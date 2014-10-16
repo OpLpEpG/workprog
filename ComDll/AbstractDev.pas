@@ -1,0 +1,1848 @@
+unit AbstractDev;
+
+interface
+
+uses RootImpl, DeviceIntf, debug_except, RootIntf, ExtendIntf, tools, XMLScript, Parser, Container,
+     Menus, Generics.Collections, System.SyncObjs, Math,
+     Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc,
+     System.Bindings.Outputs, RTTI;
+
+const
+  PRIORITY_ConnectIO = PRIORITY_IComponent + 10;
+  PRIORITY_Device    = PRIORITY_IComponent + 20;
+
+type
+
+{$REGION 'AbstractConnect'}
+  TDevice = class;
+  EConnectIOException = class(EBaseException);
+    EAsyncConnectIOException = class(EConnectIOException);
+
+  TAbstractConnectIO = class;
+  IProtocol = interface
+  ['{2674B232-B8B1-40D7-BA3F-2BCC4D310E69}']
+    procedure EventRxTimeOut(Sender : TAbstractConnectIO);
+    procedure EventRxChar(Sender : TAbstractConnectIO);
+    procedure TxChar(Sender : TAbstractConnectIO; Data: Pointer; var Cnt: Integer; maxsend: Integer = $200);
+  end;
+
+  TAbstractProtocol = class abstract(TIObject, IProtocol)
+  protected
+    procedure EventRxTimeOut(Sender : TAbstractConnectIO); virtual; abstract;
+    procedure EventRxChar(Sender : TAbstractConnectIO);virtual; abstract;
+    procedure TxChar(Sender : TAbstractConnectIO; Data: Pointer; var Cnt: Integer; maxsend: Integer = $200);virtual; abstract;
+  end;
+  TProtocolClass = class of TAbstractProtocol;
+
+  TAbstractConnectIO = class(TIComponent, IConnectIO, IDebugIO)
+  private
+    FLockUser: Pointer;
+//    FIsOpen: Boolean;
+    FStatus: TSetConnectIOStatus;
+    procedure SetS_Status(const Value: TSetConnectIOStatus);
+//    procedure SetLConnectInfo(const Value: string);
+//    procedure SetLWait(const Value: Integer);
+  protected
+    FIOEvent: TIOEvent;
+    FIOEventString: TIOEventString;
+    FComWait: Integer;
+    FConnectInfo: string;
+    procedure OnTimerRxTimeOut(Sender: TObject); virtual;
+    // IConnectIO
+    procedure SetConnectInfo(const Value: string); virtual;
+    function GetConnectInfo: string;
+    procedure Open; virtual;
+    procedure Close; virtual;
+    procedure UpdateOpenStatus(HwOpen: boolean);
+    function IsOpen: Boolean; virtual;
+    procedure SetWait(Value: integer);
+    function GetWait: integer;
+    function Locked(const User): Boolean;
+    procedure Lock(const User);
+    procedure Unlock(const User);
+
+    function GetStatus: TSetConnectIOStatus;
+
+    //IDebugIO
+    procedure SetIOEvent(const AIOEvent: TIOEvent);
+    function GetIOEvent(): TIOEvent;
+    procedure SetIOEventString(const AIOEvent: TIOEventString);
+    function GetIOEventString(): TIOEventString;
+
+    procedure Loaded; override;
+  public
+   const
+    MAX_BUF = $8000;
+   var
+    FTimerRxTimeOut: TTimer;
+    FEventReceiveData: TReceiveDataRef;
+    FProtocol: IProtocol;
+    FICount: integer;
+    FInput: array [0..MAX_BUF] of Byte;
+    constructor Create(); override;
+    destructor Destroy; override;
+    procedure CheckOpen; virtual;
+    function LockIAm(const User): Boolean;
+    procedure DoEvent(ptr: Pointer; cnt: Integer);
+    procedure Send(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1); virtual; abstract;
+    class function Enum: TArray<string>; virtual; abstract;
+//    property ConnectInfo: string read GetConnectInfo write SetConnectInfo;
+//    property Wait: integer read GetWait write SetWait;
+//    property Status: TSetConnectIOStatus read GetStatus;
+//    property IOEvent: TIOEvent read GetIOEvent write SetIOEvent;
+    property S_Status: TSetConnectIOStatus read FStatus write SetS_Status;
+  published
+    property S_ConnectInfo: string read GetConnectInfo write SetConnectInfo;
+    property S_Wait: Integer read GetWait write SetWait default 1000;
+  end;
+{$ENDREGION}
+
+  TAbstractNetConnectIO = class(TAbstractConnectIO)
+  protected
+    class function ExtractHost(const Info: string): string; virtual;
+    class function ExtractPort(const Info: string): Word; virtual;
+  public
+    class function Enum: TArray<string>; override;
+  end;
+
+{$REGION 'RamRead'}
+  TAbstractDevice = class;
+  // Класс от которого происходят все IRamReadInfo уже не абстрактный и работает для приборов PSK
+//  ERamReadInfoException = class(EBaseException);
+//    EAsyncRamReadInfoException = class(ERamReadInfoException);
+//
+//  TRamReadInfo = class(TIObject, IRamReadInfo)
+//  protected
+//    FAbstractDevice: TAbstractDevice;
+//    function UpdateRun(r: IRAMInfo; inf: IXMLInfo): Boolean;
+    //IRamReadInfo
+//    function New(TimeSart: TDateTime; TimeDelay: TTime): IRAMInfo; virtual; safecall;
+//    function Update(Info: IXMLInfo; UpdateTimeSyncEvent: TRamEvent = nil): IRAMInfo; virtual; safecall;
+//    function Get(): IRAMInfo; virtual; safecall;
+//  public
+//    constructor Create(AAbstractDevice: TAbstractDevice); reintroduce; virtual;
+//    function FileInfo: string;
+//  end;
+
+//  TRamReadInfoClass = class of TRamReadInfo;
+
+  // Класс от которого происходят все считыватели памати приборов
+  EReadRamException = class(EBaseException);
+    EAsyncReadRamException = class(EReadRamException);
+  TReadRam = class(TAggObject)
+  private
+   type
+    TReadRamThtead = class(TThread)
+    protected
+      ptr: Pointer;
+      Owner: TReadRam;
+      procedure DoSync;
+      procedure Execute; override;
+    end;
+   const
+    MAX_RAM = $420000;
+    BUFF_LEN = $16000;
+   var
+    FReadRamThtead: TReadRamThtead;
+  protected
+    FEvent: TEvent;
+//    Fifo: TFifoBuffer<Byte>;
+    Fifo: TQueueBuffer<Byte>;
+    FAbstractDevice: TAbstractDevice;
+    FOldStatus: TDeviceStatus;
+    // глобальные настройки при инициализации
+    FFlagReadToFF, FFastSpeed: Boolean;
+    FFromTime, FToTime: TDateTime;
+    Fadr: Integer;
+    FReadRamEvent: TReadRamEvent;
+
+    // глобальные пользовательские настройки
+    // данные по устройствам функция exec
+    // текущие данные по устройству
+    FStartDate, FDelayTime: TDateTime;
+    FRAMInfo: IRAMInfo;
+//    FFileRam: string;
+    FRamSize: Integer;
+//    FStream: TStream;
+    // текущие данные по устройству продолжение
+    FRecSize: Integer;
+    // пересчитанные адреса памяти
+    FCurAdr, FFromAdr, FToAdr: Integer;
+    FFromKadr, FcntKadr: Integer;
+    FFromTimeAdr, FToTimeAdr: TDateTime;
+    FRamXml: IXMLNode;
+    FKoefTime: Double;
+
+    FFlagTerminate: Boolean;
+    FFlagEndRead: Boolean;
+    FEndReason: EnumReadRam;
+
+    FModulID: integer;
+
+//    procedure CheckCreateStream; virtual;
+//    procedure FillStream(Data: Byte; Size: Integer); virtual;
+//    procedure RoundKadrStream(); virtual;
+//    procedure FreeStream; virtual;
+
+    IsOldClose: Boolean;
+
+    function ProcToEnd: Double;
+    function TestFF(P: PByte; n: Integer): Boolean;
+  // IReadDeviceRAM
+//    procedure SetReadTime(FromTime, ToTime: TDateTime); virtual; safecall;
+//    function GetFromTime: TDateTime; virtual; safecall;
+//    function GetToTime: TDateTime; virtual; safecall;
+//    procedure SetReadToFF(Flag: Boolean); virtual; safecall;
+//    function GetReadToFF: Boolean; virtual; safecall;
+//    procedure SetFastSpeed(Flag: Boolean); virtual; safecall;
+//    function GetFastSpeed: Boolean; virtual; safecall;
+    procedure DoSetData(pData: Pointer); virtual;
+    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);virtual;
+    procedure Terminate(Res: TResultEvent = nil); virtual;
+//    procedure CheckAndInitByAdr(Adr: Integer; MaxRam: Integer = 0; DefK: Double = 0; FromToAval: Boolean = True); virtual;
+    procedure EndExecute(); virtual;
+  public
+    constructor Create(AAbstractDevice: TAbstractDevice); reintroduce; virtual;
+    destructor Destroy; override;
+  end;
+  TReadRamClass = class of TReadRam;
+//  TReadRamClass = class of TAbstractReadRam;
+
+  // считыватель памати приборов c диска
+//  ERAMEnumeratorException = class(EBaseException);
+//  TRAMEnumerator = class(TIObject, IRAMDataEnumerator)
+//  private
+//      Fbuf: array[0..$8000] of Byte;
+//      FAdr : Byte;
+//      FRoot: IRAMInfo;
+//      FRAMInfo: IRAMInfo;
+//      FStream: TStream;
+//  protected
+//      function GetRamReadInfo(): IRAMInfo; safecall;
+//      function Current(): IRAMData; safecall;
+//      function MoveNext(): Boolean; safecall;
+//      function GotoKadr(Kadr: Integer): Boolean; safecall;
+//      function CountKadr(): Integer; safecall;
+//  public
+//      constructor Create(adr: Integer; ARAMInfo: IRAMInfo); reintroduce;
+//      destructor Destroy; override;
+//  end;
+//   TRAMEnumeratorClass = class of TRAMEnumerator;
+{$ENDREGION}
+
+{$REGION 'Device'}
+
+  EDeviceException = class(EBaseException);
+   EAsyncDeviceException = class(EDeviceException);
+  TDevice = class(TIComponent, ICaption, IDevice, ILowLevelDeviceIO)
+  private
+    FConnectIOName: string;
+
+    procedure SetBeforeRemoveConnectIO(const Value: string);
+    function GetAddressArray: string;
+    procedure SetAddressArray(const Value: string);
+    procedure SetLStatus(const Value: TDeviceStatus);
+    procedure SetCyclePeriod(const Value: Integer);
+  protected
+    FCyclePeriod: Integer;
+    FStatus: TDeviceStatus;
+    FDName: string;
+    // ILowLevelDeviceIO
+    procedure SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1); virtual;
+    // IDevice
+    function GetAddrs: TAddressArray;
+    function GetConnect: IConnectIO;
+    procedure SetConnect(AIConnectIO: IConnectIO); virtual;
+    function GetStatus: TDeviceStatus;
+    function CanClose: Boolean; virtual;
+   // ICaption
+    function GetDeviceName: string;
+    procedure SetDeviceName(const Value: string);
+    function ICaption.GetCaption = GetDeviceName;
+    procedure ICaption.SetCaption = SetDeviceName;
+
+    procedure Loaded; override;
+
+    property CyclePeriod: Integer read FCyclePeriod write SetCyclePeriod default 2097;
+  public
+    FAddressArray: TAddressArray;
+    constructor Create(); override;
+    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); virtual;
+    procedure CheckConnect(); virtual;
+    ///	<summary>
+    ///	  возвращает значение до открытия
+    ///	</summary>
+    function ConnectOpen(): boolean; inline;
+    procedure ConnectClose();
+    function IsConnectLocked: boolean; inline;
+    procedure ConnectUnLock; inline;
+    procedure ConnectLock; inline;
+    procedure CheckLocked; inline;
+    procedure CheckStatus(const AvailSts: TSetDeviceStatus);
+    function ConnectIO: TAbstractConnectIO; inline;
+
+    property IConnect: IConnectIO read GetConnect;
+
+    property C_BeforeRemoveConnectIO: string read FConnectIOName write SetBeforeRemoveConnectIO;
+    property S_Status: TDeviceStatus read FStatus write SetLStatus;
+  published
+    property AddressArray: string read GetAddressArray write SetAddressArray;
+    property S_ConnectIO: string read FConnectIOName write FConnectIOName;
+    property S_Name: string read GetDeviceName write SetDeviceName;
+  end;
+
+
+//  TAbstractActionsDev = class;
+//  TAbstractActionsDevClass = class of TAbstractActionsDev;
+  TAbstractDevice = class(TDevice)//,
+//                          IAddMenus,
+//                          I N ot ifyAfteActionManagerLoad,
+//                          INotifyLoadBeroreAdd,
+//                          INotifyBeforeAdd)//,
+//                          INotifyBeforeRemove)
+  private
+//    FActionsDev: TAbstractActionsDev;
+    procedure SetMetaDataInfo(const Value: TDeviceMetaData);
+    procedure SetDelayInfo(const Value: TSetDelayRes);
+    procedure SetWorkEventInfo(const Value: TWorkEventRes);
+    procedure SetEepromkEventInfo(const Value: TEepromEventRes);
+  protected
+    FReadRam: TReadRam;
+    FExeMetr: TXmlScript;
+    FMetaDataInfo: TDeviceMetaData;
+    FDelayInfo: TSetDelayRes;
+    FWorkEventInfo: TWorkEventRes;
+    FEepromEventInfo: TEepromEventRes;
+//    function QueryInterface(const IID: TGUID; out Obj): HResult; override; stdcall;
+//    procedure ResetMetaData();
+//    function GetActionsDevClass: TAbstractActionsDevClass; virtual; abstract;
+//    procedure AfteActionManagerLoad(); virtual;
+    procedure LoadBeroreAdd();
+    function PropertyReadRam: TReadRam;
+    function CreateReadRam: TReadRam; virtual;
+//    procedure BeforeAdd(); virtual;
+//    procedure BeforeRemove(); virtual;
+    procedure DoDelayEvent(rez: Boolean; SetTime: TDateTime; Delay, WorkTime: TTime; ResultEvent: TSetDelayEvent);
+
+    procedure Loaded; override;
+
+//    property ReadRam: TReadRam read GetReadRam;
+  public
+//    FRamDir: string;
+
+    // IDataDevice
+//    procedure InitMetaData(ev: TInfoEvent); virtual; safecall; abstract;
+    function GetMetaData: TDeviceMetaData;
+//    procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false); virtual; safecall; abstract;
+    // IDelayDevice
+//    procedure SetDelay(Delay, WorkTime: TTime; ResultEvent: TSetDelayEvent); virtual; safecall; abstract;
+
+    // Ram
+//    procedure RamDataPath(const PathToRamDataDir: WideString); virtual; safecall;
+//    function GetRamDataEnumerator(adr: Integer): IRAMDataEnumerator; virtual; safecall;
+//    function GetRamReadInfo(): IRamReadInfo; virtual; safecall;
+//    function GetReadDeviceRam(): IReadRamDevice; virtual; safecall;
+
+    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); override;
+    constructor Create(); override;
+    destructor Destroy; override;
+
+//    function GetRamDir: string;
+
+    property S_MetaDataInfo: TDeviceMetaData read FMetaDataInfo write SetMetaDataInfo; //live binding
+    property S_DelayInfo: TSetDelayRes read FDelayInfo write SetDelayInfo; //live binding
+    property S_WorkEventInfo: TWorkEventRes read FWorkEventInfo write SetWorkEventInfo; //live binding
+    property S_EepromEventInfo: TEepromEventRes read FEepromEventInfo write SetEepromkEventInfo; //live binding
+//    property ActionsDev: TAbstractActionsDev read FActionsDev implements  IAddMenus;
+  end;
+{$ENDREGION}
+
+ { TAbstractActionsDev = class(TAggObject, Ibind)
+  private
+    FBind: IBind;
+  protected
+    procedure AddMenus(Root: TMenuItem); virtual; abstract;
+    property Bind: IBind read FBind implements IBind;
+  public
+    constructor Create(const Controller: IInterface); reintroduce;
+    procedure CreateAddManager(); virtual; abstract;
+    procedure ShowInMenu(); virtual; abstract;
+    procedure NotifyRemove(); virtual; abstract;
+  end;}
+
+{$REGION 'Cycle'}
+
+  ECycleException = class(EDeviceException);
+  // для новых приборов , усо, Глубиноера
+  TCycle = class(TAggObject, ICycle)
+  private
+    FlagNeedStop: Boolean;
+    FOldStatus: TDeviceStatus;
+    FTimer: TTimer;
+    procedure OnTimer(Sender: TObject);
+  protected
+    FStdOnly: Boolean;
+    procedure DoCycle; virtual;
+  public
+    function GetCycle: Boolean;
+    procedure SetCycle(const Value: Boolean);
+    function GetPeriod: Integer;
+    procedure SetPeriod(const Value: Integer);
+    constructor Create(const Controller: IInterface); reintroduce;
+    destructor Destroy; override;
+  end;
+  // для новых приборов
+  TCycleEx = class(TCycle, ICycle, ICycleEx)
+  protected
+    function GetStdOnly: Boolean;
+    procedure SetStdOnly(const Value: Boolean);
+  end;
+{$ENDREGION}
+
+//  TVActionsDev = class(TAbstractActionsDev)
+//  protected
+//    procedure AddMenus(Root: TMenuItem); override;
+//  public
+//    procedure CreateAddManager(); override;
+//    procedure ShowInMenu(); override;
+//  end;
+//  TViewRamDevice = class(TAbstractDevice, IRamDevice)
+//    function GetActionsDevClass: TAbstractActionsDevClass; override;
+//  public
+//    procedure InitMetaData(ev: TInfoEvent); override;
+//    procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false); override;
+//    procedure SetDelay(Delay, WorkTime: TTime; ResultEvent: TSetDelayEvent); override;
+//    procedure RamDataPath(const PathToRamDataDir: WideString); override;
+//  end;
+
+{$REGION 'ConnectIO'}
+  // Реализация для ком порта
+  EComConnectIOException = class(EConnectIOException);
+
+//  [Dialog(DIALOG_SETUP_ComPortConnectIO)]
+  TComConnectIO = class(TAbstractConnectIO, IComPortConnectIO)
+  private
+    FCom: TComPort;
+//    FCloseTimer: TTimer;
+    FCloseErrNessage: string;
+    procedure InnerClose;
+//    procedure OnComClose(Sender: TObject);
+    procedure ComRxChar(Sender: TObject; Count: Integer);
+    procedure ComPortException(Sender:TObject;
+                          TComException:TComExceptions; ComportMessage:String;
+                          WinError:Int64; WinMessage:String);
+  protected
+    procedure SetConnectInfo(const Value: string); override;
+    procedure Open; override;
+    procedure Close; override;
+    function IsOpen: Boolean; override;
+  public
+    AsString: Boolean;
+    constructor Create(); override;
+    destructor Destroy; override;
+    procedure CheckOpen; override;
+    procedure Send(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1); override;
+    class function Enum: TArray<string>; override;
+  end;
+
+  // Реализация протоколов
+  TRunSerialQeRef = reference to procedure; //очередь
+  EProtocolBurException = class(EBaseException);
+  TProtocolBur = class(TAbstractProtocol)
+  private
+   type
+    TQe = TQueue<TRunSerialQeRef>;
+   var
+    FQe: TQe;
+  protected
+    procedure EventRxTimeOut(Sender : TAbstractConnectIO); override;
+    procedure EventRxChar(Sender : TAbstractConnectIO);override;
+    procedure TxChar(Sender : TAbstractConnectIO; Data: Pointer; var Cnt: Integer; maxsend: Integer = $200);override;
+  public
+    constructor Create;
+    destructor Destroy; override;
+    procedure Add(data : TRunSerialQeRef); // добавление в очередь и отправка
+    function IsEmpty: Boolean;             // вызываются в AsyncSend
+    procedure Next;                        // вызываются в AsyncSend
+    procedure Clear;
+  end;
+
+  TProtocolPsk = class(TAbstractProtocol)
+  protected
+    procedure EventRxTimeOut(Sender : TAbstractConnectIO); override;
+    procedure EventRxChar(Sender : TAbstractConnectIO); override;
+    procedure TxChar(Sender : TAbstractConnectIO; Data: Pointer; var Cnt: Integer; maxsend: Integer = $200);override;
+  end;
+{$ENDREGION}
+
+resourcestring
+   RS_SetIO = '(Lock) Невозможно сменить Порт т.к. прибор занят';
+   RS_Flow = '(Flow) Невозможно освободить Порт занятый чтением информации';
+   RS_IsCycle = '(Cycle) Порт занят';
+   RS_Locked = '(Lock) Порт уже занят';
+   RS_DevBusy = 'Прибор занят';
+   RS_UnLock = '(Unlock) Невозможно освободить Порт занятый другим устройством';
+   RS_ErrNoInfo = 'Не инициализирована информация об устройствах';
+   RS_NeedClosePort = 'Необходимо закрыть порт %s';
+   RS_NeedCloseNet = 'Необходимо закрыть соединение %s';
+   RS_SendData = 'Нет протокола для передачи данных';
+   RS_NoDir = 'Директория %s отсутствует';
+   RS_EmptyDir = 'Директория для чтения памяти не задана';
+   RS_NoConnect = 'Устройство не подключено к Порту';
+   RS_NoRamInfo = 'Информация устройства с адресом %d о структуре RAM: отсутствует,невозножно считать память';
+   RS_NoRamAttr = 'Невозможно счтать память Адрес: %d, отсутствуют атрибуты %s %s %s %s %s';
+   RS_NoRamFile = 'Невозможно счтать память Адрес: %d нет вайла %s';
+   RS_NoAdr = 'Невозможно получить адрес устройства для чтения памяти';
+   RS_NoXml = 'Невозможно получить xml информацию для чтения памяти';
+   RS_NoRamMetaTime = 'Информация устройства с адресом %d о постановке на задержку отсутствует';
+   RS_NoRamMeta = 'Информация устройства с адресом %d о структуре RAM: отсутствует,невозножно считать память';
+   RS_NoRamMetaRecSize = 'Информация устройства с адресом %d о структуре RAM: длина записи 0';
+   RS_NoRamMetaK = 'Информация устройства с адресом %d о поправочном коэффициенте отсутствует,невозножно считать память';
+   RS_NoRamMetaBadK = 'Информация устройства с адресом %d о структуре RAM: неверный коэффициент  %1.5f';
+   RS_BadFromToTime = 'Hевозножно считать память устройства с адресом %d время старта %s задержка %s с %s[%d] по %s[%d]';
+   RS_NoRamSize = 'Невозможно получить xml информацию для чтения памяти о размере памяти';
+   RS_NotAvalFromToTime = 'Устройство с адресом %d неподдерживает выборочное чтение памяти';
+
+implementation
+
+{$REGION  'TAbstractConnectIO - все процедуры и функции'}
+
+{ TAbstractConnectIO }
+
+procedure TAbstractConnectIO.CheckOpen;
+begin
+  if not (iosOpen in FStatus) then raise EConnectIOException.Create('Соединение закрыто');
+end;
+
+procedure TAbstractConnectIO.Close;
+begin
+  S_Status := FStatus - [iosOpen];
+end;
+
+constructor TAbstractConnectIO.Create();
+begin
+  inherited;
+  FTimerRxTimeOut := TTimer.Create(nil);
+  FTimerRxTimeOut.Enabled := False;
+  FTimerRxTimeOut.OnTimer := OnTimerRxTimeOut;
+  FComWait := FTimerRxTimeOut.Interval;
+  OutputDebugString(PWideChar('TAbstractConnectIO.Create()'));
+end;
+
+destructor TAbstractConnectIO.Destroy;
+begin
+  OutputDebugString(PWideChar('TAbstractConnectIO.Destroy [' + FConnectInfo));
+  FTimerRxTimeOut.Free;
+  inherited;
+end;
+
+procedure TAbstractConnectIO.OnTimerRxTimeOut(Sender: TObject);
+begin
+  FTimerRxTimeOut.Enabled := False;
+//  Pinteger(9)^ := 666;
+  if Assigned(FIOEvent) then FIOEvent(iosTimeOut, nil, -1);
+  if Assigned(FProtocol) then FProtocol.EventRxTimeOut(Self);
+end;
+
+procedure TAbstractConnectIO.Open;
+begin
+  S_Status := FStatus - [iosError] + [iosOpen];
+end;
+
+procedure TAbstractConnectIO.DoEvent(ptr: Pointer; cnt: Integer);
+ var
+  e: TReceiveDataRef;
+begin
+  e := FEventReceiveData;
+  FEventReceiveData := nil;
+  if Assigned(e) then e(ptr, Cnt);
+end;
+
+procedure TAbstractConnectIO.SetWait(Value: integer);
+begin
+  if FComWait <> Value then
+   begin
+    FComWait := Value;
+    Notify('S_Wait');
+    PubChange;
+   end;
+end;
+
+function TAbstractConnectIO.GetStatus: TSetConnectIOStatus;
+begin
+  Result := FStatus;
+end;
+
+procedure TAbstractConnectIO.Unlock(const User);
+begin
+  if not Assigned(FLockUser) then Exit;
+  if FLockUser = Pointer(User) then
+   begin
+    FLockUser := nil;
+    S_Status := FStatus - [iosLock];
+   end
+  else raise EConnectIOException.Create(RS_UnLock);
+end;
+
+procedure TAbstractConnectIO.UpdateOpenStatus(HwOpen: boolean);
+begin
+  if HwOpen <> (iosOpen in S_Status) then
+    if HwOpen then S_Status := S_Status + [iosOpen] - [iosError]
+    else S_Status := S_Status - [iosOpen]
+end;
+
+procedure TAbstractConnectIO.Loaded;
+begin
+  inherited Loaded;
+  (GContainer as IConnectIOEnum).ItemInitialized(Self as IManagItem);
+end;
+
+procedure TAbstractConnectIO.Lock(const User);
+begin
+  if not Assigned(FLockUser) then
+   begin
+    FLockUser := Pointer(User);
+    S_Status := FStatus + [iosLock];
+   end
+  else if FLockUser <> Pointer(User) then raise EConnectIOException.Create(RS_Locked);
+end;
+
+function TAbstractConnectIO.Locked(const User): Boolean;
+begin
+  if not Assigned(FLockUser) then Exit(False);
+  Result := FLockUser <> Pointer(User);
+end;
+
+function TAbstractConnectIO.LockIAm(const User): Boolean;
+begin
+  Result := FLockUser = Pointer(User);
+end;
+
+function TAbstractConnectIO.GetWait: integer;
+begin
+  Result := FComWait;
+end;
+
+function TAbstractConnectIO.IsOpen: Boolean;
+begin
+  Result := iosOpen in FStatus;
+end;
+
+procedure TAbstractConnectIO.SetS_Status(const Value: TSetConnectIOStatus);
+begin
+  if Value <> FStatus then
+   begin
+    FStatus := Value;
+    Notify('S_Status');
+   end;
+end;
+
+procedure TAbstractConnectIO.SetIOEvent(const AIOEvent: TIOEvent);
+begin
+  FIOEvent := AIOEvent;
+end;
+
+procedure TAbstractConnectIO.SetIOEventString(const AIOEvent: TIOEventString);
+begin
+  FIOEventString := AIOEvent;
+end;
+
+{procedure TAbstractConnectIO.SetLConnectInfo(const Value: string);
+begin
+  if not SameText(FConnectInfo, Value) then
+   begin
+    if csLoading in ComponentState then Setup(Value);
+    FConnectInfo := Value;
+    if not (csLoading in ComponentState) then Bind.Notify('LConnectInfo');
+    PubChange;
+   end;
+end;
+
+procedure TAbstractConnectIO.SetLWait(const Value: Integer);
+begin
+  SetWait(Value);
+end;}
+
+procedure TAbstractConnectIO.SetConnectInfo(const Value: string);
+begin
+  if not SameText(FConnectInfo, Value) then
+   begin
+    FConnectInfo := Value;
+    Notify('S_ConnectInfo');
+    PubChange;
+   end;
+end;
+
+function TAbstractConnectIO.GetConnectInfo: string;
+begin
+  Result := FConnectInfo;
+end;
+
+function TAbstractConnectIO.GetIOEvent: TIOEvent;
+begin
+  Result := FIOEvent;
+end;
+function TAbstractConnectIO.GetIOEventString: TIOEventString;
+begin
+  Result := FIOEventString;
+end;
+
+{$ENDREGION  TAbstractConnectIO}
+
+{$REGION  'TAbstractDevice - все процедуры и функции'}
+
+{ TDevice }
+
+procedure TDevice.CheckLocked();
+begin
+  if ConnectIO.Locked(self) then raise EDeviceException.Create(RS_Locked);
+end;
+
+procedure TDevice.CheckStatus(const AvailSts: TSetDeviceStatus);
+begin
+  if not (S_Status in AvailSts) then
+    if S_Status = dsNoInit then  raise EDeviceException.Create(RS_ErrNoInfo)
+    else raise EDeviceException.Create(RS_DevBusy);
+end;
+
+procedure TDevice.ConnectClose;
+begin
+//  TThread.Queue(nil, procedure   ?? забыл зачем ??
+//  begin
+    ConnectIO.Close;
+//  end);
+end;
+
+function TDevice.ConnectIO: TAbstractConnectIO;
+begin
+  Result := TAbstractConnectIO(IConnect);
+end;
+
+procedure TDevice.ConnectLock;
+begin
+  ConnectIO.Lock(self);
+end;
+
+function TDevice.ConnectOpen: boolean;
+begin
+  Result := ConnectIO.IsOpen;
+  if not Result then ConnectIO.Open;
+end;
+
+procedure TDevice.ConnectUnLock;
+begin
+  ConnectIO.UnLock(self);
+end;
+
+constructor TDevice.Create();
+begin
+  inherited;
+  Bind('C_BeforeRemoveConnectIO', GContainer as IConnectIOEnum,  ['S_BeforeRemove']);
+end;
+
+constructor TDevice.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
+begin
+  Create();
+  FAddressArray := AddressArray;
+  FDName := DeviceName;
+end;
+
+procedure TDevice.Loaded;
+begin
+  inherited Loaded;
+  (GContainer as IDeviceEnum).ItemInitialized(Self as IManagItem);
+end;
+
+function TDevice.GetAddressArray: string;
+begin
+  Result := TAddressRec(FAddressArray).ToStr();
+end;
+
+function TDevice.GetAddrs: TAddressArray;
+begin
+  Result := FAddressArray;
+end;
+
+procedure TDevice.SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef; WaitTime: Integer);
+begin
+  ConnectIO.Send(Data, Cnt, Event, WaitTime);
+end;
+
+function TDevice.IsConnectLocked: boolean;
+begin
+  Result := ConnectIO.Locked(Self);
+end;
+
+function TDevice.GetConnect: IConnectIO;
+ var
+  i: IInterface;
+begin
+  Result := nil;
+  if (FConnectIOName <> '') and GContainer.TryGetInstKnownServ(TypeInfo(IConnectIO), FConnectIOName, i) then Result := i as IConnectIO;
+end;
+
+function TDevice.GetDeviceName: string;
+begin
+  if FDName = '' then Result := TAddressRec(FAddressArray).ToNames
+  else Result := FDName;
+end;
+
+procedure TDevice.SetDeviceName(const Value: string);
+begin
+  if Value <> FDName then
+   begin
+    FDName := Value;
+    Notify('S_Name');
+    PubChange;
+   end;
+end;
+
+procedure TDevice.SetLStatus(const Value: TDeviceStatus);
+begin
+  if Value <> FStatus then
+   begin
+    FStatus := Value;
+    Notify('S_Status');
+   end;
+end;
+
+function TDevice.GetStatus: TDeviceStatus;
+begin
+  Result := FStatus;
+end;
+
+procedure TDevice.SetConnect(AIConnectIO: IConnectIO);
+  function AsName: string;
+  begin
+    if not Assigned(AIConnectIO) then Result := ''
+    else Result := AIConnectIO.IName;
+  end;
+begin
+  if FConnectIOName <> AsName then
+   begin
+    if Assigned(IConnect) and ConnectIO.LockIAm(Self) then raise EDeviceException.Create(RS_SetIO);
+    FConnectIOName := AsName;
+    Notify('S_ConnectIO');
+    PubChange;
+   end;
+end;
+
+procedure TDevice.SetCyclePeriod(const Value: Integer);
+begin
+  if FCyclePeriod <> Value then
+   begin
+    FCyclePeriod := Value;
+    PubChange;
+   end;
+end;
+
+procedure TDevice.SetAddressArray(const Value: string);
+begin
+  FAddressArray := TAddressRec(Value);
+end;
+
+procedure TDevice.SetBeforeRemoveConnectIO(const Value: string);
+begin
+  if FConnectIOName = Value then SetConnect(nil);
+end;
+
+function TDevice.CanClose: Boolean;
+begin
+  Result := False;
+end;
+
+procedure TDevice.CheckConnect;
+begin
+  if not Assigned(IConnect) then raise EDeviceException.Create(RS_NoConnect);
+end;
+
+{ TAbstractDevice }
+
+
+//procedure TAbstractDevice.AfteActionManagerLoad;
+//begin
+//  FActionsDev.ShowInMenu;
+//end;
+
+//procedure TAbstractDevice.ResetMetaData;
+// var
+//  GDoc: IXMLDocument;
+//begin
+//  GDoc := NewXDocument(); { TODO : нен адо создавать метаданные }
+//  FMetaDataInfo.Info := GDoc.AddChild('DEVICE');
+//  FMetaDataInfo.ErrAdr := FAddressArray;
+//end;
+
+//procedure TAbstractDevice.BeforeAdd;
+//begin
+//  ResetMetaData;
+//  LStatus := dsNoInit;
+//  FActionsDev.CreateAddManager;
+//  FActionsDev.ShowInMenu;
+//end;
+
+//procedure TAbstractDevice.BeforeRemove;
+//begin
+//  FActionsDev.NotifyRemove;
+//end;
+
+procedure TAbstractDevice.LoadBeroreAdd;
+ var
+  a: Integer;
+begin
+  SetLength(FMetaDataInfo.ErrAdr, 0);
+  FMetaDataInfo.Info := (GContainer as IALLMetaDataFactory).Get().Get().DocumentElement.ChildNodes.FindNode(Name);
+  for a in FAddressArray do if not Assigned(FindDev(FMetaDataInfo.Info, a)) then CArray.Add<Integer>(FMetaDataInfo.ErrAdr, a);
+  if Length(FMetaDataInfo.ErrAdr) = 0 then S_Status := dsReady
+  else if Length(FMetaDataInfo.ErrAdr) < Length(FAddressArray) then S_Status := dsPartReady
+  else S_Status := dsNoInit;
+//  FActionsDev.CreateAddManager;
+  if S_Status <> dsNoInit then
+   try
+    TPars.SetMetr(FMetaDataInfo.Info, FExeMetr, False);
+   finally
+    Notify('S_MetaDataInfo');
+   end;
+  TDebug.Log('TAbstractDevice.LoadBeroreAdd =====  '+ Name+'   ======');
+end;
+
+procedure TAbstractDevice.Loaded;
+begin
+  inherited Loaded;
+  LoadBeroreAdd;
+end;
+
+//function TAbstractDevice.QueryInterface(const IID: TGUID; out Obj): HResult;
+//begin
+//  if IID = IReadRamDevice then
+//   begin
+//    if not Assigned(FReadRam) then FReadRam := GetReadRamClass.Create(Self);
+//    Result := FReadRam.QueryInterface(IReadRamDevice, Obj)
+//   end
+//  else Result := inherited QueryInterface(IID, Obj)
+//end;
+
+constructor TAbstractDevice.Create();
+begin
+  inherited;
+//  FActionsDev := GetActionsDevClass.Create(Self);
+  FExeMetr := TXmlScript.Create(nil);
+end;
+
+function TAbstractDevice.CreateReadRam: TReadRam;
+begin
+  Result := TReadRam.Create(Self);
+end;
+
+constructor TAbstractDevice.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
+begin
+  inherited;
+  FMetaDataInfo.ErrAdr := FAddressArray;
+  S_Status := dsNoInit;
+end;
+
+destructor TAbstractDevice.Destroy;
+begin
+  FExeMetr.Free;
+  if Assigned(FReadRam) then FReadRam.Free;  
+//  FActionsDev.Free;
+  inherited;
+  TDebug.Log('TAbstractDevice.Destroy =====  '+ S_Name+' '+Name+'   ======');
+end;
+
+procedure TAbstractDevice.DoDelayEvent(rez: Boolean; SetTime: TDateTime; Delay, WorkTime: TTime; ResultEvent: TSetDelayEvent);
+begin
+  FDelayInfo.Res := rez;
+  FDelayInfo.Delay := Delay;
+  FDelayInfo.WorkTime := WorkTime;
+  FDelayInfo.SetTime := SetTime;
+  try
+   if Assigned(ResultEvent) then ResultEvent(FDelayInfo);
+  finally
+   Notify('S_DelayInfo');
+  end;
+end;
+
+
+function TAbstractDevice.GetMetaData: TDeviceMetaData;
+begin
+  Result := FMetaDataInfo;
+end;
+
+function TAbstractDevice.PropertyReadRam: TReadRam;
+begin
+  if not Assigned(FReadRam) then FReadRam := CreateReadRam;
+  Result := FReadRam;
+end;
+
+//function TAbstractDevice.GetReadRamClass: TReadRamClass;
+//begin
+//  Result := TReadRam;
+//end;
+
+{function TAbstractDevice.GetRamDataEnumerator(adr: Integer): IRAMDataEnumerator;
+begin
+  Result := TRAMEnumerator.Create(adr, GetRamReadInfo.Get);
+end;
+
+function TAbstractDevice.GetRamDir: string;
+begin
+  Result := FRamDir;
+  if FRamDir ='' then  raise EDeviceException.Create(RS_EmptyDir);
+  if not DirectoryExists(FRamDir) then raise EDeviceException.CreateFmt(RS_NoDir,[FRamDir]);
+end;
+
+function TAbstractDevice.GetRamReadInfo: IRamReadInfo;
+begin
+  Result := TRamReadInfo.Create(Self);
+end;
+
+function TAbstractDevice.GetReadDeviceRam: IReadRamDevice;
+begin
+  raise EDeviceException.Create('IReadRamDevice не реализован');
+end;
+
+procedure TAbstractDevice.RamDataPath(const PathToRamDataDir: WideString);
+begin
+  FRamDir := string(PathToRamDataDir);
+  if not DirectoryExists(FRamDir) then raise EDeviceException.CreateFmt(RS_NoDir,[FRamDir]);
+end; }
+
+procedure TAbstractDevice.SetDelayInfo(const Value: TSetDelayRes);
+begin
+  raise EDeviceException.Create('TAbstractDevice.SetDelayInfo(const Value: TSetDelayRes)');
+end;
+
+procedure TAbstractDevice.SetEepromkEventInfo(const Value: TEepromEventRes);
+begin
+  raise EDeviceException.Create('TAbstractDevice.SetEepromkEventInfo(const Value: TEepromEventRes)');
+end;
+
+procedure TAbstractDevice.SetMetaDataInfo(const Value: TDeviceMetaData);
+begin
+  raise EDeviceException.Create('TAbstractDevice.SetMetaDataInfo(const Value: TInfoEventRes)');
+end;
+
+procedure TAbstractDevice.SetWorkEventInfo(const Value: TWorkEventRes);
+begin
+  raise EDeviceException.Create('TAbstractDevice.SetWorkEventInfo(const Value: TWorkEventRes)');
+end;
+
+{$ENDREGION  TAbstractDevice}
+
+{ TVActionsDev }
+
+{procedure TVActionsDev.AddMenus(Root: TMenuItem);
+begin
+end;
+procedure TVActionsDev.CreateAddManager;
+begin
+end;
+procedure TVActionsDev.ShowInMenu;
+begin
+end;
+procedure TViewRamDevice.RamDataPath(const PathToRamDataDir: WideString);
+begin
+  inherited;
+  if Length(FAddressArray) > 0 then Exit;
+  FindAllWorks(GetRamReadInfo.Get(), procedure(wrk: IXMLNode; adr: Byte; const name: string)
+  begin
+    Carray.Add<Integer>(FAddressArray, adr);
+  end);
+end;
+function TViewRamDevice.GetActionsDevClass: TAbstractActionsDevClass;
+begin
+  Result := TVActionsDev;
+end;
+
+procedure TViewRamDevice.InitMetaData(ev: TInfoEvent);
+begin
+end;
+procedure TViewRamDevice.ReadWork(ev: TWorkEvent; StdOnly: Boolean);
+begin
+end;
+procedure TViewRamDevice.SetDelay(Delay, WorkTime: TTime; ResultEvent: TSetDelayEvent);
+begin
+end;   }
+
+
+{ TComConnectIO }
+{$REGION  'TComConnectIO - все процедуры и функции'}
+constructor TComConnectIO.Create();
+begin
+  inherited Create;
+  FConnectInfo := 'COM1';
+  FCom := TComPort.Create(nil);
+  FCom.BaudRate := brCustom;
+  Fcom.CustomBaudRate := 500000;
+  Fcom.Buffer.InputSize := $8000;
+  Fcom.Buffer.OutputSize := $100;
+  Fcom.Events := [evRxChar];
+  Fcom.SyncMethod := smWindowSync;
+  Fcom.TriggersOnRxChar := True;
+  Fcom.OnRxChar := ComRxChar;
+  Fcom.Port := FConnectInfo;
+end;
+
+procedure TComConnectIO.InnerClose;
+begin
+  FCom.OnException := ComPortException;
+  FCloseErrNessage := '';
+  FCom.Close;
+  FCom.OnException := nil;
+  inherited Close;
+end;
+
+procedure TComConnectIO.ComPortException(Sender: TObject; TComException: TComExceptions; ComportMessage: String; WinError: Int64; WinMessage: String);
+begin
+  FCloseErrNessage := ComportMessage + '  '+ WinMessage;
+  S_Status := FStatus + [iosError];
+end;
+
+destructor TComConnectIO.Destroy;
+begin
+  InnerClose();
+  FCom.Free;
+  inherited;
+end;
+
+class function TComConnectIO.Enum: TArray<string>;
+ var
+  s: string;
+  Ports: TStrings;
+begin
+  Ports := TStringList.Create;
+  try
+   EnumComPorts(Ports);
+   for s in Ports do CArray.Add<string>(Result, s);
+  finally
+   Ports.Free;
+  end;
+end;
+
+procedure TComConnectIO.ComRxChar(Sender: TObject; Count: Integer);
+  var
+   a: AnsiString;
+begin
+  if (FICount+Count) > $8000 then FICount := 0;
+  FCom.Read(FInput[FICount], Count);
+  Inc(FICount, Count);
+  if AsString and Assigned(FIOEventString) then
+   begin
+    SetString(a, PAnsiChar(@FInput[FICount-Count]), Count);
+    FIOEventString(iosRx, string(a));
+   end
+  else if Assigned(FIOEvent) then FIOEvent(iosRx, @FInput[FICount-Count], Count);
+  if Assigned(FProtocol) then FProtocol.EventRxChar(Self);
+end;
+
+procedure TComConnectIO.SetConnectInfo(const Value: string);
+ var
+ i: Integer;
+  a: TArray<string>;
+begin
+  if not SameText(FConnectInfo, Value) then
+   begin
+    if IsOpen then raise EComConnectIOException.CreateFmt(RS_NeedClosePort, [Fcom.Port]);
+    a := Value.Split([';']);
+    for i := 0 to Length(a)-1 do a[i] := a[i].Trim;
+    if a[0] <> '' then Fcom.Port := a[0];
+    if (Length(a) > 1) and (a[1] <> '') then
+         Fcom.CustomBaudRate := a[1].ToInteger()
+    else Fcom.CustomBaudRate := 500000;
+    if (Length(a) > 2) and (a[2] <> '') then
+         Fcom.Parity.Bits := TParityBits(a[2].ToInteger())
+    else Fcom.Parity.Bits := prNone;
+    if (Length(a) > 3) and (a[3] <> '') then
+         Fcom.StopBits := TStopBits(a[3].ToInteger())
+    else Fcom.StopBits := sbOneStopBit;
+    inherited SetConnectInfo(Fcom.Port);
+   end;
+end;
+
+function TComConnectIO.IsOpen: Boolean;
+begin
+  Result := FCom.Connected;
+  UpdateOpenStatus(Result);
+end;
+
+//procedure TComConnectIO.OnComClose(Sender: TObject);
+//begin
+//  FreeAndNil(FCloseTimer);
+//  InnerClose();
+//  if FCloseErrNessage <> '' then raise EComConnectIOException.Create(FCloseErrNessage);
+//end;
+
+procedure TComConnectIO.Open;
+begin
+  if Fcom.Connected then raise EComConnectIOException.CreateFmt(RS_NeedClosePort, [Fcom.Port]);
+  try
+   Fcom.Open;
+   inherited Open;
+  except
+   S_Status := FStatus + [iosError];
+   raise
+  end;
+end;
+procedure TComConnectIO.CheckOpen;
+begin
+  if not Fcom.Connected then raise EComConnectIOException.CreateFmt('Порт закрыт %s', [Fcom.Port]);
+end;
+
+procedure TComConnectIO.Close;
+begin
+//  if not Assigned(FCloseTimer) then
+//   begin
+//    FCloseTimer := TTimer.Create(nil);
+//    FCloseTimer.OnTimer := OnComClose;
+//    FCloseTimer.Interval := 1;
+//    FCloseTimer.Enabled := True;
+//   end;
+//  FreeAndNil(FCloseTimer);
+  InnerClose();
+  if FCloseErrNessage <> '' then raise EComConnectIOException.Create(FCloseErrNessage);
+end;
+
+procedure TComConnectIO.Send(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef; WaitTime: Integer);
+ var
+  b: array[0..$200]of Byte;
+  a: AnsiString;
+begin
+  if Assigned(FProtocol) then
+   begin
+    if not Assigned(Data) then raise EComConnectIOException.Create('Данные не инициализированны');
+    FEventReceiveData := Event;
+    if WaitTime >= 0 then FTimerRxTimeOut.Interval := WaitTime
+    else FTimerRxTimeOut.Interval := FComWait;
+    Move(Data^,b[0], Cnt);
+    FProtocol.TxChar(Self, @b[0], Cnt);
+    FTimerRxTimeOut.Enabled := True;
+    CheckOpen;
+    if Cnt > 0 then FCom.Write(b[0], cnt);
+    if AsString and Assigned(FIOEventString) then
+     begin
+      SetString(a, PAnsiChar(@b[0]), cnt);
+      FIOEventString(iosTx, string(a));
+     end
+    else if Assigned(FIOEvent) then FIOEvent(iosTx, @b[0], cnt);
+   end
+  else raise EComConnectIOException.Create(RS_SendData);
+end;
+{$ENDREGION  TComConnectIO}
+
+{ TProtocolBur }
+{$REGION  'TProtocolBur - все процедуры и функции'}
+constructor TProtocolBur.Create;
+begin
+  inherited Create;
+  FQe := TQe.Create;
+end;
+destructor TProtocolBur.Destroy;
+begin
+  FQe.Free;
+  inherited;
+end;
+
+
+procedure TProtocolBur.Add(data: TRunSerialQeRef);
+begin
+  FQe.Enqueue(data); //Count+1
+  if FQe.Count = 1 then data(); //Invoke TRunSerialQeRef, если первый
+end;
+procedure TProtocolBur.Clear;
+begin
+  FQe.Clear;
+end;
+function TProtocolBur.IsEmpty: Boolean;
+begin
+  Result := FQe.Count = 0;
+end;
+procedure TProtocolBur.Next;
+begin
+  if FQe.Count > 0 then FQe.Dequeue(); //Count-1
+  if FQe.Count > 0 then
+   try
+    FQe.Peek()();  //Invoke TRunSerialQeRef, если есть ещё
+   except
+    Clear;
+    raise;
+   end;
+end;
+
+procedure TProtocolBur.TxChar(Sender: TAbstractConnectIO; Data: Pointer; var Cnt: Integer; maxsend: Integer);
+begin
+  if Cnt > 253 then raise EProtocolBurException.CreateFmt('Данных для передачи %d больше 253', [Cnt]);
+  SetCRC16(Data, Cnt);
+  Sender.FICount := 0;
+  Inc(Cnt, 2);
+
+
+//  Cnt := 1;
+end;
+procedure TProtocolBur.EventRxChar(Sender: TAbstractConnectIO);
+begin
+  with Sender do if TestCRC16(@FInput[0], Word(FICount)) then
+   begin
+    FTimerRxTimeOut.Enabled := False;
+    try
+     DoEvent(@FInput[0], FICount-2);
+    finally
+     Next; //AsyncSend далее
+    end;
+   end;
+end;
+procedure TProtocolBur.EventRxTimeOut(Sender: TAbstractConnectIO);
+begin
+  try
+   Sender.DoEvent(nil, -1);
+  finally
+   Next; //AsyncSend далее
+  end;
+end;
+{$ENDREGION  TProtocolBur}
+
+{ TProtocolPsk }
+{$REGION  'TProtocolPsk - все процедуры и функции'}
+procedure TProtocolPsk.EventRxChar(Sender: TAbstractConnectIO);
+begin
+  with Sender do
+   begin
+    FTimerRxTimeOut.Enabled := False;
+    DoEvent(@FInput[0], FICount);
+   end;
+end;
+
+procedure TProtocolPsk.EventRxTimeOut(Sender: TAbstractConnectIO);
+begin
+  Sender.DoEvent(nil, -1);
+end;
+
+procedure TProtocolPsk.TxChar(Sender: TAbstractConnectIO; Data: Pointer; var Cnt: Integer; maxsend: Integer);
+begin
+end;
+{$ENDREGION  TProtocolPsk}
+
+{ TRamReadInfo }
+{$REGION  'TRamReadInfo - все процедуры и функции'}
+{constructor TRamReadInfo.Create(AAbstractDevice: TAbstractDevice);
+begin
+  inherited Create();
+  FAbstractDevice := AAbstractDevice;
+  FAbstractDevice.GetRamDir;
+end;
+
+function TRamReadInfo.FileInfo: string;
+begin
+  Result := FAbstractDevice.GetRamDir + 'ram.xml';
+end;
+
+function TRamReadInfo.Get: IRAMInfo;
+ var
+  GDoc: IXMLDocument;
+begin
+  if not FileExists(FileInfo) then raise ERamReadInfoException.CreateFmt('Файл %s отсутствует',[FileInfo]);
+  GDoc := NewXDocument();
+  Gdoc.LoadFromFile(FileInfo);
+  if not GDoc.DocumentElement.HasAttribute(AT_START_TIME) or not GDoc.DocumentElement.HasAttribute(AT_DELAY_TIME) then
+    raise ERamReadInfoException.CreateFmt('Файл %s с ошибкой нет %s или %s', [FileInfo, AT_START_TIME, AT_DELAY_TIME]);
+  Result := Gdoc.DocumentElement;
+end;
+
+function TRamReadInfo.New(TimeSart: TDateTime; TimeDelay: TTime): IRAMInfo;
+ var
+  GDoc: IXMLDocument;
+begin
+  GDoc := NewXDocument();
+  GDoc.DocumentElement := GDoc.AddChild('RAM_READ_INFO');
+  GDoc.DocumentElement.Attributes[AT_START_TIME] := TimeSart;
+  GDoc.DocumentElement.Attributes[AT_DELAY_TIME] := MyTimeToStr(TimeDelay);
+  GDoc.SaveToFile(FileInfo);
+  Result := GDoc.DocumentElement;
+end;
+
+function TRamReadInfo.Update(Info: IXMLInfo; UpdateTimeSyncEvent: TRamEvent): IRAMInfo;
+begin
+  Result := Get();
+  if UpdateRun(Result, Info) then Result.OwnerDocument.SaveToFile(FileInfo);
+end;
+
+function TRamReadInfo.UpdateRun(r: IRAMInfo; inf: IXMLInfo): Boolean;
+ var
+  i: Integer;
+begin
+  Result := False;
+  for i := 0 to inf.ChildNodes.Count-1 do if not Assigned(r.ChildNodes.FindNode(inf.ChildNodes[i].NodeName)) then
+   begin
+    r.ChildNodes.Add(inf.ChildNodes[i]);
+    Result := True;
+   end;
+end;      }
+{$ENDREGION  TRamReadInfo}
+
+{$REGION  'TReadRam - все процедуры и функции'}
+
+{ TReadRam.TReadRamThtead }
+
+procedure TReadRam.TReadRamThtead.DoSync;
+begin
+  Owner.DoSetData(ptr);
+end;
+
+procedure TReadRam.TReadRamThtead.Execute;
+ var
+  t: Cardinal;
+  procedure ResetT;
+//   var
+//    pdb: IProjectDBData;
+  begin
+   t := GetTickCount;
+//   if Supports(GlobalCore, IProjectDBData, pdb) then
+//    begin
+//     pdb.CommitTrans;
+//     pdb.BeginTrans;
+//    end;
+   with Owner do if FFlagEndRead and Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
+  end;
+begin
+  t := GetTickCount;
+  with Owner do
+   repeat
+    Fevent.WaitFor();
+    Fevent.ResetEvent;
+    try
+     if Terminated then Exit;
+     while Fifo.pop(ptr, FRecSize) do
+      try
+//        Synchronize(DoSync);
+       if Terminated or FFlagTerminate then Break;
+       DoSetData(ptr);
+       if FFlagEndRead and ((GetTickCount - t) > 1000) then
+       Synchronize(procedure
+       begin
+         t := GetTickCount;
+         if FFlagEndRead and Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
+       end);
+      except
+       on E: Exception do TDebug.DoException(E, False);
+      end;
+     if FFlagEndRead then
+      begin
+       FFlagEndRead := False;
+       Synchronize(EndExecute);
+      end;
+    except
+     on E: Exception do TDebug.DoException(E, False);
+    end;
+   until Terminated;
+end;
+
+{ TReadRam }
+
+constructor TReadRam.Create(AAbstractDevice: TAbstractDevice);
+begin
+  inherited Create(AAbstractDevice as IInterface);
+//  Fifo := TFifoBuffer<Byte>.Create(BUFF_LEN);
+  Fifo := TQueueBuffer<Byte>.Create;
+  FAbstractDevice := AAbstractDevice;
+  FFlagReadToFF := True;
+  FFastSpeed := True;
+  FFromTime := 0;
+  FToTime:= 0;
+  FFlagTerminate := True;
+  FEvent := TEvent.Create;
+  FReadRamThtead := TReadRamThtead.Create;
+  FReadRamThtead.Owner := Self;
+end;
+
+destructor TReadRam.Destroy;
+begin
+  FReadRamThtead.Terminate;
+  FEvent.SetEvent;
+  FReadRamThtead.WaitFor;
+  FReadRamThtead.Destroy;
+  FEvent.Destroy;
+  Fifo.Free;
+  inherited;
+end;
+
+procedure TReadRam.DoSetData(pData: Pointer);
+ var
+  ip: IProjectData;
+  nkadr: Integer;
+begin
+  TPars.SetData(FRamXml, pData);
+  FAbstractDevice.FExeMetr.Execute(T_RAM, FAdr);
+
+//  FRamXml.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'RamData.xml');
+  inc(FcntKadr);
+  nkadr := FFromKadr + FcntKadr;
+  if Supports(GlobalCore, IProjectData, ip) then ip.SaveRamData(FAbstractDevice as IDevice, FAdr, FRamXml,
+  FRecSize*nkadr, nkadr , FFromTime + 2.097152 * nkadr, FModulID);
+end;
+
+procedure TReadRam.EndExecute;
+// var
+//  pdb: IProjectDBData;
+begin
+//  if Supports(GlobalCore, IProjectDBData, pdb) then pdb.CommitTrans;
+  with FAbstractDevice do
+   try
+    S_Status := FOldStatus;
+    ConnectUnlock;
+    if IsOldClose then ConnectClose;
+   finally
+    if Assigned(FReadRamEvent) then FReadRamEvent(FEndReason, FAdr, ProcToEnd);
+   end;
+end;
+
+procedure TReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
+// var
+//  pdb: IProjectDBData;
+begin
+//  if not Supports(GlobalCore, IProjectDBData, pdb) then raise EReadRamException.Create('Error IProjectDBData not supports');
+  with FAbstractDevice do
+   begin
+    CheckStatus([dsPartReady, dsReady]);
+    CheckConnect;
+    CheckLocked;
+
+    FModulID := ModulID;
+
+    FRamXml := FindRam(FMetaDataInfo.Info, Adr);
+
+    if not Assigned(FRamXml) or not FRamXml.HasAttribute(AT_SIZE) then raise EReadRamException.CreateFmt(RS_NoRamMeta, [FAdr]);
+    FRecSize := FRamXml.Attributes[AT_SIZE];
+    if FRecSize = 0 then raise EReadRamException.CreateFmt(RS_NoRamMetaRecSize, [FAdr]);
+
+    if not FRamXml.HasAttribute(AT_RAMSIZE) then FRamSize := MAX_RAM
+//     else raise EReadRamException.Create(RS_NoRamSize)
+    else FRamSize := FRamXml.Attributes[AT_RAMSIZE] * 1024 * 1024;
+
+//  if not FRamXml.ParentNode.HasAttribute(AT_KOEF_TIME) then FKoefTime := 1
+//   else raise EReadRamException.CreateFmt(RS_NoRamMetaK, [FAdr])
+//  else FKoefTime := FRamXml.ParentNode.Attributes[AT_KOEF_TIME];
+
+//  if FKoefTime <= 0 then raise EReadRamException.CreateFmt(RS_NoRamMetaBadK, [FAdr, FKoefTime]);
+
+//  if (Length(RAMAddrs) < 1) then raise EReadRamException.Create(RS_NoAdr);
+  { TODO : Get Ram Info from DB }
+//  FRAMInfo := FAbstractDevice.GetRamReadInfo.Get();
+//  if (FRAMInfo.ChildNodes.Count <= 0) or not FRAMInfo.ChildNodes[0].HasAttribute(AT_ADDR) then raise EReadRamException.Create(RS_NoXml);
+
+//  if not FRAMInfo.HasAttribute(AT_START_TIME) or
+//     not FRAMInfo.HasAttribute(AT_DELAY_TIME) then raise EReadRamException.CreateFmt(RS_NoRamMetaTime, [FAdr]);
+//  FStartDate := StrToDateTime(FRAMInfo.Attributes[AT_START_TIME]);
+//  FDelayTime := MyStrToTime(FRAMInfo.Attributes[AT_DELAY_TIME]);
+
+    FFlagTerminate := False;
+    FReadRamEvent := evInfoRead;
+    FAdr := Adr;
+    FFromTime := FromTime;
+    FToTime := ToTime;
+    FFlagReadToFF := ReadToFF;
+    FFastSpeed := FastSpeed;
+    FFromAdr := 0;
+    FToAdr := FRamSize;
+
+    FFromKadr := FFromAdr div FRecSize;//, FcntKadr: Integer;
+    FcntKadr  := 0;
+
+
+
+//    pdb.SimpleSQL('UPDATE Modul SET FromAdr=:p1, FromKadr=:p2, FromTime=:p3 WHERE id = :p4', [FFromAdr, FFromKadr, FFromTime, FModulID]);
+//
+//
+//                                     'FromAdr INT,'+
+//                                      'ToAdr INT,'+
+//                                      'FromKadr INT,'+
+//                                      'ToKadr INT,'+
+//                                      'FromTime TIMESTAMP,'+
+//                                      'ToTime TIMESTAMP,'+
+
+
+    Fifo.Reset;
+
+    FOldStatus := S_Status;
+    try
+     S_Status := dsReadRam;
+     ConnectLock;
+     IsOldClose := not ConnectOpen();
+    except
+     EndExecute;
+     raise;
+    end;
+   end;
+//  pdb.BeginTrans;
+end;
+
+{procedure TReadRam.CheckAndInitByAdr(Adr: Integer; MaxRam: Integer = 0; DefK: Double = 0; FromToAval: Boolean = True);
+begin
+  // проверка xml информации по чтению памяти
+  FAdr := Adr;
+
+  FRamXml := FindRam(FRAMInfo, FAdr);
+
+  if not Assigned(FRamXml) or not FRamXml.HasAttribute(AT_SIZE) then raise EReadRamException.CreateFmt(RS_NoRamMeta, [FAdr]);
+  FRecSize := FRamXml.Attributes[AT_SIZE];
+  if FRecSize = 0 then raise EReadRamException.CreateFmt(RS_NoRamMetaRecSize, [FAdr]);
+
+  if not FRamXml.HasAttribute(AT_RAMSIZE) then
+   if MaxRam > 0 then FRamSize := MaxRam
+   else raise EReadRamException.Create(RS_NoRamSize)
+  else FRamSize := FRamXml.Attributes[AT_RAMSIZE] * 1024 * 1024;
+
+  if not FRamXml.ParentNode.HasAttribute(AT_KOEF_TIME) then
+   if DefK > 0 then FKoefTime := DefK
+   else raise EReadRamException.CreateFmt(RS_NoRamMetaK, [FAdr])
+  else FKoefTime := FRamXml.ParentNode.Attributes[AT_KOEF_TIME];
+
+  if FKoefTime <= 0 then raise EReadRamException.CreateFmt(RS_NoRamMetaBadK, [FAdr, FKoefTime]);
+
+//  FFileRam := FAbstractDevice.GetRamDir + FRamXml.ParentNode.NodeName+'.bin';
+
+  // конвертируем время в адреса памяти RAM
+  if (FFromTime = 0) and (FToTime = 0) then
+   begin
+    FFromAdr := 0;
+    FToAdr := FRamSize;
+   end
+  else if FromToAval then
+   begin
+    // адреса в памяти НЕ НОМЕР ЗАПИСИ !!!
+    FFromAdr := TimeToAdr(FFromTime, FKoefTime, FRecSize, FStartDate, FDelayTime);
+    FToAdr := TimeToAdr(FToTime, FKoefTime, FRecSize, FStartDate, FDelayTime);
+    if ((FFromAdr<0) and (FToAdr <= 0)) or ((FFromAdr >= FRamSize) and (FToAdr >= FRamSize)) then
+       raise EReadRamException.CreateFmt(RS_BadFromToTime,
+       [FAdr, DateTimeToStr(FStartDate), MyTimeToStr(FDelayTime), DateTimeToStr(FFromTime), FFromAdr, DateTimeToStr(FToTime), FToAdr]);
+    if FToAdr >= FRamSize then FToAdr := FRamSize-1;
+    if FFromAdr < 0 then FFromAdr := 0;    
+   end
+  else raise EReadRamException.CreateFmt(RS_NotAvalFromToTime, [FAdr]);
+
+  FFromTimeAdr := AdrToTime(FFromAdr, FKoefTime, FRecSize, FStartDate, FDelayTime);
+  FToTimeAdr := AdrToTime(FToAdr, FKoefTime, FRecSize, FStartDate, FDelayTime);
+end;  }
+
+
+function TReadRam.ProcToEnd: Double;
+begin
+  Result := max((FToAdr - FCurAdr)/(FToAdr - FFromAdr)*100, Fifo.Count/10);
+  if Result > 100 then Result := 100;
+end;
+
+function TReadRam.TestFF(P: PByte; n: Integer): Boolean;
+ var
+  i: Integer;
+begin
+  Result := FFlagReadToFF;
+  if not Result then Exit;
+  for i := 0 to n-1 do if P[i] <> $FF then Exit(False);
+end;
+
+procedure TReadRam.Terminate(Res: TResultEvent);
+begin
+  FFlagTerminate := True;
+  FFlagEndRead := True;
+  FEndReason := eirTerminate;
+  Fevent.SetEvent;
+  if Assigned(Res) then Res(True);
+end;
+
+{$ENDREGION  TAbstractReadRam}
+
+{ TRAMEnumerator }
+{$REGION  'TRAMEnumerator - все процедуры и функции'}
+{constructor TRAMEnumerator.Create(adr: Integer; ARAMInfo: IRAMInfo);
+begin
+  inherited Create;
+  Fadr := adr;
+  FRAMInfo := ARAMInfo;
+  Froot := FindRam(ARAMInfo, Fadr);
+  if not Assigned(Froot) then
+     raise ERAMEnumeratorException.Createfmt(RS_NoRamInfo,[FAdr]);
+  if not (Froot.HasAttribute(AT_TO_TIME) and Froot.HasAttribute(AT_FROM_TIME) and Froot.HasAttribute(AT_FROM_ADR) and Froot.HasAttribute(AT_TO_ADR) and Froot.HasAttribute(AT_RAM_FILE)) then
+     raise ERAMEnumeratorException.CreateFmt(RS_NoRamAttr, [FAdr, AT_TO_TIME, AT_FROM_TIME, AT_FROM_ADR, AT_TO_ADR, AT_RAM_FILE]);
+  if not FileExists(Froot.Attributes[AT_RAM_FILE]) then
+     raise ERAMEnumeratorException.CreateFmt(RS_NoRamFile, [FAdr, Froot.Attributes[AT_RAM_FILE]]);
+  FStream := TFileStream.Create(Froot.Attributes[AT_RAM_FILE], fmOpenRead or fmShareDenyWrite);
+  FStream.Position := 0;
+end;
+
+function TRAMEnumerator.Current: IRAMData;
+begin
+  if (FAdr < 16) or (FAdr = 101) then TPars.SetData(Froot, @Fbuf[0])
+  else TPars.SetPSK(Froot, @Fbuf[0]);
+  Result := Froot;
+end;
+
+destructor TRAMEnumerator.Destroy;
+begin
+  if Assigned(FStream) then FreeAndNil(FStream);
+  inherited;
+end;
+
+function TRAMEnumerator.GetRamReadInfo: IRAMInfo;
+begin
+  Result := FRoot;//FindRam(FRAMInfo, Fadr);
+end;
+
+function TRAMEnumerator.CountKadr: Integer;
+begin
+  Result := FStream.Size div Froot.Attributes[AT_SIZE];
+end;
+
+function TRAMEnumerator.GotoKadr(Kadr: Integer): Boolean;
+begin
+  FStream.Position := Froot.Attributes[AT_SIZE] * Kadr;
+  Result := FStream.Read(Fbuf[0], Froot.Attributes[AT_SIZE]) = Froot.Attributes[AT_SIZE];
+end;
+
+function TRAMEnumerator.MoveNext: Boolean;
+begin
+  Result := FStream.Read(Fbuf[0], Froot.Attributes[AT_SIZE]) = Froot.Attributes[AT_SIZE];
+end;     }
+ {$ENDREGION  TRAMEnumerator}
+
+{ TCycle }
+{$REGION  'TCycle TCycleEx - все процедуры и функции'}
+constructor TCycle.Create(const Controller: IInterface);
+begin
+  inherited Create(Controller);
+  FTimer := TTimer.Create(nil);
+  FTimer.OnTimer := OnTimer;
+  FTimer.Enabled := False;
+  TDevice(Controller).FCyclePeriod := 2097;
+end;
+
+destructor TCycle.Destroy;
+begin
+  FTimer.OnTimer := nil;
+  FTimer.Free;
+  inherited;
+end;
+
+procedure TCycle.DoCycle;
+begin
+  (Controller as IDataDevice).ReadWork(nil, FStdOnly);
+end;
+
+function TCycle.GetCycle: Boolean;
+begin
+  Result := FTimer.Enabled;
+end;
+
+function TCycle.GetPeriod: Integer;
+begin
+  Result := TDevice(Controller).CyclePeriod;
+end;
+
+procedure TCycle.OnTimer(Sender: TObject);
+begin
+  if FlagNeedStop then
+   begin
+    FTimer.Enabled := False;
+    TDevice(Controller).ConnectClose;
+   end
+  else DoCycle;
+end;
+
+procedure TCycle.SetCycle(const Value: Boolean);
+ var
+  IsOldClose: Boolean;
+begin
+  IsOldClose := False;
+  if Value = FTimer.Enabled then Exit;
+  with TDevice(Controller) do
+   if Value then
+    begin
+     CheckStatus([dsPartReady, dsReady]);
+     FOldStatus := S_Status;
+     CheckConnect;
+     CheckLocked;
+     try
+      S_Status := dsData;
+      ConnectLock;
+      FTimer.Interval := TDevice(Controller).CyclePeriod;
+      FlagNeedStop := False;
+      IsOldClose := not ConnectOpen();
+      DoCycle;
+      FTimer.Enabled := True;
+     except
+      FTimer.Enabled := False;
+      S_Status := FOldStatus;
+      ConnectUnlock;
+      if IsOldClose then ConnectClose;
+      raise;
+     end;
+    end
+   else
+    begin
+     FlagNeedStop := True;
+     S_Status := FOldStatus;
+     ConnectUnlock;
+     FTimer.Interval := 1;
+    end;
+end;
+
+procedure TCycle.SetPeriod(const Value: Integer);
+begin
+  FTimer.Interval := Value;
+  TDevice(Controller).CyclePeriod := Value;
+end;
+
+{ TCycleEx }
+
+function TCycleEx.GetStdOnly: Boolean;
+begin
+  Result := FStdOnly
+end;
+
+procedure TCycleEx.SetStdOnly(const Value: Boolean);
+begin
+  FStdOnly := Value;
+end;
+{$ENDREGION}
+
+{ TAbstractActionsDev }
+
+{constructor TAbstractActionsDev.Create(const Controller: IInterface);
+begin
+  inherited Create(Controller);
+  FBind := TBind.Create(Self);
+end;}
+
+{ TAbstractNetConnectIO }
+
+class function TAbstractNetConnectIO.Enum: TArray<string>;
+ var
+  c: IConnectIO;
+begin
+  for c in (GlobalCore as IConnectIOEnum) do if (c as IManagItem).GetComponent.ClassName = ClassName then CArray.Add<string>(Result, c.ConnectInfo);
+end;
+
+class function TAbstractNetConnectIO.ExtractHost(const Info: string): string;
+ var
+  a: TArray<string>;
+begin
+  Result := '92.168.43.5';
+  a := Info.Split([':']);
+  if Length(a)=0 then Exit;
+  Result := a[0];
+end;
+
+class function TAbstractNetConnectIO.ExtractPort(const Info: string): Word;
+ var
+  a: TArray<string>;
+begin
+  Result := 5000;
+  a := Info.Split([':']);
+  if Length(a)=0 then Exit;
+  if Length(a) >= 2 then Result := a[1].ToInteger()
+end;
+
+initialization
+  RegisterClass(TComConnectIO);
+  TRegister.AddType<TComConnectIO, IConnectIO>.LiveTime(ltSingletonNamed);
+finalization
+  GContainer.RemoveModel<TComConnectIO>;
+end.

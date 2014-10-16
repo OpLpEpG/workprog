@@ -1,0 +1,11 @@
+.topic 10
+
+This is a text pop-up window for Text Box Control Help.
+
+.topic BTN_DELAY
+
+This is a text pop-up window for Button Control Help.
+
+.topic 30
+
+This is a text pop-up window for Button Control Help.

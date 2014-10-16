@@ -1,0 +1,83 @@
+object FormUAKI: TFormUAKI
+  Left = 0
+  Top = 0
+  Caption = #1059#1040#1050'-'#1057#1048'-'#1040#1047#1042'-'#1058
+  ClientHeight = 121
+  ClientWidth = 483
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 91
+    Width = 483
+    Height = 30
+    Align = alBottom
+    BevelOuter = bvLowered
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 96
+      Top = 8
+      Width = 74
+      Height = 13
+      Caption = #1042#1080#1079#1080#1088' '#1087#1088#1080#1073#1086#1088#1072
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object btZero: TButton
+      Left = 239
+      Top = 4
+      Width = 66
+      Height = 25
+      Caption = #1054#1073#1085#1091#1083#1080#1090#1100
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      OnClick = btZeroClick
+    end
+    object Button1: TButton
+      Left = 5
+      Top = 4
+      Width = 75
+      Height = 25
+      Caption = #1057#1090#1086#1087
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 1
+      OnClick = Button1Click
+    end
+    object edDvis: TEdit
+      Left = 176
+      Top = 6
+      Width = 57
+      Height = 21
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 2
+      Text = '000.000'
+      OnKeyPress = edDvisKeyPress
+    end
+  end
+end

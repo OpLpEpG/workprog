@@ -1,0 +1,830 @@
+unit DevBur;
+
+interface
+
+uses
+  Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc,
+  Generics.Collections,  Vcl.Forms, Vcl.Dialogs,Vcl.Controls, Actns,
+  DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl;
+
+
+ type
+  EReadRamBurException = class(EReadRamException);
+    EAsyncReadRamBurException = class(EAsyncReadRamException);
+  TBurReadRam = class(TReadRam)
+  public
+   const
+    MAX_RAM = $420000;
+    MAX_BAD = 70;
+    RLEN = 3000;// $580-$36;// $4000;
+    WAIT_RLEN = 2000;
+  private
+    type TResRef = reference to procedure;
+    procedure Read(RamPtr: Integer; len: Word;  ev: TReceiveDataRef; WaitTime: Integer = -1);
+  protected
+    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer); override;
+  end;
+
+//  ERamReadInfoBurException = class(ERamReadInfoException);
+//    EAsyncRamReadInfoBurException = class(EAsyncRamReadInfoException);
+//  TRamReadInfoBur = class(TRamReadInfo)
+//  protected
+//    procedure Get_Tstart_Tdelay(RAMInfo: IRAMInfo; var tstart: TDateTime; var tdelay: TDateTime);
+//    function Update(Info: IXMLInfo; UpdateTimeSyncEvent: TRamEvent = nil): IRAMInfo; override;
+//  end;
+
+  TNotifyInfoEventRef = reference to procedure (Exception: Integer; Adr: Integer; Data: PByte; n: Integer);
+  TWorkEventRef = reference to procedure (DevAdr: Integer; Work: IXMLInfo);
+
+  EBurException = class(EDeviceException);
+   EAsyncBurException = class(EAsyncDeviceException);
+
+  TDeviceBur = class(TAbstractDevice, IDevice, ILowLevelDeviceIO, IDataDevice,
+                     IDelayDevice, ITurbo, ICycle, ICycleEx, IReadRamDevice, IEepromDevice)
+  private
+    FTmpSender: IAction;
+    FCycle: TCycleEx;
+    function GetSerialQe: TProtocolBur;
+    procedure InfoEvent(Res: TInfoEventRes);
+    procedure ReadEepromAdrRef(root: IXMLNode; adr: Byte; ev: TEepromEventRef);
+//    procedure InfoEvent2(Res: TInfoEventRes);
+  protected
+    // ILowLevelDeviceIO
+    procedure SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1); override;
+    // ITurbo
+    procedure Turbo;
+
+    procedure ReadInfoAdr(adr: Byte; ev: TNotifyInfoEventRef);
+    procedure ReadWorkAdrRef(root: IXMLNode; adr: Byte; StdOnly: Boolean; ev: TWorkEventRef);
+
+//    function GetActionsDevClass: TAbstractActionsDevClass; override;
+//    function GetReadRamClass: TReadRamClass; override;
+    function CreateReadRam: TReadRam; override;
+    property ReadRam: TReadRam read PropertyReadRam implements IReadRamDevice;
+  public
+    constructor Create(); override;
+    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); override;
+    destructor Destroy; override;
+    procedure InitMetaData(ev: TInfoEvent);
+    procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false);
+    procedure ReadEeprom(ev: TEepromEventRef);
+    procedure WriteEeprom(Addr: Integer; ev: TResultEventRef);
+    procedure SetDelay(StartTime: TDateTime; WorkTime: TTime; ResultEvent: TSetDelayEvent);
+    procedure CheckConnect(); override;
+    procedure ReadWorkRef(Info: IXMLNode; ev: TWorkEventRef; StdOnly: Boolean);
+//    function GetReadDeviceRam(): IReadRamDevice; override;
+//    function GetRamReadInfo(): IRamReadInfo; override;
+    property SerialQe: TProtocolBur read GetSerialQe;
+    property Cycle: TCycleEx read FCycle implements  ICycle, ICycleEx;
+// actions
+    //Capt, Categ: string; AImageIndex: Integer; APaths: string; AHint: string; AAutoCheck AChecked AGroupIndex AEnabled
+    [DynamicAction('<I> Задержка...', '<I>', 142, '0:Управление|3.<I>:-1', 'Окно постановки на задержку')]
+    procedure DoDelay(Sender: IAction);
+    [DynamicAction('<I> Коррекция часов...', '<I>', Dialog_SyncDelay_ICON, '0:Управление|3.<I>', 'Окно коррекции часов модулей. Вызывается перед чтением памяти,в режиме информации.')]
+    procedure DoSync(Sender: IAction);
+    [DynamicAction('<I> Информация', '<I>', 52, '0:Управление|3.<I>;2:', 'Выход/Вход в режим чтения информации')]
+    procedure DoData(Sender: IAction);
+//    procedure DoInfo(Sender: IAction);
+    [DynamicAction('(только время)', '<I>', 69, '0:Управление|3.<I>.Дополнительно|0',
+    'Пониженное энергопотребление прибора режимне информации, получение только времени и состояния прибора')]
+    procedure DoStd(Sender: IAction);
+    [DynamicAction('Выключить прибор', '<I>', 71, '0:Управление|3.<I>.Дополнительно|0', 'Перевести приборы в спящий режим')]
+    procedure DoIdle(Sender: IAction);
+  published
+    property CyclePeriod;
+  end;
+
+implementation
+
+uses tools, Parser;
+
+resourcestring
+  RS_ErrReadData = 'Ошибка чтения данных устройства с адресом: %d SZ=%d[%d] CA=0x%x';
+  RS_ErrNoInfo = 'Не инициализирована информация об устройствах';
+
+type
+  TStdRead = packed record
+    CmdAdr: Byte;
+    ln: Byte;
+    constructor Create(addr, command, ReadLength: Byte);
+  end;
+  TAdvStdRead = packed record
+    CmdAdr: Byte;
+    ln: Byte;
+    from: Word;
+    constructor Create(addr, command, ReadLength: Byte; ReadFrom: Word);
+  end;
+
+  TEepRead = packed record
+    CmdAdr: Byte;
+    From: Word;
+    len: Byte;
+    constructor Create(addr: Byte; AFrom: Word; ReadLength: Byte);
+  end;
+
+  TEepWrite = packed record
+    CmdAdr: Byte;
+    From: Word;
+    Data: array[0..255] of Byte;
+    constructor Create(addr: Byte; AFrom: Word; const AData: array of byte);
+  end;
+
+{ TEepWrite }
+
+constructor TEepWrite.Create(addr: Byte; AFrom: Word; const AData: array of byte);
+begin
+  CmdAdr := ToAdrCmd(addr, CMD_WRITE_EE);
+  From := AFrom;
+  if Length(AData) > Length(Data) then EBurException.Create('длинна данных EEPROM больще 255');
+  Move(AData, Data, Length(AData));
+end;
+
+{ TEepRead }
+
+constructor TEepRead.Create(addr: Byte; AFrom: Word; ReadLength: Byte);
+begin
+  CmdAdr := ToAdrCmd(addr, CMD_READ_EE);
+  From := AFrom;
+  len := ReadLength;
+end;
+
+{ TStdRead }
+
+constructor TStdRead.Create(addr, command, ReadLength: Byte);
+begin
+  CmdAdr := ToAdrCmd(addr, command);
+  ln := ReadLength;
+end;
+
+{ TAdvStdRead }
+
+constructor TAdvStdRead.Create(addr, command, ReadLength: Byte; ReadFrom: Word);
+begin
+  CmdAdr := ToAdrCmd(addr, command);
+  ln := ReadLength;
+  from := ReadFrom;
+end;
+
+
+
+type
+  PRamRead =^TRamRead;
+  TRamRead = packed record
+    CmdAdr: Byte;
+    PH, P6LB2H, BL: Byte;
+    Length: Word;
+    constructor Create(DevAdr: Byte; RmAdr: DWord; len: Word);
+  end;
+
+{ TRamRead }
+
+constructor TRamRead.Create(DevAdr: Byte; RmAdr: DWord; len: Word);
+ var
+  page, base: Word;
+begin
+  CmdAdr := ToAdrCmd(DevAdr, CMD_READ_RAM);
+  page := RmAdr div 528;
+  base := RmAdr mod 528;
+  PH := Byte(page shr 6);
+  BL := Byte(base);
+  P6LB2H := Byte(page shl 2) or Byte(base shr 8);
+  Length := len;
+end;
+
+{$REGION  'TBurReadRam - все процедуры и функции'}
+{ TBurReadRam }
+//Чтение одной секции данных по адресу RamPtr
+procedure TBurReadRam.Read(RamPtr: Integer; len: Word;  ev: TReceiveDataRef; WaitTime: Integer = -1);
+begin
+  if FFlagTerminate then Exit;
+  with TDeviceBur(FAbstractDevice) do
+   try
+    SerialQe.Add(procedure()
+     var
+      a: TRamRead;
+    begin
+      if FFlagTerminate then Exit;
+      a := TRamRead.Create(FAdr, DWord(RamPtr), len);
+      ConnectIO.Send(@a, SizeOf(a), procedure(p: Pointer; n: integer)
+      begin
+        if FFlagTerminate then Exit;
+        if ((len + 1) = n) and (PbyteArray(p)[0] = a.CmdAdr) then ev(@PbyteArray(p)[1], n-1)
+        else ev(nil, -1);
+      end, WaitTime);
+    end);
+   except
+    on E: Exception do
+     begin
+      TDebug.DoException(E, False);
+//      ev(nil, -1);
+     end;
+   end;
+end;
+
+procedure TBurReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
+ var
+  FuncRead: TReceiveDataRef;
+  ErrCnt: Integer;
+  Wait: Integer;
+begin
+  inherited ;//Execute(evInfoRead, Addrs);
+  if FFastSpeed then
+   begin
+    TDeviceBur(FAbstractDevice).Turbo();
+    Sleep(100);
+    Wait := 2000;
+   end
+  else Wait := WAIT_RLEN;
+
+  FCurAdr := FFromAdr;
+  ErrCnt := 0;
+  // функция рекурсии
+  FuncRead := procedure(Data: Pointer; DataSize: integer)
+    procedure WriteStream;
+    begin
+      if DataSize < 0 then Exit;
+      fifo.Push(Data, DataSize);
+      Inc(FCurAdr, DataSize);
+      FEvent.SetEvent;
+    end;
+    procedure NextRead(Status: EnumReadRam);
+    begin
+      WriteStream;
+      if Assigned(FReadRamEvent) then FReadRamEvent(Status, FAdr, ProcToEnd);
+      Read(DWord(FCurAdr), RLEN, FuncRead, wait); //рекурсия
+    end;
+    procedure EndWrite(Reason: EnumReadRam);
+    begin
+      WriteStream();
+      FFlagEndRead := True;
+      FEndReason := Reason;
+      FEvent.SetEvent;
+    end;
+  begin
+    if FFlagTerminate then Exit;
+    if DataSize < 0 then
+     begin
+      Inc(ErrCnt);
+      if ErrCnt > MAX_BAD then EndWrite(eirCantRead)
+      else NextRead(eirReadErrSector);
+     end
+    else
+     begin
+      ErrCnt := 0;
+      if TestFF(@PbyteArray(Data)[DataSize-256], 256) then
+       begin
+        while (DataSize > 0) and (PbyteArray(Data)[DataSize-1] = $FF) do Dec(DataSize);
+        EndWrite(eirEnd);
+       end
+      else if (FCurAdr >= FToAdr) then EndWrite(eirEnd)
+      else NextRead(eirReadOk);
+     end;
+  end;
+  Read(DWord(FCurAdr), RLEN, FuncRead, wait); //начало рекурсии
+end;
+{$ENDREGION  TBurReadRam}
+
+{$REGION  'TDeviceBur - все процедуры и функции'}
+{ TDeviceBur }
+procedure TDeviceBur.CheckConnect;
+begin
+  inherited CheckConnect;
+  if not Assigned(ConnectIO.FProtocol) or not (TAbstractProtocol(ConnectIO.FProtocol) is TProtocolBur) then
+   begin
+    ConnectIO.FProtocol := TProtocolBur.Create;
+   end;
+end;
+
+constructor TDeviceBur.Create;
+begin
+  inherited;
+  FCycle := TCycleEx.Create(Self);
+end;
+
+constructor TDeviceBur.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
+begin
+  inherited;
+  TRegister.AddType<TDeviceBur>.AddInstance(Name, Self as IInterface);
+end;
+
+destructor TDeviceBur.Destroy;
+begin
+  FCycle.Free;
+  inherited;
+end;
+
+procedure TDeviceBur.DoData(Sender: IAction);
+begin
+  if (Self as ICycle).Cycle then
+   begin
+    (Self as ICycle).Cycle := False;
+    Sender.Checked := False;
+   end
+  else if (S_Status in [dsNoInit, dsPartReady]) then
+   begin
+    FTmpSender := Sender;
+    InitMetaData(InfoEvent);
+    FTmpSender.Checked := True;
+   end
+  else
+   begin
+    (Self as ICycle).Cycle := True;
+    Sender.Checked := True;
+   end;
+end;
+
+procedure TDeviceBur.InfoEvent(Res: TInfoEventRes);
+begin
+  FTmpSender.Checked := False;
+  try
+   if Length(Res.ErrAdr) > 0 then raise EAsyncBurException.CreateFmt('Метаданные устройств (%s) не считаны', [TAddressRec(Res.ErrAdr).ToNames]);
+  finally
+   if Length(FAddressArray) > Length(Res.ErrAdr) then
+    begin
+     FTmpSender.Checked := True;
+     (Self as ICycle).Cycle := True;
+    end;
+  end;
+end;
+
+procedure TDeviceBur.DoDelay(Sender: IAction);
+ var
+  d: Idialog;
+begin
+  if RegisterDialog.TryGet<Dialog_SetDeviceDelay>(d) then (d as IDialog<IDelayDevice>).Execute(Self as IDelayDevice);
+//  if Supports(GlobalCore, Idialogs, d) then d.Execute(DIALOG_SetDeviceDelay, Self);
+end;
+
+procedure TDeviceBur.DoIdle(Sender: IAction);
+begin
+  if MessageDlg('Перевести приборы в спящий режим?', mtWarning, [mbYes, mbNo, mbCancel], 0) <> mrYes then Exit;
+  SetDelay(0, 0, nil);
+end;
+
+{procedure TDeviceBur.DoInfo(Sender: IAction);
+begin
+  InitMetaData(InfoEvent2);
+end;
+
+procedure TDeviceBur.InfoEvent2(Res: TInfoEventRes);
+begin
+  if Length(Res.ErrAdr) > 0 then raise EAsyncBurException.CreateFmt('Метаданные устройств (%s) не считаны', [TAddressRec(Res.ErrAdr).ToNames]);
+end;}
+
+//procedure TDeviceBur.DoRam(Sender: IAction);
+// var
+//  d: Idialog;
+//begin
+//  if RegisterDialog.TryGet<Dialog_RamRead>(d) then (d as IDialog<Integer>).Execute(FAddressArray[0]); { TODO : dialog box select modul for read }
+//end;
+
+procedure TDeviceBur.DoStd(Sender: IAction);
+begin
+  Sender.Checked := not Sender.Checked;
+  (Self as ICycleEx).StdOnly := Sender.Checked;
+end;
+
+procedure TDeviceBur.DoSync(Sender: IAction);
+ var
+  d: Idialog;
+begin
+  if RegisterDialog.TryGet<Dialog_SyncDelay>(d) then (d as IDialog<IDevice>).Execute(Self as IDevice);
+end;
+
+//function TDeviceBur.GetActionsDevClass: TAbstractActionsDevClass;
+//begin
+//  Result := TActionsDevBur;
+//end;
+
+function TDeviceBur.CreateReadRam: TReadRam;
+begin
+  Result := TBurReadRam.Create(Self);
+end;
+
+//function TDeviceBur.GetRamReadInfo: IRamReadInfo;
+//begin
+//  Result := TRamReadInfoBur.Create(Self);
+//end;
+
+//function TDeviceBur.GetReadDeviceRam: IReadRamDevice;
+//begin
+//  Result := TBurReadRam.Create(Self);
+//end;
+
+function TDeviceBur.GetSerialQe: TProtocolBur;
+begin
+  Result := TProtocolBur(ConnectIO.FProtocol);
+end;
+
+procedure TDeviceBur.InitMetaData(ev: TInfoEvent);
+ var
+  GDoc: IXMLDocument;
+  a: Byte;
+  cnt: Integer;
+  IsOldClose: Boolean;
+  TmpErr, TmpGood: TAddressArray;
+begin
+  with  FMetaDataInfo do
+  begin
+   if Length(ErrAdr) = 0 then
+    begin
+     try
+      if Assigned(ev) then ev(FMetaDataInfo);
+     finally
+      Notify('S_MetaDataInfo');
+     end;
+     Exit;
+    end;
+
+   CheckStatus([dsNoInit, dsPartReady, dsReady]);
+   CheckConnect;
+   IsOldClose := not ConnectOpen();
+   CheckLocked;
+
+   if not Assigned(FMetaDataInfo.Info) then
+    begin
+     GDoc := NewXDocument();
+     FMetaDataInfo.Info := GDoc.DocumentElement;
+     FMetaDataInfo.Info := GDoc.AddChild('DEVICE');
+    end;
+
+   SetLength(TmpErr, 0);
+   SetLength(TmpGood, 0);
+   cnt := 0;
+   for a in ErrAdr do ReadInfoAdr(a, procedure (Exc: Integer; Adr: Integer; Data: PByte; n: Integer)
+      var
+       i: Integer;
+       ip: IProjectData;
+    begin
+      if Exc = 0 then
+       begin
+        TPars.SetInfo(FMetaDataInfo.Info, Data, n); // parse all data for device
+
+//        FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'GK.xml');
+
+        CArray.Add<Integer>(TmpGood,  adr);
+       end
+      else CArray.Add<Integer>(TmpErr,  adr);
+      Inc(cnt);
+      if (cnt >= Length(ErrAdr)) then
+       try
+        ErrAdr := TmpErr;
+
+        if Length(TmpErr) = 0 then S_Status := dsReady
+        else if Length(TmpErr) < Length(FAddressArray) then S_Status := dsPartReady
+        else S_Status := dsNoInit;
+
+        if IsOldClose then connectClose;
+
+        TPars.SetMetr(FMetaDataInfo.Info, FExeMetr, True);
+
+        if Supports(GlobalCore, IProjectData, ip) then
+          for i in TmpGood do
+            ip.SetMetaData(Self as IDevice, i, FindDev(FMetaDataInfo.Info, i));
+
+       // FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'InclTst.xml');
+
+       finally
+        try
+         if Assigned(ev) then ev(FMetaDataInfo);
+        finally
+         Notify('S_MetaDataInfo');
+        end;
+       end;
+      // raise EComException.Create('TEST');
+      //Integer(Pointer(nil)^) := 0;
+    end);
+  end;
+end;
+
+procedure TDeviceBur.Turbo;
+begin
+  with SerialQe, ConnectIO do
+   begin
+    Add(procedure()
+     var
+      d: byte;
+    begin
+      d := $FD;
+      Send(@D, Sizeof(D), nil, 300);
+    end);
+   end;
+end;
+
+procedure TDeviceBur.ReadInfoAdr(adr: Byte; ev: TNotifyInfoEventRef);
+type
+  PInfoDataHeader=^TInfoDataHeader;
+  TInfoDataHeader=packed record
+   CmdAdr: Byte;
+   varType: Byte;
+   Length: Word;
+  end;
+begin
+  with SerialQe, ConnectIO do
+   begin
+     Add(procedure()
+       var
+        D1: TStdRead;
+      begin
+        D1 := TStdRead.Create(adr, CMD_INFO, SizeOf(TInfoDataHeader)-1); // SizeOf(TInfoDataHeader)-1 так как в TInfoDataHeader присутствует первый байт адреса-команды
+        Send(@D1, Sizeof(D1), procedure(p1: Pointer; n1: integer)
+           var
+            savelen: Word;
+            from: Word;
+            recur: TReceiveDataRef;
+            Data: TArray<Byte>;
+            bads: Integer;
+         begin
+           if (n1 = SizeOf(TInfoDataHeader)) and (PInfoDataHeader(p1).CmdAdr = d1.CmdAdr) then
+            begin
+             savelen := PInfoDataHeader(p1).Length;
+             from := 0;
+             bads := 0;
+             SetLength(Data, savelen + 1);
+             Data[0] := d1.CmdAdr;
+             recur := procedure(pr: Pointer; nr: integer)
+             begin
+               Add(procedure()
+                 var
+                  D: TAdvStdRead;
+                  pb: PByteArray;
+                begin
+                  pb := pr;
+                  if (nr > 1) and (pb[0] = d1.CmdAdr) then
+                   begin
+                    move(pb[1], Data[from+1], nr-1);
+                    Inc(from, nr-1);
+                    if from >= savelen then
+                     begin
+                      Tdebug.Log(from.ToString + '  ' + savelen.ToString());
+
+                      ev(0, adr, @Data[0], savelen+1);
+                      Exit;
+                     end;
+                   end
+                  else
+                   begin
+                    inc(bads);
+                    if bads > 7 then ev(-1, adr, pr, nr);
+                   end;
+                  if savelen-from > 252 then D := TAdvStdRead.Create(adr, CMD_INFO, 252, from)
+                  else D := TAdvStdRead.Create(adr, CMD_INFO, savelen-from, from);
+                  Send(@D, Sizeof(D), recur);
+                end)
+             end;
+             recur(nil, -1);
+             //if savelen > 252 then raise EAsyncBurException.CreateFmt('Поддерживается длина метаданных меньше 252 текущая: %d', [savelen]);
+            end
+           else ev(-1, adr, p1, n1);
+         end);
+      end);
+   end;
+end;
+
+procedure TDeviceBur.WriteEeprom(Addr: Integer; ev: TResultEventRef);
+ var
+  e: IXMLNode;
+begin
+  CheckConnect;
+  ConnectOpen;
+  e := FindEeprom(FMetaDataInfo.Info, Addr);
+  if not Assigned(e) then raise EBurException.CreateFmt('Метаданных EEPROM устройства с адресом %d нет', [Addr]);
+  with SerialQe, ConnectIO do
+   begin
+     Add(procedure()
+       var
+        a: TPars.TOutArray;
+        D: TEepWrite;
+      begin
+        TPars.GetData(e, a);
+        D := TEepWrite.Create(Addr, 0, a);
+        Send(@D, Length(a)+3, procedure(p: Pointer; n: integer)
+        begin;
+          if Assigned(ev) then ev(n = 1);
+        end, 2000);
+      end);
+   end;
+end;
+
+procedure TDeviceBur.ReadEeprom(ev: TEepromEventRef);
+begin
+  CheckConnect;
+  ConnectOpen;
+  if not Assigned(FMetaDataInfo.Info) then raise EBurException.Create(RS_ErrNoInfo);
+  FindAllEeprom(FMetaDataInfo.Info, procedure(wrk: IXMLNode; Adr: Byte; const name: string)
+  begin
+    ReadEepromAdrRef(wrk, adr, ev);
+  end);
+end;
+
+procedure TDeviceBur.ReadWork(ev: TWorkEvent; StdOnly: Boolean);
+ var
+  ip: IProjectData;
+begin
+  CheckConnect;
+  ConnectOpen;
+  ReadWorkRef(FMetaDataInfo.Info, procedure (DevAdr: Integer; Work: IXMLInfo)
+  begin
+    FWorkEventInfo.DevAdr := DevAdr;
+    FWorkEventInfo.Work := Work;
+    try
+     FExeMetr.Execute(T_WRK, DevAdr);
+
+//     FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'INCL.xml');
+
+     if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, DevAdr, Work, StdOnly);
+    finally
+     if Assigned(ev) then ev(FWorkEventInfo);
+     Notify('S_WorkEventInfo');
+    end;
+  end, StdOnly);
+end;
+
+procedure TDeviceBur.ReadWorkRef(Info: IXMLNode; ev: TWorkEventRef; StdOnly: Boolean);
+begin
+  if not Assigned(Info) then raise EBurException.Create(RS_ErrNoInfo);
+  FindAllWorks(Info, procedure(wrk: IXMLNode; Adr: Byte; const name: string)
+  begin
+    ReadWorkAdrRef(wrk, adr, StdOnly, ev);
+  end);
+end;
+
+procedure TDeviceBur.ReadEepromAdrRef(root: IXMLNode; adr: Byte; ev: TEepromEventRef);
+ var
+  siz: Integer;
+begin
+  siz := root.Attributes[AT_SIZE];
+  with SerialQe, ConnectIO do
+   begin
+     Add(procedure()
+       var
+        D: TEepRead;
+      begin
+        D := TEepRead.Create(adr, 0, siz);
+        Send(@D, Sizeof(D), procedure(p: Pointer; n: integer)
+        begin
+          if (n > 0) and (n-1 = siz) and (PByte(p)^ = d.CmdAdr) then
+           begin
+            inc(PByte(p));
+            TPars.SetData(root, p);
+//            FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'GK.xml');
+            FeepromEventInfo.DevAdr := adr;
+            FeepromEventInfo.eep := root;
+
+            if Assigned(ev) then ev(FeepromEventInfo);
+            Notify('S_EepromEventInfo');
+           end
+           else if n<=0 then raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, d.CmdAdr])
+           else  raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, PByte(p)^]);
+        end);
+      end);
+   end;
+end;
+
+
+procedure TDeviceBur.ReadWorkAdrRef(root: IXMLNode; adr: Byte; StdOnly: Boolean; ev: TWorkEventRef);
+ var
+  siz: Integer;
+begin
+  if StdOnly then siz := SizeOf(LongWord) + SizeOf(Byte)
+  else siz := root.Attributes[AT_SIZE];
+  with SerialQe, ConnectIO do
+   begin
+     Add(procedure()
+       var
+        D: TStdRead;
+      begin
+        D := TStdRead.Create(adr, CMD_WORK, siz);
+        Send(@D, Sizeof(D), procedure(p: Pointer; n: integer)
+        begin
+          if (n > 0) and (n-1 = siz) and (PByte(p)^ = d.CmdAdr) then
+           begin
+            inc(PByte(p));
+            if StdOnly then TPars.SetStd(root, p)
+            else TPars.SetData(root, p);
+
+//            FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'GK.xml');
+
+            if Assigned(ev) then ev(adr, root);
+           end
+           else if n<=0 then raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, d.CmdAdr])
+           else  raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, PByte(p)^]);
+        end);
+      end);
+   end;
+end;
+
+procedure TDeviceBur.SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef; WaitTime: Integer);
+begin
+  CheckConnect;  //низkоуровневая функция без особых проверок
+  CheckLocked;
+  ConnectOpen();
+  try
+   SerialQe.Add(procedure()
+   begin
+     inherited;
+   end);
+  except
+   SerialQe.Clear;
+   raise;
+  end;
+end;
+
+type
+  TTimeSync = packed record
+    CmdAdr: Byte;
+    time: Integer;
+  end;
+
+procedure TDeviceBur.SetDelay(StartTime: TDateTime; WorkTime: TTime; ResultEvent: TSetDelayEvent);
+ var
+  IsOldClose: Boolean;
+begin
+  try
+   CheckStatus([dsNoInit, dsPartReady, dsReady, dsData]);
+   CheckConnect;
+   CheckLocked;
+   IsOldClose := not ConnectOpen();
+   SerialQe.Clear;
+   with SerialQe, ConnectIO do Add(procedure()
+    var
+     d: TTimeSync;
+     LNow, CNow: TDateTime;
+     Delay, RDelay : TTime;
+   begin
+     d.CmdAdr := $F5;
+     if StartTime <> 0 then
+      begin
+       LNow := Now();
+       Delay := StartTime - LNow;
+       d.time := -Ctime.ToKadr(Delay);
+       RDelay := -Ctime.FromKadr(d.time);
+       CNow := LNow + Delay - RDelay;
+       //     Tdebug.Log('Delay Delta %1.2f %% ', [(CNow - Now)*TIME_TO_KADR*100]);
+       while CNow > Now do Tthread.Yield;
+      end
+     else d.time := 0;
+     Send(@D, Sizeof(D), procedure(p: Pointer; n: integer)
+     begin
+       DoDelayEvent(True, CNow, RDelay, 0, ResultEvent);
+       if IsOldClose then ConnectClose();
+     end, 100);
+//     Tdebug.Log('Delay Delta ERR %1.4f %%', [(StartTime - Now-RDelay)*TIME_TO_KADR*100]);
+   end);
+  except
+   DoDelayEvent(False, 0, 0, 0, ResultEvent);
+   if IsOldClose then ConnectClose();
+   raise;
+  end;
+end;
+{$ENDREGION  TDeviceBur}
+
+{$REGION  'TRamReadInfoBur - все процедуры и функции'}
+{ TRamReadInfoBur }
+//procedure TRamReadInfoBur.Get_Tstart_Tdelay(RAMInfo: IRAMInfo; var tstart, tdelay: TDateTime);
+//begin
+//  tstart := StrToDateTime(RAMInfo.Attributes[AT_START_TIME]);
+//  tdelay := MyStrToTime(RAMInfo.Attributes[AT_DELAY_TIME]);
+//end;
+
+{function TRamReadInfoBur.Update(Info: IXMLInfo; UpdateTimeSyncEvent: TRamEvent): IRAMInfo;
+  var
+   rf: IRAMInfo; // так как невозможно захватить Result
+begin
+  with TDeviceBur(FAbstractDevice) do
+   begin
+    CheckConnect;
+    if (ConnectIO as IConnectIO).Locked(Cycle) then raise ERamReadInfoBurException.Create(RS_IsCycle);
+    if not (ConnectIO as IConnectIO).IsOpen then (ConnectIO as IConnectIO).Open;
+    // обновим файл информации чтения
+    Result := Get();
+    if not Assigned(Info) then raise ERamReadInfoBurException.Create(RS_ErrNoInfo);
+    if UpdateRun(Result, Info) then Result.OwnerDocument.SaveToFile(FileInfo);
+    // обновим файл информации чтения коэффициенты рассогласования времени
+    rf := Result; // так как невозможно захватить Result
+    ReadWorkRef(rf, procedure (DevAdr: Integer; Work: IXMLInfo)
+     var
+      nt, p: IXMLNode;
+      ts, td, t: TDateTime;
+    begin
+      nt := Work.ChildNodes.FindNode('время');
+      p := FindDev(rf, DevAdr);
+      if not p.HasAttribute(AT_KOEF_TIME) and Assigned(nt) then
+       begin
+        Get_Tstart_Tdelay(rf, ts, td);
+        t := StrToTime(nt.Attributes[AT_ROW]);        //относительное время
+        p.Attributes[AT_KOEF_TIME] := (Now-ts)/(t+td); //относительное время
+        rf.OwnerDocument.SaveToFile(FileInfo);
+        if Assigned(UpdateTimeSyncEvent) then UpdateTimeSyncEvent(DevAdr, Work);
+       end;
+    end, True);
+   end;
+end;  }
+{$ENDREGION  TRamReadInfoBur}
+
+initialization
+  RegisterClass(TDeviceBur);
+  TRegister.AddType<TDeviceBur, IDevice>.LiveTime(ltSingletonNamed)
+finalization
+  GContainer.RemoveModel<TDeviceBur>;
+end.

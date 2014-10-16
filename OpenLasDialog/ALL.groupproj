@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{742701F8-D612-407D-AB07-FA20A063CE43}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="openLAS.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\..\Libs\jvcl\examples\JvFileListBox\FileDirDemo.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="openLAS">
+        <MSBuild Projects="openLAS.dproj"/>
+    </Target>
+    <Target Name="openLAS:Clean">
+        <MSBuild Projects="openLAS.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="openLAS:Make">
+        <MSBuild Projects="openLAS.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FileDirDemo">
+        <MSBuild Projects="..\..\..\Libs\jvcl\examples\JvFileListBox\FileDirDemo.dproj"/>
+    </Target>
+    <Target Name="FileDirDemo:Clean">
+        <MSBuild Projects="..\..\..\Libs\jvcl\examples\JvFileListBox\FileDirDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FileDirDemo:Make">
+        <MSBuild Projects="..\..\..\Libs\jvcl\examples\JvFileListBox\FileDirDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="openLAS;FileDirDemo"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="openLAS:Clean;FileDirDemo:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="openLAS:Make;FileDirDemo:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

@@ -1,0 +1,532 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{FECE0D7F-FE35-4E6D-B86D-7058687491AA}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Core\Core.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ProjectManager\ProjectManager.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ComDll\ComDev.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCL_Telesis\VCLTelesis.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Monitor\Monitor.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLData\VCLData.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLControl\VCLControl.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLDialogs\VCLDialogs.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="CreatePSK\CreateData.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="MainExe\WorkProg.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="BootLoader\bootLoader.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Metrol\Metrol.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="РП-45_VCL\VCL_RP45.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="D3H\D3H.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="GeneratePSK\CreateDev.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="CreateMetaData\CreateMeta.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Glubinomer\Glut.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\SOUND\Sound.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ErrAzim_model\ErrAzim.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\w2001\uso2\uso2.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Core">
+        <MSBuild Projects="Core\Core.dproj"/>
+    </Target>
+    <Target Name="Core:Clean">
+        <MSBuild Projects="Core\Core.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Core:Make">
+        <MSBuild Projects="Core\Core.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ProjectManager">
+        <MSBuild Projects="ProjectManager\ProjectManager.dproj"/>
+    </Target>
+    <Target Name="ProjectManager:Clean">
+        <MSBuild Projects="ProjectManager\ProjectManager.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProjectManager:Make">
+        <MSBuild Projects="ProjectManager\ProjectManager.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ComDev">
+        <MSBuild Projects="ComDll\ComDev.dproj"/>
+    </Target>
+    <Target Name="ComDev:Clean">
+        <MSBuild Projects="ComDll\ComDev.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ComDev:Make">
+        <MSBuild Projects="ComDll\ComDev.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLTelesis">
+        <MSBuild Projects="VCL_Telesis\VCLTelesis.dproj"/>
+    </Target>
+    <Target Name="VCLTelesis:Clean">
+        <MSBuild Projects="VCL_Telesis\VCLTelesis.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLTelesis:Make">
+        <MSBuild Projects="VCL_Telesis\VCLTelesis.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Monitor">
+        <MSBuild Projects="Monitor\Monitor.dproj"/>
+    </Target>
+    <Target Name="Monitor:Clean">
+        <MSBuild Projects="Monitor\Monitor.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Monitor:Make">
+        <MSBuild Projects="Monitor\Monitor.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLData">
+        <MSBuild Projects="VCLData\VCLData.dproj"/>
+    </Target>
+    <Target Name="VCLData:Clean">
+        <MSBuild Projects="VCLData\VCLData.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLData:Make">
+        <MSBuild Projects="VCLData\VCLData.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLControl">
+        <MSBuild Projects="VCLControl\VCLControl.dproj"/>
+    </Target>
+    <Target Name="VCLControl:Clean">
+        <MSBuild Projects="VCLControl\VCLControl.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLControl:Make">
+        <MSBuild Projects="VCLControl\VCLControl.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLDialogs">
+        <MSBuild Projects="VCLDialogs\VCLDialogs.dproj"/>
+    </Target>
+    <Target Name="VCLDialogs:Clean">
+        <MSBuild Projects="VCLDialogs\VCLDialogs.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLDialogs:Make">
+        <MSBuild Projects="VCLDialogs\VCLDialogs.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CreateData">
+        <MSBuild Projects="CreatePSK\CreateData.dproj"/>
+    </Target>
+    <Target Name="CreateData:Clean">
+        <MSBuild Projects="CreatePSK\CreateData.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CreateData:Make">
+        <MSBuild Projects="CreatePSK\CreateData.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="WorkProg">
+        <MSBuild Projects="MainExe\WorkProg.dproj"/>
+    </Target>
+    <Target Name="WorkProg:Clean">
+        <MSBuild Projects="MainExe\WorkProg.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="WorkProg:Make">
+        <MSBuild Projects="MainExe\WorkProg.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="bootLoader">
+        <MSBuild Projects="BootLoader\bootLoader.dproj"/>
+    </Target>
+    <Target Name="bootLoader:Clean">
+        <MSBuild Projects="BootLoader\bootLoader.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="bootLoader:Make">
+        <MSBuild Projects="BootLoader\bootLoader.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Metrol">
+        <MSBuild Projects="Metrol\Metrol.dproj"/>
+    </Target>
+    <Target Name="Metrol:Clean">
+        <MSBuild Projects="Metrol\Metrol.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Metrol:Make">
+        <MSBuild Projects="Metrol\Metrol.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCL_RP45">
+        <MSBuild Projects="РП-45_VCL\VCL_RP45.dproj"/>
+    </Target>
+    <Target Name="VCL_RP45:Clean">
+        <MSBuild Projects="РП-45_VCL\VCL_RP45.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCL_RP45:Make">
+        <MSBuild Projects="РП-45_VCL\VCL_RP45.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="D3H">
+        <MSBuild Projects="D3H\D3H.dproj"/>
+    </Target>
+    <Target Name="D3H:Clean">
+        <MSBuild Projects="D3H\D3H.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="D3H:Make">
+        <MSBuild Projects="D3H\D3H.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLNNKDAC">
+        <MSBuild Projects="VCL_NNK_DAC\VCLNNKDAC.dproj"/>
+    </Target>
+    <Target Name="VCLNNKDAC:Clean">
+        <MSBuild Projects="VCL_NNK_DAC\VCLNNKDAC.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLNNKDAC:Make">
+        <MSBuild Projects="VCL_NNK_DAC\VCLNNKDAC.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CreateDev">
+        <MSBuild Projects="GeneratePSK\CreateDev.dproj"/>
+    </Target>
+    <Target Name="CreateDev:Clean">
+        <MSBuild Projects="GeneratePSK\CreateDev.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CreateDev:Make">
+        <MSBuild Projects="GeneratePSK\CreateDev.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="CreateMeta">
+        <MSBuild Projects="CreateMetaData\CreateMeta.dproj"/>
+    </Target>
+    <Target Name="CreateMeta:Clean">
+        <MSBuild Projects="CreateMetaData\CreateMeta.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CreateMeta:Make">
+        <MSBuild Projects="CreateMetaData\CreateMeta.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Glut">
+        <MSBuild Projects="Glubinomer\Glut.dproj"/>
+    </Target>
+    <Target Name="Glut:Clean">
+        <MSBuild Projects="Glubinomer\Glut.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Glut:Make">
+        <MSBuild Projects="Glubinomer\Glut.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Sound">
+        <MSBuild Projects="..\SOUND\Sound.dproj"/>
+    </Target>
+    <Target Name="Sound:Clean">
+        <MSBuild Projects="..\SOUND\Sound.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Sound:Make">
+        <MSBuild Projects="..\SOUND\Sound.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ErrAzim">
+        <MSBuild Projects="ErrAzim_model\ErrAzim.dproj"/>
+    </Target>
+    <Target Name="ErrAzim:Clean">
+        <MSBuild Projects="ErrAzim_model\ErrAzim.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ErrAzim:Make">
+        <MSBuild Projects="ErrAzim_model\ErrAzim.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="uso2">
+        <MSBuild Projects="..\w2001\uso2\uso2.dproj"/>
+    </Target>
+    <Target Name="uso2:Clean">
+        <MSBuild Projects="..\w2001\uso2\uso2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="uso2:Make">
+        <MSBuild Projects="..\w2001\uso2\uso2.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Core;ProjectManager;ComDev;VCLTelesis;Monitor;VCLData;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;Sound;ErrAzim;uso2"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;Sound:Clean;ErrAzim:Clean;uso2:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Core:Make;ProjectManager:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;Sound:Make;ErrAzim:Make;uso2:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+    <ItemGroup Condition="'$(BuildGroup)'=='Main'">
+        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
+            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\w2001\uso2\uso2.dproj">
+            <ProjectGuid>{6FADEEC0-9C8A-49A9-978A-44E2995AC65B}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
+            <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Metrol\Metrol.dproj">
+            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="MainExe\WorkProg.dproj">
+            <ProjectGuid>{4858CC7A-7A81-48B7-9BAD-D77D360297D0}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
+            <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Core\Core.dproj">
+            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Glubinomer\Glut.dproj">
+            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLControl\VCLControl.dproj">
+            <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\SOUND\Sound.dproj">
+            <ProjectGuid>{FF5BAC98-F6D8-4735-BAED-63358DDC45DC}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLData\VCLData.dproj">
+            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ErrAzim_model\ErrAzim.dproj">
+            <ProjectGuid>{5D5A8FC7-D7F1-4343-9CA8-0232344CD4CE}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="BootLoader\bootLoader.dproj">
+            <ProjectGuid>{6A5832E5-091D-4003-992D-36A2C2F3F43D}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Monitor\Monitor.dproj">
+            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
+            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
+            <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
+            <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="D3H\D3H.dproj">
+            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+    </ItemGroup>
+    <ItemGroup Condition="'$(BuildGroup)'=='D1'">
+        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
+            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\w2001\uso2\uso2.dproj">
+            <ProjectGuid>{6FADEEC0-9C8A-49A9-978A-44E2995AC65B}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
+            <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Metrol\Metrol.dproj">
+            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="MainExe\WorkProg.dproj">
+            <ProjectGuid>{4858CC7A-7A81-48B7-9BAD-D77D360297D0}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
+            <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Core\Core.dproj">
+            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Glubinomer\Glut.dproj">
+            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLControl\VCLControl.dproj">
+            <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\SOUND\Sound.dproj">
+            <ProjectGuid>{FF5BAC98-F6D8-4735-BAED-63358DDC45DC}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLData\VCLData.dproj">
+            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ErrAzim_model\ErrAzim.dproj">
+            <ProjectGuid>{5D5A8FC7-D7F1-4343-9CA8-0232344CD4CE}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="BootLoader\bootLoader.dproj">
+            <ProjectGuid>{6A5832E5-091D-4003-992D-36A2C2F3F43D}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Monitor\Monitor.dproj">
+            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
+            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
+            <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
+            <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="D3H\D3H.dproj">
+            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+    </ItemGroup>
+</Project>
