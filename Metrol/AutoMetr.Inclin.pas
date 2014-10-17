@@ -90,8 +90,8 @@ begin
   if not CheckAngle(ax.CurrentAngle) then
    begin
     Owner.Fauto := eaError;
-    Owner.Report(samError, Format('”гол не получен: надо %1.3f есть 1.3f',[Double(ang), Double(ax.CurrentAngle)]));
-    Owner.Error(Format('”гол не получен: надо %1.3f есть 1.3f',[Double(ang), Double(ax.CurrentAngle)]));
+    Owner.Report(samError, Format('”гол не получен: надо %1.3f есть %1.3f',[Double(ang), Double(ax.CurrentAngle)]));
+    Owner.Error(Format('”гол не получен: надо %1.3f есть %1.3f',[Double(ang), Double(ax.CurrentAngle)]));
    end;
   Owner.FTask.Remove(Self);
 end;
@@ -126,8 +126,8 @@ begin
     if IterCnt = 0 then
      begin
       Owner.Fauto := eaError;
-      Owner.Report(samError, Format('”гол не получен: надо %1.3f есть 1.3f',[Double(ang), Double(DevAng)]));
-      Owner.Error(Format('”гол не получен: надо %1.3f есть 1.3f',[Double(ang), Double(DevAng)]));
+      Owner.Report(samError, Format('”гол не получен: надо %1.3f есть %1.3f',[Double(ang), Double(DevAng)]));
+      Owner.Error(Format('”гол не получен: надо %1.3f есть %1.3f',[Double(ang), Double(DevAng)]));
       Owner.FTask.Remove(Self)
      end
     else

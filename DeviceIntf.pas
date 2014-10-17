@@ -389,7 +389,7 @@ type
 //    procedure SetReadTime(FromTime, ToTime: TDateTime);
     // асинхронный метод читает, перечитывает и сохраняет бинарные файлы на диск
     // обновляет в процессе на диске IRAMInfo создает в PathToReadRamDir xxxxxxx.bin для каждого устройства
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
+    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
     // прерывает длительный асинхронный метод Execute
     procedure Terminate(Res: TResultEvent = nil);
 

@@ -2,7 +2,7 @@ object FrmDlgRam: TFrmDlgRam
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1095#1090#1077#1085#1080#1103' '#1087#1072#1084#1103#1090#1080
-  ClientHeight = 141
+  ClientHeight = 174
   ClientWidth = 348
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,7 +16,7 @@ object FrmDlgRam: TFrmDlgRam
   TextHeight = 13
   object btStart: TButton
     Left = 17
-    Top = 81
+    Top = 113
     Width = 75
     Height = 25
     Caption = #1057#1090#1072#1088#1090
@@ -25,7 +25,7 @@ object FrmDlgRam: TFrmDlgRam
   end
   object btExit: TButton
     Left = 243
-    Top = 81
+    Top = 113
     Width = 75
     Height = 25
     Caption = #1042#1099#1093#1086#1076
@@ -51,14 +51,14 @@ object FrmDlgRam: TFrmDlgRam
   end
   object Progress: TProgressBar
     Left = 18
-    Top = 48
+    Top = 80
     Width = 301
     Height = 17
     TabOrder = 4
   end
   object btTerminate: TButton
     Left = 98
-    Top = 81
+    Top = 113
     Width = 75
     Height = 25
     Caption = #1055#1088#1077#1088#1074#1072#1090#1100
@@ -67,12 +67,21 @@ object FrmDlgRam: TFrmDlgRam
   end
   object sb: TStatusBar
     Left = 0
-    Top = 122
+    Top = 155
     Width = 348
     Height = 19
     Panels = <
       item
         Width = 50
       end>
+    ExplicitTop = 122
+  end
+  object cbShortPack: TCheckBox
+    Left = 18
+    Top = 39
+    Width = 112
+    Height = 17
+    Caption = #1082#1086#1088#1086#1090#1082#1080#1077' '#1087#1072#1082#1077#1090#1099
+    TabOrder = 7
   end
 end

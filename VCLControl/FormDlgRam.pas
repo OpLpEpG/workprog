@@ -17,6 +17,7 @@ type
     Progress: TProgressBar;
     btTerminate: TButton;
     sb: TStatusBar;
+    cbShortPack: TCheckBox;
     procedure btExitClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
     procedure btStartClick(Sender: TObject);
@@ -203,7 +204,9 @@ begin
      end;
    UpdateControls(False);
    try
-    if not IsImport then (FDev as IReadRamDevice).Execute(0, 0, cbToFF.Checked, cbTurbo.Checked, ds['Адрес'], ReadRamEvent, FModulID)
+    if not IsImport then
+     if cbShortPack.Checked then (FDev as IReadRamDevice).Execute(0, 0, cbToFF.Checked, cbTurbo.Checked, ds['Адрес'], ReadRamEvent, FModulID, 252)
+     else (FDev as IReadRamDevice).Execute(0, 0, cbToFF.Checked, cbTurbo.Checked, ds['Адрес'], ReadRamEvent, FModulID)
     else ri.Import(flName, flIndex,0,0, cbToFF.Checked, ds['Адрес'], ReadRamEvent, FModulID);
    except
     UpdateControls(True);

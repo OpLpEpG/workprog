@@ -22,7 +22,7 @@ uses
     type TResRef = reference to procedure;
     procedure Read(RamPtr: Integer; len: Word;  ev: TReceiveDataRef; WaitTime: Integer = -1);
   protected
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer); override;
+    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
   end;
 
 //  ERamReadInfoBurException = class(ERamReadInfoException);
@@ -221,13 +221,16 @@ begin
    end;
 end;
 
-procedure TBurReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
+procedure TBurReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
  var
   FuncRead: TReceiveDataRef;
   ErrCnt: Integer;
   Wait: Integer;
 begin
   inherited ;//Execute(evInfoRead, Addrs);
+
+  if FPacketLen = 0 then FPacketLen := RLEN;
+  
   if FFastSpeed then
    begin
     TDeviceBur(FAbstractDevice).Turbo();
@@ -251,7 +254,7 @@ begin
     begin
       WriteStream;
       if Assigned(FReadRamEvent) then FReadRamEvent(Status, FAdr, ProcToEnd);
-      Read(DWord(FCurAdr), RLEN, FuncRead, wait); //рекурсия
+      Read(DWord(FCurAdr), FPacketLen, FuncRead, wait); //рекурсия
     end;
     procedure EndWrite(Reason: EnumReadRam);
     begin

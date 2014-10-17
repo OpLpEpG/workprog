@@ -151,7 +151,7 @@ type
   EReadRamPskException = class(EReadRamException);
   TAbstractReadRamPsk = class(TReadRam)
   protected
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer); override;
+    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
   public
     FFlagSwap: Boolean;
     FProtokol: Integer;
@@ -203,7 +203,7 @@ type
   private
     FExecReadRam: IProtocolReadRam;
   protected
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer); override;
+    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
     procedure Terminate(Res: TResultEvent = nil); override;
   end;
 
@@ -254,7 +254,7 @@ type
     procedure StartReadPage(ev: TCmdByteRef);
 //    procedure CheckCreateStream; override;
 //    procedure FreeStream; override;
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer); override;
+    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
   end;
 
   TPskCycle = class(TAbstractPsk, ICycle)
@@ -337,7 +337,7 @@ end;
 {$REGION  'TAbstractPsk - все процедуры и функции'}
 { TAbstractReadRamPsk }
 
-procedure TAbstractReadRamPsk.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
+procedure TAbstractReadRamPsk.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
 begin
   inherited ;//Execute(evInfoRead, Addrs);
 
@@ -795,7 +795,7 @@ end;
 {$REGION  'PSK - все процедуры и функции'}
 { TStdReadRam }
 
-procedure TStdReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
+procedure TStdReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
 begin
   inherited ;//Execute(evInfoRead, Addrs);
   case FProtokol of
@@ -1327,7 +1327,7 @@ begin
   end);
 end;
 
-procedure TGluReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
+procedure TGluReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
  var
   en, pg, FFSize: Integer;
   run: TCmdByteRef;

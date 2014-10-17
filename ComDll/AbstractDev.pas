@@ -179,6 +179,8 @@ type
 
     FModulID: integer;
 
+    FPacketLen: integer;
+
 //    procedure CheckCreateStream; virtual;
 //    procedure FillStream(Data: Byte; Size: Integer); virtual;
 //    procedure RoundKadrStream(); virtual;
@@ -197,7 +199,7 @@ type
 //    procedure SetFastSpeed(Flag: Boolean); virtual; safecall;
 //    function GetFastSpeed: Boolean; virtual; safecall;
     procedure DoSetData(pData: Pointer); virtual;
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);virtual;
+    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);virtual;
     procedure Terminate(Res: TResultEvent = nil); virtual;
 //    procedure CheckAndInitByAdr(Adr: Integer; MaxRam: Integer = 0; DefK: Double = 0; FromToAval: Boolean = True); virtual;
     procedure EndExecute(); virtual;
@@ -1495,7 +1497,7 @@ begin
    end;
 end;
 
-procedure TReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
+procedure TReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
 // var
 //  pdb: IProjectDBData;
 begin
@@ -1507,6 +1509,7 @@ begin
     CheckLocked;
 
     FModulID := ModulID;
+    FPacketLen := PacketLen;
 
     FRamXml := FindRam(FMetaDataInfo.Info, Adr);
 
