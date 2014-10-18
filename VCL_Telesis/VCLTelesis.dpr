@@ -14,9 +14,9 @@ uses
   AbstractPlugin,
   Container,
   System.Classes,
+  VCL.ControlRootForm in 'VCL.ControlRootForm.pas',
   VCL.Telesis.FFT in 'VCL.Telesis.FFT.pas' {UsoOscForm},
-  VCL.Telesis.UsoOsc in 'VCL.Telesis.UsoOsc.pas' {FFTForm},
-  VCL.ControlRootForm in 'VCL.ControlRootForm.pas';
+  VCL.Telesis.UsoOsc in 'VCL.Telesis.UsoOsc.pas' {FFTForm};
 
 {$R *.res}
 

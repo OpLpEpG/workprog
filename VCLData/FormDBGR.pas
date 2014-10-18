@@ -2,7 +2,7 @@ unit FormDBGR;
 
 interface
 
-uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, Xml.XMLIntf, IGDIPlus, Container, Actns, DataExchange,
+uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, Xml.XMLIntf, Container, Actns, DataExchange, Winapi.GDIPAPI,
   DataDBForm, Data.DB, DBIntf, DlgFltParam, AbstractDlgParams, Plot.DB, Plot.GraphParams,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Plot, Vcl.Menus;
@@ -153,7 +153,7 @@ begin
 
   if Node.HasAttribute(AT_COLOR) then p.Color := Cardinal(Node.Attributes[AT_COLOR]);
   if Node.HasAttribute(AT_WIDTH) then p.Width := Node.Attributes[AT_WIDTH];
-  if Node.HasAttribute(AT_DASH) then p.DashStyle := TGPDashStyle(Node.Attributes[AT_DASH]);
+  if Node.HasAttribute(AT_DASH) then p.DashStyle := TDashStyle(Node.Attributes[AT_DASH]);
 
   if Node.HasAttribute(AT_TITLE) then p.Title := Node.Attributes[AT_TITLE];
   if Node.HasAttribute(AT_AQURICY) then p.Presizion := Node.Attributes[AT_AQURICY];

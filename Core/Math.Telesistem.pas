@@ -85,7 +85,7 @@ implementation
 
 procedure FindSP(var d: TTelesistemDecoder; event: TFindSPRef);
  var
-  i, cnt: Integer;
+  cnt: Integer;
   corr: TArray<Double>;
 begin
   Assert(not (d.State in [csFindSP, csCheckSP]), 'not (d.State in [csFindSP, csCheckSP]');

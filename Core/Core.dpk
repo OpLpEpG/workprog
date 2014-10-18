@@ -57,7 +57,6 @@ contains
   AbstractPlugin in '..\AbstractPlugin.pas',
   DeviceIntf in '..\DeviceIntf.pas',
   ExtendIntf in '..\ExtendIntf.pas',
-  IGDIPlus in '..\IGDIPlus.pas',
   LAS in '..\LAS.pas',
   MathIntf in '..\MathIntf.pas',
   PluginAPI in '..\PluginAPI.pas',

@@ -2,7 +2,7 @@ unit XMLScript.Math;
 
 interface
 
-uses  XMLScript, tools, debug_except, MathIntf, System.UITypes, IGDIPlus,
+uses  XMLScript, tools, debug_except, MathIntf, System.UITypes, WinAPI.GDIPObj, WinAPI.GDIPApi,
     SysUtils, o_iinterpreter, o_ipascal, Xml.XMLIntf, System.Generics.Collections, System.Classes, math, System.Variants;
 
 type
@@ -17,7 +17,7 @@ type
     class function AddMetrology(root: Variant; const Title, eu: string; Znd: Double = 0; varTip: Integer = 5): Variant; static;
     class function AddMetrologyFM(root: Variant; Digits, Aqu: Integer): Variant; static;
     class function AddMetrologyRG(root: Variant; Lo, Hi: Double): Variant; static;
-    class function AddMetrologyCL(root: Variant; Color: TAlphaColor; Width: Single = 2; Dash: TGPDashStyle = DashStyleSolid): Variant; static;
+    class function AddMetrologyCL(root: Variant; Color: TAlphaColor; Width: Single = 2; Dash: TDashStyle = DashStyleSolid): Variant; static;
 
     class procedure TrrVect3D(root, Inp: Variant; Scale: Integer = 1); static;
     class procedure AddXmlMatrix(root: Variant; Row, col: Integer); overload; static;
@@ -107,7 +107,7 @@ class procedure TXMLScriptMath.ExecStepGK1(stp: integer; alg, trr: variant; IsGk
   ls: ILSFitting;
   y: TArray<Double>;
   fmatrix: TArray<Tfuncs>;
-  n, info, i: Integer;
+  n, info: Integer;
   c: PDoubleArray;
   Rep: PSLFittingReport;
   x: IXMLNode;
@@ -144,7 +144,7 @@ begin
     if c[1] = 0 then Exit;
 
    if IsGk then trr.kGK := 1/c[1] else trr.kNGK := 1/c[1];
-    i :=0;
+  //  i :=0;
     for x in XEnum(TVxmlData(alg).Node) do if x.HasAttribute('EXECUTED') then
      begin
       v := XToVar(x);
@@ -153,7 +153,7 @@ begin
       if v.RT>0 then v.DELTA := (vngk.CLC.VALUE - v.RT)*100/v.RT
       else v.DELTA := (vngk.CLC.VALUE - v.RT)*100/5;
       //v.DELTA := PDoubleArray(Rep.errcurve.ptr)[i];
-      inc(i);
+  //    inc(i);
      end;
    end;
 end;
@@ -171,7 +171,7 @@ begin
   Result := XToVar(r);
 end;
 
-class function TXMLScriptMath.AddMetrologyCL(root: Variant; Color: TAlphaColor; Width: Single; Dash: TGPDashStyle): Variant;
+class function TXMLScriptMath.AddMetrologyCL(root: Variant; Color: TAlphaColor; Width: Single; Dash: TDashStyle): Variant;
  var
   r: IXMLNode;
 begin
@@ -297,7 +297,7 @@ end;
 class function TXMLScriptMath.GetAzi(Zen, Otk, X, Y, Z: Double): Double;
  var
   os,oc,zs,zc: Double;
-  Hx, Hy, Hz: Double;
+  Hx, Hy : Double;
 begin
   Zen := DegToRad(Zen);
   Otk := DegToRad(Otk);
@@ -309,7 +309,7 @@ begin
 
   Hx := (x*oc - y*os)*zc + z*zs;
   Hy :=  x*os + y*oc;
-  Hz :=-(x*oc - y*os)*zs + z*zc;
+//  Hz :=-(x*oc - y*os)*zs + z*zc;
 
   Result := RadToDeg360(-Arctan2(Hy, Hx));
 end;

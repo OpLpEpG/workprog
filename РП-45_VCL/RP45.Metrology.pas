@@ -5,7 +5,7 @@ interface
 uses
   RootIntf, RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, Container, Actns, DBIntf, DBImpl, DataExchange,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.TypInfo, Plot, Plot.GraphParams,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, EditControl, Data.DB, IGDIPlus;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, EditControl, Data.DB, Winapi.GDIPAPI;
 
 type
   TRPRec = record
@@ -20,7 +20,7 @@ type
      Title: string;
      Width: Single;
      Color : TGPColor;
-     DashStyle: TGPDashStyle;
+     DashStyle: TDashStyle;
   end;
 
 const

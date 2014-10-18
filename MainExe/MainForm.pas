@@ -2,7 +2,7 @@ unit MainForm;
 
 interface
 
-uses DeviceIntf, ExtendIntf, RootIntf,  Winapi.Messages, System.Variants,  IGDIPlus, Vcl.HtmlHelpViewer,  XMLScript.Math,
+uses DeviceIntf, ExtendIntf, RootIntf,  Winapi.Messages, System.Variants, Vcl.HtmlHelpViewer,  XMLScript.Math,
   System.SysUtils, PluginAPI, Vcl.Dialogs, Vcl.ImgList, Vcl.Controls, Vcl.StdActns, Vcl.BandActn, System.Classes, Vcl.ActnList, Vcl.ActnMan,
   Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ComCtrls, Vcl.Forms, Vcl.Graphics, Winapi.Windows, JvAppStorage, JvAppRegistryStorage, JvDockControlForm,
   Vcl.AppEvnts, Vcl.ExtCtrls, JvFormPlacement, JvDockVIDStyle, JvComponentBase, System.Actions,
@@ -126,7 +126,7 @@ implementation
 {$R *.dfm}
 
 
-uses RootImpl,
+uses WinAPI.GDIPObj, WinAPI.GDIPApi, RootImpl, VCLTee.TeEngine,
     PluginManager, PluginSetupForm, ExceptionForm, tools, DockIForm, debug_except, ActionBarHelper, FirstForm, Container;//, Hock_Exept;
 
 {$REGION  '*********** Create Destroy ****************'}
@@ -134,7 +134,7 @@ procedure TFormMain.FormCreate(Sender: TObject);
 begin
   TThread.NameThreadForDebugging('__M_A_I_N__');
   Application.HelpFile := ExtractFilePath(ParamStr(0)) + 'help.chm';
-  GDIPlus.Start;
+//  GDIPlus.Start;
 
   FormatSettings.DecimalSeparator := '.';
 
@@ -221,7 +221,7 @@ end;
 procedure TFormMain.FormDestroy(Sender: TObject);
 begin
   OutputDebugString(PChar('***************   ¬—≈ »Õ“≈–‘≈…—€ » ÃŒƒ”À» ƒŒÀ∆Õ€ ”∆≈ ¡€“‹ «¿ –€“€  ******************* '));
-  GDIPlus.Stop;
+//  GDIPlus.Stop;
 end;
 {$ENDREGION  '*********** Create Dectroy ****************'}
 

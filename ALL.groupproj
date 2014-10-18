@@ -57,13 +57,7 @@
         <Projects Include="Glubinomer\Glut.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\SOUND\Sound.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="ErrAzim_model\ErrAzim.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\w2001\uso2\uso2.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -236,15 +230,6 @@
     <Target Name="Glut:Make">
         <MSBuild Projects="Glubinomer\Glut.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Sound">
-        <MSBuild Projects="..\SOUND\Sound.dproj"/>
-    </Target>
-    <Target Name="Sound:Clean">
-        <MSBuild Projects="..\SOUND\Sound.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Sound:Make">
-        <MSBuild Projects="..\SOUND\Sound.dproj" Targets="Make"/>
-    </Target>
     <Target Name="ErrAzim">
         <MSBuild Projects="ErrAzim_model\ErrAzim.dproj"/>
     </Target>
@@ -254,37 +239,22 @@
     <Target Name="ErrAzim:Make">
         <MSBuild Projects="ErrAzim_model\ErrAzim.dproj" Targets="Make"/>
     </Target>
-    <Target Name="uso2">
-        <MSBuild Projects="..\w2001\uso2\uso2.dproj"/>
-    </Target>
-    <Target Name="uso2:Clean">
-        <MSBuild Projects="..\w2001\uso2\uso2.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="uso2:Make">
-        <MSBuild Projects="..\w2001\uso2\uso2.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;ComDev;VCLTelesis;Monitor;VCLData;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;Sound;ErrAzim;uso2"/>
+        <CallTarget Targets="Core;ProjectManager;ComDev;VCLTelesis;Monitor;VCLData;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;Sound:Clean;ErrAzim:Clean;uso2:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;Sound:Make;ErrAzim:Make;uso2:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
-        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
-            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\w2001\uso2\uso2.dproj">
-            <ProjectGuid>{6FADEEC0-9C8A-49A9-978A-44E2995AC65B}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
             <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
@@ -328,12 +298,6 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\SOUND\Sound.dproj">
-            <ProjectGuid>{FF5BAC98-F6D8-4735-BAED-63358DDC45DC}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="VCLData\VCLData.dproj">
             <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
@@ -376,6 +340,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
+            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
@@ -394,23 +364,11 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='D1'">
-        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
-            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\w2001\uso2\uso2.dproj">
-            <ProjectGuid>{6FADEEC0-9C8A-49A9-978A-44E2995AC65B}</ProjectGuid>
-            <Configurations>Debug</Configurations>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
@@ -456,12 +414,6 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\SOUND\Sound.dproj">
-            <ProjectGuid>{FF5BAC98-F6D8-4735-BAED-63358DDC45DC}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="VCLData\VCLData.dproj">
             <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
             <Configurations>Release</Configurations>
@@ -504,6 +456,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
+            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -518,12 +476,6 @@
         </BuildGroupProject>
         <BuildGroupProject Include="D3H\D3H.dproj">
             <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>

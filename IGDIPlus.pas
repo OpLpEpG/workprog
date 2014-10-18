@@ -78,7 +78,7 @@ uses
 {$ENDIF}
   SysUtils,
   ActiveX,
-  System.SyncObjs, debug_except;
+  debug_except;
 
 type
 {$IFNDEF DELPHI16_UP} // Delphi 16.0
@@ -6587,18 +6587,6 @@ type
     function EmfToWmfBits(hemf: HENHMETAFILE; cbData16: Cardinal; pData16: PBYTE;
       iMapMode: Integer = MM_ANISOTROPIC; eFlags: TGPEmfToWmfBitsFlags = EmfToWmfBitsFlagsDefault) : Cardinal;
 
-  end;
-
-  GDIPlus = class
-  private
-    class var Flock: TCriticalSection;
-    class constructor Create;
-    class destructor Destrroy;
-  public
-    class procedure Lock;
-    class procedure UnLock;
-    class procedure Start; static;
-    class procedure Stop; static;
   end;
 
 
@@ -17194,26 +17182,7 @@ begin
 end;
 
 
-class constructor GDIPlus.Create;
-begin
-  Flock := TCriticalSection.Create;
-end;
-class destructor GDIPlus.Destrroy;
-begin
-  Flock.Free;
-end;
-class procedure GDIPlus.Lock;
-begin
-//  TDebug.Log('GDI befo LOCK');
-  Flock.Acquire;
-//  TDebug.Log('GDI After LOCK');
-end;
-class procedure GDIPlus.UnLock;
-begin
-  Flock.Release;
-//  TDebug.Log('GDI After RELEASE');
-end;
-class procedure GDIPlus.Start;
+{class procedure GDIPlus.Start;
 begin
   if( GInitialized ) then
     Exit;
@@ -17255,7 +17224,7 @@ begin
     StartupOutput.NotificationUnhook( gdiplusBGThreadToken );
 
   GdiplusShutdown(gdiplusToken);
-end;
+end;      }
 
 {procedure StartIGDIPlus();
 begin

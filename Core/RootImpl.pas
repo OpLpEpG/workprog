@@ -5,7 +5,7 @@ interface
 uses
      debug_except, RootIntf, PluginAPI, ExtendIntf, Container,
 
-     Vcl.Controls, Vcl.Graphics, Vcl.ComCtrls, Winapi.Messages, Vcl.Forms, Winapi.Windows, JvInspector,
+     Vcl.Controls, Vcl.Graphics, Vcl.ComCtrls, Winapi.Messages, Vcl.Forms, Winapi.Windows, JvInspector, System.SyncObjs,
 
      System.Classes, System.SysUtils, System.TypInfo,
      System.Generics.Defaults,
@@ -290,7 +290,18 @@ type
     class procedure UnInitialize(D: PTypeInfo); overload;
   end;
 
+  GDIPlus = class
+  private
+    class var Flock: TCriticalSection;
+    class constructor Create;
+    class destructor Destrroy;
+  public
+    class procedure Lock;
+    class procedure UnLock;
+  end;
+
 procedure MainScreenChanged; inline;
+
 
 implementation
 
@@ -1337,6 +1348,27 @@ begin
 end;
 
 {$ENDREGION}
+
+
+class constructor GDIPlus.Create;
+begin
+  Flock := TCriticalSection.Create;
+end;
+class destructor GDIPlus.Destrroy;
+begin
+  Flock.Free;
+end;
+class procedure GDIPlus.Lock;
+begin
+//  TDebug.Log('GDI befo LOCK');
+  Flock.Acquire;
+//  TDebug.Log('GDI After LOCK');
+end;
+class procedure GDIPlus.UnLock;
+begin
+  Flock.Release;
+//  TDebug.Log('GDI After RELEASE');
+end;
 
 initialization
   TRegister.AddType<TFormEnum, IFormEnum, IStorable>.LiveTime(ltSingleton);

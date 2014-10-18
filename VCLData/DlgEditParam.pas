@@ -2,7 +2,7 @@ unit DlgEditParam;
 
 interface
 
-uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, Plot,  RTTI, IGDIPlus, Container, RootIntf,
+uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, Plot,  RTTI, Container, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.UITypes, System.TypInfo,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, JvExControls, JvInspector, Vcl.ExtCtrls, JvComponentBase;
 

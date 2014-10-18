@@ -37,7 +37,7 @@ object RP45FormDlgMetrol: TRP45FormDlgMetrol
   object Label3: TLabel
     Left = 8
     Top = 126
-    Width = 81
+    Width = 82
     Height = 13
     Caption = #1055#1086#1088#1086#1075'  '#1085#1072#1075#1088#1091#1079#1082#1080
   end

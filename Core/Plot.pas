@@ -3,7 +3,7 @@ unit Plot;
 interface
 
 uses RootImpl, tools,
-     SysUtils, Controls, Messages, Winapi.Windows, Classes, IGDIPlus, Vcl.Graphics, System.Rtti, Vcl.Forms, types, Vcl.ExtCtrls,
+     SysUtils, Controls, Messages, Winapi.Windows, Classes, Winapi.GDIPAPI, WinAPI.GDIPObj,  Vcl.Graphics, System.Rtti, Vcl.Forms, types, Vcl.ExtCtrls,
      Vcl.Menus, Vcl.Themes, Vcl.GraphUtil, System.SyncObjs;
 
 const
@@ -73,10 +73,10 @@ type
   protected
     FMinY, FMaxY: Double;
     function GetHintColor: TColor; virtual;
-    procedure CalcLegendHeight(Gdip: IGPGraphics; var Height: Integer); virtual;
+    procedure CalcLegendHeight(Gdip: TGPGraphics; var Height: Integer); virtual;
     procedure UpdateMinMaxY(var MinY, MaxY: Double); virtual;
-    procedure ShowLegend(Gdip: IGPGraphics; const Height: Integer); virtual;
-    procedure ShowData(Gdip: IGPGraphics);virtual;
+    procedure ShowLegend(Gdip: TGPGraphics; const Height: Integer); virtual;
+    procedure ShowData(Gdip: TGPGraphics);virtual;
     // для этих фумкций X - глобальное Y-локальное
     procedure DoSetCursorInData(X, Y: integer; var State: PlotColState; var Cursor: HCURSOR); virtual;
     procedure DoMouseDownInLegend(X, Y: integer); virtual;
@@ -101,9 +101,9 @@ type
 
   TYColumn = class(TPlotColumn)
   protected
-    procedure CalcLegendHeight(Gdip: IGPGraphics; var Height: Integer); override;
-    procedure ShowLegend(Gdip: IGPGraphics; const Height: Integer); override;
-    procedure ShowData(Gdip: IGPGraphics); override;
+    procedure CalcLegendHeight(Gdip: TGPGraphics; var Height: Integer); override;
+    procedure ShowLegend(Gdip: TGPGraphics; const Height: Integer); override;
+    procedure ShowData(Gdip: TGPGraphics); override;
   end;
 
   TParamPoint = record
@@ -125,7 +125,7 @@ type
     FDelta: Double;
     FScale: Double;
     FWidth: Single;
-    FDashStyle: TGPDashStyle;
+    FDashStyle: TDashStyle;
     FColor: TGPColor;
     FEUnit: string;
     FTitle: string;
@@ -133,7 +133,7 @@ type
     FVisible: Boolean;
     FLegendHeight: Single;
 
-    FScPoints{, FPoints}: TGPPointFArray;
+    FScPoints{, FPoints}: TPointFDynArray;
     FScFrom, FScTo: integer;
 
     FOnContextPopup: TContextPopupEvent;
@@ -141,7 +141,7 @@ type
     FFixedParam: boolean;
     FHideInLegend: boolean;
     procedure SetColor(const Value: TGPColor);
-    procedure SetDashStyle(const Value: TGPDashStyle);
+    procedure SetDashStyle(const Value: TDashStyle);
     procedure SetDelta(const Value: Double);
     procedure SetEUnit(const Value: string);
     procedure SetScale(const Value: Double);
@@ -171,9 +171,9 @@ type
     function ScPointToCurvePoint(scP: TGPPointF): TGPPointF;
 // рисует данные всей колонки
     procedure ShowColumnData();
-    procedure ShowLegend(Gdip: IGPGraphics);
-    procedure ShowData(Gdip: IGPGraphics);
-    function CalcLegendHeight(Gdip: IGPGraphics): Single;
+    procedure ShowLegend(Gdip: TGPGraphics);
+    procedure ShowData(Gdip: TGPGraphics);
+    function CalcLegendHeight(Gdip: TGPGraphics): Single;
     procedure DoMouseDownInLegend(X, Y, Top, Height: integer);
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); virtual;
   public
@@ -198,7 +198,7 @@ type
     [ShowProp('Смещение нуля')]                 property Delta        : Double read FDelta write SetDelta;
     [ShowProp('Ширина линии')]                  property Width        : Single read FWidth write SetWidth;
     [ShowProp('Цвет')]                          property Color        : TGPColor read FColor write SetColor default aclBlack;
-    [ShowProp('Стиль штрихов')]                 property DashStyle    : TGPDashStyle read FDashStyle write SetDashStyle default DashStyleSolid;
+    [ShowProp('Стиль штрихов')]                 property DashStyle    : TDashStyle read FDashStyle write SetDashStyle default DashStyleSolid;
 
     property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
   end;
@@ -232,10 +232,10 @@ type
   protected
     procedure DefineProperties(Filer: TFiler); override;
     function GetHintColor: TColor; override;
-    procedure CalcLegendHeight(Gdip: IGPGraphics; var Height: Integer); override;
+    procedure CalcLegendHeight(Gdip: TGPGraphics; var Height: Integer); override;
     procedure UpdateMinMaxY(var MinY, MaxY: Double); override;
-    procedure ShowLegend(Gdip: IGPGraphics; const Height: Integer); override;
-    procedure ShowData(Gdip: IGPGraphics); override;
+    procedure ShowLegend(Gdip: TGPGraphics; const Height: Integer); override;
+    procedure ShowData(Gdip: TGPGraphics); override;
     procedure DoSetCursorInData(X, Y: integer; var State: PlotColState; var Cursor: HCURSOR); override;
     procedure DoMouseDownInLegend(X, Y: integer); override;
     function CheckMouseDownInData(X, Y: integer; Shift: TShiftState): Boolean; override;
@@ -246,7 +246,7 @@ type
     procedure DoShowHint(X,Y: integer; ShowCnt: integer); override;
     procedure DoHideHint(); override;
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
-    procedure ShowYAxis(Gdip: IGPGraphics);
+    procedure ShowYAxis(Gdip: TGPGraphics);
     procedure RecalcScale();
 //    procedure Exec(Func: TExecFunc);  override;
   public
@@ -337,7 +337,7 @@ type
     FChangeColumn, FSwapColumn: TPlotColumn;
 //    DataBitmap: TBitmap;
     {FBitmap, }LegendBitmap: TBitmap;
-//    FGPGData, FGPGLegend: IGPGraphics;
+//    FGPGData, FGPGLegend: TGPGraphics;
     FScaleY: Double;
     FPresizionY: Integer;
     FEUnit: string;
@@ -346,7 +346,7 @@ type
     FOnScaleChanged: TNotifyEvent;
     FOnParamXAxisChanged: TParamXAxisChangedEvent;
     FSelectedColumn: TPlotColumn;
-//    Fcbch: IGPBitmap;
+//    Fcbch: TGPBitmap;
     procedure SetCursorY(const Value: Double);
     procedure SetShowLegend(const Value: Boolean);
     function SetOffsetY(Y: Integer; NeedRepaint: Boolean = False): Boolean;
@@ -397,10 +397,10 @@ type
     procedure DoParamXAxisChanged(Column: TGraphColumn; Param: TGraphParam; ChangeState: TChangeStateParam);
 
     function GetColumnsClass: TPlotColumnsClass; virtual;
-    procedure ShowYWalls(G: IGPGraphics; top, Height: integer);
-    procedure ShowXAxis(G: IGPGraphics);
-    procedure ShowCursorY(G: IGPGraphics);
-    function GPFont: IGPFont; inline;
+    procedure ShowYWalls(G: TGPGraphics; top, Height: integer);
+    procedure ShowXAxis(G: TGPGraphics);
+    procedure ShowCursorY(G: TGPGraphics);
+    function CreateGPFont: TGPFont;
     function Range: Integer; inline;
     function RangeY: Integer; inline;
     procedure Exec(Func: TExecFunc);
@@ -472,6 +472,21 @@ const
  ACL_CURSOR = $FFFFB5C2;
  CHECKBOX_SIZE = 10;
 
+
+function MeasureString(gdip: TGPGraphics; string_: WideString; font: TFont; stringFormat: TGPStringFormat = nil): TGPRectF;
+ var
+  f: TGPFont;
+  fs: TFontStyles;
+begin
+  fs := font.Style;
+  f := TGPFont.Create(font.Name, font.Size, PInteger(@fs)^);
+  try
+   gdip.MeasureString(string_, Length(string_), f, MakePoint(0.0,0.0), stringFormat, Result);
+  finally
+   f.Free;
+  end;
+end;
+
 function SetPresetScale(s: double): Double;
  var
   m, dlt: Double;
@@ -485,7 +500,7 @@ begin
     end;
 end;
 
-function CheckBoxToGDIP(const Checked: Boolean): IGPBitmap;
+procedure CheckBoxToGDIP(const Checked: Boolean; out Res: TGPBitmap);
  const
   DA: array[Boolean]of TThemedButton = (tbCheckBoxUncheckedNormal, tbCheckBoxCheckedNormal);
  var
@@ -505,7 +520,7 @@ begin
     if Checked then  NonThemedCheckBoxState := NonThemedCheckBoxState or DFCS_CHECKED;
     DrawFrameControl(B.Canvas.Handle, R, DFC_BUTTON, NonThemedCheckBoxState);
    end;
-  Result := TGPBitmap.Create(B);
+  Res := TGPBitmap.Create(B.Handle, b.Palette);
   B.Free;
 end;
 
@@ -658,13 +673,13 @@ end;
 procedure TPlotColumn.DoHideHint();
 begin
 end;
-procedure TPlotColumn.ShowData(Gdip: IGPGraphics);
+procedure TPlotColumn.ShowData(Gdip: TGPGraphics);
 begin
 end;
-procedure TPlotColumn.ShowLegend(Gdip: IGPGraphics; const Height: Integer);
+procedure TPlotColumn.ShowLegend(Gdip: TGPGraphics; const Height: Integer);
 begin
 end;
-procedure TPlotColumn.CalcLegendHeight(Gdip: IGPGraphics; var Height: Integer);
+procedure TPlotColumn.CalcLegendHeight(Gdip: TGPGraphics; var Height: Integer);
 begin
 end;
 procedure TPlotColumn.DoMouseDownInLegend(X, Y: integer);
@@ -689,85 +704,116 @@ end;
 
 { TYColumn }
 
-procedure TYColumn.CalcLegendHeight(Gdip: IGPGraphics; var Height: Integer);
+procedure TYColumn.CalcLegendHeight(Gdip: TGPGraphics; var Height: Integer);
  var
   h: Integer;
 begin
-  h := Round(Gdip.MeasureStringF(Plot.TitleY, Plot.GPFont).Width) + 1;
+  h := Round(MeasureString(Gdip, Plot.TitleY, Plot.Font).Width + 1);
   if h > Height then Height := h;
 end;
 
-procedure TYColumn.ShowData(Gdip: IGPGraphics);
+procedure TYColumn.ShowData(Gdip: TGPGraphics);
   var
-   sf: IGPStringFormat;
-   br: IGPBrush;
-   mx: IGPMatrix;
+   sf: TGPStringFormat;
+   br: TGPBrush;
+   mx: TGPMatrix;
    cntDpmm, mr: Integer;
    Y, off, ht, Ydpmm: Double;
+   s: WideString;
+   f: TGPFont;
 begin
-  Ydpmm := Gdip.DpiY*2/2.54;
-  mr := Plot.Mirror;
-  off:= Plot.OffsetY;
-  ht := Plot.ScrollRect.Height;
+  Ydpmm := Gdip.GetDpiY*2/2.54;
+  mr    := Plot.Mirror;
+  off   := Plot.OffsetY;
+  ht    := Plot.ScrollRect.Height;
   // создание вспомогательных интерфейсов
   sf := TGPStringFormat.Create;
+  f  := Plot.CreateGPFont;
+  try
+    br := TGPSolidBrush.Create(aclBlack);
+    try
+      Gdip.SetClip(MakeRect(0,0, Width,  ht));
+      mx := TGPMatrix.Create;
+      try
+        Gdip.GetTransform(mx);
 
-  br := TGPSolidBrush.Create(aclBlack);
+        if mr = 1 then Gdip.TranslateTransform(0, Off)
+        else Gdip.TranslateTransform(0, -Off+ht);
 
-  Gdip.SetClipF(MakeRectF(0,0, Width,  ht));
-  mx := Gdip.Transform;
-
-  if mr = 1 then Gdip.TranslateTransform(0, Off)
-  else Gdip.TranslateTransform(0, -Off+ht);
-
-  cntDpmm := Trunc(-Off/Ydpmm);
-  Y := Ydpmm*Trunc(cntDpmm);
-  while Y <= (-Off + ht+Ydpmm) do
-   begin
-    // заголовок
-    Gdip.DrawStringF(
-                    Format('%g',[Plot.FirstY + cntDpmm*2/Plot.ScaleY]),
-                    Plot.GPFont,
-                    MakePointF(0, Y*mr),
-                    sf,
-                    br
-                    );
-    Inc(cntDpmm);
-    Y := Y + Ydpmm;
-   end;
-  Gdip.Transform := mx;
-  Gdip.ResetClip;
+        cntDpmm := Trunc(-Off/Ydpmm);
+        Y := Ydpmm*Trunc(cntDpmm);
+        while Y <= (-Off + ht+Ydpmm) do
+         begin
+          // заголовок
+          s := Format('%g',[Plot.FirstY + cntDpmm*2/Plot.ScaleY]);
+          Gdip.DrawString(
+                          s, Length(s),
+                          f,
+                          MakePoint(0, Y*mr),
+                          sf,
+                          br
+                          );
+          Inc(cntDpmm);
+          Y := Y + Ydpmm;
+         end;
+        Gdip.SetTransform(mx);
+      finally
+       mx.Free;
+      end;
+      Gdip.ResetClip;
+    finally
+     br.Free;
+    end;
+  finally
+   f.Free;
+   sf.Free;
+  end;
 end;
 
-procedure TYColumn.ShowLegend(Gdip: IGPGraphics; const Height: Integer);
+procedure TYColumn.ShowLegend(Gdip: TGPGraphics; const Height: Integer);
   var
-   sf: IGPStringFormat;
-   br: IGPBrush;
-   mx: IGPMatrix;
+   sf: TGPStringFormat;
+   br: TGPBrush;
+   mx: TGPMatrix;
    s: string;
+   f: TGPFont;
 begin
   // создание вспомогательных интерфейсов
   sf := TGPStringFormat.Create;
-  sf.Alignment := StringAlignmentCenter;
-  sf.LineAlignment := StringAlignmentCenter;
+  f  := Plot.CreateGPFont;
+  try
+    sf.SetAlignment(StringAlignmentCenter);
+    sf.SetLineAlignment(StringAlignmentCenter);
 
-  br := TGPSolidBrush.Create(aclBlack);
+    br := TGPSolidBrush.Create(aclBlack);
+    try
+      mx := TGPMatrix.Create;
+      try
+        Gdip.GetTransform(mx);
+        Gdip.RotateTransform(90);
 
-  mx := Gdip.Transform;
-  Gdip.RotateTransform(90);
-
-  if Plot.EUnitY <> '' then
-       s := Plot.TitleY + ' ['+ Plot.EUnitY +']'
-  else s := Plot.TitleY;
-  // заголовок
-  Gdip.DrawStringF(
-                  s,
-                  Plot.GPFont,
-                  MakePointF(Height/2, -Width/2),
-                  sf,
-                  br
-                  );
-  Gdip.Transform := mx;
+        if Plot.EUnitY <> '' then
+             s := Plot.TitleY + ' ['+ Plot.EUnitY +']'
+        else s := Plot.TitleY;
+        // заголовок
+        Gdip.DrawString(
+                        s, Length(s),
+                        f,
+                        MakePoint(Height/2, -Width/2),
+                        sf,
+                        br
+                        );
+        Gdip.SetTransform(mx);
+      finally
+        mx.Free;
+      end;
+    finally
+     br.Free;
+    end;
+  finally
+    f.Free;
+    sf.Free;
+  end;
 end;
 
 { TGraphColumn }
@@ -793,7 +839,7 @@ end;
 
 function TGraphColumn.GetHintColor: TColor;
 begin
-  if Assigned(FHintParam) then Result := GPGetColor(FHintParam.Color)
+  if Assigned(FHintParam) then Result := ARGBToColorRef(FHintParam.Color)
   else Result := inherited;
 end;
 
@@ -1063,7 +1109,7 @@ begin
   for p in FParams do p.RecalcScale();
 end;
 
-procedure TGraphColumn.CalcLegendHeight(Gdip: IGPGraphics; var Height: Integer);
+procedure TGraphColumn.CalcLegendHeight(Gdip: TGPGraphics; var Height: Integer);
   var
    p: TGraphParam;
    h: Single;
@@ -1073,50 +1119,64 @@ begin
   if h > Height then Height := Round(h);
 end;
 
-procedure TGraphColumn.ShowData(Gdip: IGPGraphics);
+procedure TGraphColumn.ShowData(Gdip: TGPGraphics);
  var
   p: TGraphParam;
-  m: IGPMatrix;
+  m: TGPMatrix;
 begin
-  Gdip.SetClipF(MakeRectF(1,0, Width-1,  Plot.ScrollRect.Height));
+  Gdip.SetClip(MakeRect(1,0, Width-1,  Plot.ScrollRect.Height));
   ShowYAxis(Gdip);
-  for p in FParams do
-   begin
-    m := Gdip.Transform;
-    if p.Visible then p.ShowData(Gdip);
-    Gdip.SetTransform(m);
-   end;
+  m := TGPMatrix.Create;
+  try
+    for p in FParams do
+     begin
+      Gdip.GetTransform(m);
+      if p.Visible then p.ShowData(Gdip);
+      Gdip.SetTransform(m);
+     end;
+  finally
+    m.Free;
+  end;
   Gdip.ResetClip;
 end;
 
-procedure TGraphColumn.ShowLegend(Gdip: IGPGraphics; const Height: Integer);
+procedure TGraphColumn.ShowLegend(Gdip: TGPGraphics; const Height: Integer);
  var
   p: TGraphParam;
-  m:IGPMatrix;
+  m: TGPMatrix;
 begin
-  m := Gdip.Transform;
-  for p in FParams do if not p.HideInLegend then
-   begin
-    p.ShowLegend(Gdip);
-    Gdip.TranslateTransform(0, p.CalcLegendHeight(Gdip));
-   end;
-  Gdip.SetTransform(m);
+  m := TGPMatrix.Create;
+  try
+    Gdip.GetTransform(m);
+    for p in FParams do if not p.HideInLegend then
+     begin
+      p.ShowLegend(Gdip);
+      Gdip.TranslateTransform(0, p.CalcLegendHeight(Gdip));
+     end;
+    Gdip.SetTransform(m);
+  finally
+    m.Free;
+  end;
 end;
 
-procedure TGraphColumn.ShowYAxis(Gdip: IGPGraphics);
+procedure TGraphColumn.ShowYAxis(Gdip: TGPGraphics);
   var
-   pn: IGPPen;
+   pn: TGPPen;
    X, ht, Xdpmm: Double;
 begin
   pn := TGPPen.Create(ACL_AXIS, 1);
-  Xdpmm := Gdip.DpiX*2/2.54;
-  ht := Plot.ScrollRect.Height;
-  X := Xdpmm;
-  while X < Width do
-   begin
-    Gdip.DrawLineF(pn, X, 0, X, ht);
-    X := X + Xdpmm;
-   end;
+  try
+    Xdpmm := Gdip.GetDpiX*2/2.54;
+    ht := Plot.ScrollRect.Height;
+    X := Xdpmm;
+    while X < Width do
+     begin
+      Gdip.DrawLine(pn, X, 0, X, ht);
+      X := X + Xdpmm;
+     end;
+  finally
+   pn.Free;
+  end;
 end;
 {$ENDREGION}
 
@@ -1174,10 +1234,10 @@ begin
   inherited;
 end;
 
-function TGraphParam.CalcLegendHeight(Gdip: IGPGraphics): Single;
+function TGraphParam.CalcLegendHeight(Gdip: TGPGraphics): Single;
 begin
   if HideInLegend then Result := 0
-  else Result := Round(Gdip.MeasureStringF('[', Plot.GPFont).Height*2 + Width);
+  else Result := Round(MeasureString(Gdip, '[', Plot.Font).Height*2 + Width);
   FLegendHeight := Result;
 end;
 
@@ -1398,25 +1458,28 @@ end;
 
 procedure TGraphParam.ShowColumnData;
  var
-  G: IGPGraphics;
+  G: TGPGraphics;
+  sb: TGPSolidBrush;
 begin
   if psUpdating in Plot.FStates then Exit;
   Include(Plot.FStates, psUpdating);
   if Plot.ShowLegend then Plot.DoPrepareLegend;
   plot.DataBitmap.Canvas.Lock;
   GDIPlus.Lock;
+  G := TGPGraphics.Create(plot.DataBitmap.Canvas.Handle);
+  sb := TGPSolidBrush.Create(ColorRefToARGB(plot.color));
   try
-    G := TGPGraphics.Create(plot.DataBitmap.Canvas);
     G.TranslateTransform(Column.Left, 0);
-    G.SetClipF(MakeRectF(1,0, Column.Width-1,  Plot.ScrollRect.Height));
-    G.FillRectangle(TGPSolidBrush.Create(MakeColor(plot.color)), MakeRect(1,0, Column.Width-1, plot.ScrollRect.Height));
+    G.SetClip(MakeRect(1,0, Column.Width-1,  Plot.ScrollRect.Height));
+    G.FillRectangle(sb, MakeRect(1,0, Column.Width-1, plot.ScrollRect.Height));
     plot.ShowCursorY(G);
     plot.ShowXAxis(g);
     G.ResetTransform;
     G.TranslateTransform(Column.Left, 0);
     Column.ShowData(G);
   finally
-   g := nil;
+   sb.Free;
+   g.Free;
    GDIPlus.UnLock;
    plot.DataBitmap.Canvas.UnLock;
    Exclude(Plot.FStates, psUpdating);
@@ -1424,66 +1487,70 @@ begin
   Plot.Repaint();
 end;
 
-procedure TGraphParam.ShowData(Gdip: IGPGraphics);
+procedure TGraphParam.ShowData(Gdip: TGPGraphics);
  var
   i,j: integer;
-  pn: IGPPen;
+  pn: TGPPen;
   Dx,Sc, Y1,Y2: Single;
 begin
   FLockPoints.Acquire;
   try
-  pn := TGPPen.Create(Color, Width);
-  pn.DashStyle := DashStyle;
-  pn.LineJoin := LineJoinBevel;
-  // ТРАНСФОРМАЦИЯ
-  Y1 := -plot.OffsetY;
-  Y2 := -plot.OffsetY + plot.ScrollRect.Height;
-  Dx := Delta;
-  Sc := Scale;
-  case RChange.State of
-    chspMove:Dx := RChange.Delta;
-    chspScale:
-     begin
-      Sc := RChange.Scale;
-      Dx := RChange.Delta;
-     end;
-  end;
-  if Plot.Mirror = 1 then Gdip.TranslateTransform(-Dx*Sc*plot.Xdpmm, -Y1)
-  else Gdip.TranslateTransform(-Dx*Sc*plot.Xdpmm, Y2);
-  // ОТ ДО
-  FScFrom := 0;
-  FScTo := -1;
-  for i := 0 to Length(FscPoints)-1 do
-   if (abs(FscPoints[i].Y) >= y1) and (FscPoints[i].X <> NULL_VALL) then
-   begin
-    if (i > 0) and (FscPoints[i-1].X <> NULL_VALL)  then  FScFrom := i-1
-    else FScFrom := i;
-    for j := Length(FscPoints)-1 downto FScFrom do if (abs(FscPoints[j].Y) <= y2) and (FscPoints[j].X <> NULL_VALL) then
-     begin
-      if (j+1 < Length(FscPoints)) and (FscPoints[j+1].X <> NULL_VALL) then FScTo := j+1
-      else FScTo := j;
-      Break;
-     end;
-    Break;
-   end;
-  // РИСОВАНИЕ
-  i := FScFrom;
-  while  FScTo-i >= 0 do
-   begin
-    while (FscPoints[i].X = NULL_VALL) and (FScTo-i >= 0) do inc(i);
-    j := i;
-    while (j < Length(FscPoints)) and (FscPoints[j].X <> NULL_VALL) and (FScTo-j >= 0) do inc(j); {TODO -oOwner -cCategory : Найти причину видимо J за границей массива}
-//    EInvalidOp    Invalid floating point operation
-//    [016E57FA]{Core.bpl    } Plot.TGraphParam.ShowData$qqr48System.%DelphiInterface$t20Igdiplus.IGPGraphics% (Line 1377, "Plot.pas")
+    pn := TGPPen.Create(Color, Width);
     try
-     if j > Length(FscPoints) then raise Exception.CreateFmt('j:%d > Length(FscPoints):%d',[j+i , Length(FscPoints)]);
-     if j-i = 1 then Gdip.DrawLineF(pn, FscPoints[i].X, FscPoints[i].Y, FscPoints[i].X, FscPoints[i].Y)
-     else if j-i >= 1 then Gdip.DrawLinesF(pn, @FscPoints[i], j-i);
-    except
-     raise
+      pn.SetDashStyle(DashStyle);
+      pn.SetLineJoin(LineJoinBevel);
+      // ТРАНСФОРМАЦИЯ
+      Y1 := -plot.OffsetY;
+      Y2 := -plot.OffsetY + plot.ScrollRect.Height;
+      Dx := Delta;
+      Sc := Scale;
+      case RChange.State of
+        chspMove:Dx := RChange.Delta;
+        chspScale:
+         begin
+          Sc := RChange.Scale;
+          Dx := RChange.Delta;
+         end;
+      end;
+      if Plot.Mirror = 1 then Gdip.TranslateTransform(-Dx*Sc*plot.Xdpmm, -Y1)
+      else Gdip.TranslateTransform(-Dx*Sc*plot.Xdpmm, Y2);
+      // ОТ ДО
+      FScFrom := 0;
+      FScTo := -1;
+      for i := 0 to Length(FscPoints)-1 do
+       if (abs(FscPoints[i].Y) >= y1) and (FscPoints[i].X <> NULL_VALL) then
+       begin
+        if (i > 0) and (FscPoints[i-1].X <> NULL_VALL)  then  FScFrom := i-1
+        else FScFrom := i;
+        for j := Length(FscPoints)-1 downto FScFrom do if (abs(FscPoints[j].Y) <= y2) and (FscPoints[j].X <> NULL_VALL) then
+         begin
+          if (j+1 < Length(FscPoints)) and (FscPoints[j+1].X <> NULL_VALL) then FScTo := j+1
+          else FScTo := j;
+          Break;
+         end;
+        Break;
+       end;
+      // РИСОВАНИЕ
+      i := FScFrom;
+      while  FScTo-i >= 0 do
+       begin
+        while (FscPoints[i].X = NULL_VALL) and (FScTo-i >= 0) do inc(i);
+        j := i;
+        while (j < Length(FscPoints)) and (FscPoints[j].X <> NULL_VALL) and (FScTo-j >= 0) do inc(j); {TODO -oOwner -cCategory : Найти причину видимо J за границей массива}
+    //    EInvalidOp    Invalid floating point operation
+    //    [016E57FA]{Core.bpl    } Plot.TGraphParam.ShowData$qqr48System.%DelphiInterface$t20Igdiplus.TGPGraphics% (Line 1377, "Plot.pas")
+        try
+         if j > Length(FscPoints) then raise Exception.CreateFmt('j:%d > Length(FscPoints):%d',[j+i , Length(FscPoints)]);
+         if j-i = 1 then Gdip.DrawLine(pn, FscPoints[i].X, FscPoints[i].Y, FscPoints[i].X, FscPoints[i].Y)
+         else if j-i >= 1 then Gdip.DrawLines(pn, PGPPointF(@FscPoints[i]), j-i);
+        except
+         raise
+        end;
+        i := j;
+       end;
+    finally
+     pn.Free;
     end;
-    i := j;
-   end;
   finally
    FLockPoints.Release;
   end;
@@ -1493,93 +1560,120 @@ procedure TGraphParam.DoMouseDownInLegend(X, Y, Top, Height: integer);
  var
   cbR: TRect;
   X0,y0: Integer;
-  G: IGPGraphics;
+  G: TGPGraphics;
   f: Boolean;
+  b: TGPBitmap;
 begin
   GDIPlus.Lock;
+  G := TGPGraphics.Create(Plot.LegendBitmap.Canvas.Handle);
   try
-   G := TGPGraphics.Create(Plot.LegendBitmap.Canvas);
    X0 := Column.Left + CHECKBOX_SIZE div 2;
-   Y0 := Round(Top + G.MeasureStringF('[', Plot.GPFont).Height + Width) - CHECKBOX_SIZE - 1;
+   Y0 := Round(Top + MeasureString(g, '[', Plot.Font).Height + Width) - CHECKBOX_SIZE - 1;
    cbR := Rect(X0, Y0, X0 + CHECKBOX_SIZE, Y0 + CHECKBOX_SIZE);
    f := cbR.Contains(Point(X,Y));
    if f then
     begin
      FVisible := not FVisible;
-     G.DrawCachedBitmap(TGPCachedBitmap.Create(CheckBoxToGDIP(FVisible), G), X0, Y0);
+     CheckBoxToGDIP(FVisible, b);
+     try
+      G.DrawCachedBitmap(TGPCachedBitmap.Create(b, G), X0, Y0);
+     finally
+      b.Free;
+     end;
     end;
   finally
-   g := nil;
+   g.Free;
    GDIPlus.UnLock;
   end;
   if f then ShowColumnData();
 end;
 
-procedure TGraphParam.ShowLegend(Gdip: IGPGraphics);
+procedure TGraphParam.ShowLegend(Gdip: TGPGraphics);
   var
-   sf: IGPStringFormat;
-   pn: IGPPen;
-   br: IGPBrush;
+   sf: TGPStringFormat;
+   pn: TGPPen;
+   br: TGPBrush;
    s: WideString;
    X, Y, w, dpmm, lbl, dx,sc: Double;
+   f: TGPFont;
+   b: TGPBitmap;
 begin
-  dpmm := Gdip.DpiX/2.54;
+  dpmm := Gdip.getDpiX/2.54;
   // создание вспомогательных интерфейсов
   sf := TGPStringFormat.Create;
-  sf.Alignment := StringAlignmentCenter;
+  f := Plot.CreateGPFont;
+  try
+    sf.SetAlignment(StringAlignmentCenter);
+    pn := TGPPen.Create(Color, Width);
+    try
+      pn.SetDashStyle(DashStyle);
+      br := TGPSolidBrush.Create(Color);
+      try
+        // заголовок
+        if EUnit <> '' then s := Title + '['+ EUnit +']'
+        else s := Title;
 
-  pn := TGPPen.Create(Color, Width);
-  pn.DashStyle := DashStyle;
+        Dx := Delta;
+        Sc := Scale;
+        case RChange.State of
+          chspMove:Dx := RChange.Delta;
+          chspScale:
+           begin
+            Sc := RChange.Scale;
+            Dx := RChange.Delta;
+           end;
+        end;
+        S := Format('%s:%g',[s,sc]);
 
-  br := TGPSolidBrush.Create(Color);
-  // заголовок
-  if EUnit <> '' then s := Title + '['+ EUnit +']'
-  else s := Title;
+        Y := MeasureString(Gdip, s, Plot.Font).Height + Width/2;
+        w := Column.Width;
+        // обрезка
+        Gdip.SetClip(MakeRect(0,0,Column.Width, CalcLegendHeight(Gdip)));
+        // заголовок и линия оси
+        Gdip.DrawString(
+                        s, Length(s),
+                        f,
+                        MakePoint(w/2, 0),
+                        sf,
+                        br);
+        Gdip.DrawLine(pn, 0, Y, w, Y);
+        // риски и шкала
+        pn.SetDashStyle(DashStyleSolid);
+        X := 0;
 
-  Dx := Delta;
-  Sc := Scale;
-  case RChange.State of
-    chspMove:Dx := RChange.Delta;
-    chspScale:
-     begin
-      Sc := RChange.Scale;
-      Dx := RChange.Delta;
-     end;
+        lbl := Dx;
+        pn.SetWidth(1);
+        Y := Y + Width/2;
+        while X < w do
+         begin
+          Gdip.DrawLine(pn, X, Y, X, Y+8);
+          s := Format('%-10.5g', [lbl]);
+          Gdip.DrawString(
+                        s, Length(s),
+                        f,
+                        MakePoint(X+1, y),
+                        br);
+          X := X + 2*dpmm;
+          lbl := lbl + 2.0/Sc;
+          if Abs(lbl) < 0.0000001 then lbl := 0;
+         end;
+        finally
+         br.Free;
+        end;
+    finally
+     pn.Free;
+    end;
+  finally
+   f.Free;
+   sf.Free;
   end;
-  S := Format('%s:%g',[s,sc]);
-
-  Y := Gdip.MeasureStringF(s, Plot.GPFont).Height + Width/2;
-  w := Column.Width;
-  // обрезка
-  Gdip.SetClipF(MakeRectF(0,0,Column.Width, CalcLegendHeight(Gdip)));
-  // заголовок и линия оси
-  Gdip.DrawStringF(
-                  s,
-                  Plot.GPFont,
-                  MakePointF(w/2, 0),
-                  sf,
-                  br
-                  ).DrawLineF(pn, 0, Y, w, Y);
-  // риски и шкала
-  pn.DashStyle := DashStyleSolid;
-  X := 0;
-
-  lbl := Dx;
-  pn.Width := 1;
-  Y := Y + Width/2;
-  while X < w do
-   begin
-    Gdip.DrawLineF(pn, X, Y, X, Y+8).DrawStringF(
-                  Format('%-10.5g', [lbl]),
-                  Plot.GPFont,
-                  MakePointF(X+1, y),
-                  br);
-    X := X + 2*dpmm;
-    lbl := lbl + 2.0/Sc;
-    if Abs(lbl) < 0.0000001 then lbl := 0;
-   end;
-  Gdip.DrawCachedBitmap(TGPCachedBitmap.Create(CheckBoxToGDIP(FVisible), Gdip), CHECKBOX_SIZE div 2, Trunc(Y-CHECKBOX_SIZE)-1);
-  Gdip.ResetClip;
+  CheckBoxToGDIP(FVisible, b);
+  try
+   Gdip.DrawCachedBitmap(TGPCachedBitmap.Create(b, Gdip), CHECKBOX_SIZE div 2, Trunc(Y-CHECKBOX_SIZE)-1);
+   Gdip.ResetClip;
+  finally
+   b.Free;
+  end;
 end;
 
 function TGraphParam.GetOwnColumn: TGraphColumn;
@@ -1601,7 +1695,7 @@ begin
    end;
 end;
 
-procedure TGraphParam.SetDashStyle(const Value: TGPDashStyle);
+procedure TGraphParam.SetDashStyle(const Value: TDashStyle);
 begin
   if FDashStyle <> Value then
    begin
@@ -1818,7 +1912,7 @@ end;
 
 constructor TCustomPlot.Create(AOwner: TComponent);
  var
-  G: IGPGraphics;
+  G: TGPGraphics;
 begin
   inherited;
   FRender := TQeRender.Create(False, 'PLOT');
@@ -1840,12 +1934,12 @@ begin
   ScaleFactor := 1;
   FCursorY := NULL_VALL;
   GDIPlus.Lock;
+  G := TGPGraphics.Create(LegendBitmap.Canvas.Handle);
   try
-   G := TGPGraphics.Create(LegendBitmap.Canvas);
-   Ydpmm := G.DpiY/2.54;
-   Xdpmm := G.DpiX/2.54;
+   Ydpmm := G.GetDpiY/2.54;
+   Xdpmm := G.GetDpiX/2.54;
   finally
-   g := nil;
+   g.Free;
    GDIPlus.UnLock;
   end;
 end;
@@ -2045,18 +2139,18 @@ end;
 
 function TCustomPlot.UpdateLegendHeight: TUpdates;
  var
-  G: IGPGraphics;
+  G: TGPGraphics;
   c: TPlotColumn;
   lh: Integer;
 begin
   if not HandleAllocated then Exit;
   GDIPlus.Lock;
+  G := TGPGraphics.Create(LegendBitmap.Canvas.Handle);
   try
-   G := TGPGraphics.Create(LegendBitmap.Canvas);
    lh := 64;
    for c in Columns do c.CalcLegendHeight(G, lh);
   finally
-   G := nil;
+   G.Free;
    GDIPlus.UnLock;
   end;
   if LegendHeight <> lh then Result := [uLegendHeight] else Result := [];
@@ -2149,9 +2243,12 @@ begin
   Result.Height := LegendHeight;
 end;
 
-function TCustomPlot.GPFont: IGPFont;
+function TCustomPlot.CreateGPFont: TGPFont;
+ var
+  f: TFontStyles;
 begin
-  Result := TGPFont.Create(Font.Name, Font.Size, Font.Style);
+   f := Font.Style;
+  Result := TGPFont.Create(Font.Name, Font.Size, PInteger(@F)^);
 end;
 
 function TCustomPlot.IsLegend(Y: Integer): Boolean;
@@ -2599,19 +2696,23 @@ end;
 
 
 {$REGION 'P A I N T'}
-procedure TCustomPlot.ShowYWalls(G: IGPGraphics; top, Height: integer);
+procedure TCustomPlot.ShowYWalls(G: TGPGraphics; top, Height: integer);
  var
-  pn: IGPPen;
+  pn: TGPPen;
   i: Integer;
 begin
   pn := TGPPen.Create(aclBlack, 1);
+  try
   for i := 1 to Columns.Count-1 do G.DrawLine(pn, TPlotColumn(Columns.Items[i]).Left, top, TPlotColumn(Columns.Items[i]).Left, Height);
+  finally
+   pn.Free;
+  end;
 end;
 
-procedure TCustomPlot.ShowCursorY(G: IGPGraphics);
+procedure TCustomPlot.ShowCursorY(G: TGPGraphics);
   var
    Y: Double;
-  pn: IGPPen;
+  pn: TGPPen;
 begin
   if FCursorY <> NULL_VALL then
    begin
@@ -2619,33 +2720,41 @@ begin
     if (Y >= 0) and (Y <= ScrollRect.Height) then
      begin
       pn := TGPPen.Create(ACL_CURSOR, 8);
-      G.DrawLineF(pn, 0, Y, ClientWidth, Y);
+      try
+       G.DrawLine(pn, 0, Y, ClientWidth, Y);
+      finally
+       pn.Free;
+      end;
      end;
    end;
 end;
 
-procedure TCustomPlot.ShowXAxis(G: IGPGraphics);
+procedure TCustomPlot.ShowXAxis(G: TGPGraphics);
   var
-   pn: IGPPen;
+   pn: TGPPen;
    Y: Double;
 begin
   pn := TGPPen.Create(ACL_AXIS, 1);
+  try
+    if Mirror = 1 then g.TranslateTransform(0, OffsetY)
+    else g.TranslateTransform(0, -OffsetY+ScrollRect.Height);
 
-  if Mirror = 1 then g.TranslateTransform(0, OffsetY)
-  else g.TranslateTransform(0, -OffsetY+ScrollRect.Height);
-
-  Y := 2*Ydpmm*Trunc(-OffsetY/Ydpmm/2);
-  while Y < (-OffsetY + ScrollRect.Height) do
-   begin
-    G.DrawLineF(pn, 0, Y*Mirror, ClientWidth, Y*Mirror);
-    Y := Y + Ydpmm*2;
-   end;
+    Y := 2*Ydpmm*Trunc(-OffsetY/Ydpmm/2);
+    while Y < (-OffsetY + ScrollRect.Height) do
+     begin
+      G.DrawLine(pn, 0, Y*Mirror, ClientWidth, Y*Mirror);
+      Y := Y + Ydpmm*2;
+     end;
+  finally
+   pn.Free;
+  end;
 end;
 
 procedure TCustomPlot.DoPrepareData();
  var
   c: TPlotColumn;
-  g: IGPGraphics;
+  g: TGPGraphics;
+  sb: TGPSolidBrush;
 begin
   if psUpdating in FStates then Exit;
   Include(FStates, psUpdating);
@@ -2655,9 +2764,10 @@ begin
   try
    GDIPlus.Lock;
 //   TDebug.Log('  PrepareData() START===== ');
+   g := TGPGraphics.Create(DataBitmap.Canvas.Handle);
+   sb := TGPSolidBrush.Create(ColorRefToARGB(color));
    try
-    g := TGPGraphics.Create(DataBitmap.Canvas);
-    G.FillRectangle(TGPSolidBrush.Create(MakeColor(color)), IGDIPlus.MakeRect(ScrollRect));
+    G.FillRectangle(sb, MakeRect(ScrollRect));
     ShowCursorY(G);
     ShowXAxis(G);
     G.ResetTransform;
@@ -2669,7 +2779,8 @@ begin
     G.ResetTransform;
     ShowYWalls(G, 0, ScrollRect.Height);
    finally
-    g := nil;
+    sb.Free;
+    g.Free;
     GDIPlus.UnLock;
    end;
   finally
@@ -2682,12 +2793,16 @@ end;
 procedure TCustomPlot.DoPrepareLegend();
  var
   c: TPlotColumn;
-  g: IGPGraphics;
+  g: TGPGraphics;
+  sb: TGPSolidBrush;
+  p : TGPPen;
 begin
   GDIPlus.Lock;
+  G := TGPGraphics.Create(LegendBitmap.Canvas.Handle);
+  sb := TGPSolidBrush.Create(ColorRefToARGB(color));
+  p := TGPPen.Create(aclBlack, 1);
   try
-   G := TGPGraphics.Create(LegendBitmap.Canvas);
-   G.FillRectangle(TGPSolidBrush.Create(MakeColor(color)), IGDIPlus.MakeRect(LegendRect));
+   G.FillRectangle(sb, MakeRect(LegendRect));
    for c in Columns do
     begin
      c.ShowLegend(G, LegendHeight);
@@ -2695,9 +2810,11 @@ begin
     end;
    G.ResetTransform;
    ShowYWalls(G, 0, LegendHeight-1);
-   G.DrawLine(TGPPen.Create(aclBlack, 1), 0, LegendHeight-1, ClientWidth, LegendHeight-1);
+   G.DrawLine(p, 0, LegendHeight-1, ClientWidth, LegendHeight-1);
   finally
-   g := nil;
+   p.Free;
+   sb.Free;
+   g.free;
    GDIPlus.UnLock;
   end;
 end;

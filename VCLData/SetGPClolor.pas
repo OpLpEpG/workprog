@@ -3,7 +3,7 @@ unit SetGPClolor;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, IGDIPlus,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Winapi.GDIPAPI, WinAPI.GDIPObj,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, JvExControls, JvInspector, JvComponentBase;
 
 type
@@ -55,14 +55,21 @@ end;
 
 procedure TInspGPColorItem.DrawValue(const ACanvas: TCanvas);
  var
-  g: IGPGraphics;
+  g: TGPGraphics;
   c: TGPColor;
+  sb: TGPSolidBrush;
 begin
   if not Data.HasValue then Exit;
-  G := TGPGraphics.Create(ACanvas);
-  c := Data.AsOrdinal;
-  G.FillRectangle(TGPSolidBrush.Create(c), MakeRect(Rects[iprValueArea]));
-  if  Editing then DrawEditor(ACanvas);
+  G := TGPGraphics.Create(ACanvas.Handle);
+  sb := TGPSolidBrush.Create(c);
+  try
+   c := Data.AsOrdinal;
+   G.FillRectangle(sb, MakeRect(Rects[iprValueArea]));
+   if  Editing then DrawEditor(ACanvas);
+  finally
+   sb.Free;
+   g.Free;
+  end;
 end;
 
 procedure TInspGPColorItem.Edit;

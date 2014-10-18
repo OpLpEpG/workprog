@@ -3,8 +3,9 @@ unit VCL.Telesis.UsoOsc;
 interface
 
 uses DeviceIntf, PluginAPI, ExtendIntf, RootImpl, debug_except, DockIForm, RootIntf, Container, Actns,
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VCLTee.TeEngine, VCLTee.Series, Vcl.ExtCtrls, VCLTee.TeeProcs, VCLTee.Chart, VCL.ControlRootForm;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Vcl.Graphics, Vcl.ExtCtrls, VCL.ControlRootForm, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  VCLTee.TeEngine, VCLTee.Series,  VCLTee.TeeProcs, VCLTee.Chart;
 
 type
   TFFTForm = class(TControlRootForm<TFFTData, ITelesistem>)
