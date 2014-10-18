@@ -81,8 +81,8 @@
         <DCC_RangeChecking>true</DCC_RangeChecking>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.0.147;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.1.1.1;Comments=</VerInfo_Keys>
-        <VerInfo_Build>147</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.0.148;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.1.1.1;Comments=</VerInfo_Keys>
+        <VerInfo_Build>148</VerInfo_Build>
         <DCC_MapFile>3</DCC_MapFile>
         <ILINK_MapFileType>DetailedSegments</ILINK_MapFileType>
         <DCC_ExeOutput>..\_exe\$(Config)</DCC_ExeOutput>

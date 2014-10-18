@@ -177,13 +177,17 @@ procedure TFormUAKI.NetSetupConnection(u: IUaki);
   gc: IGetConnectIO;
   d: IDialog;
 begin
-  if Assigned(u) and not Assigned(u.IConnect) then if Supports(GlobalCore, IConnectIOEnum, ge) and Supports(GlobalCore, IGetConnectIO, gc) then
+  if Assigned(u) and not Assigned(u.IConnect) then
    begin
-     c := gc.ConnectIO(4);
-     ge.Add(c);
-     u.IConnect := c;
-   end;
-  if RegisterDialog.TryGet<Dialog_SetupConnectIO>(d) then (d as IDialog<IConnectIO>).Execute(u.IConnect);
+    if Supports(GlobalCore, IConnectIOEnum, ge) and Supports(GlobalCore, IGetConnectIO, gc) then
+     begin
+       c := gc.ConnectIO(4);
+       if RegisterDialog.TryGet<Dialog_SetupConnectIO>(d) then (d as IDialog<IConnectIO>).Execute(c);
+       u.IConnect := c;
+       ge.Add(c);
+     end
+   end
+   else if RegisterDialog.TryGet<Dialog_SetupConnectIO>(d) then (d as IDialog<IConnectIO>).Execute(u.IConnect);
 end;
 
 procedure TFormUAKI.NToleranceClick(Sender: TObject);

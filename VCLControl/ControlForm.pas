@@ -105,11 +105,13 @@ begin
    end;
   TreeUpdate();
   Bind('C_Project', GlobalCore as IManager, ['S_ProjectChange']);
+  Bind('C_Project', GlobalCore as IDeviceEnum, ['S_AfterAdd']);
+  Bind('C_Project', GlobalCore as IConnectIOEnum, ['S_AfterAdd']);
 end;
 
 procedure TFormControl.NAddDevClick(Sender: TObject);
 begin
- if TFormCreateDev.Execute = mrOk then TreeUpdate;
+ if TFormCreateDev.Execute = mrOk then// TreeUpdate;
 end;
 
 procedure TFormControl.NRemoveClick(Sender: TObject);
@@ -200,10 +202,9 @@ begin
     c := gc.ConnectIO(TMenuItem(Sender).Tag);
     if RegisterDialog.TryGet<Dialog_SetupConnectIO>(d) and (d as IDialog<IConnectIO>).Execute(c) then
       begin
-       if Supports(GlobalCore, IConnectIOEnum, ce) then ce.Add(c);
        (FEditData.Item as IDevice).IConnect := c;
+       if Supports(GlobalCore, IConnectIOEnum, ce) then ce.Add(c);
       end;
-    TreeUpdate();
    end;
 end;
 
@@ -224,9 +225,8 @@ begin
    begin
     c := gc.ConnectIO(TMenuItem(Sender).Tag);
     c.ConnectInfo := TMenuItem(Sender).Caption;
-    if Assigned(ce) then ce.Add(c);
     (FEditData.Item as IDevice).IConnect := c;
-    TreeUpdate();
+    if Assigned(ce) then ce.Add(c);
    end;
 end;
 

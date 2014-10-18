@@ -45,7 +45,6 @@ type
 
     procedure Send(const Cmd: AnsiString; Event: TStolRes; WaitTime1: Integer = -1); overload;
     procedure Send(const Cmd: AnsiString; WaitTime1, WaitTime2: Integer;  Event: TStolRes); overload;
-    procedure Loaded; override;
   public
     constructor Create(); override;
     constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); override;
@@ -70,8 +69,13 @@ end;
 { TStolGK }
 
 constructor TStolGK.Create;
+ var
+  LDoc: IXMLDocument;
 begin
   inherited;
+  LDoc := NewXDocument();
+  LDoc.LoadFromFile(ExtractFilePath(ParamStr(0))+'Devices\StolGkCommands.xml');
+  XMLCommand := LDoc.DocumentElement;
   FDName := 'STOL_GK';
   FStatus := dsReady;
 end;
@@ -105,15 +109,6 @@ begin
   Result := FStatusStol;
 end;
 
-procedure TStolGK.Loaded;
- var
-  LDoc: IXMLDocument;
-begin
-  inherited;
-  LDoc := NewXDocument();
-  LDoc.LoadFromFile(ExtractFilePath(ParamStr(0))+'Devices\StolGkCommands.xml');
-  XMLCommand := LDoc.DocumentElement;
-end;
 
 procedure TStolGK.SetConnect(AIConnectIO: IConnectIO);
 begin
