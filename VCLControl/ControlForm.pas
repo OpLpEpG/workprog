@@ -43,6 +43,8 @@ type
     FDummi: string;
     FProject: string;
 
+    FNotUpdate: Boolean;
+
     procedure TreeClear;
     procedure TreeUpdate;
 
@@ -196,14 +198,19 @@ procedure TFormControl.AddNewClick(Sender: TObject);
   gc: IGetConnectIO;
   ce: IConnectIOEnum;
   d: Idialog;
+  dv: IDevice;
 begin
   if Supports(GlobalCore, IGetConnectIO, gc) then
    begin
     c := gc.ConnectIO(TMenuItem(Sender).Tag);
     if RegisterDialog.TryGet<Dialog_SetupConnectIO>(d) and (d as IDialog<IConnectIO>).Execute(c) then
       begin
-       (FEditData.Item as IDevice).IConnect := c;
+       dv := FEditData.Item as IDevice;
+       FNotUpdate := True;
        if Supports(GlobalCore, IConnectIOEnum, ce) then ce.Add(c);
+       dv.IConnect := c;
+       FNotUpdate := False;
+       TreeUpdate();
       end;
    end;
 end;
@@ -213,11 +220,13 @@ procedure TFormControl.ConnectClick(Sender: TObject);
   c: IConnectIO;
   gc: IGetConnectIO;
   ce: IConnectIOEnum;
+  dv: IDevice;
 begin
   GlobalCore.QueryInterface(IConnectIOEnum, ce);
+  dv := FEditData.Item as IDevice;
   if Supports(GlobalCore, IConnectIOEnum, ce) then for c in ce do if SameText(c.ConnectInfo, TMenuItem(Sender).Caption) then
    begin
-    (FEditData.Item as IDevice).IConnect := c;
+    dv.IConnect := c;
     TreeUpdate();
     Exit;
    end;
@@ -225,8 +234,11 @@ begin
    begin
     c := gc.ConnectIO(TMenuItem(Sender).Tag);
     c.ConnectInfo := TMenuItem(Sender).Caption;
-    (FEditData.Item as IDevice).IConnect := c;
+    FNotUpdate := True;
     if Assigned(ce) then ce.Add(c);
+    dv.IConnect := c;
+    FNotUpdate := False;
+    TreeUpdate();
    end;
 end;
 
@@ -320,6 +332,7 @@ procedure TFormControl.TreeUpdate;
    if Assigned(ce) then ce.Remove(c);
   end;
 begin
+  if FNotUpdate then Exit;
   TBindHelper.RemoveControlExpressions(Self, ['C_ConnectIO', 'C_Device']);
   GlobalCore.QueryInterface(IDeviceEnum, de);
   GlobalCore.QueryInterface(IConnectIOEnum, ce);

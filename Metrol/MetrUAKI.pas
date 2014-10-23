@@ -4,7 +4,7 @@ interface
 
 uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, UakiIntf, RootImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Menus,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UakiUI, Vcl.ExtCtrls, Vcl.StdCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UakiUI, UakiUI.Ten, Vcl.ExtCtrls, Vcl.StdCtrls;
 
 type
   TFormUAKI = class(TCustomFontIForm, INotifyCanClose, INotifyBeforeRemove)
@@ -22,7 +22,9 @@ type
     FuiA: TFrameUakiUI;
     FuiZ: TFrameUakiUI;
     FuiV: TFrameUakiUI;
+    FuiT: TFrameUakiTEN;
     FC_PublishedChanged: string;
+    FC_TenUpdate: Integer;
     function GetUaki: IUaki;
     procedure NetSetupClick(Sender: TObject);
     procedure SetC_AxisUpdate(const Value: Integer);
@@ -32,6 +34,7 @@ type
     procedure InitFrame(var Frame: TFrameUakiUI; const Capt, Nm: string; Addr: Integer);
     procedure SetC_PublishedChanged(const Value: string);
     procedure NetSetupConnection(u: IUaki);
+    procedure SetC_TenUpdate(const Value: Integer);
   protected
    const
     NICON = 273;
@@ -45,6 +48,7 @@ type
     class procedure DoCreateForm(Sender: IAction); override;
     property Uaki: IUaki read GetUaki;
     property C_AxisUpdate: Integer read FC_AxisUpdate write SetC_AxisUpdate;
+    property C_TenUpdate: Integer read FC_TenUpdate write SetC_TenUpdate;
     property C_PublishedChanged: string read FC_PublishedChanged write SetC_PublishedChanged;
   end;
 
@@ -158,10 +162,15 @@ end;
 procedure TFormUAKI.Loaded;
 begin
   inherited Loaded;
+  FuiT := CreateUnLoad<TFrameUakiTEN>;
+  FuiT.Name := 'FuiT';
+  FuiT.Parent := Self;
+  FuiT.FuncUaki := GetUaki;
+  FuiT.Show;
+//  btCycl.Caption := 'Опрос+';
   InitFrame(FuiV, 'Визир','FuiV', ADR_AXIS_VIZ);
   InitFrame(FuiZ, 'Зенит','FuiZ', ADR_AXIS_ZU);
   InitFrame(FuiA, 'Азимут','FuiA', ADR_AXIS_AZI);
-//  btCycl.Caption := 'Опрос+';
   (Uaki as ICycle).Cycle := True;
 end;
 
@@ -220,6 +229,12 @@ begin
   edDvis.Text := Uaki.Viz.DeltaAngle.ToString;
 end;
 
+procedure TFormUAKI.SetC_TenUpdate(const Value: Integer);
+begin
+  FC_TenUpdate := Value;
+  FuiT.UpdateScreen(Value, Uaki);
+end;
+
 function TFormUAKI.GetUaki: IUaki;
  var
   g: IGetDevice;
@@ -243,6 +258,7 @@ begin
    if not FBinded then
     begin
      Bind('C_AxisUpdate', d, ['S_AxisUpdate']);
+     Bind('C_TenUpdate', d, ['S_TenUpdate']);
      Bind('C_PublishedChanged', d, ['S_PublishedChanged']);
      FBinded := True;
     end;

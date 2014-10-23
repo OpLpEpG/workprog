@@ -230,11 +230,22 @@ begin
   Caption := Format('[%s %s] %s', [TXTDT[DataType], TXTACT[FDBConnection.Active], Tpath.GetFileNameWithoutExtension(DBName)]);
 end;
 
+procedure TFormDataDB.SetC_UpdateFields(const Value: Integer);
+begin
+  FC_UpdateFields := Value;
+  if FC_UpdateFields = -1 then ResetParamsAndScreen
+  else if FC_UpdateFields = -2 then
+   begin
+    FDataSet.DisableControls;
+    DoBeforeClose;
+    FDataSet.Close;
+   end;
+end;
 procedure TFormDataDB.ResetParamsAndScreen;
 begin
-  FDataSet.DisableControls;
+//  FDataSet.DisableControls;
   try
-   DoBeforeClose;
+//   DoBeforeClose;
    FDataSet.CloneCursor(Query);
    DoAfterOpen();
   finally
@@ -269,11 +280,6 @@ begin
   Result := FDBConnection.AddOrGetQuery(TB_NAME[DataType]);
 end;
 
-procedure TFormDataDB.SetC_UpdateFields(const Value: Integer);
-begin
-  FC_UpdateFields := Value;
-  if FC_UpdateFields < 0 then ResetParamsAndScreen;
-end;
 
 //procedure TFormDataDB.SetDeviceChange(const Value: string);
 //begin

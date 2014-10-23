@@ -60,10 +60,10 @@ procedure TInspGPColorItem.DrawValue(const ACanvas: TCanvas);
   sb: TGPSolidBrush;
 begin
   if not Data.HasValue then Exit;
+  c := Data.AsOrdinal;
   G := TGPGraphics.Create(ACanvas.Handle);
   sb := TGPSolidBrush.Create(c);
   try
-   c := Data.AsOrdinal;
    G.FillRectangle(sb, MakeRect(Rects[iprValueArea]));
    if  Editing then DrawEditor(ACanvas);
   finally
@@ -130,5 +130,5 @@ begin
 end;
 
 initialization
-  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem,TypeInfo(TGPColor)));
+  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TGPColor)));
 end.

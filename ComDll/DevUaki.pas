@@ -72,6 +72,9 @@ type
     FZen: TAxisZen;
     FViz: TAxisViz;
     FS_AxisUpdate: Integer;
+    FTemp: TArray<Double>;
+    FTen: array[0..2] of Integer;
+    FS_TenUpdate: Integer;
     procedure SetS_AxisUpdate(const Value: Integer);
    type
     TCycleUAK = class(TCycle)
@@ -81,9 +84,16 @@ type
    var
     FCycle: TCycleUAK;
   protected
+    procedure UpdateTenData;
+    procedure OnCurrentData(const Data: string; status: integer);
+    // IUaki
     function GetAzi: IAxisAZI;
     function GetZen: IAxisZEN;
     function GetViz: IAxisVIZ;
+    function  GetTenPower(Index: Integer): Integer;
+    procedure SetTenPower(Index, Value: Integer);
+    function GetTemperature: TArray<Double>;
+    procedure TenStop;
 
     procedure SetConnect(AIConnectIO: IConnectIO); override;
   public
@@ -95,6 +105,7 @@ type
     property Zen: TAxisZen read FZen implements  IAxisZEN;
     property Viz: TAxisViz read FViz implements  IAxisVIZ;
     property S_AxisUpdate: Integer read FS_AxisUpdate write SetS_AxisUpdate;
+    property S_TenUpdate: Integer read FS_TenUpdate write FS_TenUpdate;
   published
     property CyclePeriod;
   end;
@@ -105,6 +116,7 @@ implementation
 
 procedure TDevUaki.TCycleUAK.DoCycle;
 begin
+  TDevUaki(Controller).UpdateTenData;
   with Controller as IUaki do
    begin
     Azi.UpdateAngleData;
@@ -126,6 +138,7 @@ begin
   FDName := 'UAKI';
   FStatus := dsReady;
   FCyclePeriod := 500;
+  FS_TenUpdate := Length(FTen);
 end;
 
 constructor TDevUaki.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
@@ -148,6 +161,16 @@ begin
   Result := Fazi;
 end;
 
+function TDevUaki.GetTemperature: TArray<Double>;
+begin
+  Result := FTemp;
+end;
+
+function TDevUaki.GetTenPower(Index: Integer): Integer;
+begin
+  Result := FTen[Index];
+end;
+
 function TDevUaki.GetViz: IAxisVIZ;
 begin
   Result := FViz;
@@ -168,6 +191,46 @@ procedure TDevUaki.SetS_AxisUpdate(const Value: Integer);
 begin
   FS_AxisUpdate := Value;
   Notify('S_AxisUpdate');
+end;
+
+procedure TDevUaki.SetTenPower(Index, Value: Integer);
+  function p2d(p: integer): Integer;
+  begin
+    if p<0 then p := 0
+    else if p>100 then p := 100;
+    Result := Round(p*255/100);
+  end;
+begin
+  FTen[Index] := Value;
+  (IConnect as IUDPConnectIO).Send(Format('14p%d,%d,%d',[p2d(FTen[0]),p2d(FTen[1]),p2d(FTen[2])]));
+end;
+
+procedure TDevUaki.TenStop;
+begin
+  (IConnect as IUDPConnectIO).Send('14p0,0,0');
+end;
+
+procedure TDevUaki.UpdateTenData;
+begin
+  (IConnect as IUDPConnectIO).Send('14a', OnCurrentData);
+end;
+procedure TDevUaki.OnCurrentData(const Data: string; status: integer);
+ var
+  a: TArray<string>;
+  i: Integer;
+begin
+  if status >= 24 then
+   begin
+    a := Data.Trim.Replace('*', '').Split(['{', '[',' ', ',',']', '}'], ExcludeEmpty);
+    if Length(a) >= 4 then for I := 0 to 2 do Ften[i] := Round(a[i+1].Trim.ToInteger*100/255);
+    if Length(a)-4 > 0 then
+     begin
+      SetLength(FTemp, Length(a)-4);
+      for I := 0 to Length(a)-4-1 do FTemp[i] := StrToIntDef(a[i+4].Trim, 0) / 100;
+     end
+    else SetLength(FTemp, 0);
+    Notify('S_TenUpdate');
+   end;
 end;
 
 { TAxis }

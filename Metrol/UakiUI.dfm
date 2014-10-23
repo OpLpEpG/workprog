@@ -2,10 +2,11 @@ object FrameUakiUI: TFrameUakiUI
   Left = 0
   Top = 0
   Width = 106
-  Height = 235
+  Height = 252
   Align = alLeft
   PopupMenu = pp
   TabOrder = 0
+  ExplicitWidth = 451
   ExplicitHeight = 305
   object lbName: TLabel
     Left = 8

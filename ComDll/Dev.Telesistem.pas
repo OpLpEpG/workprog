@@ -3,7 +3,8 @@ unit Dev.Telesistem;
 interface
 
 uses System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Dev.Telesistem.Decoder,
-     Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools;
+     Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools,
+     Math.Telesistem;
 
 const
 //   TELESIS_USO: TSubDeviceInfo = (typ: [sdtUniqe, sdtMastExist]; Category: 'Усо');
@@ -140,9 +141,10 @@ type
      function GetCaption: string; override;
    end;
 
-   TDecoder = class(TCustomDecoder, ITelesistem)
+   TDecoder1 = class(TCustomDecoder, ITelesistem)
    protected
      function GetCaption: string; override;
+     function GetDecoderClass: TDecoderClass; override;
    public
      constructor Create; override;
      [DynamicAction('Показать окно Декорера', '<I>', 55, '0:Телесистема.<I>', 'Показать окно Декорера')]
@@ -574,6 +576,9 @@ begin
   FS_Data.FFTSize := FFT_AMP_LEN;
   FS_Data.InData := @FdataIn[FFT_OVERSAMP];
   FS_Data.SampleSize := FFT_SAMPLES;
+
+  FDataCnt := FFT_OVERSAMP;
+
   InitConst('TFFTForm', 'FFTForm_');
   inherited;
 end;
@@ -678,26 +683,31 @@ end;
 {$ENDREGION}
 
 
-{ TDecoder }
+{ TDecoder1}
 
-constructor TDecoder.Create;
+constructor TDecoder1.Create;
 begin
   inherited;
   InitConst('TDecoderECHOForm', 'DecoderECHO_');
 end;
 
-procedure TDecoder.DoSetup(Sender: IAction);
+procedure TDecoder1.DoSetup(Sender: IAction);
 begin
   inherited;
 end;
 
-function TDecoder.GetCaption: string;
+function TDecoder1.GetCaption: string;
 begin
   Result := 'Декодер-1'
 end;
 
+function TDecoder1.GetDecoderClass: TDecoderClass;
+begin
+  Result := TDecoder;
+end;
+
 initialization
-  RegisterClasses([TTelesistem, TUso1, TDecoder, TbitFlt, TFltBPF, TPalseFlt, TPalseFlt2]);
+  RegisterClasses([TTelesistem, TUso1, TDecoder1, TbitFlt, TFltBPF, TPalseFlt, TPalseFlt2]);
   TRegister.AddType<TTelesistem, IDevice>.LiveTime(ltSingletonNamed);
   TRegister.AddType<TUso1, ITelesistem>.LiveTime(ltTransientNamed);
 //  TRegister.AddType<TUso2, ITelesistem>.LiveTime(ltTransientNamed);
@@ -705,7 +715,7 @@ initialization
   TRegister.AddType<TFltBPF, ITelesistem>.LiveTime(ltTransientNamed);
   TRegister.AddType<TPalseFlt, ITelesistem>.LiveTime(ltTransientNamed);
   TRegister.AddType<TPalseFlt2, ITelesistem>.LiveTime(ltTransientNamed);
-  TRegister.AddType<TDecoder, ITelesistem>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TDecoder1, ITelesistem>.LiveTime(ltTransientNamed);
 //  TRegister.AddType<TDecoderFibonach, ITelesistem>.LiveTime(ltTransientNamed);
 //  TRegister.AddType<TCorrelate, ITelesistem>.LiveTime(ltTransientNamed);
 finalization
@@ -716,7 +726,7 @@ finalization
   GContainer.RemoveModel<TPalseFlt>;
   GContainer.RemoveModel<TPalseFlt2>;
   GContainer.RemoveModel<TFltBPF>;
-  GContainer.RemoveModel<TDecoder>;
+  GContainer.RemoveModel<TDecoder1>;
 //  GContainer.RemoveModel<TCorrelate>;
 //  GContainer.RemoveModel<TDecoderFibonach>;
 end.

@@ -18,7 +18,7 @@ object FormMetrSetup: TFormMetrSetup
   object lbNatt: TLabel
     Left = 160
     Top = 74
-    Width = 155
+    Width = 156
     Height = 13
     Caption = #1063#1080#1089#1083#1086' '#1076#1072#1085#1085#1099#1093' '#1076#1083#1103' '#1072#1090#1090#1077#1089#1090#1072#1094#1080#1080
   end
@@ -67,7 +67,7 @@ object FormMetrSetup: TFormMetrSetup
     Width = 121
     Height = 21
     TabOrder = 2
-    Text = '32'
+    Text = '5'
   end
   object edDev: TEdit
     Left = 16

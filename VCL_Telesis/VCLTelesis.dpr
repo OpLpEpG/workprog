@@ -15,8 +15,10 @@ uses
   Container,
   System.Classes,
   VCL.ControlRootForm in 'VCL.ControlRootForm.pas',
-  VCL.Telesis.FFT in 'VCL.Telesis.FFT.pas' {UsoOscForm},
-  VCL.Telesis.UsoOsc in 'VCL.Telesis.UsoOsc.pas' {FFTForm};
+  VCL.Telesis.uso in 'VCL.Telesis.uso.pas' {UsoOscForm},
+  VCL.Telesis.FFT in 'VCL.Telesis.FFT.pas' {FFTForm},
+  VCL.Telesis.Decoder in 'VCL.Telesis.Decoder.pas' {DecoderECHOForm},
+  VCL.Telesis.Decoder.FindSP in 'VCL.Telesis.Decoder.FindSP.pas' {FrameFindSP: TFrame};
 
 {$R *.res}
 

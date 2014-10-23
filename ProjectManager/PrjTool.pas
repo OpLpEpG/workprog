@@ -507,11 +507,11 @@ begin
     if Assigned(w) then Carray.Add<IHelper>(FHelpes, THelper.Factory(Self, w, u.Attributes[AT_ADDR], u.ParentNode.Attributes[AT_DEV_ID]));
    end;
    DisableControls;
-
+   S_UpdateFields := -2;
    AsyncSQL(SQLGenerate,[],[], qcOpen, procedure
    begin
-     EnableControls;
      S_UpdateFields := -1;
+     EnableControls;
    end);
 end;
 

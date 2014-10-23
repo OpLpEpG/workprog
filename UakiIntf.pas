@@ -75,9 +75,18 @@ type
    function GetZen: IAxisZEN;
    function GetViz: IAxisVIZ;
 
+   function  GetTenPower(Index: Integer): Integer;
+   procedure SetTenPower(Index, Value: Integer);
+   function GetTemperature: TArray<Double>;
+
+   procedure TenStop;
+
    property Azi: IAxisAZI read GetAzi;
    property Zen: IAxisZEN read GetZen;
    property Viz: IAxisVIZ read GetViz;
+
+   property TenPower[Index: Integer]: Integer read GetTenPower write SetTenPower;
+   property Temperature: TArray<Double> read GetTemperature;
   end;
 
 implementation

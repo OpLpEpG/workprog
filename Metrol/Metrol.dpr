@@ -37,7 +37,8 @@ uses
   AutoMetr.GK in 'AutoMetr.GK.pas',
   StolGKUI in 'StolGKUI.pas' {FormStolGK},
   MetrInclin.CheckFormSetup in 'MetrInclin.CheckFormSetup.pas',
-  MetrGK.CheckFormSetup in 'MetrGK.CheckFormSetup.pas';
+  MetrGK.CheckFormSetup in 'MetrGK.CheckFormSetup.pas',
+  UakiUI.Ten in 'UakiUI.Ten.pas' {FrameUakiTEN: TFrame};
 
 {$R *.res}
 

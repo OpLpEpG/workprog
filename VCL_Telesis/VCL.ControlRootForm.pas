@@ -8,6 +8,12 @@ uses DeviceIntf, PluginAPI, ExtendIntf, RootImpl, debug_except, DockIForm, RootI
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,  Vcl.ExtCtrls;
 
 type
+  TControlRootFrame<T> = class(TForm)
+  public
+    procedure DoData(Data: T); virtual; abstract;
+    constructor Create(AOwner: TComponent); override;
+  end;
+
   TControlRootForm<T; SERV: IInterface> = class(TCustomFontIForm, IControlForm, IRootControlForm)
   private
     FSubControlName: String;
@@ -31,6 +37,17 @@ type
   end;
 
 implementation
+
+{ TControlRootFrame<T> }
+
+constructor TControlRootFrame<T>.Create(AOwner: TComponent);
+begin
+  inherited;
+  Tag := $12345678;
+  Name := Self.ClassName.Substring(1);
+  Parent := TWinControl(AOwner);
+  Show;
+end;
 
 { TControlRootForm<T> }
 

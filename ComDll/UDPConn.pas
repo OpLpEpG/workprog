@@ -56,11 +56,11 @@ constructor TUDPConnectIO.Create;
 begin
   inherited;
   FQueue := TQueue<TQeTask>.Create;
-  FConnectInfo := '192.168.0.253:10005';
+  FConnectInfo := '192.168.10.253:10005';
   FClient := TIdUDPClient.Create(nil);
   FServer := TIdUDPServer.Create(nil);
   FServer.OnUDPRead := ReadEvent;
-  FClient.Host := '192.168.0.253';
+  FClient.Host := '192.168.10.253';
   FServer.DefaultPort := 10005;
   FClient.Port := 10005;
   FComWait := 100;

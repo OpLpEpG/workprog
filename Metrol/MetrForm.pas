@@ -138,7 +138,7 @@ type
   published
     property DataDevice: string read FDataDevice write SetDataDevice;
     property TrrFile: string read FTrrFile write SetTrrFile;
-    property AttCount: Integer read FAttCount write FAttCount default 32;
+    property AttCount: Integer read FAttCount write FAttCount default 5;
     property IsMedian: Boolean read FIsMedian write FIsMedian default False;
 end;
 
@@ -335,7 +335,7 @@ procedure TFormMetrolog.InitializeNewForm;
   ie: IXMLNode;
 begin
   inherited;
-  FAttCount := 32;
+  FAttCount := 5;
   FAttCnt := 0;
 
   FStatusBar := CreateUnLoad<TStatusBar>;
