@@ -703,7 +703,7 @@ end;
 
 function TDecoder1.GetDecoderClass: TDecoderClass;
 begin
-  Result := TDecoder;
+  Result := TTelesistemDecoder;
 end;
 
 initialization

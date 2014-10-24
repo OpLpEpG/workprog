@@ -8,17 +8,15 @@ uses VCL.ControlRootForm, Math.Telesistem,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart;
 
 type
-  TFrameFindSPAbstr = TControlRootFrame<PTelesistemDecoderData>;
-
-  TFrameFindSP = class(TFrameFindSPAbstr)
+  TFrameFindSP = class(TControlRootFrame<TTelesistemDecoder>)
     Chart: TChart;
     SeriesSP: TLineSeries;
     SeriesCorr: TFastLineSeries;
     procedure ChartAfterDraw(Sender: TObject);
   private
-    Fdata: PTelesistemDecoderData;
+    Fdata: TTelesistemDecoder;
   public
-    procedure DoData(Data: PTelesistemDecoderData); override;
+    procedure DoData(Data: TTelesistemDecoder); override;
   end;
 
 implementation
@@ -36,40 +34,44 @@ begin
   if not Assigned(FData) then Exit;
   Chart.Canvas.Font.Name := 'Courier';
 
-  s := Format(FMTT, [FData.Max1Index, FData.Max1]);
-  Chart.Canvas.TextOut(Chart.ClientWidth - Chart.Canvas.TextWidth(s), 0, s);
-  s := Format(FMTT, [FData.Max2Index, FData.Max2]);
-  Chart.Canvas.TextOut(Chart.ClientWidth - Chart.Canvas.TextWidth(s), Chart.Canvas.TextHeight(s), s);
+  with Fdata.FindSPData do
+   begin
+    s := Format(FMTT, [Max1Index, Max1]);
+    Chart.Canvas.TextOut(Chart.ClientWidth - Chart.Canvas.TextWidth(s), 0, s);
+    s := Format(FMTT, [Max2Index, Max2]);
+    Chart.Canvas.TextOut(Chart.ClientWidth - Chart.Canvas.TextWidth(s), Chart.Canvas.TextHeight(s), s);
 
-  s := Format(FMTT, [FData.Min2Index, FData.Min2]);
-  Chart.Canvas.TextOut(Chart.ClientWidth - Chart.Canvas.TextWidth(s), Chart.BottomAxis.PosAxis - Chart.Canvas.TextHeight(s)*2, s);
-  s := Format(FMTT, [FData.Min1Index, FData.Min1]);
-  Chart.Canvas.TextOut(Chart.ClientWidth - Chart.Canvas.TextWidth(s), Chart.BottomAxis.PosAxis - Chart.Canvas.TextHeight(s), s);
+    s := Format(FMTT, [Min2Index, Min2]);
+    Chart.Canvas.TextOut(Chart.ClientWidth - Chart.Canvas.TextWidth(s), Chart.BottomAxis.PosAxis - Chart.Canvas.TextHeight(s)*2, s);
+    s := Format(FMTT, [Min1Index, Min1]);
+    Chart.Canvas.TextOut(Chart.ClientWidth - Chart.Canvas.TextWidth(s), Chart.BottomAxis.PosAxis - Chart.Canvas.TextHeight(s), s);
+   end;
 end;
 
-procedure TFrameFindSP.DoData(Data: PTelesistemDecoderData);
+procedure TFrameFindSP.DoData(Data: TTelesistemDecoder);
  var
   d: Double;
 begin
   FData :=  Data;
   if Data.KadrLen <> Chart.BottomAxis.Maximum then  Chart.BottomAxis.Maximum := Data.KadrLen;
   if SeriesCorr.Count >= Data.KadrLen then SeriesCorr.Clear;
-  for d in Data.FindSpData^ do SeriesCorr.Add(d);
+  for d in Data.FindSpData.Corr do SeriesCorr.Add(d);
   SeriesSP.Clear;
-  SeriesSP.AddNullXY(Data.Max1Index, 0);
-  SeriesSP.AddXY(Data.Max1Index, 0);
-  SeriesSP.AddXY(Data.Max1Index, Data.Max1, '', clRed);
-  SeriesSP.AddNullXY(Data.Max2Index, 0);
-  SeriesSP.AddXY(Data.Max2Index, 0);
-  SeriesSP.AddXY(Data.Max2Index, Data.Max2, '', clMaroon);
-  SeriesSP.AddNullXY(Data.Min1Index, 0);
-  SeriesSP.AddXY(Data.Min1Index, 0);
-  SeriesSP.AddXY(Data.Min1Index, Data.Min1, '', clBlue);
-  SeriesSP.AddNullXY(Data.Min2Index, 0);
-  SeriesSP.AddXY(Data.Min2Index, 0);
-  SeriesSP.AddXY(Data.Min2Index, Data.Min2, '', clNavy);
-
-  Chart.Canvas.TextOut(100, 100, Format('max %d %1.1f ',[Data.Max1Index, Data.Max1]));
+  with Fdata.FindSPData do
+   begin
+    SeriesSP.AddNullXY(Max1Index, 0);
+    SeriesSP.AddXY(Max1Index, 0);
+    SeriesSP.AddXY(Max1Index, Max1, '', clRed);
+    SeriesSP.AddNullXY(Max2Index, 0);
+    SeriesSP.AddXY(Max2Index, 0);
+    SeriesSP.AddXY(Max2Index, Max2, '', clMaroon);
+    SeriesSP.AddNullXY(Min1Index, 0);
+    SeriesSP.AddXY(Min1Index, 0);
+    SeriesSP.AddXY(Min1Index, Min1, '', clBlue);
+    SeriesSP.AddNullXY(Min2Index, 0);
+    SeriesSP.AddXY(Min2Index, 0);
+    SeriesSP.AddXY(Min2Index, Min2, '', clNavy);
+   end;
 end;
 
 end.

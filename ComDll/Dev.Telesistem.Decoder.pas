@@ -5,9 +5,9 @@ interface
 uses System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Math.Telesistem,
      Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools;
 type
-  TCustomDecoder = class(TSubDevWithForm<TDecoder>)
+  TCustomDecoder = class(TSubDevWithForm<TTelesistemDecoder>)
   private
-    FDecoder: TDecoder;
+    FDecoder: TTelesistemDecoder;
     FPorogCode: Real;
     FNumBadCode: Integer;
     FPorogSP: Real;
@@ -101,13 +101,13 @@ end;
 procedure TCustomDecoder.SetNumBadCode(const Value: Integer);
 begin
   FNumBadCode := Value;
-  if Assigned(FDecoder) then FDecoder.NumBadCode := Value;
+  if Assigned(FDecoder) then FDecoder.PorogBadCodes := Value;
 end;
 
 procedure TCustomDecoder.SetPorogCode(const Value: Real);
 begin
   FPorogCode := Value;
-  if Assigned(FDecoder) then FDecoder.PorogCode := Value;
+  if Assigned(FDecoder) then FDecoder.PorogCod := Value;
 end;
 
 procedure TCustomDecoder.SetPorogSP(const Value: Real);
@@ -129,8 +129,8 @@ begin
     FDecoder := GetDecoderClass.Create(Bits, DataCnt, DataCodLen, SPCodLen, OnDecoder);
     FS_Data := FDecoder;
     FDecoder.PorogSP := PorogSP;
-    FDecoder.PorogCode := PorogCode;
-    FDecoder.NumBadCode := NumBadCode;
+    FDecoder.PorogCod := PorogCode;
+    FDecoder.PorogBadCodes := NumBadCode;
    end;
   FDecoder.AddData(Data, DataSize);
 end;

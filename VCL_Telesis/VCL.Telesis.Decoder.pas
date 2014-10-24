@@ -8,9 +8,9 @@ uses DeviceIntf, PluginAPI, ExtendIntf, RootImpl, debug_except, DockIForm, RootI
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VCL.Telesis.Decoder.FindSP;
 
 type
-  TDecoderECHOForm = class(TControlRootForm<TDecoder, ITelesistem>)
+  TDecoderECHOForm = class(TControlRootForm<TTelesistemDecoder, ITelesistem>)
   private
-    FFrame: TControlRootFrame<PTelesistemDecoderData>;
+    FFrame: TControlRootFrame<TTelesistemDecoder>;
     FState: TCorrelatorState;
     procedure InitFrame;
   protected
@@ -28,9 +28,9 @@ implementation
 
 procedure TDecoderECHOForm.InitFrame;
 begin
-  if Assigned(FFrame) then FFrame.Free;
+  if Assigned(FFrame) then FreeAndNil(FFrame);
   if not Assigned(C_Data) then FFrame := TFrameFindSP.Create(Self)
-  else case C_Data.Data.State of
+  else case C_Data.State of
     csFindSP: FFrame := TFrameFindSP.Create(Self);
     csSP: ;
     csCode: ;
@@ -48,8 +48,8 @@ end;
 
 procedure TDecoderECHOForm.DoData;
 begin
-  if (FState <> C_Data.Data.State) or not Assigned(FFrame) then InitFrame
-  else FFrame.DoData(C_Data.Data);
+  if (FState <> C_Data.State) or not Assigned(FFrame) then InitFrame;
+  if Assigned(FFrame) then FFrame.DoData(C_Data);
 end;
 
 initialization
