@@ -18,7 +18,8 @@ uses
   VCL.Telesis.uso in 'VCL.Telesis.uso.pas' {UsoOscForm},
   VCL.Telesis.FFT in 'VCL.Telesis.FFT.pas' {FFTForm},
   VCL.Telesis.Decoder in 'VCL.Telesis.Decoder.pas' {DecoderECHOForm},
-  VCL.Telesis.Decoder.FindSP in 'VCL.Telesis.Decoder.FindSP.pas' {FrameFindSP: TFrame};
+  VCL.Telesis.Decoder.RunCode in 'VCL.Telesis.Decoder.RunCode.pas' {FormRunCodes: TFrame},
+  VCL.Telesis.Decoder.FindSP in 'VCL.Telesis.Decoder.FindSP.pas' {FrameFindSP};
 
 {$R *.res}
 

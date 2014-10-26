@@ -46,7 +46,6 @@ begin
   Tag := $12345678;
   Name := Self.ClassName.Substring(1);
   Parent := TWinControl(AOwner);
-  Show;
 end;
 
 { TControlRootForm<T> }

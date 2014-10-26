@@ -115,6 +115,7 @@ type
      Index: integer;
      // польсобытие
      FEvent: TNotifyEvent;
+
      function GetDataLen: Integer; virtual;
      function GetKadrLen: Integer; virtual;
      function GetSPLen: Integer; virtual;
@@ -122,12 +123,13 @@ type
      function GetBuffer: PDoubleArray; virtual;
 
      function CorrSP(var fs: TFindSPData; idx, cnt: Integer): TArray<Double>; virtual;
-     function CorrCode(var c: TCodData):Integer; virtual;
+     function CorrCode(var cd: TCodData):Integer; virtual;
 
      procedure ForceState(const Value: TCorrelatorState);
 
      property Count: Integer read GetCount;
      property Buffer: PDoubleArray read GetBuffer;
+     class function ToPorog(Amp, Amp2: Double): Double; static; inline;
    public
      constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
      procedure AddData(data: PDouble; len: Integer);
@@ -262,12 +264,71 @@ begin
   RunAutomat;
 end;
 
-function TTelesistemDecoder.CorrCode(var c: TCodData): Integer;
+function TTelesistemDecoder.CorrCode(var cd: TCodData): Integer;
+ const RMCBIN: array [0..31, 0..31] of Integer =(
+  (-1, 1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1),
+  (-1, 1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1),
+  (-1, 1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1),
+  (-1, 1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1),
+  (-1, 1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1),
+  (-1, 1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1),
+  (-1, 1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1),
+  (-1, 1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1),
+  (-1, 1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1),
+  (-1, 1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1),
+  (-1, 1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1),
+  (-1, 1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1),
+  (-1, 1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1),
+  (-1, 1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1),
+  (-1, 1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1),
+  (-1, 1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1),
+  ( 1,-1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1),
+  ( 1,-1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1),
+  ( 1,-1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1),
+  ( 1,-1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1),
+  ( 1,-1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1),
+  ( 1,-1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1),
+  ( 1,-1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1),
+  ( 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1),
+  ( 1,-1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1),
+  ( 1,-1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1),
+  ( 1,-1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1),
+  ( 1,-1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1),
+  ( 1,-1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1),
+  ( 1,-1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1),
+  ( 1,-1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1),
+  ( 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1));
+
+ var
+    m, c, j, i: Integer;
+    mx1,  mx2: Double;
+    mxi1: Integer;
 begin
-  Result := 0;
-  c.Code := 1;
-  c.IsBad := False;
-  SetLength(c.Corr, 32);
+  SetLength(cd.Corr, 32);
+  mxi1 := 0;
+  mx1 := 0;
+  mx2 := 0;
+  for c := 0 to 31 do
+   begin
+    m := 0;
+    for i := 0 to 31 do for j := 0 to Bits-1 do
+     begin
+      cd.Corr[c] := cd.Corr[c] + RMCBIN[c,i] * buffer[m];
+      Inc(m);
+     end;
+    cd.Corr[c] := cd.Corr[c]/32/Bits;
+    if FSPData.Faza = -1 then cd.Corr[c] := -cd.Corr[c];
+    if cd.Corr[c] >= mx1 then
+     begin
+      mx2 := mx1;
+      mx1 := cd.Corr[c];
+      mxi1 := c;
+     end;
+   end;
+  cd.Code := mxi1;
+  cd.Porog := ToPorog(mx1, mx2);
+  cd.IsBad := cd.Porog < PorogCod;
+  if cd.IsBad then Result := 1 else Result := 0;
 end;
 
 function TTelesistemDecoder.CorrSP(var fs: TFindSPData; idx, cnt: Integer): TArray<Double>;
@@ -333,6 +394,12 @@ begin
    end;
 end;
 
+class function TTelesistemDecoder.ToPorog(Amp, Amp2: Double): Double;
+begin
+  if Amp = 0 then Result := 0
+  else Result := (1 - Amp2/Amp) * 100;
+end;
+
 procedure TTelesistemDecoder.RunAutomat;
   procedure SafeExceEvent;
   begin
@@ -341,11 +408,6 @@ procedure TTelesistemDecoder.RunAutomat;
     except
      on E: Exception do TDebug.DoException(E);
     end;
-  end;
-  function ToPorog(Amp, Amp2: Double): Double;
-  begin
-    if Amp = 0 then Result := 0
-    else Result := (1 - Amp2/Amp) * 100;
   end;
   procedure SetcsSP(Fz, SPidx: Integer; spAmp, Prg: Double);
    var

@@ -1,0 +1,225 @@
+object FormRunCodes: TFormRunCodes
+  Tag = 305419896
+  Left = 0
+  Top = 0
+  Align = alClient
+  BorderStyle = bsNone
+  ClientHeight = 215
+  ClientWidth = 505
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = True
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Splitter2: TSplitter
+    Left = 281
+    Top = 0
+    Height = 215
+    ExplicitLeft = 288
+    ExplicitTop = 40
+    ExplicitHeight = 100
+  end
+  object Panel: TPanel
+    Left = 0
+    Top = 0
+    Width = 281
+    Height = 215
+    Align = alLeft
+    BevelOuter = bvNone
+    Caption = 'Panel'
+    TabOrder = 0
+    ExplicitHeight = 292
+    object Splitter1: TSplitter
+      Left = 0
+      Top = 105
+      Width = 281
+      Height = 3
+      Cursor = crVSplit
+      Align = alTop
+      ExplicitTop = 0
+      ExplicitWidth = 105
+    end
+    object Chart: TChart
+      Left = 0
+      Top = 0
+      Width = 281
+      Height = 105
+      AllowPanning = pmNone
+      BottomWall.Visible = False
+      LeftWall.Visible = False
+      Legend.Visible = False
+      MarginBottom = 1
+      MarginLeft = 0
+      MarginRight = 1
+      MarginTop = 1
+      MarginUnits = muPixels
+      Title.Text.Strings = (
+        'TChart')
+      Title.Visible = False
+      BottomAxis.Automatic = False
+      BottomAxis.AutomaticMaximum = False
+      BottomAxis.AutomaticMinimum = False
+      BottomAxis.Axis.Width = 0
+      BottomAxis.Maximum = 24.000000000000000000
+      LeftAxis.Axis.Width = 0
+      LeftAxis.AxisValuesFormat = '#0.#'
+      LeftAxis.LabelsFormat.Font.Shadow.Smooth = False
+      LeftAxis.LabelsFormat.Font.Shadow.Visible = False
+      LeftAxis.LabelsFormat.Shadow.Visible = False
+      LeftAxis.LabelsSeparation = 20
+      LeftAxis.LabelStyle = talValue
+      RightAxis.Visible = False
+      Shadow.Visible = False
+      TopAxis.Visible = False
+      View3D = False
+      View3DWalls = False
+      Zoom.Allow = False
+      Zoom.Pen.Visible = False
+      OnAfterDraw = ChartAfterDraw
+      Align = alTop
+      BevelOuter = bvNone
+      TabOrder = 0
+      ExplicitLeft = 1
+      ExplicitTop = -12
+      ExplicitWidth = 279
+      DefaultCanvas = 'TTeeCanvas3D'
+      PrintMargins = (
+        15
+        23
+        15
+        23)
+      ColorPaletteIndex = 19
+      object SeriesSP: TAreaSeries
+        AreaChartBrush.Color = clGray
+        AreaChartBrush.BackColor = clDefault
+        Dark3D = False
+        DrawArea = True
+        LinePen.Width = 4
+        LinePen.Visible = False
+        Pointer.InflateMargins = True
+        Pointer.Style = psRectangle
+        Pointer.Visible = False
+        Stairs = True
+        XValues.Name = 'X'
+        XValues.Order = loAscending
+        YValues.Name = 'Y'
+        YValues.Order = loNone
+      end
+      object SeriesCorr: TAreaSeries
+        Selected.Hover.Visible = False
+        AreaChartBrush.Color = clGray
+        AreaChartBrush.BackColor = clDefault
+        DrawArea = True
+        LinePen.Color = clDefault
+        LinePen.Width = 0
+        Pointer.InflateMargins = True
+        Pointer.Style = psRectangle
+        Pointer.Visible = False
+        Stairs = True
+        TreatNulls = tnIgnore
+        XValues.Name = 'X'
+        XValues.Order = loAscending
+        YValues.Name = 'Y'
+        YValues.Order = loNone
+      end
+    end
+    object Chart1: TChart
+      Left = 0
+      Top = 108
+      Width = 281
+      Height = 107
+      AllowPanning = pmNone
+      BottomWall.Visible = False
+      LeftWall.Visible = False
+      Legend.Visible = False
+      MarginBottom = 1
+      MarginLeft = 0
+      MarginRight = 1
+      MarginTop = 1
+      MarginUnits = muPixels
+      Title.Text.Strings = (
+        'TChart')
+      Title.Visible = False
+      BottomAxis.Automatic = False
+      BottomAxis.AutomaticMaximum = False
+      BottomAxis.AutomaticMinimum = False
+      BottomAxis.Axis.Width = 0
+      BottomAxis.Maximum = 24.000000000000000000
+      LeftAxis.Axis.Width = 0
+      LeftAxis.AxisValuesFormat = '#0.#'
+      LeftAxis.LabelsFormat.Font.Shadow.Smooth = False
+      LeftAxis.LabelsFormat.Font.Shadow.Visible = False
+      LeftAxis.LabelsFormat.Shadow.Visible = False
+      LeftAxis.LabelsSeparation = 20
+      LeftAxis.LabelStyle = talValue
+      RightAxis.Visible = False
+      Shadow.Visible = False
+      TopAxis.Visible = False
+      View3D = False
+      View3DWalls = False
+      Zoom.Allow = False
+      Zoom.Pen.Visible = False
+      OnAfterDraw = ChartAfterDraw
+      Align = alClient
+      BevelOuter = bvNone
+      TabOrder = 1
+      ExplicitLeft = 2
+      ExplicitTop = 138
+      ExplicitWidth = 279
+      ExplicitHeight = 185
+      DefaultCanvas = 'TTeeCanvas3D'
+      PrintMargins = (
+        15
+        23
+        15
+        23)
+      ColorPaletteIndex = 19
+      object AreaSeries1: TAreaSeries
+        AreaChartBrush.Color = clGray
+        AreaChartBrush.BackColor = clDefault
+        Dark3D = False
+        DrawArea = True
+        LinePen.Width = 4
+        LinePen.Visible = False
+        Pointer.InflateMargins = True
+        Pointer.Style = psRectangle
+        Pointer.Visible = False
+        Stairs = True
+        XValues.Name = 'X'
+        XValues.Order = loAscending
+        YValues.Name = 'Y'
+        YValues.Order = loNone
+      end
+      object AreaSeries2: TAreaSeries
+        Selected.Hover.Visible = False
+        AreaChartBrush.Color = clGray
+        AreaChartBrush.BackColor = clDefault
+        DrawArea = True
+        LinePen.Color = clDefault
+        LinePen.Width = 0
+        Pointer.InflateMargins = True
+        Pointer.Style = psRectangle
+        Pointer.Visible = False
+        Stairs = True
+        TreatNulls = tnIgnore
+        XValues.Name = 'X'
+        XValues.Order = loAscending
+        YValues.Name = 'Y'
+        YValues.Order = loNone
+      end
+    end
+  end
+  object Memo: TMemo
+    Left = 284
+    Top = 0
+    Width = 221
+    Height = 215
+    Align = alClient
+    BorderStyle = bsNone
+    TabOrder = 1
+  end
+end

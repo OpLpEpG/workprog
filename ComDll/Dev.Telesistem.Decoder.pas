@@ -33,9 +33,9 @@ type
   published
     [ShowProp('Порог СП %')]               property PorogSP    : Real   read FPorogSP     write SetPorogSP;
     [ShowProp('Порог данных %')]           property PorogCode  : Real   read FPorogCode   write SetPorogCode;
-    [ShowProp('Число ошибочных данных')]   property NumBadCode : Integer read FNumBadCode write SetNumBadCode default 6;
+    [ShowProp('Число ошибочных данных')]   property NumBadCode : Integer read FNumBadCode write SetNumBadCode default 8;
     property Bits: Integer read FBits write SetBits default 8;
-    property DataCnt: Integer read FDataCnt write SetDataCnt default 10;
+    property DataCnt: Integer read FDataCnt write SetDataCnt default 16;
     property DataCodLen: Integer read FDataCodLen write SetDataCodLen default 17;
     property SPCodLen: Integer read FSPCodLen write SetSPCodLen default 128;
   end;
@@ -48,7 +48,7 @@ constructor TCustomDecoder.Create;
 begin
   PorogSP := 50;
   PorogCode := 50;
-  NumBadCode := 6;
+  NumBadCode := 8;
   FBits := 8;
   FDataCnt := 16;
   FDataCodLen := 17;

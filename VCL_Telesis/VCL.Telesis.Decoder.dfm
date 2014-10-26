@@ -1,7 +1,7 @@
 object DecoderECHOForm: TDecoderECHOForm
   Left = 0
   Top = 0
-  Caption = 'DecoderECHOForm'
+  Caption = #1044#1077#1082#1086#1076#1077#1088
   ClientHeight = 250
   ClientWidth = 409
   Color = clBtnFace
