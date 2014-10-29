@@ -31,7 +31,8 @@ uses
   Dev.Telesistem in 'Dev.Telesistem.pas',
   SubDevImpl in 'SubDevImpl.pas',
   Dev.Telesistem.Decoder in 'Dev.Telesistem.Decoder.pas',
-  Dev.StolGK in 'Dev.StolGK.pas';
+  Dev.StolGK in 'Dev.StolGK.pas',
+  Dev.Telesistem.Shum in 'Dev.Telesistem.Shum.pas';
 
 {$R *.res}
 

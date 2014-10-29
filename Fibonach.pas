@@ -6,6 +6,7 @@ uses System.SysUtils;
 
 procedure Encode(const Data: array of Word; Bits: Integer; var CurBit: Boolean; var bin: TArray<Boolean>);
 procedure CreateSuncro(Bits: Integer; var CurBit: Boolean; var bin: TArray<Boolean>);
+function Decode(const Data: Integer; out Res: Integer): Boolean;
 
 implementation
 
@@ -167,7 +168,7 @@ procedure Encode(const Data: array of Word; Bits: Integer; var CurBit: Boolean; 
    cod: Word;
 begin
   n := Length(bin);
-  SetLength(bin, n + Bits*(Length(Data)*17 + 1) );
+  SetLength(bin, n + Bits*(Length(Data)*17{ + 1}) );
   for I := 0 to Length(Data)-1 do
    begin
     if Data[i] > 2583 then raise Exception.Create('BAD NUMBER FIBONAHI > 2583');
@@ -179,8 +180,27 @@ begin
      end;
     AddBit(False);
    end;
-  CurBit := True;
-  AddBit(True);
+//  CurBit := True;
+//  AddBit(True);
+end;
+
+function Decode(const Data: Integer; out Res: Integer): Boolean;
+ var
+  i : Integer;
+begin
+  Result := False;
+  if Data > $AAAA then Res := 2583
+  else for i := 0 to Length(FIBONACH_CODES)-1 do
+   if FIBONACH_CODES[i] = Data then
+    begin
+     Res := i;
+     Exit(True)
+    end
+   else if FIBONACH_CODES[i] > Data then
+    begin
+     Res := i-1;
+     Exit(False)
+    end;
 end;
 
 end.

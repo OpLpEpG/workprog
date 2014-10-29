@@ -18,8 +18,7 @@ type
    private
      FIName: string;
    protected
-     FSubDevice: ISubDevice;
-     procedure InputData(Data: Pointer; DataSize: integer); virtual; abstract;
+     FSubDevice: TSubDev;
      procedure SetChild(SubDevice: ISubDevice); virtual;
 
      function GetItemName: string;
@@ -37,10 +36,13 @@ type
 
      procedure OnUserRemove; virtual;
    public
+     procedure InputData(Data: Pointer; DataSize: integer); virtual; abstract;
      constructor Create; reintroduce; overload; virtual;
      constructor Create(Collection: TCollection); overload; override; final;
      destructor Destroy; override;
      function Owner: TRootDevice; inline;
+     property Category: TSubDeviceInfo read GetCategory;
+     property Caption: string read GetCaption;
    published
      property IName: String read GetItemName write FIName;
    end;
@@ -118,7 +120,12 @@ procedure TRootDevice.UpdateParents;
  var
   i: Integer;
 begin
-  for i := 1 to FSubDevs.Count-1 do TSubDev(FSubDevs.Items[i-1]).FSubDevice := TSubDev(FSubDevs.Items[i]) as ISubDevice;
+  for i := 1 to FSubDevs.Count-1 do
+   begin
+    TDebug.Log('%d ', [i]);
+    TSubDev(FSubDevs.Items[i-1]).FSubDevice := TSubDev(FSubDevs.Items[i]);
+   end;
+  TSubDev(FSubDevs.Items[FSubDevs.Count-1]).FSubDevice := nil;
 end;
 
 destructor TRootDevice.Destroy;
@@ -217,6 +224,7 @@ begin
       and (TSubDev(FSubDevs.Items[idx]).GetCategory.Category = Category)
       and (sdtUniqe in TSubDev(FSubDevs.Items[idx]).GetCategory.Typ) then
        begin
+        TSubDev(FSubDevs.Items[idx]).BeforeRemove;
         GContainer.RemoveInstKnownServ(GetService(), TSubDev(FSubDevs.Items[idx]).IName);
         FSubDevs.Delete(idx);
        end;
@@ -266,6 +274,7 @@ end;
 
 destructor TSubDev.Destroy;
 begin
+  TDebug.Log('TSubDev.Destroy  %s  %s  %s', [IName, Category.Category, Caption]);
   TBindHelper.RemoveExpressions(Self);
   inherited;
 end;
@@ -292,7 +301,7 @@ end;
 
 procedure TSubDev.SetChild(SubDevice: ISubDevice);
 begin
-  FSubDevice := SubDevice;
+  FSubDevice := TSubDev(SubDevice);
 end;
 
 procedure TSubDev.SetDeviceName(const Value: string);

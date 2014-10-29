@@ -15,7 +15,7 @@ type
 
   TDockIFormClass = class of TDockIForm;
 
-  TDockIForm = class(TIForm, IDockClient)
+  TDockIForm = class(TIForm, IDockClient, INotifyBeforeRemove)
   private
 //    FShowAction: IAction;
     FDockClient: TJvDockClient;
@@ -31,6 +31,7 @@ type
   protected
     NCanClose: Boolean;
     NClose, NTab, NDock: TMenuItem;
+    procedure BeforeRemove(); virtual;
     procedure InitializeNewForm; override;
     procedure IShow; override;
 //    procedure LoadBeroreAdd(); virtual;
@@ -204,6 +205,11 @@ begin
   CreateShowAction
 end;}
 
+procedure TDockIForm.BeforeRemove;
+begin
+  HideDockForm(Self); // не удалять !!!
+end;
+
 class function TDockIForm.ClassIcon: Integer;
 begin
   Result := 305;
@@ -215,7 +221,7 @@ procedure TDockIForm.Close_ItemClick(Sender: TObject);
 begin
   FDockClient.OnFormShow := nil;
   FDockClient.OnFormHide := nil;
-  HideDockForm(Self); // не удалять !!!
+  //HideDockForm(Self); // не удалять !!!
   if Supports(GlobalCore, IFormEnum, fe) then fe.Remove(Self as IForm);
 end;
 

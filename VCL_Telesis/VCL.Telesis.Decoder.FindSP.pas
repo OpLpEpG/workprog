@@ -5,14 +5,17 @@ interface
 uses VCL.ControlRootForm, Math.Telesistem,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
-  VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart;
+  VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, Vcl.Menus;
 
 type
   TFrameFindSP = class(TControlRootFrame<TTelesistemDecoder>)
     Chart: TChart;
     SeriesSP: TLineSeries;
     SeriesCorr: TFastLineSeries;
+    PopupMenu: TPopupMenu;
+    N1: TMenuItem;
     procedure ChartAfterDraw(Sender: TObject);
+    procedure N1Click(Sender: TObject);
   private
     Fdata: TTelesistemDecoder;
   public
@@ -49,13 +52,17 @@ begin
 end;
 
 procedure TFrameFindSP.DoData(Data: TTelesistemDecoder);
- var
-  d: Double;
+// var
+//  d: Double;
+//  i: Integer;
 begin
   FData :=  Data;
   if Data.KadrLen <> Chart.BottomAxis.Maximum then  Chart.BottomAxis.Maximum := Data.KadrLen;
+  SeriesCorr.Clear;
+  SeriesCorr.AddArray(Data.FindSpData.Corr);
+  Assert(SeriesCorr.Count <= Data.KadrLen, 'SeriesCorr.Count > Data.KadrLen');
   if SeriesCorr.Count >= Data.KadrLen then SeriesCorr.Clear;
-  for d in Data.FindSpData.Corr do SeriesCorr.Add(d);
+//  for d in Data.FindSpData.LastCorr do SeriesCorr.Add(d);
   SeriesSP.Clear;
   with Fdata.FindSPData do
    begin
@@ -72,6 +79,11 @@ begin
     SeriesSP.AddXY(Min2Index, 0);
     SeriesSP.AddXY(Min2Index, Min2, '', clNavy);
    end;
+end;
+
+procedure TFrameFindSP.N1Click(Sender: TObject);
+begin
+  if Assigned(FData) then FData.State := csUserToSP;
 end;
 
 end.

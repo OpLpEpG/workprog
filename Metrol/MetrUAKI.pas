@@ -7,7 +7,7 @@ uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UakiUI, UakiUI.Ten, Vcl.ExtCtrls, Vcl.StdCtrls;
 
 type
-  TFormUAKI = class(TCustomFontIForm, INotifyCanClose, INotifyBeforeRemove)
+  TFormUAKI = class(TCustomFontIForm, INotifyCanClose)
     Panel1: TPanel;
     btZero: TButton;
     Button1: TButton;
@@ -39,7 +39,7 @@ type
    const
     NICON = 273;
     procedure CanClose(var CanClose: Boolean);
-    procedure BeforeRemove();
+    procedure BeforeRemove(); override;
     procedure InitializeNewForm; override;
     procedure Loaded; override;
     class function ClassIcon: Integer; override;
@@ -69,6 +69,7 @@ begin
 //    TDebug.Log('%s', ['--------------------------NOP---------------------']);
     Application.ProcessMessages;
    end;
+  inherited;
 end;
 
 procedure TFormUAKI.btGoClick(Sender: TObject);

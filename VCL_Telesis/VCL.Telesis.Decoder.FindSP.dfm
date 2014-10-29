@@ -54,6 +54,7 @@ object FrameFindSP: TFrameFindSP
     OnAfterDraw = ChartAfterDraw
     Align = alClient
     BevelOuter = bvNone
+    PopupMenu = PopupMenu
     TabOrder = 0
     DefaultCanvas = 'TTeeCanvas3D'
     PrintMargins = (
@@ -84,6 +85,14 @@ object FrameFindSP: TFrameFindSP
       XValues.Order = loAscending
       YValues.Name = 'Y'
       YValues.Order = loNone
+    end
+  end
+  object PopupMenu: TPopupMenu
+    Left = 128
+    Top = 64
+    object N1: TMenuItem
+      Caption = #1087#1088#1080#1085#1091#1076#1080#1090#1077#1083#1100#1085#1086' '#1057#1055
+      OnClick = N1Click
     end
   end
 end

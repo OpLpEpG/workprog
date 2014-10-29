@@ -7,7 +7,6 @@ uses System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, Ma
 type
   TCustomDecoder = class(TSubDevWithForm<TTelesistemDecoder>)
   private
-    FDecoder: TTelesistemDecoder;
     FPorogCode: Real;
     FNumBadCode: Integer;
     FPorogSP: Real;
@@ -23,11 +22,13 @@ type
     procedure SetDataCodLen(const Value: Integer);
     procedure SetSPCodLen(const Value: Integer);
   protected
+    FDecoder: TTelesistemDecoder;
     procedure OnDecoder(Sender: TObject);
-    procedure InputData(Data: Pointer; DataSize: integer); override; final;
     function GetCategory: TSubDeviceInfo; override;
     function GetDecoderClass: TDecoderClass; virtual; abstract;
+    procedure SetupNewDecoder; virtual;
   public
+    procedure InputData(Data: Pointer; DataSize: integer); override; final;
     constructor Create; override;
     destructor Destroy; override;
   published
@@ -35,8 +36,8 @@ type
     [ShowProp('Порог данных %')]           property PorogCode  : Real   read FPorogCode   write SetPorogCode;
     [ShowProp('Число ошибочных данных')]   property NumBadCode : Integer read FNumBadCode write SetNumBadCode default 8;
     property Bits: Integer read FBits write SetBits default 8;
-    property DataCnt: Integer read FDataCnt write SetDataCnt default 16;
-    property DataCodLen: Integer read FDataCodLen write SetDataCodLen default 17;
+    property DataCnt: Integer read FDataCnt write SetDataCnt default 32;
+    property DataCodLen: Integer read FDataCodLen write SetDataCodLen default 32;
     property SPCodLen: Integer read FSPCodLen write SetSPCodLen default 128;
   end;
 
@@ -47,11 +48,11 @@ implementation
 constructor TCustomDecoder.Create;
 begin
   PorogSP := 50;
-  PorogCode := 50;
-  NumBadCode := 8;
+  PorogCode := 51;
+  NumBadCode := 14;
   FBits := 8;
-  FDataCnt := 16;
-  FDataCodLen := 17;
+  FDataCnt := 32;
+  FDataCodLen := 32;
   FSPCodLen := 128;
   inherited;
 end;
@@ -122,15 +123,20 @@ begin
   Result.Typ := [sdtUniqe, sdtMastExist];
 end;
 
+procedure TCustomDecoder.SetupNewDecoder;
+begin
+  FDecoder.PorogSP := PorogSP;
+  FDecoder.PorogCod := PorogCode;
+  FDecoder.PorogBadCodes := NumBadCode;
+end;
+
 procedure TCustomDecoder.InputData(Data: Pointer; DataSize: integer);
 begin
   if not Assigned(FDecoder) then
    begin
     FDecoder := GetDecoderClass.Create(Bits, DataCnt, DataCodLen, SPCodLen, OnDecoder);
     FS_Data := FDecoder;
-    FDecoder.PorogSP := PorogSP;
-    FDecoder.PorogCod := PorogCode;
-    FDecoder.PorogBadCodes := NumBadCode;
+    SetupNewDecoder;
    end;
   FDecoder.AddData(Data, DataSize);
 end;

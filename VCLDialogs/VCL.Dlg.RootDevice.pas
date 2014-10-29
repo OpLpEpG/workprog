@@ -5,7 +5,7 @@ interface
 uses RootIntf, DeviceIntf, debug_except, ExtendIntf, DockIForm, PluginAPI, RootImpl, Container,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.TypInfo,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls, VirtualTrees, Vcl.Menus,
-  Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup;
+  Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, JvComponentBase, JvInspector, JvExControls;
 
 type
   TSubDevaModelData = record
@@ -35,6 +35,8 @@ type
     N2: TMenuItem;
     NUp: TMenuItem;
     NDown: TMenuItem;
+    insp: TJvInspector;
+    InspectorBorlandPainter: TJvInspectorBorlandPainter;
     procedure btCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
@@ -42,6 +44,7 @@ type
     procedure NRemoveClick(Sender: TObject);
     procedure NUpClick(Sender: TObject);
     procedure NDownClick(Sender: TObject);
+    procedure TreeAddToSelection(Sender: TBaseVirtualTree; Node: PVirtualNode);
   protected
 //    procedure CanClose(var CanClose: Boolean);
     function GetInfo: PTypeInfo; override;
@@ -79,8 +82,8 @@ begin
 end;
 
 procedure TFormSetupRootDevice.ClearTree;
- var
-  pv: PVirtualNode;
+// var
+//  pv: PVirtualNode;
 begin
 //  for pv in Tree.Nodes do PNodeExData(Tree.GetNodeData(pv)).SubDevice := nil;
   Tree.Clear;
@@ -151,6 +154,15 @@ begin
   if {not (sdtMastExist in FEditData.DevInfo.Typ) and} not FEditData.IsRoot then NRemove.Enabled := True;
 end;
 
+procedure TFormSetupRootDevice.TreeAddToSelection(Sender: TBaseVirtualTree; Node: PVirtualNode);
+ var
+  pe: PNodeExData;
+begin
+  pe := Tree.GetNodeData(Node);
+  if pe.IsRoot then Exit();
+  ShowPropAttribute.Apply(TObject(pe.SubDevice), Insp);
+end;
+
 procedure TFormSetupRootDevice.TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;  var CellText: string);
  var
   p: PNodeExData;
@@ -215,6 +227,7 @@ function TFormSetupRootDevice.Execute(InputData: IRootDevice): Boolean;
 begin
   Result := True;
   FDev := InputData;
+  Insp.Root.SortKind := iskNone;
   UpdateFModels(GContainer.ModelsAsArray(FDev.Service));
   UpdateTree;
   Caption := 'Настройка устройства ' + (FDev as ICaption).Text;

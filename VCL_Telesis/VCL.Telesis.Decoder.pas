@@ -31,6 +31,8 @@ begin
   inherited;
   FFrameSP := TFrameFindSP.Create(Self);
   FFrameCod := TFormRunCodes.Create(Self);
+//  FFrameCod.Parent := nil;
+//  FFrameCod.Show;
   FFrameSP.Show;
 end;
 
@@ -46,9 +48,11 @@ begin
    csSP,csCode, csCheckSP:
     begin
      FFrameSP.Hide;
+     TFrameFindSP(FFrameSP).SeriesCorr.Clear;
      FFrameCod.Show;
      FFrameCod.DoData(C_Data);
     end;
+    csUserToFindSP:
   end;
 end;
 

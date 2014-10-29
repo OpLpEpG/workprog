@@ -4,8 +4,8 @@ object FormRunCodes: TFormRunCodes
   Top = 0
   Align = alClient
   BorderStyle = bsNone
-  ClientHeight = 215
-  ClientWidth = 505
+  ClientHeight = 292
+  ClientWidth = 528
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,7 +18,8 @@ object FormRunCodes: TFormRunCodes
   object Splitter2: TSplitter
     Left = 281
     Top = 0
-    Height = 215
+    Height = 292
+    Align = alRight
     ExplicitLeft = 288
     ExplicitTop = 40
     ExplicitHeight = 100
@@ -27,27 +28,25 @@ object FormRunCodes: TFormRunCodes
     Left = 0
     Top = 0
     Width = 281
-    Height = 215
-    Align = alLeft
+    Height = 292
+    Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel'
     TabOrder = 0
-    ExplicitHeight = 292
     object Splitter1: TSplitter
       Left = 0
-      Top = 105
+      Top = 161
       Width = 281
       Height = 3
       Cursor = crVSplit
       Align = alTop
-      ExplicitTop = 0
-      ExplicitWidth = 105
+      ExplicitTop = 105
     end
     object Chart: TChart
       Left = 0
       Top = 0
       Width = 281
-      Height = 105
+      Height = 161
       AllowPanning = pmNone
       BottomWall.Visible = False
       LeftWall.Visible = False
@@ -60,11 +59,7 @@ object FormRunCodes: TFormRunCodes
       Title.Text.Strings = (
         'TChart')
       Title.Visible = False
-      BottomAxis.Automatic = False
-      BottomAxis.AutomaticMaximum = False
-      BottomAxis.AutomaticMinimum = False
       BottomAxis.Axis.Width = 0
-      BottomAxis.Maximum = 24.000000000000000000
       LeftAxis.Axis.Width = 0
       LeftAxis.AxisValuesFormat = '#0.#'
       LeftAxis.LabelsFormat.Font.Shadow.Smooth = False
@@ -79,13 +74,10 @@ object FormRunCodes: TFormRunCodes
       View3DWalls = False
       Zoom.Allow = False
       Zoom.Pen.Visible = False
-      OnAfterDraw = ChartAfterDraw
       Align = alTop
       BevelOuter = bvNone
+      PopupMenu = PopupMenu
       TabOrder = 0
-      ExplicitLeft = 1
-      ExplicitTop = -12
-      ExplicitWidth = 279
       DefaultCanvas = 'TTeeCanvas3D'
       PrintMargins = (
         15
@@ -93,45 +85,23 @@ object FormRunCodes: TFormRunCodes
         15
         23)
       ColorPaletteIndex = 19
-      object SeriesSP: TAreaSeries
-        AreaChartBrush.Color = clGray
-        AreaChartBrush.BackColor = clDefault
-        Dark3D = False
-        DrawArea = True
-        LinePen.Width = 4
-        LinePen.Visible = False
-        Pointer.InflateMargins = True
-        Pointer.Style = psRectangle
-        Pointer.Visible = False
-        Stairs = True
+      object SeriesSP: TBarSeries
+        BarBrush.BackColor = clDefault
+        BarPen.Width = 4
+        BarPen.Visible = False
+        Marks.Visible = False
+        Marks.Callout.Length = 8
         XValues.Name = 'X'
         XValues.Order = loAscending
-        YValues.Name = 'Y'
-        YValues.Order = loNone
-      end
-      object SeriesCorr: TAreaSeries
-        Selected.Hover.Visible = False
-        AreaChartBrush.Color = clGray
-        AreaChartBrush.BackColor = clDefault
-        DrawArea = True
-        LinePen.Color = clDefault
-        LinePen.Width = 0
-        Pointer.InflateMargins = True
-        Pointer.Style = psRectangle
-        Pointer.Visible = False
-        Stairs = True
-        TreatNulls = tnIgnore
-        XValues.Name = 'X'
-        XValues.Order = loAscending
-        YValues.Name = 'Y'
+        YValues.Name = 'Bar'
         YValues.Order = loNone
       end
     end
-    object Chart1: TChart
+    object ChartCode: TChart
       Left = 0
-      Top = 108
+      Top = 164
       Width = 281
-      Height = 107
+      Height = 128
       AllowPanning = pmNone
       BottomWall.Visible = False
       LeftWall.Visible = False
@@ -144,11 +114,7 @@ object FormRunCodes: TFormRunCodes
       Title.Text.Strings = (
         'TChart')
       Title.Visible = False
-      BottomAxis.Automatic = False
-      BottomAxis.AutomaticMaximum = False
-      BottomAxis.AutomaticMinimum = False
       BottomAxis.Axis.Width = 0
-      BottomAxis.Maximum = 24.000000000000000000
       LeftAxis.Axis.Width = 0
       LeftAxis.AxisValuesFormat = '#0.#'
       LeftAxis.LabelsFormat.Font.Shadow.Smooth = False
@@ -166,11 +132,8 @@ object FormRunCodes: TFormRunCodes
       OnAfterDraw = ChartAfterDraw
       Align = alClient
       BevelOuter = bvNone
+      PopupMenu = PopupMenu
       TabOrder = 1
-      ExplicitLeft = 2
-      ExplicitTop = 138
-      ExplicitWidth = 279
-      ExplicitHeight = 185
       DefaultCanvas = 'TTeeCanvas3D'
       PrintMargins = (
         15
@@ -178,34 +141,21 @@ object FormRunCodes: TFormRunCodes
         15
         23)
       ColorPaletteIndex = 19
-      object AreaSeries1: TAreaSeries
-        AreaChartBrush.Color = clGray
-        AreaChartBrush.BackColor = clDefault
-        Dark3D = False
-        DrawArea = True
-        LinePen.Width = 4
-        LinePen.Visible = False
-        Pointer.InflateMargins = True
-        Pointer.Style = psRectangle
-        Pointer.Visible = False
-        Stairs = True
+      object SeriesCode: TBarSeries
+        BarBrush.BackColor = clDefault
+        BarPen.Width = 4
+        BarPen.Visible = False
+        Marks.Visible = False
+        Marks.Callout.Length = 8
         XValues.Name = 'X'
         XValues.Order = loAscending
-        YValues.Name = 'Y'
+        YValues.Name = 'Bar'
         YValues.Order = loNone
+        Data = {0000000000}
       end
-      object AreaSeries2: TAreaSeries
-        Selected.Hover.Visible = False
-        AreaChartBrush.Color = clGray
-        AreaChartBrush.BackColor = clDefault
-        DrawArea = True
-        LinePen.Color = clDefault
-        LinePen.Width = 0
-        Pointer.InflateMargins = True
-        Pointer.Style = psRectangle
-        Pointer.Visible = False
-        Stairs = True
-        TreatNulls = tnIgnore
+      object SeriesPorog: TFastLineSeries
+        LinePen.Color = 13395626
+        LinePen.Width = 3
         XValues.Name = 'X'
         XValues.Order = loAscending
         YValues.Name = 'Y'
@@ -216,10 +166,23 @@ object FormRunCodes: TFormRunCodes
   object Memo: TMemo
     Left = 284
     Top = 0
-    Width = 221
-    Height = 215
-    Align = alClient
+    Width = 244
+    Height = 292
+    Align = alRight
     BorderStyle = bsNone
+    PopupMenu = PopupMenu
     TabOrder = 1
+  end
+  object PopupMenu: TPopupMenu
+    Left = 152
+    Top = 64
+    object N1: TMenuItem
+      Caption = #1087#1088#1080#1085#1091#1076#1080#1090#1077#1083#1100#1085#1086' '#1087#1086#1080#1089#1082' '#1057#1055
+      OnClick = N1Click
+    end
+    object N2: TMenuItem
+      Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1089#1090#1072#1090#1080#1089#1090#1080#1082#1091
+      OnClick = N2Click
+    end
   end
 end

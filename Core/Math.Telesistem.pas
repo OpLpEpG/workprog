@@ -40,6 +40,7 @@ type
 
 {$ENDREGION}
 
+{$REGION 'TTelesistemDecoder'}
    TTelesistemDecoder = class
    public
     type
@@ -63,11 +64,17 @@ type
       Corr: TArray<Double>;
      end;
      TSPData = record
-      Faza: Integer;
-      Idx: Integer;
       Amp: Double;
       Porog: Double;
       Corr: TArray<Double>;
+     end;
+     TSPIndex = record
+      Faza: Integer;
+      Idx: Integer;
+     end;
+     TCheckSPIndex = record
+      FazaNew: Integer;
+      Dkadr: Integer;
      end;
      TCodData = record
       Code: Integer;
@@ -79,13 +86,6 @@ type
       CodeCnt: Integer;
       BadCodes: Integer;
       CodData: TArray<TCodData>;
-     end;
-     TCheckSPData = record
-      FazaNew: Integer;
-      Dkadr: Integer;
-      Amp: Double;
-      Porog : Double;
-      Corr: TArray<Double>;
      end;
    private
      // установки пакета
@@ -101,8 +101,9 @@ type
      FFindSPData: TFindSPData;
      // СП
      FSPData: TSPData;
-    FCodes: TPaketCodes;
-    FCheckSPData: TCheckSPData;
+     FCodes: TPaketCodes;
+     FSPIndex: TSPIndex;
+     FCHIndex: TCheckSPIndex;
      procedure SetState(const Value: TCorrelatorState);
      function GetFindSPData: TFindSPData;
      procedure RunAutomat;
@@ -162,109 +163,28 @@ type
      property FindSPData: TFindSPData read GetFindSPData;
      property SPData: TSPData read FSPData;
      property Codes: TPaketCodes read FCodes;
-     property CheckSPData: TCheckSPData read FCheckSPData;
+     property SPIndex: TSPIndex read FSPIndex;
+     property CheckSPIndex: TCheckSPIndex read FCHIndex;
    end;
    TDecoderClass = class of TTelesistemDecoder;
+{$ENDREGION}
+
+  TFibonachiDecoder = class(TTelesistemDecoder)
+  private
+    FPorogAmpCod: Double;
+    FAlgIsMull: Boolean;
+  protected
+    function CorrCode(var cd: TTelesistemDecoder.TCodData):Integer; override;
+  public
+    property PorogAmpCod: Double read FPorogAmpCod;
+    property AlgIsMull: Boolean read FAlgIsMull write FAlgIsMull;
+  end;
+
+   procedure EncodeRM(const Data: array of Byte; Bits: Integer; var bin: TArray<Boolean>);
 
 implementation
 
-{$REGION 'TTelesistemDecoder'}
-
-{ TTelesistemDecoder }
-
-constructor TTelesistemDecoder.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
-begin
-  FBits := ABits;
-  FDataCnt := ADataCnt;
-  FDataCodLen := ADataCodLen;
-  FSPcodLen := ASPCodLen;
-  FEvent := AEvent;
-            //ADC USO 16 бит
-  FAmpPorogSP := $8000 * 0.85;
-  FPorogSP := 70;  //%
-  FPorogCod := 50; //%
-  FPorogBadCodes := FDataCnt div 2;
-end;
-
-function TTelesistemDecoder.GetKadrLen: Integer;
-begin
-  Result := Bits * (DataCnt * DataCodLen + SPcodLen + 1)
-end;
-
-function TTelesistemDecoder.GetSPLen: Integer;
-begin
-  Result := Bits * SPcodLen
-end;
-
-function TTelesistemDecoder.GetBuffer: PDoubleArray;
-begin
-  Result := @Buf[Index];
-end;
-
-function TTelesistemDecoder.GetCount: Integer;
-begin
-  Result := Length(Buf)- Index;
-end;
-
-function TTelesistemDecoder.GetDataLen: Integer;
-begin
-  Result := Bits * DataCodLen;
-end;
-
-function TTelesistemDecoder.GetFindSPData: TFindSPData;
-begin
-  Assert(FState = csFindSP, 'FState <> csFindSP');
-  Result := FFindSPData;
-end;
-
-procedure TTelesistemDecoder.SetState(const Value: TCorrelatorState);
-begin
-  if FState <> Value then ForceState(Value);
-end;
-
-procedure TTelesistemDecoder.ForceState(const Value: TCorrelatorState);
-begin
-  FState := Value;
-  case Value of
-    csFindSP: with FFindSPData do
-     begin
-      Max1 := 0;
-      Max2 := 0;
-      Min1 := 0;
-      Min2 := 0;
-      Max1Index := 0;
-      Min1Index := 0;
-      Max2Index := 0;
-      Min2Index := 0;
-      FindSPCount := 0;
-     end;
-    csCode: with FCodes do
-     begin
-      CodeCnt := 0;
-      BadCodes := 0;
-      SetLength(CodData, DataCnt);
-     end;
-  end;
-end;
-
-procedure TTelesistemDecoder.AddData(data: PDouble; len: Integer);
- var
-  n: Integer;
-begin
-  n := Length(Buf);
-  SetLength(Buf, n+len);
-  Move(data^, Buf[n], len*SizeOf(Double));
-  n := Length(Buf) - KadrLen*2;
-  if n > 0 then
-   begin
-    Delete(Buf,0, n);
-    Dec(Index, n);
-    Assert(Index >= 0, 'Index < 0');
-   end;
-  RunAutomat;
-end;
-
-function TTelesistemDecoder.CorrCode(var cd: TCodData): Integer;
+{$REGION 'EncodeRM'}
  const RMCBIN: array [0..31, 0..31] of Integer =(
   (-1, 1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1),
   (-1, 1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1),
@@ -299,6 +219,120 @@ function TTelesistemDecoder.CorrCode(var cd: TCodData): Integer;
   ( 1,-1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1),
   ( 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1));
 
+procedure EncodeRM(const Data: array of Byte; Bits: Integer; var bin: TArray<Boolean>);
+  var
+   n: Integer;
+   procedure AddBit(bit: Boolean);
+    var
+     i: Integer;
+   begin
+     for I := 0 to bits-1 do bin[n+i] := Bit;
+     Inc(n, bits);
+   end;
+  var
+   b: Integer;
+   d: Byte;
+begin
+  n := Length(bin);
+  SetLength(bin, n + Bits*(Length(Data)*32) );
+  for d in Data do
+   begin
+    if d >= 32 then raise Exception.Create('BAD NUMBER I >= 32');
+    for b in RMCBIN[d] do AddBit(b = 1);
+   end;
+end;
+{$ENDREGION}
+
+{$REGION 'TTelesistemDecoder'}
+
+{ TTelesistemDecoder }
+
+constructor TTelesistemDecoder.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
+begin
+  FBits := ABits;
+  FDataCnt := ADataCnt;
+  FDataCodLen := ADataCodLen;
+  FSPcodLen := ASPCodLen;
+  FEvent := AEvent;
+            //ADC USO 16 бит
+  FAmpPorogSP := $8000 * 0.85;
+  FPorogSP := 70;  //%
+  FPorogCod := 50; //%
+  FPorogBadCodes := FDataCnt div 2;
+end;
+
+function TTelesistemDecoder.GetKadrLen: Integer;
+begin
+  Result := Bits * (DataCnt * DataCodLen + SPcodLen)
+end;
+
+function TTelesistemDecoder.GetSPLen: Integer;
+begin
+  Result := Bits * SPcodLen
+end;
+
+function TTelesistemDecoder.GetBuffer: PDoubleArray;
+begin
+  Result := @Buf[Index];
+end;
+
+function TTelesistemDecoder.GetCount: Integer;
+begin
+  Result := Length(Buf)- Index;
+end;
+
+function TTelesistemDecoder.GetDataLen: Integer;
+begin
+  Result := Bits * DataCodLen;
+end;
+
+function TTelesistemDecoder.GetFindSPData: TFindSPData;
+begin
+//  Assert(FState = csFindSP, 'FState <> csFindSP');
+  Result := FFindSPData;
+end;
+
+procedure TTelesistemDecoder.SetState(const Value: TCorrelatorState);
+begin
+  if FState <> Value then
+   begin
+    ForceState(Value);
+    if FState in [csUserToSP, csUserToFindSP] then RunAutomat;
+   end;
+end;
+
+procedure TTelesistemDecoder.ForceState(const Value: TCorrelatorState);
+begin
+  FState := Value;
+  case Value of
+    csFindSP: FillChar(FFindSPData, SizeOf(FFindSPData), 0);
+    csCode: with FCodes do
+     begin
+      CodeCnt := 0;
+      BadCodes := 0;
+      SetLength(CodData, DataCnt);
+     end;
+  end;
+end;
+
+procedure TTelesistemDecoder.AddData(data: PDouble; len: Integer);
+ var
+  n: Integer;
+begin
+  n := Length(Buf);
+  SetLength(Buf, n+len);
+  Move(data^, Buf[n], len*SizeOf(Double));
+  n := Length(Buf) - KadrLen*2;
+  if n > 0 then
+   begin
+    Delete(Buf,0, n);
+    Dec(Index, n);
+    Assert(Index >= 0, 'Index < 0');
+   end;
+  RunAutomat;
+end;
+
+function TTelesistemDecoder.CorrCode(var cd: TCodData): Integer;
  var
     m, c, j, i: Integer;
     mx1,  mx2: Double;
@@ -311,13 +345,14 @@ begin
   for c := 0 to 31 do
    begin
     m := 0;
+    cd.Corr[c] := 0;
     for i := 0 to 31 do for j := 0 to Bits-1 do
      begin
       cd.Corr[c] := cd.Corr[c] + RMCBIN[c,i] * buffer[m];
       Inc(m);
      end;
     cd.Corr[c] := cd.Corr[c]/32/Bits;
-    if FSPData.Faza = -1 then cd.Corr[c] := -cd.Corr[c];
+    if FSPIndex.Faza = -1 then cd.Corr[c] := -cd.Corr[c];
     if cd.Corr[c] >= mx1 then
      begin
       mx2 := mx1;
@@ -396,7 +431,7 @@ end;
 
 class function TTelesistemDecoder.ToPorog(Amp, Amp2: Double): Double;
 begin
-  if Amp = 0 then Result := 0
+  if (Amp = 0) or (Amp2 > Amp) then Result := 0
   else Result := (1 - Amp2/Amp) * 100;
 end;
 
@@ -415,14 +450,14 @@ procedure TTelesistemDecoder.RunAutomat;
     z: TArray<Double>;
     d: TFindSPData;
   begin
-    with FSPData do
+    with FSPData, FSPIndex do
      begin
       Faza := Fz;
       Idx := SPidx;
       Amp := spAmp;
       Porog := Prg;
      end;
-    si := FSPData.Idx - Bits*2;
+    si := FSPIndex.Idx - Bits*2;
     if si + Index < 0 then
      begin
       si := -si - Index;
@@ -457,7 +492,7 @@ begin
       if cnt > 0 then
        begin
         if FindSPCount + cnt > KadrLen then cnt := KadrLen - FindSPCount;
-        Corr := CorrSP(FFindSPData, FindSPCount, cnt);
+        Corr := Corr + CorrSP(FFindSPData, FindSPCount, cnt);
         Inc(FindSPCount, cnt);
         SafeExceEvent();
         if FindSPCount = KadrLen then //  конeц пакета
@@ -495,7 +530,7 @@ begin
     csSP:
      begin
       SafeExceEvent();
-      inc(Index, FSPData.Idx + SPLen);
+      inc(Index, FSPIndex.Idx + SPLen);
       ForceState(csCode);
       RunAutomat;
      end;
@@ -517,8 +552,9 @@ begin
         Exit;
        end;
      end;
-    csCheckSP: if Count >= SPLen + Bits*2 then with FCheckSPData do
+    csCheckSP: if Count >= SPLen + Bits*2 then with FSPData, FCHIndex do
      begin
+      FillChar(fs, SizeOf(fs), 0);
       Corr := CorrSP(fs, -Bits*2, Bits*4);
       if fs.Max1 > -fs.Min1 then
        begin
@@ -535,7 +571,7 @@ begin
         Porog := ToPorog(-fs.Min1, -fs.Min2);
        end;
       SafeExceEvent();
-      if (FazaNew = FSPData.Faza) and (Porog >= FPorogSP) and (Dkadr < 8) then
+      if (FazaNew = FSPIndex.Faza) and (Porog >= FPorogSP) and (Dkadr < 8) then
        begin
         inc(Index, SPLen + Dkadr);
         ForceState(csCode);
@@ -560,5 +596,46 @@ end;
 
 {$ENDREGION}
 
+
+{ TFibonachiDecoder }
+
+function TFibonachiDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Integer;
+ var
+  m, j, i: Integer;
+  ones, zeroes, amp: Double;
+begin
+  SetLength(cd.Corr, DataCodLen);
+  if FAlgIsMull then FPorogAmpCod := 0
+  else FPorogAmpCod := FSPData.Amp * PorogCod/100;
+  m := 0;
+  cd.Code := 0;
+  ones := Double.MaxValue;
+  zeroes := Double.MinValue;
+  for i := 0 to DataCodLen-1 do
+   begin
+    cd.Corr[i] := 0;
+    for j := 0 to Bits-1 do
+     begin
+      if FAlgIsMull then cd.Corr[i] := cd.Corr[i] +  buffer[m] * buffer[m-bits]
+      else  cd.Corr[i] := cd.Corr[i] +  buffer[m] + buffer[m-bits];
+      Inc(m);
+     end;
+    if FAlgIsMull then cd.Corr[i] := cd.Corr[i]/bits/FSPData.Amp
+    else cd.Corr[i] := Abs(cd.Corr[i]/bits/2);
+    cd.Code := cd.Code shl 1;
+    amp := cd.Corr[i];
+    if amp > FPorogAmpCod  then
+     begin
+      cd.Code := cd.Code or 1;
+      if ones > amp then ones := amp;
+     end
+    else if zeroes < amp then zeroes := amp;
+   end;
+  if FAlgIsMull then cd.Porog := ToPorog(ones, Abs(Abs(zeroes) - FSPData.Amp))
+  else cd.Porog := ToPorog(ones, zeroes);
+  cd.IsBad := Odd(cd.Code); //!!! в две строчки
+  cd.IsBad := not Decode(cd.Code shr 1, cd.Code) or cd.IsBad; //!!!
+  if cd.IsBad then Result := 1 else Result := 0;
+end;
 
 end.

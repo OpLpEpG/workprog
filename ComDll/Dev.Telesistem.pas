@@ -49,6 +49,7 @@ type
     procedure DoSetup(Sender: IAction); override;
   end;
 
+   TTestUsoData = (tudNone, tudFibonach, tudRMCod);
    TTelesisFrequency = (afq40, afq20, afq10, afq5, afq2p5, afq1p25);
     TRecRun = record
        LSync, HSync: Boolean;
@@ -69,7 +70,6 @@ type
     FFT_AMP_LEN = FFT_LEN div 2;
 
 type
-
   TUso1 = class(TSubDevWithForm<TUsoData>, ITelesistem)
   private
     FFrequency: TTelesisFrequency;
@@ -77,17 +77,20 @@ type
     RecRun: TRecRun;
     Tst_Data: TArray<Boolean>;
     FData: TArray<Double>;
-  procedure SetFrequency(const Value: TTelesisFrequency);
+    FTestUsoData: TTestUsoData;
+    procedure SetFrequency(const Value: TTelesisFrequency);
+    procedure SetTestUsoData(const Value: TTestUsoData);
   protected
-    procedure InputData(Data: Pointer; DataSize: integer); override;
     function GetCategory: TSubDeviceInfo; override;
     function GetCaption: string; override;
   public
+    procedure InputData(Data: Pointer; DataSize: integer); override;
     constructor Create; override;
     [DynamicAction('Показать осцилограмму усо <I> ', '<I>', 52, '0:Телесистема.<I>', 'Показать осцилограмму усо')]
     procedure DoSetup(Sender: IAction); override;
-    published
+  published
     [ShowProp('Частота прибора')] property Frequency: TTelesisFrequency read FFrequency write SetFrequency default afq10;
+    [ShowProp('Тестовые даррые')] property TestUsoData: TTestUsoData read FTestUsoData write SetTestUsoData default tudNone;
    end;
 
 //   TUso2 = class(TUso1)
@@ -101,11 +104,14 @@ type
      FFourier: IFourier;
      FDataCnt: Integer;
    protected
-     procedure InputData(Data: Pointer; DataSize: integer); override;
+     procedure FBCH(from, too: Integer);
+     procedure FNCH(from, too: Integer);
+     procedure DoOutputData(Data: Pointer; DataSize: integer); virtual;
      function GetCategory: TSubDeviceInfo; override;
      function GetCaption: string; override;
      procedure OnUserRemove; override;
    public
+     procedure InputData(Data: Pointer; DataSize: integer); override;
      constructor Create; override;
      [DynamicAction('Показать спектр <I> ', '<I>', 52, '0:Телесистема.<I>', 'спектр')]
      procedure DoSetup(Sender: IAction); override;
@@ -115,10 +121,10 @@ type
    private
      Ffifo: array [0..7] of Double;
    protected
-     procedure InputData(Data: Pointer; DataSize: integer); override;
      function GetCaption: string; override;
      function GetCategory: TSubDeviceInfo; override;
    public
+     procedure InputData(Data: Pointer; DataSize: integer); override;
      constructor Create; override;
      [DynamicAction('Показать осцилограмму BIT <I> ', '<I>', 53, '0:Телесистема.<I>', 'Показать осцилограмму BIT')]
      procedure DoSetup(Sender: IAction); override;
@@ -126,10 +132,10 @@ type
 
    TPalseFlt = class(TbitFlt)
    protected
-     procedure InputData(Data: Pointer; DataSize: integer); override;
      function GetCategory: TSubDeviceInfo; override;
      function GetCaption: string; override;
    public
+     procedure InputData(Data: Pointer; DataSize: integer); override;
      constructor Create; override;
      [DynamicAction('Показать осцилограмму ФОИ <I> ', '<I>', 54, '0:Телесистема.<I>', 'Показать осцилограмму ФОИ')]
      procedure DoSetup(Sender: IAction); override;
@@ -150,6 +156,22 @@ type
      [DynamicAction('Показать окно Декорера', '<I>', 55, '0:Телесистема.<I>', 'Показать окно Декорера')]
      procedure DoSetup(Sender: IAction); override;
    end;
+
+  TDecoder2 = class(TCustomDecoder, ITelesistem)
+  private
+    FIsMul: Boolean;
+    procedure SetIsMul(const Value: Boolean);
+  protected
+    function GetCaption: string; override;
+    function GetDecoderClass: TDecoderClass; override;
+    procedure SetupNewDecoder;  override;
+  public
+    constructor Create; override;
+    [DynamicAction('Показать окно Декорера', '<I>', 55, '0:Телесистема.<I>', 'Показать окно Декорера')]
+    procedure DoSetup(Sender: IAction); override;
+  published
+    [ShowProp('Фильтр единиц умножением')] property IsMul: Boolean read FIsMul write SetIsMul;
+  end;
 
 //   TCorrelate = class(TSubDevWithForm<TUsoData>, ITelesistem)
 //   protected
@@ -326,17 +348,13 @@ end;
 { TUso1 }
 
 constructor TUso1.Create;
- var
-  cb: Boolean;
 begin
+  FKSum := 1;
+  FFrequency :=  afq10;
   SetLength(FData, USO_LEN);
   FS_Data.Data := @Fdata[0];
   FS_Data.Size := USO_LEN;
-  cb := True;
-  CreateSuncro(8, cb, Tst_Data);
-  Encode([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 8, cb, Tst_Data);
   InitConst('TUsoOscForm', 'OscForm_');
-  if FKSum = 0 then FKSum := 1;
   inherited;
 end;
 
@@ -364,7 +382,26 @@ procedure TUso1.InputData(Data: Pointer; DataSize: integer);
   var
    p: PByte;
 begin
-  p := Data;
+
+ while True do
+  begin
+    if FTestUsoData <> tudNone then
+     begin
+      if c >= Length(Tst_Data) then c := 0;
+      if Tst_Data[c] then FData[i] := 1 else FData[i] := - 1;
+      Inc(c);
+     end;
+    inc(i);
+    if i = Length(FData) then
+     begin
+      i := 0;
+      NotifyData;
+      if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], Length(FData));
+      Exit;
+     end;
+  end;
+
+ { p := Data;
   with RecRun do while DataSize > 0 do
    begin
     if HSync then
@@ -379,11 +416,12 @@ begin
          begin
           Nfq := 0;
           FData[i] := SumDat / FKSum * 0.0625;
-          if Tst_Data[c] then FData[i] :=  {FData[i]} + 1// + 500
-          else FData[i] := {FData[i]} - 1;// + 500;
-        //  FData[i] := 1;
-          Inc(c);
-          if c = Length(Tst_Data) then c := 0;
+          if FTestUsoData <> tudNone then
+           begin
+            if c >= Length(Tst_Data) then c := 0;
+            if Tst_Data[c] then FData[i] := 1 else FData[i] := - 1;
+            Inc(c);
+           end;
           SumDat := 0;
           inc(i);
           if i = Length(FData) then
@@ -409,20 +447,43 @@ begin
       end;
     Dec(DataSize);
     Inc(p);
-   end;
+   end;     }
 end;
 
 procedure TUso1.SetFrequency(const Value: TTelesisFrequency);
 begin
-  FFrequency := Value;
-  case FFrequency of
-      afq40: FKSum := 1;
-      afq20: FKSum := 1;
-      afq10: FKSum := 1;
-       afq5: FKSum := 2;
-     afq2p5: FKSum := 4;
-    afq1p25: FKSum := 8;
-  end;
+  if FFrequency <> Value then
+   begin
+    FFrequency := Value;
+    case FFrequency of
+        afq40: FKSum := 1;
+        afq20: FKSum := 1;
+        afq10: FKSum := 1;
+         afq5: FKSum := 2;
+       afq2p5: FKSum := 4;
+      afq1p25: FKSum := 8;
+    end;
+    Owner.PubChange;
+   end;
+end;
+
+procedure TUso1.SetTestUsoData(const Value: TTestUsoData);
+ var
+  cb: Boolean;
+begin
+  if FTestUsoData <> Value then
+   begin
+    FTestUsoData := Value;
+    SetLength(Tst_Data, 0);
+    cb := True;
+    CreateSuncro(8, cb, Tst_Data);
+    case FTestUsoData of
+     tudNone: SetLength(Tst_Data, 0);
+     tudFibonach: Encode([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 8, cb, Tst_Data);
+     tudRMCod: EncodeRM([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31], 8, Tst_Data);
+    end;
+    Owner.PubChange;
+   end;
 end;
 
 {$ENDREGION}
@@ -538,23 +599,24 @@ end;
 
 {$REGION 'TFltBPF'}
 
-constructor TFltBPF.Create;
-  procedure FNCH(from, too: Integer);
-   var
-    i: Integer;
-  begin
-    for i := 0 to from do FltCoeff[i] := 0;
-    for i := from to too do FltCoeff[i] := Sin((i-from) * PI/2 / (too-from));
-  end;
+procedure TFltBPF.FNCH(from, too: Integer);
  var
-  i, m: Integer;
-  procedure FBCH(from, too: Integer);
-   var
-    i: Integer;
-  begin
-    for i := from to too do FltCoeff[i] := Cos((i-from) * PI/2 / (too-from));
-    for i := too to m do FltCoeff[i] := 0;
-  end;
+  i: Integer;
+begin
+  for i := 0 to from do FltCoeff[i] := 0;
+  for i := from to too do FltCoeff[i] := Sin((i-from) * PI/2 / (too-from));
+end;
+procedure TFltBPF.FBCH(from, too: Integer);
+ var
+  i: Integer;
+begin
+  for i := from to too do FltCoeff[i] := Cos((i-from) * PI/2 / (too-from));
+  for i := too to FFT_AMP_LEN div 4 do FltCoeff[i] := 0;
+end;
+
+constructor TFltBPF.Create;
+ var
+  i: Integer;
 begin
   if not Assigned(FFourier) then {FFourier := TFFourier.Create;} FourierFactory(FFourier);
   SetLength(FdataIn, FFT_LEN);
@@ -563,8 +625,7 @@ begin
   //       1 == n-1 .... n/2-1 = n/2+1
   //      0 1..n/2-1 n/2 n/2+1..n-1
   SetLength(FltCoeff, FFT_AMP_LEN-1); // нет 0
-  m := FFT_AMP_LEN div 4;
-  for i := 0 to m-1  do FltCoeff[i] := 1;
+  for i := 0 to FFT_AMP_LEN div 4-1  do FltCoeff[i] := 1;
 
 //  FNCH(9, 17);
 //  FBCH(Round(m-m/1.7), Round(m-m/3));
@@ -662,8 +723,8 @@ begin
     CheckMath(FFourier, FFourier.ifft(FS_Data.OutData));
 
     inc(FS_Data.OutData, FFT_OVERSAMP);
-    NotifyData;
-    if Assigned(FSubDevice) then FSubDevice.InputData(FS_Data.OutData, FFT_SAMPLES);
+
+    DoOutputData(FS_Data.OutData, FFT_SAMPLES);
 
     Move(FDataIn[FFT_SAMPLES], FDataIn[0], FFT_OVERSAMP*2*Sizeof(Double));
     FDataCnt := FFT_OVERSAMP*2;
@@ -672,7 +733,11 @@ begin
   else if FDataCnt > FFT_LEN then raise EBaseException.Create('FDataCnt > FFT_LEN');
 end;
 
-
+procedure TFltBPF.DoOutputData(Data: Pointer; DataSize: integer);
+begin
+  NotifyData;
+  if Assigned(FSubDevice) then FSubDevice.InputData(Data, DataSize);
+end;
 
 procedure TFltBPF.OnUserRemove;
 begin
@@ -698,7 +763,7 @@ end;
 
 function TDecoder1.GetCaption: string;
 begin
-  Result := 'Декодер-1'
+  Result := 'Декодер-RM'
 end;
 
 function TDecoder1.GetDecoderClass: TDecoderClass;
@@ -706,8 +771,46 @@ begin
   Result := TTelesistemDecoder;
 end;
 
+{ TDecoder2 }
+
+constructor TDecoder2.Create;
+begin
+  inherited;
+  InitConst('TDecoderECHOForm', 'DecoderECHO_');
+  DataCnt := 16;
+  DataCodLen := 17;
+end;
+
+procedure TDecoder2.DoSetup(Sender: IAction);
+begin
+  inherited;
+end;
+
+function TDecoder2.GetCaption: string;
+begin
+  Result := 'Декодер-F'
+end;
+
+function TDecoder2.GetDecoderClass: TDecoderClass;
+begin
+  Result := TFibonachiDecoder;
+end;
+
+procedure TDecoder2.SetIsMul(const Value: Boolean);
+begin
+  FIsMul := Value;
+  if Assigned(FDecoder) then TFibonachiDecoder(FDecoder).AlgIsMull := Value;
+  Owner.PubChange;
+end;
+
+procedure TDecoder2.SetupNewDecoder;
+begin
+  inherited;
+  TFibonachiDecoder(FDecoder).AlgIsMull := FIsMul;
+end;
+
 initialization
-  RegisterClasses([TTelesistem, TUso1, TDecoder1, TbitFlt, TFltBPF, TPalseFlt, TPalseFlt2]);
+  RegisterClasses([TTelesistem, TUso1, TDecoder1, TDecoder2, TbitFlt, TFltBPF, TPalseFlt, TPalseFlt2]);
   TRegister.AddType<TTelesistem, IDevice>.LiveTime(ltSingletonNamed);
   TRegister.AddType<TUso1, ITelesistem>.LiveTime(ltTransientNamed);
 //  TRegister.AddType<TUso2, ITelesistem>.LiveTime(ltTransientNamed);
@@ -716,6 +819,7 @@ initialization
   TRegister.AddType<TPalseFlt, ITelesistem>.LiveTime(ltTransientNamed);
   TRegister.AddType<TPalseFlt2, ITelesistem>.LiveTime(ltTransientNamed);
   TRegister.AddType<TDecoder1, ITelesistem>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TDecoder2, ITelesistem>.LiveTime(ltTransientNamed);
 //  TRegister.AddType<TDecoderFibonach, ITelesistem>.LiveTime(ltTransientNamed);
 //  TRegister.AddType<TCorrelate, ITelesistem>.LiveTime(ltTransientNamed);
 finalization
@@ -727,6 +831,7 @@ finalization
   GContainer.RemoveModel<TPalseFlt2>;
   GContainer.RemoveModel<TFltBPF>;
   GContainer.RemoveModel<TDecoder1>;
+  GContainer.RemoveModel<TDecoder2>;
 //  GContainer.RemoveModel<TCorrelate>;
 //  GContainer.RemoveModel<TDecoderFibonach>;
 end.

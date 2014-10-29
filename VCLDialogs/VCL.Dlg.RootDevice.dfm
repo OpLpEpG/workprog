@@ -52,6 +52,23 @@ object FormSetupRootDevice: TFormSetupRootDevice
         OnClick = btCloseClick
       end
     end
+    object insp: TJvInspector
+      Left = 0
+      Top = 0
+      Width = 442
+      Height = 394
+      Style = isItemPainter
+      Align = alClient
+      Divider = 200
+      ItemHeight = 16
+      Painter = InspectorBorlandPainter
+      TabStop = True
+      TabOrder = 1
+      ExplicitLeft = 8
+      ExplicitTop = 8
+      ExplicitWidth = 307
+      ExplicitHeight = 270
+    end
   end
   object Tree: TVirtualStringTree
     Left = 0
@@ -69,7 +86,9 @@ object FormSetupRootDevice: TFormSetupRootDevice
     PopupMenu = ppM
     TabOrder = 1
     TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+    OnAddToSelection = TreeAddToSelection
     OnGetText = TreeGetText
+    ExplicitLeft = -3
     Columns = <
       item
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
@@ -103,5 +122,25 @@ object FormSetupRootDevice: TFormSetupRootDevice
       Caption = #1042#1085#1080#1079
       OnClick = NDownClick
     end
+  end
+  object InspectorBorlandPainter: TJvInspectorBorlandPainter
+    CategoryFont.Charset = DEFAULT_CHARSET
+    CategoryFont.Color = clBlack
+    CategoryFont.Height = -11
+    CategoryFont.Name = 'Tahoma'
+    CategoryFont.Style = []
+    NameFont.Charset = DEFAULT_CHARSET
+    NameFont.Color = clWindowText
+    NameFont.Height = -11
+    NameFont.Name = 'Tahoma'
+    NameFont.Style = []
+    ValueFont.Charset = DEFAULT_CHARSET
+    ValueFont.Color = clNavy
+    ValueFont.Height = -11
+    ValueFont.Name = 'Tahoma'
+    ValueFont.Style = [fsBold]
+    DrawNameEndEllipsis = True
+    Left = 272
+    Top = 32
   end
 end
