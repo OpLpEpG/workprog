@@ -39,6 +39,7 @@ object FFTForm: TFFTForm
     TopAxis.Visible = False
     View3D = False
     Zoom.Allow = False
+    OnAfterDraw = ChartAfterDraw
     Align = alClient
     TabOrder = 0
     DefaultCanvas = 'TTeeCanvas3D'

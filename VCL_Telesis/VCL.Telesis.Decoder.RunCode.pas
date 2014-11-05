@@ -75,7 +75,7 @@ begin
      end;
     csCode: with Data.Codes do
      begin
-      if CodeCnt-1 <> CodData[CodeCnt-1].Code then inc(statBad);
+      if {CodeCnt-1} 2090 <> CodData[CodeCnt-1].Code then inc(statBad);
       Inc(statCnt);
       SeriesCode.Clear;
       SeriesCode.AddArray(CodData[CodeCnt-1].Corr);
@@ -84,6 +84,12 @@ begin
         SeriesPorog.Clear;
         SeriesPorog.AddXY(0, TFibonachiDecoder(Data).PorogAmpCod);
         SeriesPorog.AddXY(ChartCode.BottomAxis.Maximum, TFibonachiDecoder(Data).PorogAmpCod);
+       end
+     else if Data is TFSKDecoder then
+       begin
+        SeriesPorog.Clear;
+        SeriesPorog.AddXY(0, TFSKDecoder(Data).PorogAmpCod);
+        SeriesPorog.AddXY(ChartCode.BottomAxis.Maximum, TFSKDecoder(Data).PorogAmpCod);
        end;
       Memo.Lines.Add(Format('%5d %5d %5d %15.0f',[CodeCnt, BadCodes, CodData[CodeCnt-1].Code, CodData[CodeCnt-1].Porog]));
      end;

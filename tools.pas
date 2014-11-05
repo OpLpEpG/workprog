@@ -1145,7 +1145,7 @@ begin
 
   LIdent := UTF8ToString(PAnsiChar(@CallDesc^.ArgTypes[LArgCount]));
 
-  FillChar(Strings, SizeOf(Strings), 0);
+  Strings := default(TStringRefList); //   FillChar(Strings, SizeOf(Strings), 0);
   VarParams := GetDispatchInvokeArgs(CallDesc, Params, Strings, true);
 
   case CallDesc^.CallType of

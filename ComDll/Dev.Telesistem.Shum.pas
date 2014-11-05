@@ -55,7 +55,6 @@ procedure TTelesistemShum.InputData(Data: Pointer; DataSize: integer);
   d: PDoubleArray;
   i: Integer;
   s: array[0..USO_LEN-1] of Double;
-//  ah, ad: Double;
 begin
   while Length(Fshum) < DataSize do
    begin
@@ -63,16 +62,7 @@ begin
     inherited InputData(@s[0], USO_LEN);
    end;
   d := Data;
-{  ah := 0;
-  ad := 0;
-  for i := 0 to DataSize-1 do
-   begin
-    ah := ah + Abs(Fshum[i]);
-    ad := ad + Abs(d[i]);
-   end;
-  ah := ah/DataSize;
-  ad := ad/DataSize;}
-  for i := 0 to DataSize-1 do d[i] := d[i] + Fshum[i];// *ad/ah;
+  for i := 0 to DataSize-1 do d[i] := d[i] + Fshum[i];
   Delete(Fshum, 0, DataSize);
   inherited DoOutputData(d, DataSize);
 end;

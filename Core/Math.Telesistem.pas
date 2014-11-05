@@ -132,7 +132,7 @@ type
      property Buffer: PDoubleArray read GetBuffer;
      class function ToPorog(Amp, Amp2: Double): Double; static; inline;
    public
-     constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
+     constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent); virtual;
      procedure AddData(data: PDouble; len: Integer);
 
      property State: TCorrelatorState read FState write SetState;
@@ -180,12 +180,38 @@ type
     property AlgIsMull: Boolean read FAlgIsMull write FAlgIsMull;
   end;
 
-   procedure EncodeRM(const Data: array of Byte; Bits: Integer; var bin: TArray<Boolean>);
+  TFSKDecoder = class(TTelesistemDecoder)
+  private
+    FPorogAmpCod: Double;
+//    FAlgIsMull: Boolean;
+   Etalon: TArray<Double>;
+  protected
+    function CorrCode(var cd: TTelesistemDecoder.TCodData):Integer; override;
+  public
+    constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent); override;
+    property PorogAmpCod: Double read FPorogAmpCod;
+//    property AlgIsMull: Boolean read FAlgIsMull write FAlgIsMull;
+  end;
+
+  TCorFibonachDecoder =  class(TTelesistemDecoder)
+  private
+//    FSimbLen: Integer;
+//    procedure SetSimbLen(const Value: Integer);
+  protected
+    function CorrCode(var cd: TTelesistemDecoder.TCodData):Integer; override;
+  public
+//    property SimbLen: Integer read FSimbLen write SetSimbLen;
+  end;
+
+  TRMCodes = array [0..31, 0..31] of Integer;
+
+  procedure EncodeRM(const Data: array of Byte; Bits: Integer; var bin: TArray<Boolean>);
+  function Tst_DecodeFM(): TRMCodes;
 
 implementation
 
 {$REGION 'EncodeRM'}
- const RMCBIN: array [0..31, 0..31] of Integer =(
+ const RMCBIN: TRMCodes =(
   (-1, 1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1),
   (-1, 1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1,-1, 1),
   (-1, 1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1,-1, 1, 1,-1,-1, 1,-1, 1),
@@ -219,6 +245,17 @@ implementation
   ( 1,-1, 1,-1, 1,-1,-1, 1,-1, 1,-1, 1,-1, 1,-1, 1, 1,-1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1),
   ( 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1, 1,-1, 1,-1,-1, 1, 1,-1, 1,-1, 1,-1, 1,-1, 1,-1,-1, 1));
 
+function Tst_DecodeFM(): TRMCodes;
+ var
+  c,i: Integer;
+begin
+  for c := 0 to 31 do for i := 0 to 31 do
+   begin
+     Result[c,i] := RMCBIN[c,i]*RMCBIN[c, (i+1) mod 32];
+     if Result[c,i] = -1 then Result[c,i] := 0;
+   end;
+end;
+
 procedure EncodeRM(const Data: array of Byte; Bits: Integer; var bin: TArray<Boolean>);
   var
    n: Integer;
@@ -243,7 +280,7 @@ begin
 end;
 {$ENDREGION}
 
-{$REGION 'TTelesistemDecoder'}
+{$REGION 'OLD ECHO'}
 
 { TTelesistemDecoder }
 
@@ -305,7 +342,7 @@ procedure TTelesistemDecoder.ForceState(const Value: TCorrelatorState);
 begin
   FState := Value;
   case Value of
-    csFindSP: FillChar(FFindSPData, SizeOf(FFindSPData), 0);
+    csFindSP: FFindSPData := default(TFindSPData);
     csCode: with FCodes do
      begin
       CodeCnt := 0;
@@ -334,9 +371,9 @@ end;
 
 function TTelesistemDecoder.CorrCode(var cd: TCodData): Integer;
  var
-    m, c, j, i: Integer;
-    mx1,  mx2: Double;
-    mxi1: Integer;
+   m, c, j, i: Integer;
+   mx1,  mx2: Double;
+   mxi1: Integer;
 begin
   SetLength(cd.Corr, 32);
   mxi1 := 0;
@@ -554,7 +591,7 @@ begin
      end;
     csCheckSP: if Count >= SPLen + Bits*2 then with FSPData, FCHIndex do
      begin
-      FillChar(fs, SizeOf(fs), 0);
+      fs := default(TFindSPData);
       Corr := CorrSP(fs, -Bits*2, Bits*4);
       if fs.Max1 > -fs.Min1 then
        begin
@@ -592,10 +629,9 @@ begin
      end
   end;
 end;
-
-
 {$ENDREGION}
 
+{$REGION 'Fibonachi'}
 
 { TFibonachiDecoder }
 
@@ -635,6 +671,91 @@ begin
   else cd.Porog := ToPorog(ones, zeroes);
   cd.IsBad := Odd(cd.Code); //!!! в две строчки
   cd.IsBad := not Decode(cd.Code shr 1, cd.Code) or cd.IsBad; //!!!
+  if cd.IsBad then Result := 1 else Result := 0;
+end;
+
+{$ENDREGION}
+
+{ TCorFibonachDecoder }
+
+
+//procedure TCorFibonachDecoder.SetSimbLen(const Value: Integer);
+//begin
+//  if Value in [2,4,8,16] then FSimbLen := Value
+//  else raise Exception.CreateFmt('SimbLen Value %d not in [2,4,8,16]', [Value]);
+//end;
+
+
+{$REGION 'FSK'}
+{ TFSKDecoder }
+function TFSKDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Integer;
+ var
+  m, j, i: Integer;
+//  tmp: TArray<Double>;
+begin
+  SetLength(cd.Corr, DataCodLen div 2);
+  FPorogAmpCod := FSPData.Amp * PorogCod/100;
+  m := 0;
+  cd.Code := 0;
+//  SetLength(tmp, Bits*2);
+  for i := 0 to DataCodLen div 2 - 1 do
+   begin
+    cd.Corr[i] := 0;
+    for j := 0 to Bits*4-1 do cd.Corr[i] := cd.Corr[i] + buffer[m + j] * Etalon[j];
+    Inc(m, Bits*2);                 //sin
+    cd.Corr[i] := cd.Corr[i]/Bits/4/0.7;
+    cd.Code := cd.Code shl 1;
+    if cd.Corr[i] > FPorogAmpCod then cd.Code := cd.Code or 1;
+   end;
+  cd.IsBad := Odd(cd.Code); //!!! в две строчки
+  cd.IsBad := not Decode(cd.Code shr 1, cd.Code) or cd.IsBad; //!!!
+  if cd.IsBad then Result := 1 else Result := 0;
+end;
+
+constructor TFSKDecoder.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
+ var
+  i: Integer;
+begin
+  inherited;
+  SetLength(Etalon, ABits*4);
+  for i := 0 to High(Etalon) do Etalon[i] := Sin(i*PI/ABits/2);
+end;
+{$ENDREGION}
+
+
+{ TCorFibonachDecoder }
+
+function TCorFibonachDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Integer;
+ var
+   m, c, j, i: Integer;
+   mx1,  mx2: Double;
+   mxi1: Integer;
+begin
+  SetLength(cd.Corr, 2584);
+  mxi1 := 0;
+  mx1 := 0;
+  mx2 := 0;
+  for c := 0 to 2583 do
+   begin
+    m := 0;
+    cd.Corr[c] := 0;
+    for i := 0 to 15 do for j := 0 to Bits-1 do
+     begin
+      cd.Corr[c] := cd.Corr[c] + RMCBIN[c,i] * buffer[m];
+      Inc(m);
+     end;
+    cd.Corr[c] := cd.Corr[c]/32/Bits;
+    if FSPIndex.Faza = -1 then cd.Corr[c] := -cd.Corr[c];
+    if cd.Corr[c] >= mx1 then
+     begin
+      mx2 := mx1;
+      mx1 := cd.Corr[c];
+      mxi1 := c;
+     end;
+   end;
+  cd.Code := mxi1;
+  cd.Porog := ToPorog(mx1, mx2);
+  cd.IsBad := cd.Porog < PorogCod;
   if cd.IsBad then Result := 1 else Result := 0;
 end;
 

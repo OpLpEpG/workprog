@@ -255,7 +255,7 @@ begin
   FLastConnectFunc := func;
   for n in Networks(InterfaceID) do if SameText(ssid, string(PAnsiChar(@n.dot11Ssid.ucSSID))) then
    begin
-    FillChar(ConnParams, SizeOf(ConnParams), 0);
+    ConnParams := default(Tndu_WLAN_CONNECTION_PARAMETERS);// FillChar(ConnParams, SizeOf(ConnParams), 0);
     if Secure then ConnParams.wlanConnectionMode := wlan_connection_mode_discovery_secure
     else ConnParams.wlanConnectionMode := wlan_connection_mode_discovery_unsecure;
     ConnParams.dot11BssType := n.dot11BssType;
