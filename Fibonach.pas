@@ -14,8 +14,7 @@ procedure CreateSuncro(Bits: Integer; var CurBit: Boolean; var bin: TArray<Boole
 function Decode(const Data: Integer; out Res: Integer): Boolean; overload;
 //function Decode(const Data: TArray<Double>; Bits: Integer; out Corr: TArray<Double>; out Res: Integer): Boolean; overload;
 function Encod(cod: Word): Word;
-
-implementation
+function FastCorr(A,B: Word): Integer;
 
 const
   FIBONACH_CODES: array [0..2583] of Word =($0,$1,$2,$4,$5,$8,$9,$A,$10,$11,$12,$14,$15,$20,$21,$22,$24,$25,$28,$29,$2A,$40,$41,$42,
@@ -234,6 +233,8 @@ $64CB,$64C9,$64CD,$64CC,$66AA,$66AB,$66A9,$66AD,$66AC,$66A5,$66A4,$66A6,$66B5,$6
 $66D5,$66D4,$66D6,$66D2,$66D3,$66DA,$66DB,$66D9,$66CA,$66CB,$66C9,$66CD,$66CC,$6655,$6654,$6656,$6652,$6653,$665A,$665B,$6659,$664A,$664B,$6649,$664D,
 $664C,$666A,$666B,$6669,$666D,$666C,$6665,$6664,$6666);
 
+implementation
+
 procedure EncodeFSK(const Data: array of word; Bits: Integer; var bin: TArray<Boolean>);
   var
    n: Integer;
@@ -416,6 +417,16 @@ begin
     if (cod and $8000) = 0 then c := not c;
     cod  := cod shl 1;
    end;
+end;
+
+function FastCorr(A, B: Word): Integer;
+ var
+  i: Integer;
+  R: Word;
+begin
+  Result := 0;
+  R := not (A xor B);
+  for i := 0 to 15 do if (R shr i) and 1 <> 0 then Dec(Result) else Inc(Result);
 end;
 
 end.

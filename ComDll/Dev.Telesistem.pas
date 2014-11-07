@@ -49,7 +49,7 @@ type
     procedure DoSetup(Sender: IAction); override;
   end;
 
-   TTestUsoData = (tudNone, tudFibonach, tudRMCod, tudFSK);
+   TTestUsoData = (tudNone, tudFibonach, tudRMCod, tudFSK, tudFibonachCorr);
    TTelesisFrequency = (afq40, afq20, afq10, afq5, afq2p5, afq1p25);
     TRecRun = record
        LSync, HSync: Boolean;
@@ -181,6 +181,22 @@ type
     constructor Create; override;
     [DynamicAction('Показать окно Декорера', '<I>', 55, '0:Телесистема.<I>', 'Показать окно Декорера')]
     procedure DoSetup(Sender: IAction); override;
+  end;
+
+  TDecoder4 = class(TCustomDecoder, ITelesistem)
+  private
+    FCorLen: Integer;
+    procedure SetCorLen(const Value: Integer);
+  protected
+    procedure SetupNewDecoder;  override;
+    function GetCaption: string; override;
+    function GetDecoderClass: TDecoderClass; override;
+  public
+    constructor Create; override;
+    [DynamicAction('Показать окно Декорера', '<I>', 55, '0:Телесистема.<I>', 'Показать окно Декорера')]
+    procedure DoSetup(Sender: IAction); override;
+  published
+    [ShowProp('длина керреляции')] property CorLen: Integer read FCorLen write SetCorLen;
   end;
 
 //   TCorrelate = class(TSubDevWithForm<TUsoData>, ITelesistem)
@@ -393,7 +409,7 @@ procedure TUso1.InputData(Data: Pointer; DataSize: integer);
    p: PByte;
 begin
 
-{ while True do
+ while True do
   begin
     if FTestUsoData <> tudNone then
      begin
@@ -409,9 +425,9 @@ begin
       if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], Length(FData));
       Exit;
      end;
-  end;}
+  end;
 
-  p := Data;
+ { p := Data;
   with RecRun do while DataSize > 0 do
    begin
     if HSync then
@@ -457,7 +473,7 @@ begin
       end;
     Dec(DataSize);
     Inc(p);
-   end;
+   end;   }
 end;
 
 procedure TUso1.SetFrequency(const Value: TTelesisFrequency);
@@ -495,14 +511,22 @@ begin
       begin
        SetLength(a, 16);
        Decode($9249, d);
-      // for I := 0 to Length(a)-1 do a[i] := d;
-       // Encode(a, 8, cb, Tst_Data);
-       Encode([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 8, cb, Tst_Data);
+       for I := 0 to Length(a)-1 do a[i] := d;
+       Encode(a, 8, cb, Tst_Data);
+//       Encode([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 8, cb, Tst_Data);
       end;
      tudRMCod: EncodeRM([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31], 8, Tst_Data);
      tudFSK:
       begin
        EncodeFSK([2583, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 8, Tst_Data);
+      end;
+     tudFibonachCorr:
+      begin
+       SetLength(a, 16);
+       Decode($9249, d);
+       for I := 0 to Length(a)-1 do a[i] := d;
+       Encode(a, 8, Tst_Data);
+      // Encode([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 8, Tst_Data);
       end;
     end;
     Owner.PubChange;
@@ -858,8 +882,47 @@ begin
   Result := TFSKDecoder;
 end;
 
+{ TDecoder4 }
+
+constructor TDecoder4.Create;
+begin
+  inherited;
+  InitConst('TDecoderECHOForm', 'DecoderECHO_');
+  DataCnt := 16;
+  DataCodLen := 18;
+  FCorLen := 2;
+end;
+
+procedure TDecoder4.DoSetup(Sender: IAction);
+begin
+  inherited;
+end;
+
+function TDecoder4.GetCaption: string;
+begin
+  Result := 'Декодер-корр-фиб'
+end;
+
+function TDecoder4.GetDecoderClass: TDecoderClass;
+begin
+  Result := TCorFibonachDecoder;
+end;
+
+procedure TDecoder4.SetCorLen(const Value: Integer);
+begin
+  FCorLen := Value;
+  if Assigned(FDecoder) then TCorFibonachDecoder(FDecoder).SimbLen := Value;
+  Owner.PubChange;
+end;
+
+procedure TDecoder4.SetupNewDecoder;
+begin
+  inherited;
+  TCorFibonachDecoder(FDecoder).SimbLen := FCorLen;
+end;
+
 initialization
-  RegisterClasses([TTelesistem, TUso1, TDecoder1, TDecoder2, TDecoder3, TbitFlt, TFltBPF, TPalseFlt, TPalseFlt2]);
+  RegisterClasses([TTelesistem, TUso1, TDecoder1, TDecoder2, TDecoder3, TDecoder4, TbitFlt, TFltBPF, TPalseFlt, TPalseFlt2]);
   TRegister.AddType<TTelesistem, IDevice>.LiveTime(ltSingletonNamed);
   TRegister.AddType<TUso1, ITelesistem>.LiveTime(ltTransientNamed);
 //  TRegister.AddType<TUso2, ITelesistem>.LiveTime(ltTransientNamed);
@@ -870,6 +933,7 @@ initialization
   TRegister.AddType<TDecoder1, ITelesistem>.LiveTime(ltTransientNamed);
   TRegister.AddType<TDecoder2, ITelesistem>.LiveTime(ltTransientNamed);
   TRegister.AddType<TDecoder3, ITelesistem>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TDecoder4, ITelesistem>.LiveTime(ltTransientNamed);
 //  TRegister.AddType<TDecoderFibonach, ITelesistem>.LiveTime(ltTransientNamed);
 //  TRegister.AddType<TCorrelate, ITelesistem>.LiveTime(ltTransientNamed);
 finalization
@@ -883,6 +947,7 @@ finalization
   GContainer.RemoveModel<TDecoder1>;
   GContainer.RemoveModel<TDecoder2>;
   GContainer.RemoveModel<TDecoder3>;
+  GContainer.RemoveModel<TDecoder4>;
 //  GContainer.RemoveModel<TCorrelate>;
 //  GContainer.RemoveModel<TDecoderFibonach>;
 end.

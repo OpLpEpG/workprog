@@ -104,6 +104,8 @@ type
      FCodes: TPaketCodes;
      FSPIndex: TSPIndex;
      FCHIndex: TCheckSPIndex;
+     FBitFilterOn: Boolean;
+     FBitFilter: Tarray<Double>;
      procedure SetState(const Value: TCorrelatorState);
      function GetFindSPData: TFindSPData;
      procedure RunAutomat;
@@ -127,6 +129,8 @@ type
      function CorrCode(var cd: TCodData):Integer; virtual;
 
      procedure ForceState(const Value: TCorrelatorState);
+
+     function BitFilter(n: Integer): Double; inline;
 
      property Count: Integer read GetCount;
      property Buffer: PDoubleArray read GetBuffer;
@@ -158,6 +162,12 @@ type
      ///	  Разниза Max1 Max2 в процентах
      ///	</summary>
      property PorogCod: Double read FPorogCod write FPorogCod;
+     ///	<summary>
+     ///	  Разниза Max1 Max2 в процентах
+     ///	</summary>
+     property BitFilterOn: Boolean read FBitFilterOn write FBitFilterOn;
+
+
      property PorogBadCodes: Integer read FPorogBadCodes write FPorogBadCodes;
 
      property FindSPData: TFindSPData read GetFindSPData;
@@ -195,12 +205,12 @@ type
 
   TCorFibonachDecoder =  class(TTelesistemDecoder)
   private
-//    FSimbLen: Integer;
-//    procedure SetSimbLen(const Value: Integer);
+    FSimbLen: Integer;
+    procedure SetSimbLen(const Value: Integer);
   protected
     function CorrCode(var cd: TTelesistemDecoder.TCodData):Integer; override;
   public
-//    property SimbLen: Integer read FSimbLen write SetSimbLen;
+    property SimbLen: Integer read FSimbLen write SetSimbLen;
   end;
 
   TRMCodes = array [0..31, 0..31] of Integer;
@@ -285,6 +295,8 @@ end;
 { TTelesistemDecoder }
 
 constructor TTelesistemDecoder.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
+ var
+  i: Integer;
 begin
   FBits := ABits;
   FDataCnt := ADataCnt;
@@ -296,6 +308,9 @@ begin
   FPorogSP := 70;  //%
   FPorogCod := 50; //%
   FPorogBadCodes := FDataCnt div 2;
+
+  SetLength(FBitFilter, FBits);
+  for i := 0 to FBits-1 do  FBitFilter[i] := Sin(i/Bits*pi);
 end;
 
 function TTelesistemDecoder.GetKadrLen: Integer;
@@ -369,6 +384,11 @@ begin
   RunAutomat;
 end;
 
+function TTelesistemDecoder.BitFilter(n: Integer): Double;
+begin
+  if FBitFilterOn then Result := FBitFilter[n] else Result := 1;
+end;
+
 function TTelesistemDecoder.CorrCode(var cd: TCodData): Integer;
  var
    m, c, j, i: Integer;
@@ -385,7 +405,7 @@ begin
     cd.Corr[c] := 0;
     for i := 0 to 31 do for j := 0 to Bits-1 do
      begin
-      cd.Corr[c] := cd.Corr[c] + RMCBIN[c,i] * buffer[m];
+      cd.Corr[c] := cd.Corr[c] + RMCBIN[c,i] * buffer[m] * BitFilter(j);
       Inc(m);
      end;
     cd.Corr[c] := cd.Corr[c]/32/Bits;
@@ -652,8 +672,8 @@ begin
     cd.Corr[i] := 0;
     for j := 0 to Bits-1 do
      begin
-      if FAlgIsMull then cd.Corr[i] := cd.Corr[i] +  buffer[m] * buffer[m-bits]
-      else  cd.Corr[i] := cd.Corr[i] +  buffer[m] + buffer[m-bits];
+      if FAlgIsMull then cd.Corr[i] := cd.Corr[i] +  buffer[m] * buffer[m-bits] * BitFilter(j)
+      else  cd.Corr[i] := cd.Corr[i] +  (buffer[m] + buffer[m-bits]) * BitFilter(j);
       Inc(m);
      end;
     if FAlgIsMull then cd.Corr[i] := cd.Corr[i]/bits/FSPData.Amp
@@ -673,18 +693,7 @@ begin
   cd.IsBad := not Decode(cd.Code shr 1, cd.Code) or cd.IsBad; //!!!
   if cd.IsBad then Result := 1 else Result := 0;
 end;
-
 {$ENDREGION}
-
-{ TCorFibonachDecoder }
-
-
-//procedure TCorFibonachDecoder.SetSimbLen(const Value: Integer);
-//begin
-//  if Value in [2,4,8,16] then FSimbLen := Value
-//  else raise Exception.CreateFmt('SimbLen Value %d not in [2,4,8,16]', [Value]);
-//end;
-
 
 {$REGION 'FSK'}
 { TFSKDecoder }
@@ -725,37 +734,119 @@ end;
 
 { TCorFibonachDecoder }
 
+
+procedure TCorFibonachDecoder.SetSimbLen(const Value: Integer);
+begin
+  if Value in [2..16,18] then FSimbLen := Value
+  else raise Exception.CreateFmt('SimbLen Value %d not in [2..18]', [Value]);
+end;
+
 function TCorFibonachDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Integer;
  var
-   m, c, j, i: Integer;
-   mx1,  mx2: Double;
-   mxi1: Integer;
+  m, oldm, c: Integer;
+  procedure CorrBit(bit: Boolean);
+   var
+    i: Integer;
+  begin
+    if bit then for i := 0 to Bits-1 do cd.Corr[c] := cd.Corr[c] + buffer[m+i] * BitFilter(i)
+    else        for i := 0 to Bits-1 do cd.Corr[c] := cd.Corr[c] - buffer[m+i] * BitFilter(i);
+    Inc(m, bits);
+  end;
+ var
+  i: Integer;
+  mx1,  mx2: Double;
+  mxi1: Integer;
+  cod: Word;
+  //
+  ArrBit, etbit: TArray<Boolean>;
+  SimbTrom: Integer;
+  SimbTo: Integer;
+  procedure CodToBits(a: TArray<Boolean>; cd: Word);
+   var
+    i: Integer;
+  begin
+    for i := 1 to 16 do
+     begin
+      a[i] := Cd and $8000 <> 0;
+      cd := cd shl 1;
+     end;
+    a[0] := not a[1];
+    a[17] := not a[16];
+  end;
 begin
   SetLength(cd.Corr, 2584);
-  mxi1 := 0;
-  mx1 := 0;
-  mx2 := 0;
-  for c := 0 to 2583 do
+
+  if FSimbLen < 18 then
    begin
-    m := 0;
-    cd.Corr[c] := 0;
-    for i := 0 to 15 do for j := 0 to Bits-1 do
+    SetLength(ArrBit, 18);
+    SetLength(etbit, 18);
+
+    CodToBits(etbit, FIBONACH_ENCODED_PSK[2090]);
+    cd.Code := 2090;
+    cd.IsBad := False;
+    for c := 0 to 2583 do
+    begin
+     CodToBits(ArrBit, FIBONACH_ENCODED_PSK[c]);
+     m := 0;
+     SimbTrom := 0;
+     SimbTo := FSimbLen;
+     while true do
+      begin
+       cd.Corr[c] := 0;
+       oldm := m;
+       for i := SimbTrom to SimbTo-1 do CorrBit(etbit[i]);
+       m := oldm;
+       mx1 := cd.Corr[c]/(SimbTo-SimbTrom)/Bits;
+       cd.Corr[c] := 0;
+       for i := SimbTrom to SimbTo-1 do CorrBit(ArrBit[i]);
+       cd.Corr[c] := cd.Corr[c]/(SimbTo-SimbTrom)/Bits;
+       if cd.Corr[c] > mx1 then
+        begin
+         cd.Code := c;
+         cd.IsBad := True;
+        end;
+       if SimbTo = 18 then Break;
+       SimbTrom := SimbTo;
+       SimbTo := SimbTo + FSimbLen;
+       if SimbTo > 18 then SimbTo := 18;
+      end;
+    end;
+   end
+  else
+   begin
+    mxi1 := 0;
+    mx1 := 0;
+    mx2 := 0;
+    for c := 0 to 2583 do
      begin
-      cd.Corr[c] := cd.Corr[c] + RMCBIN[c,i] * buffer[m];
-      Inc(m);
+      m := 0;
+      cd.Corr[c] := 0;
+
+      Cod := FIBONACH_ENCODED_PSK[c];
+
+      //  inv15 15H..0L inv0
+      CorrBit(Cod and $8000 = 0); //
+      for i := 0 to 14 do
+       begin
+        CorrBit(Cod and $8000 <> 0);
+        cod := cod shl 1;
+       end;
+      CorrBit(Cod and $8000 <> 0);
+      CorrBit(Cod and $8000 = 0);
+
+      cd.Corr[c] := cd.Corr[c]/18/Bits;
+      if FSPIndex.Faza = -1 then cd.Corr[c] := -cd.Corr[c];
+      if cd.Corr[c] >= mx1 then
+       begin
+        mx2 := mx1;
+        mx1 := cd.Corr[c];
+        mxi1 := c;
+       end;
      end;
-    cd.Corr[c] := cd.Corr[c]/32/Bits;
-    if FSPIndex.Faza = -1 then cd.Corr[c] := -cd.Corr[c];
-    if cd.Corr[c] >= mx1 then
-     begin
-      mx2 := mx1;
-      mx1 := cd.Corr[c];
-      mxi1 := c;
-     end;
+    cd.Code := mxi1;
+    cd.Porog := ToPorog(mx1, mx2);
+    cd.IsBad := cd.Porog < PorogCod;
    end;
-  cd.Code := mxi1;
-  cd.Porog := ToPorog(mx1, mx2);
-  cd.IsBad := cd.Porog < PorogCod;
   if cd.IsBad then Result := 1 else Result := 0;
 end;
 

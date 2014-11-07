@@ -14,6 +14,7 @@ type
     FDataCnt: Integer;
     FDataCodLen: Integer;
     FBits: Integer;
+    FBitFilter: Boolean;
     procedure SetNumBadCode(const Value: Integer);
     procedure SetPorogCode(const Value: Real);
     procedure SetPorogSP(const Value: Real);
@@ -21,6 +22,7 @@ type
     procedure SetDataCnt(const Value: Integer);
     procedure SetDataCodLen(const Value: Integer);
     procedure SetSPCodLen(const Value: Integer);
+    procedure SetBitFilter(const Value: Boolean);
   protected
     FDecoder: TTelesistemDecoder;
     procedure OnDecoder(Sender: TObject);
@@ -35,6 +37,7 @@ type
     [ShowProp('Порог СП %')]               property PorogSP    : Real   read FPorogSP     write SetPorogSP;
     [ShowProp('Порог данных %')]           property PorogCode  : Real   read FPorogCode   write SetPorogCode;
     [ShowProp('Число ошибочных данных')]   property NumBadCode : Integer read FNumBadCode write SetNumBadCode default 8;
+    [ShowProp('Битовый фильтр')]           property BitFilter: Boolean  read FBitFilter   write SetBitFilter  default False;
     property Bits: Integer read FBits write SetBits default 8;
     property DataCnt: Integer read FDataCnt write SetDataCnt default 32;
     property DataCodLen: Integer read FDataCodLen write SetDataCodLen default 32;
@@ -61,6 +64,15 @@ destructor TCustomDecoder.Destroy;
 begin
   if Assigned(FDecoder) then FDecoder.Free;
   inherited;
+end;
+
+procedure TCustomDecoder.SetBitFilter(const Value: Boolean);
+begin
+  if FBitFilter <> Value then
+   begin
+    FBitFilter := Value;
+    if Assigned(FDecoder) then FreeAndNil(FDecoder);
+   end;
 end;
 
 procedure TCustomDecoder.SetBits(const Value: Integer);
@@ -128,6 +140,7 @@ begin
   FDecoder.PorogSP := PorogSP;
   FDecoder.PorogCod := PorogCode;
   FDecoder.PorogBadCodes := NumBadCode;
+  FDecoder.BitFilterOn := BitFilter;
 end;
 
 procedure TCustomDecoder.InputData(Data: Pointer; DataSize: integer);

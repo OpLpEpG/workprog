@@ -23,4 +23,13 @@ object FormTest: TFormTest
     ScrollBars = ssBoth
     TabOrder = 0
   end
+  object Button1: TButton
+    Left = 496
+    Top = 8
+    Width = 33
+    Height = 25
+    Caption = 'CR'
+    TabOrder = 1
+    OnClick = Button1Click
+  end
 end
