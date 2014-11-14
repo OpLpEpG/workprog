@@ -183,11 +183,13 @@ type
   private
     FPorogAmpCod: Double;
     FAlgIsMull: Boolean;
+    FFindZeroes: Boolean;
   protected
     function CorrCode(var cd: TTelesistemDecoder.TCodData):Integer; override;
   public
     property PorogAmpCod: Double read FPorogAmpCod;
     property AlgIsMull: Boolean read FAlgIsMull write FAlgIsMull;
+    property FindZeroes: Boolean read FFindZeroes write FFindZeroes;
   end;
 
   TFSKDecoder = class(TTelesistemDecoder)
@@ -659,28 +661,49 @@ function TFibonachiDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Intege
  var
   m, j, i: Integer;
   ones, zeroes, amp: Double;
+  flt0: TArray<Double>;
 begin
   SetLength(cd.Corr, DataCodLen);
+  SetLength(flt0, DataCodLen);
+
   if FAlgIsMull then FPorogAmpCod := 0
   else FPorogAmpCod := FSPData.Amp * PorogCod/100;
+
   m := 0;
-  cd.Code := 0;
   ones := Double.MaxValue;
   zeroes := Double.MinValue;
   for i := 0 to DataCodLen-1 do
    begin
     cd.Corr[i] := 0;
-    for j := 0 to Bits-1 do
+    flt0[i] := 0;
+    for j := 0 to Bits-1 do if FAlgIsMull then
      begin
-      if FAlgIsMull then cd.Corr[i] := cd.Corr[i] +  buffer[m] * buffer[m-bits] * BitFilter(j)
-      else  cd.Corr[i] := cd.Corr[i] +  (buffer[m] + buffer[m-bits]) * BitFilter(j);
+      cd.Corr[i] := cd.Corr[i] + buffer[m] * buffer[m-bits] * BitFilter(j);
+      if FFindZeroes then flt0[i] := flt0[i] + buffer[m] * buffer[m-2*bits] * BitFilter(j);
+      Inc(m);
+     end
+    else
+     begin
+      cd.Corr[i] := cd.Corr[i] + (buffer[m] + buffer[m-bits]) * BitFilter(j);
+      if FFindZeroes then flt0[i] := flt0[i] + (buffer[m] + buffer[m-2*bits]) * BitFilter(j);
       Inc(m);
      end;
+   end;
+  for i := 0 to DataCodLen-1 do
+    if flt0[i] > 0 then
+     begin
+      cd.Corr[i] := cd.Corr[i] - flt0[i];
+      if (i > 0) and (flt0[i-1] < 0) then cd.Corr[i-1] := cd.Corr[i-1] - flt0[i];
+      if (i < DataCodLen-1) and (flt0[i-1] < 0) then cd.Corr[i-1] := cd.Corr[i-1] - flt0[i];
+     end;
+  cd.Code := 0;
+  for i := 0 to DataCodLen-1 do
+   begin
     if FAlgIsMull then cd.Corr[i] := cd.Corr[i]/bits/FSPData.Amp
-    else cd.Corr[i] := Abs(cd.Corr[i]/bits/2);
+    else cd.Corr[i] := Abs(cd.Corr[i])/bits/2; // неуверен при сложении
     cd.Code := cd.Code shl 1;
     amp := cd.Corr[i];
-    if amp > FPorogAmpCod  then
+    if amp > FPorogAmpCod then
      begin
       cd.Code := cd.Code or 1;
       if ones > amp then ones := amp;

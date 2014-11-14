@@ -6,6 +6,8 @@ uses DeviceIntf, ExtendIntf, RootIntf,  Winapi.Messages, System.Variants, Vcl.Ht
   System.SysUtils, PluginAPI, Vcl.Dialogs, Vcl.ImgList, Vcl.Controls, Vcl.StdActns, Vcl.BandActn, System.Classes, Vcl.ActnList, Vcl.ActnMan,
   Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ComCtrls, Vcl.Forms, Vcl.Graphics, Winapi.Windows, JvAppStorage, JvAppRegistryStorage, JvDockControlForm,
   Vcl.AppEvnts, Vcl.ExtCtrls, JvFormPlacement, JvDockVIDStyle, JvComponentBase, System.Actions,
+  System.Generics.Collections,
+  System.Generics.Defaults,
   JvDockVSNetStyle, JvDockTree, Vcl.ToolWin, Vcl.PlatformDefaultStyleActnCtrls;
 
 const
@@ -29,15 +31,10 @@ type
     ToolBar1: TActionToolBar;
     ToolBar2: TActionToolBar;
     sb: TStatusBar;
-    Timer: TTimer;
     ActionExceptForm: TAction;
     FormStorage: TJvFormStorage;
     ApplicationEvents: TApplicationEvents;
     pc: TPageControl;
-    PrjOpen: TFileOpen;
-    PrjNew: TFileOpen;
-    PrjClose: TAction;
-    SetupProject: TAction;
     JvDockServer: TJvDockServer;
     JvDockVSNetStyle: TJvDockVSNetStyle;
     procedure FormCreate(Sender: TObject);
@@ -50,14 +47,15 @@ type
     procedure Debug_ReloadClick(Sender: TObject);
     procedure ActionUpdateExecute(Sender: TObject);
     procedure ControlBarBandPaint(Sender: TObject; Control: TControl; Canvas: TCanvas; var ARect: TRect; var Options: TBandPaintOptions);
-    procedure TimerTimer(Sender: TObject);
+//    procedure TimerTimer(Sender: TObject);
     procedure ActionExceptFormExecute(Sender: TObject);
     procedure pc1ContextPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
     procedure ApplicationEventsException(Sender: TObject; E: Exception);
-    procedure PrjNewAccept(Sender: TObject);
-    procedure PrjOpenAccept(Sender: TObject);
-    procedure PrjCloseExecute(Sender: TObject);
-    procedure SetupProjectExecute(Sender: TObject);
+    procedure CustomizeActionBarsCustomizeDlgClose(Sender: TObject);
+//    procedure PrjNewAccept(Sender: TObject);
+//    procedure PrjOpenAccept(Sender: TObject);
+//    procedure PrjCloseExecute(Sender: TObject);
+//    procedure SetupProjectExecute(Sender: TObject);
   protected
     // IImagProvider
     procedure GetIcon(Index: integer; Image: TIcon);
@@ -75,6 +73,7 @@ type
     procedure UpdateWidthBars;
     function HideUnusedMenus: boolean;
     procedure SaveActionManager();
+    procedure ResetActions;
     // IRegistry
     procedure SaveString(const Name, Value: WideString);
     function LoadString(const Name, DefValue: WideString): WideString;
@@ -88,16 +87,20 @@ type
     //IMainScreen
     procedure IMainScreen.Changed = MainScreenChanged;
     procedure MainScreenChanged;
+
+    function GetStatusBar(index: Integer): string;
+    procedure SetStatusBar(index: Integer; const Value: string);
+
+    procedure Lock;
+    procedure UnLock;
   private
     FMainScreenChange: Boolean;
-    FProjectFile: WideString;
     procedure SaveScreeDialog;
     function ChildFormsBusy: boolean;
     function DeviceBusy: boolean;
 //    procedure AfterLoadScreen;
-    procedure SetProjectFile(const Value: WideString);
-    procedure SowPrg(sho: Boolean);
-    procedure ResetActions;
+//    procedure SetProjectFile(const Value: WideString);
+//    procedure SowPrg(sho: Boolean);
 //    procedure SetShowDebugErrorData(const Value: boolean);
 //    procedure SetShowErrorDialog(const Value: boolean);
 //    function GetShowDebugErrorData: boolean;
@@ -111,7 +114,7 @@ type
     procedure LoadActionManager;
     procedure SaveTabForms();
     procedure LoadTabForms();
-    property ProjectFile: WideString read FProjectFile write SetProjectFile;
+    property StatusBar[index: Integer]: string read GetStatusBar write SetStatusBar;
 //  published
 //    property ShowErrorDialog: boolean read GetShowErrorDialog write SetShowErrorDialog;
 //    property ShowDebugErrorData: boolean read GetShowDebugErrorData write SetShowDebugErrorData;
@@ -141,7 +144,7 @@ begin
   SetErrorMode(SetErrorMode(0) or SEM_NOOPENFILEERRORBOX or SEM_FAILCRITICALERRORS);
   Plugins.SetVersion(VERS1000);
 
-  FProjectFile := ExtractFilePath(ParamStr(0)) + 'Default.xml';
+  StatusBar[1] := ExtractFilePath(ParamStr(0)) + 'Default.xml';
 
   TFormExceptions.This.Icon := 257;
 
@@ -161,7 +164,7 @@ procedure TFormMain.FormShow(Sender: TObject);
 //  a: TICustRTTIAction;
 begin
   try
-   PrjNew.Dialog.InitialDir := ExtractFilePath(ParamStr(0)) + 'Projects';
+//   PrjNew.Dialog.InitialDir := ExtractFilePath(ParamStr(0)) + 'Projects';
     //  *******************************************
     // загрузка плагинов с событием LoadNotify после загрузки осгновной формы !!!
     //  *******************************************
@@ -281,11 +284,6 @@ begin
   end;
 end;
 
-procedure TFormMain.MainScreenChanged;
-begin
-  FMainScreenChange := True;
-end;
-
 procedure TFormMain.SaveActionManager;
 // var
 //  S: TMemoryStream;
@@ -386,8 +384,14 @@ end;
 procedure TFormMain.ResetActions;
  var
   a: IAction;
+  ar: TArray<IAction>;
 begin
-  for a in GContainer.Enum<IAction>(True) do
+  ar := GContainer.InstancesAsArray<IAction>(True);
+  Tarray.Sort<IAction>(ar, TComparer<IAction>.Construct(function(const Left, Right: IAction): Integer
+  begin
+    Result := string.Compare(Left.GetPath, Right.GetPath);
+  end));
+  for a in ar do
    begin
     if not a.OwnerExists then GContainer.RemoveInstance(a.Model, a.IName);
     if not Assigned(ActionManager.FindItemByAction(TCustomAction(a.GetComponent))) then a.DefaultShow;
@@ -406,19 +410,20 @@ begin
   BeginDockLoading;
   try
     ini.Reload; // !!!
-    ProjectFile := ini.ReadString('CurrentProject');
+    StatusBar[1] := ini.ReadString('CurrentProject');
     if Supports(Plugins, IManager, m) then
      begin
       m.LoadScreen();                 //  загрузка текстов обьектов - форм actions
-      if LoadProject and (FProjectFile <> '') then m.LoadProject(FProjectFile);
+      if LoadProject and (StatusBar[1] <> '') then m.LoadProject(StatusBar[1]);
      end;
+
+    LoadActionManager; // скрывает часть { TODO : проблемма с - и логикой действий}
     // create actions
-    ResetActions;
+    ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
 
     // create forms
     GContainer.InstancesAsArray<IForm>(True);
 
-    LoadActionManager;
 
     LoadDockTreeFromAppStorage(ini, 'DockTree');
     LoadTabForms();
@@ -430,16 +435,16 @@ begin
   end;
 end;
 
-procedure TFormMain.PrjCloseExecute(Sender: TObject);
+{procedure TFormMain.PrjCloseExecute(Sender: TObject);
  var
   m: IManager;
 begin
   LockWindowUpdate(Handle);
   try
    if not Supports(Plugins, IManager, m) then Exit;
-   ProjectFile := '';
-   m.LoadProject(ProjectFile);
-   ini.WriteString('CurrentProject', ProjectFile);
+   StatusBar[1] := '';
+   m.LoadProject(StatusBar[1]);
+   ini.WriteString('CurrentProject', StatusBar[1]);
    ResetActions;
   finally
    LockWindowUpdate(0);
@@ -453,9 +458,9 @@ begin
   LockWindowUpdate(Handle);
   try
    if not Supports(Plugins, IManager, m) then Exit;
-   ProjectFile := PrjNew.Dialog.FileName;
-   m.NewProject(ProjectFile);
-   ini.WriteString('CurrentProject', ProjectFile);
+   StatusBar[1] := PrjNew.Dialog.FileName;
+   m.NewProject(StatusBar[1]);
+   ini.WriteString('CurrentProject', StatusBar[1]);
    ResetActions;
   finally
    LockWindowUpdate(0);
@@ -469,14 +474,14 @@ begin
   LockWindowUpdate(Handle);
   try
    if not Supports(Plugins, IManager, m) then Exit;
-   ProjectFile := PrjOpen.Dialog.FileName;
-   m.LoadProject(ProjectFile);
-   ini.WriteString('CurrentProject', ProjectFile);
+   StatusBar[1] := PrjOpen.Dialog.FileName;
+   m.LoadProject(StatusBar[1]);
+   ini.WriteString('CurrentProject', StatusBar[1]);
    ResetActions;
   finally
    LockWindowUpdate(0);
   end;
-end;
+end;    }
 {$ENDREGION  *********** SAVE LOAD ****************}
 
 
@@ -568,6 +573,7 @@ begin
 //  SetBar(ToolBar1);
 //  SetBar(ToolBar2);
 //  Application.HandleMessage;
+
   SetBar(MainMenu);
   SetBar(ToolBar1);
   SetBar(ToolBar2);
@@ -655,18 +661,38 @@ procedure TFormMain.RegisterAction(Action: IAction);
 begin
   TCustomAction(Action.GetComponent).ActionList := ActionManager;
 end;
-
+ // IScreen
+procedure TFormMain.MainScreenChanged;
+begin
+  FMainScreenChange := True;
+end;
+procedure TFormMain.Lock;
+begin
+  LockWindowUpdate(Handle);
+end;
+procedure TFormMain.UnLock;
+begin
+  LockWindowUpdate(0);
+end;
+function TFormMain.GetStatusBar(index: Integer): string;
+begin
+ Result := sb.Panels[index].Text;
+end;
+procedure TFormMain.SetStatusBar(index: Integer; const Value: string);
+begin
+  sb.Panels[index].Text := Value;
+end;
 
 
 {$ENDREGION  '*********** Providers ****************'}
 
 
 {$REGION 'trach'}
-procedure TFormMain.SetProjectFile(const Value: WideString);
-begin
-  FProjectFile := Value;
-  sb.Panels[1].Text := FProjectFile;
-end;
+//procedure TFormMain.SetProjectFile(const Value: WideString);
+//begin
+//  StatusBar[1] := Value;
+//  sb.Panels[1].Text := FProjectFile;
+//end;
 
 {procedure TFormMain.SetShowDebugErrorData(const Value: boolean);
 begin
@@ -689,15 +715,15 @@ begin
 end;}
 
 
-procedure TFormMain.SetupProjectExecute(Sender: TObject);
+{procedure TFormMain.SetupProjectExecute(Sender: TObject);
  var
   d: Idialog;
   dp: IDialog<Pointer>;
 begin
-  if ProjectFile = '' then Exit;
+  if StatusBar[1] = '' then Exit;
   if RegisterDialog.TryGet<Dialog_SetupProject>(d) then
    if Supports(d, IDialog<Pointer>, dp ) then dp.Execute(nil);
-end;
+end;}
 
 function TFormMain.ChildFormsBusy: boolean;
  var
@@ -738,15 +764,15 @@ begin
    end;
 end;
 
-procedure TFormMain.SowPrg(sho: Boolean);
-begin
-  ActionManager.FindItemByCaption('Проект').Visible := Sho;
-  ActionManager.FindItemByCaption('Новый проект...').Visible := Sho;
-  ActionManager.FindItemByCaption('Открыть проект...').Visible := Sho;
-  ActionManager.FindItemByCaption('Закрыть проект').Visible := Sho;
-  ActionManager.FindItemByCaption('Свойства проекта').Visible := Sho;
-  if not sho and (ProjectFile <> '') then PrjCloseExecute(nil);
-end;
+//procedure TFormMain.SowPrg(sho: Boolean);
+//begin
+//  ActionManager.FindItemByCaption('Проект').Visible := Sho;
+//  ActionManager.FindItemByCaption('Новый проект...').Visible := Sho;
+//  ActionManager.FindItemByCaption('Открыть проект...').Visible := Sho;
+//  ActionManager.FindItemByCaption('Закрыть проект').Visible := Sho;
+//  ActionManager.FindItemByCaption('Свойства проекта').Visible := Sho;
+//  if not sho and (ProjectFile <> '') then PrjCloseExecute(nil);
+//end;
 
 procedure TFormMain.ActionExitExecute(Sender: TObject);
 begin
@@ -791,21 +817,26 @@ begin
   else Options := [bpoGrabber];
 end;
 
+procedure TFormMain.CustomizeActionBarsCustomizeDlgClose(Sender: TObject);
+begin
+  UpdateWidthBars;
+end;
+
 //procedure TFormMain.ToolBarCanResize(Sender: TObject; var NewWidth, NewHeight: Integer; var Resize: Boolean);
 //begin
  // if NewHeight > 24 then NewHeight := 24;
 //end;
 
-procedure TFormMain.TimerTimer(Sender: TObject);
- var
-  tn: TTime;
-  Fts: Variant;
-  Ftd: Variant;
-  Ftw: Variant;
-  s: string;
+//procedure TFormMain.TimerTimer(Sender: TObject);
+// var
+//  tn: TTime;
+//  Fts: Variant;
+//  Ftd: Variant;
+//  Ftw: Variant;
+//  s: string;
 //  ds: DelayStatus;
 //  dm: IDelayManager;
-begin
+//begin
 {  if Supports(Plugins, IDelayManager, dm) then with dm do
    begin
     GetDelay(Fts,Ftd,Ftw, ds);
@@ -828,7 +859,7 @@ begin
      dsEndDelay: sb.Panels[0].Text := 'Задержка остановлена';
     end;
    end;}
-end;
+//end;
 
 {$ENDREGION}
 

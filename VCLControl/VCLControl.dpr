@@ -16,7 +16,9 @@ uses
   FireDAC.DApt,
   FireDAC.UI.Intf,
   RootImpl,
+  Actns,
   DeviceIntf,
+  Vcl.Dialogs,
   DockIForm,
   AbstractPlugin,
   PluginAPI,
@@ -37,10 +39,21 @@ uses
 
 type
  TVCLControl = class(TAbstractPlugin)
+ private
+  class procedure InnerProject(const PrjName: string; isNew: Boolean);
  protected
    class function GetHInstance: THandle; override;
  public
    class function PluginName: string; override;
+  //Capt, Categ: string; AImageIndex: Integer; APaths: string; AHint: string; AAutoCheck AChecked AGroupIndex AEnabled
+   [StaticAction('Новый проект...', 'Проект', 16, '0:Файл.Проект|1:0')]
+   class procedure DoNewProject(Sender: IAction);
+   [StaticAction('-Свойства проекта...', 'Проект', 238, '0:Файл.Проект|1:4')]
+   class procedure DoZPropertyProject(Sender: IAction);
+   [StaticAction('Открыть проект...', 'Проект', 329, '0:Файл.Проект|1:1')]
+   class procedure DoOpenProject(Sender: IAction);
+   [StaticAction('-Закрыть проект', 'Проект', 226, '0:Файл.Проект|1:2')]
+   class procedure DoSloseProject(Sender: IAction);
  end;
 
 function Init(): PTypeInfo;
@@ -68,6 +81,66 @@ end;
 class function TVCLControl.GetHInstance: THandle;
 begin
   Result := HInstance;
+end;
+
+class procedure TVCLControl.InnerProject(const PrjName: string; isNew: Boolean);
+begin
+  (GContainer as IMainScreen).Lock;
+  try
+   (GContainer as IMainScreen).StatusBarText[1] := PrjName;
+   (GContainer as IRegistry).SaveString('CurrentProject', PrjName);
+   if isNew then
+         (GContainer as IManager).NewProject(PrjName)
+   else  (GContainer as IManager).LoadProject(PrjName);
+   (GContainer as IActionProvider).ResetActions;
+  finally
+   (GContainer as IMainScreen).UnLock;
+  end;
+end;
+
+class procedure TVCLControl.DoNewProject(Sender: IAction);
+begin
+  with TOpenDialog.Create(nil) do
+  try
+   InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
+   DefaultExt := 'db';
+   Filter := 'Файл проекта (*.db)|*.db';
+   Options := [ofOverwritePrompt,ofHideReadOnly,ofPathMustExist,ofEnableSizing];
+   if not Execute() then Exit;
+   InnerProject(FileName, True);
+  finally
+   Free;
+  end;
+end;
+
+class procedure TVCLControl.DoOpenProject(Sender: IAction);
+begin
+  with TOpenDialog.Create(nil) do
+  try
+   InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
+   DefaultExt := 'db';
+   Filter := 'Файл проекта (*.db)|*.db';
+   Options := [ofReadOnly,ofHideReadOnly,ofPathMustExist,ofFileMustExist,ofEnableSizing];
+   if not Execute() then Exit;
+   InnerProject(FileName, False);
+  finally
+   Free;
+  end;
+end;
+
+class procedure TVCLControl.DoSloseProject(Sender: IAction);
+begin
+   InnerProject('', False);
+end;
+
+class procedure TVCLControl.DoZPropertyProject(Sender: IAction);
+ var
+  d: Idialog;
+  dp: IDialog<Pointer>;
+begin
+  if (GContainer as IManager).ProjectName <> '' then
+    if RegisterDialog.TryGet<Dialog_SetupProject>(d) then
+      if Supports(d, IDialog<Pointer>, dp ) then dp.Execute(nil);
 end;
 
 begin

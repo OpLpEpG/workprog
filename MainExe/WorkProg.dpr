@@ -27,7 +27,7 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFormMain, FormMain);
-//  {$IFDEF DEBUG}
+  //  {$IFDEF DEBUG}
   Application.CreateForm(TFormSplash, FormSplash);
   FormSplash.Show;
 //{$ENDIF}

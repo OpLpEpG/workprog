@@ -20,6 +20,12 @@ object FormTest: TFormTest
     Width = 554
     Height = 289
     Align = alClient
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Courier'
+    Font.Style = []
+    ParentFont = False
     ScrollBars = ssBoth
     TabOrder = 0
   end
@@ -31,5 +37,14 @@ object FormTest: TFormTest
     Caption = 'CR'
     TabOrder = 1
     OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 496
+    Top = 39
+    Width = 33
+    Height = 25
+    Caption = 'CR2'
+    TabOrder = 2
+    OnClick = Button2Click
   end
 end

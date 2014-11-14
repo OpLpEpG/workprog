@@ -2,7 +2,7 @@ unit manager;
 
 interface
 
-uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, DBIntf, DBImpl, System.DateUtils,
+uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, DBIntf, DBImpl, System.DateUtils, Actns,
      RootImpl, AbstractPlugin, PluginAPI, DockIForm, DButil, System.SyncObjs, DBEnumers,
      Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows,
      System.SysUtils, Vcl.Graphics, System.Classes, System.Generics.Collections, System.Generics.Defaults, RTTI, System.TypInfo, Xml.XMLIntf,

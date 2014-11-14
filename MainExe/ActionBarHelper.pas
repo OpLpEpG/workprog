@@ -161,9 +161,16 @@ begin
    end;
   if not Assigned(FindByAction(root, Action)) then
    begin
-    root := root.Items.Add;
-    root.Action := FAction;
-    if (ActionIndex >= 0) and (ActionIndex < root.OwningCollection.Count) then root.Index := ActionIndex;
+    a := root.Items.Add;
+    a.Action := FAction;
+    if (ActionIndex >= 0) and (ActionIndex < a.OwningCollection.Count) then a.Index := ActionIndex;
+    if Action.DividerBefore then
+     begin
+      if (a.Index > 0) and (root.Items[a.Index-1].Caption = '-') then Exit;
+      root := root.Items.Add;
+      root.Caption := '-';
+      root.Index := a.Index;
+     end;
    end;
 end;
 

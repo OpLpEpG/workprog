@@ -18,6 +18,7 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
     FEnabled: Boolean;
     FAutoCheck: Boolean;
     FChecked: Boolean;
+    FDivider: Boolean;
   public
     ///	<param name="Capt">
     ///	  имя
@@ -61,7 +62,7 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
 
   TShowInfo = record
    Bar: Integer;
-   ActionIndex: Integer;
+   MenuIndex: Integer;
    path: TArray<TMenuPath>;
   end;
 
@@ -75,6 +76,7 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
   private
     FRefCount: Integer;
     FPaths: string;
+    FDivider: Boolean;
   protected
     FPriority: Integer;
     function QueryInterface(const IID: TGUID; out Obj): HResult; override; stdcall;
@@ -99,6 +101,8 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
 
     procedure DefaultShow;
     function OwnerExists: Boolean; virtual; abstract;
+    function GetPath: String;
+    function DividerBefore: Boolean;
 
     procedure Loaded; override;
   public
@@ -188,7 +192,6 @@ uses tools;
 constructor ActionAttribute.Create(const Capt, Categ: string; AImageIndex: Integer; const APaths, AHint: string; AAutoCheck, AChecked: Boolean; AGroupIndex: Integer; AEnabled: Boolean);
 begin
   FService := TypeInfo(IAction);
-  FCaption := Capt;
   FCategory := Categ;
   FImagIndex := AImageIndex;
   FHint := AHint;
@@ -197,7 +200,14 @@ begin
   FChecked := AChecked;
   FEnabled := AEnabled;
   FGroupIndex := AGroupIndex;
+  if not Capt.StartsWith('-') then FCaption := Capt
+  else
+   begin
+    FCaption := Capt.Substring(1);
+    FDivider := True;
+   end;
 end;
+
 
 { StaticActionAttribute }
 
@@ -237,7 +247,7 @@ begin
       if Length(pf) > 1 then mp.Index := pf[1].Trim.ToInteger() else mp.Index := -1;
       CArray.Add<TMenuPath>(si.path, mp);
      end;
-    if Length(all) > 2 then si.ActionIndex := all[2].Trim.ToInteger else si.ActionIndex := -1;
+    if Length(all) > 2 then si.MenuIndex := all[2].Trim.ToInteger else si.MenuIndex := -1;
     CArray.Add<TShowInfo>(Result.Data, si);
    end;
 end;
@@ -280,6 +290,7 @@ begin
   Enabled := atr.Enabled;
   AutoCheck := atr.AutoCheck;
   Checked := atr.Checked;
+  FDivider := atr.FDivider;
 end;
 
 procedure TICustomAction.DefaultShow;
@@ -288,13 +299,18 @@ procedure TICustomAction.DefaultShow;
   am : IActionProvider;
 begin
   if Supports(GlobalCore, IActionProvider, am) then
-  for s in TShowInfos(FPaths).Data do am.ShowInBar(s.Bar, s.Path, Self, s.ActionIndex);
+  for s in TShowInfos(FPaths).Data do am.ShowInBar(s.Bar, s.Path, Self, s.MenuIndex);
 end;
 
 destructor TICustomAction.Destroy;
 begin
   TDebug.Log('TICustomAction.Destroy %s', [Caption]);
   inherited;
+end;
+
+function TICustomAction.DividerBefore: Boolean;
+begin
+  Result := FDivider;
 end;
 
 procedure TICustomAction.AfterConstruction;
@@ -344,6 +360,11 @@ end;
 function TICustomAction.GetItemName: String;
 begin
   Result := Name;
+end;
+
+function TICustomAction.GetPath: String;
+begin
+  Result := FPaths;
 end;
 
 procedure TICustomAction.Loaded;
@@ -414,6 +435,7 @@ function TICustRTTIAction.Execute: Boolean;
  var
   i: IInterface;
 begin
+  if Caption = '-' then Exit(inherited Execute);
   if not CheckMethod then Exit(False);
   Result := True;
   if FMethod.IsClassMethod then FMethod.Invoke(FInstanceType.MetaclassType, [TValue.From<IAction>(Self as IAction)])

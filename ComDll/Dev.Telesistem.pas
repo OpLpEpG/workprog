@@ -160,7 +160,9 @@ type
   TDecoder2 = class(TCustomDecoder, ITelesistem)
   private
     FIsMul: Boolean;
+    FFltZerro: Boolean;
     procedure SetIsMul(const Value: Boolean);
+    procedure SetFltZerro(const Value: Boolean);
   protected
     function GetCaption: string; override;
     function GetDecoderClass: TDecoderClass; override;
@@ -171,6 +173,7 @@ type
     procedure DoSetup(Sender: IAction); override;
   published
     [ShowProp('Фильтр единиц умножением')] property IsMul: Boolean read FIsMul write SetIsMul default True;
+    [ShowProp('Фильтр нулей')] property FltZerro: Boolean read FFltZerro write SetFltZerro default True;
   end;
 
   TDecoder3 = class(TCustomDecoder, ITelesistem)
@@ -827,6 +830,7 @@ begin
   DataCnt := 16;
   DataCodLen := 17;
   FIsMul := True;
+  FFltZerro := True;
 end;
 
 procedure TDecoder2.DoSetup(Sender: IAction);
@@ -844,6 +848,13 @@ begin
   Result := TFibonachiDecoder;
 end;
 
+procedure TDecoder2.SetFltZerro(const Value: Boolean);
+begin
+  FFltZerro := Value;
+  if Assigned(FDecoder) then TFibonachiDecoder(FDecoder).FindZeroes := Value;
+  Owner.PubChange;
+end;
+
 procedure TDecoder2.SetIsMul(const Value: Boolean);
 begin
   FIsMul := Value;
@@ -855,6 +866,7 @@ procedure TDecoder2.SetupNewDecoder;
 begin
   inherited;
   TFibonachiDecoder(FDecoder).AlgIsMull := FIsMul;
+  TFibonachiDecoder(FDecoder).FindZeroes := FFltZerro;
 end;
 
 { TDecoder3 }

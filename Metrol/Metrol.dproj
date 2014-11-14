@@ -191,8 +191,6 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <None Include="help\Metrology.htm"/>
-        <None Include="help\Metrology.Inclin.htm"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

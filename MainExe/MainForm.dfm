@@ -165,35 +165,6 @@ object FormMain: TFormMain
               item
                 Items = <
                   item
-                    Action = PrjNew
-                    ImageIndex = 16
-                    ShortCut = 16462
-                  end
-                  item
-                    Action = PrjOpen
-                    ImageIndex = 329
-                    ShortCut = 16463
-                  end
-                  item
-                    Caption = '-'
-                  end
-                  item
-                    Action = PrjClose
-                    ImageIndex = 226
-                  end
-                  item
-                    Caption = '-'
-                  end
-                  item
-                    Action = SetupProject
-                    ImageIndex = 238
-                  end>
-                Caption = #1055#1088#1086#1077#1082#1090
-                UsageCount = 1
-              end
-              item
-                Items = <
-                  item
                     Action = ActionSaveDesktop
                     ImageIndex = 221
                   end
@@ -216,10 +187,6 @@ object FormMain: TFormMain
           item
             Items = <
               item
-                Action = ActionPluginSetup
-                ImageIndex = 279
-              end
-              item
                 Action = ActionExceptForm
                 ImageIndex = 257
               end
@@ -230,11 +197,6 @@ object FormMain: TFormMain
           end
           item
             Items = <
-              item
-                Action = CustomizeActionBars
-                ImageIndex = 35
-                ShortCut = 24693
-              end
               item
                 Action = ActionUpdate
                 Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1082#1088#1099#1090#1099#1077' '#1080' '#1086#1073#1085#1086#1074#1080#1090#1100' '#1082#1085#1086#1087#1082#1080
@@ -289,7 +251,7 @@ object FormMain: TFormMain
       ActionManager = ActionManager
       CustomizeDlg.ActionManager = ActionManager
       CustomizeDlg.StayOnTop = False
-      CustomizeDlg.OnClose = ActionUpdateExecute
+      CustomizeDlg.OnClose = CustomizeActionBarsCustomizeDlgClose
     end
     object ActionSaveDesktop: TAction
       Category = #1056#1072#1073#1086#1095#1080#1081' '#1089#1090#1086#1083
@@ -301,6 +263,7 @@ object FormMain: TFormMain
       Category = #1055#1086#1082#1072#1079#1072#1090#1100
       Caption = #1052#1086#1076#1091#1083#1080'...'
       ImageIndex = 279
+      ShortCut = 24694
       OnExecute = ActionPluginSetupExecute
     end
     object ActionLoadDesktop: TAction
@@ -321,46 +284,12 @@ object FormMain: TFormMain
       ImageIndex = 257
       OnExecute = ActionExceptFormExecute
     end
-    object PrjNew: TFileOpen
-      Category = #1055#1088#1086#1077#1082#1090
-      Caption = #1053#1086#1074#1099#1081' '#1087#1088#1086#1077#1082#1090'...'
-      Dialog.DefaultExt = 'db'
-      Dialog.Filter = #1060#1072#1081#1083' '#1087#1088#1086#1077#1082#1090#1072' (*.db)|*.db'
-      Dialog.Options = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist, ofEnableSizing]
-      Hint = 'Open|Opens an existing file'
-      ImageIndex = 16
-      ShortCut = 16462
-      OnAccept = PrjNewAccept
-    end
-    object PrjOpen: TFileOpen
-      Category = #1055#1088#1086#1077#1082#1090
-      Caption = #1054#1090#1082#1088#1099#1090#1100' '#1087#1088#1086#1077#1082#1090'...'
-      Dialog.DefaultExt = 'db'
-      Dialog.Filter = #1060#1072#1081#1083' '#1087#1088#1086#1077#1082#1090#1072' (*.db)|*.db'
-      Dialog.Options = [ofReadOnly, ofHideReadOnly, ofPathMustExist, ofFileMustExist, ofEnableSizing]
-      Hint = 'Open|Opens an existing file'
-      ImageIndex = 329
-      ShortCut = 16463
-      OnAccept = PrjOpenAccept
-    end
-    object PrjClose: TAction
-      Category = #1055#1088#1086#1077#1082#1090
-      Caption = #1047#1072#1082#1088#1099#1090#1100' '#1087#1088#1086#1077#1082#1090
-      ImageIndex = 226
-      OnExecute = PrjCloseExecute
-    end
-    object SetupProject: TAction
-      Category = #1055#1088#1086#1077#1082#1090
-      Caption = #1057#1074#1086#1081#1089#1090#1074#1072' '#1087#1088#1086#1077#1082#1090#1072
-      ImageIndex = 238
-      OnExecute = SetupProjectExecute
-    end
   end
   object ImageList: TImageList
     Left = 34
     Top = 49
     Bitmap = {
-      494C010167019001280310001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010167019001480310001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000A0050000010020000000000000A0
       0500000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -12253,11 +12182,6 @@ object FormMain: TFormMain
     Root = '%NONE%'
     SubStorages = <>
     Left = 248
-    Top = 112
-  end
-  object Timer: TTimer
-    OnTimer = TimerTimer
-    Left = 144
     Top = 112
   end
   object FormStorage: TJvFormStorage

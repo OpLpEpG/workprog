@@ -14,7 +14,8 @@ procedure CreateSuncro(Bits: Integer; var CurBit: Boolean; var bin: TArray<Boole
 function Decode(const Data: Integer; out Res: Integer): Boolean; overload;
 //function Decode(const Data: TArray<Double>; Bits: Integer; out Corr: TArray<Double>; out Res: Integer): Boolean; overload;
 function Encod(cod: Word): Word;
-function FastCorr(A,B: Word): Integer;
+function FastCorr(A,B: Integer; n: integer): Integer;
+function RMCodes: TArray<Cardinal>;
 
 const
   FIBONACH_CODES: array [0..2583] of Word =($0,$1,$2,$4,$5,$8,$9,$A,$10,$11,$12,$14,$15,$20,$21,$22,$24,$25,$28,$29,$2A,$40,$41,$42,
@@ -419,14 +420,42 @@ begin
    end;
 end;
 
-function FastCorr(A, B: Word): Integer;
+function FastCorr(A, B: Integer; n: Integer): Integer;
  var
-  i: Integer;
-  R: Word;
+  R: Integer;
 begin
   Result := 0;
-  R := not (A xor B);
-  for i := 0 to 15 do if (R shr i) and 1 <> 0 then Dec(Result) else Inc(Result);
+  R := A xor B;
+  while n > 0 do
+   begin
+    if R and 1 <> 0 then Dec(Result) else Inc(Result);
+    R := R shr 1;
+    Dec(n);
+   end;
 end;
+
+function RMCodes: TArray<Cardinal>;
+ const
+  a0 = $AC83;// $38CA;// $FFFF;// $9238; // 1001001000111000
+  a1 = $00FF; // 0000000011111111
+  a2 = $0F0F; // 0000111100001111
+  a3 = $3333; // 0011001100110011
+  a4 = $5555; // 0101010101010101
+  ARR_C: array[0..15] of word = (a0, a0 xor a1, a0 xor a2,a0 xor a1 xor a2, a0 xor a3,a0 xor a1 xor a3
+  ,a0 xor a2 xor a3, a0 xor a1 xor a2 xor a3, a0 xor a4, a0 xor a1 xor a4,a0 xor a2 xor a4, a0 xor a1 xor a2 xor a4
+  ,a0 xor a3 xor a4, a0 xor a1 xor a3 xor a4, a0 xor a2 xor a3 xor a4,a0 xor a1 xor a2 xor a3 xor a4);
+
+ var
+  i,j : Integer;
+begin
+  SetLength(Result, 32);
+  for i := 0 to 15 do for j := 0 to 15 do
+   begin
+    Result[i] := Result[i] shl 2;
+    if (ARR_C[i] shl j) and $8000 <> 0 then Result[i] := Result[i] or 1 else Result[i] := Result[i] or 2;
+   end;
+  for i := 0 to 15 do Result[i+16] := not Result[i];
+end;
+
 
 end.

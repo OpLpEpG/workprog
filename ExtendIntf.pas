@@ -44,6 +44,8 @@ type
 //    procedure SetEventHandler(const AEventHandler: TIActionEvent);
     procedure DefaultShow;
     function OwnerExists: Boolean;
+    function GetPath: String;
+    function DividerBefore: Boolean;
 //   public
     property Caption: String read GetCaption write SetCaption;
     property Category: String read GetCategory write SetCategory;
@@ -212,6 +214,7 @@ type
     function HideUnusedMenus: boolean;
     procedure UpdateWidthBars;
     procedure SaveActionManager;
+    procedure ResetActions;
   end;
 
   TWideStrings = array of WideString;
@@ -229,7 +232,14 @@ type
 
   IMainScreen = interface
   ['{140FBD42-770F-4448-A09F-963AC6DFFD2C}']
+  // private
+    function GetStatusBar(index: Integer): string;
+    procedure SetStatusBar(index: Integer; const Value: string);
+
     procedure Changed;
+    procedure Lock;
+    procedure UnLock;
+    property StatusBarText[index: Integer]: string read GetStatusBar write SetStatusBar;
   end;
 
   // **********  плугин ************************

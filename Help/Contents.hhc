@@ -21,16 +21,12 @@
 	</UL>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="&Igrave;&aring;&ograve;&eth;&icirc;&euml;&icirc;&atilde;&egrave;&yuml;">
-		<param name="Local" value="Metrol/Metrology.htm">
+		<param name="Local" value="Metrol\Metrology.htm">
 		</OBJECT>
 	<UL>
 		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="&Egrave;&iacute;&ecirc;&euml;&egrave;&iacute;&icirc;&igrave;&aring;&ograve;&eth;&egrave;&yuml;">
-			<param name="Local" value="Metrol/Metrology.Inclin.htm">
-			</OBJECT>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="&oslash;&ograve;&auml;1">
-			<param name="Local" value="Metrol/Metrology.Inclin.htm">
+			<param name="Name" value="&Egrave;&iacute;&ecirc;&euml;&egrave;&iacute;&icirc;&igrave;&aring;&ograve;&eth;&ucirc;">
+			<param name="Local" value="Metrol\Metrology.Inclin.htm">
 			</OBJECT>
 	</UL>
 </UL>
