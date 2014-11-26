@@ -4,7 +4,7 @@ interface
 
 uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, debug_except, DockIForm, MetrForm, Container, Actns, ExcelImpl,XMLScript,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.StdCtrls, Vcl.ExtCtrls, ActiveX,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, Vcl.Menus,
   Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, AutoMetr.GK;
 
@@ -138,6 +138,7 @@ begin
     end;
   begin
     try
+      CoInitialize(nil);
       r := GlobalCore as IReport;
       r.OpenDocument(ExtractFilePath(ParamStr(0))+'Devices\ReportGK1.ods');
       v := VarArrayCreate([0,9, 0,0], varVariant);
@@ -159,6 +160,7 @@ begin
       else SetCell('G32', 'Прибор к эксплуатации НЕ годен!!!');
 
       r.SaveAs(TrrFile);
+      CoUnInitialize();
     except
      on E: Exception do TDebug.DoException(E);
     end;

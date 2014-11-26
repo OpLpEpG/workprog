@@ -75,7 +75,7 @@ begin
      end;
     csCode: with Data.Codes do
      begin
-      if {CodeCnt-1} 2090 <> CodData[CodeCnt-1].Code then inc(statBad);
+      if CodeCnt <> 1 then if {CodeCnt-1} 2090 <> CodData[CodeCnt-1].Code then inc(statBad);
       Inc(statCnt);
       SeriesCode.Clear;
       SeriesCode.AddArray(CodData[CodeCnt-1].Corr);

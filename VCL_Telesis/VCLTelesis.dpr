@@ -19,7 +19,9 @@ uses
   VCL.Telesis.FFT in 'VCL.Telesis.FFT.pas' {FFTForm},
   VCL.Telesis.Decoder in 'VCL.Telesis.Decoder.pas' {DecoderECHOForm},
   VCL.Telesis.Decoder.RunCode in 'VCL.Telesis.Decoder.RunCode.pas' {FormRunCodes: TFrame},
-  VCL.Telesis.Decoder.FindSP in 'VCL.Telesis.Decoder.FindSP.pas' {FrameFindSP};
+  VCL.Telesis.Decoder.FindSP in 'VCL.Telesis.Decoder.FindSP.pas' {FrameFindSP},
+  VCL.Telesis.DecoderFFT_FSK in 'VCL.Telesis.DecoderFFT_FSK.pas' {FormDEcoderFFT_FSK},
+  VCL.Telesis.FrameFFT_FSK in 'VCL.Telesis.FrameFFT_FSK.pas' {FrameFFT_FSK: TFrame};
 
 {$R *.res}
 

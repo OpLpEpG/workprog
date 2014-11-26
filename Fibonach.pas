@@ -9,6 +9,7 @@ procedure Encode(const Data: array of Word; Bits: Integer; var CurBit: Boolean; 
 // два разделительных инверсных бита начало и конец L = 1+16+1
 procedure Encode(const Data: array of Word; Bits: Integer; var bin: TArray<Boolean>); overload;
 procedure EncodeFSK(const Data: array of word; Bits: Integer; var bin: TArray<Boolean>);
+procedure EncodeFSK2(const Data: array of word; Bits: Integer; var bin: TArray<Boolean>);
 
 procedure CreateSuncro(Bits: Integer; var CurBit: Boolean; var bin: TArray<Boolean>);
 function Decode(const Data: Integer; out Res: Integer): Boolean; overload;
@@ -269,6 +270,53 @@ begin
       Dec(b, bt);
      end;
     if b = 0 then AddBit(1);
+   end
+end;
+
+procedure EncodeFSK2(const Data: array of word; Bits: Integer; var bin: TArray<Boolean>);
+  var
+   n: Integer;
+   procedure AddBit(bit: Boolean);
+    var
+     i: Integer;
+   begin
+     if bit then
+      begin
+       for i := 0 to Bits*2-1 do bin[n+i] := True;
+       Inc(n, Bits*2);
+       for i := 0 to Bits*2-1 do bin[n+i] := False;
+       Inc(n, Bits*2);
+      end
+     else
+      begin
+       for i := 0 to Bits-1 do bin[n+i] := True;
+       Inc(n, Bits);
+       for i := 0 to Bits-1 do bin[n+i] := False;
+       Inc(n, Bits);
+       for i := 0 to Bits-1 do bin[n+i] := True;
+       Inc(n, Bits);
+       for i := 0 to Bits-1 do bin[n+i] := False;
+       Inc(n, Bits);
+      end;
+   end;
+  var
+   b, i: Integer;
+   cod: Word;
+begin
+  n := Length(bin);
+  SetLength(bin, n + Bits*(Length(Data)*16 * 4));
+  for I := 0 to Length(Data)-1 do
+   begin
+    if Data[i] > 2583 then raise Exception.Create('BAD NUMBER FIBONAHI > 2583');
+    cod := FIBONACH_CODES[Data[i]];
+    b := 16;
+    while b > 0 do
+     begin
+      AddBit((cod and $8000) <> 0);
+      cod := cod shl 1;
+      Dec(b, 1);
+     end;
+  //  AddBit(False);
    end
 end;
 

@@ -81,8 +81,8 @@
         <DCC_RangeChecking>true</DCC_RangeChecking>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.0.151;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.1.1.1;Comments=</VerInfo_Keys>
-        <VerInfo_Build>151</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.0.153;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.1.1.1;Comments=</VerInfo_Keys>
+        <VerInfo_Build>153</VerInfo_Build>
         <DCC_MapFile>3</DCC_MapFile>
         <ILINK_MapFileType>DetailedSegments</ILINK_MapFileType>
         <DCC_ExeOutput>..\_exe\$(Config)</DCC_ExeOutput>
@@ -128,10 +128,18 @@
         <None Include="..\Help\Alias.h"/>
         <None Include="..\Help\Map.h"/>
         <None Include="..\Help\help.htm"/>
-        <None Include="..\Help\Delay.htm"/>
         <None Include="..\Help\help.hhp"/>
         <None Include="..\Help\Metrol\Metrology.htm"/>
         <None Include="..\Help\Metrol\Metrology.Inclin.htm"/>
+        <None Include="..\Help\Moduls.htm"/>
+        <None Include="..\Help\Project\Progect.htm"/>
+        <None Include="..\Help\Project\Control.htm"/>
+        <None Include="..\Help\Project\ReadRam.htm"/>
+        <None Include="..\Help\Project\SetTrr.htm"/>
+        <None Include="..\Help\Devices\CorrectTime.htm"/>
+        <None Include="..\Help\Devices\Delay.htm"/>
+        <None Include="..\Help\Devices\IO.htm"/>
+        <None Include="..\Help\Devices\Devices.htm"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -192,7 +200,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\Help\Metrol\Metrology.Inclin.htm" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="Untitled1.htm" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>

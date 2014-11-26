@@ -75,6 +75,8 @@ object FormPsk: TFormPsk
       OnFocusChanged = TreeFocusChanged
       OnGetText = TreeGetText
       OnGetImageIndex = TreeGetImageIndex
+      ExplicitLeft = 3
+      ExplicitTop = -2
       Columns = <
         item
           Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
@@ -102,7 +104,7 @@ object FormPsk: TFormPsk
           WideText = #1044#1072#1090#1095#1080#1082#1072' '#1089#1084#1077#1097#1077#1085#1080#1077' '
         end
         item
-          Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAutoSpring, coSmartResize, coAllowFocus]
+          Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAutoSpring, coSmartResize, coAllowFocus, coEditable]
           Position = 5
           Width = 170
           WideText = #1060#1086#1088#1084#1072#1090#1080#1088#1086#1074#1072#1085#1080#1077
@@ -127,7 +129,7 @@ object FormPsk: TFormPsk
     object Label1: TLabel
       Left = 16
       Top = 13
-      Width = 218
+      Width = 219
       Height = 13
       Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1080#1073#1086#1088#1072' ('#1087#1088#1086#1073#1077#1083#1099' '#1085#1077#1076#1086#1087#1091#1089#1090#1080#1084#1099')'
     end
@@ -182,7 +184,7 @@ object FormPsk: TFormPsk
     object Label8: TLabel
       Left = 58
       Top = 276
-      Width = 182
+      Width = 183
       Height = 13
       Caption = #1058#1072#1081#1084#1072#1091#1090' '#1087#1086#1090#1086#1082#1086#1074#1086#1075#1086' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' ('#1084#1089')'
     end
@@ -252,7 +254,7 @@ object FormPsk: TFormPsk
       object Label14: TLabel
         Left = 51
         Top = 120
-        Width = 182
+        Width = 183
         Height = 13
         Caption = #1058#1072#1081#1084#1072#1091#1090' '#1087#1086#1090#1086#1082#1086#1074#1086#1075#1086' '#1087#1088#1086#1090#1086#1082#1086#1083#1072' ('#1084#1089')'
       end

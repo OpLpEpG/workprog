@@ -365,7 +365,7 @@ procedure TStolGK.Run(const Cmd: string; Res: TStolRes);
     C_DIR: array [0..3] of AnsiString = ('DR*','DL*','DL*','DL*');
     C_CMD: array [0..3] of AnsiString = ('HM*','ML1*','ML2*','ML3*');
 
-  procedure MoveInf(UserCmdInd: Integer; Delay: Integer = 60000);
+  procedure MoveInf(UserCmdInd: Integer; Delay: Integer = 3*60000);
   begin
     Add('LB*');
     Add('BG*');
@@ -427,7 +427,7 @@ procedure TStolGK.Run(const Cmd: string; Res: TStolRes);
 
     Add('DS*');
     Add('ED*');
-    Add('SB1*', Round(Tall*1000 + 5000));
+    Add('SB1*', Round(Tall*1000 + 15000));
   end;
 
  var

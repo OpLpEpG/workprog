@@ -2,7 +2,7 @@ unit Math.Telesistem;
 
 interface
 
-uses System.SysUtils, System.Classes, Fibonach, MathIntf, System.Math, debug_except;
+uses System.SysUtils, System.Classes, Fibonach, MathIntf, System.Math, debug_except, DeviceIntf;
 
 type
 {$REGION 'TCorrelatorState'}
@@ -119,6 +119,7 @@ type
      // польсобытие
      FEvent: TNotifyEvent;
 
+     function GetOversampDataLen: Integer; virtual;
      function GetDataLen: Integer; virtual;
      function GetKadrLen: Integer; virtual;
      function GetSPLen: Integer; virtual;
@@ -144,6 +145,7 @@ type
      property KadrLen: Integer read GetKadrLen;
      property SPLen: Integer read GetSPLen;
      property DataLen: Integer read GetDataLen;
+     property OversampDataLen: Integer read GetOversampDataLen;
 
      property SPCodLen: Integer read FSPcodLen;
      property DataCnt: Integer read FDataCnt;
@@ -203,6 +205,35 @@ type
     constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent); override;
     property PorogAmpCod: Double read FPorogAmpCod;
 //    property AlgIsMull: Boolean read FAlgIsMull write FAlgIsMull;
+  end;
+
+  TFSK2Decoder = class(TTelesistemDecoder)
+  private
+   FPorogAmpCod: Double;
+   FAlgIsMull: Boolean;
+   Etalon0, Etalon1: TArray<Double>;
+  protected
+    function GetOversampDataLen: Integer; override;
+    function CorrCode(var cd: TTelesistemDecoder.TCodData):Integer; override;
+  public
+    constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent); override;
+    property PorogAmpCod: Double read FPorogAmpCod;
+    property AlgIsMull: Boolean read FAlgIsMull write FAlgIsMull;
+  end;
+
+  TFSKDecoderFFT = class(TTelesistemDecoder)
+  private
+   {FDataIn, FDataOut,} FFData, FFDataFlt, FltCoeff: TArray<Double>;
+   FFLength: Integer;
+   FData: TFFTData;
+   FOversampDataLen: Integer;
+   FFourier: IFourier;
+  protected
+    function GetOversampDataLen: Integer; override;
+    function CorrCode(var cd: TTelesistemDecoder.TCodData):Integer; override;
+  public
+    constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent); override;
+    property Data: TFFTData read FData;
   end;
 
   TCorFibonachDecoder =  class(TTelesistemDecoder)
@@ -318,6 +349,11 @@ end;
 function TTelesistemDecoder.GetKadrLen: Integer;
 begin
   Result := Bits * (DataCnt * DataCodLen + SPcodLen)
+end;
+
+function TTelesistemDecoder.GetOversampDataLen: Integer;
+begin
+  Result := 0;
 end;
 
 function TTelesistemDecoder.GetSPLen: Integer;
@@ -593,7 +629,7 @@ begin
       ForceState(csCode);
       RunAutomat;
      end;
-    csCode: while Count >= DataLen do with FCodes do
+    csCode: while Count >= DataLen + OversampDataLen do with FCodes do
      begin
       Inc(BadCodes, CorrCode(CodData[CodeCnt]));
       Inc(CodeCnt);
@@ -752,11 +788,98 @@ begin
   SetLength(Etalon, ABits*4);
   for i := 0 to High(Etalon) do Etalon[i] := Sin(i*PI/ABits/2);
 end;
+
+{ TFSKDecoderFFT }
+function TFSKDecoderFFT.CorrCode(var cd: TTelesistemDecoder.TCodData): Integer;
+  procedure Amp(var d: TArray<Double>; co: PComplex);
+   var
+    i: Integer;
+  begin
+    for i := 0 to Length(d) - 1 do
+     begin
+      d[i] := Hypot(co.X, co.Y);
+      inc(co);
+     end;
+  end;
+  procedure ApplyFlt(co: PComplex);
+   var
+    i: Integer;
+    ce: PComplex;
+  begin
+    ce := co;
+    inc(ce, FFLength-1); // начинаем с последней гармоники = 1 гармонике
+    co.x := 0; // обнуляем 0 гармонику
+    co.y := 0;
+    inc(co); // начинаем с 1 гармоники
+    for i := 0 to Length(FltCoeff)-1 do
+     begin
+      co.x := FltCoeff[i]*co.x;
+      co.y := FltCoeff[i]*co.y;
+      ce.x := FltCoeff[i]*ce.x;
+      ce.y := FltCoeff[i]*ce.y;
+      Inc(co);
+      Dec(ce);
+     end;
+    co.x := 0; // обнуляем N/2 гармонику
+    co.y := 0;
+  end;
+ var
+  c: PComplex;
+begin
+  FData.InData := @buffer[0];
+  CheckMath(FFourier, FFourier.fft(@buffer[-OversampDataLen], FFLength));
+  CheckMath(FFourier, FFourier.GetLastFF(c));
+  Amp(FFData, c);
+  ApplyFlt(c);
+  Amp(FFDataFlt, c);
+  CheckMath(FFourier, FFourier.ifft(FData.OutData));
+  inc(FData.OutData, OversampDataLen);
+  if cd.IsBad then Result := 1 else Result := 0;
+end;
+
+constructor TFSKDecoderFFT.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
+  const
+   AVL_FF: array [0..5] of Integer = (32,64,128,256,512,1024);
+  var
+   i: Integer;
+begin
+  inherited;
+  FourierFactory(FFourier);
+  for i := 0 to 4 do if (AVL_FF[i] <= DataLen) and (DataLen <= AVL_FF[i+1]) then
+    begin
+     FFLength := AVL_FF[i+1];
+     FOversampDataLen := (FFLength - DataLen) div 2;
+     Break;
+    end;
+//  SetLength(FdataIn, FFLength);
+//  SetLength(FDataOut, FFLength);
+  // особые точки 0 и максимальная гармоника n/2 не нужны приравниваем 0 при фильтровании
+  //       1 == n-1 .... n/2-1 = n/2+1
+  //      0 1..n/2-1 n/2 n/2+1..n-1
+  SetLength(FltCoeff, FFLength div 2 - 1); // нет 0
+  for i := 0 to FFLength div 8 - 1  do FltCoeff[i] := 1;
+
+//  FNCH(9, 17);
+//  FBCH(Round(m-m/1.7), Round(m-m/3));
+
+  SetLength(FFdata, FFLength div 2);
+  SetLength(FFdataFlt, FFLength div 2);
+  FData.FF := @FFdata[0];
+  FData.FFFiltered := @FFdataFlt[0];
+  FData.FFTSize := FFLength div 2;
+  FData.InData := @buffer[0];//@FdataIn[FOversampDataLen];
+  FData.SampleSize := DataLen;
+end;
+
+function TFSKDecoderFFT.GetOversampDataLen: Integer;
+begin
+  Result := FOversampDataLen;
+end;
 {$ENDREGION}
 
+{$REGION 'CorFibonachDecoder'}
 
 { TCorFibonachDecoder }
-
 
 procedure TCorFibonachDecoder.SetSimbLen(const Value: Integer);
 begin
@@ -871,6 +994,52 @@ begin
     cd.IsBad := cd.Porog < PorogCod;
    end;
   if cd.IsBad then Result := 1 else Result := 0;
+end;
+{$ENDREGION}
+
+{ TFSK2Decoder }
+
+function TFSK2Decoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Integer;
+ var
+  m, j, i: Integer;
+//  tmp: TArray<Double>;
+begin
+  SetLength(cd.Corr, DataCodLen div 4);
+  FPorogAmpCod := FSPData.Amp * PorogCod/100;
+  m := 0;
+  cd.Code := 0;
+  for i := 0 to DataCodLen div 4 - 1 do
+   begin
+    cd.Corr[i] := 0;
+    if AlgIsMull then
+          for j := 0 to Bits*4-1 do cd.Corr[i] := cd.Corr[i] - buffer[m + j - 8] * buffer[m + j + 8]
+    else  for j := 0 to Bits*4-1 do cd.Corr[i] := cd.Corr[i] - buffer[m + j] * Etalon0[j] + buffer[m + j] * Etalon1[j];
+    Inc(m, Bits*4);                 //sin
+    if AlgIsMull then cd.Corr[i] := cd.Corr[i]/Bits/4
+    else  cd.Corr[i] := cd.Corr[i]/Bits/4/0.7;
+    cd.Code := cd.Code shl 1;
+    if cd.Corr[i] > 0 then cd.Code := cd.Code or 1;
+   end;
+ // cd.IsBad := Odd(cd.Code); //!!! в две строчки
+  cd.IsBad := not Decode(cd.Code{ shr 1}, cd.Code) or cd.IsBad; //!!!
+  if cd.IsBad then Result := 1 else Result := 0;
+end;
+
+constructor TFSK2Decoder.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
+ var
+  i: Integer;
+begin
+  inherited;
+//  AlgIsMull := True;
+  SetLength(Etalon0, ABits*4);
+  SetLength(Etalon1, ABits*4);
+  for i := 0 to High(Etalon1) do Etalon1[i] := Sin(i*PI*2/Length(Etalon1));
+  for i := 0 to High(Etalon0) do Etalon0[i] := Sin(i*PI*4/Length(Etalon0));
+end;
+
+function TFSK2Decoder.GetOversampDataLen: Integer;
+begin
+  if AlgIsMull then Result := 8 else Result := 0;
 end;
 
 end.

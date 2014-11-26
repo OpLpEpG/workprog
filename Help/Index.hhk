@@ -13,12 +13,12 @@
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="Delay">
 		<param name="Name" value="Delay">
-		<param name="Local" value="Delay.htm">
+		<param name="Local" value="Devices\Delay.htm">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="&Ccedil;&agrave;&auml;&aring;&eth;&aelig;&ecirc;&agrave;">
 		<param name="Name" value="Delay">
-		<param name="Local" value="Delay.htm">
+		<param name="Local" value="Devices\Delay.htm">
 		</OBJECT>
 	<LI> <OBJECT type="text/sitemap">
 		<param name="Name" value="&Igrave;&aring;&ograve;&eth;&icirc;&euml;&icirc;&atilde;&egrave;&yuml;">

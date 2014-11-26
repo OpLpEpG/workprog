@@ -12,9 +12,17 @@ Title=Ïמלמשü ןמ ןנמדנאללו
 
 [FILES]
 help.htm
-Delay.htm
 Metrol\Metrology.htm
 Metrol\Metrology.Inclin.htm
+Devices\CorrectTime.htm
+Devices\Delay.htm
+Devices\IO.htm
+Project\Control.htm
+Project\Progect.htm
+Project\ReadRam.htm
+Project\SetTrr.htm
+Moduls.htm
+Devices\Devices.htm
 
 [ALIAS]
 #include Alias.h
