@@ -182,19 +182,6 @@ type
 //    procedure SetData(Value: O);
 //  end;
 
-   TUsoData = record
-    Data: PDouble;
-    Size: Integer;
-   end;
-
-   TFFTData = record
-     InData, OutData: PDouble;
-     SampleSize: Integer;
-     FF, FFFiltered: PDouble;
-     FFTSize: Integer;
-   end;
-
-
   ISubDevice = interface//(IManagItem)
   ['{D9947F39-BE31-45BC-9F5F-6FAC6CB19FC8}']
     function GetCategory: TSubDeviceInfo;
@@ -204,11 +191,11 @@ type
     ///	<summary>
     ///	 обмен данными
     ///	</summary>
-    procedure InputData(Data: Pointer; DataSize: integer);
+  //  procedure InputData(Data: Pointer; DataSize: integer);
     ///	<summary>
     ///	 обмен данными
     ///	</summary>
-    procedure SetChild(SubDevice: ISubDevice);
+//    procedure SetChild(SubDevice: ISubDevice);
 //    function GetAddr: Integer;
 //    property Addr: Integer read GetAddr;
 
@@ -216,6 +203,12 @@ type
     property Caption: string read GetCaption;
 
     property IName: String read GetItemName;
+  end;
+
+  ISubDevice<T> = interface(ISubDevice)
+  ['{374907BE-F493-465F-B012-2F97AC9FBC7F}']
+    function GetData: T;
+    property Data: T read GetData;
   end;
 
   IRootDevice = interface

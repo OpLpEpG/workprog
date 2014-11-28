@@ -167,7 +167,7 @@ type
    type
     TDirType = (dtWrk, dtRam, dtEEprom);
    const
-    STR_DIR_TYPE: array [TDirType] of string =(T_WRK, T_RAM, T_EEPROM);
+    STR_DIR_TYPE: array [TDirType] of string=(T_WRK, T_RAM, T_EEPROM);
 
     class function GetDev(DataNode: IXMLNode): IXMLNode; static;
     class function GetCalc(DataNode: IXMLNode): IXMLNode; static;
@@ -220,6 +220,19 @@ type
   end;
 
   EFifoBuffer = class(EBaseException);
+
+  TFifoRec<T> = record
+   type PointerT = ^T;
+   var
+    Data: TArray<T>;
+    function Count: Integer; inline;
+    procedure Add(const pData: PointerT; Len: integer);
+    procedure Delete(Len: Integer; From: Integer = 0);
+  end;
+
+  PFifoDouble = ^TFifoDouble;
+  TFifoDouble = TFifoRec<Double>;
+
   ///	<summary>
   ///	  потокобезопасный циклический ФИФО выходные (Peek) порции данных
   ///	  значительно меньше длинны буфера
@@ -493,6 +506,30 @@ uses parser;
 
 const
  K_DEVTIME_TO_TIME = 2.097152/3600/24;
+
+
+
+function TFifoRec<T>.Count: Integer;
+begin
+  Result := Length(Data);
+end;
+
+procedure TFifoRec<T>.Add(const pData: PointerT; Len: integer);
+ var
+  n: Integer;
+begin
+  n := Length(Data);
+  SetLength(Data, n+len);
+  Move(pData^, Data[n], len*SizeOf(T));
+end;
+
+procedure TFifoRec<T>.Delete(Len: Integer; From: Integer = 0);
+ var
+  n: Integer;
+begin
+  n := Length(Data) - (From + Len);
+  if n > 0 then System.Delete(Data, From, n);
+end;
 
 { CNode }
 

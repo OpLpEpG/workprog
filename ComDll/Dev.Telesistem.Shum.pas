@@ -22,6 +22,7 @@ type
     constructor Create; override;
     [DynamicAction('Показать генератор шума <I> ', '<I>', 52, '0:Телесистема.<I>', 'ШУМ')]
     procedure DoSetup(Sender: IAction); override;
+    property Shum: TArray<Double> read FShum;
   published
     [ShowProp('Коэффициент амплитуды шума')] property KAmp: Double read FKAmp write SetKAmp;
   end;
@@ -63,8 +64,8 @@ begin
    end;
   d := Data;
   for i := 0 to DataSize-1 do d[i] := d[i] + Fshum[i];
-  Delete(Fshum, 0, DataSize);
   inherited DoOutputData(d, DataSize);
+  Delete(Fshum, 0, DataSize);
 end;
 
 procedure TTelesistemShum.SetKAmp(const Value: Double);

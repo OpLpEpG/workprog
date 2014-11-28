@@ -78,6 +78,10 @@ begin
   XMLCommand := LDoc.DocumentElement;
   FDName := 'STOL_GK';
   FStatus := dsReady;
+    ///
+//    S_StatusStol := FStatusStol + [ssSync];
+//    S_Position := 979;
+    ///
 end;
 
 constructor TStolGK.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
@@ -182,6 +186,11 @@ procedure TStolGK.ScennaRun(Event: TStolRes; SetPos: Boolean; Position: integer)
   recur: TStolRes;
   i: Integer;
 begin
+  if Length(FScenna) = 0 then
+   begin
+    DoEvent(Event, esEndCmd, 'Нет задания');
+    Exit;
+   end;
   recur := procedure (e: TEventStol; const s: AnsiString)
    var
     st: AnsiString;

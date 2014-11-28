@@ -367,7 +367,7 @@ begin
     begin
       BindPortStstus(False);
       if (FSubDevs.Count>0) then
-       with TSubDev(FSubDevs.Items[0]) as ISubDevice do
+       with TSubDev(FSubDevs.Items[0]) do
          if Category.Category = TELESIS_STRUCURE[0].Category then InputData(Data, DataSize);
     end, 3000);
     S_Status := dsData;

@@ -2,9 +2,50 @@ unit Math.Telesistem;
 
 interface
 
-uses System.SysUtils, System.Classes, Fibonach, MathIntf, System.Math, debug_except, DeviceIntf;
+uses System.SysUtils, System.Classes, Fibonach, MathIntf, System.Math, debug_except, DeviceIntf,
+     System.Generics.Collections, tools;
 
 type
+   TUsoData = record
+    Data: PDouble;
+    Size: Integer;
+    Fifo: TFifoDouble;
+   end;
+
+   TFFTData = record
+     InData, OutData: PDouble;
+     SampleSize: Integer;
+     FF, FFFiltered: PDouble;
+     FFTSize: Integer;
+   end;
+
+{ TTelesistemBuffer = class
+ public
+  type
+   TChanel = (tbcUso1, tbcUso2, tbcNoise, tbcFFT, tbcCoor);
+   TDataRec = record
+     Data: TArray<Double>;
+     Index: Integer;
+//     class function Create: TDataRec;
+     function Count: Integer;
+     procedure Add(const pData: PDouble; len: integer);
+     procedure Delete(max: Integer);
+   end;
+ private
+   FDic: TDictionary<TChanel, TDataRec>;
+   FRemoveChanel: TChanel;
+   FCount: Integer;
+   FIndex: Integer;
+   procedure SetCount(const Value: Integer);
+   procedure SetIndex(const Value: Integer);
+ public
+   constructor Create();
+   destructor Destroy; override;
+   procedure Add(ch: TChanel; data: PDouble; len: Integer);
+   property Count: Integer read FCount write SetCount;
+   property Index: Integer read FIndex write SetIndex;
+ end;}
+
 {$REGION 'TCorrelatorState'}
    TCorrelatorState = (
     ///	<summary>
@@ -1041,5 +1082,66 @@ function TFSK2Decoder.GetOversampDataLen: Integer;
 begin
   if AlgIsMull then Result := 8 else Result := 0;
 end;
+
+{ TTelesistemBuffer }
+
+{constructor TTelesistemBuffer.Create;
+begin
+  FDic := TDictionary<TChanel, TDataRec>.Create(Ord(High(TChanel))+1);
+  FRemoveChanel := High(TChanel);
+  FCount := $8000;
+end;
+
+destructor TTelesistemBuffer.Destroy;
+begin
+
+  inherited;
+end;
+
+procedure TTelesistemBuffer.SetCount(const Value: Integer);
+begin
+  FCount := Value;
+end;
+
+procedure TTelesistemBuffer.SetIndex(const Value: Integer);
+begin
+  FIndex := Value;
+end;
+
+procedure TTelesistemBuffer.Add(ch: TChanel; data: PDouble; len: Integer);
+ var
+  b: TDataRec;
+begin
+  if not FDic.TryGetValue(ch, b) then FDic.Add(ch, b);
+  b.Add(data, len);
+  b.Delete(FCount);
+end;
+
+procedure TTelesistemBuffer.TDataRec.Add(const pData: PDouble; len: integer);
+ var
+  n: Integer;
+begin
+  n := Length(Data);
+  SetLength(Data, n+len);
+  Move(pData^, Data[n], len*SizeOf(Double));
+end;
+
+procedure TTelesistemBuffer.TDataRec.Delete(max: Integer);
+ var
+  n: Integer;
+begin
+  n := Length(Data) - max;
+  if n > 0 then
+   begin
+    System.Delete(Data, 0, n);
+    Dec(Index, n);
+    Assert(Index >= 0, 'Index < 0');
+   end;
+end;
+
+function TTelesistemBuffer.TDataRec.Count: Integer;
+begin
+  Result := Length(Data);
+end;  }
 
 end.

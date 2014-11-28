@@ -19,7 +19,7 @@ type
      FIName: string;
    protected
      FSubDevice: TSubDev;
-     procedure SetChild(SubDevice: ISubDevice); virtual;
+//     procedure SetChild(SubDevice: ISubDevice); virtual;
 
      function GetItemName: string;
      function GetCategory: TSubDeviceInfo; virtual; abstract;
@@ -30,13 +30,12 @@ type
      function ICaption.GetCaption = GetDeviceName;
      procedure ICaption.SetCaption = SetDeviceName;
 
-     function TryGetSubDevForm(const model, prefix: string; out F: IForm; NeedCreate: Boolean = False): Boolean;
-
      procedure BeforeRemove(); virtual;
 
      procedure OnUserRemove; virtual;
    public
      procedure InputData(Data: Pointer; DataSize: integer); virtual; abstract;
+     procedure DeleteData(DataSize: integer); virtual;
      constructor Create; reintroduce; overload; virtual;
      constructor Create(Collection: TCollection); overload; override; final;
      destructor Destroy; override;
@@ -47,20 +46,28 @@ type
      property IName: String read GetItemName write FIName;
    end;
 
-   TSubDevWithForm<T> = class(TSubDev)
+   TSubDev<T> = class(TSubDev, ISubDevice<T>)
+   protected
+     FS_Data: T;
+     function GetData: T;
+//     procedure BeforeRemove(); override;
+//     procedure OnUserRemove; override;
+     procedure NotifyData;
+   public
+     property S_Data: T read FS_Data write FS_Data;
+   end;
+
+   TSubDevWithForm<T> = class(TSubDev<T>)
    private
      FFormClass, FPrefixFormName{, FPropertyName}: string;
    protected
 //     FormData: IForm;
-     FS_Data: T;
-     procedure RemoveUserForm; virtual;
-     procedure NotifyData;
+     function TryGetSubDevForm(const model, prefix: string; out F: IForm; NeedCreate: Boolean = False): Boolean;
      procedure InitConst(const aFormClass, aPrefixFormName{, aPropertyName}: string);
+     procedure RemoveUserForm; virtual;
      procedure BeforeRemove(); override;
      procedure OnUserRemove; override;
      procedure DoSetup(Sender: IAction); virtual;
-   public
-     property S_Data: T read FS_Data write FS_Data;
    end;
 
   TSubDevCollection = class(TICollection)
@@ -258,10 +265,6 @@ end;
 
 { TSubDev }
 
-procedure TSubDev.BeforeRemove;
-begin
-end;
-
 constructor TSubDev.Create;
 begin
 end;
@@ -279,6 +282,18 @@ begin
   inherited;
 end;
 
+procedure TSubDev.DeleteData(DataSize: integer);
+begin
+end;
+
+procedure TSubDev.BeforeRemove;
+begin
+end;
+
+procedure TSubDev.OnUserRemove;
+begin
+end;
+
 function TSubDev.GetDeviceName: string;
 begin
   Result := (TSubDevCollection(Collection).FOwner as ICaption).Text;
@@ -290,41 +305,19 @@ begin
   Result := FIName;
 end;
 
-procedure TSubDev.OnUserRemove;
-begin
-end;
-
 function TSubDev.Owner: TRootDevice;
 begin
   Result := TRootDevice(TSubDevCollection(Collection).OwnerDevice)
 end;
 
-procedure TSubDev.SetChild(SubDevice: ISubDevice);
-begin
-  FSubDevice := TSubDev(SubDevice);
-end;
+//procedure TSubDev.SetChild(SubDevice: ISubDevice);
+//begin
+//  FSubDevice := TSubDev(SubDevice);
+//end;
 
 procedure TSubDev.SetDeviceName(const Value: string);
 begin
   raise Exception.Create('Error Writing programm call procedure TSubDev.SetDeviceName(const Value: string);');
-end;
-
-function TSubDev.TryGetSubDevForm(const model, prefix: string; out F: IForm; NeedCreate: Boolean = False): Boolean;
- var
-  m: ModelType;
-  s: string;
-begin
-  Result := False;
-  s := prefix + IName;
-  F := (Gcontainer as IformEnum).Get(s);
-  if Assigned(F) then Exit(True);
-  m := GContainer.GetModelType(model);
-  if Assigned(m) and NeedCreate then
-    begin
-     F := TIForm.NewForm(m, s);
-     Result := Assigned(F);
-     if Result then (Gcontainer as IformEnum).Add(F);
-    end
 end;
 
 { TSubDevCollection }
@@ -347,12 +340,29 @@ begin
   RemoveUserForm;
 end;
 
+function TSubDevWithForm<T>.TryGetSubDevForm(const model, prefix: string; out F: IForm; NeedCreate: Boolean = False): Boolean;
+ var
+  m: ModelType;
+  s: string;
+begin
+  Result := False;
+  s := prefix + IName;
+  F := (Gcontainer as IformEnum).Get(s);
+  if Assigned(F) then Exit(True);
+  m := GContainer.GetModelType(model);
+  if Assigned(m) and NeedCreate then
+    begin
+     F := TIForm.NewForm(m, s);
+     Result := Assigned(F);
+     if Result then (Gcontainer as IformEnum).Add(F);
+    end
+end;
 
 procedure TSubDevWithForm<T>.RemoveUserForm;
  var
   FormData: IForm;
 begin
-  TBindHelper.RemoveSourceExpressions(Self, ['S_Data']);
+//  TBindHelper.RemoveSourceExpressions(Self, ['S_Data']);
   if TryGetSubDevForm(FFormClass, FPrefixFormName, FormData) then
    begin
     (Gcontainer as IformEnum).Remove(FormData);
@@ -391,9 +401,26 @@ end;
 //   end;
 //end;
 
-procedure TSubDevWithForm<T>.NotifyData;
+{ TSubDev<T> }
+
+procedure TSubDev<T>.NotifyData;
 begin
   TBindings.Notify(Self, 'S_Data');
 end;
+
+function TSubDev<T>.GetData: T;
+begin
+  Result := FS_Data;
+end;
+
+//procedure TSubDev<T>.BeforeRemove;
+//begin
+//  TBindHelper.RemoveSourceExpressions(Self, ['S_Data']);
+//end;
+
+//procedure TSubDev<T>.OnUserRemove;
+//begin
+//  TBindHelper.RemoveSourceExpressions(Self, ['S_Data']);
+//end;
 
 end.
