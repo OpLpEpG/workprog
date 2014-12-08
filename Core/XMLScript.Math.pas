@@ -28,6 +28,7 @@ type
     class procedure GetH(Azi, Zen, Otk: Double; out X,Y,Z: Double; I: Double = 19.2;  Amp: Double = 1000); static;
     class function GetAzi(Zen, Otk, X,Y,Z: Double): Double; static;
     class procedure ImportNNK10(const TrrFile: string; NewTrr: Variant); static;
+    class procedure SGK_FindGK(root: variant); static;
     class function RadToDeg180(Rad: Double): Double; static;
     class function RadToDeg360(Rad: Double): Double; static;
     class function RbfInterp(xy: Variant; x1, x2: Double): Double; static;
@@ -54,6 +55,7 @@ begin
   else if MethodName = 'ARCTAN2'        then Result := ArcTan2(       Params[0], Params[1])
   else if MethodName = 'HYPOT'          then Result := Hypot(         Params[0], Params[1])
   else if MethodName = 'HYPOT3D'        then Result := Hypot3D(       Params[0], Params[1], Params[2])
+  else if MethodName = 'SGK_FINDGK'     then           SGK_FindGK(    Params[0])
   else if MethodName = 'RADTODEG_0_180' then Result := RadToDeg180(   Params[0])
   else if MethodName = 'RADTODEG_0_360' then Result := RadToDeg360(   Params[0])
   else if MethodName = 'VARASTYPE'      then Result := VarAsType(     Params[0], Params[1])
@@ -84,6 +86,7 @@ begin
   'function Hypot(X, Y: Double): Double',
   'function Hypot3D(X, Y, Z: Double): Double',
   'function ArcTan2(Y, X: Double): Double',
+  'procedure SGK_FindGK(root: variant)',
   'function RadToDeg_0_180(Rad: Double): Double',
   'function RadToDeg_0_360(Rad: Double): Double',
   'function VarAsType(const V: Variant; AVarType: Integer): Variant',
@@ -377,6 +380,17 @@ begin
    end;
   rbf := IRbf(oi.Intf);
   CheckMath(rbf, rbf.Calc2(x1,x2, Result));
+end;
+
+class procedure TXMLScriptMath.SGK_FindGK(root: variant);
+ var
+  s,d: string;
+  Sm : Integer;
+begin
+  s := root.—√ .DEV.VALUE;
+  sm := 0;
+  for d in s.Split([' '], ExcludeEmpty) do sm := sm + d.ToInteger;
+  root.„Í.DEV.VALUE := Sm;
 end;
 
 class procedure TXMLScriptMath.ImportNNK10(const TrrFile: string; NewTrr: Variant);

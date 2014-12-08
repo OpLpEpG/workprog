@@ -2,7 +2,7 @@ unit VCL.Telesis.Decoder.RunCode;
 
 interface
 
-uses VCL.ControlRootForm, Math.Telesistem,
+uses VCL.ControlRootForm, Math.Telesistem, VCL.Telesis.Decoder,  MathIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, Vcl.StdCtrls, Vcl.Menus;
@@ -21,12 +21,16 @@ type
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     N2: TMenuItem;
+    srSignal: TFastLineSeries;
+    srNoise: TFastLineSeries;
+    srData: TFastLineSeries;
     procedure ChartAfterDraw(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure N2Click(Sender: TObject);
   private
     Fdata: TTelesistemDecoder;
     statCnt, statBad: Integer;
+    function Root: TDecoderECHOForm; inline;
   public
     procedure DoData(Data: TTelesistemDecoder); override;
   end;
@@ -34,6 +38,7 @@ type
 implementation
 
 {$R *.dfm}
+
 
 { TFrame1 }
 
@@ -60,6 +65,14 @@ end;
 procedure TFormRunCodes.DoData(Data: TTelesistemDecoder);
  const
   STRSTATE: array[TCorrelatorState] of string =('csFindSP', 'csSP', 'csCode', 'csCheckSP', 'csBadCodes', 'csUserToFindSP', 'csUserToSP');
+  procedure ShowSrs(const y: PdoubleArray; s: TFastLineSeries);
+   var
+    i: Integer;
+  begin
+    for i := 0 to data.DataLen - 1 do s.Add(y[i])
+  end;
+ var
+  i: Integer;
 begin
   FData :=  Data;
   Memo.Lines.Add(STRSTATE[Data.State]);
@@ -77,17 +90,23 @@ begin
      begin
       if CodeCnt <> 1 then if {CodeCnt-1} 2090 <> CodData[CodeCnt-1].Code then inc(statBad);
       Inc(statCnt);
-      SeriesCode.Clear;
-      SeriesCode.AddArray(CodData[CodeCnt-1].Corr);
+
+      for i := 0 to ChartCode.SeriesCount-1 do  ChartCode.Series[i].Clear;
+
+      for i := 0 to Length(CodData[CodeCnt-1].CodBuf[bftcorr])-1 do SeriesCode.AddXY(i* Data.Bits, CodData[CodeCnt-1].CodBuf[bftcorr][i]);
+    // SeriesCode.AddArray(CodData[CodeCnt-1].Corr);
+
+      if Root.UsoReady then ShowSrs(data.IndexBuffer(Root.C_Uso.Fifo), srSignal);
+      if Root.NoiseReady then ShowSrs(data.IndexBuffer(Root.C_Noise.FifoFShum), srNoise);
+      if Root.fftReady then ShowSrs(data.IndexBuffer(Root.C_fft.FifoData), srData);
+
       if Data is TFibonachiDecoder then
        begin
-        SeriesPorog.Clear;
         SeriesPorog.AddXY(0, TFibonachiDecoder(Data).PorogAmpCod);
         SeriesPorog.AddXY(ChartCode.BottomAxis.Maximum, TFibonachiDecoder(Data).PorogAmpCod);
        end
-     else if Data is TFSKDecoder then
+      else if Data is TFSKDecoder then
        begin
-        SeriesPorog.Clear;
         SeriesPorog.AddXY(0, TFSKDecoder(Data).PorogAmpCod);
         SeriesPorog.AddXY(ChartCode.BottomAxis.Maximum, TFSKDecoder(Data).PorogAmpCod);
        end;
@@ -135,6 +154,11 @@ procedure TFormRunCodes.N2Click(Sender: TObject);
 begin
   statCnt := 0;
   statBad := 0;
+end;
+
+function TFormRunCodes.Root: TDecoderECHOForm;
+begin
+  Result := TDecoderECHOForm(Owner);
 end;
 
 end.

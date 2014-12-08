@@ -163,7 +163,11 @@ end;
 
 procedure TFormStolGK.SetC_StatusStol(const Value: TStatusStol);
 begin
-  if ssSync in Value then sb.Panels[0].Text := 'SYNC'
+  if ssSync in Value then
+   begin
+    lbPosition.Caption := StolGK.Position.ToString;
+    sb.Panels[0].Text := 'SYNC'
+   end
   else
    begin
     lbPosition.Caption := '-----';

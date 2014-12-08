@@ -62,9 +62,17 @@ begin
     for i := 0 to USO_LEN-1 do s[i] := Random($FFFF)/$FFFF*5*FKAmp;
     inherited InputData(@s[0], USO_LEN);
    end;
+
+  FS_Data.FifoData.Add(Data, DataSize);
+  FS_Data.FifoFShum.Add(@Fshum[0], DataSize);
+
   d := Data;
   for i := 0 to DataSize-1 do d[i] := d[i] + Fshum[i];
-  inherited DoOutputData(d, DataSize);
+
+  NotifyData;
+  if Assigned(FSubDevice) then FSubDevice.InputData(d, DataSize);
+//  inherited DoOutputData(d, DataSize);
+
   Delete(Fshum, 0, DataSize);
 end;
 

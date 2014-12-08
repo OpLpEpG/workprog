@@ -34,7 +34,8 @@ uses
   DlgFltParam in 'DlgFltParam.pas',
   DlgViewParam in 'DlgViewParam.pas',
   DlgFromToGlu in 'DlgFromToGlu.pas' {FormDlgGluFilter},
-  DialogOpenLas in 'DialogOpenLas.pas' {DlgOpenLAS};
+  DialogOpenLas in 'DialogOpenLas.pas' {DlgOpenLAS},
+  VCL.FormShowArray in 'VCL.FormShowArray.pas' {FormShowArray};
 
 {$R *.res}
 

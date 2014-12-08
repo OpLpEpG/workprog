@@ -45,7 +45,7 @@ begin
    StolGK.Run(FStep.Attributes['Gk_Stol'], procedure (e: TEventStol; const cmd: AnsiString)
      procedure err(const ermsg: string);
      begin
-       FNeedSendStop := False;
+//       FNeedSendStop := False;
        Report(samError, ermsg);
        Error(ermsg);
      end;

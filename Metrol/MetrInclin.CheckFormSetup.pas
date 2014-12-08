@@ -29,7 +29,7 @@ uses tools, math;
 procedure TFormInclinCheckSetup.DoBeforeShow;
 begin
   inherited;
-  DevName :=  getp(FRoot, 'DevName', ' Инклинометр');
+//  DevName :=  getp(FRoot, 'DevName', ' Инклинометр');
   UsedStol := getp(FRoot, 'UsedStol', 'Уси-2');
   Room :=     getp(FRoot, 'Room', 'Производственное помещение ОМ');
   ErrZU :=    RoundTo(getp(FRoot, 'ErrZU', 0), -2);

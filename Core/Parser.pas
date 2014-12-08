@@ -56,6 +56,7 @@ type
     class function VarTypeToLength(vt: Integer): Integer;
     class function VarTypeToStr(vt: Integer): string;
     class function ArrayValToVar(PData: Pointer; Len: integer): Variant; static;
+    class function ArrayStrToArray(const Data: string): TArray<Double>; static;
   private
     const
 //     MAIN = 'MAIN_METR';
@@ -65,10 +66,11 @@ type
 //    class
     class procedure Init;
     class procedure DeInit;
+    { TODO : сделать ToValue(Data: Pointer; vt: Integer): TValue }
     class function ToVar(Data: Pointer; vt: Integer): Variant;
     class procedure FromVar(Data: Variant; vt: Integer; pOutData: Pointer);
     class function HorizontToWord(Data: Word; vt: Integer): Word;
-    class procedure ArrayToWord(Data: PWord; cnt: Integer; vt: Integer);
+    class function WordsToString(Data: PWord; cnt, vt: Integer): string;
   end;
 
 implementation
@@ -114,16 +116,29 @@ begin
   else for t in XEnum(XMLScript.ChildNodes[SF].ChildNodes[MD]) do Values.Add(t.NodeName)
 end;
 
-class procedure TPars.ArrayToWord(Data: PWord; cnt, vt: Integer);
+{ TODO : сделать дл€ любых типов }
+class function TPars.WordsToString(Data: PWord; cnt, vt: Integer): string;
  var
   i: Integer;
+  a: TArray<string>;
 begin
-  if vt in [var_i2_15b, var_ui2_15b, var_i2_10b, var_i2_14b, var_ui2_14b] then
+  SetLength(a, cnt);
   for i := 0 to cnt-1 do
    begin
-    Data^ := HorizontToWord(Data^, vt);
+    a[i] := ToVar(Data, vt);
     Inc(Data);
    end;
+   Result := string.Join(' ',a);
+
+{  if vt in [var_i2_15b, var_ui2_15b, var_i2_10b, var_i2_14b, var_ui2_14b] then
+   begin
+    SetLength(Result, cnt*2);
+    for i := 0 to cnt-1 do
+     begin
+      PWord(@Result[i*2])^ := HorizontToWord(Data^, vt);
+      Inc(Data);
+     end;
+   end;}
 end;
 
 class function TPars.HorizontToWord(Data: Word; vt: Integer): Word;
@@ -298,6 +313,16 @@ begin
   end;
 end;
 
+
+class function TPars.ArrayStrToArray(const Data: string): TArray<Double>;
+ var
+  a: TArray<string>;
+  i: Integer;
+begin
+  a := data.Split([' '], ExcludeEmpty);
+  SetLength(Result, Length(a));
+  for i := 0 to Length(a)-1 do Result[i] := a[i].ToDouble;
+end;
 
 class function TPars.ArrayValToVar(PData: Pointer; Len: integer): Variant;
 var
@@ -594,7 +619,7 @@ begin
     ExeSc.Lines.Add('begin');
     ExeSc.Lines.Add('end.');
 
-//    ExeSc.Lines.SaveToFile(ExtractFilePath(ParamStr(0))+'RP45ScriptExe.txt');
+    ExeSc.Lines.SaveToFile(ExtractFilePath(ParamStr(0))+'~tst\ExeSc.txt');
 
     if not ExeSc.Compile then MessageDlg('ќшибка компил€ции выполнени€-'+ExeSc.ErrorMsg+':'+ExeSc.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
 
@@ -654,11 +679,7 @@ begin
       begin
        di := Data;
        Inc(di, Integer(n.Attributes[AT_INDEX]));
-       if n.HasAttribute(AT_ARRAY) then
-        begin
-         ArrayToWord(di, n.Attributes[AT_ARRAY], n.Attributes[AT_TIP]);
-         n.Attributes[AT_VALUE] := LongWord(di);
-        end
+       if n.ParentNode.HasAttribute(AT_ARRAY) then n.Attributes[AT_VALUE] := WordsToString(di, n.ParentNode.Attributes[AT_ARRAY], n.Attributes[AT_TIP])
        else n.Attributes[AT_VALUE] := ToVar(di, n.Attributes[AT_TIP]);
       end;
    end);

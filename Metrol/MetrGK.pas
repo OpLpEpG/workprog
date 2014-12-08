@@ -122,8 +122,11 @@ begin
 end;
 
 class procedure TFormGK.ExportGKToCalc(const TrrFile: string; NewTrr: variant; const GkNgk: string);
+ var
+  root: variant;
 begin
-  if not TVxmlData(NewTrr.TGK).Node.HasAttribute('DevName') or
+  if GkNgk = 'NGK' then  root := NewTrr.TNGK else root := NewTrr.TGK;
+  if not TVxmlData(root).Node.HasAttribute('DevName') or
      not TVxmlData(NewTrr).Node.ParentNode.ParentNode.HasAttribute(AT_SERIAL) then
      raise EBaseException.Create('Параметры метрологии не установлены');
   TThread.CreateAnonymousThread(procedure
@@ -143,20 +146,25 @@ begin
       r.OpenDocument(ExtractFilePath(ParamStr(0))+'Devices\ReportGK1.ods');
       v := VarArrayCreate([0,9, 0,0], varVariant);
       Sheet := r.Document.GetSheets.getByName('Метрология ГК');
-      for i := 1 to 10 do
+      for i := 1 to 10 do if GkNgk = 'NGK' then
+       begin
+        st := XToVar(GetXNode(TVxmlData(NewTrr).Node, 'TNGK.STEP'+i.ToString));
+         v[i-1, 0] := Double(st.нгк.DEV.VALUE);
+       end
+      else
        begin
         st := XToVar(GetXNode(TVxmlData(NewTrr).Node, 'TGK.STEP'+i.ToString));
-        v[i-1, 0] := Double(st.гк.DEV.VALUE);
+         v[i-1, 0] := Double(st.гк.DEV.VALUE);
        end;
       Range := Sheet.getCellRangeByName('B12:K12');
       Range.setDataArray(v);
 
-      SetCell('E5', NewTrr.TGK.DevName);
+      SetCell('E5', root.DevName);
       SetCell('G5', TVxmlData(NewTrr).Node.ParentNode.ParentNode.Attributes[AT_SERIAL]);
-      SetCell('B5', NewTrr.TGK.TIME_ATT);
-      SetCell('I34', NewTrr.TGK.Metrolog);
+      SetCell('B5', root.TIME_ATT);
+      SetCell('I34', root.Metrolog);
 
-      if Boolean(NewTrr.TGK.Ready) then SetCell('G32', 'Прибор к эксплуатации годен')
+      if Boolean(root.Ready) then SetCell('G32', 'Прибор к эксплуатации годен')
       else SetCell('G32', 'Прибор к эксплуатации НЕ годен!!!');
 
       r.SaveAs(TrrFile);

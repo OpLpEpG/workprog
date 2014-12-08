@@ -3,7 +3,7 @@ unit VCL.Telesis.uso;
 interface
 
 uses DeviceIntf, PluginAPI, ExtendIntf, RootImpl, debug_except, DockIForm, RootIntf, Container, Actns,
-  Winapi.Windows, Winapi.Messages,
+  Winapi.Windows, Winapi.Messages, Math.Telesistem,
   System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, VCL.ControlRootForm,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart;

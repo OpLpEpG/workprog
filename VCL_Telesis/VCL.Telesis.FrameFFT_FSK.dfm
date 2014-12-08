@@ -8,7 +8,7 @@ object FrameFFT_FSK: TFrameFFT_FSK
   TabOrder = 0
   object Splitter: TSplitter
     Left = 0
-    Top = 146
+    Top = 117
     Width = 451
     Height = 3
     Cursor = crVSplit
@@ -21,10 +21,13 @@ object FrameFFT_FSK: TFrameFFT_FSK
     Left = 0
     Top = 0
     Width = 451
-    Height = 146
-    Cursor = crCross
+    Height = 117
     AllowPanning = pmNone
     Legend.Visible = False
+    MarginBottom = 0
+    MarginLeft = 0
+    MarginRight = 0
+    MarginTop = 0
     Title.Text.Strings = (
       'TChart')
     Title.Visible = False
@@ -36,9 +39,7 @@ object FrameFFT_FSK: TFrameFFT_FSK
     Align = alClient
     PopupMenu = PopupMenu
     TabOrder = 0
-    ExplicitLeft = -137
-    ExplicitWidth = 726
-    ExplicitHeight = 301
+    ExplicitHeight = 121
     DefaultCanvas = 'TTeeCanvas3D'
     PrintMargins = (
       15
@@ -87,10 +88,9 @@ object FrameFFT_FSK: TFrameFFT_FSK
   end
   object ChartT: TChart
     Left = 0
-    Top = 149
+    Top = 120
     Width = 451
-    Height = 103
-    Cursor = crCross
+    Height = 132
     AllowPanning = pmNone
     Legend.CheckBoxes = True
     Legend.Symbol.Pen.Visible = False
@@ -99,6 +99,11 @@ object FrameFFT_FSK: TFrameFFT_FSK
     Legend.TopPos = 0
     Legend.Transparent = True
     Legend.VertSpacing = -2
+    Legend.Visible = False
+    MarginBottom = 0
+    MarginLeft = 0
+    MarginRight = 0
+    MarginTop = 0
     Title.Text.Strings = (
       'TChart')
     Title.Visible = False
@@ -111,8 +116,6 @@ object FrameFFT_FSK: TFrameFFT_FSK
     Align = alBottom
     PopupMenu = PopupMenu
     TabOrder = 1
-    ExplicitTop = 141
-    ExplicitWidth = 504
     DefaultCanvas = 'TTeeCanvas3D'
     ColorPaletteIndex = 13
     object csInData: TFastLineSeries

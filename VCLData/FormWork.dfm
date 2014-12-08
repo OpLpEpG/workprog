@@ -24,6 +24,7 @@ object FormWrok: TFormWrok
     Header.AutoSizeIndex = 2
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring, hoHeaderClickAutoSort]
     Header.ParentFont = True
+    PopupMenu = ppM
     TabOrder = 0
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
     TreeOptions.PaintOptions = [toHotTrack, toShowButtons, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
@@ -50,5 +51,14 @@ object FormWrok: TFormWrok
         Width = 280
         WideText = #1057' '#1084#1077#1090#1088#1086#1083#1086#1075#1080#1077#1081
       end>
+  end
+  object ppM: TPopupActionBar
+    OnPopup = ppMPopup
+    Left = 240
+    Top = 136
+    object NShow: TMenuItem
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1072' '#1085#1086#1074#1086#1084' '#1075#1088#1072#1092#1080#1082#1077
+      OnClick = NShowClick
+    end
   end
 end

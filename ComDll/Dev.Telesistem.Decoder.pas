@@ -151,7 +151,12 @@ begin
     FS_Data := FDecoder;
     SetupNewDecoder;
    end;
-  FDecoder.AddData(Data, DataSize);
+  FDecoder.AddData(Data, DataSize, procedure (DelSize: Integer)
+   var
+    sd : ISubDevice;
+  begin
+    for sd in (Owner as IRootDevice).GetSubDevices do  TSubDev(sd).DeleteData(DelSize);
+  end);
 end;
 
 procedure TCustomDecoder.OnDecoder(Sender: TObject);

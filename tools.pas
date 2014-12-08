@@ -116,6 +116,7 @@ type
 //  TRamDataRef = TWorkDataRef;
 
 function TryGetX(Root: IXMLNode; const Path: string; out X: IXMLNode; const AttrName: string = ''): Boolean;
+function GetPathXNode(Node: IXMLNode): string;
 function GetXNode(Root: IXMLNode; const Path: string; CreatePathNotExists: Boolean = False): IXMLNode;
 // проверяет содержит ли Test Etalon структуру и атрибуты
 // для каждого атрибута вызывается действие
@@ -445,7 +446,7 @@ type
     function Params: string;
     procedure FieldValuesToNil;
     //
-    class function XArrayToVar(Data: IXMLNode): Variant; static;
+//    class function XArrayToVar(Data: IXMLNode): Variant; static;
     class function FieldTypesToTxtTypes(FieldType: TFieldType): string; static;
   public
 //    class procedure UnDuplicateNames(var FieldNames: TArray<string>); static;
@@ -528,7 +529,7 @@ procedure TFifoRec<T>.Delete(Len: Integer; From: Integer = 0);
   n: Integer;
 begin
   n := Length(Data) - (From + Len);
-  if n > 0 then System.Delete(Data, From, n);
+  if n > 0 then System.Delete(Data, From, Len);
 end;
 
 { CNode }
@@ -832,6 +833,17 @@ end;  }
 function ToAdrCmd(a, cmd: Byte): Byte;
 begin
   Result := (a shl 4) or cmd;
+end;
+
+function GetPathXNode(Node: IXMLNode): string;
+begin
+  Result := Node.NodeName;
+  Node := Node.ParentNode;
+  repeat
+   if (Node.NodeName = T_WRK) or (Node.NodeName = T_RAM) or (Node.NodeName = T_EEPROM) then Exit;
+   Result := Node.NodeName +'.'+ Result;
+   Node := Node.ParentNode;
+  until not Assigned(Node);
 end;
 
 function TryGetX(Root: IXMLNode; const Path: string; out X: IXMLNode; const AttrName: string = ''): Boolean;
@@ -1730,22 +1742,22 @@ begin
   end;
 end;
 
-class function THelperXMLtoDB.XArrayToVar(Data: IXMLNode): Variant;
- var
-  V: Variant;
-  pSource, pDest: Pointer;
-  Len: Integer;
-begin
-  Len := Data.Attributes[AT_ARRAY] * TPars.VarTypeToLength(Data.Attributes[AT_TIP]); { TODO : not need change array length }
-  V := VarArrayCreate([0, Len - 1], varByte);                                        { TODO : varAny }
-  pSource := Pointer(Integer(Data.Attributes[AT_VALUE]));
-  pDest := VarArrayLock(V);
-  try
-   Move(pSource^, pDest^, Len );
-  finally
-   VarArrayUnlock(V);
-  end;
-end;
+//class function THelperXMLtoDB.XArrayToVar(Data: IXMLNode): Variant;
+// var
+//  V: Variant;
+//  pSource, pDest: Pointer;
+//  Len: Integer;
+//begin
+//  Len := Data.Attributes[AT_ARRAY] * TPars.VarTypeToLength(Data.Attributes[AT_TIP]); { TODO : not need change array length }
+//  V := VarArrayCreate([0, Len - 1], varByte);                                        { TODO : varAny }
+//  pSource := Pointer(Integer(Data.Attributes[AT_VALUE]));
+//  pDest := VarArrayLock(V);
+//  try
+//   Move(pSource^, pDest^, Len );
+//  finally
+//   VarArrayUnlock(V);
+//  end;
+//end;
 
 {class function THelperXMLtoDB.CreateName(Node: IXMLNode; const pre: string): string;
 begin
@@ -1794,7 +1806,7 @@ begin
   begin
     try
     if IsData(n) then
-     if n.HasAttribute(AT_ARRAY) then CArray.Add<TFieldType>(fFieldTypes, ftBlob)
+     if n.ParentNode.HasAttribute(AT_ARRAY) then CArray.Add<TFieldType>(fFieldTypes, ftString)
      else CArray.Add<TFieldType>(fFieldTypes, Tpars.VarTypeToDBField(n.Attributes[AT_TIP]));
     except
       n.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'GLU45.xml');
@@ -1819,8 +1831,8 @@ function THelperXMLtoDB.FieldValues: TArray<variant>;
 begin
   SetLength(Result, Length(Fields));
   for i := 0 to Length(fParams)-1 do
-   if fParams[i].HasAttribute(AT_ARRAY) then Result[i] := XArrayToVar(fParams[i])
-   else Result[i] := fParams[i].Attributes[AT_VALUE];
+//   if fParams[i].ParentNode.HasAttribute(AT_ARRAY) then Result[i] :=  XArrayToVar(fParams[i]) else
+   Result[i] := fParams[i].Attributes[AT_VALUE];
 
 //  fRoot.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'DB_GK.xml');
 

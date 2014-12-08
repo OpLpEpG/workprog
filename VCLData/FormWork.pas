@@ -16,13 +16,19 @@ type
 
   TFormWrok = class(TCustomFontIForm)
     Tree: TVirtualStringTree;
+    ppM: TPopupActionBar;
+    NShow: TMenuItem;
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer);
+    procedure ppMPopup(Sender: TObject);
+    procedure NShowClick(Sender: TObject);
   private
     FDataDevice: string;
     FMetaDataInfo: TInfoEventRes;
     FBindWorkRes: TWorkEventRes;
     NConnect: TMenuItem;
+    FEditData: PNodeExData;
+    FEditNode: PVirtualNode;
     procedure ClearTree;
     procedure SetBindWorkRes(const Value: TWorkEventRes);
     procedure SetDataDevice(const Value: string);
@@ -54,7 +60,7 @@ implementation
 
 {$R *.dfm}
 
-uses AbstractPlugin, tools;
+uses AbstractPlugin, tools, VCL.FormShowArray;
 
 
 { TFormWork }
@@ -154,6 +160,26 @@ begin
   NConnect.Visible := NConnect.Count <> 0;
 end;
 
+procedure TFormWrok.ppMPopup(Sender: TObject);
+ var
+  i: Integer;
+begin
+  FEditNode := nil;
+  FEditData := nil;
+  for i := 0 to  ppM.Items.Count-1  do ppM.Items[i].Visible := False;
+  if not Assigned(Tree.HotNode) then Exit;
+  FEditNode := Tree.HotNode;
+  FEditData := Tree.GetNodeData(FEditNode);
+  TDebug.Log(FEditData.XMNode.NodeName);
+  if not FEditData.XMNode.HasAttribute(AT_ARRAY) then Exit;
+  for i := 0 to  ppM.Items.Count-1  do ppM.Items[i].Visible := True;
+end;
+
+procedure TFormWrok.NShowClick(Sender: TObject);
+begin
+  TFormShowArray.Execute(DataDevice, GetPathXNode(FEditData.XMNode));
+end;
+
 class procedure TFormWrok.DoCreateForm(Sender: IAction);
 begin
   inherited;
@@ -205,8 +231,8 @@ begin
 end;
 
 procedure TFormWrok.SetBindWorkRes(const Value: TWorkEventRes);
- var
-  Enum: TVTVirtualNodeEnumerator;
+// var
+//  Enum: TVTVirtualNodeEnumerator;
 begin
   FBindWorkRes := Value;
   if not Assigned(FMetaDataInfo.Info) then Exit;
@@ -241,7 +267,7 @@ begin
     begin
      n := xd.XMNode.ChildNodes.FindNode(T_DEV);
      if not Assigned(n) then n := xd.XMNode.ChildNodes.FindNode(T_CLC);
-     if Assigned(n) and n.HasAttribute(AT_ARRAY) then ImageIndex := 285
+     if Assigned(n) and n.ParentNode.HasAttribute(AT_ARRAY) then ImageIndex := 285
      else ImageIndex := 203;
     end;
 end;

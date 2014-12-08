@@ -83,6 +83,7 @@ type
   protected
     function GetCategory: TSubDeviceInfo; override;
     function GetCaption: string; override;
+    procedure DeleteData(DataSize: integer); override;
   public
     procedure InputData(Data: Pointer; DataSize: integer); override;
     constructor Create; override;
@@ -110,6 +111,7 @@ type
      function GetCategory: TSubDeviceInfo; override;
      function GetCaption: string; override;
      procedure OnUserRemove; override;
+     procedure DeleteData(DataSize: integer); override;
    public
      procedure InputData(Data: Pointer; DataSize: integer); override;
      constructor Create; override;
@@ -407,6 +409,19 @@ begin
   inherited;
 end;
 
+procedure TUso1.DeleteData(DataSize: integer);
+// var
+//  n: Integer;
+begin
+//  n := FS_Data.Fifo.Count;
+  FS_Data.Fifo.Delete(DataSize);
+{  TDebug.Log('USO.Count  %d  %d   DataSize  %d      ', [n, FS_Data.Fifo.Count, DataSize]);
+  if n - FS_Data.Fifo.Count <> DataSize then
+   begin
+    TDebug.Log(' EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEe ');
+   end;}
+end;
+
 procedure TUso1.DoSetup(Sender: IAction);
 begin
   inherited;
@@ -444,6 +459,7 @@ begin
     if i = Length(FData) then
      begin
       i := 0;
+      FS_Data.Fifo.Add(@FData[0], Length(FData));
       NotifyData;
       if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], Length(FData));
       Exit;
@@ -476,6 +492,8 @@ begin
           if i = Length(FData) then
            begin
             i := 0;
+            FS_Data.Fifo.Add(@FData[0], Length(FData));
+//            TDebug.Log('ADD USO.Count  %d                 ', [FS_Data.Fifo.Count]);
             NotifyData;
             if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], Length(FData));
            end;
@@ -808,6 +826,7 @@ begin
 
     DoOutputData(FS_Data.OutData, FFT_SAMPLES);
 
+
     Move(FDataIn[FFT_SAMPLES], FDataIn[0], FFT_OVERSAMP*2*Sizeof(Double));
     FDataCnt := FFT_OVERSAMP*2;
 
@@ -815,8 +834,15 @@ begin
   else if FDataCnt > FFT_LEN then raise EBaseException.Create('FDataCnt > FFT_LEN');
 end;
 
+procedure TFltBPF.DeleteData(DataSize: integer);
+begin
+  FS_Data.FifoData.Delete(DataSize);
+  FS_Data.FifoFShum.Delete(DataSize);
+end;
+
 procedure TFltBPF.DoOutputData(Data: Pointer; DataSize: integer);
 begin
+  FS_Data.FifoData.Add(Data, FFT_SAMPLES);
   NotifyData;
   if Assigned(FSubDevice) then FSubDevice.InputData(Data, DataSize);
 end;

@@ -17,6 +17,8 @@ type
      SampleSize: Integer;
      FF, FFFiltered: PDouble;
      FFTSize: Integer;
+     FifoData: TFifoDouble;
+     FifoFShum: TFifoDouble;
    end;
 
 { TTelesistemBuffer = class
@@ -85,6 +87,14 @@ type
    TTelesistemDecoder = class
    public
     type
+     TBufferType = (bftCorr, bftMul, bftBit);
+     TSetBufferType = set of TBufferType;
+//     TCodBuffer = record
+//       BufferType: TBufferType;
+//       Data: TArray<Double>;
+//       constructor Create(bt: TBufferType);
+//     end;
+     TDeleteEvent = reference to procedure (DelSize: Integer);
      TFindSPData = record
       Max1: Double;
       Max2: Double;
@@ -121,7 +131,7 @@ type
       Code: Integer;
       Porog : Double;
       IsBad: Boolean;
-      Corr: TArray<Double>;
+      CodBuf: array [TBufferType] of TArray<Double>;
      end;
      TPaketCodes = record
       CodeCnt: Integer;
@@ -150,6 +160,7 @@ type
      procedure SetState(const Value: TCorrelatorState);
      function GetFindSPData: TFindSPData;
      procedure RunAutomat;
+    function GetCodeTypes: TSetBufferType;
    protected
      Buf: TArray<Double>;
      ///	<summary>
@@ -168,6 +179,7 @@ type
      function GetBuffer: PDoubleArray; virtual;
 
      function CorrSP(var fs: TFindSPData; idx, cnt: Integer): TArray<Double>; virtual;
+
      function CorrCode(var cd: TCodData):Integer; virtual;
 
      procedure ForceState(const Value: TCorrelatorState);
@@ -179,7 +191,9 @@ type
      class function ToPorog(Amp, Amp2: Double): Double; static; inline;
    public
      constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent); virtual;
-     procedure AddData(data: PDouble; len: Integer);
+     procedure AddData(data: PDouble; len: Integer; DelEvent: TDeleteEvent);
+
+     function IndexBuffer(ExtBuff: TFifoDouble): PDoubleArray;
 
      property State: TCorrelatorState read FState write SetState;
      // константы
@@ -192,6 +206,7 @@ type
      property DataCnt: Integer read FDataCnt;
      property DataCodLen: Integer read FDataCodLen;
      property Bits: Integer read FBits;
+     property CodeTypes: TSetBufferType read GetCodeTypes;
      // пользовательские данные
      ///	<summary>
      ///	  Амплитуда СП настоько большая что можно принять решение не дожидаясь конца пакета
@@ -365,7 +380,6 @@ end;
 {$ENDREGION}
 
 {$REGION 'OLD ECHO'}
-
 { TTelesistemDecoder }
 
 constructor TTelesistemDecoder.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
@@ -402,9 +416,21 @@ begin
   Result := Bits * SPcodLen
 end;
 
+function TTelesistemDecoder.IndexBuffer(ExtBuff: TFifoDouble): PDoubleArray;
+begin
+//  TDebug.Log('ExtBuff.Count %d     Index %d    ', [ExtBuff.Count, Index]);
+  Assert(ExtBuff.Count > Index, 'Length(ExtBuff) < Index');
+  Result := @ExtBuff.Data[Index];
+end;
+
 function TTelesistemDecoder.GetBuffer: PDoubleArray;
 begin
   Result := @Buf[Index];
+end;
+
+function TTelesistemDecoder.GetCodeTypes: TSetBufferType;
+begin
+  Result := [bftCorr, bftBit];
 end;
 
 function TTelesistemDecoder.GetCount: Integer;
@@ -446,7 +472,7 @@ begin
   end;
 end;
 
-procedure TTelesistemDecoder.AddData(data: PDouble; len: Integer);
+procedure TTelesistemDecoder.AddData(data: PDouble; len: Integer; DelEvent: TDeleteEvent);
  var
   n: Integer;
 begin
@@ -459,6 +485,8 @@ begin
     Delete(Buf,0, n);
     Dec(Index, n);
     Assert(Index >= 0, 'Index < 0');
+//    TDebug.Log('NEW CORR LEN %d  INDEX %d     N %d', [Length(Buf), index, n] );
+    DelEvent(n);
    end;
   RunAutomat;
 end;
@@ -474,25 +502,25 @@ function TTelesistemDecoder.CorrCode(var cd: TCodData): Integer;
    mx1,  mx2: Double;
    mxi1: Integer;
 begin
-  SetLength(cd.Corr, 32);
+  SetLength(cd.CodBuf[bftcorr], 32);
   mxi1 := 0;
   mx1 := 0;
   mx2 := 0;
   for c := 0 to 31 do
    begin
     m := 0;
-    cd.Corr[c] := 0;
+    cd.CodBuf[bftcorr][c] := 0;
     for i := 0 to 31 do for j := 0 to Bits-1 do
      begin
-      cd.Corr[c] := cd.Corr[c] + RMCBIN[c,i] * buffer[m] * BitFilter(j);
+      cd.CodBuf[bftcorr][c] := cd.CodBuf[bftcorr][c] + RMCBIN[c,i] * buffer[m] * BitFilter(j);
       Inc(m);
      end;
-    cd.Corr[c] := cd.Corr[c]/32/Bits;
-    if FSPIndex.Faza = -1 then cd.Corr[c] := -cd.Corr[c];
-    if cd.Corr[c] >= mx1 then
+    cd.CodBuf[bftcorr][c] := cd.CodBuf[bftcorr][c]/32/Bits;
+    if FSPIndex.Faza = -1 then cd.CodBuf[bftcorr][c] := -cd.CodBuf[bftcorr][c];
+    if cd.CodBuf[bftcorr][c] >= mx1 then
      begin
       mx2 := mx1;
-      mx1 := cd.Corr[c];
+      mx1 := cd.CodBuf[bftcorr][c];
       mxi1 := c;
      end;
    end;
@@ -740,7 +768,7 @@ function TFibonachiDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Intege
   ones, zeroes, amp: Double;
   flt0: TArray<Double>;
 begin
-  SetLength(cd.Corr, DataCodLen);
+  SetLength(cd.CodBuf[bftcorr], DataCodLen);
   SetLength(flt0, DataCodLen);
 
   if FAlgIsMull then FPorogAmpCod := 0
@@ -751,17 +779,17 @@ begin
   zeroes := Double.MinValue;
   for i := 0 to DataCodLen-1 do
    begin
-    cd.Corr[i] := 0;
+    cd.CodBuf[bftcorr][i] := 0;
     flt0[i] := 0;
     for j := 0 to Bits-1 do if FAlgIsMull then
      begin
-      cd.Corr[i] := cd.Corr[i] + buffer[m] * buffer[m-bits] * BitFilter(j);
+      cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i] + buffer[m] * buffer[m-bits] * BitFilter(j);
       if FFindZeroes then flt0[i] := flt0[i] + buffer[m] * buffer[m-2*bits] * BitFilter(j);
       Inc(m);
      end
     else
      begin
-      cd.Corr[i] := cd.Corr[i] + (buffer[m] + buffer[m-bits]) * BitFilter(j);
+      cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i] + (buffer[m] + buffer[m-bits]) * BitFilter(j);
       if FFindZeroes then flt0[i] := flt0[i] + (buffer[m] + buffer[m-2*bits]) * BitFilter(j);
       Inc(m);
      end;
@@ -769,17 +797,17 @@ begin
   for i := 0 to DataCodLen-1 do
     if flt0[i] > 0 then
      begin
-      cd.Corr[i] := cd.Corr[i] - flt0[i];
-      if (i > 0) and (flt0[i-1] < 0) then cd.Corr[i-1] := cd.Corr[i-1] - flt0[i];
-      if (i < DataCodLen-1) and (flt0[i-1] < 0) then cd.Corr[i-1] := cd.Corr[i-1] - flt0[i];
+      cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i] - flt0[i];
+      if (i > 0) and (flt0[i-1] < 0) then cd.CodBuf[bftcorr][i-1] := cd.CodBuf[bftcorr][i-1] - flt0[i];
+      if (i < DataCodLen-1) and (flt0[i-1] < 0) then cd.CodBuf[bftcorr][i-1] := cd.CodBuf[bftcorr][i-1] - flt0[i];
      end;
   cd.Code := 0;
   for i := 0 to DataCodLen-1 do
    begin
-    if FAlgIsMull then cd.Corr[i] := cd.Corr[i]/bits/FSPData.Amp
-    else cd.Corr[i] := Abs(cd.Corr[i])/bits/2; // неуверен при сложении
+    if FAlgIsMull then cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i]/bits/FSPData.Amp
+    else cd.CodBuf[bftcorr][i] := Abs(cd.CodBuf[bftcorr][i])/bits/2; // неуверен при сложении
     cd.Code := cd.Code shl 1;
-    amp := cd.Corr[i];
+    amp := cd.CodBuf[bftcorr][i];
     if amp > FPorogAmpCod then
      begin
       cd.Code := cd.Code or 1;
@@ -802,19 +830,19 @@ function TFSKDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Integer;
   m, j, i: Integer;
 //  tmp: TArray<Double>;
 begin
-  SetLength(cd.Corr, DataCodLen div 2);
+  SetLength(cd.CodBuf[bftcorr], DataCodLen div 2);
   FPorogAmpCod := FSPData.Amp * PorogCod/100;
   m := 0;
   cd.Code := 0;
 //  SetLength(tmp, Bits*2);
   for i := 0 to DataCodLen div 2 - 1 do
    begin
-    cd.Corr[i] := 0;
-    for j := 0 to Bits*4-1 do cd.Corr[i] := cd.Corr[i] + buffer[m + j] * Etalon[j];
+    cd.CodBuf[bftcorr][i] := 0;
+    for j := 0 to Bits*4-1 do cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i] + buffer[m + j] * Etalon[j];
     Inc(m, Bits*2);                 //sin
-    cd.Corr[i] := cd.Corr[i]/Bits/4/0.7;
+    cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i]/Bits/4/0.7;
     cd.Code := cd.Code shl 1;
-    if cd.Corr[i] > FPorogAmpCod then cd.Code := cd.Code or 1;
+    if cd.CodBuf[bftcorr][i] > FPorogAmpCod then cd.Code := cd.Code or 1;
    end;
   cd.IsBad := Odd(cd.Code); //!!! в две строчки
   cd.IsBad := not Decode(cd.Code shr 1, cd.Code) or cd.IsBad; //!!!
@@ -931,12 +959,12 @@ end;
 function TCorFibonachDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Integer;
  var
   m, oldm, c: Integer;
-  procedure CorrBit(bit: Boolean);
+  procedure CrrBit(bit: Boolean);
    var
     i: Integer;
   begin
-    if bit then for i := 0 to Bits-1 do cd.Corr[c] := cd.Corr[c] + buffer[m+i] * BitFilter(i)
-    else        for i := 0 to Bits-1 do cd.Corr[c] := cd.Corr[c] - buffer[m+i] * BitFilter(i);
+    if bit then for i := 0 to Bits-1 do cd.CodBuf[bftcorr][c] := cd.CodBuf[bftcorr][c] + buffer[m+i] * BitFilter(i)
+    else        for i := 0 to Bits-1 do cd.CodBuf[bftcorr][c] := cd.CodBuf[bftcorr][c] - buffer[m+i] * BitFilter(i);
     Inc(m, bits);
   end;
  var
@@ -961,7 +989,7 @@ function TCorFibonachDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Inte
     a[17] := not a[16];
   end;
 begin
-  SetLength(cd.Corr, 2584);
+  SetLength(cd.CodBuf[bftcorr], 2584);
 
   if FSimbLen < 18 then
    begin
@@ -979,15 +1007,15 @@ begin
      SimbTo := FSimbLen;
      while true do
       begin
-       cd.Corr[c] := 0;
+       cd.CodBuf[bftcorr][c] := 0;
        oldm := m;
-       for i := SimbTrom to SimbTo-1 do CorrBit(etbit[i]);
+       for i := SimbTrom to SimbTo-1 do CrrBit(etbit[i]);
        m := oldm;
-       mx1 := cd.Corr[c]/(SimbTo-SimbTrom)/Bits;
-       cd.Corr[c] := 0;
-       for i := SimbTrom to SimbTo-1 do CorrBit(ArrBit[i]);
-       cd.Corr[c] := cd.Corr[c]/(SimbTo-SimbTrom)/Bits;
-       if cd.Corr[c] > mx1 then
+       mx1 := cd.CodBuf[bftcorr][c]/(SimbTo-SimbTrom)/Bits;
+       cd.CodBuf[bftcorr][c] := 0;
+       for i := SimbTrom to SimbTo-1 do CrrBit(ArrBit[i]);
+       cd.CodBuf[bftcorr][c] := cd.CodBuf[bftcorr][c]/(SimbTo-SimbTrom)/Bits;
+       if cd.CodBuf[bftcorr][c] > mx1 then
         begin
          cd.Code := c;
          cd.IsBad := True;
@@ -1007,26 +1035,26 @@ begin
     for c := 0 to 2583 do
      begin
       m := 0;
-      cd.Corr[c] := 0;
+      cd.CodBuf[bftcorr][c] := 0;
 
       Cod := FIBONACH_ENCODED_PSK[c];
 
       //  inv15 15H..0L inv0
-      CorrBit(Cod and $8000 = 0); //
+      CrrBit(Cod and $8000 = 0); //
       for i := 0 to 14 do
        begin
-        CorrBit(Cod and $8000 <> 0);
+        CrrBit(Cod and $8000 <> 0);
         cod := cod shl 1;
        end;
-      CorrBit(Cod and $8000 <> 0);
-      CorrBit(Cod and $8000 = 0);
+      CrrBit(Cod and $8000 <> 0);
+      CrrBit(Cod and $8000 = 0);
 
-      cd.Corr[c] := cd.Corr[c]/18/Bits;
-      if FSPIndex.Faza = -1 then cd.Corr[c] := -cd.Corr[c];
-      if cd.Corr[c] >= mx1 then
+      cd.CodBuf[bftcorr][c] := cd.CodBuf[bftcorr][c]/18/Bits;
+      if FSPIndex.Faza = -1 then cd.CodBuf[bftcorr][c] := -cd.CodBuf[bftcorr][c];
+      if cd.CodBuf[bftcorr][c] >= mx1 then
        begin
         mx2 := mx1;
-        mx1 := cd.Corr[c];
+        mx1 := cd.CodBuf[bftcorr][c];
         mxi1 := c;
        end;
      end;
@@ -1045,21 +1073,21 @@ function TFSK2Decoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Integer;
   m, j, i: Integer;
 //  tmp: TArray<Double>;
 begin
-  SetLength(cd.Corr, DataCodLen div 4);
+  SetLength(cd.CodBuf[bftcorr], DataCodLen div 4);
   FPorogAmpCod := FSPData.Amp * PorogCod/100;
   m := 0;
   cd.Code := 0;
   for i := 0 to DataCodLen div 4 - 1 do
    begin
-    cd.Corr[i] := 0;
+    cd.CodBuf[bftcorr][i] := 0;
     if AlgIsMull then
-          for j := 0 to Bits*4-1 do cd.Corr[i] := cd.Corr[i] - buffer[m + j - 8] * buffer[m + j + 8]
-    else  for j := 0 to Bits*4-1 do cd.Corr[i] := cd.Corr[i] - buffer[m + j] * Etalon0[j] + buffer[m + j] * Etalon1[j];
+          for j := 0 to Bits*4-1 do cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i] - buffer[m + j - 8] * buffer[m + j + 8]
+    else  for j := 0 to Bits*4-1 do cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i] - buffer[m + j] * Etalon0[j] + buffer[m + j] * Etalon1[j];
     Inc(m, Bits*4);                 //sin
-    if AlgIsMull then cd.Corr[i] := cd.Corr[i]/Bits/4
-    else  cd.Corr[i] := cd.Corr[i]/Bits/4/0.7;
+    if AlgIsMull then cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i]/Bits/4
+    else  cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i]/Bits/4/0.7;
     cd.Code := cd.Code shl 1;
-    if cd.Corr[i] > 0 then cd.Code := cd.Code or 1;
+    if cd.CodBuf[bftcorr][i] > 0 then cd.Code := cd.Code or 1;
    end;
  // cd.IsBad := Odd(cd.Code); //!!! в две строчки
   cd.IsBad := not Decode(cd.Code{ shr 1}, cd.Code) or cd.IsBad; //!!!

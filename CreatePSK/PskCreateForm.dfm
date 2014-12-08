@@ -61,13 +61,14 @@ object FormPsk: TFormPsk
       Height = 488
       Align = alClient
       BorderWidth = 1
+      EditDelay = 500
       Header.AutoSizeIndex = 5
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring, hoHeaderClickAutoSort]
       Header.ParentFont = True
       PopupMenu = ppM
       TabOrder = 1
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
-      TreeOptions.MiscOptions = [toAcceptOLEDrop, toEditable, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
+      TreeOptions.MiscOptions = [toAcceptOLEDrop, toEditable, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick, toEditOnDblClick]
       TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
       TreeOptions.SelectionOptions = [toExtendedFocus, toMultiSelect]
       OnCreateEditor = TreeCreateEditor
@@ -75,11 +76,9 @@ object FormPsk: TFormPsk
       OnFocusChanged = TreeFocusChanged
       OnGetText = TreeGetText
       OnGetImageIndex = TreeGetImageIndex
-      ExplicitLeft = 3
-      ExplicitTop = -2
       Columns = <
         item
-          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
+          Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coEditable]
           Position = 0
           Width = 150
           WideText = #1044#1077#1088#1077#1074#1086

@@ -71,6 +71,7 @@ begin
   Metrolog := getp(FRoot, 'Metrolog', '');
   Ready :=    getp(FRoot, 'Ready', True);
   Date :=     StrToDate(getp(FRoot, AT_TIMEATT, DateToStr(Now)));
+  DevName :=  getp(FRoot, 'DevName', FRoot.ParentNode.ParentNode.ParentNode.NodeName +'.'+FRoot.ParentNode.NodeName);
   NextDate := StrToDate(getp(FRoot, 'NextDate', DateToStr(Now+90)));
 end;
 

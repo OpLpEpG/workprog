@@ -16,7 +16,7 @@ object FormRunCodes: TFormRunCodes
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter2: TSplitter
-    Left = 281
+    Left = 371
     Top = 0
     Height = 292
     Align = alRight
@@ -27,7 +27,7 @@ object FormRunCodes: TFormRunCodes
   object Panel: TPanel
     Left = 0
     Top = 0
-    Width = 281
+    Width = 371
     Height = 292
     Align = alClient
     BevelOuter = bvNone
@@ -36,16 +36,17 @@ object FormRunCodes: TFormRunCodes
     object Splitter1: TSplitter
       Left = 0
       Top = 161
-      Width = 281
+      Width = 371
       Height = 3
       Cursor = crVSplit
       Align = alTop
       ExplicitTop = 105
+      ExplicitWidth = 281
     end
     object Chart: TChart
       Left = 0
       Top = 0
-      Width = 281
+      Width = 371
       Height = 161
       AllowPanning = pmNone
       BottomWall.Visible = False
@@ -100,11 +101,12 @@ object FormRunCodes: TFormRunCodes
     object ChartCode: TChart
       Left = 0
       Top = 164
-      Width = 281
+      Width = 371
       Height = 128
       AllowPanning = pmNone
       BottomWall.Visible = False
       LeftWall.Visible = False
+      Legend.CheckBoxes = True
       Legend.Visible = False
       MarginBottom = 1
       MarginLeft = 0
@@ -147,14 +149,50 @@ object FormRunCodes: TFormRunCodes
         BarPen.Visible = False
         Marks.Visible = False
         Marks.Callout.Length = 8
+        Title = #1050#1086#1088#1088
+        Transparency = 71
+        BarWidthPercent = 100
+        MultiBar = mbNone
+        Shadow.Visible = False
+        SideMargins = False
         XValues.Name = 'X'
         XValues.Order = loAscending
         YValues.Name = 'Bar'
         YValues.Order = loNone
-        Data = {0000000000}
       end
       object SeriesPorog: TFastLineSeries
+        Title = #1055#1086#1088#1086#1075
         LinePen.Color = 13395626
+        LinePen.Width = 3
+        XValues.Name = 'X'
+        XValues.Order = loAscending
+        YValues.Name = 'Y'
+        YValues.Order = loNone
+      end
+      object srSignal: TFastLineSeries
+        SeriesColor = 8453888
+        Title = #1057#1080#1075#1085#1072#1083
+        LinePen.Color = 8453888
+        LinePen.Width = 3
+        XValues.Name = 'X'
+        XValues.Order = loAscending
+        YValues.Name = 'Y'
+        YValues.Order = loNone
+      end
+      object srNoise: TFastLineSeries
+        SeriesColor = 8388863
+        Title = #1064#1091#1084
+        LinePen.Color = 8388863
+        LinePen.Width = 3
+        XValues.Name = 'X'
+        XValues.Order = loAscending
+        YValues.Name = 'Y'
+        YValues.Order = loNone
+      end
+      object srData: TFastLineSeries
+        SeriesColor = 10485760
+        Title = #1057'+'#1064
+        LinePen.Color = 10485760
         LinePen.Width = 3
         XValues.Name = 'X'
         XValues.Order = loAscending
@@ -164,9 +202,9 @@ object FormRunCodes: TFormRunCodes
     end
   end
   object Memo: TMemo
-    Left = 284
+    Left = 374
     Top = 0
-    Width = 244
+    Width = 154
     Height = 292
     Align = alRight
     BorderStyle = bsNone

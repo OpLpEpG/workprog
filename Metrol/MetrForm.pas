@@ -694,7 +694,7 @@ begin
     if Supports(GlobalCore, IDeviceEnum, de) then d := de.Get(FDataDevice);
     if Assigned(d) and Supports(d, IDataDevice) then
      begin
-      Caption := (d as ICaption).Text;
+      Caption := (d as ICaption).Text +'.'+ MetrolMame;
       Bind( 'C_MetaDataInfo', d, ['S_MetaDataInfo']);
       Bind( 'C_BindWorkRes', d, ['S_WorkEventInfo']);
       if not (csLoading in ComponentState) then

@@ -54,7 +54,7 @@ type
 //     procedure OnUserRemove; override;
      procedure NotifyData;
    public
-     property S_Data: T read FS_Data write FS_Data;
+     property S_Data: T read FS_Data;// write FS_Data;
    end;
 
    TSubDevWithForm<T> = class(TSubDev<T>)

@@ -23,7 +23,6 @@ uses tools, math;
 procedure TFormGKCheckSetup.DoBeforeShow;
 begin
   inherited;
-  DevName :=  getp(FRoot, 'DevName', 'ГК');
   UsedStol := getp(FRoot, 'UsedStol', 'Стол-ГК');
   Room :=     getp(FRoot, 'Room', 'Производственное помещение');
 end;

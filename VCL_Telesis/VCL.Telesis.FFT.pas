@@ -3,7 +3,7 @@ unit VCL.Telesis.FFT;
 interface
 
 uses DeviceIntf, PluginAPI, ExtendIntf, RootImpl, debug_except, DockIForm, RootIntf, Container, Actns,
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,  Math.Telesistem,
   Vcl.Graphics, Vcl.ExtCtrls, VCL.ControlRootForm, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   VCLTee.TeEngine, VCLTee.Series,  VCLTee.TeeProcs, VCLTee.Chart;
 
