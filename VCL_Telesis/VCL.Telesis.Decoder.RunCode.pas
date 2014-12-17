@@ -24,6 +24,9 @@ type
     srSignal: TFastLineSeries;
     srNoise: TFastLineSeries;
     srData: TFastLineSeries;
+    srMul: TFastLineSeries;
+    srBit: TFastLineSeries;
+    srZerro: TFastLineSeries;
     procedure ChartAfterDraw(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure N2Click(Sender: TObject);
@@ -99,6 +102,11 @@ begin
       if Root.UsoReady then ShowSrs(data.IndexBuffer(Root.C_Uso.Fifo), srSignal);
       if Root.NoiseReady then ShowSrs(data.IndexBuffer(Root.C_Noise.FifoFShum), srNoise);
       if Root.fftReady then ShowSrs(data.IndexBuffer(Root.C_fft.FifoData), srData);
+
+      srMul.AddArray(CodData[CodeCnt-1].CodBuf[bftMul]);
+      srBit.AddArray(CodData[CodeCnt-1].CodBuf[bftBit]);
+      srZerro.AddArray(CodData[CodeCnt-1].CodBuf[bftZerro]);
+
 
       if Data is TFibonachiDecoder then
        begin

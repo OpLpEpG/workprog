@@ -4,7 +4,7 @@ object FormRunCodes: TFormRunCodes
   Top = 0
   Align = alClient
   BorderStyle = bsNone
-  ClientHeight = 292
+  ClientHeight = 306
   ClientWidth = 528
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object FormRunCodes: TFormRunCodes
   object Splitter2: TSplitter
     Left = 371
     Top = 0
-    Height = 292
+    Height = 306
     Align = alRight
     ExplicitLeft = 288
     ExplicitTop = 40
@@ -28,14 +28,15 @@ object FormRunCodes: TFormRunCodes
     Left = 0
     Top = 0
     Width = 371
-    Height = 292
+    Height = 306
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel'
     TabOrder = 0
+    ExplicitHeight = 292
     object Splitter1: TSplitter
       Left = 0
-      Top = 161
+      Top = 129
       Width = 371
       Height = 3
       Cursor = crVSplit
@@ -47,7 +48,7 @@ object FormRunCodes: TFormRunCodes
       Left = 0
       Top = 0
       Width = 371
-      Height = 161
+      Height = 129
       AllowPanning = pmNone
       BottomWall.Visible = False
       LeftWall.Visible = False
@@ -100,14 +101,13 @@ object FormRunCodes: TFormRunCodes
     end
     object ChartCode: TChart
       Left = 0
-      Top = 164
+      Top = 132
       Width = 371
-      Height = 128
+      Height = 174
       AllowPanning = pmNone
       BottomWall.Visible = False
       LeftWall.Visible = False
       Legend.CheckBoxes = True
-      Legend.Visible = False
       MarginBottom = 1
       MarginLeft = 0
       MarginRight = 1
@@ -136,6 +136,8 @@ object FormRunCodes: TFormRunCodes
       BevelOuter = bvNone
       PopupMenu = PopupMenu
       TabOrder = 1
+      ExplicitTop = 144
+      ExplicitHeight = 162
       DefaultCanvas = 'TTeeCanvas3D'
       PrintMargins = (
         15
@@ -148,11 +150,13 @@ object FormRunCodes: TFormRunCodes
         BarPen.Width = 4
         BarPen.Visible = False
         Marks.Visible = False
+        Marks.AutoPosition = False
         Marks.Callout.Length = 8
         Title = #1050#1086#1088#1088
         Transparency = 71
         BarWidthPercent = 100
         MultiBar = mbNone
+        OffsetPercent = 50
         Shadow.Visible = False
         SideMargins = False
         XValues.Name = 'X'
@@ -199,17 +203,48 @@ object FormRunCodes: TFormRunCodes
         YValues.Name = 'Y'
         YValues.Order = loNone
       end
+      object srMul: TFastLineSeries
+        SeriesColor = 8421631
+        Title = 'Mul'
+        LinePen.Color = 8421631
+        LinePen.Width = 3
+        XValues.Name = 'X'
+        XValues.Order = loAscending
+        YValues.Name = 'Y'
+        YValues.Order = loNone
+      end
+      object srBit: TFastLineSeries
+        SeriesColor = clTeal
+        Title = 'bit'
+        LinePen.Color = clTeal
+        LinePen.Width = 3
+        XValues.Name = 'X'
+        XValues.Order = loAscending
+        YValues.Name = 'Y'
+        YValues.Order = loNone
+      end
+      object srZerro: TFastLineSeries
+        SeriesColor = 16711808
+        Title = 'zerro'
+        LinePen.Color = 1157562496
+        LinePen.Width = 3
+        XValues.Name = 'X'
+        XValues.Order = loAscending
+        YValues.Name = 'Y'
+        YValues.Order = loNone
+      end
     end
   end
   object Memo: TMemo
     Left = 374
     Top = 0
     Width = 154
-    Height = 292
+    Height = 306
     Align = alRight
     BorderStyle = bsNone
     PopupMenu = PopupMenu
     TabOrder = 1
+    ExplicitHeight = 292
   end
   object PopupMenu: TPopupMenu
     Left = 152

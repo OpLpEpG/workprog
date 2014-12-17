@@ -87,7 +87,7 @@ type
    TTelesistemDecoder = class
    public
     type
-     TBufferType = (bftCorr, bftMul, bftBit);
+     TBufferType = (bftCorr, bftMul, bftBit, bftZerro);
      TSetBufferType = set of TBufferType;
 //     TCodBuffer = record
 //       BufferType: TBufferType;
@@ -769,6 +769,10 @@ function TFibonachiDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Intege
   flt0: TArray<Double>;
 begin
   SetLength(cd.CodBuf[bftcorr], DataCodLen);
+  SetLength(cd.CodBuf[bftMul], DataCodLen*Bits);
+  SetLength(cd.CodBuf[bftBit], DataCodLen*Bits);
+  SetLength(cd.CodBuf[bftZerro], DataCodLen*Bits);
+
   SetLength(flt0, DataCodLen);
 
   if FAlgIsMull then FPorogAmpCod := 0
@@ -783,6 +787,10 @@ begin
     flt0[i] := 0;
     for j := 0 to Bits-1 do if FAlgIsMull then
      begin
+      cd.CodBuf[bftMul][m] := buffer[m] * buffer[m-bits]/ FSPData.Amp;
+      cd.CodBuf[bftBit][m] := cd.CodBuf[bftMul][m] * BitFilter(j);
+      cd.CodBuf[bftZerro][m] := buffer[m] * buffer[m-2*bits]/ FSPData.Amp;
+
       cd.CodBuf[bftcorr][i] := cd.CodBuf[bftcorr][i] + buffer[m] * buffer[m-bits] * BitFilter(j);
       if FFindZeroes then flt0[i] := flt0[i] + buffer[m] * buffer[m-2*bits] * BitFilter(j);
       Inc(m);

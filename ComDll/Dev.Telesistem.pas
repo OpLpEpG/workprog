@@ -4,8 +4,8 @@ interface
 
 uses System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Dev.Telesistem.Decoder,
      Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools,
-     Math.Telesistem, System.IOUtils,
-     JvExControls, JvInspector, JvComponentBase,
+     Math.Telesistem, System.IOUtils, Vcl.Graphics,  System.Types,
+     JvExControls, JvInspector, JvComponentBase,  JvResources,
      Vcl.ExtCtrls, Vcl.Dialogs, Vcl.Forms;
 
 const
@@ -85,8 +85,6 @@ type
     procedure DeleteData(DataSize: integer); override;
     constructor Create; override;
     destructor Destroy; override;
-    [DynamicAction('Показать осцилограмму усо <I> ', '<I>', 52, '0:Телесистема.<I>', 'Показать осцилограмму усо')]
-    procedure DoSetup(Sender: IAction); override;
   published
     [ShowProp('Частота прибора')] property Frequency: TTelesisFrequency read FFrequency write SetFrequency default afq10;
   end;
@@ -103,6 +101,8 @@ type
     function GetCaption: string; override;
   public
     procedure InputData(Data: Pointer; DataSize: integer); override;
+    [DynamicAction('Показать осцилограмму усо <I> ', '<I>', 52, '0:Телесистема.<I>', 'Показать осцилограмму усо')]
+    procedure DoSetup(Sender: IAction); override;
   published
     [ShowProp('Тестовые данные')] property TestUsoData: TTestUsoData read FTestUsoData write SetTestUsoData default tudNone;
     [ShowProp('Вести запись в файл')] property WriteToFile: Boolean read FWriteToFile write SetWriteToFile default False;
@@ -112,14 +112,15 @@ type
   public
    type
     TUsoFileName = string;
+    TPosition = Int64;
   private
     FTimer: TTimer;
     FSpeed: Integer;
-    FPosition: Int64;
+    FPosition: TPosition;
     FUsoFileName: TUsoFileName;
     procedure SetSpeed(const Value: Integer);
     procedure OnTimer(Sender: TObject);
-    procedure SetPosition(const Value: Int64);
+    procedure SetPosition(const Value: TPosition);
     procedure SetUsoFileName(const Value: TUsoFileName);
   protected
     function GetCaption: string; override;
@@ -127,16 +128,13 @@ type
     constructor Create; override;
     destructor Destroy; override;
     procedure InputData(Data: Pointer; DataSize: integer); override;
+    [DynamicAction('Показать осцилограмму усо <I> ', '<I>', 52, '0:Телесистема.<I>', 'Показать осцилограмму усо')]
+    procedure DoSetup(Sender: IAction); override;
   published
     [ShowProp('Скорость воспроизведения')] property Speed: Integer read FSpeed write SetSpeed default 100;
-    [ShowProp('Позиция')] property Position: Int64 read FPosition write SetPosition default 0;
+    [ShowProp('Позиция')] property Position: TPosition read FPosition write SetPosition default 0;
     [ShowProp('Файл')] property UsoFileName: TUsoFileName read FUsoFileName write SetUsoFileName;
   end;
-
-//   TUso2 = class(TUso1)
-//   protected
-//     function GetCaption: string; override;
-//   end;
 
    TFltBPF = class(TSubDevWithForm<TFFTData>, ITelesistem)
    private
@@ -459,10 +457,10 @@ begin
   inherited;
 end;
 
-procedure TUsoRoot.DoSetup(Sender: IAction);
-begin
-  inherited;
-end;
+//procedure TUsoRoot.DoSetup(Sender: IAction);
+//begin
+//  inherited;
+//end;
 
 function TUsoRoot.GetCategory: TSubDeviceInfo;
 begin
@@ -487,6 +485,11 @@ begin
 end;
 
 { TUso1 }
+
+procedure TUso1.DoSetup(Sender: IAction);
+begin
+  inherited;
+end;
 
 function TUso1.GetCaption: string;
 begin
@@ -653,15 +656,61 @@ end;
 { TusoFile }
 
 type
-  TInspUcoFile = class(TJvCustomInspectorItem)
-  protected
+  TInspPosition = class(TJvInspectorInt64Item)
+  private
+    Ftimer: TTimer;
+    procedure OnTimer(Sender: TObject);
+  public
+    procedure DrawValue(const ACanvas: TCanvas); override;
+    constructor Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData); override;
+    destructor Destroy; override;
+  end;
+
+{ TInspPosition }
+
+constructor TInspPosition.Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData);
+begin
+  inherited;
+  Ftimer := TTimer.Create(nil);
+  Ftimer.OnTimer := OnTimer;
+  Ftimer.Enabled := True;
+end;
+
+procedure TInspPosition.OnTimer(Sender: TObject);
+begin
+  InvalidateItem;
+end;
+
+destructor TInspPosition.Destroy;
+begin
+  Ftimer.Free;
+  inherited;
+end;
+
+procedure TInspPosition.DrawValue(const ACanvas: TCanvas);
+ var
+  f: TFileStream;
+  r: TRect;
+begin
+  f := TusoFile(TJvInspectorPropData(Data).Instance).FFileStream;
+  if Assigned(f) then
+   begin
+     ACanvas.Brush.Color := clBtnFace;
+     r := Rects[iprValueArea];
+     ACanvas.FillRect(r);
+     ACanvas.Brush.Color := clBlue;
+     r.Width := Round(f.Position/ f.Size * r.Width);
+     ACanvas.FillRect(r);
+   end;
+  if Editing then DrawEditor(ACanvas);
+end;
+
+type
+  TInspUcoFile = class(TJvInspectorStringItem)
   public
     constructor Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData); override;
     procedure Edit; override;
-    procedure InitEdit; override;
-    procedure DoneEdit(const CancelEdits: Boolean = False); override;
   end;
-
 
 constructor TInspUcoFile.Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData);
 begin
@@ -669,12 +718,11 @@ begin
   Flags := Flags  + [iifEditButton];
 end;
 
-
 procedure TInspUcoFile.Edit;
 begin
   with TOpenDialog.Create(nil) do
   try
-   InitialDir := Tpath.GetFullPath(ParamStr(0)) + 'Projects';
+   InitialDir := Tpath.GetFullPath(ParamStr(0)) + '\Projects';
    Filter :=  'Файл проекта (uso_*.bin)|uso_*.bin';
    DefaultExt := 'bin';
    Options := [ofReadOnly,ofHideReadOnly,ofPathMustExist,ofFileMustExist,ofEnableSizing];
@@ -684,29 +732,25 @@ begin
   end;
 end;
 
-procedure TInspUcoFile.DoneEdit(const CancelEdits: Boolean);
-begin
-  SetEditing(False);
-end;
-
-procedure TInspUcoFile.InitEdit;
-begin
-  SetEditing(CanEdit);
-end;
-
 constructor TusoFile.Create;
 begin
-  inherited;
   FTimer := TTimer.Create(nil);
   FTimer.OnTimer := OnTimer;
   FSpeed := 100;
   FTimer.Interval := FSpeed;
   FTimer.Enabled := True;
+  InitConst('TUsoOscForm', 'OscForm_');
+  inherited;
 end;
 
 destructor TusoFile.Destroy;
 begin
   FTimer.Free;
+  inherited;
+end;
+
+procedure TusoFile.DoSetup(Sender: IAction);
+begin
   inherited;
 end;
 
@@ -719,7 +763,7 @@ procedure TusoFile.InputData(Data: Pointer; DataSize: integer);
 begin
 end;
 
-procedure TusoFile.SetPosition(const Value: Int64);
+procedure TusoFile.SetPosition(const Value: TPosition);
 begin
   FPosition := Value;
   if Assigned(FFileStream) then FFileStream.Position := FPosition;
@@ -750,10 +794,10 @@ procedure TusoFile.OnTimer(Sender: TObject);
    ar: array[0..USO_LEN-1] of SmallInt;
    a: SmallInt;
 begin
-  if Assigned(FFileStream) and (FFileStream.ReadData(ar[0], USO_LEN) = USO_LEN) then for a in ar do
+  if Assigned(FFileStream) and (FFileStream.Read(ar, USO_LEN*2) = USO_LEN*2) then for a in ar do
    begin
     SumDat := SumDat + a;
-    inc(FPosition, USO_LEN);
+    FPosition := FFileStream.Position;
     Inc(Nfq);
     if Nfq >= FKSum then
      begin
@@ -1230,6 +1274,7 @@ end;
 
 initialization
   TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspUcoFile, TypeInfo(TusoFile.TUsoFileName)));
+  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspPosition, TypeInfo(TusoFile.TPosition)));
   RegisterClasses([TTelesistem, TUso1, TusoFile, TDecoder1, TDecoder2, TDecoder3, TDecoder4, TDecoder5, TDecoder6, TbitFlt, TFltBPF, TPalseFlt, TPalseFlt2]);
   TRegister.AddType<TTelesistem, IDevice>.LiveTime(ltSingletonNamed);
   TRegister.AddType<TUso1, ITelesistem>.LiveTime(ltTransientNamed);

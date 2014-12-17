@@ -54,7 +54,7 @@ class function TControlRootForm<T, SERV>.ExistsSubDev(root: IRootDevice; const C
  var
   sd: ISubDevice;
 begin
-  for sd in root.GetSubDevices do if SameText(sd.Category.Category, Categ) and SameText(sd.Caption, Capt) then
+  for sd in root.GetSubDevices do if SameText(sd.Category.Category, Categ) and (SameText(sd.Caption, Capt) or (Capt = '')) then
    begin
     dev := sd;
     Exit(True);

@@ -46,7 +46,7 @@ begin
   inherited;
   if GContainer.TryGetInstKnownServ(TypeInfo(IDevice), ControlName, i) and Supports(i, IRootDevice, d) then
    begin
-    if ExistsSubDev(d, 'Усо', 'Усо телесистемы', s) then Bind('C_Uso', s, ['S_Data']);
+    if ExistsSubDev(d, 'Усо', '', s) then Bind('C_Uso', s, ['S_Data']);
     if ExistsSubDev(d, 'Фильтры', 'генератор шума',  s) then Bind('C_Noise', s, ['S_Data']);
     if ExistsSubDev(d, 'Фильтры', 'Фильтр FFT',  s) then Bind('C_fft', s, ['S_Data']);
    end;
