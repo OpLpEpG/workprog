@@ -17,6 +17,7 @@ type
     procedure ChartAfterDraw(Sender: TObject);
     procedure N1Click(Sender: TObject);
   private
+    cntOld: Integer;
     Fdata: TTelesistemDecoder;
   public
     procedure DoData(Data: TTelesistemDecoder); override;
@@ -58,10 +59,14 @@ procedure TFrameFindSP.DoData(Data: TTelesistemDecoder);
 begin
   FData :=  Data;
   if Data.KadrLen <> Chart.BottomAxis.Maximum then  Chart.BottomAxis.Maximum := Data.KadrLen;
-  SeriesCorr.Clear;
-  SeriesCorr.AddArray(Data.FindSpData.Corr);
+
+  if Length(Data.FindSpData.Corr) > 0 then
+   begin
+    SeriesCorr.Clear;
+    SeriesCorr.AddArray(Data.FindSpData.Corr);
+   end;
   Assert(SeriesCorr.Count <= Data.KadrLen, 'SeriesCorr.Count > Data.KadrLen');
-  if SeriesCorr.Count >= Data.KadrLen then SeriesCorr.Clear;
+//  if SeriesCorr.Count >= Data.KadrLen then SeriesCorr.Clear;
 //  for d in Data.FindSpData.LastCorr do SeriesCorr.Add(d);
   SeriesSP.Clear;
   with Fdata.FindSPData do

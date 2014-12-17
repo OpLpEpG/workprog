@@ -103,12 +103,51 @@ end;
     Result := True;
   end;
 
+
+procedure CreateSuncro(Bits: Integer; var CurBit: Boolean; var bin: TArray<Boolean>);
+ const
+  SINCRO: array[0..7] of Integer = (5,  123, 1850, 1837, 1691, 2345, 1725, 1973);
+  var
+   n: Integer;
+   procedure AddBit(bit: Boolean);
+    var
+     i: Integer;
+   begin
+     if not bit then CurBit := not CurBit;
+     for I := 0 to bits-1 do bin[n+i] := CurBit;
+     Inc(n, bits);
+   end;
+  var
+   b,i: Integer;
+   cod: Word;
+begin
+  n := 0;
+  SetLength(bin, Bits*(Length(SINCRO)*16));
+  for I := 0 to Length(SINCRO)-1 do
+   begin
+    if SINCRO[i] > 2583 then raise Exception.Create('BAD NUMBER FIBONAHI > 2583');
+    cod := FIBONACH_CODES[SINCRO[i]];
+    for b := 0 to 15 do
+     begin
+      AddBit((cod and $8000) <> 0);
+      cod := cod shl 1;
+     end;
+   end;
+end;
+
 procedure TFormTest.FormCreate(Sender: TObject);
+ const
+  SINCRO: array[0..7] of Integer = (5,  123, 1850, 1837, 1691, 2345, 1725, 1973);
  var
   i, j, n2: Integer;
   s: string;
   f: file;
 begin
+  for I := 0 to Length(SINCRO)-1 do
+   begin
+    memo.Lines.Add(IntToHex(FIBONACH_CODES[SINCRO[i]], 4));
+   end;
+
   rm := RMCodes;
   TArray.Sort<Cardinal>(rm);
 //  for i := 0 to 31 do if not Checkword(rm[i], 32) then Memo.Lines.Add(IntToBin(rm[i], 32));

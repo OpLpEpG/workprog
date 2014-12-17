@@ -4,7 +4,9 @@ interface
 
 uses System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Dev.Telesistem.Decoder,
      Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools,
-     Math.Telesistem;
+     Math.Telesistem, System.IOUtils,
+     JvExControls, JvInspector, JvComponentBase,
+     Vcl.ExtCtrls, Vcl.Dialogs, Vcl.Forms;
 
 const
 //   TELESIS_USO: TSubDeviceInfo = (typ: [sdtUniqe, sdtMastExist]; Category: 'Усо');
@@ -70,29 +72,66 @@ type
     FFT_AMP_LEN = FFT_LEN div 2;
 
 type
-  TUso1 = class(TSubDevWithForm<TUsoData>, ITelesistem)
+  TUsoRoot = class(TSubDevWithForm<TUsoData>, ITelesistem)
   private
     FFrequency: TTelesisFrequency;
-    FKSum: Integer;
-    RecRun: TRecRun;
-    Tst_Data: TArray<Boolean>;
-    FData: TArray<Double>;
-    FTestUsoData: TTestUsoData;
     procedure SetFrequency(const Value: TTelesisFrequency);
-    procedure SetTestUsoData(const Value: TTestUsoData);
   protected
+    FFileStream: TFileStream;
+    FKSum: Integer;
+    FData: TArray<Double>;
     function GetCategory: TSubDeviceInfo; override;
-    function GetCaption: string; override;
-    procedure DeleteData(DataSize: integer); override;
   public
-    procedure InputData(Data: Pointer; DataSize: integer); override;
+    procedure DeleteData(DataSize: integer); override;
     constructor Create; override;
+    destructor Destroy; override;
     [DynamicAction('Показать осцилограмму усо <I> ', '<I>', 52, '0:Телесистема.<I>', 'Показать осцилограмму усо')]
     procedure DoSetup(Sender: IAction); override;
   published
     [ShowProp('Частота прибора')] property Frequency: TTelesisFrequency read FFrequency write SetFrequency default afq10;
-    [ShowProp('Тестовые даррые')] property TestUsoData: TTestUsoData read FTestUsoData write SetTestUsoData default tudNone;
-   end;
+  end;
+
+  TUso1 = class(TUsoRoot)
+  private
+    RecRun: TRecRun;
+    Tst_Data: TArray<Boolean>;
+    FTestUsoData: TTestUsoData;
+    FWriteToFile: Boolean;
+    procedure SetTestUsoData(const Value: TTestUsoData);
+    procedure SetWriteToFile(const Value: Boolean);
+  protected
+    function GetCaption: string; override;
+  public
+    procedure InputData(Data: Pointer; DataSize: integer); override;
+  published
+    [ShowProp('Тестовые данные')] property TestUsoData: TTestUsoData read FTestUsoData write SetTestUsoData default tudNone;
+    [ShowProp('Вести запись в файл')] property WriteToFile: Boolean read FWriteToFile write SetWriteToFile default False;
+  end;
+
+  TusoFile = class(TUsoRoot)
+  public
+   type
+    TUsoFileName = string;
+  private
+    FTimer: TTimer;
+    FSpeed: Integer;
+    FPosition: Int64;
+    FUsoFileName: TUsoFileName;
+    procedure SetSpeed(const Value: Integer);
+    procedure OnTimer(Sender: TObject);
+    procedure SetPosition(const Value: Int64);
+    procedure SetUsoFileName(const Value: TUsoFileName);
+  protected
+    function GetCaption: string; override;
+  public
+    constructor Create; override;
+    destructor Destroy; override;
+    procedure InputData(Data: Pointer; DataSize: integer); override;
+  published
+    [ShowProp('Скорость воспроизведения')] property Speed: Integer read FSpeed write SetSpeed default 100;
+    [ShowProp('Позиция')] property Position: Int64 read FPosition write SetPosition default 0;
+    [ShowProp('Файл')] property UsoFileName: TUsoFileName read FUsoFileName write SetUsoFileName;
+  end;
 
 //   TUso2 = class(TUso1)
 //   protected
@@ -111,8 +150,8 @@ type
      function GetCategory: TSubDeviceInfo; override;
      function GetCaption: string; override;
      procedure OnUserRemove; override;
-     procedure DeleteData(DataSize: integer); override;
    public
+     procedure DeleteData(DataSize: integer); override;
      procedure InputData(Data: Pointer; DataSize: integer); override;
      constructor Create; override;
      [DynamicAction('Показать спектр <I> ', '<I>', 52, '0:Телесистема.<I>', 'спектр')]
@@ -396,9 +435,9 @@ end;
 
 {$REGION ' uso '}
 
-{ TUso1 }
+{ TUsoRoot }
 
-constructor TUso1.Create;
+constructor TUsoRoot.Create;
 begin
   FKSum := 1;
   FFrequency :=  afq10;
@@ -409,32 +448,49 @@ begin
   inherited;
 end;
 
-procedure TUso1.DeleteData(DataSize: integer);
-// var
-//  n: Integer;
+procedure TUsoRoot.DeleteData(DataSize: integer);
 begin
-//  n := FS_Data.Fifo.Count;
   FS_Data.Fifo.Delete(DataSize);
-{  TDebug.Log('USO.Count  %d  %d   DataSize  %d      ', [n, FS_Data.Fifo.Count, DataSize]);
-  if n - FS_Data.Fifo.Count <> DataSize then
-   begin
-    TDebug.Log(' EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEe ');
-   end;}
 end;
 
-procedure TUso1.DoSetup(Sender: IAction);
+destructor TUsoRoot.Destroy;
+begin
+  if Assigned(FFileStream) then FreeAndNil(FFileStream);
+  inherited;
+end;
+
+procedure TUsoRoot.DoSetup(Sender: IAction);
 begin
   inherited;
 end;
 
+function TUsoRoot.GetCategory: TSubDeviceInfo;
+begin
+  Result := TELESIS_STRUCURE[0];
+end;
+
+procedure TUsoRoot.SetFrequency(const Value: TTelesisFrequency);
+begin
+  if FFrequency <> Value then
+   begin
+    FFrequency := Value;
+    case FFrequency of
+        afq40: FKSum := 1;
+        afq20: FKSum := 1;
+        afq10: FKSum := 1;
+         afq5: FKSum := 2;
+       afq2p5: FKSum := 4;
+      afq1p25: FKSum := 8;
+    end;
+    Owner.PubChange;
+   end;
+end;
+
+{ TUso1 }
+
 function TUso1.GetCaption: string;
 begin
   Result := 'Усо телесистемы'
-end;
-
-function TUso1.GetCategory: TSubDeviceInfo;
-begin
-  Result := TELESIS_STRUCURE[0];
 end;
 
 procedure TUso1.InputData(Data: Pointer; DataSize: integer);
@@ -475,6 +531,7 @@ begin
       Inc(Ncanal);
       if Ncanal >= 3 then
        begin
+        if Assigned(FFileStream) then FFileStream.WriteData(SmallInt(Swap(wrd)));
         SumDat := SumDat + SmallInt(Swap(wrd));
         Inc(Nfq);
         if Nfq >= FKSum then
@@ -514,23 +571,6 @@ begin
       end;
     Dec(DataSize);
     Inc(p);
-   end;
-end;
-
-procedure TUso1.SetFrequency(const Value: TTelesisFrequency);
-begin
-  if FFrequency <> Value then
-   begin
-    FFrequency := Value;
-    case FFrequency of
-        afq40: FKSum := 1;
-        afq20: FKSum := 1;
-        afq10: FKSum := 1;
-         afq5: FKSum := 2;
-       afq2p5: FKSum := 4;
-      afq1p25: FKSum := 8;
-    end;
-    Owner.PubChange;
    end;
 end;
 
@@ -585,6 +625,153 @@ begin
     Owner.PubChange;
    end;
 end;
+
+procedure TUso1.SetWriteToFile(const Value: Boolean);
+ {$J+}
+ const
+  i: Integer = 0;
+ {$J-}
+  function GetFileName: string;
+  begin
+    Result := Format('%s\Projects\uso_%d.bin',[Tpath.GetDirectoryName(ParamStr(0)), i]);
+  end;
+begin
+  if FWriteToFile <> Value then
+   begin
+    FWriteToFile := Value;
+    if Assigned(FFileStream) then FreeAndNil(FFileStream);
+    if Value then
+     begin
+      i := 0;
+      while TFile.Exists(GetFileName) do Inc(i);
+      FFileStream := TFileStream.Create(GetFileName, fmCreate);
+     end;
+   end;
+end;
+
+
+{ TusoFile }
+
+type
+  TInspUcoFile = class(TJvCustomInspectorItem)
+  protected
+  public
+    constructor Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData); override;
+    procedure Edit; override;
+    procedure InitEdit; override;
+    procedure DoneEdit(const CancelEdits: Boolean = False); override;
+  end;
+
+
+constructor TInspUcoFile.Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData);
+begin
+  inherited;
+  Flags := Flags  + [iifEditButton];
+end;
+
+
+procedure TInspUcoFile.Edit;
+begin
+  with TOpenDialog.Create(nil) do
+  try
+   InitialDir := Tpath.GetFullPath(ParamStr(0)) + 'Projects';
+   Filter :=  'Файл проекта (uso_*.bin)|uso_*.bin';
+   DefaultExt := 'bin';
+   Options := [ofReadOnly,ofHideReadOnly,ofPathMustExist,ofFileMustExist,ofEnableSizing];
+   if Execute(Application.Handle) then Data.AsString := FileName;
+  finally
+   Free;
+  end;
+end;
+
+procedure TInspUcoFile.DoneEdit(const CancelEdits: Boolean);
+begin
+  SetEditing(False);
+end;
+
+procedure TInspUcoFile.InitEdit;
+begin
+  SetEditing(CanEdit);
+end;
+
+constructor TusoFile.Create;
+begin
+  inherited;
+  FTimer := TTimer.Create(nil);
+  FTimer.OnTimer := OnTimer;
+  FSpeed := 100;
+  FTimer.Interval := FSpeed;
+  FTimer.Enabled := True;
+end;
+
+destructor TusoFile.Destroy;
+begin
+  FTimer.Free;
+  inherited;
+end;
+
+function TusoFile.GetCaption: string;
+begin
+  Result := 'Усо файловое';
+end;
+
+procedure TusoFile.InputData(Data: Pointer; DataSize: integer);
+begin
+end;
+
+procedure TusoFile.SetPosition(const Value: Int64);
+begin
+  FPosition := Value;
+  if Assigned(FFileStream) then FFileStream.Position := FPosition;
+end;
+
+procedure TusoFile.SetSpeed(const Value: Integer);
+begin
+  FSpeed := Value;
+  Ftimer.Interval := FSpeed;
+end;
+
+procedure TusoFile.SetUsoFileName(const Value: TUsoFileName);
+begin
+  FUsoFileName := Value;
+  if Assigned(FFileStream) then FreeAndNil(FFileStream);
+  FFileStream := TFileStream.Create(FUsoFileName, fmOpenRead);
+  Position := 0;
+end;
+
+procedure TusoFile.OnTimer(Sender: TObject);
+ const
+  {$J+}
+   SumDat: Integer = 0;
+   Nfq: Integer = 0;
+   i: Integer = 0;
+  {$J-}
+ var
+   ar: array[0..USO_LEN-1] of SmallInt;
+   a: SmallInt;
+begin
+  if Assigned(FFileStream) and (FFileStream.ReadData(ar[0], USO_LEN) = USO_LEN) then for a in ar do
+   begin
+    SumDat := SumDat + a;
+    inc(FPosition, USO_LEN);
+    Inc(Nfq);
+    if Nfq >= FKSum then
+     begin
+      Nfq := 0;
+      FData[i] := SumDat / FKSum * 0.0625;
+      SumDat := 0;
+      inc(i);
+      if i = Length(FData) then
+       begin
+        i := 0;
+        FS_Data.Fifo.Add(@FData[0], Length(FData));
+        NotifyData;
+        if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], Length(FData));
+       end;
+     end;
+   end;
+end;
+
 
 {$ENDREGION}
 
@@ -727,7 +914,7 @@ begin
   SetLength(FltCoeff, FFT_AMP_LEN-1); // нет 0
   for i := 0 to FFT_AMP_LEN div 4-1  do FltCoeff[i] := 1;
 
-//  FNCH(9, 17);
+//  FNCH(15, 45);
 //  FBCH(Round(m-m/1.7), Round(m-m/3));
 
   SetLength(FFdata, FFT_AMP_LEN);
@@ -1042,9 +1229,11 @@ begin
 end;
 
 initialization
-  RegisterClasses([TTelesistem, TUso1, TDecoder1, TDecoder2, TDecoder3, TDecoder4, TDecoder5, TDecoder6, TbitFlt, TFltBPF, TPalseFlt, TPalseFlt2]);
+  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspUcoFile, TypeInfo(TusoFile.TUsoFileName)));
+  RegisterClasses([TTelesistem, TUso1, TusoFile, TDecoder1, TDecoder2, TDecoder3, TDecoder4, TDecoder5, TDecoder6, TbitFlt, TFltBPF, TPalseFlt, TPalseFlt2]);
   TRegister.AddType<TTelesistem, IDevice>.LiveTime(ltSingletonNamed);
   TRegister.AddType<TUso1, ITelesistem>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TusoFile, ITelesistem>.LiveTime(ltTransientNamed);
 //  TRegister.AddType<TUso2, ITelesistem>.LiveTime(ltTransientNamed);
   TRegister.AddType<TbitFlt, ITelesistem>.LiveTime(ltTransientNamed);
   TRegister.AddType<TFltBPF, ITelesistem>.LiveTime(ltTransientNamed);
@@ -1060,6 +1249,7 @@ initialization
 //  TRegister.AddType<TCorrelate, ITelesistem>.LiveTime(ltTransientNamed);
 finalization
   GContainer.RemoveModel<TTelesistem>;
+  GContainer.RemoveModel<TusoFile>;
   GContainer.RemoveModel<TUso1>;
 //  GContainer.RemoveModel<TUso2>;
   GContainer.RemoveModel<TbitFlt>;

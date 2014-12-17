@@ -237,6 +237,8 @@ $664C,$666A,$666B,$6669,$666D,$666C,$6665,$6664,$6666);
 
 implementation
 
+const FB_WORD: array[0..15] of word = (1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597);
+
 procedure EncodeFSK(const Data: array of word; Bits: Integer; var bin: TArray<Boolean>);
   var
    n: Integer;

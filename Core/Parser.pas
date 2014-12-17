@@ -619,7 +619,7 @@ begin
     ExeSc.Lines.Add('begin');
     ExeSc.Lines.Add('end.');
 
-    ExeSc.Lines.SaveToFile(ExtractFilePath(ParamStr(0))+'~tst\ExeSc.txt');
+//    ExeSc.Lines.SaveToFile(ExtractFilePath(ParamStr(0))+'~tst\ExeSc.txt');
 
     if not ExeSc.Compile then MessageDlg('ќшибка компил€ции выполнени€-'+ExeSc.ErrorMsg+':'+ExeSc.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
 
