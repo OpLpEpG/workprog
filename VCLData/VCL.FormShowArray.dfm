@@ -45,6 +45,7 @@ object FormShowArray: TFormShowArray
     Shadow.Visible = False
     TopAxis.Visible = False
     View3D = False
+    View3DOptions.Orthogonal = False
     View3DWalls = False
     Zoom.Allow = False
     Zoom.Pen.Visible = False
@@ -58,39 +59,24 @@ object FormShowArray: TFormShowArray
       15
       23)
     ColorPaletteIndex = 19
-    object srDev: TBarSeries
-      Selected.Hover.Visible = False
-      BarBrush.Gradient.EndColor = 16777088
-      BarPen.Color = 4194368
-      BarPen.Width = 0
-      BarPen.Visible = False
-      Marks.Visible = False
-      Marks.Callout.Length = 8
+    object srDev: TFastLineSeries
       Title = #1089#1099#1088#1099#1077
-      Gradient.EndColor = 16777088
-      MultiBar = mbNone
-      Shadow.Visible = False
-      Sides = 28
-      UseYOrigin = False
-      YOrigin = 5.000000000000000000
+      LinePen.Color = 15054131
+      LinePen.Width = 2
+      TreatNulls = tnDontPaint
       XValues.Name = 'X'
       XValues.Order = loAscending
-      YValues.Name = 'Bar'
+      YValues.Name = 'Y'
       YValues.Order = loNone
     end
-    object srCLC: TBarSeries
-      Selected.Hover.Visible = False
-      BarPen.Color = 8388863
-      BarPen.Width = 3
-      BarPen.Visible = False
-      Marks.Visible = False
-      Marks.Callout.Length = 8
+    object srCLC: TFastLineSeries
       Title = #1089' '#1084#1077#1090#1088#1086#1083#1086#1075#1080#1077#1081
-      MultiBar = mbNone
-      Shadow.Visible = False
+      LinePen.Color = 13395626
+      LinePen.Width = 3
+      TreatNulls = tnDontPaint
       XValues.Name = 'X'
       XValues.Order = loAscending
-      YValues.Name = 'Bar'
+      YValues.Name = 'Y'
       YValues.Order = loNone
     end
   end

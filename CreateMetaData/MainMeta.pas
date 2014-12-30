@@ -21,28 +21,28 @@ type
 	VT_VOID,VT_HRESULT,VT_PTR,VT_SAFEARRAY,VT_CARRAY,VT_USERDEFINED,
 	VT_LPSTR,VT_LPWSTR,VT_RECORD=36,
 	VT_I3,VT_UI3,VT_INFO, VT_ADDRES,VT_I2_15,VT_UI2_15, VT_RAM_SIZE,
-	VT_CHIP=56,VT_SERIAL,
+	VT_CHIP=56,VT_SERIAL, VT_I2_15_INV, VT_ARRAY,
 	VT_FILETIME=64,VT_BLOB,VT_STREAM,VT_STORAGE,VT_STREAMED_OBJECT,
 	VT_STORED_OBJECT,VT_BLOB_OBJECT,VT_CF,VT_CLSID);
 
   TparsRec = record
-   Tip, CIData, InfData: string;
+   Tip, CIData, InfData, ArrSz: string;
   end;
 
   TTip = class
    tip: EnumType;
    TypeCiName: string;
-   constructor Create(ATypeCiName: string; Atip: EnumType);
+   constructor Create(ATypeCiName: string; Atip: EnumType); overload;
    function  GetName(const ACiname, ADatName: string): string;
-   procedure DeclareInMeta(ss: TStrings; const ACiname, ADatName: string); virtual;
-   procedure MetaImplement(ss: TStrings; const ACiname, ADatName, Preambula: string); virtual;
+   procedure DeclareInMeta(ss: TStrings; const ACiname, ADatName, ArrSz: string); virtual;
+   procedure MetaImplement(ss: TStrings; const ACiname, ADatName, ArrSz, Preambula: string); virtual;
   end;
 
   TData = class
     tip: TTip;
     DatName: string;
-    CiName: string;
-    constructor Create(const Atip, ACiname, ADatName: string); overload;
+    CiName, ArrSize: string;
+    constructor Create(const Atip, ACiname, ADatName, ArrSz: string); overload;
     constructor Create(const Rec: TparsRec); overload;
     procedure DeclareInMeta(ss: TStrings);
     procedure MetaImplement(ss: TStrings; const Preambula: string);
@@ -52,8 +52,8 @@ type
    DeclaredTypes: TArray<TStrings>;
    Fdt: TArray<TData>;
    constructor Create(ATypeCiName: string; dt: TArray<TparsRec>);
-   procedure DeclareInMeta(ss: TStrings; const ACiname, ADatName: string); override;
-   procedure MetaImplement(ss: TStrings; const ACiname, ADatName, Preambula: string); override;
+   procedure DeclareInMeta(ss: TStrings; const ACiname, ADatName, ArrSz: string); override;
+   procedure MetaImplement(ss: TStrings; const ACiname, ADatName, ArrSz, Preambula: string); override;
    procedure DeclareMetaDataType(const ACiname, ADatName: string);
   end;
 
@@ -124,6 +124,7 @@ begin
  VT_RAM_SIZE: Result := Trim('VT_RAM_SIZE');
      VT_CHIP: Result := Trim('   VT_CHIP');
    VT_SERIAL: Result := Trim(' VT_SERIAL');
+   VT_ARRAY:  Result := Trim('  VT_ARRAY');
   else raise Exception.Create('function EnumToStr(et : EnumType): string;');
   end;
 end;
@@ -141,7 +142,7 @@ procedure TFormMeta.NCompileClick(Sender: TObject);
 
   procedure FetchLine(s: string);
    const
-   CNC: array[0..3] of Char = ('{','}',';',' ');
+   CNC: array[0..5] of Char = ('{', '}', '[', ']', ';',' ');
    var
     i,j: Integer;
     w, c: string;
@@ -158,7 +159,7 @@ procedure TFormMeta.NCompileClick(Sender: TObject);
     i := 1;
     While i <= Length(s) do
      begin
-      for j := 0 to 3 do if s[i] = CNC[j] then
+      for j := 0 to High(CNC) do if s[i] = CNC[j] then
        begin
         w := Copy(s, 1, i-1);
         if W <>'' then CArray.Add<string>(aw, w);
@@ -202,7 +203,12 @@ procedure TFormMeta.NCompileClick(Sender: TObject);
     Result.Tip := GetAw;
     Result.CIData := GetAw;
     Result.InfData := '';
-    if not nextAw(';') then raise Exception.Create('function ParsSimple : TparsRec');
+    if nextAw('[', True) then
+     begin
+      Result.ArrSz := GetAw;
+      if not nextAw(']') then raise Exception.Create('not found ]');
+     end;
+    if not nextAw(';') then raise Exception.Create('function ParsSimple : TparsRec not found ;');
     if nextAw('/', True) then Result.InfData := GetAw
   end;
 
@@ -280,9 +286,13 @@ begin
   GTypeDic.Add(TypeCiName, Self);
 end;
 
-procedure TTip.DeclareInMeta(ss: TStrings; const ACiname, ADatName: string);
+procedure TTip.DeclareInMeta(ss: TStrings; const ACiname, ADatName, ArrSz: string);
 begin
-  ss.Add(Format('    varType_t varType%s; uint8_t param%s[sizeof("%s")];', [ACiname, ACiname, GetName(ACiname, ADatName)]));
+  if ArrSz = '' then
+   ss.Add(Format('    varType_t varType%0:s; uint8_t param%0:s[sizeof("%1:s")];', [ACiname, GetName(ACiname, ADatName)]))
+  else
+   ss.Add(Format('    varType_t TypeArr%0:s; uint16_t Arrlen%0:s; varType_t varType%0:s; uint8_t param%s[sizeof("%1:s")];',
+                      [ACiname, GetName(ACiname, ADatName)]));
 end;
 
 function TTip.GetName(const ACiname, ADatName: string): string;
@@ -292,9 +302,12 @@ begin
   else Result := ACiName+ADatName;
 end;
 
-procedure  TTip.MetaImplement(ss: TStrings; const ACiname, ADatName, Preambula: string);
+procedure  TTip.MetaImplement(ss: TStrings; const ACiname, ADatName,ArrSz, Preambula: string);
 begin
-  ss.Add(Format('%s%s, "%s",\', [Preambula, EnumToStr(tip), GetName(ACiname, ADatName)]));
+  if ArrSz = '' then
+   ss.Add(Format('%s%s, "%s",\', [Preambula, EnumToStr(tip), GetName(ACiname, ADatName)]))
+  else
+   ss.Add(Format('%sVT_ARRAY, %s, %s, "%s",\', [Preambula, ArrSz, EnumToStr(tip), GetName(ACiname, ADatName)]));
 end;
 
 { TRecTip }
@@ -308,7 +321,7 @@ begin
   for i :=0 to Length(dt)-1 do Fdt[i] := TData.Create(dt[i]);
 end;
 
-procedure TRecTip.DeclareInMeta(ss: TStrings; const ACiname, ADatName: string);
+procedure TRecTip.DeclareInMeta(ss: TStrings; const ACiname, ADatName, ArrSz: string);
 begin
   ss.Add(Format('    meta_%s_%s meta_%s;', [ACiname, TypeCiName, ACiname]));
 end;
@@ -330,7 +343,7 @@ begin
   GMetaTypeDeclare.Add(key, ss);
 end;
 
-procedure TRecTip.MetaImplement(ss: TStrings; const ACiname, ADatName, Preambula: string);
+procedure TRecTip.MetaImplement(ss: TStrings; const ACiname, ADatName, ArrSz, Preambula: string);
  var
   d: TData;
 begin
@@ -341,27 +354,28 @@ end;
 
 { TData }
 
-constructor TData.Create(const Atip, ACiname, ADatName: string);
+constructor TData.Create(const Atip, ACiname, ADatName,ArrSz: string);
 begin
   if not GTypeDic.TryGetValue(Atip, tip) then raise Exception.Create('constructor TData.Create(const Atip, ACiname, ADatName: string);');
   DatName := ADatName;
   CiName := ACiname;
+  ArrSize := ArrSz;
   if tip is TRecTip then TRecTip(tip).DeclareMetaDataType(CiName, DatName);
 end;
 
 constructor TData.Create(const Rec: TparsRec);
 begin
-  Create(Rec.Tip, Rec.CIData, Rec.InfData);
+  Create(Rec.Tip, Rec.CIData, Rec.InfData, Rec.ArrSz);
 end;
 
 procedure TData.DeclareInMeta(ss: TStrings);
 begin
-  tip.DeclareInMeta(ss, CiName, DatName);
+  tip.DeclareInMeta(ss, CiName, DatName, ArrSize);
 end;
 
 procedure TData.MetaImplement(ss: TStrings; const Preambula: string);
 begin
-  tip.MetaImplement(ss, CiName, DatName, Preambula)
+  tip.MetaImplement(ss, CiName, DatName, ArrSize, Preambula)
 end;
 {$ENDREGION}
 

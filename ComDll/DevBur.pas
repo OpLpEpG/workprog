@@ -103,10 +103,17 @@ resourcestring
   RS_ErrNoInfo = 'Не инициализирована информация об устройствах';
 
 type
+  PStdRead = ^TStdRead;
   TStdRead = packed record
     CmdAdr: Byte;
     ln: Byte;
     constructor Create(addr, command, ReadLength: Byte);
+  end;
+  PStdReadLong = ^TStdReadLong;
+  TStdReadLong = packed record
+    CmdAdr: Byte;
+    ln: Word;
+    constructor Create(addr, command, ReadLength: Word);
   end;
   TAdvStdRead = packed record
     CmdAdr: Byte;
@@ -155,6 +162,15 @@ begin
   CmdAdr := ToAdrCmd(addr, command);
   ln := ReadLength;
 end;
+
+{ TStdReadLong }
+
+constructor TStdReadLong.Create(addr, command, ReadLength: Word);
+begin
+  CmdAdr := ToAdrCmd(addr, command);
+  ln := ReadLength;
+end;
+
 
 { TAdvStdRead }
 
@@ -463,7 +479,7 @@ begin
        begin
         TPars.SetInfo(FMetaDataInfo.Info, Data, n); // parse all data for device
 
-//        FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'GK.xml');
+ //       FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'caliper.xml');
 
         CArray.Add<Integer>(TmpGood,  adr);
        end
@@ -695,10 +711,20 @@ begin
    begin
      Add(procedure()
        var
-        D: TStdRead;
+        D: TStdReadLong;
+        sz: Integer;
       begin
-        D := TStdRead.Create(adr, CMD_WORK, siz);
-        Send(@D, Sizeof(D), procedure(p: Pointer; n: integer)
+        if siz < 255 then
+         begin
+          PStdRead(@D)^ := TStdRead.Create(adr, CMD_WORK, siz);
+          sz := Sizeof(TStdRead);
+         end
+        else
+         begin
+          D := TStdReadLong.Create(adr, CMD_WORK, siz);
+          sz := Sizeof(TStdReadLong);
+         end;
+        Send(@D, sz, procedure(p: Pointer; n: integer)
         begin
           if (n > 0) and (n-1 = siz) and (PByte(p)^ = d.CmdAdr) then
            begin

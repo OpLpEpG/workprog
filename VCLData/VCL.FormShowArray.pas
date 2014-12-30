@@ -4,13 +4,13 @@ interface
 
 uses  DeviceIntf, PluginAPI, ExtendIntf, RootImpl, debug_except, DockIForm, RootIntf, Container, Actns,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VCLTee.TeEngine, VCLTee.Series, Vcl.ExtCtrls, VCLTee.TeeProcs, VCLTee.Chart;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VCLTee.TeEngine, VCLTee.Series, Vcl.ExtCtrls, VCLTee.TeeProcs, VCLTee.Chart, VclTee.TeeGDIPlus;
 
 type
   TFormShowArray = class(TDockIForm)
     ChartCode: TChart;
-    srDev: TBarSeries;
-    srCLC: TBarSeries;
+    srDev: TFastLineSeries;
+    srCLC: TFastLineSeries;
   private
     FDataDevice: string;
     FBindWorkRes: TWorkEventRes;
@@ -80,12 +80,35 @@ end;
 procedure TFormShowArray.SetBindWorkRes(const Value: TWorkEventRes);
  var
   n: IXMLNode;
+  a: TArray<Double>;
+  //d: Double;
 begin
   FBindWorkRes := Value;
-  srDev.Clear;
-  srCLC.Clear;
-  if TryGetX(FBindWorkRes.Work, XMLPath+'.'+T_DEV, n, AT_VALUE) and (n.NodeValue <> '') then srDev.AddArray(TPars.ArrayStrToArray(n.NodeValue));
-  if TryGetX(FBindWorkRes.Work, XMLPath+'.'+T_CLC, n, AT_VALUE) and (n.NodeValue <> '') then srCLC.AddArray(TPars.ArrayStrToArray(n.NodeValue));
+  if TryGetX(FBindWorkRes.Work, XMLPath+'.'+T_DEV, n, AT_VALUE) then if (n.NodeValue <> '') and (n.NodeValue <> null) then
+   begin
+    srDev.BeginUpdate;
+    try
+      srDev.Clear;
+      a := TPars.ArrayStrToArray(n.NodeValue);
+      if Length(a) <> 681 then
+       begin
+        TDebug.Log('  BAD LEM ARRAY %d',[Length(a)]);
+       end;
+  //    for d in a do srDev.Add(d);
+      srDev.AddArray(a);
+    finally
+     srDev.EndUpdate;
+    end
+   end
+  else
+   begin
+    TDebug.Log('  BAD NO DATA  ');
+   end;
+//  if TryGetX(FBindWorkRes.Work, XMLPath+'.'+T_CLC, n, AT_VALUE) and (n.NodeValue <> '') then
+//   begin
+//    srCLC.Clear;
+//    srCLC.AddArray(TPars.ArrayStrToArray(n.NodeValue));
+//   end;
 end;
 
 procedure TFormShowArray.SetRemoveDevice(const Value: string);

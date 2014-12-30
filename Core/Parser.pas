@@ -34,6 +34,7 @@ type
     varChip =   varRecord+20;
     varSerial = varRecord+21;
     var_i2_15b_inv  = varRecord+22;
+    var_array  = varRecord+23;
    type
     TTypeDic = TDictionary<Integer, string>;
     TOutArray = array of Byte;
@@ -68,9 +69,10 @@ type
     class procedure DeInit;
     { TODO : сделать ToValue(Data: Pointer; vt: Integer): TValue }
     class function ToVar(Data: Pointer; vt: Integer): Variant;
-    class procedure FromVar(Data: Variant; vt: Integer; pOutData: Pointer);
+    class procedure FromVar(Data: Variant; vt: Integer; pOutData: Pointer); overload;
+    class procedure FromVar(DataArr: string; vt, arr_len: Integer; pOutData: Pointer); overload;
     class function HorizontToWord(Data: Word; vt: Integer): Word;
-    class function WordsToString(Data: PWord; cnt, vt: Integer): string;
+    class function ArrayToString(Data: PByte; cnt, vt: Integer): string;
   end;
 
 implementation
@@ -89,6 +91,24 @@ begin
   end;
 end;
 
+
+class procedure TPars.FromVar(DataArr: string; vt, arr_len: Integer; pOutData: Pointer);
+ var
+  a: TArray<string>;
+  s: string;
+  n: Integer;
+  p: PByte;
+begin
+  a := DataArr.Split([' '], ExcludeEmpty);
+  if Length(a) <> arr_len then raise EBaseException.Create('ошибка преобразования массива Length(a) <> arr_len');
+  p := pOutData;
+  n := VarTypeToLength(vt);
+  for s in a do
+   begin
+    FromVar(s, vt, p);
+    inc(p,n);
+   end;
+end;
 
 class function TPars.VarTypeToStr(vt: Integer): string;
 begin
@@ -116,29 +136,19 @@ begin
   else for t in XEnum(XMLScript.ChildNodes[SF].ChildNodes[MD]) do Values.Add(t.NodeName)
 end;
 
-{ TODO : сделать для любых типов }
-class function TPars.WordsToString(Data: PWord; cnt, vt: Integer): string;
+class function TPars.ArrayToString(Data: PByte; cnt, vt: Integer): string;
  var
-  i: Integer;
+  i, n: Integer;
   a: TArray<string>;
 begin
   SetLength(a, cnt);
+  n := VarTypeToLength(vt);
   for i := 0 to cnt-1 do
    begin
     a[i] := ToVar(Data, vt);
-    Inc(Data);
+    Inc(Data, n);
    end;
    Result := string.Join(' ',a);
-
-{  if vt in [var_i2_15b, var_ui2_15b, var_i2_10b, var_i2_14b, var_ui2_14b] then
-   begin
-    SetLength(Result, cnt*2);
-    for i := 0 to cnt-1 do
-     begin
-      PWord(@Result[i*2])^ := HorizontToWord(Data^, vt);
-      Inc(Data);
-     end;
-   end;}
 end;
 
 class function TPars.HorizontToWord(Data: Word; vt: Integer): Word;
@@ -452,7 +462,6 @@ begin
   end;
 end;
 
-{ TODO : написать поддержку массивов }
 class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev: THackEvent = nil);
  var
   CurIndex: Integer;
@@ -463,7 +472,7 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
   end;
   function Add(u: IXMLNode; var sp: PByte; sn: integer): integer; // возвращает размер реальной структуры
    var
-    tp, slen, savelen: integer;
+    tp, arr_len, slen, savelen: integer;
     function AddMetr(const s: string): IXMLNode;
      var
       a: TArray<string>;
@@ -477,13 +486,15 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
       Result := AddMetr(s);
       if (Result.NodeName = T_WRK) or (Result.NodeName = T_RAM) or (Result.NodeName = T_EEPROM) then CurIndex := 0;
     end;
-    function AddXDat(const s: string): Integer;
+    function AddXDat(const s: string; arr: Integer = 1): Integer;
      var
-      ch: IXMLNode;
+      ch, r: IXMLNode;
     begin
-      ch := AddMetr(s).AddChild(T_DEV);
+      r := AddMetr(s);
+      if arr > 1 then r.Attributes[AT_ARRAY] := arr;
+      ch := r.AddChild(T_DEV);
       ch.Attributes[AT_TIP] := tp;
-      Result := VarTypeToLength(tp);
+      Result := VarTypeToLength(tp) * arr;
       ch.Attributes[AT_INDEX] := CurIndex;
       Inc(CurIndex, Result);
     end;
@@ -529,23 +540,35 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
           if Assigned(hev) then hev(sp^, sp + 1);
           u.Attributes[AT_SERIAL] := PWord(@sp[1])^; // parse serial
           Inc(sp, 3); Dec(sn, 3);   // parse tip, serial
-        end
+        end;
+        var_array:
+         begin
+          arr_len := PWord(@sp[1])^; // parse array size
+          Inc(sp, 3); Dec(sn, 3);   // parse tip, array size
+          tp := sp^; //сохраним тип
+          Inc(sp); Dec(sn);   // parse tip
+          Inc(Result, AddXDat(PStr(sp, sn), arr_len)); // parse name
+         end
         else
-        begin
+         begin
           tp := sp^; //сохраним тип
           Inc(sp); Dec(sn);   // parse tip
           Inc(Result, AddXDat(PStr(sp, sn))); // parse name
-        end
+         end;
       end;
-      if sn < 0 then raise Exception.Create('ОШИБКА ИЗВЛЕЧЕНИЯ ИНФОРМАЦИИ О ДАННЫХ!!!');
+      if sn < 0 then
+       begin
+      //  node.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'Prof.xml');
+        raise Exception.Create('ОШИБКА ИЗВЛЕЧЕНИЯ ИНФОРМАЦИИ О ДАННЫХ!!!');
+       end;
      end;
      u.Attributes[AT_SIZE] := Result;
   end;
-// var
-//  test: TArray<Byte>;
+ var
+  test: TArray<Byte>;
 begin
-//  SetLength(test, InfoLen);
-//  move(Info^,test[0],InfoLen);
+  SetLength(test, InfoLen);
+  move(Info^,test[0],InfoLen);
 
   CurIndex := 0;
   Dec(InfoLen); Inc(Info); // parse cmdadr
@@ -630,7 +653,6 @@ begin
   end;
 end;
 
-{ TODO : написать поддержку массивов }
 class procedure TPars.GetData(root: IXMLNode; var Data: TOutArray);
  var
   d: TOutArray;
@@ -639,7 +661,9 @@ begin
    ExecXTree(root, procedure(n: IXMLNode)
    begin
      if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) and n.HasAttribute(AT_VALUE) then
-        FromVar(n.Attributes[AT_VALUE], Integer(n.Attributes[AT_TIP]), @d[Integer(n.Attributes[AT_INDEX])]);
+      if n.ParentNode.HasAttribute(AT_ARRAY) then
+           FromVar(n.Attributes[AT_VALUE], Integer(n.Attributes[AT_TIP]), n.ParentNode.Attributes[AT_ARRAY], @d[Integer(n.Attributes[AT_INDEX])])
+      else FromVar(n.Attributes[AT_VALUE], Integer(n.Attributes[AT_TIP]), @d[Integer(n.Attributes[AT_INDEX])]);
    end);
    Data := d;
 end;
@@ -649,6 +673,9 @@ begin
    ExecXTree(root, procedure(n: IXMLNode)
    begin
      if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) then
+      if n.ParentNode.HasAttribute(AT_ARRAY) then
+        n.Attributes[AT_VALUE] := ArrayToString(Data + Integer(n.Attributes[AT_INDEX]), n.ParentNode.Attributes[AT_ARRAY], n.Attributes[AT_TIP])
+      else
         n.Attributes[AT_VALUE] := ToVar(Data + Integer(n.Attributes[AT_INDEX]), n.Attributes[AT_TIP]);
    end);
 end;
@@ -679,7 +706,8 @@ begin
       begin
        di := Data;
        Inc(di, Integer(n.Attributes[AT_INDEX]));
-       if n.ParentNode.HasAttribute(AT_ARRAY) then n.Attributes[AT_VALUE] := WordsToString(di, n.ParentNode.Attributes[AT_ARRAY], n.Attributes[AT_TIP])
+       if n.ParentNode.HasAttribute(AT_ARRAY) then
+            n.Attributes[AT_VALUE] := ArrayToString(PByte(di), n.ParentNode.Attributes[AT_ARRAY], n.Attributes[AT_TIP])
        else n.Attributes[AT_VALUE] := ToVar(di, n.Attributes[AT_TIP]);
       end;
    end);

@@ -12,9 +12,11 @@ type
     Memo: TMemo;
     Button1: TButton;
     Button2: TButton;
+    Button3: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
   private
     rm: TArray<Cardinal>;
     n1: Cardinal;
@@ -143,6 +145,9 @@ procedure TFormTest.FormCreate(Sender: TObject);
   s: string;
   f: file;
 begin
+  for i := 0 to 2583 do if FIBONACH_ENCODED_PSK[i] = $5555 then Caption :=FIBONACH_CODES[i].ToString();
+
+
   for I := 0 to Length(SINCRO)-1 do
    begin
     memo.Lines.Add(IntToHex(FIBONACH_CODES[SINCRO[i]], 4));
@@ -223,6 +228,29 @@ begin
   for i := 0 to High(FM4) do if GlobCorr(fm4[i]) then Memo.Lines.Add(Format('%5d %x %s',[i, fm4[i], IntToBin(fm4[i], 32)]));
 
 
+end;
+
+
+procedure TFormTest.Button3Click(Sender: TObject);
+const S1 = '//%d';
+		  S2 = 'STRH reg0,  [reg2, 0x00]   // set clock';
+		  S3 = 'LDR  reg5,  [reg3, 0x00]   // считываем GPIOC->IDR';
+		  S4 = 'STRH reg0,  [reg1, 0x00]   // reset clock';
+		  S5 = 'STR  reg5,  [peg, #%d]   // записываем то, что было в GPIOC->IDR, в память со смещением';
+  var
+   i: Integer;
+begin
+  Memo.Clear;
+  Memo.Lines.BeginUpdate;
+  for I := 0 to 680 do
+   begin
+     Memo.Lines.Add(Format(S1,[i]));
+     Memo.Lines.Add(S2);
+     Memo.Lines.Add(S3);
+     Memo.Lines.Add(S4);
+     Memo.Lines.Add(Format(S5,[i*4]));
+   end;
+  Memo.Lines.EndUpdate;
 end;
 
 

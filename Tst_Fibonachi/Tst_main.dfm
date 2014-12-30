@@ -47,4 +47,13 @@ object FormTest: TFormTest
     TabOrder = 2
     OnClick = Button2Click
   end
+  object Button3: TButton
+    Left = 496
+    Top = 70
+    Width = 33
+    Height = 25
+    Caption = 'CR2'
+    TabOrder = 3
+    OnClick = Button3Click
+  end
 end

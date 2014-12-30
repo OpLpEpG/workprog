@@ -205,11 +205,11 @@ begin
      if (FICount+cnt) > $8000 then FICount := 0;
      Move(VBuffer[0], FInput[FICount], cnt);
      Inc(FICount, cnt);
-//     Synchronize(procedure
-//     begin
+     Synchronize(procedure
+     begin
        if Assigned(FIOEvent) then FIOEvent(iosRx, @FInput[FICount-cnt], cnt);
        if Assigned(FProtocol) then FProtocol.EventRxChar(NetConnect);
-//     end);
+     end);
     end;
   except
    on E: Exception do TDebug.DoException(E, False);

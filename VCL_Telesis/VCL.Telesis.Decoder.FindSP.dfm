@@ -94,5 +94,14 @@ object FrameFindSP: TFrameFindSP
       Caption = #1087#1088#1080#1085#1091#1076#1080#1090#1077#1083#1100#1085#1086' '#1057#1055
       OnClick = N1Click
     end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object NPause: TMenuItem
+      AutoCheck = True
+      Caption = #1055#1072#1091#1079#1072
+      Checked = True
+      OnClick = NPauseClick
+    end
   end
 end

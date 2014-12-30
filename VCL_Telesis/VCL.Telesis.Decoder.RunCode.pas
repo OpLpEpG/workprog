@@ -2,7 +2,8 @@ unit VCL.Telesis.Decoder.RunCode;
 
 interface
 
-uses VCL.ControlRootForm, Math.Telesistem, VCL.Telesis.Decoder,  MathIntf,
+uses DeviceIntf, PluginAPI, ExtendIntf, RootImpl, debug_except, DockIForm, RootIntf, Container, Actns, Math.Telesistem,
+  VCL.ControlRootForm,  VCL.Telesis.Decoder,  MathIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, Vcl.StdCtrls, Vcl.Menus;
@@ -27,13 +28,35 @@ type
     srMul: TFastLineSeries;
     srBit: TFastLineSeries;
     srZerro: TFastLineSeries;
+    N3: TMenuItem;
+    NPause: TMenuItem;
+    N4: TMenuItem;
+    N11: TMenuItem;
+    N21: TMenuItem;
+    N31: TMenuItem;
+    N41: TMenuItem;
+    N51: TMenuItem;
+    N61: TMenuItem;
+    N71: TMenuItem;
+    N81: TMenuItem;
+    N91: TMenuItem;
+    N101: TMenuItem;
+    N111: TMenuItem;
+    N121: TMenuItem;
+    N131: TMenuItem;
+    N141: TMenuItem;
+    N151: TMenuItem;
+    N161: TMenuItem;
     procedure ChartAfterDraw(Sender: TObject);
     procedure N1Click(Sender: TObject);
     procedure N2Click(Sender: TObject);
+    procedure NPauseClick(Sender: TObject);
+    procedure NDataClick(Sender: TObject);
   private
     Fdata: TTelesistemDecoder;
     statCnt, statBad: Integer;
     function Root: TDecoderECHOForm; inline;
+    procedure ShowData(idx, CurCode: Integer);
   public
     procedure DoData(Data: TTelesistemDecoder); override;
   end;
@@ -153,6 +176,11 @@ begin
 //   end;
 end;
 
+procedure TFormRunCodes.NDataClick(Sender: TObject);
+begin
+  if Assigned(FData) and (TMenuItem(Sender).Tag <= FData.Codes.CodeCnt) then ShowData(TMenuItem(Sender).Tag-1, FData.Codes.CodeCnt-1);
+end;
+
 procedure TFormRunCodes.N1Click(Sender: TObject);
 begin
   if Assigned(FData) then FData.State := csUserToFindSP;
@@ -164,9 +192,42 @@ begin
   statBad := 0;
 end;
 
+procedure TFormRunCodes.NPauseClick(Sender: TObject);
+begin
+  Root.S_Pause := NPause.Checked;
+end;
+
 function TFormRunCodes.Root: TDecoderECHOForm;
 begin
   Result := TDecoderECHOForm(Owner);
+end;
+
+procedure TFormRunCodes.ShowData(idx, CurCode: Integer);
+  procedure ShowSrs(y: PdoubleArray; s: TFastLineSeries);
+   var
+    i, d: Integer;
+  begin
+    Dec(Pdouble(y), (CurCode - idx +1) * Fdata.DataLen);
+    for i := 0 to Fdata.DataLen - 1 do s.Add(y[i])
+  end;
+ var
+  i: Integer;
+begin
+  with FData.Codes do
+     begin
+      for i := 0 to ChartCode.SeriesCount-1 do  ChartCode.Series[i].Clear;
+
+      for i := 0 to Length(CodData[idx].CodBuf[bftcorr])-1 do SeriesCode.AddXY(i* FData.Bits, CodData[idx].CodBuf[bftcorr][i]);
+    // SeriesCode.AddArray(CodData[CodeCnt-1].Corr);
+
+      if Root.UsoReady then ShowSrs(Fdata.IndexBuffer(Root.C_Uso.Fifo), srSignal);
+      if Root.NoiseReady then ShowSrs(Fdata.IndexBuffer(Root.C_Noise.FifoFShum), srNoise);
+      if Root.fftReady then ShowSrs(Fdata.IndexBuffer(Root.C_fft.FifoData), srData);
+
+      srMul.AddArray(CodData[idx].CodBuf[bftMul]);
+      srBit.AddArray(CodData[idx].CodBuf[bftBit]);
+      srZerro.AddArray(CodData[idx].CodBuf[bftZerro]);
+     end;
 end;
 
 end.

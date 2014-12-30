@@ -34,12 +34,35 @@ type
     constructor Create(DevAdr: Byte; var addr: DWORD);
   end;
 
+  PRamWriteNew =^TRamWriteNew;
+  TRamWriteNew = packed record
+  private
+    data: TArray<Byte>;
+    function GetItem(index: Integer): DWORD;
+    procedure SetItem(index: Integer; const Value: DWORD);
+  public
+    from: DWORD;
+    Count: Integer;
+    function CmdAdr: Byte;
+    function Ptr: Pointer;
+    function Size: Integer;
+    constructor Create(DevAdr: Byte; afrom: DWORD; alen: word);
+    property Item[index: Integer]: DWORD read GetItem write SetItem;
+  end;
+
   PRamRead =^TRamRead;
   TRamRead = packed record
     CmdAdr: Byte;
     PH, P6LB2H, BL: Byte;
     Length: word;
     constructor Create(DevAdr: Byte; RmAdr: DWord; len: word);
+  end;
+
+  PRamReadNew =^TRamReadNew;
+  TRamReadNew = packed record
+    CmdAdr: Byte;
+    Adres: DWORD;
+    Length: word;
   end;
 
   EFormRamTestError = class(EBaseException);
@@ -58,10 +81,22 @@ type
     lbBaseW: TLabel;
     edPageR: TEdit;
     btClear: TButton;
+    edArdesWrite: TEdit;
+    btWriteRam: TButton;
+    edAdresRead: TEdit;
+    btReadRam: TButton;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    elLenWrite: TEdit;
+    btLenRead: TEdit;
+    Label6: TLabel;
     procedure btSetBaseClick(Sender: TObject);
     procedure btWriteClick(Sender: TObject);
     procedure btReadClick(Sender: TObject);
     procedure btClearClick(Sender: TObject);
+    procedure btWriteRamClick(Sender: TObject);
+    procedure btReadRamClick(Sender: TObject);
   private
     function GetDevice(adr: Integer): ILowLevelDeviceIO;
     { Private declarations }
@@ -193,9 +228,62 @@ begin
 end;
 
 
+procedure TFormRamTest.btWriteRamClick(Sender: TObject);
+ var
+  lld: ILowLevelDeviceIO;
+  d: TRamWriteNew;
+  adr: Integer;
+  adres: DWORD;
+  len: Word;
+begin
+  adr := StrToInt(edADR.Text);
+  adres := StrToInt('$' + edArdesWrite.Text);
+  len := StrToInt('$' + elLenWrite.Text);
+  d := TRamWriteNew.Create(Adr, adres, len);
+  lld := GetDevice(adr);
+  lld.SendROW(d.Ptr, d.Size, procedure(p: Pointer; n: integer)
+  begin
+    if (n = 2) and (PByteArray(p)[0] = d.CmdAdr) and (PByteArray(p)[1] = 1) then
+      begin
+       sb.Panels[0].Text := Format('Записано c %x длина(DWORD) %x', [adres, len]);
+      end
+    else sb.Panels[0].Text := Format('Ошибка записи %x %x ', [adres, len]);
+  end, 2000);
+end;
+
+
 function ToAdrCmd(a, cmd: Byte): Byte;
 begin
   Result := (a shl 4) or cmd;
+end;
+
+procedure TFormRamTest.btReadRamClick(Sender: TObject);
+  type
+   PDwordArray = ^Tda;
+   Tda = array [0..$8000-1] of DWORD;
+ var
+  lld: ILowLevelDeviceIO;
+  a: TRamReadNew;
+  adr: Integer;
+begin
+  adr := StrToInt(edADR.Text);
+  a.CmdAdr := ToAdrCmd(adr, CMD_ERAM);
+  a.Adres := StrToInt('$' + edAdresRead.Text);
+  a.Length := StrToInt('$' + btLenRead.Text)*4;
+  lld := GetDevice(adr);
+  lld.SendROW(@a, SizeOf(a), procedure(p: Pointer; n: integer)
+   var
+    i: Integer;
+    d: PDwordArray;
+  begin
+    if ((a.Length+1) = n) and (PByteArray(p)[0] = a.CmdAdr) then
+     begin
+       memo.Lines.BeginUpdate;
+       d := @PByteArray(p)[1];
+       for i := 0 to a.Length div 4 - 1 do memo.Text := memo.Text + Format('%8.8x ',[d[i]]);
+       memo.Lines.EndUpdate;
+     end;
+  end, 2000);
 end;
 
 { TRamWrite }
@@ -234,6 +322,52 @@ begin
   BL := base and $FF;
   P6LB2H := (page shl 2) or (base shr 8);
   Length := len;
+end;
+
+{ TRamWriteNew }
+
+constructor TRamWriteNew.Create(DevAdr: Byte; afrom: DWORD; alen: word);
+ var
+  i : DWORD;
+begin
+  SetLength(data, alen*4+1+4);
+  data[0] := ToAdrCmd(DevAdr, CMD_ERAM_WRITE);
+  from := afrom;
+  Count := alen;
+  for i := 0 to Count-1 do Item[i] := afrom + i;
+end;
+
+function TRamWriteNew.CmdAdr: Byte;
+begin
+  Result := data[0];
+end;
+
+function TRamWriteNew.GetItem(index: Integer): DWORD;
+ var
+  pw: PDWORD;
+begin
+  pw := @data[1+4];
+  inc(pw, index);
+  Result := pw^;
+end;
+
+function TRamWriteNew.Ptr: Pointer;
+begin
+  Result := @data[0];
+end;
+
+procedure TRamWriteNew.SetItem(index: Integer; const Value: DWORD);
+ var
+  pw: PDWORD;
+begin
+  pw := @data[1+4];
+  inc(pw, index);
+  pw^ := Value;
+end;
+
+function TRamWriteNew.Size: Integer;
+begin
+  Result := Length(data);
 end;
 
 initialization

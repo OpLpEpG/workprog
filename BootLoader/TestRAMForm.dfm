@@ -2,7 +2,7 @@ object FormRamTest: TFormRamTest
   Left = 0
   Top = 0
   Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1087#1072#1084#1103#1090#1080
-  ClientHeight = 307
+  ClientHeight = 495
   ClientWidth = 584
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -15,7 +15,7 @@ object FormRamTest: TFormRamTest
   TextHeight = 13
   object sb: TStatusBar
     Left = 0
-    Top = 288
+    Top = 476
     Width = 584
     Height = 19
     Panels = <
@@ -27,7 +27,7 @@ object FormRamTest: TFormRamTest
     Left = 121
     Top = 0
     Width = 463
-    Height = 288
+    Height = 476
     Align = alClient
     Font.Charset = RUSSIAN_CHARSET
     Font.Color = clWindowText
@@ -42,7 +42,7 @@ object FormRamTest: TFormRamTest
     Left = 0
     Top = 0
     Width = 121
-    Height = 288
+    Height = 476
     Align = alLeft
     TabOrder = 2
     object Label1: TLabel
@@ -69,6 +69,36 @@ object FormRamTest: TFormRamTest
       Width = 6
       Height = 13
       Caption = '0'
+    end
+    object Label3: TLabel
+      Left = 6
+      Top = 247
+      Width = 52
+      Height = 13
+      Caption = #1072#1076#1088#1077#1089' HEX'
+    end
+    object Label4: TLabel
+      Left = 6
+      Top = 335
+      Width = 52
+      Height = 13
+      Caption = #1072#1076#1088#1077#1089' HEX'
+    end
+    object Label5: TLabel
+      Left = 68
+      Top = 231
+      Width = 39
+      Height = 26
+      Caption = #1076#1083#1080#1085#1072' DWORD'
+      WordWrap = True
+    end
+    object Label6: TLabel
+      Left = 64
+      Top = 322
+      Width = 39
+      Height = 26
+      Caption = #1076#1083#1080#1085#1072' DWORD'
+      WordWrap = True
     end
     object edADR: TEdit
       Left = 87
@@ -138,5 +168,55 @@ object FormRamTest: TFormRamTest
       TabOrder = 7
       OnClick = btClearClick
     end
+    object edArdesWrite: TEdit
+      Left = 5
+      Top = 261
+      Width = 53
+      Height = 21
+      TabOrder = 8
+      Text = '0'
+    end
+    object btWriteRam: TButton
+      Left = 5
+      Top = 288
+      Width = 110
+      Height = 25
+      Caption = #1079#1072#1087#1080#1089#1100' '#1074' '#1087#1072#1084#1103#1090#1100
+      TabOrder = 9
+      OnClick = btWriteRamClick
+    end
+    object edAdresRead: TEdit
+      Left = 6
+      Top = 351
+      Width = 52
+      Height = 21
+      TabOrder = 10
+      Text = '0'
+    end
+    object btReadRam: TButton
+      Left = 5
+      Top = 378
+      Width = 110
+      Height = 25
+      Caption = #1095#1080#1090#1072#1090#1100' '#1087#1072#1084#1103#1090#1100
+      TabOrder = 11
+      OnClick = btReadRamClick
+    end
+    object btLenRead: TEdit
+      Left = 62
+      Top = 351
+      Width = 53
+      Height = 21
+      TabOrder = 12
+      Text = '8'
+    end
+  end
+  object elLenWrite: TEdit
+    Left = 62
+    Top = 261
+    Width = 53
+    Height = 21
+    TabOrder = 3
+    Text = '0'
   end
 end

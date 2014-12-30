@@ -764,8 +764,13 @@ begin
 end;
 
 procedure TIForm.Bind(Control: IInterface; const ControlExprStr: string; const SourceExpr: array of string);
+ var
+  i: IInterfaceComponentReference;
 begin
-  TBindHelper.Bind((Control as IInterfaceComponentReference).GetComponent, ControlExprStr, Self, SourceExpr);
+  if Supports(Control, IInterfaceComponentReference, i) then
+       TBindHelper.Bind(i.GetComponent, ControlExprStr, Self, SourceExpr)
+  else
+       TBindHelper.Bind(TObject(Control), ControlExprStr, Self, SourceExpr)
 end;
 
 function TIForm.QueryInterface(const IID: TGUID; out Obj): HResult;

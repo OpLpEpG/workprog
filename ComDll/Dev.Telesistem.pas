@@ -118,10 +118,12 @@ type
     FSpeed: Integer;
     FPosition: TPosition;
     FUsoFileName: TUsoFileName;
+    FC_Pause: Boolean;
     procedure SetSpeed(const Value: Integer);
     procedure OnTimer(Sender: TObject);
     procedure SetPosition(const Value: TPosition);
     procedure SetUsoFileName(const Value: TUsoFileName);
+    procedure SetC_Pause(const Value: Boolean);
   protected
     function GetCaption: string; override;
   public
@@ -130,6 +132,7 @@ type
     procedure InputData(Data: Pointer; DataSize: integer); override;
     [DynamicAction('Показать осцилограмму усо <I> ', '<I>', 52, '0:Телесистема.<I>', 'Показать осцилограмму усо')]
     procedure DoSetup(Sender: IAction); override;
+    property C_Pause: Boolean read FC_Pause write SetC_Pause;
   published
     [ShowProp('Скорость воспроизведения')] property Speed: Integer read FSpeed write SetSpeed default 100;
     [ShowProp('Позиция')] property Position: TPosition read FPosition write SetPosition default 0;
@@ -141,6 +144,15 @@ type
      FDataIn, FDataOut, FFData, FFDataFlt, FltCoeff: TArray<Double>;
      FFourier: IFourier;
      FDataCnt: Integer;
+    FFVch2: Integer;
+    FFVch1: Integer;
+    FFNch2: Integer;
+    FFNch1: Integer;
+    procedure SetFNch1(const Value: Integer);
+    procedure SetFNch2(const Value: Integer);
+    procedure SetFVch1(const Value: Integer);
+    procedure SetFVch2(const Value: Integer);
+    procedure SetupFilter;
    protected
      procedure FBCH(from, too: Integer);
      procedure FNCH(from, too: Integer);
@@ -154,6 +166,11 @@ type
      constructor Create; override;
      [DynamicAction('Показать спектр <I> ', '<I>', 52, '0:Телесистема.<I>', 'спектр')]
      procedure DoSetup(Sender: IAction); override;
+  published
+    [ShowProp('ФНЧ 1')] property FNch1: Integer read FFNch1 write SetFNch1;
+    [ShowProp('ФНЧ 2')] property FNch2: Integer read FFNch2 write SetFNch2;
+    [ShowProp('ФВЧ 1')] property FVch1: Integer read FFVch1 write SetFVch1;
+    [ShowProp('ФВЧ 2')] property FVch2: Integer read FFVch2 write SetFVch2;
    end;
 
    TbitFlt = class(TSubDevWithForm<TUsoData>, ITelesistem)
@@ -506,7 +523,7 @@ procedure TUso1.InputData(Data: Pointer; DataSize: integer);
    p: PByte;
 begin
 
-{ while True do
+ while True do
   begin
     if FTestUsoData <> tudNone then
      begin
@@ -523,9 +540,9 @@ begin
       if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], Length(FData));
       Exit;
      end;
-  end;}
+  end;
 
- p := Data;
+{ p := Data;
   with RecRun do while DataSize > 0 do
    begin
     if HSync then
@@ -574,7 +591,7 @@ begin
       end;
     Dec(DataSize);
     Inc(p);
-   end;
+   end; }
 end;
 
 procedure TUso1.SetTestUsoData(const Value: TTestUsoData);
@@ -763,6 +780,12 @@ procedure TusoFile.InputData(Data: Pointer; DataSize: integer);
 begin
 end;
 
+procedure TusoFile.SetC_Pause(const Value: Boolean);
+begin
+  FC_Pause := Value;
+  FTimer.Enabled := FC_Pause;
+end;
+
 procedure TusoFile.SetPosition(const Value: TPosition);
 begin
   FPosition := Value;
@@ -779,7 +802,8 @@ procedure TusoFile.SetUsoFileName(const Value: TUsoFileName);
 begin
   FUsoFileName := Value;
   if Assigned(FFileStream) then FreeAndNil(FFileStream);
-  FFileStream := TFileStream.Create(FUsoFileName, fmOpenRead);
+  if TFile.Exists(FUsoFileName) then FFileStream := TFileStream.Create(FUsoFileName, fmOpenRead)
+  else FUsoFileName := '';
   Position := 0;
 end;
 
@@ -949,6 +973,11 @@ constructor TFltBPF.Create;
  var
   i: Integer;
 begin
+  FFNch2 := 1;
+  FFNch1 := 20;
+  FFVch2 := 100;
+  FFVch1 := 120;
+
   if not Assigned(FFourier) then {FFourier := TFFourier.Create;} FourierFactory(FFourier);
   SetLength(FdataIn, FFT_LEN);
   SetLength(FDataOut, FFT_LEN);
@@ -1082,6 +1111,39 @@ procedure TFltBPF.OnUserRemove;
 begin
   inherited;
   if Assigned(FSubDevice) and (FDataCnt > FFT_OVERSAMP) then FSubDevice.InputData(@FDataIn[FFT_OVERSAMP], FDataCnt - FFT_OVERSAMP);
+end;
+
+procedure TFltBPF.SetFNch1(const Value: Integer);
+begin
+  FFNch1 := Value;
+  SetupFilter;
+end;
+
+procedure TFltBPF.SetFNch2(const Value: Integer);
+begin
+  FFNch2 := Value;
+  SetupFilter;
+end;
+
+procedure TFltBPF.SetFVch1(const Value: Integer);
+begin
+  FFVch1 := Value;
+  SetupFilter;
+end;
+
+procedure TFltBPF.SetFVch2(const Value: Integer);
+begin
+  FFVch2 := Value;
+  SetupFilter;
+end;
+
+procedure TFltBPF.SetupFilter;
+ var
+  i: Integer;
+begin
+  for i := 0 to FFT_AMP_LEN div 4-1  do FltCoeff[i] := 1;
+  FNCH(FFNch1, FFNch2);
+  FBCH(FFVch1, FFVch2);
 end;
 
 {$ENDREGION}

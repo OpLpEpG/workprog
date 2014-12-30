@@ -14,8 +14,11 @@ type
     SeriesCorr: TFastLineSeries;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
+    N2: TMenuItem;
+    NPause: TMenuItem;
     procedure ChartAfterDraw(Sender: TObject);
     procedure N1Click(Sender: TObject);
+    procedure NPauseClick(Sender: TObject);
   private
     cntOld: Integer;
     Fdata: TTelesistemDecoder;
@@ -26,6 +29,8 @@ type
 implementation
 
 {$R *.dfm}
+
+uses VCL.Telesis.Decoder;
 
 { TFrame1 }
 
@@ -89,6 +94,11 @@ end;
 procedure TFrameFindSP.N1Click(Sender: TObject);
 begin
   if Assigned(FData) then FData.State := csUserToSP;
+end;
+
+procedure TFrameFindSP.NPauseClick(Sender: TObject);
+begin
+  TDecoderECHOForm(Owner).S_Pause := NPause.Checked;
 end;
 
 end.

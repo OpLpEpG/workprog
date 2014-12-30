@@ -4,6 +4,7 @@ interface
 
 uses DeviceIntf, PluginAPI, ExtendIntf, RootImpl, debug_except, DockIForm, RootIntf, Container, Actns, Math.Telesistem,
      VCL.ControlRootForm,
+     System.Bindings.Helper,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
 
@@ -14,9 +15,11 @@ type
     FC_Noise: TFFTData;
     FC_fft: TFFTData;
     FC_Uso: TUsoData;
+    FS_Pause: Boolean;
     procedure SetC_fft(const Value: TFFTData);
     procedure SetC_Noise(const Value: TFFTData);
     procedure SetC_Uso(const Value: TUsoData);
+    procedure SetS_Pause(const Value: Boolean);
   protected
     procedure DoData; override;
     procedure Loaded; override;
@@ -27,6 +30,7 @@ type
     property C_Uso: TUsoData read FC_Uso write SetC_Uso;
     property C_Noise: TFFTData read FC_Noise write SetC_Noise;
     property C_fft: TFFTData read FC_fft write SetC_fft;
+    property S_Pause: Boolean read FS_Pause write SetS_Pause;
   end;
 
 implementation
@@ -47,6 +51,7 @@ begin
   if GContainer.TryGetInstKnownServ(TypeInfo(IDevice), ControlName, i) and Supports(i, IRootDevice, d) then
    begin
     if ExistsSubDev(d, 'Усо', '', s) then Bind('C_Uso', s, ['S_Data']);
+    if ExistsSubDev(d, 'Усо', 'Усо файловое', s) then Bind(s, 'C_Pause', ['S_Pause']);
     if ExistsSubDev(d, 'Фильтры', 'генератор шума',  s) then Bind('C_Noise', s, ['S_Data']);
     if ExistsSubDev(d, 'Фильтры', 'Фильтр FFT',  s) then Bind('C_fft', s, ['S_Data']);
    end;
@@ -73,6 +78,12 @@ procedure TDecoderECHOForm.SetC_Uso(const Value: TUsoData);
 begin
   FC_Uso := Value;
   UsoReady := True;
+end;
+
+procedure TDecoderECHOForm.SetS_Pause(const Value: Boolean);
+begin
+  FS_Pause := Value;
+  TBindings.Notify(Self, 'S_Pause');
 end;
 
 procedure TDecoderECHOForm.DoData;

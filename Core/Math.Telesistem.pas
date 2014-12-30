@@ -702,8 +702,8 @@ begin
      begin
       Inc(BadCodes, CorrCode(CodData[CodeCnt]));
       Inc(CodeCnt);
-      SafeExceEvent();
       Inc(Index, DataLen);
+      SafeExceEvent();
       if CodeCnt >= DataCnt then
        begin
         ForceState(csCheckSP);
@@ -769,9 +769,9 @@ function TFibonachiDecoder.CorrCode(var cd: TTelesistemDecoder.TCodData): Intege
   flt0: TArray<Double>;
 begin
   SetLength(cd.CodBuf[bftcorr], DataCodLen);
-  SetLength(cd.CodBuf[bftMul], DataCodLen*Bits);
-  SetLength(cd.CodBuf[bftBit], DataCodLen*Bits);
-  SetLength(cd.CodBuf[bftZerro], DataCodLen*Bits);
+  SetLength(cd.CodBuf[bftMul], DataLen);
+  SetLength(cd.CodBuf[bftBit], DataLen);
+  SetLength(cd.CodBuf[bftZerro], DataLen);
 
   SetLength(flt0, DataCodLen);
 
