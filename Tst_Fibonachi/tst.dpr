@@ -3,7 +3,8 @@ program tst;
 uses
   Vcl.Forms,
   Tst_main in 'Tst_main.pas' {FormTest},
-  Fibonach in '..\Fibonach.pas';
+  Fibonach in '..\Fibonach.pas',
+  DataProf in '..\DataProf.pas';
 
 {$R *.res}
 

@@ -3,7 +3,7 @@ unit AbstractDev;
 interface
 
 uses RootImpl, DeviceIntf, debug_except, RootIntf, ExtendIntf, tools, XMLScript, Parser, Container,
-     Menus, Generics.Collections, System.SyncObjs, Math,
+     Menus, Generics.Collections, System.SyncObjs, Math, ActiveX,
      Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc,
      System.Bindings.Outputs, RTTI;
 
@@ -147,11 +147,13 @@ type
   protected
     FEvent: TEvent;
 //    Fifo: TFifoBuffer<Byte>;
-    Fifo: TQueueBuffer<Byte>;
+    Fifo: TArray<Byte>;// TQueueBuffer<Byte>;
     FAbstractDevice: TAbstractDevice;
     FOldStatus: TDeviceStatus;
     // глобальные настройки при инициализации
-    FFlagReadToFF, FFastSpeed: Boolean;
+    FFlagReadToFF: Boolean;
+    FFastSpeed: Integer;
+
     FFromTime, FToTime: TDateTime;
     Fadr: Integer;
     FReadRamEvent: TReadRamEvent;
@@ -181,6 +183,8 @@ type
 
     FPacketLen: integer;
 
+    FBinFile: string;
+
 //    procedure CheckCreateStream; virtual;
 //    procedure FillStream(Data: Byte; Size: Integer); virtual;
 //    procedure RoundKadrStream(); virtual;
@@ -199,7 +203,7 @@ type
 //    procedure SetFastSpeed(Flag: Boolean); virtual; safecall;
 //    function GetFastSpeed: Boolean; virtual; safecall;
     procedure DoSetData(pData: Pointer); virtual;
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);virtual;
+    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);virtual;
     procedure Terminate(Res: TResultEvent = nil); virtual;
 //    procedure CheckAndInitByAdr(Adr: Integer; MaxRam: Integer = 0; DefK: Double = 0; FromToAval: Boolean = True); virtual;
     procedure EndExecute(); virtual;
@@ -445,6 +449,7 @@ type
     procedure CheckOpen; override;
     procedure Send(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1); override;
     class function Enum: TArray<string>; override;
+    property Com: TComPort read FCom;
   end;
 
   // Реализация протоколов
@@ -1076,7 +1081,7 @@ begin
   FConnectInfo := 'COM1';
   FCom := TComPort.Create(nil);
   FCom.BaudRate := brCustom;
-  Fcom.CustomBaudRate := 500000;
+  Fcom.CustomBaudRate := 125000;
   Fcom.Buffer.InputSize := $8000;
   Fcom.Buffer.OutputSize := $100;
   Fcom.Events := [evRxChar];
@@ -1151,7 +1156,7 @@ begin
     if a[0] <> '' then Fcom.Port := a[0];
     if (Length(a) > 1) and (a[1] <> '') then
          Fcom.CustomBaudRate := a[1].ToInteger()
-    else Fcom.CustomBaudRate := 500000;
+    else Fcom.CustomBaudRate := 125000;
     if (Length(a) > 2) and (a[2] <> '') then
          Fcom.Parity.Bits := TParityBits(a[2].ToInteger())
     else Fcom.Parity.Bits := prNone;
@@ -1405,37 +1410,49 @@ procedure TReadRam.TReadRamThtead.Execute;
 //    end;
    with Owner do if FFlagEndRead and Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
   end;
+
 begin
-  t := GetTickCount;
-  with Owner do
-   repeat
-    Fevent.WaitFor();
-    Fevent.ResetEvent;
-    try
-     if Terminated then Exit;
-     while Fifo.pop(ptr, FRecSize) do
+  CoInitialize(nil);
+  try
+    NameThreadForDebugging('RAM_READ');
+    t := GetTickCount;
+    with Owner do
+     repeat
+      Fevent.WaitFor();
+      Fevent.ResetEvent;
       try
-//        Synchronize(DoSync);
-       if Terminated or FFlagTerminate then Break;
-       DoSetData(ptr);
-       if FFlagEndRead and ((GetTickCount - t) > 1000) then
-       Synchronize(procedure
-       begin
-         t := GetTickCount;
-         if FFlagEndRead and Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
-       end);
+       if Terminated then Exit;
+       while Length(Fifo) >= FRecSize {Fifo.pop(ptr, FRecSize)} do
+        try
+  //        Synchronize(DoSync);
+         if Terminated or FFlagTerminate then Break;
+         DoSetData(@Fifo[0]);
+         Delete(Fifo, 0 , FRecSize);
+         if FFlagEndRead and ((GetTickCount - t) > 1000) then
+         Synchronize(procedure
+         begin
+           t := GetTickCount;
+           if FFlagEndRead and Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
+         end);
+        except
+         on E: Exception do TDebug.DoException(E, False);
+        end;
+       if FFlagEndRead then
+        begin
+         FFlagEndRead := False;
+         Synchronize(EndExecute);
+        end;
       except
-       on E: Exception do TDebug.DoException(E, False);
+       on E: Exception do
+        begin
+         TDebug.DoException(E, False);
+         Terminate;
+        end;
       end;
-     if FFlagEndRead then
-      begin
-       FFlagEndRead := False;
-       Synchronize(EndExecute);
-      end;
-    except
-     on E: Exception do TDebug.DoException(E, False);
-    end;
-   until Terminated;
+     until Terminated;
+   finally
+    CoUninitialize;
+   end;
 end;
 
 { TReadRam }
@@ -1444,10 +1461,10 @@ constructor TReadRam.Create(AAbstractDevice: TAbstractDevice);
 begin
   inherited Create(AAbstractDevice as IInterface);
 //  Fifo := TFifoBuffer<Byte>.Create(BUFF_LEN);
-  Fifo := TQueueBuffer<Byte>.Create;
+  //Fifo := TQueueBuffer<Byte>.Create;
   FAbstractDevice := AAbstractDevice;
   FFlagReadToFF := True;
-  FFastSpeed := True;
+  FFastSpeed := 0;
   FFromTime := 0;
   FToTime:= 0;
   FFlagTerminate := True;
@@ -1463,7 +1480,7 @@ begin
   FReadRamThtead.WaitFor;
   FReadRamThtead.Destroy;
   FEvent.Destroy;
-  Fifo.Free;
+ // Fifo.Free;
   inherited;
 end;
 
@@ -1497,7 +1514,7 @@ begin
    end;
 end;
 
-procedure TReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+procedure TReadRam.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
 // var
 //  pdb: IProjectDBData;
 begin
@@ -1510,6 +1527,8 @@ begin
 
     FModulID := ModulID;
     FPacketLen := PacketLen;
+
+    FBinFile:= BinFile;
 
     FRamXml := FindRam(FMetaDataInfo.Info, Adr);
 
@@ -1563,7 +1582,8 @@ begin
 //                                      'ToTime TIMESTAMP,'+
 
 
-    Fifo.Reset;
+//    Fifo.Reset;
+    SetLength(Fifo, 0);
 
     FOldStatus := S_Status;
     try
@@ -1629,7 +1649,7 @@ end;  }
 
 function TReadRam.ProcToEnd: Double;
 begin
-  Result := max((FToAdr - FCurAdr)/(FToAdr - FFromAdr)*100, Fifo.Count/10);
+  Result := max((FToAdr - FCurAdr)/(FToAdr - FFromAdr)*100, Length(Fifo)/10);
   if Result > 100 then Result := 100;
 end;
 

@@ -5,22 +5,25 @@ interface
 uses  DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, Data.DB, System.TypInfo, Vcl.Menus,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Container,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls,
-  System.Bindings.Helper;
+  System.Bindings.Helper, Vcl.ExtCtrls, Vcl.Mask, JvExMask, JvToolEdit;
 
 type
   EFrmDlgRam = class(EBaseException);
   TFrmDlgRam = class(TDialogIForm, IDialog, IDialog<Integer>)
     btStart: TButton;
     btExit: TButton;
-    cbTurbo: TCheckBox;
     cbToFF: TCheckBox;
     Progress: TProgressBar;
     btTerminate: TButton;
     sb: TStatusBar;
     cbShortPack: TCheckBox;
+    rg: TRadioGroup;
+    Label1: TLabel;
+    od: TJvFilenameEdit;
     procedure btExitClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
     procedure btStartClick(Sender: TObject);
+    procedure odBeforeDialog(Sender: TObject; var AName: string; var AAction: Boolean);
   private
     FModul: string;
     FModulID: Integer;
@@ -205,8 +208,8 @@ begin
    UpdateControls(False);
    try
     if not IsImport then
-     if cbShortPack.Checked then (FDev as IReadRamDevice).Execute(0, 0, cbToFF.Checked, cbTurbo.Checked, ds['Адрес'], ReadRamEvent, FModulID, 252)
-     else (FDev as IReadRamDevice).Execute(0, 0, cbToFF.Checked, cbTurbo.Checked, ds['Адрес'], ReadRamEvent, FModulID)
+     if cbShortPack.Checked then (FDev as IReadRamDevice).Execute(od.FileName, 0, 0, cbToFF.Checked, rg.ItemIndex+1, ds['Адрес'], ReadRamEvent, FModulID, 252)
+     else (FDev as IReadRamDevice).Execute(od.FileName,0, 0, cbToFF.Checked, rg.ItemIndex+1, ds['Адрес'], ReadRamEvent, FModulID)
     else ri.Import(flName, flIndex,0,0, cbToFF.Checked, ds['Адрес'], ReadRamEvent, FModulID);
    except
     UpdateControls(True);
@@ -215,6 +218,11 @@ begin
   finally
     ds.Release;
   end;
+end;
+
+procedure TFrmDlgRam.odBeforeDialog(Sender: TObject; var AName: string; var AAction: Boolean);
+begin
+  od.FileName := '';
 end;
 
 procedure TFrmDlgRam.btStartClick(Sender: TObject);

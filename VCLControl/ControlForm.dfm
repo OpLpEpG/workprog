@@ -2,8 +2,8 @@ object FormControl: TFormControl
   Left = 0
   Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1080#1077
-  ClientHeight = 231
-  ClientWidth = 443
+  ClientHeight = 251
+  ClientWidth = 354
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,8 +16,8 @@ object FormControl: TFormControl
   object Tree: TVirtualStringTree
     Left = 0
     Top = 0
-    Width = 443
-    Height = 231
+    Width = 354
+    Height = 251
     Align = alClient
     BorderWidth = 1
     Color = clBtnHighlight
@@ -34,11 +34,13 @@ object FormControl: TFormControl
     OnGetText = TreeGetText
     OnPaintText = TreePaintText
     OnGetImageIndex = TreeGetImageIndex
+    ExplicitWidth = 443
+    ExplicitHeight = 231
     Columns = <
       item
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
         Position = 0
-        Width = 167
+        Width = 78
         WideText = #1059#1089#1090#1088#1086#1081#1089#1090#1074#1086
       end
       item

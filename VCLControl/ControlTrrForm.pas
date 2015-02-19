@@ -2,7 +2,7 @@ unit ControlTrrForm;
 
 interface
 
-uses Actns,
+uses Actns, Parser, ImportExport,
   RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, ControlDBForm, Xml.XMLIntf, Xml.XMLDoc, Container,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.DBGrids;
@@ -70,7 +70,12 @@ procedure TFormControlTrr.DBGridEditButtonClick(Sender: TObject);
  var
   p: IMetrology;
   d: IXMLDocument;
+  ie, n: IXMLNode;
+  FImportExport: IImportExport;
 begin
+  ie := GetXNode(TPars.XMLScript, FDBGrid.Fields[2].AsString+'.MODEL.'+ FDBGrid.Fields[3].AsString);
+  if Assigned(ie) then FImportExport := TImportExport.Create(ie);
+
   if FDBGrid.Fields[0].AsString = '' then Exit;
   if Supports(GlobalCore, IMetrology, p) then
   with TOpenDialog.Create(nil) do
@@ -79,10 +84,21 @@ begin
     Options := Options + [ofPathMustExist, ofFileMustExist];
     DefaultExt := 'xml';
     Filter := 'Файл тарировки (*.xml)|*.xml';
+
+    if Assigned(FImportExport) then Filter := Filter + FImportExport.GetImportFilters;
+
     if Execute(Handle) then
     begin
      d := NewXDocument();
-     d.LoadFromFile(FileName);
+     if FilterIndex > 1 then
+      begin
+       n := d.AddChild('TRR').AddChild(FDBGrid.Fields[1].AsString).AddChild(T_MTR).AddChild(FDBGrid.Fields[2].AsString);
+       FImportExport.ExecuteImport(FilterIndex-1, FileName, n);
+      end
+     else d.LoadFromFile(FileName);
+
+//     d.SaveToFile(ExtractFilePath(ParamStr(0))+'ind2.xml');
+
      p.Setup(FDBGrid.Fields[0].AsInteger, d.DocumentElement, ExtractFileName(FileName));
     end;
    finally

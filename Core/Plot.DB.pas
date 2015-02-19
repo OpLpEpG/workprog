@@ -20,6 +20,7 @@ type
     function CheckEOFandGetXY(var X,Y: Double; GoToFirst: Boolean = false): Boolean; override; // internal RecalcScale
     property YFiedName: string read GetYFiedName;
   public
+
     procedure RecalcScale(); override; // защита AsyncADQuery
     property DataSet: TCustomAsyncMemTable read GetDataSet;// write SetDataSet;
   published

@@ -1,9 +1,9 @@
-object FormControlTrr: TFormControlTrr
+object Form2: TForm2
   Left = 0
   Top = 0
-  Caption = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1080' '#1080#1084#1087#1086#1088#1090
-  ClientHeight = 181
-  ClientWidth = 365
+  Caption = 'Form2'
+  ClientHeight = 289
+  ClientWidth = 554
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,6 +11,9 @@ object FormControlTrr: TFormControlTrr
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
+  OnPaint = FormPaint
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
 end

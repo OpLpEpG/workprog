@@ -210,6 +210,15 @@ object FormRamTest: TFormRamTest
       TabOrder = 12
       Text = '8'
     end
+    object btReadBads: TButton
+      Left = 5
+      Top = 409
+      Width = 110
+      Height = 25
+      Caption = #1095#1080#1090#1072#1090#1100' BAD'
+      TabOrder = 13
+      OnClick = btReadBadsClick
+    end
   end
   object elLenWrite: TEdit
     Left = 62

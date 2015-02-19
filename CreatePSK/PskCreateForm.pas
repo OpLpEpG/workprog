@@ -71,6 +71,9 @@ type
     NPastAdd: TMenuItem;
     SaveDialog: TSaveDialog;
     upd: TMenuItem;
+    cbByteAddress: TCheckBox;
+    N4: TMenuItem;
+    NewAddr: TMenuItem;
     procedure NOpenClick(Sender: TObject);
     procedure NSaveClick(Sender: TObject);
     procedure NTestClick(Sender: TObject);
@@ -91,6 +94,7 @@ type
     procedure NPastClick(Sender: TObject);
     procedure NPastAddClick(Sender: TObject);
     procedure updClick(Sender: TObject);
+    procedure NewAddrClick(Sender: TObject);
   private
     FXMLInfo: IXMLInfo;
 
@@ -208,7 +212,7 @@ procedure TFormPsk.NTestClick(Sender: TObject);
    const
     ERR_LEN = 'ERR: У элемента %s индекс с длинной данных(%d + %d) больше длинны кадра %d (байты)';
     ERR_IND = 'ERR: У элемента %s индекс %d (байты) по смещению %d используется другим элементом';
-    ERR_ZER = 'Пустые данные с %d по %d (байты) с %d по %d (слова)';
+    ERR_ZER = 'Пустые данные с %d по %d кол-во %d (байты) с %d по %d (слова)';
    var
     kadr, fr, c: Integer;
     a: array of Byte;
@@ -227,10 +231,12 @@ procedure TFormPsk.NTestClick(Sender: TObject);
           memo.Lines.Add(Format('ERR: У элемента %s нет важных атрибутов', [n.ParentNode.NodeName]))
        else
       begin
-       ind := n.Attributes[AT_INDEX]*2;
-       len := 2;
+       if cbByteAddress.Checked then ind := n.Attributes[AT_INDEX]
+       else ind := n.Attributes[AT_INDEX]*2;
        try
-        if n.ParentNode.HasAttribute(AT_ARRAY) then len := n.ParentNode.Attributes[AT_ARRAY]*2
+        if n.ParentNode.HasAttribute(AT_ARRAY) then
+         if cbByteAddress.Checked then len := n.ParentNode.Attributes[AT_ARRAY]*TPars.VarTypeToLength(n.Attributes[AT_TIP])
+         else len := n.ParentNode.Attributes[AT_ARRAY]*2 // all word data device
         else len := TPars.VarTypeToLength(n.Attributes[AT_TIP]);
        except
         on E: Exception do memo.Lines.Add(e.Message);
@@ -271,7 +277,7 @@ procedure TFormPsk.NTestClick(Sender: TObject);
        begin
         fr := c;
         while (C < kadr) and (a[c] = 0) do Inc(c);
-        memo.Lines.Add(Format(ERR_ZER, [fr, c-1, fr div 2, (c-1) div 2]));
+        memo.Lines.Add(Format(ERR_ZER, [fr, c-1, c-fr, fr div 2, (c-1) div 2]));
        end
        else inc(c);
      end;
@@ -287,8 +293,13 @@ begin
   tmp := StrToInt(edDevider.Text);
   if tmp = 128 then RemoveAtr(d, AT_DELAYDV)
   else d.Attributes[AT_DELAYDV] := tmp;
+
+  if cbByteAddress.Checked then d.Attributes[AT_PSK_BYTE_ADDR] := 1
+  else RemoveAtr(d, AT_PSK_BYTE_ADDR);
+
   if cbWorkTime.Checked then d.Attributes[AT_WORKTIME] := 1
   else RemoveAtr(d, AT_WORKTIME);
+
   // work
   w := FindWork(FXMLInfo, d.Attributes[AT_ADDR]);
   if Assigned(w) then
@@ -314,6 +325,8 @@ begin
   if Assigned(r) then
    begin
     r.Attributes[AT_RAMSIZE] := StrToInt(edRamSize.Text);
+    tmp := StrToInt(edRamKadr.Text);
+    r.Attributes[AT_SIZE] := tmp;
     r.Attributes[AT_RAMLP] := cbRamProt.ItemIndex+1;
     if cbHbFirst.Checked then r.Attributes[AT_RAMLP] := r.Attributes[AT_RAMLP] or $80;
 
@@ -359,6 +372,10 @@ begin
   edAdr.Text := d.Attributes[AT_ADDR];
   if d.HasAttribute(AT_DELAYDV) then edDevider.Text := d.Attributes[AT_DELAYDV]
   else edDevider.Text := '128';
+
+  if d.HasAttribute(AT_PSK_BYTE_ADDR) and (d.Attributes[AT_PSK_BYTE_ADDR] = 1) then cbByteAddress.Checked := True
+  else cbByteAddress.Checked := False;
+
   if d.HasAttribute(AT_WORKTIME) and (d.Attributes[AT_WORKTIME] = 1) then cbWorkTime.Checked := True
   else cbWorkTime.Checked := False;
   // work
@@ -505,6 +522,7 @@ begin
   NPast.Enabled := False;
   NPastAdd.Enabled := False;
   NAdd.Visible := False;
+  NewAddr.Enabled := False;
   if Tree.SelectedCount > 0 then
    begin
     if Tree.SelectedCount = 1 then
@@ -512,6 +530,7 @@ begin
       NAdd.Visible := True;
       NPast.Enabled := FlagClipboard;
       NPastAdd.Enabled := FlagClipboard;
+      NewAddr.Enabled := PNodeExData(Tree.GetNodeData(Tree.GetFirstSelected())).XMNode.ChildNodes.Count > 0;
      end;
     for pv in Tree.SelectedNodes do
      begin
@@ -644,6 +663,30 @@ begin
     Ex.XMNode := nil;
    end;
   UpdateTree;
+end;
+
+procedure TFormPsk.NewAddrClick(Sender: TObject);
+ var
+  pv: PVirtualNode;
+  ex: PNodeExData;
+  sel: IXMLNode;
+  adr: Integer;
+begin
+  if Tree.SelectedCount <> 1 then Exit;
+  sel := PNodeExData(Tree.GetNodeData(Tree.GetFirstSelected())).XMNode;
+  if sel.ChildNodes.Count = 0 then Exit;
+
+  adr := InputBox('Aдрес первого элемента', 'Введите адрес', '0').ToInteger();
+  ExecXTree(sel, procedure (n: IXMLNode)
+  begin
+    if n.HasAttribute(AT_INDEX) and n.HasAttribute(AT_TIP) then
+     begin
+      n.Attributes[AT_INDEX] := adr;
+      if n.ParentNode.HasAttribute(AT_ARRAY) then
+           inc(adr, TPars.VarTypeToLength(n.Attributes[AT_TIP]) * Integer(n.ParentNode.Attributes[AT_ARRAY]))
+      else inc(adr, TPars.VarTypeToLength(n.Attributes[AT_TIP]));
+     end;
+  end);
 end;
 
 procedure TFormPsk.NOpenClick(Sender: TObject);
@@ -888,8 +931,28 @@ begin
 end;
 
 procedure TFormPsk.EditKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+ var
+  d: IXMLNode;
+  old: Integer;
 begin
   case Key of
+    VK_SPACE:
+     begin
+      if FEditColumn = 2 then if FEdit is TEdit then
+       begin
+        old := 0;
+        ExecXTree(FindWork(FXMLInfo, FXMLInfo.ChildNodes[0].Attributes[AT_ADDR]), procedure(n: IXMLNode)
+        begin
+          if n.HasAttribute(AT_INDEX) and n.HasAttribute(AT_TIP) and (n.Attributes[AT_INDEX] > old) then
+           begin
+            old := n.Attributes[AT_INDEX];
+            d := n;
+           end;
+        end);
+        TEdit(FEdit).Text := (old + TPars.VarTypeToLength(d.Attributes[AT_TIP])).ToString;
+       end;
+      Key := 0;
+     end;
     VK_ESCAPE:
       begin
         Tree.CancelEditNode;

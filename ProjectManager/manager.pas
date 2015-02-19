@@ -2,10 +2,11 @@ unit manager;
 
 interface
 
-uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, DBIntf, DBImpl, System.DateUtils, Actns,
+uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, DBIntf, DBImpl, System.DateUtils, Actns, System.UITypes,
      RootImpl, AbstractPlugin, PluginAPI, DockIForm, DButil, System.SyncObjs, DBEnumers,
-     Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows,
+     Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows, System.IOUtils,   ShellAPI, messages,
      System.SysUtils, Vcl.Graphics, System.Classes, System.Generics.Collections, System.Generics.Defaults, RTTI, System.TypInfo, Xml.XMLIntf,
+     FireDAC.Phys.SQLiteWrapper,
      FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
      FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, Data.DB, FireDAC.Comp.Client, FireDAC.Phys.SQLite;
 
@@ -190,9 +191,14 @@ procedure TManager.SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
   procedure AddMetr(root: IXMLNode);
    var
     n: IXMLNode;
+    function netr: string;
+    begin
+      if not n.HasAttribute(AT_METR) then Result := ''
+      else Result := n.Attributes[AT_METR];
+    end;
   begin
     if not Assigned(root) then Exit;
-    for n in XEnum(root) do Query.ExecSQL(Format(ADD_TRR, [n.NodeName, adr, id]));
+    for n in XEnum(root) do Query.ExecSQL(Format(ADD_TRR, [n.NodeName, netr, adr, id]));
   end;
 begin
   if not GetDevID(Query, Dev, id) then Exit;
@@ -208,6 +214,9 @@ begin
    CreaTbl(MetaData.ChildNodes.FindNode(T_WRK),'Log', CREA_LOG_VAL);
    CreaTbl(MetaData.ChildNodes.FindNode(T_RAM),'Ram', CREA_RAM_VAL);
    AddMetr(MetaData.ChildNodes.FindNode(T_MTR));
+
+
+//   MetaData.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'INK1.xml');
   finally
    Query.Release;
   end;
@@ -220,6 +229,7 @@ procedure TManager.SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceN
   de: IDeviceEnum;
   info, dev,  trr,  tip,  run: IXMLnode;
       fdev,       ftip, frun: IXMLnode;
+  atr: IXMLnode;
   Vnomer, Vtime: Variant;
   id: Integer;
 begin
@@ -247,7 +257,17 @@ begin
      fdev := TrrData.ChildNodes[0];
      ftip := fdev.ChildNodes.FindNode(T_MTR).ChildNodes.FindNode(Query['Тип']);
      if not Assigned(ftip) then raise EManagerexception.CreateFmt('У импортируемой метрологии нет %s',[Query['Тип']]);
+
+     atr := tip.AttributeNodes.FindNode(AT_METR);
+     if Assigned(atr) then tip.AttributeNodes.Remove(atr);
+
+  //   tip.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'tip.xml');
+  //   ftip.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'ftip.xml');
+
      if not HasXTree(tip, ftip) then raise EManagerexception.Create('Импортировать метрологию невозможно - неверная структура');
+
+     if Assigned(atr) then tip.AttributeNodes.Add(atr);
+
      // проверка без исключения
      if (fdev.NodeName <> 'ANY_DEVICE') and (fdev.NodeName <> dev.NodeName)  then
           MessageDlg(Format('Текущий файл тарировки прибора %s а выбран прибор %s',[fdev.NodeName, dev.NodeName]),
@@ -426,24 +446,101 @@ begin
   end;
 end;
 
-procedure TManager.LoadProject(const FileName: string);
+function ShellExecAndWait(ExeFile: string; Parameters: string = ''; ShowWindow: Word = SW_SHOWNORMAL): Boolean;
+
+  procedure WaitFor(processHandle: THandle);
+  var
+    AMessage : TMsg;
+    Result   : DWORD;
+  begin
+    repeat
+      Result := MsgWaitForMultipleObjects(1,
+                                          processHandle,
+                                          False,
+                                          INFINITE,
+                                          QS_PAINT or
+                                          QS_SENDMESSAGE);
+      if Result = WAIT_FAILED then
+        Exit;
+      if Result = ( WAIT_OBJECT_0 + 1 ) then
+      begin
+        while PeekMessage(AMessage, 0, WM_PAINT, WM_PAINT, PM_REMOVE) do
+          DispatchMessage(AMessage);
+      end;
+    until result = WAIT_OBJECT_0;
+  end;
+
+var
+  ExecuteCommand: array[0 .. 512] of Char;
+  PathToExeFile : string;
+  StartUpInfo   : TStartupInfo;
+  ProcessInfo   : TProcessInformation;
 begin
-  FDBConnection := nil;
-  ClearItems([ecIO, ecDevice]);
-  if FileExists(FileName) then
-   begin
-    FProject := FileName;
-    FDBConnection := ConnectionsPool.GetConnection(FileName, True);
-//    InternalInitDelay;
-    ((GlobalCore as IConnectIOEnum) as IStorable).Load;
-    ((GlobalCore as IDeviceEnum) as IStorable).Load;
-    Notify('S_ProjectChange');
-   end
+  StrPCopy(ExecuteCommand , ExeFile + ' ' + Parameters);
+  FillChar(StartUpInfo, SizeOf(StartUpInfo), #0);
+  StartUpInfo.cb  := SizeOf(StartUpInfo);
+  StartUpInfo.dwFlags := STARTF_USESHOWWINDOW;
+  StartUpInfo.wShowWindow := ShowWindow;//SW_SHOWNORMAL; //SW_MINIMIZE;
+  PathToExeFile := ExtractFileDir(ExeFile);
+//  if PathToExeFile = '' then
+//    PathToExeFile := ExtractFileDir(FindFileInPath(ExeFile));
+  if CreateProcess(nil,
+                   ExecuteCommand,
+                   nil,
+                   nil,
+                   False,
+                   CREATE_NEW_CONSOLE or NORMAL_PRIORITY_CLASS,
+                   nil,
+                   PChar(PathToExeFile),
+                   StartUpInfo,
+                   ProcessInfo) then
+  begin
+    WaitFor(ProcessInfo.hProcess);
+    CloseHandle(ProcessInfo.hProcess);
+    CloseHandle(ProcessInfo.hThread);
+    Result := true;
+  end
   else
-   begin
-    FProject := '';
-    Notify('S_ProjectChange');
-   end;
+    Result := false;
+end;
+procedure TManager.LoadProject(const FileName: string);
+ procedure Exec;
+ begin
+    FDBConnection := nil;
+    ClearItems([ecIO, ecDevice]);
+    if FileExists(FileName) then
+     begin
+      FProject := FileName;
+      FDBConnection := ConnectionsPool.GetConnection(FileName, True);
+    //    InternalInitDelay;
+      ((GlobalCore as IConnectIOEnum) as IStorable).Load;
+      ((GlobalCore as IDeviceEnum) as IStorable).Load;
+      Notify('S_ProjectChange');
+     end
+    else
+     begin
+      FProject := '';
+      Notify('S_ProjectChange');
+     end;
+ end;
+begin
+  try
+    Exec;
+  except
+    on E: ESQLiteNativeException do
+      if E.Message.Contains('database disk image is malformed')
+      and (MessageDlg(Format('База данных %s испорчена. попытаться восстановить?', [FileName]), mtError, [mbYes, mbNo], 0) = mrYes) then
+        begin
+          ShellExecAndWait(Tpath.GetDirectoryName(ParamStr(0))+'\xb.bat', FileName);
+          try
+           Exec;
+          except
+           TDebug.DoException(E);
+          end;
+        end
+      else raise;
+    else raise;
+  end;
 end;
 
 procedure TManager.NewProject(const FileName: string);

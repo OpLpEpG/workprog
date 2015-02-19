@@ -35,6 +35,8 @@ type
     varSerial = varRecord+21;
     var_i2_15b_inv  = varRecord+22;
     var_array  = varRecord+23;
+    var_i2_14b_GZ  = varRecord+24;
+
    type
     TTypeDic = TDictionary<Integer, string>;
     TOutArray = array of Byte;
@@ -193,6 +195,7 @@ begin
    TypeDic.Add(var_ui3    , 'var_ui3');
    TypeDic.Add(var_i2_15b , 'var_i2_15b');
    TypeDic.Add(var_i2_15b_inv , 'var_i2_15b_inv');
+   TypeDic.Add(var_i2_14b_GZ , 'var_i2_14b_GZ');
    TypeDic.Add(var_ui2_15b, 'var_ui2_15b');
    TypeDic.Add(var_i2_10b , 'var_i2_10b');
    TypeDic.Add(var_i2_14b , 'var_i2_14b');
@@ -231,6 +234,7 @@ begin
     var_ui3    :Result := 'INT';
     var_i2_15b :Result := 'INT';
     var_i2_15b_inv :Result := 'INT';
+    var_i2_14b_GZ :Result := 'INT';
     var_ui2_15b:Result := 'INT';
     var_i2_10b :Result := 'INT';
     var_i2_14b :Result := 'INT';
@@ -263,13 +267,14 @@ begin
     varShortInt:Result := ftInteger; { vt_i1          16 }
     varByte    :Result := ftInteger; { vt_ui1         17 }
     varWord    :Result := ftInteger; { vt_ui2         18 }
-    varLongWord:Result := ftInteger; { vt_ui4         19 }
+    varLongWord:Result := ftLongWord; { vt_ui4         19 }
     varInt64   :Result := ftInteger; { vt_i8          20 }
-    varUInt64  :Result := ftInteger; { vt_ui8         21 }
+    varUInt64  :Result := ftLongWord; { vt_ui8         21 }
     var_i3     :Result := ftInteger;
     var_ui3    :Result := ftInteger;
     var_i2_15b :Result := ftInteger;
     var_i2_15b_inv :Result := ftInteger;
+    var_i2_14b_GZ :Result := ftInteger;
     var_ui2_15b:Result := ftInteger;
     var_i2_10b :Result := ftInteger;
     var_i2_14b :Result := ftInteger;
@@ -306,6 +311,7 @@ begin
     var_ui3    :Result := 3;
     var_i2_15b :Result := 2;
     var_i2_15b_inv :Result := 2;
+    var_i2_14b_GZ :Result := 2;
     var_ui2_15b:Result := 2;
     var_i2_10b :Result := 2;
     var_i2_14b :Result := 2;
@@ -402,6 +408,14 @@ begin
       h := b^; Inc(b);
       l := b^;
       Result := word((word(h) shl 8) or l);
+     end;
+    var_i2_14b_GZ:
+     begin
+      w := Data;
+      Result := (w^ shr 8) and $7F;
+      Dec(w);
+      Result := Result or ((w^ and $7F00) shr 1);
+      if (Result and $2000) <> 0 then Result := Smallint(PWord(Data)^ or $E000);
      end;
     var_ui2_kadr_psk4:
      begin
@@ -526,8 +540,8 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
         varRamSize:
         begin
           if Assigned(hev) then hev(sp^, sp + 1);
-          u.Attributes[AT_RAMSIZE] := sp[1]; // parse ram_size
-          Inc(sp, 2); Dec(sn, 2);   // parse tip, ram_size
+          u.Attributes[AT_RAMSIZE] := PWord(@sp[1])^; // parse ram_size
+          Inc(sp, 3); Dec(sn, 3);   // parse tip, ram_size
         end;
         varChip:
         begin
@@ -605,7 +619,11 @@ class procedure TPars.SetMetr(node: IXMLNode; ExeSc: TXmlScript; ExecSetup: Bool
       if Assigned(sr) then
        begin
         mc := mtr.ChildNodes.FindNode(s);
-        if not Assigned(mc) then mc := mtr.AddChild(s);
+        if not Assigned(mc) then
+         begin
+          mc := mtr.AddChild(s);
+          if n.HasAttribute(AT_METR) then mc.Attributes[AT_METR] := n.Attributes[AT_METR];
+         end;
         AddXML(mc, sr);
         if n.HasAttribute(AT_METR) then AddXML(mc, sr.ChildNodes[MD].ChildNodes[n.Attributes[AT_METR]], s);
        end
@@ -698,7 +716,8 @@ end;
 { TODO : ПСК AT_INDEX в словах и данные PWord надо переделать в байты и сделать единую функцию SetData}
 class procedure TPars.SetPsk(root: IXMLNode; const Data: PWord);
 begin
-   ExecXTree(root, procedure(n: IXMLNode)
+  if root.ParentNode.HasAttribute(AT_PSK_BYTE_ADDR) then  SetData(root, Pbyte(Data))
+  else ExecXTree(root, procedure(n: IXMLNode)
     var
      di: PWord;
    begin

@@ -71,17 +71,18 @@ const // по устройствам
      'CREATE TABLE IF NOT EXISTS Metrol(id INTEGER PRIMARY KEY,'+
                                       'fk INTEGER NOT NULL REFERENCES Modul(id) ON DELETE CASCADE,'+
                                       'Тип TEXT NOT NULL,'+
+                                      'Модель TEXT,'+
                                       'Источник TEXT,'+
                                       'Модуль TEXT,'+
                                       'Номер INT,'+
                                       '"Дата аттестации" DATETIME)'; // // julian datetime(DDDDDDDDD) для аитоматичечкого отображения текстом
      CREATE_TRR_VIEW =
      'CREATE VIEW IF NOT EXISTS Customer_Metrol AS SELECT '+
-     ' Metrol.id, Device.Имя, Metrol.Тип, Modul.Модуль, Metrol.Модуль AS ''Тип источника'', Metrol.Номер, Metrol."Дата аттестации", Metrol.Источник '+
+     ' Metrol.id, Device.Имя, Metrol.Тип, Metrol.Модель, Modul.Модуль, Metrol.Модуль AS ''Тип источника'', Metrol.Номер, Metrol."Дата аттестации", Metrol.Источник '+
      ' FROM Metrol, Modul, Device '+
      ' WHERE Metrol.fk = Modul.id AND Modul.fk = Device.id';
 
-    ADD_TRR = 'INSERT INTO Metrol(Тип, fk) VALUES("%s", (SELECT id FROM Modul WHERE (Адрес = %d) AND (Modul.fk = %d)))';
+    ADD_TRR = 'INSERT INTO Metrol(Тип, Модель, fk) VALUES("%s", "%s", (SELECT id FROM Modul WHERE (Адрес = %d) AND (Modul.fk = %d)))';
     GET_TRR_FROM_METR_ID = 'SELECT IName, Адрес, Тип, Modul.id'+
                                 ' FROM Device,Modul,Metrol'+
                                 ' WHERE Modul.fk = Device.id AND Metrol.fk = Modul.id AND Metrol.id = %d';

@@ -56,4 +56,47 @@ object FormTest: TFormTest
     TabOrder = 3
     OnClick = Button3Click
   end
+  object Button4: TButton
+    Left = 496
+    Top = 101
+    Width = 33
+    Height = 25
+    Caption = 'CR2'
+    TabOrder = 4
+    OnClick = Button4Click
+  end
+  object Button5: TButton
+    Left = 496
+    Top = 132
+    Width = 33
+    Height = 25
+    Caption = 'v'
+    TabOrder = 5
+    OnClick = Button5Click
+  end
+  object Button6: TButton
+    Left = 496
+    Top = 163
+    Width = 33
+    Height = 25
+    Caption = 'v'
+    TabOrder = 6
+    OnClick = Button6Click
+  end
+  object vld: TFDSQLiteValidate
+    DriverLink = FDPhysSQLiteDriverLink1
+    Database = 'c:\XE\Projects\Device2\_exe\Debug\Projects\Telesis1.db'
+    OnProgress = vldProgress
+    Left = 176
+    Top = 64
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 248
+    Top = 72
+  end
+  object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
+    Left = 104
+    Top = 16
+  end
 end

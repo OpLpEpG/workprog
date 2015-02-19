@@ -43,6 +43,7 @@ const
   AT_ADDR = 'ADDR';
   AT_CHIP = 'CHIP_INDEX';
   AT_INFO = 'INFO';
+  AT_PSK_BYTE_ADDR = 'PSK_BYTE_ADDR';
   AT_SERIAL = 'SERIAL_NO';
   AT_TIMEATT = 'TIME_ATT';
   AT_DELAYDV = 'DELAY_DEVIDER';
@@ -281,7 +282,7 @@ type
   ///	  потокобезопасный QEUE выходные (pop) все порции данных
   ///	  меньше или равны длинны push порций данных (всех)
   ///	</summary>
-  TQueueBuffer<T> = class(TQueue<TArray<T>>)
+{  TQueueBuffer<T> = class(TQueue<TArray<T>>)
   protected
     FLock: TCriticalSection;
     FCurData, FOut: TArray<T>;
@@ -292,7 +293,7 @@ type
     procedure Push(Data: Pointer; Size: Integer);
     function Pop(var Data: Pointer; Size: Integer): Boolean;
     procedure Reset;
-  end;
+  end;}
 
   ///	<summary>
   ///	  выполнение заданий в очереди в потоке
@@ -1486,7 +1487,7 @@ end;
 
 { TQeueBuffer<T> }
 
-constructor TQueueBuffer<T>.Create;
+{constructor TQueueBuffer<T>.Create;
 begin
   inherited Create;
   FLock := TCriticalSection.Create;
@@ -1564,7 +1565,7 @@ begin
   finally
    FLock.Release;
   end;
-end;
+end;       }
 
 {$ENDREGION}
 

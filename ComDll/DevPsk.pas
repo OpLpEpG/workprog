@@ -151,7 +151,7 @@ type
   EReadRamPskException = class(EReadRamException);
   TAbstractReadRamPsk = class(TReadRam)
   protected
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
+    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
   public
     FFlagSwap: Boolean;
     FProtokol: Integer;
@@ -203,7 +203,7 @@ type
   private
     FExecReadRam: IProtocolReadRam;
   protected
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
+    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
     procedure Terminate(Res: TResultEvent = nil); override;
   end;
 
@@ -219,7 +219,7 @@ type
     FSpHi: Byte;
     FWorkEvent: TWorkEvent;
     FWorkInput: array [0..$8000] of Byte;
-    procedure FlowDataEvent(Res: boolean; Data: PByte; DataSize: integer);
+    procedure FlowDataEvent(Res: boolean; DataB: PByte; DataSize: integer);
     procedure ReStartFlow();
     // IStop
     procedure StopFlow(ResultEvent: TResultEvent = nil); virtual;
@@ -254,7 +254,7 @@ type
     procedure StartReadPage(ev: TCmdByteRef);
 //    procedure CheckCreateStream; override;
 //    procedure FreeStream; override;
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
+    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean;FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
   end;
 
   TPskCycle = class(TAbstractPsk, ICycle)
@@ -337,7 +337,7 @@ end;
 {$REGION  'TAbstractPsk - все процедуры и функции'}
 { TAbstractReadRamPsk }
 
-procedure TAbstractReadRamPsk.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+procedure TAbstractReadRamPsk.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
 begin
   inherited ;//Execute(evInfoRead, Addrs);
 
@@ -350,7 +350,7 @@ begin
 //  FRamXml.Attributes[AT_TO_TIME] := DateTimeToStr(FToTimeAdr);
 //  FRamXml.Attributes[AT_FROM_ADR] := FFromAdr;
 //  FRamXml.Attributes[AT_TO_ADR] := FToAdr;
-  if FFastSpeed  then
+  if FFastSpeed > 0 then
    if FRamXml.HasAttribute(AT_RAMHP) and (FRamXml.Attributes[AT_RAMHP] <> 0) then
     begin
      FFlagSwap := (FRamXml.Attributes[AT_RAMHP] and PRO_SWAP) <> 0;
@@ -795,7 +795,7 @@ end;
 {$REGION  'PSK - все процедуры и функции'}
 { TStdReadRam }
 
-procedure TStdReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+procedure TStdReadRam.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
 begin
   inherited ;//Execute(evInfoRead, Addrs);
   case FProtokol of
@@ -1122,6 +1122,9 @@ begin
 //  ChLockLockOpen(FFlagFlow, EPskStdException);
 
   FWorkEventInfo.Work := FindWork(FMetaDataInfo.Info, FAddressArray[0]);
+
+//  FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'IND.xml');
+
   if not Assigned(FWorkEventInfo.Work) then raise EPskStdException.Create(RS_NoMetaInfo);
   if FWorkEventInfo.Work.HasAttribute(AT_FLOWINTERVAL) then FFlowDataWait := FWorkEventInfo.Work.Attributes[AT_FLOWINTERVAL]
   else FFlowDataWait := 1200;
@@ -1248,7 +1251,7 @@ begin
    end;
 end;
 
-procedure TPskStd.FlowDataEvent(Res: boolean; Data: PByte; DataSize: integer);
+procedure TPskStd.FlowDataEvent(Res: boolean; DataB: PByte; DataSize: integer);
   function TestSP(Data: PWordArray; cnt: integer): Boolean;
    var
     ww: Integer;
@@ -1257,25 +1260,35 @@ procedure TPskStd.FlowDataEvent(Res: boolean; Data: PByte; DataSize: integer);
     ww := FWorkLen div 2;
     if FSpHi = 0 then
      begin
-      if (Data[0] = 0) and (FWorkLen+2 <= cnt) and (Data[ww] = 0) then Result := True;
+      //if (Data[0] = 0) and (FWorkLen+2 <= cnt) and (Data[ww] = 0) then Result := True;
+      if (Data[0] = 0) {and (FWorkLen <= cnt)} then Result := True;
      end
-    else if (FWorkLen+2+2+2 <= cnt)
-         and (Data[0] = Word(FSpHi shl 8))
+    else if {(FWorkLen+2+2+2 <= cnt)
+         and} (Data[0] = Word(FSpHi shl 8))
          and ((Data[1] and $FF00) = $C000)
          and ((Data[2] and $FF00) = $C000)
-         and (Data[ww] = Word(FSpHi shl 8))
+         {and (Data[ww] = Word(FSpHi shl 8))
          and ((Data[ww+1] and $FF00) = $C000)
-         and ((Data[ww+2] and $FF00) = $C000) then Result := True
+         and ((Data[ww+2] and $FF00) = $C000)} then Result := True
   end;
  var
   i: Integer;
   ip: IProjectData;
 begin
   if not FFlagFlow then Exit;
-  if DataSize < 0 then ReStartFlow // перезапуск потокового режима
+  if DataSize < 0 then
+   begin
+    ReStartFlow; // перезапуск потокового режима
+    with ConnectIO do
+     begin
+      FICount := 0;
+     end;
+   end
   else
    try
-    for i := 0 to DataSize-2 do if TestSP(@Data[i], DataSize-i) then
+    i := 0;
+    //for i := 0 to DataSize-2 do if TestSP(@DataB[i], DataSize-i) then
+    if (DataSize >= FWorkLen) and TestSP(@DataB[0], DataSize) then
      begin
       with ConnectIO do
        begin
@@ -1292,7 +1305,7 @@ begin
        if Assigned(FWorkEvent) then FWorkEvent(FWorkEventInfo);
        Notify('S_WorkEventInfo');
       end;
-      Break;
+     // Break;
      end;
    finally
     WaitRxData(FlowDataEvent);
@@ -1327,7 +1340,7 @@ begin
   end);
 end;
 
-procedure TGluReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+procedure TGluReadRam.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean;FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
  var
   en, pg, FFSize: Integer;
   run: TCmdByteRef;
@@ -1362,8 +1375,13 @@ begin
       FEvent.SetEvent;
     end;
     procedure ToFifo(n: Integer);
+     var
+      l: Integer;
     begin
-      fifo.Push(@FAbstractDevice.ConnectIO.FInput[1], n);
+      l :=  Length(Fifo);
+      SetLength(fifo,l+n);
+      move(FAbstractDevice.ConnectIO.FInput[1], fifo[l], n);
+     // fifo.Push(@FAbstractDevice.ConnectIO.FInput[1], n);
       Inc(FCurAdr, n);
       FEvent.SetEvent;
     end;
@@ -1445,13 +1463,18 @@ procedure TGluReadRam.Import(const FileName: string; FilterIndex: Integer;
   cnt: Longint;
   b: array [0..528] of Byte;
   procedure ToFifo(n: Longint);
-  begin
-    fifo.Push(@b[0], n);
+     var
+      l: Integer;
+    begin
+      l :=  Length(Fifo);
+      SetLength(fifo,l+n);
+      move(b[0], fifo[l], n);
+  //  fifo.Push(@b[0], n);
     Inc(FCurAdr, n);
     FEvent.SetEvent;
   end;
 begin
-  inherited Execute(FromTime, ToTime,ReadToFF,False, Adr, evInfoRead, ModulID);
+  inherited Execute('', FromTime, ToTime,ReadToFF,0, Adr, evInfoRead, ModulID);
   s := TFileStream.Create(FileName, fmOpenRead);
   try
    FToAdr := s.Size;

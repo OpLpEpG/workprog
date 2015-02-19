@@ -382,7 +382,7 @@ type
 //    procedure SetReadTime(FromTime, ToTime: TDateTime);
     // асинхронный метод читает, перечитывает и сохраняет бинарные файлы на диск
     // обновляет в процессе на диске IRAMInfo создает в PathToReadRamDir xxxxxxx.bin для каждого устройства
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
     // прерывает длительный асинхронный метод Execute
     procedure Terminate(Res: TResultEvent = nil);
 
@@ -437,7 +437,7 @@ type
 // включение повышенной скорости новые приборы
   ITurbo = interface(IDevice)
   ['{ED12F5BF-0785-4EC7-A767-08B69AB54893}']
-    procedure Turbo;
+    procedure Turbo(speed: integer);
   end;
 
 // циклопрос, (Режим информации) новые приборы + усо + глубиромер

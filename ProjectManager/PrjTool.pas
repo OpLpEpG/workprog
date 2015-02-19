@@ -529,7 +529,7 @@ begin
   for h in FHelpes do if (h.Adr = adr) and (h.Fk = id) then
    begin
     v := h.FieldValues;
-    for i := 0 to Length(v)-1 do Fields[ind+i].AsVariant := v[i];
+    for i := 0 to Length(v)-1 do if Fields.Count > ind+i then Fields[ind+i].AsVariant := v[i];
     S_UpdateFields := id;
     Exit;
    end

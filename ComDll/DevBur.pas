@@ -2,7 +2,7 @@ unit DevBur;
 
 interface
 
-uses
+uses    System.IOUtils,
   Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc,
   Generics.Collections,  Vcl.Forms, Vcl.Dialogs,Vcl.Controls, Actns,
   DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl;
@@ -22,7 +22,7 @@ uses
     type TResRef = reference to procedure;
     procedure Read(RamPtr: Integer; len: Word;  ev: TReceiveDataRef; WaitTime: Integer = -1);
   protected
-    procedure Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
+    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
   end;
 
 //  ERamReadInfoBurException = class(ERamReadInfoException);
@@ -52,7 +52,7 @@ uses
     // ILowLevelDeviceIO
     procedure SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1); override;
     // ITurbo
-    procedure Turbo;
+    procedure Turbo(speed: integer);
 
     procedure ReadInfoAdr(adr: Byte; ev: TNotifyInfoEventRef);
     procedure ReadWorkAdrRef(root: IXMLNode; adr: Byte; StdOnly: Boolean; ev: TWorkEventRef);
@@ -187,24 +187,27 @@ type
   PRamRead =^TRamRead;
   TRamRead = packed record
     CmdAdr: Byte;
-    PH, P6LB2H, BL: Byte;
-    Length: Word;
-    constructor Create(DevAdr: Byte; RmAdr: DWord; len: Word);
+    Adr: DWORD;
+//    Len: DWORD;
+//    PH, P6LB2H, BL: Byte;
+    Length: DWord;
+    constructor Create(DevAdr: Byte; RmAdr, len: DWord);
   end;
 
 { TRamRead }
 
-constructor TRamRead.Create(DevAdr: Byte; RmAdr: DWord; len: Word);
- var
-  page, base: Word;
+constructor TRamRead.Create(DevAdr: Byte; RmAdr, len: DWord);
+// var
+//  page, base: Word;
 begin
   CmdAdr := ToAdrCmd(DevAdr, CMD_READ_RAM);
-  page := RmAdr div 528;
-  base := RmAdr mod 528;
-  PH := Byte(page shr 6);
-  BL := Byte(base);
-  P6LB2H := Byte(page shl 2) or Byte(base shr 8);
+//  page := RmAdr div 528;
+//  base := RmAdr mod 528;
+//  PH := Byte(page shr 6);
+//  BL := Byte(base);
+//  P6LB2H := Byte(page shl 2) or Byte(base shr 8);
   Length := len;
+  Adr := RmAdr;
 end;
 
 {$REGION  'TBurReadRam - все процедуры и функции'}
@@ -212,19 +215,19 @@ end;
 //Чтение одной секции данных по адресу RamPtr
 procedure TBurReadRam.Read(RamPtr: Integer; len: Word;  ev: TReceiveDataRef; WaitTime: Integer = -1);
 begin
-  if FFlagTerminate then Exit;
+//  if FFlagTerminate then Exit;
   with TDeviceBur(FAbstractDevice) do
    try
     SerialQe.Add(procedure()
      var
       a: TRamRead;
     begin
-      if FFlagTerminate then Exit;
+     // if FFlagTerminate then Exit;
       a := TRamRead.Create(FAdr, DWord(RamPtr), len);
       ConnectIO.Send(@a, SizeOf(a), procedure(p: Pointer; n: integer)
       begin
-        if FFlagTerminate then Exit;
-        if ((len + 1) = n) and (PbyteArray(p)[0] = a.CmdAdr) then ev(@PbyteArray(p)[1], n-1)
+        if FFlagTerminate then ev(nil, -1)
+        else if ((len + 1) = n) and (PbyteArray(p)[0] = a.CmdAdr) then ev(@PbyteArray(p)[1], n-1)
         else ev(nil, -1);
       end, WaitTime);
     end);
@@ -237,19 +240,20 @@ begin
    end;
 end;
 
-procedure TBurReadRam.Execute(FromTime, ToTime: TDateTime; ReadToFF, FastSpeed: Boolean; Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+procedure TBurReadRam.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
  var
   FuncRead: TReceiveDataRef;
   ErrCnt: Integer;
   Wait: Integer;
+  FFileStream: TFileStream;
 begin
   inherited ;//Execute(evInfoRead, Addrs);
 
   if FPacketLen = 0 then FPacketLen := RLEN;
-  
-  if FFastSpeed then
+
+  if FFastSpeed > 0 then
    begin
-    TDeviceBur(FAbstractDevice).Turbo();
+    TDeviceBur(FAbstractDevice).Turbo(FFastSpeed);
     Sleep(100);
     Wait := 2000;
    end
@@ -257,12 +261,30 @@ begin
 
   FCurAdr := FFromAdr;
   ErrCnt := 0;
+
+  if binFile <> '' then
+   begin
+    if TFile.Exists(binFile) then TFile.Delete(binFile);
+    FFileStream := TFileStream.Create(binFile, fmCreate);
+   end;
   // функция рекурсии
   FuncRead := procedure(Data: Pointer; DataSize: integer)
+    procedure CloseAny;
+    begin
+      TDeviceBur(FAbstractDevice).Turbo(0);
+      if Assigned(FFileStream) then FreeAndNil(FFileStream);
+    end;
     procedure WriteStream;
+     var
+      l: Integer;
     begin
       if DataSize < 0 then Exit;
-      fifo.Push(Data, DataSize);
+      l :=  Length(Fifo);
+      SetLength(fifo,l+DataSize);
+      move(Data^, fifo[l], DataSize);
+
+      if Assigned(FFileStream) then FFileStream.Write(Data^, DataSize);
+      //fifo.Push(Data, DataSize);
       Inc(FCurAdr, DataSize);
       FEvent.SetEvent;
     end;
@@ -278,9 +300,14 @@ begin
       FFlagEndRead := True;
       FEndReason := Reason;
       FEvent.SetEvent;
+      CloseAny;
     end;
   begin
-    if FFlagTerminate then Exit;
+    if FFlagTerminate then
+     begin
+      CloseAny;
+      Exit;
+     end;
     if DataSize < 0 then
      begin
       Inc(ErrCnt);
@@ -479,7 +506,7 @@ begin
        begin
         TPars.SetInfo(FMetaDataInfo.Info, Data, n); // parse all data for device
 
- //       FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'caliper.xml');
+     //   FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'caliper.xml');
 
         CArray.Add<Integer>(TmpGood,  adr);
        end
@@ -516,16 +543,27 @@ begin
   end;
 end;
 
-procedure TDeviceBur.Turbo;
+procedure TDeviceBur.Turbo(speed: integer);
+ const
+  SPD: array[0..6]of Integer = (125000, 500000, 1200000, 2000000, 3000000, 8000000, 12000000);
 begin
   with SerialQe, ConnectIO do
    begin
+    if speed = 0 then
+     begin
+      if ConnectIO is TComConnectIO then TComConnectIO(ConnectIO).Com.CustomBaudRate := SPD[speed];
+      Exit;
+     end;
     Add(procedure()
      var
-      d: byte;
+      d: word;
     begin
-      d := $FD;
-      Send(@D, Sizeof(D), nil, 300);
+      d := $FD00 + speed;
+      d := Swap(d);
+      Send(@D, Sizeof(D), procedure(p: Pointer; n: integer)
+      begin
+        if ConnectIO is TComConnectIO then TComConnectIO(ConnectIO).Com.CustomBaudRate := SPD[speed];
+      end, 300);
     end);
    end;
 end;

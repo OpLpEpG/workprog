@@ -18,12 +18,18 @@ const
    CMD_ERAM_WRITE  = 9;
    CMD_ERAM_CLEAR  = $A;
    CMD_ERAM_SET_BASE = $C;
+   CMD_ERAM_GET_BAD = $C;
 
 type
   TSetWritePage = packed record
     CmdAdr: Byte;
     Page: Word;
     constructor Create(addr: Byte; Apg: Word);
+  end;
+
+  TGetBadPage = packed record
+    CmdAdr: Byte;
+    Length: Word;
   end;
 
   PRamWrite =^TRamWrite;
@@ -62,7 +68,7 @@ type
   TRamReadNew = packed record
     CmdAdr: Byte;
     Adres: DWORD;
-    Length: word;
+    Length: DWORD;
   end;
 
   EFormRamTestError = class(EBaseException);
@@ -91,12 +97,14 @@ type
     elLenWrite: TEdit;
     btLenRead: TEdit;
     Label6: TLabel;
+    btReadBads: TButton;
     procedure btSetBaseClick(Sender: TObject);
     procedure btWriteClick(Sender: TObject);
     procedure btReadClick(Sender: TObject);
     procedure btClearClick(Sender: TObject);
     procedure btWriteRamClick(Sender: TObject);
     procedure btReadRamClick(Sender: TObject);
+    procedure btReadBadsClick(Sender: TObject);
   private
     function GetDevice(adr: Integer): ILowLevelDeviceIO;
     { Private declarations }
@@ -257,6 +265,37 @@ begin
   Result := (a shl 4) or cmd;
 end;
 
+procedure TFormRamTest.btReadBadsClick(Sender: TObject);
+  type
+   PDwordArray = ^Tda;
+   Tda = array [0..$8000-1] of DWORD;
+ var
+  lld: ILowLevelDeviceIO;
+  a: TGetBadPage;
+  adr: Integer;
+begin
+  adr := StrToInt(edADR.Text);
+  a.CmdAdr := ToAdrCmd(adr, CMD_ERAM_GET_BAD);
+  a.Length := StrToInt('$' + btLenRead.Text)*4;
+  lld := GetDevice(adr);
+  lld.SendROW(@a, SizeOf(a), procedure(p: Pointer; n: integer)
+   var
+    i: Integer;
+    d: PDwordArray;
+    s: string;
+  begin
+    if ((a.Length+1) = n) and (PByteArray(p)[0] = a.CmdAdr) then
+     begin
+       d := @PByteArray(p)[1];
+       s := '';
+       for i := 0 to a.Length div 4 - 1 do s := s + Format('%8.8x ',[d[i]]);
+//       memo.Lines.BeginUpdate;
+       memo.Text := s;
+//       memo.Lines.EndUpdate;
+     end;
+  end, 2000);
+end;
+
 procedure TFormRamTest.btReadRamClick(Sender: TObject);
   type
    PDwordArray = ^Tda;
@@ -275,13 +314,16 @@ begin
    var
     i: Integer;
     d: PDwordArray;
+    s: string;
   begin
     if ((a.Length+1) = n) and (PByteArray(p)[0] = a.CmdAdr) then
      begin
-       memo.Lines.BeginUpdate;
        d := @PByteArray(p)[1];
-       for i := 0 to a.Length div 4 - 1 do memo.Text := memo.Text + Format('%8.8x ',[d[i]]);
-       memo.Lines.EndUpdate;
+       s := '';
+       for i := 0 to a.Length div 4 - 1 do s := s + Format('%8.8x ',[d[i]]);
+//       memo.Lines.BeginUpdate;
+       memo.Text := s;
+//       memo.Lines.EndUpdate;
      end;
   end, 2000);
 end;
@@ -376,3 +418,6 @@ initialization
 finalization
   GContainer.RemoveModel<TFormRamTest>;
 end.
+
+
+

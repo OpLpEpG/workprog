@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Fibonach,System.Threading, System.Math,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, System.IOUtils,
-  System.Generics.Collections;
+  System.Generics.Collections, FireDAC.Stan.Def, FireDAC.Stan.Async, FireDAC.Stan.Intf, FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.UI.Intf,
+  FireDAC.VCLUI.Wait, FireDAC.Stan.ExprFuncs, FireDAC.Phys.SQLiteDef, FireDAC.Comp.UI;
 
 type
   TFormTest = class(TForm)
@@ -13,10 +14,20 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    vld: TFDSQLiteValidate;
+    Button6: TButton;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure Button4Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
+    procedure vldProgress(ASender: TFDPhysDriverService; const AMessage: string);
   private
     rm: TArray<Cardinal>;
     n1: Cardinal;
@@ -209,6 +220,11 @@ begin
    Memo.Lines.Add('--------------------------------------------' );
 end;
 
+procedure TFormTest.vldProgress(ASender: TFDPhysDriverService; const AMessage: string);
+begin
+  Memo.Lines.Add(AMessage);
+end;
+
 procedure TFormTest.Button2Click(Sender: TObject);
  var
   i: Integer;
@@ -253,6 +269,79 @@ begin
   Memo.Lines.EndUpdate;
 end;
 
+
+procedure TFormTest.Button4Click(Sender: TObject);
+ const
+  NN = 22;
+  CD: array [0..NN-1] of Integer = (1,-1,-1,1,1,-1,1,-1,-1,1,1,-1,1,-1,1,-1,-1,1,-1,1,-1,1);
+//  CD: array [0..NN-1] of Integer = (-1,-1,-1,1,1,1,-1,-1,1,1,-1,1,1,-1,1,-1,1,-1);
+//  CD: array [0..NN-1] of Integer = (1, 1, 1, 1, -1,-1,-1, -1, 1,-1, 1,-1,-1, 1, 1,-1,-1, 1);
+ var
+  data: array [0..NN*2-1] of Integer;
+  function corr(from: Integer): Integer;
+    var
+     i: Integer;
+  begin
+    Result := 0;
+    for i := 0 to NN-1 do Result := Result + data[from+i]*CD[i];
+  end;
+ var
+  i: Integer;
+  s: string;
+begin
+  for i := 0 to High(data) do data[i] := 0;
+  for i := 0 to NN-1 do data[i] := CD[i];
+  s := '';
+  for i := 1 to NN-1 do s := s +corr(i).ToString()+ ' ';
+  s := s.Trim;
+  Memo.Lines.Add(s);
+end;
+
+procedure TFormTest.Button5Click(Sender: TObject);
+ const
+  NL = 22;
+ var
+  i, n, cr, crold, crglob: Integer;
+  rez: TArray<Integer>;
+  rezs: TArray<string>;
+  s: string;
+begin
+  crglob := NL;
+  for n := 1 to (2 shl (NL-1)) - 1 do
+   begin
+//    n := 246425;
+    crold := -NL;
+    s := '';
+    for i := 1 to NL-1 do
+     begin
+      cr := FastCorr(n, n shr i, NL-i);
+      s := s + cr.ToString() + ' ';
+     // cr := Abs(cr);
+      if cr > crold then crold := cr;
+     end;
+    if crold = crglob then
+     begin
+      rez := rez + [n];
+      rezs := rezs + [s];
+     end
+    else if crold < crglob then
+     begin
+      crglob := crold;
+      SetLength(rez, 1);
+      SetLength(rezs, 1);
+      rez[0] := n;
+      rezs[0] := s;
+     end;
+   end;
+  Caption := crglob.ToString();
+  for i:=0 to High(rez) do Memo.Lines.Add(Format('%d  %x  %s %s',[i,rez[i], IntToBin(rez[i],NL), rezs[i]]));
+end;
+
+procedure TFormTest.Button6Click(Sender: TObject);
+begin
+  Memo.Clear;
+  vld.Analyze;
+end;
 
 end.
 

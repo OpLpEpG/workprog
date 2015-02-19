@@ -137,7 +137,6 @@ type
                       out info: Integer;
                       out x: PDoubleArray): HRESULT; stdcall;
   end;
-
 //  __interface ILMFitting : public ILastMathError
 //
 // 	SAFECALL FitV(const ae_int_t n, const ae_int_t m, const double *xin, const double *boundL, const double *boundU,
@@ -179,6 +178,36 @@ type
                   func: TLMFittingCB; out xout: PDoubleArray; out Rep: PLMFittingReport): HRESULT; stdcall;
   end;
 
+{typedef struct
+	double *dwt;
+	int dwt_len;
+	int *length;
+	int length_len;
+	double flag0;
+	double flag1;
+ wave1d_rez_t;
+
+__interface Iwavelet : public ILastMathError
+
+	SAFECALL setup_dwt(const char* name, const int set_J);
+	SAFECALL dw_i16(const INT16 *a, const ae_int_t cnt,  wave1d_rez_t &rez);
+	SAFECALL idw(const double **x, ae_int_t &cnt);
+;}
+  TWaveletRez = record
+    dwt: PDoubleArray;
+    dwt_len: Integer;
+    length: PIntegerArray;
+    length_len: Integer;
+    flag0, flag1: double;
+  end;
+
+
+  Iwavelet = interface(ILastMathError)
+    function setup_dwt(const name: PAnsiChar; const J: Integer): HRESULT; stdcall;
+    function dw_i16(const sig: PSmallInt; len: Integer; out rez: TWaveletRez): HRESULT; stdcall;
+    function dw(const sig: PDouble; len: Integer; out rez: TWaveletRez): HRESULT; stdcall;
+    function idw(out sig: PDoubleArray; out len: Integer): HRESULT; stdcall;
+  end;
 
 {$WARN SYMBOL_PLATFORM OFF}
 procedure RbfFactory(out Rbf: IRbf); cdecl; external 'matlab.dll' delayed;
@@ -189,6 +218,7 @@ procedure LSFittingFactory(out LSFitting: ILSFitting); cdecl; external 'matlab.d
 procedure LMFittingFactory(out LMFitting: ILMFitting); cdecl; external 'matlab.dll' delayed;
 procedure ToDoubleMatrix(Src: Pointer; out mtx: IDoubleMatrix); cdecl; external 'matlab.dll' delayed;
 procedure EquationsFactory(out Equations: IEquations); cdecl; external 'matlab.dll' delayed;
+procedure WaveletFactory(out wavelet: Iwavelet); cdecl; external 'matlab.dll' delayed;
 {$WARN SYMBOL_PLATFORM ON}
 
 procedure CheckMath(lme: ILastMathError; res: HRESULT);

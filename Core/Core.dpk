@@ -93,7 +93,8 @@ contains
   XMLScript.Math in 'XMLScript.Math.pas',
   Fibonach in '..\Fibonach.pas',
   StolGKIntf in '..\StolGKIntf.pas',
-  Math.Telesistem in 'Math.Telesistem.pas';
+  Math.Telesistem in 'Math.Telesistem.pas',
+  XMLScript.IKN in 'XMLScript.IKN.pas';
 
 end.
 

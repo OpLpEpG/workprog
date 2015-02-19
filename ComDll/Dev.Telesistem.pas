@@ -523,7 +523,7 @@ procedure TUso1.InputData(Data: Pointer; DataSize: integer);
    p: PByte;
 begin
 
- while True do
+{ while True do
   begin
     if FTestUsoData <> tudNone then
      begin
@@ -540,9 +540,9 @@ begin
       if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], Length(FData));
       Exit;
      end;
-  end;
+  end;}
 
-{ p := Data;
+ p := Data;
   with RecRun do while DataSize > 0 do
    begin
     if HSync then
@@ -591,7 +591,7 @@ begin
       end;
     Dec(DataSize);
     Inc(p);
-   end; }
+   end;
 end;
 
 procedure TUso1.SetTestUsoData(const Value: TTestUsoData);

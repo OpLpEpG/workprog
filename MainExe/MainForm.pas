@@ -2,7 +2,7 @@ unit MainForm;
 
 interface
 
-uses DeviceIntf, ExtendIntf, RootIntf,  Winapi.Messages, System.Variants, Vcl.HtmlHelpViewer,  XMLScript.Math,
+uses DeviceIntf, ExtendIntf, RootIntf,  Winapi.Messages, System.Variants, Vcl.HtmlHelpViewer,  XMLScript.Math, XMLScript.IKN,
   System.SysUtils, PluginAPI, Vcl.Dialogs, Vcl.ImgList, Vcl.Controls, Vcl.StdActns, Vcl.BandActn, System.Classes, Vcl.ActnList, Vcl.ActnMan,
   Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ComCtrls, Vcl.Forms, Vcl.Graphics, Winapi.Windows, JvAppStorage, JvAppRegistryStorage, JvDockControlForm,
   Vcl.AppEvnts, Vcl.ExtCtrls, JvFormPlacement, JvDockVIDStyle, JvComponentBase, System.Actions,
