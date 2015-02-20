@@ -110,7 +110,7 @@ begin
   nf := Root.Attributes[TXMLScriptIKN.AT_NF];
   nz := Root.Attributes[TXMLScriptIKN.AT_NZ];
 
-  SetLength(Fdata, nz, nf, nt);
+  SetLength(Fdata, nz+1, nf, nt);
   SetLength(FarrT, nt);
   SetLength(FZnd, nz);
   SetLength(Fw, nf);
@@ -254,7 +254,6 @@ begin
     root.Attributes[Format('L%dF%d',[i,f])] := DEF_VAL[n];
     inc(n);
    end;
-
   //root.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'ind3.xml');
 end;
 
@@ -325,13 +324,16 @@ class procedure TXMLScriptIKN.Exec_IKN_A2(v, t: Variant);
  var
   al, cl, tl, pl: array[0..7,1..4] of Double;
   i, j: Integer;
-  d: IOwnIntfXMLNode;
+  d: ITrrFileIKNA2;
   trr, pr, fq, lz: IXMLNode;
 begin
   root := TVxmlData(v).Node;
   trr := TVxmlData(t).Node;
-  d := (trr as IOwnIntfXMLNode);
-  if not Assigned(d.Intf) then d.Intf := TTrrFileIKNA2.Create(trr);
+  if not XSupport(trr, ITrrFileIKNA2, d) then
+   begin
+    d := TTrrFileIKNA2.Create(trr);
+    (trr as IOwnIntfXMLNode).Intf := d;
+   end;
   for j := 1 to 4 do for i := 0 to 7 do
    begin
     al[i,j] := ang240(i, j*2-1);
@@ -340,7 +342,7 @@ begin
    end;
   for i := 0 to 7 do for j := 1 to 4 do
    begin
-    pl[i,j] := al[i,j] - cl[i,j] - al[0,j] + cl[0,j] - (d.Intf as ITrrFileIKNA2).ph_zero_spline(i,j, tl[i,j]);
+    pl[i,j] := al[i,j] - cl[i,j] - al[0,j] + cl[0,j] - d.ph_zero_spline(i,j-1, tl[i,j]);
    end;
   pr := root.ChildNodes.FindNode(T_PRV);
   for j := 1 to 4 do
@@ -349,7 +351,7 @@ begin
     for i := 0 to 6 do
      begin
       lz := fq.ChildNodes.FindNode('L'+i.ToString);
-      lz.ChildNodes.FindNode(T_CLC).Attributes[AT_VALUE] := (d.Intf as ITrrFileIKNA2).s_from_a_SL(pl[i+1,j], i, j-1);
+      lz.ChildNodes.FindNode(T_CLC).Attributes[AT_VALUE] := d.s_from_a_SL(pl[i+1,j], i, j-1);
      end;
    end;
 end;

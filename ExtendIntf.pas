@@ -176,7 +176,7 @@ type
 
   IALLMetaDataFactory = interface
   ['{5609F9AD-AB7D-4217-8C22-8584D1E137F1}']
-    function Get(const DBName: string): IALLMetaData; overload;
+    function Get(const Name: string): IALLMetaData; overload;
     function Get: IALLMetaData; overload;
   end;
 

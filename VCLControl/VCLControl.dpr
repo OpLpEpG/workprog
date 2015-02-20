@@ -87,11 +87,11 @@ class procedure TVCLControl.InnerProject(const PrjName: string; isNew: Boolean);
 begin
   (GContainer as IMainScreen).Lock;
   try
-   (GContainer as IMainScreen).StatusBarText[1] := PrjName;
-   (GContainer as IRegistry).SaveString('CurrentProject', PrjName);
    if isNew then
          (GContainer as IManager).NewProject(PrjName)
    else  (GContainer as IManager).LoadProject(PrjName);
+   (GContainer as IMainScreen).StatusBarText[1] := (GContainer as IManager).ProjectName;
+   (GContainer as IRegistry).SaveString('CurrentProject', (GContainer as IManager).ProjectName);
    (GContainer as IActionProvider).ResetActions;
   finally
    (GContainer as IMainScreen).UnLock;
@@ -99,13 +99,24 @@ begin
 end;
 
 class procedure TVCLControl.DoNewProject(Sender: IAction);
+ var
+  me: IManagerEx;
 begin
   with TOpenDialog.Create(nil) do
   try
-   InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
-   DefaultExt := 'db';
-   Filter := 'Файл проекта (*.db)|*.db';
-   Options := [ofOverwritePrompt,ofHideReadOnly,ofPathMustExist,ofEnableSizing];
+   if Supports(GContainer, IManagerEx, me) then
+    begin
+     DefaultExt := me.GetProjectDefaultExt;
+     Filter :=  me.GetProjectFilter;
+     InitialDir := me.GetProjectDirectory;
+    end
+   else
+    begin
+     DefaultExt := 'db';
+     Filter := 'Файл проекта (*.db)|*.db';
+     InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
+    end;
+   Options := [ofOverwritePrompt,ofHideReadOnly,ofEnableSizing];
    if not Execute() then Exit;
    InnerProject(FileName, True);
   finally
@@ -114,12 +125,23 @@ begin
 end;
 
 class procedure TVCLControl.DoOpenProject(Sender: IAction);
+ var
+  me: IManagerEx;
 begin
   with TOpenDialog.Create(nil) do
   try
-   InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
-   DefaultExt := 'db';
-   Filter := 'Файл проекта (*.db)|*.db';
+   if Supports(GContainer, IManagerEx, me) then
+    begin
+     DefaultExt := me.GetProjectDefaultExt;
+     Filter :=  me.GetProjectFilter;
+     InitialDir := me.GetProjectDirectory;
+    end
+   else
+    begin
+     DefaultExt := 'db';
+     Filter := 'Файл проекта (*.db)|*.db';
+     InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
+    end;
    Options := [ofReadOnly,ofHideReadOnly,ofPathMustExist,ofFileMustExist,ofEnableSizing];
    if not Execute() then Exit;
    InnerProject(FileName, False);

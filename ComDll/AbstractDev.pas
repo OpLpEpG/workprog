@@ -898,7 +898,7 @@ procedure TAbstractDevice.LoadBeroreAdd;
   a: Integer;
 begin
   SetLength(FMetaDataInfo.ErrAdr, 0);
-  FMetaDataInfo.Info := (GContainer as IALLMetaDataFactory).Get().Get().DocumentElement.ChildNodes.FindNode(Name);
+  FMetaDataInfo.Info := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get().Get(), Name);
   for a in FAddressArray do if not Assigned(FindDev(FMetaDataInfo.Info, a)) then CArray.Add<Integer>(FMetaDataInfo.ErrAdr, a);
   if Length(FMetaDataInfo.ErrAdr) = 0 then S_Status := dsReady
   else if Length(FMetaDataInfo.ErrAdr) < Length(FAddressArray) then S_Status := dsPartReady

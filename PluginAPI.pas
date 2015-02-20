@@ -67,6 +67,12 @@ type
     procedure LoadProject(const FileName: string);
   end;
 
+  IManagerEx = interface
+  ['{4040A260-D710-46D1-AD4E-16C350A2B990}']
+    function GetProjectFilter: string;
+    function GetProjectDefaultExt: string;
+    function GetProjectDirectory: string;
+  end;
   // ***********  ядро  ************  -
 //  ICore = interface
 //  ['{602AFD4B-D766-4352-BA77-91AACCB8981D}']

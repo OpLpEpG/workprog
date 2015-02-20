@@ -1,0 +1,503 @@
+unit manager3;
+
+interface
+
+uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils, Actns, System.UITypes,
+     RootImpl, AbstractPlugin, PluginAPI, DockIForm, System.SyncObjs, XMLEnumers,
+     Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows, System.IOUtils,   ShellAPI, messages,
+     System.SysUtils, Vcl.Graphics, System.Classes, System.Generics.Collections, System.Generics.Defaults,
+     RTTI, System.TypInfo, Xml.XMLIntf;
+
+ const
+   T_DEV = 'DEVICES';
+   T_CON = 'CONNECTIOS';
+   T_OPT = 'OPTIONS';
+ type
+  EManagerexception = class(EBaseException);
+
+  TManager = class(TAbstractPlugin,
+                               IManager, IManagerEx,
+                               IProjectData,
+                               IProjectOptions,
+                               IALLMetaDataFactory, IALLMetaData,
+                               IMetrology{,
+                               IDelayManager})
+  private
+//    VSetTime, VDelay, VWorkTime: Variant;
+//    FDelayStatus: DelayStatus;
+   // FDBConnection: IDBConnection;
+    FC_TableUpdate: string;
+
+//    FSQLMonitor: TSQLMonitor;
+//    DbgMon: TFDMoniRemoteClientLink;
+
+//    procedure ClearDevsAndIOs;
+    procedure SetTableUpdate(const Value: string);
+//    procedure CreateTables;
+//    procedure AddOption(AParams: array of Variant);
+//    function Query: TAsyncADQuery; inline;
+//    procedure AddOption(AParams: array of Variant);
+  protected
+   // IALLMetaDataFactory
+
+    function Get(const Name: string): IALLMetaData; overload;
+    function Get: IALLMetaData; overload;
+
+   // IALLMetaData
+    function IALLMetaData.Get = MetaDataGet;
+    function MetaDataGet: IXMLDocument;
+    procedure Save;
+
+    { IManager }
+    procedure ClearItems(ClearItems: EClearItems = [ecIO, ecDevice, ecForm]); { TODO : убрать как устаревшее }
+    function ProjectName: string;
+    procedure LoadScreen();
+    procedure SaveScreen();
+    procedure NewProject(const FileName: string);
+    procedure LoadProject(const FileName: string);
+    { IManagerEx }
+    function GetProjectFilter: string;
+    function GetProjectDefaultExt: string;
+    function GetProjectDirectory: string;
+    // IProjectData,
+    procedure SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
+    procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; StdOnly: Boolean = False);
+    procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; CurAdr, CurKadr: Integer; CurTime: TDateTime; FModulID: Integer);
+
+    procedure IMetrology.Setup = SetMetrol;
+    procedure SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
+
+    // IProjectOptions
+    function GetOption(const Name: string): Variant;
+    procedure SetOption(const Name: string; const Value: Variant);
+    procedure AddOrIgnore(const Name, Section: string;
+                          const Description: string = '';
+                          const SectionDescription: string ='';
+                          const Units: string = '';
+                          Hidden: Boolean = True;
+                          ReadOnly: Boolean = False;
+                          DataType: Integer = -1);
+
+    // IDelayManager = interface
+//    procedure InternalInitDelay;
+//    procedure SetDelay(SetTime, Delay, WorkTime: Variant);
+//    procedure GetDelay(var SetTime, Delay, WorkTime: Variant; var ds: DelayStatus);
+//    procedure StopDelay();
+
+    class function GetHInstance: THandle; override;
+  public
+    FProjectFile: string;
+    FProjecDoc: IXMLDocument;
+    Froot, FConnect, FDevices, Foptions : IXMLNode;
+
+    class var This: TManager;
+    class function ProjectDir: string;
+    constructor Create; override;
+//    destructor Destroy; override;
+    class function PluginName: string; override;
+
+    property Option[const Name: string]: Variant read GetOption write SetOption;
+
+    property S_ProjectChange: string read FProjectFile write FProjectFile;
+
+    property C_TableUpdate: string read FC_TableUpdate write SetTableUpdate;
+    property S_TableUpdate: string read FC_TableUpdate write SetTableUpdate;
+  end;
+
+implementation
+
+uses tools;//, PrjTool;
+
+const
+  IFORMS_INI_DIR = 'IFormObjs';
+
+type
+  TALLMetaData = class(TIObject, IALLMetaData)
+  private
+    XDoc: IXMLDocument;
+    FName: string;
+  protected
+    function Get: IXMLDocument;
+    procedure Save;
+    constructor Create(const Name: string);
+  end;
+
+constructor TALLMetaData.Create(const Name: string);
+begin
+  XDoc := NewXDocument;
+  FName := Name;
+  XDoc.LoadFromFile(FName);
+end;
+
+function TALLMetaData.Get: IXMLDocument;
+begin
+  Result := XDoc;
+end;
+
+procedure TALLMetaData.Save;
+begin
+  XDoc.SaveToFile(FName);
+end;
+
+
+{$REGION 'TManager'}
+
+{ TManager }
+
+function TManager.Get(const Name: string): IALLMetaData;
+ var
+  i: IInterface;
+begin
+  if GContainer.TryGetInstance(TypeInfo(TALLMetaData), Name, i, False) then Result := i as IALLMetaData
+  else
+   begin
+    Result := TALLMetaData.Create(Name);
+    TRegister.AddType<TALLMetaData>.AddInstance(Name, Result as IInterface);
+   end
+end;
+
+function TManager.Get: IALLMetaData;
+begin
+  Result := Self as IALLMetaData;
+end;
+
+function TManager.MetaDataGet: IXMLDocument;
+begin
+  Result := FProjecDoc;
+end;
+
+class function TManager.GetHInstance: THandle;
+begin
+  Result := HInstance;
+end;
+
+class function TManager.PluginName: string;
+begin
+  Result := 'XML Проект';
+end;
+
+constructor TManager.Create;
+begin
+  inherited;
+  This := Self;
+//  DbgMon := TADMoniRemoteClientLink.Create(nil);
+//  TDebug.Log('----------- TManager.Create ---------------------');
+end;
+
+{destructor TManager.Destroy;
+begin
+  TDebug.Log('----------- TManager.Destroy ---------------------');
+  DbgMon.Free;
+  inherited;
+end;}
+
+function TManager.GetProjectDefaultExt: string;
+begin
+  Result := 'xml';
+end;
+
+function TManager.GetProjectDirectory: string;
+begin
+  Result := ProjectDir;
+end;
+
+function TManager.GetProjectFilter: string;
+begin
+  Result := 'Файл проекта (*.xml)|*.xml';
+end;
+
+function TManager.GetOption(const Name: string): Variant;
+ var
+  c, v: IXMLNode;
+begin
+  Result := null;
+  for c in XEnum(Foptions) do
+  begin
+   v := c.ChildNodes.FindNode(Name);
+   if Assigned(v) then Result := v.Attributes['Значение'];
+   Break;
+  end;
+end;
+
+procedure TManager.SetOption(const Name: string; const Value: Variant);
+ var
+  c, v: IXMLNode;
+begin
+  for c in XEnum(Foptions) do
+  begin
+   v := c.ChildNodes.FindNode(Name);
+   if Assigned(v) and v.HasAttribute('Значение') then v.Attributes['Значение'] := Value;
+   Break;
+  end;
+end;
+
+procedure TManager.AddOrIgnore(const Name, Section, Description, SectionDescription, Units: string; Hidden, ReadOnly: Boolean; DataType: Integer);
+ var
+  c, v: IXMLNode;
+begin
+   c := Foptions.ChildNodes.FindNode(Section);
+   if not Assigned(c) then
+    begin
+     c := Foptions.AddChild(Section);// ChildNodes.FindNode(Section);
+     c.Attributes['Категория'] := SectionDescription;
+    end
+   else if Assigned(c.ChildNodes.FindNode(Name)) then Exit;
+   v := c.AddChild(Name);
+   v.Attributes['Описание'] := Description;
+   v.Attributes['Единицы'] := Units;
+   v.Attributes['Hidden'] := Hidden;
+   v.Attributes['ReadOnly'] := ReadOnly;
+   v.Attributes['DataType'] := DataType;
+end;
+
+procedure TManager.SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
+  var
+   dv: IXMLNode;
+begin
+  dv := FDevices.ChildNodes.FindNode(Dev.IName);
+  dv.ChildNodes.Add(MetaData);
+  Save;
+  S_TableUpdate := 'Modul';
+end;
+
+procedure TManager.SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
+ var
+  d: IDevice;
+  de: IDeviceEnum;
+  info, dev,  trr,  tip,  run: IXMLnode;
+      fdev,       ftip, frun: IXMLnode;
+  atr: IXMLnode;
+  Vnomer, Vtime: Variant;
+  id: Integer;
+begin
+  id := 0;
+  de := GContainer as IDeviceEnum;
+ { Query.Acquire;
+  try
+   Query.Open(Format(GET_TRR_FROM_METR_ID, [MetrolID]));
+    try
+     // проверка аргкмннтов
+     Query.First;
+     if Query.Eof then raise EManagerexception.CreateFmt('Нет Устройства %d в базе данных',[MetrolID]);
+     d := de.Get(Query['IName']);
+     if not Assigned(d) then raise EManagerexception.CreateFmt('Нет Устройства %s',[Query['IName']]);
+
+    info := (d as IDataDevice).GetMetaData.Info;
+    if Assigned(info) then  dev := FindDev(info, Query['Адрес']);
+
+     if not Assigned(dev) then raise EManagerexception.CreateFmt('Нет у %s модуля %d',[Query['IName'], Query['Адрес']]);
+
+     trr := dev.ChildNodes.FindNode(T_MTR);
+     tip := trr.ChildNodes.FindNode(Query['Тип']);
+     if not Assigned(tip) then raise EManagerexception.CreateFmt('У %s модуля %d, нет метрологии %s',[Query['IName'], Query['Адрес'], Query['Тип']]);
+
+     fdev := TrrData.ChildNodes[0];
+     ftip := fdev.ChildNodes.FindNode(T_MTR).ChildNodes.FindNode(Query['Тип']);
+     if not Assigned(ftip) then raise EManagerexception.CreateFmt('У импортируемой метрологии нет %s',[Query['Тип']]);
+
+     atr := tip.AttributeNodes.FindNode(AT_METR);
+     if Assigned(atr) then tip.AttributeNodes.Remove(atr);
+
+  //   tip.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'tip.xml');
+  //   ftip.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'ftip.xml');
+
+     if not HasXTree(tip, ftip) then raise EManagerexception.Create('Импортировать метрологию невозможно - неверная структура');
+
+     if Assigned(atr) then tip.AttributeNodes.Add(atr);
+
+     // проверка без исключения
+     if (fdev.NodeName <> 'ANY_DEVICE') and (fdev.NodeName <> dev.NodeName)  then
+          MessageDlg(Format('Текущий файл тарировки прибора %s а выбран прибор %s',[fdev.NodeName, dev.NodeName]),
+          TMsgDlgType.mtWarning, [mbOK], 0)
+     else if fdev.HasAttribute(AT_SERIAL) and dev.HasAttribute(AT_SERIAL) and (fdev.Attributes[AT_SERIAL] <> dev.Attributes[AT_SERIAL]) then
+          MessageDlg(Format('Текущий файл тарировки прибора с номером %s а выбран прибор с номером %s', [fdev.Attributes[AT_SERIAL], fdev.Attributes[AT_SERIAL]]),
+          TMsgDlgType.mtWarning, [mbOK], 0);
+     // выполнение
+     // присвоение новых значений
+     HasXTree(tip, ftip, procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
+     begin
+       EtalonAttr.NodeValue := TestAttr.NodeValue;
+     end);
+     run := tip.ChildNodes.FindNode('RUN');
+     frun := ftip.ChildNodes.FindNode('RUN');
+     if Assigned(run) then tip.ChildNodes.Remove(run);
+     if Assigned(frun) then tip.ChildNodes.Add(frun.CloneNode(True));
+     id := Query['id'];
+    finally
+     Query.Close;
+    end;
+   if fdev.HasAttribute(AT_SERIAL) then Vnomer := Integer(fdev.Attributes[AT_SERIAL]);
+   if ftip.HasAttribute(AT_TIMEATT) then Vtime := ftip.Attributes[AT_TIMEATT];
+    // запись БД
+   Query.ExecSQL(Format(CHNG_MODUL_META2, [dev.XML, id]));
+   Query.ExecSQL(CHNG_TRR_SRC, [SourceName, fdev.NodeName, Vnomer, Vtime, MetrolID], [ftString, ftString, ftInteger, ftDateTime, ftInteger]);
+  finally
+   Query.Release;
+  end;     }
+  (de as IBind).Notify('S_PublishedChanged');
+end;
+
+procedure TManager.Save;
+begin
+  FProjecDoc.SaveToFile(FProjectFile);
+end;
+
+procedure TManager.SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; StdOnly: Boolean = False);
+ var
+  d: IOwnIntfXMLNode;
+  Id: Integer;
+begin
+  d := (Data as IOwnIntfXMLNode);
+{  if not Assigned(d.Intf) then
+   begin
+    GetDevID(Query, dev, Id);
+    d.Intf := TSaveLogData.Create(Data, ADD_LOG_VAL, Adr, id);
+   end;
+  (d.Intf as ISaveLogDataCash).SetStdOnly(StdOnly);
+//  Tdebug.Log('SaveLogData START %d, %s    ', [adr, Data.ParentNode.NodeName]);
+  (d.Intf as ISaveLogDataCash).SaveData(nil);{  procedure
+   begin
+     Tdebug.Log('SaveLogData END %d, %s    ', [adr, Data.ParentNode.NodeName]);
+   end);}
+end;
+
+procedure TManager.SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; CurAdr, CurKadr: Integer; CurTime: TDateTime; FModulID: Integer);
+const
+  {$J+} tick: Cardinal = 0;{$J-}
+ var
+  d: IOwnIntfXMLNode;
+  Id: Integer;
+  t: Cardinal;
+begin
+ { t := GetTickCount;
+  Query.Acquire;
+  try
+    d := (Data as IOwnIntfXMLNode);
+    if not Assigned(d.Intf) then
+     begin
+      GetDevID(Query, dev, Id);
+      d.Intf := TSaveData.Create(Data, ADD_RAM_VAL, Adr, id);
+     end;
+    (d.Intf as ISaveDataCash).SaveData(nil);
+    Query.ExecSQL('UPDATE Modul SET ToAdr=:p1, ToKadr=:p2, ToTime=:p3 WHERE id = :p4', [CurAdr, CurKadr, DateTimeToJulianDate(CurTime), FModulID],
+                                                                                        [ftInteger, ftFloat, ftTime, ftInteger]);
+  finally
+   Query.Release;
+  end;
+  if (t - tick) > 1000 then
+   begin
+    S_TableUpdate := 'Ram';
+    tick := t;
+   end;}
+end;
+
+procedure TManager.ClearItems(ClearItems: EClearItems);
+begin
+  if ecIO in ClearItems then (GlobalCore as IConnectIOEnum).Clear;
+  if ecDevice in ClearItems then (GlobalCore as IDeviceEnum).Clear;
+  if ecForm in ClearItems then (GlobalCore as IFormEnum).Clear;//  FFormEnum.Clear;
+end;
+
+class function TManager.ProjectDir: string;
+begin
+  Result := TPath.GetSharedDocumentsPath +'\Горизонт\WorkProg\Projects';
+  if not TDirectory.Exists(Result) then TDirectory.CreateDirectory(Result);
+end;
+
+function TManager.ProjectName: string;
+begin
+  Result := FProjectFile;
+end;
+
+procedure TManager.LoadScreen;
+ var
+  sa: TArray<IStorable>;
+  s: IStorable;
+begin
+  sa := GContainer.InstancesAsArray<IStorable>(true);
+  TArray.Sort<IStorable>(sa, TManagItemComparer<IStorable>.Create);
+  for s in sa do s.Load;
+end;
+
+procedure TManager.SaveScreen();
+ var
+  s: IStorable;
+begin
+  for s in GContainer.Enum<IStorable>() do s.Save;
+end;
+
+procedure TManager.SetTableUpdate(const Value: string);
+begin
+  FC_TableUpdate := Value;
+  Notify('S_TableUpdate');
+end;
+
+procedure TManager.LoadProject(const FileName: string);
+begin
+  ClearItems([ecIO, ecDevice]);
+  if FileExists(FileName) then
+   begin
+    FProjectFile := FileName;
+    FProjecDoc := NewXDocument();
+    FProjecDoc.LoadFromFile(FProjectFile);
+    Froot := FProjecDoc.DocumentElement;
+    FConnect := Froot.ChildNodes.FindNode(T_CON);
+    FDevices := Froot.ChildNodes.FindNode(T_DEV);
+    Foptions := Froot.ChildNodes.FindNode(T_OPT);
+
+    ((GlobalCore as IConnectIOEnum) as IStorable).Load;
+    ((GlobalCore as IDeviceEnum) as IStorable).Load;
+    Notify('S_ProjectChange');
+   end
+  else
+   begin
+    Froot := nil;
+    FConnect := nil;
+    FDevices := nil;
+    Foptions := nil;
+    FProjecDoc := nil;
+    FProjectFile := '';
+    Notify('S_ProjectChange');
+   end;
+end;
+
+procedure TManager.NewProject(const FileName: string);
+ var
+  dir, flName, ladtDir: string;
+  last: TArray<string>;
+  LDoc: IXMLDocument;
+begin
+  if FileExists(FileName) then raise EManagerexception.CreateFmt('Проект %s уже существует',[FileName]);
+
+  dir := TPath.GetDirectoryName(FileName);
+  flName := TPath.GetFileNameWithoutExtension(FileName);
+  last := dir.Split([Tpath.DirectorySeparatorChar], ExcludeEmpty);
+  ladtDir := last[High(last)];
+  if (not SameText(flName, ladtDir)) and (MessageDlg('Cоздать директорию ..\'+flName +'\ ?', mtInformation, [mbYes, mbNo], 0) = mrYes) then
+   begin
+    dir := dir + Tpath.DirectorySeparatorChar + flName;
+    TDirectory.CreateDirectory(dir);
+   end;
+
+  ClearItems([ecIO, ecDevice]);
+
+  FProjectFile := dir + Tpath.DirectorySeparatorChar + TPath.GetFileName(FileName);
+  FProjecDoc := NewXDocument();
+  Froot := FProjecDoc.AddChild('PROJECT');
+  FConnect := Froot.AddChild(T_CON);
+  FDevices := Froot.AddChild(T_DEV);
+//  Foptions := Froot.AddChild(T_OPT);
+  LDoc := NewXDocument();
+  LDoc.LoadFromFile(ExtractFilePath(ParamStr(0))+'Devices\Options.xml');
+  Froot.ChildNodes.Add(Ldoc.DocumentElement);
+
+  ((GlobalCore as IConnectIOEnum) as IStorable).New;
+  ((GlobalCore as IDeviceEnum) as IStorable).New;
+
+  FProjecDoc.SaveToFile(FProjectFile);
+  Notify('S_ProjectChange');
+end;
+
+{$ENDREGION}
+
+end.

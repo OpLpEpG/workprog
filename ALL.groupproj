@@ -9,6 +9,9 @@
         <Projects Include="ProjectManager\ProjectManager.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="ProjectManager\ProjectManager3.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="ComDll\ComDev.dproj">
             <Dependencies/>
         </Projects>
@@ -115,6 +118,15 @@
     </Target>
     <Target Name="ProjectManager:Make">
         <MSBuild Projects="ProjectManager\ProjectManager.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ProjectManager3">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj"/>
+    </Target>
+    <Target Name="ProjectManager3:Clean">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProjectManager3:Make">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Make"/>
     </Target>
     <Target Name="ComDev">
         <MSBuild Projects="ComDll\ComDev.dproj"/>
@@ -360,13 +372,13 @@
         <MSBuild Projects="..\..\Libs\Graphics32\Examples\Layers\Sprites\Sprites.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;ComDev;VCLTelesis;Monitor;VCLData;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;DelphiAdvD2DGeometries;QPIXELS;Project2;Project3;GradLines;ImgView_Layers;RotLayer;Sprites"/>
+        <CallTarget Targets="Core;ProjectManager;ProjectManager3;ComDev;VCLTelesis;Monitor;VCLData;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;DelphiAdvD2DGeometries;QPIXELS;Project2;Project3;GradLines;ImgView_Layers;RotLayer;Sprites"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;DelphiAdvD2DGeometries:Clean;QPIXELS:Clean;Project2:Clean;Project3:Clean;GradLines:Clean;ImgView_Layers:Clean;RotLayer:Clean;Sprites:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ProjectManager3:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;DelphiAdvD2DGeometries:Clean;QPIXELS:Clean;Project2:Clean;Project3:Clean;GradLines:Clean;ImgView_Layers:Clean;RotLayer:Clean;Sprites:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;DelphiAdvD2DGeometries:Make;QPIXELS:Make;Project2:Make;Project3:Make;GradLines:Make;ImgView_Layers:Make;RotLayer:Make;Sprites:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;ProjectManager3:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;DelphiAdvD2DGeometries:Make;QPIXELS:Make;Project2:Make;Project3:Make;GradLines:Make;ImgView_Layers:Make;RotLayer:Make;Sprites:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
@@ -462,9 +474,9 @@
         </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
             <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="..\DirectPixel\Project3.dproj">
             <ProjectGuid>{C34EE684-21D1-4710-94D6-46279A44C337}</ProjectGuid>
@@ -494,6 +506,12 @@
             <ProjectGuid>{651CF745-5C11-41EF-B66C-2F03AAC1782E}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="ErrAzim_model\ErrAzim.dproj">
@@ -638,7 +656,7 @@
         </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
             <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
-            <Configurations>Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>

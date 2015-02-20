@@ -33,6 +33,10 @@ const
   CMD_WRITE_RAM = 9;
   CMD_CLEAR_RAM = 10;
 
+  // совместимость с БД для XML проекта
+  AT_CAPTION = 'Имя';
+  AT_PRIORITY = 'Ptiority';
+  AT_OBJ = 'ObjData';
 //   Атрибуты
 //   Основные ветви метаданных
   T_WRK   = 'WRK';
@@ -158,6 +162,8 @@ function FindXmlNode(root: IXMLNode; const Section, NodeName: string; var Node: 
 
 function DevNode(DataNode: IXMLNode): IXMLNode;
 function CalcNode(DataNode: IXMLNode): IXMLNode;
+
+function GetIDeviceMeta(Doc: IXMLDocument; const Iname: string): IXMLNode;
 //function IsData(Node: IXMLNode): Boolean;
 //function IsWrkRam(Node: IXMLNode): Boolean;
 
@@ -624,7 +630,12 @@ end;
 {$ENDREGION}
 
 {$REGION 'Вспомогательные функции'}
-
+function GetIDeviceMeta(Doc: IXMLDocument; const Iname: string): IXMLNode;
+begin
+  if Doc.DocumentElement.NodeName = 'PROJECT' then
+       Result := Doc.DocumentElement.ChildNodes.FindNode('DEVICES').ChildNodes.FindNode(IName)
+  else Result := Doc.DocumentElement.ChildNodes.FindNode(IName);
+end;
 function CalcNode(DataNode: IXMLNode): IXMLNode;
 begin
   Result := DataNode.ChildNodes.FindNode(T_CLC);
