@@ -24,6 +24,9 @@
         <Projects Include="VCLData\VCLData.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="VCLControl\VCLControl3.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="VCLControl\VCLControl.dproj">
             <Dependencies/>
         </Projects>
@@ -91,6 +94,12 @@
             <Dependencies/>
         </Projects>
         <Projects Include="..\..\Libs\Graphics32\Examples\Layers\Sprites\Sprites.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="PlotTst\Project4.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -163,6 +172,15 @@
     </Target>
     <Target Name="VCLData:Make">
         <MSBuild Projects="VCLData\VCLData.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLControl3">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj"/>
+    </Target>
+    <Target Name="VCLControl3:Clean">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLControl3:Make">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Make"/>
     </Target>
     <Target Name="VCLControl">
         <MSBuild Projects="VCLControl\VCLControl.dproj"/>
@@ -371,14 +389,32 @@
     <Target Name="Sprites:Make">
         <MSBuild Projects="..\..\Libs\Graphics32\Examples\Layers\Sprites\Sprites.dproj" Targets="Make"/>
     </Target>
+    <Target Name="ConwaysLife">
+        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj"/>
+    </Target>
+    <Target Name="ConwaysLife:Clean">
+        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ConwaysLife:Make">
+        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Project4">
+        <MSBuild Projects="PlotTst\Project4.dproj"/>
+    </Target>
+    <Target Name="Project4:Clean">
+        <MSBuild Projects="PlotTst\Project4.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project4:Make">
+        <MSBuild Projects="PlotTst\Project4.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;ProjectManager3;ComDev;VCLTelesis;Monitor;VCLData;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;DelphiAdvD2DGeometries;QPIXELS;Project2;Project3;GradLines;ImgView_Layers;RotLayer;Sprites"/>
+        <CallTarget Targets="Core;ProjectManager;ProjectManager3;ComDev;VCLTelesis;Monitor;VCLData;VCLControl3;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;DelphiAdvD2DGeometries;QPIXELS;Project2;Project3;GradLines;ImgView_Layers;RotLayer;Sprites;ConwaysLife;Project4"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ProjectManager3:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;DelphiAdvD2DGeometries:Clean;QPIXELS:Clean;Project2:Clean;Project3:Clean;GradLines:Clean;ImgView_Layers:Clean;RotLayer:Clean;Sprites:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ProjectManager3:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl3:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;DelphiAdvD2DGeometries:Clean;QPIXELS:Clean;Project2:Clean;Project3:Clean;GradLines:Clean;ImgView_Layers:Clean;RotLayer:Clean;Sprites:Clean;ConwaysLife:Clean;Project4:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;ProjectManager3:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;DelphiAdvD2DGeometries:Make;QPIXELS:Make;Project2:Make;Project3:Make;GradLines:Make;ImgView_Layers:Make;RotLayer:Make;Sprites:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;ProjectManager3:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl3:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;DelphiAdvD2DGeometries:Make;QPIXELS:Make;Project2:Make;Project3:Make;GradLines:Make;ImgView_Layers:Make;RotLayer:Make;Sprites:Make;ConwaysLife:Make;Project4:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
@@ -387,6 +423,12 @@
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="Metrol\Metrol.dproj">
             <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
@@ -415,6 +457,12 @@
         <BuildGroupProject Include="Core\Core.dproj">
             <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
+            <ProjectGuid>{FD581887-6F0D-484F-A9BC-69B94BDC1A84}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
@@ -454,6 +502,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="PlotTst\Project4.dproj">
+            <ProjectGuid>{C66BA0B8-3DC1-4FC8-AB47-5A444EEB091A}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
@@ -492,9 +546,9 @@
         </BuildGroupProject>
         <BuildGroupProject Include="VCLControl\VCLControl.dproj">
             <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCLData\VCLData.dproj">
             <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
@@ -538,6 +592,18 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
+            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\GradLines\GradLines.dproj">
+            <ProjectGuid>{779431F2-6DCD-4395-823B-F9A60AC69FF9}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
             <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
@@ -550,22 +616,16 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\GradLines\GradLines.dproj">
-            <ProjectGuid>{779431F2-6DCD-4395-823B-F9A60AC69FF9}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='D1'">
         <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Layers\ImgView_Layers\ImgView_Layers.dproj">
             <ProjectGuid>{58B1871C-DEB3-4001-9793-B623871B6FF3}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\GradLines\GradLines.dproj">
+            <ProjectGuid>{779431F2-6DCD-4395-823B-F9A60AC69FF9}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -597,6 +657,12 @@
         <BuildGroupProject Include="Core\Core.dproj">
             <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
             <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
+            <ProjectGuid>{FD581887-6F0D-484F-A9BC-69B94BDC1A84}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
@@ -633,6 +699,12 @@
         <BuildGroupProject Include="CreatePSK\CreateData.dproj">
             <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
             <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="PlotTst\Project4.dproj">
+            <ProjectGuid>{C66BA0B8-3DC1-4FC8-AB47-5A444EEB091A}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
@@ -674,7 +746,7 @@
         </BuildGroupProject>
         <BuildGroupProject Include="VCLControl\VCLControl.dproj">
             <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
-            <Configurations>Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
@@ -688,6 +760,12 @@
             <ProjectGuid>{651CF745-5C11-41EF-B66C-2F03AAC1782E}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="ErrAzim_model\ErrAzim.dproj">
@@ -714,6 +792,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
+            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
             <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -729,12 +813,6 @@
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
             <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\GradLines\GradLines.dproj">
-            <ProjectGuid>{779431F2-6DCD-4395-823B-F9A60AC69FF9}</ProjectGuid>
-            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>

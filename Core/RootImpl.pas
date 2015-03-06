@@ -154,19 +154,19 @@ type
     FIcon: Integer;
     procedure SetIcon(const Value: Integer);
   protected
-    FPriority: Integer;
+   // FPriority: Integer;
     function QueryInterface(const IID: TGUID; out Obj): HResult; override; stdcall;
     function _AddRef: Integer; reintroduce; stdcall;
     function _Release: Integer; reintroduce; stdcall;
   // IManagItem
-    function Priority: Integer;
+    function Priority: Integer; virtual;
     function Model: ModelType;
     function GetItemName: String;
     function RootName: String;
     procedure SetItemName(const Value: String);
     // IFORM
     procedure IForm.Show = IShow; procedure IShow; virtual;
-    procedure InitializeNewForm; override;
+//    procedure InitializeNewForm; override;
 
     function GetCaption: string;
     procedure SetCaption(const Value: string);
@@ -214,7 +214,7 @@ type
     procedure SetItemChanged(const Value: string); virtual;
     procedure DoBeforeAdd(mi: IManagItem); virtual;
     procedure DoAfterAdd(mi: IManagItem); virtual;
-    procedure DoBeforeRemove(mi: IManagItem); virtual;
+    procedure DoBeforeRemove(mi: IManagItem; const name: string); virtual;
     procedure DoAfterRemove(mi: IManagItem); virtual;
     function DoBeforeClear(mi: IManagItem): Boolean; virtual;
   //IServiceManager
@@ -235,6 +235,7 @@ type
        function DoGetEnumerator: TEnumerator<ET>; override;
      end;
     function Enum(Initialize: Boolean = True): TEnumerable<T>; // с инициализацией
+    function AsArrayRec: TArray<TInstanceRec<T>>;
     function Get(const ItemName: string; Initialize: Boolean = True): T; overload;
     function Get(model: ModelType; const ItemName: string; Initialize: Boolean = True): T; overload;
     // Storable
@@ -245,7 +246,7 @@ type
     procedure DoBeforeSave(mi: IManagItem); virtual;
     procedure DoAfterSave(mi: IManagItem); virtual;
 
-    procedure DoLoadItem(const mit: string);
+    procedure DoLoadItem(const mit: string; Prior: Integer = 1000);
     // IStorable
     procedure New; virtual;
     procedure Save; virtual;
@@ -562,10 +563,14 @@ begin
 end;
 
 constructor TIComponent.Create;
+ var
+  i: Integer;
 begin
   inherited Create(nil);
   FPriority := PRIORITY_IComponent;
-  Name := RootName + FormatDateTime('yymdhnsz', now);
+  i:= 1;
+  while GContainer.Contains(RootName + i.ToString()) do Inc(i);
+  Name := RootName + i.ToString;// FormatDateTime('yymdhnsz', now);
 end;
 
 destructor TIComponent.Destroy;
@@ -715,11 +720,11 @@ begin
   Result := Name;
 end;
 
-procedure TIForm.InitializeNewForm;
-begin
-  inherited;
-  FPriority := PRIORITY_IForm;
-end;
+//procedure TIForm.InitializeNewForm;
+//begin
+//  inherited;
+//  FPriority := PRIORITY_IForm;
+//end;
 
 procedure TIForm.IShow;
 begin
@@ -755,7 +760,7 @@ end;
 
 function TIForm.Priority: Integer;
 begin
-  Result := FPriority;
+  Result := PRIORITY_IForm;;
 end;
 
 procedure TIForm.Bind(const ControlExprStr: string; Source: IInterface; const SourceExpr: array of string);
@@ -916,7 +921,12 @@ begin
       ReadListBegin;
       ReadStr; //'ItemClassName' - property
       Item := TCollectionItemClass(FindClass(ReadString)).Create(Self); //Add(ReadString); // - value
-      while not EndOfList do ReadProperty(Item);
+      while not EndOfList do
+       try
+        ReadProperty(Item);
+       except
+        on E: Exception do TDebug.DoException(E);
+       end;
       ReadListEnd;
      end;
     ReadListEnd;
@@ -1042,9 +1052,14 @@ end;
 
 procedure TRootServiceManager<T>.Remove(const Item: IManagItem);
 begin
-  DoBeforeRemove(Item);
+  DoBeforeRemove(Item, Item.IName);
   GContainer.RemoveInstance(Item.Model, Item.IName);
   DoAfterRemove(Item);
+end;
+
+function TRootServiceManager<T>.AsArrayRec: TArray<TInstanceRec<T>>;
+begin
+  Result := TArray<TInstanceRec<T>>(GContainer.InstancesAsArrayRec<T>);
 end;
 
 procedure TRootServiceManager<T>.Clear;
@@ -1053,7 +1068,7 @@ procedure TRootServiceManager<T>.Clear;
   a: TArray<T>;
 begin
   a := GContainer.InstancesAsArray<T>(False);
-  TArray.Sort<T>(a, TManagItemComparer<T>.Create);
+//  TArray.Sort<T>(a, TManagItemComparer<T>.Create); сортеруен InstancesAsArray
   for i :=Length(a)-1 downto 0 do
    begin
     if DoBeforeClear(a[i]) then
@@ -1088,11 +1103,11 @@ begin
   if SupportPublishedChanged then Bind('C_PublishedChanged', mi, ['S_PublishedChanged']);
 end;
 
-procedure TRootServiceManager<T>.DoBeforeRemove(mi: IManagItem);
+procedure TRootServiceManager<T>.DoBeforeRemove(mi: IManagItem; const name: string);
  var
   br: INotifyBeforeRemove;
 begin
-  FBindRemove := mi.IName;
+  FBindRemove := name;
   if Supports(mi, INotifyBeforeRemove, br) then br.BeforeRemove();
   Notify('S_BeforeRemove');
 end;
@@ -1107,16 +1122,26 @@ end;
 
 procedure TRootServiceManager<T>.Remove(model: ModelType; const Item: string);
  var
-  ii: IInterface;
+  ir: TInstanceRec;
 begin
-  if GContainer.TryGetInstance(model, Item, ii, False) then Remove(ii as IManagItem);
+  if GContainer.TryGetInstRec(model, Item, ir) then
+  begin
+   DoBeforeRemove(ir.Inst as IManagItem, Item);
+   GContainer.RemoveInstance(model, Item);
+   DoAfterRemove(ir.Inst as IManagItem);
+  end;
 end;
 
 procedure TRootServiceManager<T>.Remove(const Item: string);
  var
-  ii: IInterface;
+  ir: TInstanceRec;
 begin
-  if GContainer.TryGetInstKnownServ(TypeInfo(T), Item, ii, False) then  Remove(ii as IManagItem);
+  if GContainer.TryGetInstRecKnownServ(TypeInfo(T), Item, ir) then
+  begin
+   DoBeforeRemove(ir.Inst as IManagItem, Item);
+   GContainer.RemoveInstKnownServ(TypeInfo(T), Item);
+   DoAfterRemove(ir.Inst as IManagItem);
+  end;
 end;
 
 function TRootServiceManager<T>.GetEnumerator: TEnumerator<T>;
@@ -1228,9 +1253,9 @@ begin
   if Supports(mi, INotifyAfteSave, sa) then sa.AfteSave();
 end;
 
-procedure TRootServiceManager<T>.DoLoadItem(const mit: string);
+procedure TRootServiceManager<T>.DoLoadItem(const mit: string; Prior: Integer = 1000);
 begin
-  GContainer.AddTextInstance(TypeInfo(T), mit);
+  GContainer.AddTextInstance(TypeInfo(T), mit, Prior);
 end;
 
 procedure TRootServiceManager<T>.Load;
@@ -1273,13 +1298,26 @@ end;
 
 procedure TRegistryStorable<T>.Load;
  var
-  sss: TWideStrings;
+  r: TArray<TInstanceRec>;
+  sss: TArray<string>;
+  a: TInstanceRec;
+  i: Integer;
   s: string;
 begin
   (GlobalCore as IRegistry).LoadArrayString(FPath, sss);
-  for s in sss do
+  SetLength(r, Length(sss));
+  for i := 0 to High(sss) do
+   begin
+    r[i].Text := sss[i].Remove(0, sss[i].IndexOf('|')+1);
+    r[i].Priority := sss[i].Substring(0, sss[i].IndexOf('|')).ToInteger()
+   end;
+//   TArray.Sort<TInstanceRec>(r, TComparer<TInstanceRec>.Construct(function(const Left, Right: TInstanceRec): Integer
+//    begin
+//      Result := Left.Priority - Right.Priority;
+//    end));
+  for a in r do
    try
-    FOwner.DoLoadItem(s);
+    FOwner.DoLoadItem(a.Text, a.Priority);
    except
     on E: Exception do TDebug.DoException(E, False);
    end;
@@ -1288,15 +1326,25 @@ end;
 procedure TRegistryStorable<T>.Save;
  var
   a: TArray<TInstanceRec>;
-  b: TWideStrings;
+  r: TInstanceRec;
+  b: TArray<string>;
   f: T;
-  i: Integer;
+//  i: Integer;
 begin
   for f in GContainer.Enum<T>(False) do FOwner.DoBeforeSave(f);
   a := GContainer.InstancesAsArrayRec<T>;
-  for i := 0 to Length(a)-1 do
-    if not (Assigned(a[i].Inst) and ((a[i].Inst as IManagItem).Priority < 0)) then
-      CArray.Add<WideString>(TArray<WideString>(b), Ffunc(a[i].Text));
+//  Tarray.Sort<TInstanceRec>(a, TComparer<TInstanceRec>.Construct(function(const Left, Right: TInstanceRec): Integer
+//  begin
+//    if not (Assigned(left.Inst) and Assigned(Right.Inst)) then Result := 0
+//    else Result := (Left.Inst as ImanagItem).Priority - (Right.Inst as ImanagItem).Priority
+//  end));
+  for r in a do if r.Priority > 0 then CArray.Add<string>(b, r.Priority.ToString + '|'+ Ffunc(r.Text));
+
+
+
+//  for i := 0 to Length(a)-1 do
+//    if not (Assigned(a[i].Inst) and ((a[i].Inst as IManagItem).Priority < 0)) then
+//      CArray.Add<WideString>(TArray<WideString>(b), a[i] Ffunc(a[i].Text));
   (GlobalCore as IRegistry).SaveArrayString(FPath, b);
   for f in GContainer.Enum<T>(False) do FOwner.DoAfterSave(f);
 end;

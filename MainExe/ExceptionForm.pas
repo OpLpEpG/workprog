@@ -27,6 +27,7 @@ type
     class procedure AsyncException(const CsName, msg, StackTrace: WideString);
   protected
     procedure BeforeClean(var CanClean: Boolean);
+    function Priority: Integer; override;
     class function ClassIcon: Integer; override;
   public
     class var This: TFormExceptions;
@@ -56,7 +57,6 @@ begin
   TDebug.ExeptionEvent := AsyncException;
   This := TFormExceptions.CreateUser('FormExceptions');
   (This as IInterface)._AddRef();
-  This.FPriority := PRIORITY_NoStore;
   This.NClose.OnClick := This.NCloseClick;
   if Supports(Plugins, IFormEnum, fe)then fe.Add(This as Iform);
 end;
@@ -89,6 +89,11 @@ procedure TFormExceptions.NDialogClick(Sender: TObject);
 begin
   if NDialog.Checked then TDebug.ExeptionEvent := nil
   else TDebug.ExeptionEvent := AsyncException;
+end;
+
+function TFormExceptions.Priority: Integer;
+begin
+  Result := PRIORITY_NoStore;
 end;
 
 procedure TFormExceptions.FileSaveAsAccept(Sender: TObject);

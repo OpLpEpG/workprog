@@ -86,23 +86,6 @@ begin
   Result.Value := PropertyValue;
 end;
 
-function TImplExcel.OpenDocument(const FileName: string): Variant;
- var
-  Desktop: Variant;
-  Ar: variant;
-begin
-  Result := Null;
-  if VarIsEmpty(FSrv) then FSrv := CreateOleObject('com.sun.star.ServiceManager');
-  if VarIsEmpty(FSrv) or VarIsNull(FSrv) then raise EExcelException.Create('класс OOCalc не найден !!!');
-  Desktop := FSrv.CreateInstance('com.sun.star.frame.Desktop');
-  Ar := VarArrayCreate([0,1],varVariant);
-  Ar[0] := MakePropertyValue('Hidden', True);
-  Ar[1] := MakePropertyValue('AsTemplate', True);
-  FDoc := Desktop.LoadComponentFromURL('file:///'+FileName, '_blank',  0,Ar);
-  if VarIsEmpty(FDoc) or VarIsNull(FDoc) then raise EExcelException.CreateFmt('файл %s не найден !!!',['file:///'+FileName]);
-  Result := Fdoc;
-end;
-
 function ConvertToURL(const FileName: string): string;
 var
   i:integer;
@@ -120,6 +103,23 @@ begin
       end;
     end;
   Result:='file:///'+Result;
+end;
+
+function TImplExcel.OpenDocument(const FileName: string): Variant;
+ var
+  Desktop: Variant;
+  Ar: variant;
+begin
+  Result := Null;
+  if VarIsEmpty(FSrv) then FSrv := CreateOleObject('com.sun.star.ServiceManager');
+  if VarIsEmpty(FSrv) or VarIsNull(FSrv) then raise EExcelException.Create('класс OOCalc не найден !!!');
+  Desktop := FSrv.CreateInstance('com.sun.star.frame.Desktop');
+  Ar := VarArrayCreate([0,1],varVariant);
+  Ar[0] := MakePropertyValue('Hidden', True);
+  Ar[1] := MakePropertyValue('AsTemplate', True);
+  FDoc := Desktop.LoadComponentFromURL(ConvertToURL(FileName), '_blank',  0,Ar);
+  if VarIsEmpty(FDoc) or VarIsNull(FDoc) then raise EExcelException.CreateFmt('файл %s не найден !!!',['file:///'+FileName]);
+  Result := Fdoc;
 end;
 
 procedure TImplExcel.SaveAs(const FileName: String);

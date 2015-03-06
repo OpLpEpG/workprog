@@ -3,13 +3,15 @@ unit XMLEnumers;
 interface
 
 uses System.SysUtils, System.Generics.Collections, System.Classes, Xml.XMLIntf,
-  debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, RootImpl;
+     System.Generics.Defaults,
+     debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, RootImpl;
 
 type
   TXMEnum<T: IManagItem> = class(TRootServiceManager<T>)
   protected
     class function SupportPublishedChanged: Boolean; override;
     procedure SetItemChanged(const Value: string); override;
+    procedure DoAfterItemChanged(n: IXMLNode; mi: TInstanceRec); virtual;
     procedure DoAfterAdd(mi: IManagItem); override;
     procedure DoAfterAddIner(n: IXMLNode; mi: IManagItem); virtual;
     procedure DoAfterRemove(mi: IManagItem); override;
@@ -25,7 +27,8 @@ type
 
   TDevices = class(TXMEnum<IDevice>, IDeviceEnum)
   protected
-    procedure DoAfterAddIner(n: IXMLNode; mi: IManagItem); override;
+//    procedure DoAfterItemChanged(n: IXMLNode; mi: TInstanceRec); override;
+//    procedure DoAfterAddIner(n: IXMLNode; mi: IManagItem); override;
   protected
     function Root: IXmlNode; override;
   end;
@@ -69,6 +72,10 @@ procedure TXMEnum<T>.DoAfterAddIner(n: IXMLNode; mi: IManagItem);
 begin
 end;
 
+procedure TXMEnum<T>.DoAfterItemChanged(n: IXMLNode; mi: TInstanceRec);
+begin
+end;
+
 procedure TXMEnum<T>.DoAfterRemove(mi: IManagItem);
  var
   n: IXMLNode;
@@ -88,16 +95,25 @@ begin
   if not GContainer.TryGetInstRecKnownServ(TypeInfo(T), Value, ir) then Exit;
   n := Root.ChildNodes.FindNode(Value);
   n.Attributes[AT_OBJ] := ir.Text;
+  DoAfterItemChanged(n, ir);
   UpdateProject;
 end;
 
 procedure TXMEnum<T>.Load;
  var
   v: IXMLNode;
+  i: Integer;
+  a: TArray<IXMLNode>;
 begin
-  for v in XEnum(Root) do
+  SetLength(a, root.ChildNodes.Count);
+  for i := 0 to root.ChildNodes.Count-1 do a[i] := root.ChildNodes[i];
+//  TArray.Sort<IXMLNode>(a, TComparer<IXMLNode>.Construct(function(const Left, Right: IXMLNode): Integer
+//  begin
+//    Result := Left.Attributes[AT_PRIORITY] - Right.Attributes[AT_PRIORITY];
+//  end));
+  for v in a do
    try
-    DoLoadItem(v.Attributes[AT_OBJ]);
+    DoLoadItem(v.Attributes[AT_OBJ], v.Attributes[AT_PRIORITY]);
    except
     on E: Exception do TDebug.DoException(E, False);
    end;
@@ -113,11 +129,17 @@ end;
 
 { TDevices }
 
-procedure TDevices.DoAfterAddIner(n: IXMLNode; mi: IManagItem);
+{procedure TDevices.DoAfterAddIner(n: IXMLNode; mi: IManagItem);
 begin
   inherited;
   n.Attributes[AT_CAPTION] := (mi as ICaption).Text;
 end;
+
+procedure TDevices.DoAfterItemChanged(n: IXMLNode; mi: TInstanceRec);
+begin
+  inherited;
+  if Assigned(mi.Inst) then n.Attributes[AT_CAPTION] := (mi.Inst as ICaption).Text;
+end;}
 
 function TDevices.Root: IXmlNode;
 begin

@@ -67,7 +67,7 @@ contains
   Actns in 'Actns.pas',
   LasImpl in 'LasImpl.pas',
   Parser in 'Parser.pas',
-  Plot in 'Plot.pas',
+  CustomPlot in 'CustomPlot.pas',
   Plot.DB in 'Plot.DB.pas',
   XMLScript in 'XMLScript.pas',
   ImportExport in 'ImportExport.pas',
@@ -94,7 +94,8 @@ contains
   Fibonach in '..\Fibonach.pas',
   StolGKIntf in '..\StolGKIntf.pas',
   Math.Telesistem in 'Math.Telesistem.pas',
-  XMLScript.IKN in 'XMLScript.IKN.pas';
+  XMLScript.IKN in 'XMLScript.IKN.pas',
+  Plot in 'Plot.pas';
 
 end.
 

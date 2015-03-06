@@ -64,10 +64,7 @@ object FormSetupRootDevice: TFormSetupRootDevice
       Painter = InspectorBorlandPainter
       TabStop = True
       TabOrder = 1
-      ExplicitLeft = 8
-      ExplicitTop = 8
-      ExplicitWidth = 307
-      ExplicitHeight = 270
+      OnDataValueChanged = inspDataValueChanged
     end
   end
   object Tree: TVirtualStringTree
@@ -88,7 +85,6 @@ object FormSetupRootDevice: TFormSetupRootDevice
     TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
     OnAddToSelection = TreeAddToSelection
     OnGetText = TreeGetText
-    ExplicitLeft = -3
     Columns = <
       item
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]

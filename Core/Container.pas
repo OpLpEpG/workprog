@@ -104,17 +104,18 @@ type
 
   TInstance = class
     fValue: IInterface;
+    Priority: Integer;
     fText: string;
 //   destructor Destroy; override;
   end;
-  TInstanceRec = record
-  public
-    Inst: IInterface;
-    Text: string;
+
+  TInstanceRecH = record helper for TInstanceRec
   private
     constructor Create(AInst: TInstance);
   end;
-
+  // свойства сервисов
+             //             хранит       не хранит    хранит по имент   хранит модель по имени
+             //             обект        обект        обект             обект не хранит
   TLiveTime = (ltAttribute, ltSingleton, ltTransient, ltSingletonNamed, ltTransientNamed);
 
   EComponentModel = class(EBaseException);
@@ -122,8 +123,11 @@ type
   private
     fClassType: PTypeInfo;
     fInstanceType: TRttiInstanceType;
+
     fLiveTime: TLiveTime;
+
     fSingleton: IInterface;
+    fModelPriority: Integer;
     //  именные объекты
     fInst: TInstancesDict;
     //  ссылки на дочерние объекты класса или создадут (factory) Singleton Transient и выполнят задачу
@@ -143,23 +147,28 @@ type
     constructor Create(ClassType: PTypeInfo);
     destructor Destroy; override;
 
+    function Contains(const Name: string): boolean;
+
     function GetInstance(Initialize: Boolean = True): IInterface; overload;
     function GetInstance(const Name: string; Initialize: Boolean): IInterface; overload;
     function GetInstance(Inst: TInstance; Initialize: Boolean): IInterface; overload;
     class function GetTextInstance(Inst: TInstance): string;
 
     procedure AddInstance(const Name: string; Inst: IInterface); overload;
-    procedure AddInstance(const Name: string; Inst: string); overload;
+//    procedure AddInstance(const Name: string; Inst: string); overload;
+    procedure AddInstance(const Name: string; Inst: string; Prior: Integer = 1000); overload;
 //    function ContainsInstance(const Name: string):Boolean; { TODO : write }
     procedure RemovInstance(const Name: string);
     procedure RemovInstances;
 
     property InstanceType: TRttiInstanceType read fInstanceType;
     property LiveTime: TLiveTime read fLiveTime;
+    property ModelPriority: Integer read fModelPriority;
   end;
 {$ENDREGION}
 
 {$REGION 'TContainer'}
+type
   EContainer = class(EBaseException);
   TContainer = class(TObject, IInterface)
   private
@@ -181,6 +190,7 @@ type
     destructor Destroy; override;
     // основные функции проверки Instance без создания объекта
     function Contains(Model: ModelType; InstanceName: string): Boolean; overload;
+    function Contains(InstanceName: string): Boolean; overload;
     // основные функции получения Instance Service
     function TryGetInstance(Model: ModelType; out Obj: IInterface; Initialize: Boolean = true): Boolean; overload;
     function TryGetInstance(const InstanceName: string; out Obj: IInterface; Initialize: Boolean = true): Boolean; overload;
@@ -197,7 +207,7 @@ type
     function GetModelType(const ClassName: string): ModelType;
     function GetModelLiveTime(Model: ModelType): TLiveTime;
 
-    procedure AddTextInstance(serv: ServiceType; const InstanceText: string);
+    procedure AddTextInstance(serv: ServiceType; const InstanceText: string; Prior: Integer = 1000);
     // удаление
     procedure RemoveModel<T: class>; inline; //при выгрузке плугина
     procedure RemoveModels;  inline; // при выгрузке программы
@@ -214,8 +224,25 @@ type
 //             зависимости
     procedure RegisterAttrInjection(aid: IAttributeInjection);
     function TryGetAttrInjection(Attr: TCustomAttribute; out aid: IAttributeInjection): Boolean;
-    // итерации
+    /// итерации
+    /// основная итерация используется энумератором
+    /// сортировка по приоритету:
+    ///  - приоритет модели
+    ///  - приоритет именных объектов
+    ///  смешанные livetime
+    type
+     /// вспомогательные классы к InstancesAsArray
+     TModelsInst = record
+      m: TComponentModel;
+      p: TInstancePair;
+     end;
+     TModelsInstComparer = class(TComparer<TModelsInst>)
+       function Compare(const Left, Right: TModelsInst): Integer; override;
+       class procedure Add(var mi: TArray<TModelsInst>; cm: TComponentModel; ip: TInstancePair); overload;
+       class procedure Add(var mi: TArray<TModelsInst>; cm: TComponentModel); overload;
+     end;
     function InstancesAsArray<Service: IInterface>(InitializeInstatces: Boolean = False): TArray<Service>;
+    // модели ltSingletonNamed, ltTransientNamed
     function InstancesAsArrayRec<Service: IInterface>: TArray<TInstanceRec>;
 //    function InstancesAsNamedArray<Service: IInterface>(InitializeInstatces: Boolean = False): TArray<TPair<string, Service>>;
     function ModelsAsArray<Service: IInterface>: TArray<ModelType>; overload; inline;
@@ -252,7 +279,7 @@ type
     function LiveTime(const lt: TLiveTime): TRegistration;
     function AddInstance(const Inst: IInterface): TRegistration; overload;
     function AddInstance(const Name: string; const Inst: IInterface): TRegistration; overload;
-    function AddInstance(const Name: string; const Inst: string): TRegistration; overload;
+    function AddInstance(const Name: string; const Inst: string; Prior: Integer = 1000): TRegistration; overload;
   end;
 
   TRegistration<T: class> = record
@@ -268,9 +295,10 @@ type
     function Add<I1,I2,I3,I4,I5,I6,I7: IInterface>: TRegistration<T>; overload;
     function Add<I1,I2,I3,I4,I5,I6,I7,I8: IInterface>: TRegistration<T>; overload;
     function LiveTime(const lt: TLiveTime): TRegistration<T>;
+    function SingletonPriority(const pr: Integer): TRegistration<T>;
     function AddInstance(const Inst: IInterface): TRegistration<T>; overload;
     function AddInstance(const Name: string; const Inst: IInterface): TRegistration<T>; overload;
-    function AddInstance(const Name: string; const Inst: string): TRegistration<T>; overload;
+    function AddInstance(const Name: string; const Inst: string; Prior: Integer = 1000): TRegistration<T>; overload;
     function AddInstance(const Name: string): TRegistration<T>; overload;
 //    function Name(const AName: string): TRegistration<T>;
   end;
@@ -385,14 +413,21 @@ end;
 
 { TInstanceRec }
 
-constructor TInstanceRec.Create(AInst: TInstance);
+constructor TInstanceRecH.Create(AInst: TInstance);
 begin
   Inst := AInst.fValue;
+  Priority := AInst.Priority;
   Text := TComponentModel.GetTextInstance(AInst);
 end;
 
 
 { TComponentModel }
+
+function TComponentModel.Contains(const Name: string): boolean;
+begin
+  if not Assigned(fInst) then Exit(False);
+  Result := fInst.ContainsKey(Name);
+end;
 
 constructor TComponentModel.Create(ClassType: PTypeInfo);
  var
@@ -401,6 +436,7 @@ constructor TComponentModel.Create(ClassType: PTypeInfo);
   aij: IAttributeInjection;
 begin
   fClassType := ClassType;
+  fModelPriority := 1000;
   fInstanceType := TContainer.RttiContext.GetType(ClassType).AsInstance;
   for m in fInstanceType.GetDeclaredMethods do for a in m.GetAttributes do
    if (a is TInjectionAttribute) and GContainer.TryGetAttrInjection(a, aij) then
@@ -441,15 +477,31 @@ begin
 end;
 
 procedure TComponentModel.AddInstance(const Name: string; Inst: IInterface);
+ var
+  v: TInstance;
+  m: IManagItem;
 begin
-  CreateTInstance(Name).fValue := Inst;
+  v := CreateTInstance(Name);
+  v.fValue := Inst;
+  if Supports(inst, IManagItem, m) then v.Priority := m.Priority;
   InjectInstance(Name);
 end;
 
-procedure TComponentModel.AddInstance(const Name: string; Inst: string);
+//procedure TComponentModel.AddInstance(const Name: string; Inst: string);
+// var
+//  v: TInstance;
+//begin
+//  CreateTInstance(Name).fText := Inst;
+//  InjectInstance(Name);
+//end;
+
+procedure TComponentModel.AddInstance(const Name: string; Inst: string; Prior: Integer);
+ var
+  v: TInstance;
 begin
-  CreateTInstance(Name).fText := Inst;
-  InjectInstance(Name);
+  v := CreateTInstance(Name);
+  v.fText := Inst;
+  v.Priority := Prior;
 end;
 
 procedure TComponentModel.RemoveDependencies(const Name: string);
@@ -494,6 +546,7 @@ begin
   case fLiveTime of
    ltAttribute: raise Exception.Create('ltAttribute');
    ltSingletonNamed: raise Exception.Create('ltSingletonNamed');
+   ltTransientNamed: raise Exception.Create('ltTransientNamed');
   end;
   CreateInstance.GetInterface(IInterface, Result);
   if fLiveTime = ltSingleton then fSingleton := Result;    // AtomicCmpExchange(fSingleton, Result, nil);
@@ -501,6 +554,7 @@ end;
 
  type
   TMyInnerComponent = class(TComponent);
+
 function TComponentModel.GetInstance(Inst: TInstance; Initialize: Boolean): IInterface;
  var
   o: TMyInnerComponent;
@@ -630,7 +684,7 @@ begin
   Result := Assigned(cm.fInst) and cm.fInst.ContainsKey(InstanceName);
 end;
 
-procedure TContainer.AddTextInstance(serv: ServiceType; const InstanceText: string);
+procedure TContainer.AddTextInstance(serv: ServiceType; const InstanceText: string; Prior: Integer = 1000);
  var
   CName, IName: string;
   md: ModelType;
@@ -640,7 +694,7 @@ begin
   md := GContainer.GetModelType(CName);
   if not Assigned(md) then raise EContainer.CreateFmt('класс %s не найден',[CName]);
   IName := Trim(Copy(InstanceText, Pos(' ', InstanceText)+1, Pos(':', InstanceText)- Pos(' ', InstanceText)-1));
-  TRegistration.Create(md).Add(Serv).AddInstance(IName, InstanceText);
+  TRegistration.Create(md).Add(Serv).AddInstance(IName, InstanceText, Prior);
 end;
 
 function TContainer.Contains(Model: ModelType; InstanceName: string): Boolean;
@@ -648,6 +702,14 @@ function TContainer.Contains(Model: ModelType; InstanceName: string): Boolean;
   m: TComponentModel;
 begin
   Result := FModels.TryGetValue(Model, m) and Contains(m, InstanceName);
+end;
+
+function TContainer.Contains(InstanceName: string): Boolean;
+ var
+  m: TComponentModel;
+begin
+  Result := False;
+  for m in FModels.Values do if m.Contains(InstanceName) then Exit(True)
 end;
 
 function TContainer.TryGetAttrInjection(Attr: TCustomAttribute; out aid: IAttributeInjection): Boolean;
@@ -948,41 +1010,122 @@ begin
           if Supports(m.GetInstance(i.Value, i.Key, InitializeInstatces), Guid, s) then CArray.Add<TPair<string, Service>>(Result, TPair<string, Service>.Create(i.Key, s));
 end;}
 
+function TContainer.TModelsInstComparer.Compare(const Left, Right: TModelsInst): Integer;
+begin
+  Result := Left.m.fModelPriority - Right.m.fModelPriority;
+  if (Result = 0) and Assigned(Left.p.Value) and Assigned(Right.p.Value) then
+      Result := Left.p.Value.Priority - Right.p.Value.Priority;
+end;
+
+class procedure TContainer.TModelsInstComparer.Add(var mi: TArray<TModelsInst>; cm: TComponentModel; ip: TInstancePair);
+ var
+  a: TModelsInst;
+begin
+  a.m := cm;
+  a.p := ip;
+  CArray.Add<TModelsInst>(mi, a);
+end;
+
+class procedure TContainer.TModelsInstComparer.Add(var mi: TArray<TModelsInst>; cm: TComponentModel);
+ var
+  a: TModelsInst;
+begin
+  a.m := cm;
+  a.p.Value := nil;
+  CArray.Add<TModelsInst>(mi, a);
+end;
+
 function TContainer.InstancesAsArray<Service>(InitializeInstatces: Boolean): TArray<Service>;
  var
+  mi: TArray<TModelsInst>;
+  mis: TModelsInst;
+
   ms: TModels;
   m: TComponentModel;
+
   st: ServiceType;
   s: Service;
   si: IInterface;
   Guid: TGUID;
+
   i: TInstancePair;
 begin
   st := TypeInfo(Service);
   Guid := GetTypeData(st).Guid;
+  /// формирование массива объектов
   if FServices.TryGetValue(st, ms) then
    for m in ms do
-     if (m.LiveTime = ltSingletonNamed) then
-      begin
-       if Assigned(m.fInst) then
-        for i in m.fInst do
-         try
-          if Supports(m.GetInstance(i.Value, InitializeInstatces), Guid, s) then
-            CArray.Add<Service>(Result, s);
-         except
-          on E: Exception do
-           begin
-            m.fInst.Remove(i.Key);
-            TDebug.DoException(E);
-           end;
-         end
-      end
-     else
-      begin
-       if InitializeInstatces then si := m.GetInstance
-       else si := m.fSingleton;
-       if Supports(si, Guid, s) then CArray.Add<Service>(Result, s);
-      end;
+     case m.LiveTime of
+
+       ltSingleton:
+        if Assigned(m.fSingleton) or InitializeInstatces then TModelsInstComparer.Add(mi, m);
+
+       ltTransient:
+        if InitializeInstatces then TModelsInstComparer.Add(mi, m);
+
+       ltSingletonNamed:
+        if Assigned(m.fInst) then
+         for i in m.fInst do
+          if Assigned(i.Value.fValue) or InitializeInstatces then TModelsInstComparer.Add(mi, m, i);
+
+       ltTransientNamed:
+        if InitializeInstatces and Assigned(m.fInst) then
+         for i in m.fInst do TModelsInstComparer.Add(mi, m, i);
+     end;
+  ///  сортировка
+  TArray.Sort<TModelsInst>(mi, TModelsInstComparer.Create);
+  /// инициализация
+  for mis in mi do
+   begin
+    si := nil;
+    case mis.m.LiveTime of
+
+     ltSingleton, ltTransient:
+
+       if Assigned(mis.m.fSingleton) then si := mis.m.fSingleton
+       else if InitializeInstatces then
+        try
+         si := mis.m.GetInstance(InitializeInstatces);
+        except
+         on E: Exception do TDebug.DoException(E);
+        end;
+
+     ltSingletonNamed, ltTransientNamed:
+
+       if Assigned(mis.p.Value.fValue) then si := mis.p.Value.fValue
+       else if InitializeInstatces then
+        try
+         si := mis.m.GetInstance(mis.p.Value, InitializeInstatces);
+        except
+         on E: Exception do TDebug.DoException(E);
+        end;
+    end;
+    if Supports(si, Guid, s) then CArray.Add<Service>(Result, s);
+   end;
+///  old function
+///  if FServices.TryGetValue(st, ms) then
+///   for m in ms do
+///     if (m.LiveTime = ltSingletonNamed) then
+///      begin
+///       if Assigned(m.fInst) then
+///        for i in m.fInst do
+///         try
+///          if Supports(m.GetInstance(i.Value, InitializeInstatces), Guid, s) then
+///            CArray.Add<Service>(Result, s);
+///         except
+///          on E: Exception do
+///           begin
+///            m.fInst.Remove(i.Key);
+///            TDebug.DoException(E);
+///           end;
+///         end
+///      end
+///     else
+///      begin
+///       if InitializeInstatces then si := m.GetInstance
+///       else si := m.fSingleton;
+///       if Supports(si, Guid, s) then CArray.Add<Service>(Result, s);
+///      end;
 end;
 
 function TContainer.InstancesAsArrayRec<Service>: TArray<TInstanceRec>;
@@ -992,14 +1135,12 @@ function TContainer.InstancesAsArrayRec<Service>: TArray<TInstanceRec>;
   st: ServiceType;
   s: Service;
   si: IInterface;
-  Guid: TGUID;
   i: TInstancePair;
 begin
   st := TypeInfo(Service);
-  Guid := GetTypeData(st).Guid;
   if FServices.TryGetValue(st, ms) then
    for m in ms do
-     if (m.LiveTime = ltSingletonNamed) then
+     if m.LiveTime in [ltSingletonNamed, ltTransientNamed] then
        if Assigned(m.fInst) then for i in m.fInst do CArray.Add<TInstanceRec>(Result, TInstanceRec.Create(i.Value));
 end;
 
@@ -1122,10 +1263,10 @@ begin
   fModel.AddInstance(Name, Inst);
 end;
 
-function TRegistration.AddInstance(const Name, Inst: string): TRegistration;
+function TRegistration.AddInstance(const Name, Inst: string; Prior: Integer = 1000): TRegistration;
 begin
   Result := Self;
-  fModel.AddInstance(Name, Inst);
+  fModel.AddInstance(Name, Inst, Prior);
 end;
 
 function TRegistration.LiveTime(const lt: TLiveTime): TRegistration;
@@ -1196,10 +1337,10 @@ begin
   fRegist.fModel.AddInstance(Name, Inst);
 end;
 
-function TRegistration<T>.AddInstance(const Name, Inst: string): TRegistration<T>;
+function TRegistration<T>.AddInstance(const Name, Inst: string; Prior: Integer = 1000): TRegistration<T>;
 begin
   Result := Self;
-  fRegist.fModel.AddInstance(Name, Inst);
+  fRegist.fModel.AddInstance(Name, Inst, Prior);
 end;
 
 function TRegistration<T>.AddInstance(const Inst: IInterface): TRegistration<T>;
@@ -1213,6 +1354,12 @@ function TRegistration<T>.LiveTime(const lt: TLiveTime): TRegistration<T>;
 begin
   Result := Self;
   fRegist.fModel.fLiveTime := lt;
+end;
+
+function TRegistration<T>.SingletonPriority(const pr: Integer): TRegistration<T>;
+begin
+  Result := Self;
+  fRegist.fModel.fModelPriority := pr;
 end;
 
 {$ENDREGION}

@@ -2,7 +2,7 @@
 
 interface
 
-uses  SysUtils, System.Classes, math, System.Variants, Container, RootImpl, System.Generics.Collections,
+uses  SysUtils, System.Classes, math, System.Variants, Container, RootImpl, System.Generics.Collections, Winapi.ActiveX,
       XMLScript, XMLScript.Math, tools, debug_except, MathIntf, Xml.XMLIntf, ExtendIntf;
 
 type
@@ -502,33 +502,38 @@ begin
     Sheet, Range, st: Variant;
   begin
     try
-     r := GlobalCore as IReport;
-     r.OpenDocument(ExtractFilePath(ParamStr(0))+'Devices\ReportInclin3.ods');
-     
-     vz := VarArrayCreate([0,1, 0,6], varVariant);
-     va := VarArrayCreate([0,5, 0,11], varVariant);
-     ea := VarArrayCreate([0,5, 0,11], varVariant);
+     CoInitialize(nil);
+     try
+       r := GlobalCore as IReport;
+       r.OpenDocument(ExtractFilePath(ParamStr(0))+'Devices\ReportInclin3.ods');
 
-     for i := 0 to 11 do for j := 0 to 5 do CArray.Add<IAngleErr>(ste, TAzimErr.Create(@va, @ea, j, i, i*30, TBL_ZU_AZ[j]));
-     for j := 0 to 6 do CArray.Add<IAngleErr>(ste, TZenErr.Create(@vz, j, TBL_ZU_ALL[j]));
+       vz := VarArrayCreate([0,1, 0,6], varVariant);
+       va := VarArrayCreate([0,5, 0,11], varVariant);
+       ea := VarArrayCreate([0,5, 0,11], varVariant);
 
-     for i := 1 to 436 do
-      begin
-       st := XToVar(GetXNode(TVxmlData(NewTrr).Node, 'P_3.STEP'+i.ToString));  
-       for ae in ste do ae.CheckStepData(st);
-      end;
+       for i := 0 to 11 do for j := 0 to 5 do CArray.Add<IAngleErr>(ste, TAzimErr.Create(@va, @ea, j, i, i*30, TBL_ZU_AZ[j]));
+       for j := 0 to 6 do CArray.Add<IAngleErr>(ste, TZenErr.Create(@vz, j, TBL_ZU_ALL[j]));
 
-     Sheet := r.Document.GetSheets.getByIndex(1);
-     Range := Sheet.getCellRangeByName('B8:C14');
-     Range.setDataArray(vz);
-     Range := Sheet.getCellRangeByName('B23:G34');
-     Range.setDataArray(va);
-     Range := Sheet.getCellRangeByName('B40:G51');
-     Range.setDataArray(ea);
-          
-     ShowReportTitle(r, NewTrr.P_3);
+       for i := 1 to 436 do
+        begin
+         st := XToVar(GetXNode(TVxmlData(NewTrr).Node, 'P_3.STEP'+i.ToString));
+         for ae in ste do ae.CheckStepData(st);
+        end;
 
-     r.SaveAs(TrrFile);
+       Sheet := r.Document.GetSheets.getByIndex(1);
+       Range := Sheet.getCellRangeByName('B8:C14');
+       Range.setDataArray(vz);
+       Range := Sheet.getCellRangeByName('B23:G34');
+       Range.setDataArray(va);
+       Range := Sheet.getCellRangeByName('B40:G51');
+       Range.setDataArray(ea);
+
+       ShowReportTitle(r, NewTrr.P_3);
+
+       r.SaveAs(TrrFile);
+     finally
+      CoUnInitialize();
+     end;
     except
      on E: Exception do TDebug.DoException(E);
     end;
@@ -553,39 +558,43 @@ begin
     Sheet, Range, st: Variant;
   begin
     try
-     r := GlobalCore as IReport;
-     r.OpenDocument(ExtractFilePath(ParamStr(0))+'Devices\ReportInclin2.ods');
+     CoInitialize(nil);
+     try
+       r := GlobalCore as IReport;
+       r.OpenDocument(ExtractFilePath(ParamStr(0))+'Devices\ReportInclin2.ods');
 
-     vz := VarArrayCreate([0,1, 0,2], varVariant);
-     va := VarArrayCreate([0,1, 0,5], varVariant);
-     ea := VarArrayCreate([0,1, 0,5], varVariant);
+       vz := VarArrayCreate([0,1, 0,2], varVariant);
+       va := VarArrayCreate([0,1, 0,5], varVariant);
+       ea := VarArrayCreate([0,1, 0,5], varVariant);
 
-     for i := 0 to 5 do for j := 0 to 1 do CArray.Add<IAngleErr>(ste, TAzimErr.Create(@va, @ea, j, i, i*60, TBL_ZU_AZ[j]));
-     for j := 0 to 2 do CArray.Add<IAngleErr>(ste, TZenErr.Create(@vz, j, TBL_ZU_ALL[j]));
+       for i := 0 to 5 do for j := 0 to 1 do CArray.Add<IAngleErr>(ste, TAzimErr.Create(@va, @ea, j, i, i*60, TBL_ZU_AZ[j]));
+       for j := 0 to 2 do CArray.Add<IAngleErr>(ste, TZenErr.Create(@vz, j, TBL_ZU_ALL[j]));
 
-     for i := 1 to 64 do
-      begin
-       st := XToVar(GetXNode(TVxmlData(NewTrr).Node, 'P_2.STEP'+i.ToString));
-       for ae in ste do ae.CheckStepData(st);
-      end;
+       for i := 1 to 64 do
+        begin
+         st := XToVar(GetXNode(TVxmlData(NewTrr).Node, 'P_2.STEP'+i.ToString));
+         for ae in ste do ae.CheckStepData(st);
+        end;
 
-     Sheet := r.Document.GetSheets.getByIndex(1);
-     Range := Sheet.getCellRangeByName('B8:C10');
-     Range.setDataArray(vz);
-     Range := Sheet.getCellRangeByName('B19:C24');
-     Range.setDataArray(va);
-     Range := Sheet.getCellRangeByName('B30:C35');
-     Range.setDataArray(ea);
+       Sheet := r.Document.GetSheets.getByIndex(1);
+       Range := Sheet.getCellRangeByName('B8:C10');
+       Range.setDataArray(vz);
+       Range := Sheet.getCellRangeByName('B19:C24');
+       Range.setDataArray(va);
+       Range := Sheet.getCellRangeByName('B30:C35');
+       Range.setDataArray(ea);
 
-     ShowReportTitle(r, NewTrr.P_2);
+       ShowReportTitle(r, NewTrr.P_2);
 
-     r.SaveAs(TrrFile);
+       r.SaveAs(TrrFile);
+     finally
+      CoUnInitialize();
+     end;
     except
      on E: Exception do TDebug.DoException(E);
     end;
   end).Start;
 end;
-
 
 class procedure TMetrInclinMath.ExportP1ToCalc(const TrrFile: string; NewTrr: Variant);
   const TBL_Z: array[0..3,0..7]of Integer = ((1, 2,3,4,5,6,7,8),
@@ -628,6 +637,8 @@ begin
     Sheet, Range: Variant;
   begin
     try
+     CoInitialize(nil);
+     try
       r := GlobalCore as IReport;
       r.OpenDocument(ExtractFilePath(ParamStr(0))+'Devices\ReportInclin1.ods');
       v := VarArrayCreate([0,7, 0,3], varVariant);
@@ -673,6 +684,9 @@ begin
       ShowReportTitle(r, NewTrr.P_1);
 
       r.SaveAs(TrrFile);
+     finally
+      CoUnInitialize();
+     end;
     except
      on E: Exception do TDebug.DoException(E);
     end;

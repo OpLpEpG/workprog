@@ -23,9 +23,9 @@ type
     procedure NAddClick(Sender: TObject);
     procedure ButtonOKClick(Sender: TObject);
   private
-    { Private declarations }
+    FDevice: IDevice;
   public
-    class function Execute(): TModalResult;
+    class function Execute(out d: IDevice): TModalResult;
   end;
 
 implementation
@@ -34,11 +34,12 @@ implementation
 
 uses AbstractPlugin, Tools;
 
-class function TFormCreateDev.Execute: TModalResult;
+class function TFormCreateDev.Execute(out d: IDevice): TModalResult;
 begin
   with TFormCreateDev.Create(nil) do
    try
     Result := ShowModal();
+    d := FDevice;
    finally
     Free;
    end;
@@ -52,7 +53,8 @@ begin
   if Trim(edAdr.Text) = '' then raise EBaseException.Create('Не выбраны устройства');
   if Supports(GlobalCore, IGetDevice, g) and Supports(GlobalCore, IDeviceEnum, de) then
    begin
-    de.Add(g.Device(TAddressRec(edAdr.Text), edCaption.Text));
+    FDevice := g.Device(TAddressRec(edAdr.Text), edCaption.Text);
+    de.Add(FDevice);
     (GlobalCore as IActionProvider).SaveActionManager;
     ((GlobalCore as IActionEnum) as IStorable).Save;
    end;

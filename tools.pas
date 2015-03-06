@@ -43,6 +43,8 @@ const
   T_RAM    = 'RAM';
   T_EEPROM = 'EEP';
   T_MTR = 'Метрология';
+
+  AT_FILE_NAME = 'FILE_NAME';
 //  свойства прибора
   AT_ADDR = 'ADDR';
   AT_CHIP = 'CHIP_INDEX';

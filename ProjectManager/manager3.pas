@@ -17,9 +17,10 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
 
   TManager = class(TAbstractPlugin,
                                IManager, IManagerEx,
-                               IProjectData,
+                               IProjectDataFile,
                                IProjectOptions,
                                IALLMetaDataFactory, IALLMetaData,
+                               IGlobalMemory,
                                IMetrology{,
                                IDelayManager})
   private
@@ -38,6 +39,8 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
 //    function Query: TAsyncADQuery; inline;
 //    procedure AddOption(AParams: array of Variant);
   protected
+    // IGlobalMemory
+    function GetMemorySize(Need: Int64): Int64;
    // IALLMetaDataFactory
 
     function Get(const Name: string): IALLMetaData; overload;
@@ -59,10 +62,10 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
     function GetProjectFilter: string;
     function GetProjectDefaultExt: string;
     function GetProjectDirectory: string;
-    // IProjectData,
+    // IProjectDataFile,
     procedure SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
-    procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; StdOnly: Boolean = False);
-    procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; CurAdr, CurKadr: Integer; CurTime: TDateTime; FModulID: Integer);
+    procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
+    procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
 
     procedure IMetrology.Setup = SetMetrol;
     procedure SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
@@ -106,7 +109,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
 
 implementation
 
-uses tools;//, PrjTool;
+uses tools, PrjTool3;//, PrjTool;
 
 const
   IFORMS_INI_DIR = 'IFormObjs';
@@ -169,6 +172,16 @@ end;
 class function TManager.GetHInstance: THandle;
 begin
   Result := HInstance;
+end;
+
+function TManager.GetMemorySize(Need: Int64): Int64;
+ var
+  memStatus: TMemoryStatusEx;
+begin
+  memStatus.dwLength := sizeOf (memStatus);
+  GlobalMemoryStatusEx (memStatus);
+  Result := memStatus.ullAvailVirtual div 2;
+  if Need < Result then Result := Need;  
 end;
 
 class function TManager.PluginName: string;
@@ -342,53 +355,28 @@ begin
   FProjecDoc.SaveToFile(FProjectFile);
 end;
 
-procedure TManager.SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; StdOnly: Boolean = False);
+procedure TManager.SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
  var
-  d: IOwnIntfXMLNode;
-  Id: Integer;
+  f: IFileData;
 begin
-  d := (Data as IOwnIntfXMLNode);
-{  if not Assigned(d.Intf) then
+  if not XSupport(Data, IFileData, f) then
    begin
-    GetDevID(Query, dev, Id);
-    d.Intf := TSaveLogData.Create(Data, ADD_LOG_VAL, Adr, id);
+    f := GFileDataFactory.Factory(TFileData, Data);
+    (Data as IOwnIntfXMLNode).Intf := f;
    end;
-  (d.Intf as ISaveLogDataCash).SetStdOnly(StdOnly);
-//  Tdebug.Log('SaveLogData START %d, %s    ', [adr, Data.ParentNode.NodeName]);
-  (d.Intf as ISaveLogDataCash).SaveData(nil);{  procedure
-   begin
-     Tdebug.Log('SaveLogData END %d, %s    ', [adr, Data.ParentNode.NodeName]);
-   end);}
+  f.Write(RowLen, Row, f.Size);
 end;
 
-procedure TManager.SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; CurAdr, CurKadr: Integer; CurTime: TDateTime; FModulID: Integer);
-const
-  {$J+} tick: Cardinal = 0;{$J-}
+procedure TManager.SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
  var
-  d: IOwnIntfXMLNode;
-  Id: Integer;
-  t: Cardinal;
+  f: IFileData;
 begin
- { t := GetTickCount;
-  Query.Acquire;
-  try
-    d := (Data as IOwnIntfXMLNode);
-    if not Assigned(d.Intf) then
-     begin
-      GetDevID(Query, dev, Id);
-      d.Intf := TSaveData.Create(Data, ADD_RAM_VAL, Adr, id);
-     end;
-    (d.Intf as ISaveDataCash).SaveData(nil);
-    Query.ExecSQL('UPDATE Modul SET ToAdr=:p1, ToKadr=:p2, ToTime=:p3 WHERE id = :p4', [CurAdr, CurKadr, DateTimeToJulianDate(CurTime), FModulID],
-                                                                                        [ftInteger, ftFloat, ftTime, ftInteger]);
-  finally
-   Query.Release;
-  end;
-  if (t - tick) > 1000 then
+  if not XSupport(Data, IFileData, f) then
    begin
-    S_TableUpdate := 'Ram';
-    tick := t;
-   end;}
+    f := GFileDataFactory.Factory(TFileData, Data);
+    (Data as IOwnIntfXMLNode).Intf := f;
+   end;
+  f.Write(RowLen, Row);
 end;
 
 procedure TManager.ClearItems(ClearItems: EClearItems);

@@ -8,6 +8,12 @@ type
   ModelType = PTypeInfo;
   ServiceType = PTypeInfo;
 
+  TInstanceRec = record
+    Inst: IInterface;
+    Priority: Integer;
+    Text: string;
+  end;
+
   ///	<summary>
   ///	    Внутренний  интерфейс связывания
   ///	</summary>
@@ -97,6 +103,12 @@ type
     property IName: String read GetItemName write SetItemName;
   end;
 
+  TInstanceRec<T: IManagItem> = record
+    Inst: T;
+    Priority: Integer;
+    Text: string;
+  end;
+
   ICaption = interface
   ['{DBBF1D44-F436-435C-BF09-1A58290A4B11}']
     function GetCaption: string;
@@ -175,6 +187,7 @@ type
   IServiceManager<T: IManagItem> = interface(IServiceManager)
     function GetEnumerator: TEnumerator<T>; // без инициализации
     function Enum(Initialize: Boolean = True): TEnumerable<T>; // с инициализацией
+    function AsArrayRec: TArray<TInstanceRec<T>>;
     function Get(const ItemName: string; Initialize: Boolean = True): T; overload;
     function Get(model: ModelType; const ItemName: string; Initialize: Boolean = True): T; overload;
   end;

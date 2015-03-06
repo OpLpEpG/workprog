@@ -1487,6 +1487,7 @@ end;
 procedure TReadRam.DoSetData(pData: Pointer);
  var
   ip: IProjectData;
+  ix: IProjectDataFile;
   nkadr: Integer;
 begin
   TPars.SetData(FRamXml, pData);
@@ -1495,8 +1496,9 @@ begin
 //  FRamXml.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'RamData.xml');
   inc(FcntKadr);
   nkadr := FFromKadr + FcntKadr;
-  if Supports(GlobalCore, IProjectData, ip) then ip.SaveRamData(FAbstractDevice as IDevice, FAdr, FRamXml,
-  FRecSize*nkadr, nkadr , FFromTime + 2.097152 * nkadr, FModulID);
+  if Supports(GlobalCore, IProjectDataFile, ix) then ix.SaveRamData(FAbstractDevice as IDevice, FAdr, FRamXml, pData, FRecSize)
+  else if Supports(GlobalCore, IProjectData, ip) then
+    ip.SaveRamData(FAbstractDevice as IDevice, FAdr, FRamXml,  FRecSize*nkadr, nkadr , FFromTime + 2.097152 * nkadr, FModulID);
 end;
 
 procedure TReadRam.EndExecute;

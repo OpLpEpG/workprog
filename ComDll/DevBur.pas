@@ -34,7 +34,7 @@ uses    System.IOUtils,
 //  end;
 
   TNotifyInfoEventRef = reference to procedure (Exception: Integer; Adr: Integer; Data: PByte; n: Integer);
-  TWorkEventRef = reference to procedure (DevAdr: Integer; Work: IXMLInfo);
+  TWorkEventRef = reference to procedure (DevAdr: Integer; Work: IXMLInfo; Data: PByte; n: Integer);
 
   EBurException = class(EDeviceException);
    EAsyncBurException = class(EAsyncDeviceException);
@@ -677,10 +677,11 @@ end;
 procedure TDeviceBur.ReadWork(ev: TWorkEvent; StdOnly: Boolean);
  var
   ip: IProjectData;
+  ix: IProjectDataFile;
 begin
   CheckConnect;
   ConnectOpen;
-  ReadWorkRef(FMetaDataInfo.Info, procedure (DevAdr: Integer; Work: IXMLInfo)
+  ReadWorkRef(FMetaDataInfo.Info, procedure (DevAdr: Integer; Work: IXMLInfo; Data: PByte; n: Integer)
   begin
     FWorkEventInfo.DevAdr := DevAdr;
     FWorkEventInfo.Work := Work;
@@ -689,7 +690,8 @@ begin
 
 //     FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'INCL.xml');
 
-     if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, DevAdr, Work, StdOnly);
+     if Supports(GlobalCore, IProjectDataFile, ix) then ix.SaveLogData(Self as IDevice, DevAdr, Work, Data, n)
+     else if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, DevAdr, Work, StdOnly);
     finally
      if Assigned(ev) then ev(FWorkEventInfo);
      Notify('S_WorkEventInfo');
@@ -772,7 +774,7 @@ begin
 
 //            FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'GK.xml');
 
-            if Assigned(ev) then ev(adr, root);
+            if Assigned(ev) then ev(adr, root, p, siz);
            end
            else if n<=0 then raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, d.CmdAdr])
            else  raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, PByte(p)^]);

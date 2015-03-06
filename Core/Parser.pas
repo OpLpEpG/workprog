@@ -3,7 +3,7 @@ unit Parser;
 interface
 
 uses debug_except,
-     XMLScript, System.Variants, Data.DB,
+     XMLScript, System.Variants, Data.DB, System.Rtti,
      SysUtils, Xml.XMLIntf, Xml.XMLDoc, Xml.xmldom, System.Generics.Collections, System.Generics.Defaults, System.Classes, Vcl.Dialogs;
 
 type

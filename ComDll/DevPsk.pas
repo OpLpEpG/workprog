@@ -1274,6 +1274,7 @@ procedure TPskStd.FlowDataEvent(Res: boolean; DataB: PByte; DataSize: integer);
  var
   i: Integer;
   ip: IProjectData;
+  ix: IProjectDataFile;
 begin
   if not FFlagFlow then Exit;
   if DataSize < 0 then
@@ -1300,7 +1301,10 @@ begin
       FWorkEventInfo.DevAdr := FAddressArray[0];
       try
        FExeMetr.Execute(T_WRK);
-       if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, FWorkEventInfo.DevAdr, FWorkEventInfo.Work, False);
+       if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, FWorkEventInfo.DevAdr, FWorkEventInfo.Work, False)
+       else if Supports(GlobalCore, IProjectDataFile, ix) then
+                  ix.SaveLogData(Self as IDevice, FWorkEventInfo.DevAdr, FWorkEventInfo.Work, @FWorkInput[0], FWorkLen);
+        //
       finally
        if Assigned(FWorkEvent) then FWorkEvent(FWorkEventInfo);
        Notify('S_WorkEventInfo');

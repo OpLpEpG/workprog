@@ -51,7 +51,7 @@ uses DButil, Container, DBintf, FireDAC.Phys.SQLiteWrapper, FireDAC.Phys.SQLiteC
 
 type
   TALLMetaDataFactory = class(TIObject, IALLMetaDataFactory)
-    function Get(const DBName: string): IALLMetaData;overload;
+    function Get(const DBName: string): IALLMetaData; overload;
     function Get: IALLMetaData; overload;
   end;
 

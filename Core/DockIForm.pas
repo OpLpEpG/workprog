@@ -57,6 +57,7 @@ type
   protected
     function GetInfo: PTypeInfo; virtual; abstract;
     procedure Close_ItemClick(Sender: TObject); override;
+    function Priority: Integer; override;
   public
     constructor Create; override;
   end;
@@ -303,8 +304,12 @@ end;
 constructor TDialogIForm.Create;
 begin
   CreateUser('Dialog_' + ClassName);
-  FPriority := PRIORITY_NoStore;
   FDockClient.EnableDock := False;
+end;
+
+function TDialogIForm.Priority: Integer;
+begin
+  Result := PRIORITY_NoStore;
 end;
 
 { TCustomFontIForm }

@@ -45,6 +45,7 @@ type
     procedure NUpClick(Sender: TObject);
     procedure NDownClick(Sender: TObject);
     procedure TreeAddToSelection(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure inspDataValueChanged(Sender: TObject; Data: TJvCustomInspectorData);
   protected
 //    procedure CanClose(var CanClose: Boolean);
     function GetInfo: PTypeInfo; override;
@@ -92,6 +93,11 @@ end;
 function TFormSetupRootDevice.GetInfo: PTypeInfo;
 begin
   Result := TypeInfo(Dialog_SetupRootDevice);
+end;
+
+procedure TFormSetupRootDevice.inspDataValueChanged(Sender: TObject; Data: TJvCustomInspectorData);
+begin
+  (FDev as IBind).Notify('S_PublishedChanged');
 end;
 
 procedure TFormSetupRootDevice.ConnectClick(Sender: TObject);

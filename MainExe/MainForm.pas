@@ -75,10 +75,10 @@ type
     procedure SaveActionManager();
     procedure ResetActions;
     // IRegistry
-    procedure SaveString(const Name, Value: WideString);
-    function LoadString(const Name, DefValue: WideString): WideString;
-    procedure SaveArrayString(const Root: WideString; const Value: TWideStrings);
-    procedure LoadArrayString(const Root: WideString; var Value: TWideStrings);
+    procedure SaveString(const Name, Value: String);
+    function LoadString(const Name, DefValue: String): String;
+    procedure SaveArrayString(const Root: String; const Value: TArray<string>);
+    procedure LoadArrayString(const Root: String; var Value: TArray<string>);
     //  ITabFormProvider (зависит от версии компилятора т.к. использ TDockIForm, TJvDockClient
     function IsTab(const Form: IForm): Boolean;
     procedure Tab(const Form: IForm);
@@ -177,7 +177,7 @@ begin
     // регистрируем провайдеры которым нужны для регистрации плугины но желательно до
     // события LoadNotify (LoadNotify провайдеров происходит после пругинов)
   finally
-   if Assigned(FormSplash) then FreeAndNil(FormSplash);
+  // if Assigned(FormSplash) then FreeAndNil(FormSplash);
   end;
 
   OutputDebugString(PChar('==================  НАЧАЛО РАБОТЫ ПРОГРАММЫ  ================================='));
@@ -487,7 +487,7 @@ end;    }
 
 {$REGION  '*********** Providers ****************'}
 // IRegistry
-procedure TFormMain.SaveArrayString(const Root: WideString; const Value: TWideStrings);
+procedure TFormMain.SaveArrayString(const Root: String; const Value: TArray<string>);
  var
   i: Integer;
 begin
@@ -496,7 +496,7 @@ begin
   for i := 0 to Length(Value)-1 do ini.WriteString(Root+ '\Item'+i.ToString, Value[i]);
 end;
 
-procedure TFormMain.LoadArrayString(const Root: WideString; var Value: TWideStrings);
+procedure TFormMain.LoadArrayString(const Root: String; var Value: TArray<string>);
  var
   i: Integer;
 begin
@@ -504,12 +504,12 @@ begin
   for i := 0 to Length(Value)-1 do Value[i] := ini.ReadString(Root+ '\Item'+i.ToString, '');
 end;
 
-function TFormMain.LoadString(const Name, DefValue: WideString): WideString;
+function TFormMain.LoadString(const Name, DefValue: String): String;
 begin
   Result := ini.ReadString(Name, DefValue);
 end;
 
-procedure TFormMain.SaveString(const Name, Value: WideString);
+procedure TFormMain.SaveString(const Name, Value: String);
 begin
   ini.WriteString(Name, Value);
 end;

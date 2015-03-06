@@ -127,6 +127,40 @@ type
     procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; StdOnly: Boolean = False);
     procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; CurAdr, CurKadr: Integer; CurTime: TDateTime; ModulID: Integer);
   end;
+  // Внутренний  интерфейс IManager3
+  IProjectDataFile = interface
+  ['{BFD4B4E0-2F3D-4D46-91A6-C5EE6AA97703}']
+    procedure SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
+    procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
+    procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
+  end;
+
+  IFileData = interface
+  ['{4405AC54-233B-4E82-9065-F1852B93337E}']
+    function GetPosition: Int64;
+    function GetSize: Int64;
+    procedure SetPosition(const Value: Int64);
+    function GetFileName: string;
+    function Read(Count: Integer; out PData: Pointer; From: Int64 = -1): Integer;
+    function Write(Count: Integer; PData: Pointer;  From: Int64 = -1): Integer;
+    property FileName: string read GetFileName;
+    property Position: Int64 read GetPosition write SetPosition;
+    property Size: Int64 read GetSize;
+  end;
+
+  ICashedData = interface
+  ['{787172A0-1677-4E86-B473-D9864BD0C552}']
+    procedure SetCashSize(const Value: Integer);
+    function GetCashSize: Integer;
+    function GetMaxCashSize: Int64;
+    property CashSize: Integer read GetCashSize write SetCashSize;
+    property MaxCashSize: Int64 read GetMaxCashSize;
+  end;
+
+  IGlobalMemory = interface
+  ['{15385324-B18A-4840-B965-D056CC6EBBE9}']
+    function GetMemorySize(Need: Int64): Int64;
+  end;
 
   IProjectOptions = interface
   ['{23652567-6435-44AB-8071-32D486C71F35}']
@@ -217,17 +251,17 @@ type
     procedure ResetActions;
   end;
 
-  TWideStrings = array of WideString;
+ // TWideStrings = array of WideString;
 
   ///	<summary>
   ///	  Читает и Пишет в корень текущего экрана
   ///	</summary>
   IRegistry = interface
   ['{BAABFFB6-4B3F-4788-BE0E-29FB35A787EC}']
-    procedure SaveString(const Name, Value: WideString);
-    function LoadString(const Name, DefValue: WideString): WideString;
-    procedure SaveArrayString(const Root: WideString; const Value: TWideStrings);
-    procedure LoadArrayString(const Root: WideString; var Value: TWideStrings);
+    procedure SaveString(const Name, Value: String);
+    function LoadString(const Name, DefValue: String): String;
+    procedure SaveArrayString(const Root: String; const Value: TArray<string>);
+    procedure LoadArrayString(const Root: String; var Value: TArray<string>);
   end;
 
   IMainScreen = interface

@@ -973,10 +973,10 @@ constructor TFltBPF.Create;
  var
   i: Integer;
 begin
-  FFNch2 := 1;
-  FFNch1 := 20;
-  FFVch2 := 100;
-  FFVch1 := 120;
+  FFNch1 := 1;
+  FFNch2 := 20;
+  FFVch1 := 100;
+  FFVch2 := 120;
 
   if not Assigned(FFourier) then {FFourier := TFFourier.Create;} FourierFactory(FFourier);
   SetLength(FdataIn, FFT_LEN);

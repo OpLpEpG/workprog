@@ -40,8 +40,8 @@ type
  TComDevPlugin = class(TAbstractPlugin, IGetDevice, IGetConnectIO)
  protected
    function  Device(const Addrs: TAddressArray; const DeviceName: string): IDevice;
-   procedure EnumDevices(GetDevicesCB: TGetDevicesCB);
-   procedure IGetDevice.Enum = EnumDevices;
+   procedure EnmDevices(GetDevicesCB: TGetDevicesCB);
+   procedure IGetDevice.Enum = EnmDevices;
    procedure IGetConnectIO.Enum = EnumConnect;
    procedure EnumConnect(GetConnectIOCB: TGetConnectIOCB);
    function  ConnectIO(ConnectID: Integer): IConnectIO;
@@ -75,7 +75,7 @@ begin
   end;
 end;
 
-procedure TComDevPlugin.EnumDevices(GetDevicesCB: TGetDevicesCB);
+procedure TComDevPlugin.EnmDevices(GetDevicesCB: TGetDevicesCB);
 begin
   EnumDevices(GetDevicesCB);
 end;

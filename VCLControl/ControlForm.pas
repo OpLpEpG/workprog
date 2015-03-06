@@ -112,8 +112,15 @@ begin
 end;
 
 procedure TFormControl.NAddDevClick(Sender: TObject);
+ var
+  d: IDevice;
 begin
- if TFormCreateDev.Execute = mrOk then// TreeUpdate;
+//  FNotUpdate := True;
+  try
+   if TFormCreateDev.Execute(d) = mrOk then ;
+  finally
+//   FNotUpdate := False;
+  end;
 end;
 
 procedure TFormControl.NRemoveClick(Sender: TObject);

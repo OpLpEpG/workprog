@@ -127,6 +127,7 @@ procedure TRootDevice.UpdateParents;
  var
   i: Integer;
 begin
+  if FSubDevs.Count = 0 then Exit;
   for i := 1 to FSubDevs.Count-1 do
    begin
     TDebug.Log('%d ', [i]);

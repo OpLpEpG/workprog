@@ -372,7 +372,7 @@ procedure TManager.LoadScreen;
   s: IStorable;
 begin
   sa := GContainer.InstancesAsArray<IStorable>(true);
-  TArray.Sort<IStorable>(sa, TManagItemComparer<IStorable>.Create);
+ // TArray.Sort<IStorable>(sa, TManagItemComparer<IStorable>.Create);
   for s in sa do s.Load;
 end;
 

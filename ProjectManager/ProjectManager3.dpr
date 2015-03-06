@@ -21,7 +21,8 @@ uses
   AbstractPlugin,
   System.Classes,
   manager3 in 'manager3.pas',
-  XMLEnumers in 'XMLEnumers.pas';
+  XMLEnumers in 'XMLEnumers.pas',
+  PrjTool3 in 'PrjTool3.pas';
 
 {$R *.res}
 
@@ -29,7 +30,8 @@ function Init(): PTypeInfo;
 begin
   FFDGUIxSilentMode  := True;
   Result := TypeInfo(TManager);
-  TRegister.AddType<TManager, IPlugin, IManager, IManagerEx, IProjectData, IMetrology, IProjectOptions, IALLMetaDataFactory>.LiveTime(ltSingleton);
+  TRegister.AddType<TManager, IPlugin, IManager, IManagerEx, IProjectData,
+  IMetrology, IProjectOptions, IALLMetaDataFactory, IGlobalMemory>.LiveTime(ltSingleton);
   TManager.ProjectDir;
 end;
 
