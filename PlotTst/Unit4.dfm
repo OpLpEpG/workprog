@@ -2,8 +2,8 @@ object Form4: TForm4
   Left = 0
   Top = 0
   Caption = 'Form4'
-  ClientHeight = 289
-  ClientWidth = 554
+  ClientHeight = 598
+  ClientWidth = 805
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,12 +15,61 @@ object Form4: TForm4
   PixelsPerInch = 96
   TextHeight = 13
   object Button1: TButton
-    Left = 8
-    Top = 8
-    Width = 75
+    Left = 26
+    Top = 18
+    Width = 57
     Height = 25
-    Caption = 'Button1'
+    Caption = 'AddColl'
     TabOrder = 0
     OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 26
+    Top = 49
+    Width = 57
+    Height = 25
+    Caption = 'Create'
+    TabOrder = 1
+    OnClick = Button2Click
+  end
+  object Button3: TButton
+    Left = 26
+    Top = 80
+    Width = 57
+    Height = 25
+    Caption = 'Load'
+    TabOrder = 2
+    OnClick = Button3Click
+  end
+  object Button4: TButton
+    Left = 26
+    Top = 111
+    Width = 57
+    Height = 25
+    Caption = 'Save'
+    TabOrder = 3
+    OnClick = Button4Click
+  end
+  object CheckBox1: TCheckBox
+    Left = 104
+    Top = 24
+    Width = 57
+    Height = 17
+    Caption = 'legend'
+    Checked = True
+    State = cbChecked
+    TabOrder = 4
+    OnClick = CheckBox1Click
+  end
+  object CheckBox2: TCheckBox
+    Left = 104
+    Top = 47
+    Width = 41
+    Height = 17
+    Caption = 'info'
+    Checked = True
+    State = cbChecked
+    TabOrder = 5
+    OnClick = CheckBox2Click
   end
 end

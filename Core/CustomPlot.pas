@@ -2,30 +2,52 @@ unit CustomPlot;
 
 interface
 
-uses RootImpl, tools,
+uses RootImpl, tools, debug_except,
      Vcl.Grids,
      SysUtils, Controls, Messages, Winapi.Windows, Classes, System.Rtti, types,
      Vcl.Graphics, Vcl.Forms, Vcl.ExtCtrls, Vcl.Menus, Vcl.Themes, Vcl.GraphUtil;
 
 type
-  // основной класс графиков
+  /// основной класс графиков
   TCustomPlot = class;
 
-  // всякие коллекции сохраняемые
+  /// прямоугольник отрисовки  графиков легенды информации
+  TPlotRegion = class;
+  /// коллекция хранится в колонке
+  TPlotRegions = class;
+
+  /// содержимое таблиц графиков
+  TPlotParam = class;
+  TPlotParams = class;
+
+  /// колонки коллекция
+  TPlotColumn = class;
+  TPlotColumns = class;
+  /// строки коллекция
+  TPlotRow = class;
+  TPlotRows = class;
+
+  {$REGION 'всякие коллекции сохраняемые'}
+  TPlotCollection = class;
   TPlotCollectionItem = class(TICollectionItem)
   private
     FPlot: TCustomPlot;
   public
+    // конструктор вызывается загрузчиком и в CreateNew
     constructor Create(Collection: TCollection); override;
+    // конструктор вызывается пользователем при созданн елемента коллекции
+    constructor CreateNew(Collection: TPlotCollection); virtual;
     property Plot: TCustomPlot read FPlot;
   end;
+  TPlotCollectionItemClass = class of TPlotCollectionItem;
 
-  TPlotCollection = class(TICollection)
+  TPlotCollection = class abstract(TICollection)
   private
     FPlot: TCustomPlot;
   protected
   public
     function Add(const ItemClassName: string): TPlotCollectionItem; reintroduce; overload;
+    function Add(ItemClass: TPlotCollectionItemClass): TPlotCollectionItem; reintroduce; overload;
     property Plot: TCustomPlot read FPlot;
   end;
 
@@ -47,216 +69,284 @@ type
   public
     function Add<C: T>: C; reintroduce; overload;
     function GetEnumerator: TEnumerator; reintroduce;
-    constructor Create(AOwner: TObject);
+    constructor Create(AOwner: TObject); virtual;
     property Items[Index: Integer]: T read GetItem write SetItem; default;
   end;
+{$ENDREGION}
 
-  /// прямоугольник отрисовки
-  TPlotRegion = class;
-
-//  PlotRegionType = (praService, praData);
+  {$REGION ' строки колонки '}
   /// строки колонки общее
-  TRegionCollectionItem = class(TPlotCollectionItem)
+  TColRowCollectionItem = class(TPlotCollectionItem)
   private
-    FRegionsCount: Integer;
-    FAutoSize: Boolean;
-    function GetItem(Index: Integer): TPlotRegion;
+    FVisible: Boolean;
+    procedure SetVisible(const Value: Boolean);
   protected
     FFrom: Integer;
     FLen: Integer;
+    function GetItem(Index: Integer): TPlotRegion; virtual; abstract;
+    function GetRegionsCount: Integer; virtual; abstract;
     function GetTo: Integer; inline;
     procedure SetLen(const Value: Integer); inline;
+    function AutoSize: Boolean; virtual;
   public
     constructor Create(Collection: TCollection); override;
-    property AutoSize: Boolean read FAutoSize;
     property Regions[Index: Integer]: TPlotRegion read GetItem; default;
-    property RegionsCount: Integer read FRegionsCount;
+    property RegionsCount: Integer read GetRegionsCount;
+    property Visible: Boolean read FVisible write SetVisible default True;
   end;
 
-  TPlotRegions<T: TRegionCollectionItem> = class(TPlotCollection<T>)
+  TCollectionColRows<T: TColRowCollectionItem> = class(TPlotCollection<T>)
   protected
     procedure Notify(Item: TCollectionItem; Action: TCollectionNotification); override;
-    function LastToResize(FromLast: integer): TRegionCollectionItem;
+    function LastToResize(FromLast: integer; ToFirst: Integer = 0): TColRowCollectionItem;
     function GetAllLen: Integer; virtual; abstract;
   public
     procedure UpdateSizes;
   end;
 
-  /// колонки коллекция
-  TPlotColumn = class;
-  TPlotColumns = class;
-  /// строки коллекция
-  TPlotRow = class;
-  TPlotRows = class;
-
-
-  TPlotRow = class(TRegionCollectionItem)
+  // строки;
+  TPlotRow = class(TColRowCollectionItem)
   private
-//    FPlotRowType: PlotRowType;
-    FVisible: Boolean;
     FCursor: Integer;
   public
     property Top: Integer read FFrom;
-    property Down: Integer read GetTo;
-//    property PlotRowType: PlotRowType read FPlotRowType;
+    property Bottom: Integer read GetTo;
     property Cursor: Integer read FCursor;
+  protected
+    function GetItem(Index: Integer): TPlotRegion; override;
+    function GetRegionsCount: Integer; override;
   published
     property Height: Integer read FLen write SetLen;
-    property Visible: Boolean read FVisible write FVisible;
+    property Visible;
   end;
-
+  TPlotRowClass = class of TPlotRow;
+  TPlotRows = class(TCollectionColRows<TPlotRow>)
+  protected
+    function GetAllLen: Integer; override;
+  public
+    function FindRows(rc: TPlotRowClass):TArray<TPlotRow>;
+  end;
   // типы строки;
-  TCustomPlotLegend = class(TPlotRow);
+  TNoSizeblePlotRow = class(TPlotRow)
+  protected
+    function AutoSize: Boolean; override;
+  end;
+  TCustomPlotLegend = class(TNoSizeblePlotRow);
+  TCustomPlotInfo = class(TNoSizeblePlotRow);
   TCustomPlotData = class(TPlotRow)
   public
     constructor Create(Collection: TCollection); override;
   end;
-  TCustomPlotInfo = class(TPlotRow);
 
-
-  TPlotRows = class(TPlotRegions<TPlotRow>)
-  protected
-    function GetAllLen: Integer; override;
-  end;
-
-  TPlotRegion = class
-    PlotRow: TPlotRow;
-    PlotColumn: TPlotColumn;
-  end;
-
-  TPlotColumn = class(TRegionCollectionItem)
-  private
-    FResizeble: Boolean;
-  protected
+  /// колонки
+  TPlotColumnClass = class of TPlotColumn;
+  TPlotColumn = class(TColRowCollectionItem)
   public
+   type
+    TColClassData = record
+     ColCls: TPlotColumnClass;
+     DisplayName: string;
+    end;
+  private
+    FRegions: TPlotRegions;
+    FParams: TPlotParams;
+    FOnContextPopup: TContextPopupEvent;
+    procedure CreateRegions();
+    procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+  protected
+    procedure DefineProperties(Filer: TFiler); override;
+    function GetItem(Index: Integer): TPlotRegion; override;
+    function GetRegionsCount: Integer; override;
+    // Хранилище типов колонок
+    class procedure ColClsRegister(acc: TPlotColumnClass; const DisplayName: string);
+  public
+    class var ColClassItems: TArray<TColClassData>;
+    constructor Create(Collection: TCollection); override;
+    constructor CreateNew(Collection: TPlotCollection); override;
+//    constructor Create(Collection: TCollection); override; final;
+    destructor Destroy; override;
     property Left: Integer read FFrom;
     property Right: Integer read GetTo;
-    property Resizeble: Boolean read FResizeble;
+    property Regions: TPlotRegions read FRegions;
+    property Params: TPlotParams read FParams;
   published
     property Width: Integer read FLen write SetLen;
+    property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
   end;
-  TPlotColumnClass = class of TPlotColumn;
-
-  TPlotColumns = class(TPlotRegions<TPlotColumn>)
+  TPlotColumns = class(TCollectionColRows<TPlotColumn>)
   protected
     function GetAllLen: Integer; override;
   end;
   TPlotColumnsClass = class of TPlotColumns;
+{$ENDREGION}
 
+   {$REGION 'коллекции хранящиеся в колонке параметры: регионы, мeтки глубины'}
+  /// коллекция колонки общее
+  TColumnCollectionItem = class(TPlotCollectionItem)
+  private
+    FColumn: TPlotColumn;
+  public
+    constructor Create(Collection: TCollection); override;
+    property Column: TPlotColumn read FColumn;
+  end;
+  TColumnCollection<T: TColumnCollectionItem> = class(TPlotCollection<T>)
+  private
+    FColumn: TPlotColumn;
+  public
+    constructor Create(AOwner: TObject); override;
+    property Column: TPlotColumn read FColumn;
+  end;
 
+  {$REGION 'TPlotRegion'}
+  /// основной класс отрисовки
+  TPlotRegionClass = class of TPlotRegion;
+  TPlotRegion = class(TColumnCollectionItem)
+  private
+    FClientRect: TRect;
+    FPlotRow: TPlotRow;
+    FOnContextPopup: TContextPopupEvent;
+    function GetRow: string;
+    procedure SetRow(const Value: string);
+    procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+   type
+    TRegClsData = record
+     pc: TPlotRegionClass;
+     rc: TPlotRowClass;
+     cc: TPlotColumnClass;
+    end;
+    class var GRegClsItems: TArray<TRegClsData>;
+  protected
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); virtual;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); virtual;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); virtual;
+    procedure SetClientRect(const Value: TRect);
+    procedure UpdateSize;
+    procedure Paint; virtual;
+  public
+    // поиск нкжного класса региона по колонке и ряду
+    class procedure RegClsRegister(apc: TPlotRegionClass; arc: TPlotRowClass; acc: TPlotColumnClass);
+    class function RegClsFind(arc: TPlotRowClass; acc: TPlotColumnClass): TPlotRegionClass;
+    function TryHitParametr(pos: TPoint; out Par: TPlotParam): Boolean; virtual;
+    property Row: TPlotRow read FPlotRow write FPlotRow;
+    property ClientRect: TRect read FClientRect write SetClientRect;
+  published
+    property PropRow: string read GetRow write SetRow;
+    property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
+  end;
+  TPlotRegions = class(TColumnCollection<TPlotRegion>);
+  {$ENDREGION}
 
+  IDataLink = interface
+  ['{421A0AD1-48C0-4DB0-A08D-281E0121C13D}']
 
+  end;
+  TPlotParamClass = class of TPlotParam;
+  TPlotParam = class(TColumnCollectionItem, IDataLink)
+  private
+    FLink: IDataLink;
+    FOnContextPopup: TContextPopupEvent;
+    FTitle: string;
+    procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+    procedure SetTitle(const Value: string);
+  public
+    property Link: IDataLink read FLink implements IDataLink;
+  published
+    property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
+    [ShowProp('Имя')] property Title: string read FTitle write SetTitle;
+  end;
+  TPlotParams = class(TColumnCollection<TPlotParam>);
+{$ENDREGION}
 
+  /// перемещение или изменение размера рядов или колонок мышкой
+  ///  сосотяние
   PlotState = (pcsNormal, pcsColSizing, pcsColMoving, pcsRowSizing, pcsRowMoving);
+  {$REGION 'классы выполняюшие PlotState'}
+  TCustomEditDlot = class
+    FOwner:  TCustomPlot;
+    FItem, FSwap: TColRowCollectionItem;
+    Fpos: Integer;
+    FState: PlotState;
+    function SetPos(Pos: TPoint):integer;
+    procedure Drow; virtual;
+    procedure Move(Pos: TPoint); virtual;
+    constructor Create(Owner:  TCustomPlot; Pos: TPoint; ps: PlotState; Item: TColRowCollectionItem);
+    destructor Destroy; override;
+  end;
+  TCustomEditDlotClass = class of TCustomEditDlot;
 
+  TColSizing = class(TCustomEditDlot)
+    destructor Destroy; override;
+  end;
+
+  TRowSizing = class(TColSizing);
+
+  TColMoving = class(TCustomEditDlot)
+    procedure Move(Pos: TPoint); override;
+    destructor Destroy; override;
+  end;
+
+  TRowMoving = class(TColMoving);
+{$ENDREGION}
+
+  ///  клласс основной
+  EPlotException = EBaseException;
   TCustomPlot = class(TICustomControl)
   private
-   type
-    TUpdate = (uColunsWidth, uLegendHeight, uScrollRect, uBitmapLegend, uBitmapData, uScrollBar,
-               uPrepareLegend, uPaintLegend, uPaintData,
-               uAsyncPrepareData, uAsyncPaintData, uSyncPrepareData, uSyncPaintData);
-    TUpdates = set of TUpdate;
-//    TCheckMouse = (cmColSize, cmColMove, cmColData, cmColLegend);
-//    TCheckMouses = set of TCheckMouse;
-    TCheckMouseFunc = reference to function (cm: PlotState; Col: TPlotColumn; X, Y: integer): boolean;
-    TMovSiz = class
-      FItem, FSwap: TRegionCollectionItem;
-      Fpos: TPoint;
-      FState: PlotState;
-      procedure Drow;
-      procedure Move(Pos: TPoint);
-      constructor Create(Pos: TPoint; ps: PlotState; item: TRegionCollectionItem);
-    end;
-
-   var
+    FHitTest: TPoint;
+    FState: PlotState;
+    FEditPlot: TCustomEditDlot;
     FColumns: TPlotColumns;
     FRows: TPlotRows;
+    FHitRegion: TPlotRegion;
+    FYAxis: TPlotParam;
 
-    FSelectedColumn: TPlotColumn;
-    FSelectedPow: TPlotRow;
-    FSelectedRegion: TPlotRegion;
-
-    FHitTest: TPoint;
-
-    FState: PlotState;
-
+    procedure UpdateColRowRegionSizes;
+    procedure UpdateRegionSizes;
+    function IsMouseSizeMove(Pos: TPoint; var ps: PlotState; out Item: TColRowCollectionItem): Boolean; overload;
+    function IsMouseSizeMove(Pos: TPoint; var ps: PlotState): Boolean; overload;
 
     procedure WMNCHitTest(var Msg: TWMNCHitTest); message WM_NCHITTEST;
     procedure WMSetCursor(var Msg: TWMSetCursor); message WM_SETCURSOR;
-    procedure DrawSizingLine();
-    procedure DrawMovingLine();
-//    procedure DrawCrossLine(X, Y: Integer);
+    procedure WMSize(var Message: TWMSize); message WM_SIZE;
+    procedure SetYAxis(const Value: TPlotParam);
   protected
-    function IsMouseSizeMove(Pos: TPoint; var ps: PlotState; out Item: TRegionCollectionItem): Boolean; overload;
-    function IsMouseSizeMove(Pos: TPoint; var ps: PlotState): Boolean; overload;
+    procedure Loaded; override;
     procedure DefineProperties(Filer: TFiler); override;
-//    procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
+    procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
 //    procedure CreateWnd; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Paint; override;
   public
-//    DataBitmap: TBitmap;
-//    ScaleFactor: Double;
-//    Mirror: Integer; { TODO : protected property DB plot check SQL for DESC to set mirror -1 }
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-{    function MouseYtoParamY(Y: Integer): Double;
-    function ParamYToY(Y: Double): Double;
-    procedure UpdateMinMaxY(ForceScale: boolean = False); virtual;
-    procedure Update0Position;
-    procedure UpdateAllAndRepaint;
-    procedure UpdateDataAndRepaint;
-    procedure BeginUpdate;
-    procedure EndUpdate;
-    procedure AsyncRun(Async, AfrerSync: TRenderProc);
-    procedure GoToBookmark();
-    function IsLegend(Y: Integer): Boolean; inline;
-    procedure SetBookmark(Y: Integer); inline;
-    property OnScaleChanged: TNotifyEvent read FOnScaleChanged write FOnScaleChanged;}
-    function GetRow(pos: TPoint): TPlotRow;
+    function HitRow(pos: TPoint): TPlotRow;
+    function HitColumn(pos: TPoint): TPlotColumn;
+    function HitRegion(pos: TPoint): TPlotRegion; overload;
+    function HitRegion(c: TPlotColumn; r: TPlotRow): TPlotRegion; overload;
     property Columns: TPlotColumns read FColumns;
     property Rows: TPlotRows read FRows;
-//    property SelectedColumn: TPlotColumn read FSelectedColumn write FSelectedColumn;
-{    property TitleY: string read FTitle write FTitle;
-    property EUnitY: string read FEUnit write FEUnit;
-    property PresizionY: Integer read FPresizionY write FPresizionY default 2;
-    property DpmmX: Double read Xdpmm;
-    property DpmmY: Double read Ydpmm;
-    property OnParamXAxisChanged: TParamXAxisChangedEvent read FOnParamXAxisChanged write FOnParamXAxisChanged;
-    property Popupmenu;}
   published
-//    property ScaleY: Double read FScaleY write SetScaleY;
-//    property PresetScaleY: integer read FPresetScaleY write SetPresetScaleY default SCALE_ONE;
-//    property YOffset: Integer read OffsetY write SetYOffset; // должно быть после ScaleY PresetScaleY
-//    property CursorY: Double read FCursorY write SetCursorY;
+    property YAxis: TPlotParam read FYAxis write SetYAxis;
   end;
 
-  TPlot3 = class(TCustomPlot)
+  TPlot = class(TCustomPlot)
   published
     property Align;
     property ParentFont;
+    property Parent;
     property Font;
-//    property OnScaleChanged;
     property ParentColor;
     property Color;
     property OnContextPopup;
-//    property OnParamXAxisChanged;
   end;
-
-var
- testcnt: Integer;
-
-
-//function SetPresetScale(s: double): Double;
-//procedure TstDebug(const msg: string);
-
 
 implementation
 
-uses System.Math, debug_except, Winapi.CommCtrl;
+uses System.Math, Winapi.CommCtrl;
 
+{$REGION 'Collection'}
 
 { TPlotCollectionItem }
 
@@ -266,16 +356,21 @@ begin
   inherited Create(Collection);
 end;
 
+constructor TPlotCollectionItem.CreateNew(Collection: TPlotCollection);
+begin
+  Create(Collection);
+end;
+
 { TPlotCollection }
 
 function TPlotCollection.Add(const ItemClassName: string): TPlotCollectionItem;
 begin
-  Result := TPlotCollectionItem(TICollectionItemClass(FindClass(ItemClassName)).Create(Self));
+  Result := TPlotCollectionItem(TPlotCollectionItemClass(FindClass(ItemClassName)).CreateNew(Self));
 end;
 
 function TPlotCollection<T>.Add<C>: C;
 begin
-  Result := TRttiContext.Create.GetType(TClass(C)).GetMethod('Create').Invoke(TClass(C), [Self]).AsType<C>; //через жопу работает
+  Result := TRttiContext.Create.GetType(TClass(C)).GetMethod('CreateNew').Invoke(TClass(C), [Self]).AsType<C>; //через жопу работает
 end;
 
 constructor TPlotCollection<T>.Create(AOwner: TObject);
@@ -300,6 +395,11 @@ begin
   inherited SetItem(Index, Value);
 end;
 
+function TPlotCollection.Add(ItemClass: TPlotCollectionItemClass): TPlotCollectionItem;
+begin
+  Result := ItemClass.CreateNew(Self);
+end;
+
 { TPlotCollection<T>.TEnumerator }
 
 function TPlotCollection<T>.TEnumerator.DoGetCurrent: T;
@@ -316,29 +416,148 @@ end;
 
 { TRegionCollectionItem }
 
-constructor TRegionCollectionItem.Create(Collection: TCollection);
+function TColRowCollectionItem.AutoSize: Boolean;
+begin
+  Result := True;
+end;
+
+constructor TColRowCollectionItem.Create(Collection: TCollection);
 begin
   FLen := 20;
-  FAutoSize := True;
+  FVisible := True;
   inherited;
 end;
 
-function TRegionCollectionItem.GetItem(Index: Integer): TPlotRegion;
-begin
-
-end;
-
-function TRegionCollectionItem.GetTo: Integer;
+function TColRowCollectionItem.GetTo: Integer;
 begin
   Result := FFrom + FLen;
 end;
 
-procedure TRegionCollectionItem.SetLen(const Value: Integer);
+procedure TColRowCollectionItem.SetLen(const Value: Integer);
 begin
-  if Value > 20 then
-    FLen := Value
-  else
-    FLen := 20;
+  if Value > 20 then FLen := Value
+  else FLen := 20;
+end;
+
+procedure TColRowCollectionItem.SetVisible(const Value: Boolean);
+begin
+  if  FVisible <> Value then
+   begin
+    FVisible := Value;
+    if csLoading in Plot.ComponentState then Exit;
+    TCollectionColRows<TColRowCollectionItem>(Collection).UpdateSizes;
+    Plot.UpdateRegionSizes;
+   end;
+end;
+
+{ TPlotColumns }
+
+function TPlotColumns.GetAllLen: Integer;
+begin
+  Result := FPlot.Width;
+end;
+
+{ TPlotRows }
+
+function TPlotRows.FindRows(rc: TPlotRowClass): TArray<TPlotRow>;
+ var
+  r: TPlotRow;
+begin
+  for r in Self do if r is rc then CArray.Add<TPlotRow>(Result, r);
+end;
+
+function TPlotRows.GetAllLen: Integer;
+begin
+  Result := FPlot.Height;
+end;
+
+{ TPlotRow }
+
+function TPlotRow.GetItem(Index: Integer): TPlotRegion;
+ var
+  r: TPlotRegion;
+begin
+  if (Index < 0) or (Index >= FPlot.Columns.Count) then raise EPlotException.CreateFmt('Неверный индекс Региона I:%d L:%d',[Index, FPlot.Columns.Count]);
+  for r in FPlot.Columns[Index].FRegions do if r.Row = Self then Exit(r);
+  raise EPlotException.CreateFmt('Регион %s не найлен',[ClassName]);
+end;
+
+function TPlotRow.GetRegionsCount: Integer;
+begin
+  Result := FPlot.Columns.Count;
+end;
+
+{ TNoSizeblePlotRow }
+
+function TNoSizeblePlotRow.AutoSize: Boolean;
+begin
+  Result := False;
+end;
+
+{ TPlotColumn }
+
+class procedure TPlotColumn.ColClsRegister(acc: TPlotColumnClass; const DisplayName: string);
+ var
+  d: TColClassData;
+begin
+  d.ColCls := acc;
+  d.DisplayName := DisplayName;
+  CArray.Add<TColClassData>(ColClassItems, d);
+end;
+
+constructor TPlotColumn.Create(Collection: TCollection);
+begin
+  FPlot := TPlotColumns(Collection).Plot;
+  FRegions := TPlotRegions.Create(Self);
+  FParams := TPlotParams.Create(Self);
+  inherited Create(Collection);
+end;
+
+constructor TPlotColumn.CreateNew(Collection: TPlotCollection);
+begin
+  inherited;
+  CreateRegions();
+end;
+
+procedure TPlotColumn.CreateRegions;
+ var
+  r: TPlotRow;
+  p: TPlotRegion;
+begin
+  FRegions.Clear;
+  for r in Plot.Rows do TPlotRegion(FRegions.Add(TPlotRegion.RegClsFind(TPlotRowClass(r.ClassType), TPlotColumnClass(ClassType)))).FPlotRow := r;
+  for p in Regions do p.UpdateSize;
+end;
+
+procedure TPlotColumn.DefineProperties(Filer: TFiler);
+begin
+  inherited;
+  FParams.RegisterProperty(Filer, 'Params');
+  FRegions.RegisterProperty(Filer, 'Regions');
+end;
+
+destructor TPlotColumn.Destroy;
+begin
+  FRegions.Free;
+  FParams.Free;
+  inherited;
+end;
+
+procedure TPlotColumn.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+begin
+  if Assigned(FOnContextPopup) then FOnContextPopup(Self, MousePos, Handled);
+  if not Handled then Plot.HitRegion(Self,  Plot.HitRow(MousePos)).DoContextPopup(MousePos, Handled);
+end;
+
+function TPlotColumn.GetItem(Index: Integer): TPlotRegion;
+begin
+  if (Index < 0) or (Index >= FRegions.Count) then raise EPlotException.CreateFmt('Неверный индекс Региона I:%d L:%d',[Index, FRegions.Count]);
+  Result := FRegions[Index];
+end;
+
+function TPlotColumn.GetRegionsCount: Integer;
+begin
+  Result := FRegions.Count;
 end;
 
 { TCustomPlotData }
@@ -347,76 +566,300 @@ constructor TCustomPlotData.Create(Collection: TCollection);
 begin
   inherited;
   FCursor := crCross;
-//  FPlotRowType := praData;
 end;
 
 { TPlotRegions<T> }
 
-function TPlotRegions<T>.LastToResize(FromLast: integer): TRegionCollectionItem;
+function TCollectionColRows<T>.LastToResize(FromLast: integer; ToFirst: Integer = 0): TColRowCollectionItem;
  var
   i: Integer;
-//  r: TRegionCollectionItem;
 begin
-  Result := Items[FromLast];
-  for i := FromLast downto 0 do if Items[i].AutoSize then Exit(Items[i]);
-//  for r in self do TDebug.Log('resize  from %d   len %d   ',[r.FFrom, r.FLen]);
-//  TDebug.Log('Result  from %d   len %d   ',[Result.FFrom, Result.FLen]);
+  for i := FromLast downto ToFirst do
+   if Items[i].Visible then
+    if Items[i].AutoSize then Exit(Items[i])
+    else Result := Items[i];
 end;
 
-procedure TPlotRegions<T>.Notify(Item: TCollectionItem; Action: TCollectionNotification);
+procedure TCollectionColRows<T>.Notify(Item: TCollectionItem; Action: TCollectionNotification);
  var
-  r: TRegionCollectionItem;
+  r: TColRowCollectionItem;
   len: Integer;
 begin
   inherited;
-  if csDestroying in FPlot.ComponentState then Exit;
+  if FPlot.ComponentState * [csLoading, csDestroying] <> [] then Exit;
   if (Action = cnAdded) then
    if (Count >= 2) then
     begin
      r := LastToResize(Count - 2);
      r.SetLen(r.FLen div 2);
-     TRegionCollectionItem(Item).FLen := r.FLen;
-//     TDebug.Log(' r from %d   r len %d   ',[r.FFrom, r.FLen]);
+     TColRowCollectionItem(Item).FLen := r.FLen;
     end
-   else TRegionCollectionItem(Item).FLen := GetAllLen;
-//  for r in self do TDebug.Log('  from %d   len %d   ',[r.FFrom, r.FLen]);
-
+   else TColRowCollectionItem(Item).FLen := GetAllLen;
   UpdateSizes;
-  FPlot.Repaint;
+  Plot.UpdateRegionSizes;
 end;
 
-procedure TPlotRegions<T>.UpdateSizes;
+procedure TCollectionColRows<T>.UpdateSizes;
  var
   lf, i, j, wf: Integer;
-  r, rs: TRegionCollectionItem;
+  r, rs: TColRowCollectionItem;
 begin
-  if Count = 0 then Exit;
+  if (Count = 0) or (FPlot.ComponentState * [csLoading, csDestroying] <> []) then Exit;
   rs := LastToResize(Count - 1);
   lf := 0;
-  for i := 0 to Count-1 do
+  for i := 0 to Count-1 do if Items[i].Visible then
    begin
     r := Items[i];
     r.FFrom := lf;
-    if rs  = r then
+    if rs = r then
      begin
       wf := 0;
-      for j := i + 1 to Count - 1 do wf := wf + Items[j].Flen;
+      for j := i + 1 to Count - 1 do if Items[j].Visible then wf := wf + Items[j].Flen;
       r.SetLen(GetAllLen - lf- wf);
      end;
     Inc(lf, r.FLen);
    end;
-  for r in self do TDebug.Log('update  from %d   len %d   ',[r.FFrom, r.FLen]);
+end;
+
+{ TColumnCollection<T> }
+
+constructor TColumnCollection<T>.Create(AOwner: TObject);
+begin
+  FColumn := TPlotColumn(AOwner);
+  inherited Create(TPlotColumn(AOwner).Plot);
+end;
+
+{ TColumnCollectionItem }
+
+constructor TColumnCollectionItem.Create(Collection: TCollection);
+begin
+  FColumn := TColumnCollection<TColumnCollectionItem>(Collection).Column;
+  inherited Create(Collection);
+end;
+
+{ TPlotRegion }
+
+procedure TPlotRegion.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+ var
+  p: TPlotParam;
+begin
+  if Assigned(FOnContextPopup) then FOnContextPopup(Self, MousePos, Handled);
+  if not Handled and TryHitParametr(MousePos, p) then p.DoContextPopup(MousePos, Handled);
+end;
+
+function TPlotRegion.GetRow: string;
+begin
+  Result :=  FPlotRow.ClassName;
+end;
+
+procedure TPlotRegion.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+end;
+procedure TPlotRegion.MouseMove(Shift: TShiftState; X, Y: Integer);
+begin
+end;
+procedure TPlotRegion.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+end;
+procedure TPlotRegion.Paint;
+begin
+  if Column.Visible and Row.Visible then
+   begin
+    Plot.Canvas.FillRect(ClientRect);
+    Plot.Canvas.TextRect(ClientRect, ClientRect.Left + ClientRect.Width div 2, ClientRect.Top + ClientRect.Height div 2, 'NOP');
+   end;
+end;
+procedure TPlotRegion.UpdateSize;
+ var
+  r: TRect;
+begin
+  r := TRect.Create(Column.Left, Row.Top, Column.Right, Row.Bottom);
+  if r <> ClientRect then ClientRect := r;
+end;
+
+class function TPlotRegion.RegClsFind(arc: TPlotRowClass; acc: TPlotColumnClass): TPlotRegionClass;
+ var
+  r: TRegClsData;
+begin
+  for r in GRegClsItems do if (r.cc = acc) and (r.rc = arc) then Exit(r.pc);
+  Result := TPlotRegion;
+//  raise EPlotException.CreateFmt('Ненайден класс региона %s  %s', [arc.ClassName, acc.ClassName]);
+end;
+
+class procedure TPlotRegion.RegClsRegister(apc: TPlotRegionClass; arc: TPlotRowClass; acc: TPlotColumnClass);
+ var
+  d: TRegClsData;
+begin
+  d.pc := apc;
+  d.rc := arc;
+  d.cc := acc;
+  CArray.Add<TRegClsData>(GRegClsItems, d);
+end;
+
+procedure TPlotRegion.SetClientRect(const Value: TRect);
+begin
+  FClientRect := Value;
+end;
+
+procedure TPlotRegion.SetRow(const Value: string);
+ var
+  r: TPlotRow;
+begin
+  for r in Plot.Rows do if SameText(r.ClassName, Value) then
+   begin
+    FPlotRow := r;
+    Exit;
+   end;
+  raise EPlotException.CreateFmt('Ненайден класс ряда %s', [Value]);
+end;
+
+function TPlotRegion.TryHitParametr(pos: TPoint; out Par: TPlotParam): Boolean;
+begin
+  Result := False;
+end;
+
+{ TPlotParam }
+
+procedure TPlotParam.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+begin
+  if Assigned(FOnContextPopup) then FOnContextPopup(Self, MousePos, Handled);
 end;
 
 
+
+{$ENDREGION Collection}
+
+{$REGION ' классы выполняюшие PlotState '}
+procedure TPlotParam.SetTitle(const Value: string);
+begin
+  FTitle := Value;
+end;
+
+{ TCustomEditDlot }
+
+constructor TCustomEditDlot.Create(Owner:  TCustomPlot; Pos: TPoint; ps: PlotState; Item: TColRowCollectionItem);
+begin
+  FOwner := Owner;
+  FItem := Item;
+  FSwap := Item;
+  FState := ps;
+  if FState in [pcsColMoving, pcsRowMoving] then Fpos := Item.FFrom
+  else Fpos := SetPos(Pos);
+  Drow;
+end;
+
+destructor TCustomEditDlot.Destroy;
+begin
+  FOwner.FState := pcsNormal;
+  inherited;
+end;
+
+procedure TCustomEditDlot.Drow;
+begin
+  with FOwner.Canvas do
+   begin
+    Pen.Style := psDot;
+    Pen.Mode := pmXor;
+    if FState in [pcsColSizing, pcsRowSizing] then
+     begin
+      Pen.Color := clBlack;
+      Pen.Width := 1;
+     end
+    else
+     begin
+      Pen.Color := clWhite;
+      Pen.Width := 5;
+     end;
+    if FState in [pcsColSizing, pcsColMoving] then
+     begin
+      MoveTo(Fpos, 0);
+      LineTo(Fpos, FOwner.ClientHeight);
+     end
+    else
+     begin
+      MoveTo(0, Fpos);
+      LineTo(FOwner.ClientWidth, Fpos);
+     end;
+   end;
+end;
+
+procedure TCustomEditDlot.Move(Pos: TPoint);
+begin
+  Drow;
+  Fpos := SetPos(Pos);
+  Drow;
+end;
+
+function TCustomEditDlot.SetPos(Pos: TPoint): integer;
+begin
+  if FState in [pcsColMoving, pcsColSizing] then Result := Pos.X
+  else Result := Pos.Y;
+end;
+
+{ TRowSizing }
+
+destructor TColMoving.Destroy;
+begin
+  if FItem <> FSwap then
+   begin
+    FItem.Index := FSwap.Index;
+    if FState = pcsColMoving then FOwner.Columns.UpdateSizes()
+    else FOwner.Rows.UpdateSizes();
+    FOwner.UpdateRegionSizes;
+    FOwner.Repaint;
+   end
+  else Drow;
+  inherited;
+end;
+
+procedure TColMoving.Move(Pos: TPoint);
+ var
+  r: TColRowCollectionItem;
+  p: Integer;
+begin
+  p := SetPos(Pos);
+  for r in TPlotCollection<TColRowCollectionItem>(FItem.Collection) do if (p < r.GetTo) and (p > r.FFrom) and (FSwap <> r) then
+   begin
+    Drow;
+    FSwap := r;
+    Fpos := r.FFrom;
+    Drow;
+    Break;
+   end;
+end;
+
+{ TColSizing }
+
+destructor TColSizing.Destroy;
+ var
+  wold: Integer;
+begin
+  wold := FItem.FLen;
+  if FState = pcsColSizing then FSwap := FOwner.Columns.LastToResize(FOwner.Columns.Count-1, FItem.Index+1)
+  else FSwap := FOwner.Rows.LastToResize(FOwner.Rows.Count-1, FItem.Index+1);
+  if FItem <> FSwap then
+   begin
+    FItem.SetLen(Fpos - FItem.FFrom);
+    FSwap.SetLen(FSwap.FLen - (FItem.FLen - wold));
+    if FState = pcsColSizing then FOwner.Columns.UpdateSizes()
+    else FOwner.Rows.UpdateSizes();
+    FOwner.UpdateRegionSizes;
+    FOwner.Repaint;
+   end
+  else Drow;
+  inherited;
+end;
+{$ENDREGION}
+
+{$REGION 'TCustomPlot ----- Create Destroy'}
 
 { TCustomPlot }
 
 constructor TCustomPlot.Create(AOwner: TComponent);
 begin
   inherited;
-  FColumns := TPlotColumns.Create(Self);
   FRows := TPlotRows.Create(Self);
+  FColumns := TPlotColumns.Create(Self);
 end;
 
 destructor TCustomPlot.Destroy;
@@ -427,456 +870,69 @@ begin
 end;
 
 
-{$REGION 'Сериализация коллекции с у которой элементы разные классы'}
+procedure TCustomPlot.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+begin
+  inherited;
+//  if Assigned(PopupMenu) then
+  if not Handled then  HitColumn(MousePos).DoContextPopup(MousePos, Handled);
+end;
+
 procedure TCustomPlot.DefineProperties(Filer: TFiler);
 begin
   inherited DefineProperties(Filer);
-  FColumns.RegisterProperty(Filer, 'PlotColumns');
   FRows.RegisterProperty(Filer, 'PlotRows');
+  FColumns.RegisterProperty(Filer, 'PlotColumns');
 end;
 {$ENDREGION}
 
-{$REGION 'Сериализация коллекции с у которой элементы разные классы'}
-{procedure TCustomPlot.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+{$REGION 'TCustomPlot ----- SCROLL DATA'}
+{$ENDREGION 'TCustomPlot ----- SCROLL BAR'}
+
+{$REGION 'TCustomPlot ----- MOVE, RESIZE HIT'}
+
+procedure TCustomPlot.UpdateColRowRegionSizes;
+begin
+  Rows.UpdateSizes;
+  Columns.UpdateSizes;
+  UpdateRegionSizes;
+end;
+
+procedure TCustomPlot.UpdateRegionSizes;
  var
   c: TPlotColumn;
+  p: TPlotRegion;
 begin
-  inherited;
-  if Handled then Exit;
-  for c in Columns do if (c.Left < MousePos.X) and (c.Right > MousePos.X) then
-   begin
-    c.DoContextPopup(MousePos, Handled);
-    Break;
-   end;
+  if csLoading in ComponentState then Exit;
+  for c in Columns do for p in c.Regions do p.UpdateSize;
 end;
 
-function TCustomPlot.UpdateALL(const tsk: TUpdates): TUpdates;
-begin
-  Result := [];
-  if (csLoading in ComponentState) then Exit;
-  if uColunsWidth in tsk then UpdateColumns;
-  if uLegendHeight in tsk then Result := Result + UpdateLegendHeight;
-  if uScrollRect in tsk then UpdateScrollRect;
-  if uBitmapLegend in tsk then Result := Result + UpdateSizeBitmapLegend;
-  if uBitmapData in tsk then Result := Result + UpdateSizeBitmapData;
-  if uScrollBar in tsk then UpdateVerticalScrollBar;
-  if uPrepareLegend in tsk then DoPrepareLegend;
-  if ShowLegend and (uPaintLegend in tsk) then DoPaintLegend;
-  if uPaintData in tsk then DoPaintData;
-  if uAsyncPrepareData in tsk then
-    if uAsyncPaintData in tsk then AsyncRun(DoPrepareData, DoPaintData)
-    else AsyncRun(DoPrepareData, nil);
-  if uSyncPrepareData in tsk then
-    if uSyncPaintData in tsk then
-     begin
-      DoPrepareData;
-      DoPaintData;
-     end
-    else DoPrepareData;
-end;
-
-procedure TCustomPlot.UpdateAllAndRepaint;
-begin
-  UpdateALL([uColunsWidth, uScrollRect, uLegendHeight, uBitmapLegend, uBitmapData, uScrollBar, uPrepareLegend,
-             uPaintLegend, uAsyncPrepareData, uAsyncPaintData]);
-end;
-
-function TCustomPlot.UpdateSizeBitmapData: TUpdates;
-begin
-  DataBitmap.Canvas.Lock;
-  try
-   if (DataBitmap.Width < ClientWidth) or (DataBitmap.Height < ScrollRect.Height) then
-    begin
-     DataBitmap.SetSize(ClientWidth, ScrollRect.Height);
-     Result := [uBitmapData]
-    end
-   else Result := []
-  finally
-   DataBitmap.Canvas.Unlock;
-  end;
-end;
-
-function TCustomPlot.UpdateSizeBitmapLegend: TUpdates;
-begin
-  if (LegendBitmap.Width < ClientWidth) or (LegendBitmap.Height < LegendHeight) then
-   begin
-    LegendBitmap.SetSize(ClientWidth, LegendHeight);
-    Result := [uBitmapLegend]
-   end
-  else Result := []
-end;
-
-procedure TCustomPlot.UpdateColumns;
+function TCustomPlot.HitColumn(pos: TPoint): TPlotColumn;
  var
-  lf, i: Integer;
+  r: TPlotColumn;
 begin
-  if Columns.Count = 0 then Exit;
-  lf := 0;
-  for i := 0 to Columns.Count-2 do
-   begin
-    Columns.Items[i].FLeft := lf;
-    Inc(lf, Columns.Items[i].Width);
-   end;
-  Columns.Items[Columns.Count-1].FLeft := lf;
-  Columns.Items[Columns.Count-1].Width := ClientWidth - lf;   // последняя колонка переменной ширины
+  for r in Columns do if (pos.Y >= r.Left) and (pos.Y <= r.Right) then Exit(r);
+  raise EBaseException.Create('Нет колонки в данном месте');
 end;
 
-procedure TCustomPlot.UpdateDataAndRepaint;
+function TCustomPlot.HitRegion(pos: TPoint): TPlotRegion;
 begin
-  AsyncRun(DoPrepareData, DoPaintData);
+  Result := HitRegion(HitColumn(pos), HitRow(pos));
 end;
 
-function TCustomPlot.UpdateLegendHeight: TUpdates;
+function TCustomPlot.HitRegion(c: TPlotColumn; r: TPlotRow): TPlotRegion;
  var
-  G: TGPGraphics;
-  c: TPlotColumn;
-  lh: Integer;
+  p: TPlotRegion;
 begin
-  if not HandleAllocated then Exit;
-  GDIPlus.Lock;
-  G := TGPGraphics.Create(LegendBitmap.Canvas.Handle);
-  try
-   lh := 64;
-   for c in Columns do c.CalcLegendHeight(G, lh);
-  finally
-   G.Free;
-   GDIPlus.UnLock;
-  end;
-  if LegendHeight <> lh then Result := [uLegendHeight] else Result := [];
-  LegendHeight := lh;
+  for p in c.Regions do if p.Row = r then Exit(p);
+  raise EBaseException.Create('Нет региона в данном месте');
 end;
 
-procedure TCustomPlot.UpdateScrollRect;
-  var
-  last_mirror: Boolean;
-begin
-  if not HandleAllocated then Exit;
-  last_mirror := (OffsetY = (ScrollRect.Height - Range)) and (Mirror = -1);
-  ScrollRect := ClientRect;
-  if FShowLegend then
-   begin
-    if LegendHeight > ScrollRect.Height then ScrollRect.Height := 1
-    else ScrollRect.Height := ScrollRect.Height - LegendHeight;
-    if last_mirror then
-     begin
-      if not (csLoading in ComponentState) and (Range > 1)  then OffsetY := ScrollRect.Height - Range;
-      Exit;
-     end;
-   end;
-  if not (csLoading in ComponentState) and (Range > 1) and (OffsetY < (ScrollRect.Height - Range)) then
-   begin
-    OffsetY := ScrollRect.Height - Range;
-    if OffsetY > 0 then OffsetY := 0;
-   end;
-end;
-
-procedure TCustomPlot.UpdateVerticalScrollBar();
- var
-  ScrollInfo: TScrollInfo;
-  ofY: Integer;
-begin
-  if  not HandleAllocated or (csLoading in ComponentState)  then Exit;
-  ScrollInfo.cbSize := SizeOf(ScrollInfo);
-  ScrollInfo.fMask := SIF_ALL;
-  ScrollInfo.nMin := 0;
-  if Range > ScrollRect.Height then ScrollInfo.nMax := Range else  ScrollInfo.nMax := 0;
-  ScrollInfo.nPage := Max(1, ScrollRect.Height);
-  if Mirror = 1 then ofY :=  -OffsetY
-  else ofY := Range + OffsetY - ScrollRect.Height;
-  ScrollInfo.nPos := OfY;
-  ScrollInfo.nTrackPos := OfY;
-  FlatSB_SetScrollInfo(Handle, SB_VERT, ScrollInfo, True);
-end;    }
-
-
-{ TODO : написать  ADDData RecalcScale только для последних данных}
-//procedure TCustomPlot.UpdateMinMaxY(ForceScale: boolean);
-// var
-//  c: TPlotColumn;
-//  mx, mi: Double;
-//  OldFirstY, OldLastY: Integer;
-//begin
-//  mi := 1000000;
-//  mx := -1;
-//  OldFirstY := FirstY;
-//  OldLastY := LastY;
-//  { TODO : перерисать оптимально т.к . RecalcScale длительная операция }
-//  for c in Columns do
-//   begin
-//    c.UpdateMinMaxY(mi, mx);
-//    if mi < mx then
-//     begin
-//      FirstY := Trunc(mi);
-//      FirstY := FirstY div 10 * 10;
-//      LastY :=  Trunc(mx)+1;
-//     end;
-//   end;
-//  if (OldFirstY = FirstY) and (OldLastY = LastY) and not ForceScale then Exit;
-//  for c in Columns do if c is TGraphColumn then TGraphColumn(c).RecalcScale;
-//end;
-
-{procedure TCustomPlot.Update0Position;
-begin
-  if HandleAllocated then
-   begin
-    if Mirror = -1 then SetOffsetY(-10000000, True)
-    else SetOffsetY(0, True);
-    Exclude(FStates, psScrolling);
-    UpdateVerticalScrollBar;
-   end;
-end;
-
-function TCustomPlot.LegendRect: TRect;
-begin
-  Result := ClientRect;
-  Result.Height := LegendHeight;
-end;
-
-function TCustomPlot.CreateGPFont: TGPFont;
- var
-  f: TFontStyles;
-begin
-   f := Font.Style;
-  Result := TGPFont.Create(Font.Name, Font.Size, PInteger(@F)^);
-end;
-
-function TCustomPlot.IsLegend(Y: Integer): Boolean;
-begin
-  Result := ShowLegend and (Y < LegendHeight);
-end;
-
-procedure TCustomPlot.KeyPress(var Key: Char);
-begin
-  if CharInSet(AnsiString(Key)[1], ['L','l','Д','д']) then ShowLegend := not ShowLegend
-  else if CharInSet(AnsiString(Key)[1],['C','c','С','с']) then GoToBookmark;
-  inherited;
-end;     }
-
-{$ENDREGION}
-
-{$REGION 'SCROLL DATA'}
-{function TCustomPlot.Range: Integer;
-begin
-  Result := Trunc(RangeY * ScaleY*Ydpmm)+1;
-end;
-
-function TCustomPlot.RangeY: Integer;
-begin
-  Result := LastY - FirstY;
-end;
-
-procedure TCustomPlot.SetScaleY(const Value: Double);
- var
-  p: TCollectionItem;
-begin
-  if FScaleY <> Value then
-   begin
-    if Mirror = 1 then OffsetY := Round(OffsetY *Value/FScaleY)
-    else OffsetY := Round((OffsetY- ScrollRect.Height)*Value/FScaleY+ ScrollRect.Height);
-    FScaleY := Value;
-    for p in FColumns do if p is TGraphColumn then TGraphColumn(p).RecalcScale();
-    if HandleAllocated then
-     begin
-      UpdateVerticalScrollBar;
-      SetOffsetY(OffsetY, True);
-      Exclude(FStates, psScrolling);
-      if Assigned(FOnScaleChanged) then FOnScaleChanged(Self);
-     end;
-   end;
-end;
-
-procedure TCustomPlot.SetShowLegend(const Value: Boolean);
-begin
-  if (FShowLegend <> Value) then
-   begin
-    FShowLegend := Value;
-    if not (csLoading in ComponentState) then
-      UpdateALL([uScrollRect, uBitmapLegend, uBitmapData, uScrollBar, uPrepareLegend, uPaintLegend, uAsyncPrepareData, uAsyncPaintData]);
-   end;
-end;
-
-procedure TCustomPlot.SetYOffset(const Value: Integer);
-begin
-  OffsetY := Value;
-end;
-
-procedure TCustomPlot.SetBookmark(Y: Integer);
-begin
-  CursorY := MouseYtoParamY(Y);
-end;
-
-procedure TCustomPlot.SetCursorY(const Value: Double);
-begin
-  FCursorY := Value;
-end;
-
-function TCustomPlot.SetOffsetY(Y: Integer; NeedRepaint: Boolean = False): Boolean;
- var
-  DeltaY, ofY: Integer;
-begin
-  if Y < (ScrollRect.Height - Range) then Y := ScrollRect.Height - Range;
-  if Y > 0 then Y := 0;
-  DeltaY := Y - OffsetY;
-  Result := (DeltaY <> 0);
-  if Result or NeedRepaint then
-   begin
-    OffsetY := Y;
-    Include(FStates, psScrolling);
-    //Рисуем скроллбар
-    if Mirror = 1 then ofY :=  -OffsetY
-    else ofY := Range + OffsetY - ScrollRect.Height;
-    if FlatSB_GetScrollPos(Handle, SB_VERT) <> -OffsetY then FlatSB_SetScrollPos(Handle, SB_VERT, OfY, True);
-
-    if ScrollRect.Height > 0 then AsyncRun(DoPrepareData, DoPaintData);
-   end;
-end;
-
-procedure TCustomPlot.SetPresetScaleY(const Value: integer);
-begin
-  if FPresetScaleY <> Value then
-   begin
-    if Value < 0 then FPresetScaleY := 0
-    else if Value > High(SCALE_PRESET) then FPresetScaleY := High(SCALE_PRESET)
-    else FPresetScaleY := Value;
-    if HandleAllocated then ScaleY := SCALE_PRESET[FPresetScaleY]* ScaleFactor;
-   end;
-end;
-
-procedure TCustomPlot.WMSize(var Message: TWMSize);
-begin
-  inherited;
-  if HandleAllocated and (([psSizing, psUpdating] * FStates) = []) and (ClientHeight > 0) and not (csLoading in ComponentState) then
-   try
-    Include(FStates, psSizing);
-    TDebug.Log(' *** TCustomPlot.WMSize  ****    ');                                                                             //??????
-    UpdateALL([uColunsWidth, uLegendHeight, uScrollRect, uBitmapLegend, uBitmapData, uScrollBar, uPrepareLegend, uPaintLegend, uSyncPrepareData]);
-   finally
-    Exclude(FStates, psSizing);
-   end;
-end;
-
-procedure TCustomPlot.CMHintShow(var Message: TCMHintShow);
-begin
-  with Message.HintInfo^ do  HintPos := FHintData.DataPoint;
-end;                                                          }
-
-//procedure TCustomPlot.CMMouseWheel(var Message: TCMMouseWheel);
-// var
-//  ScrollAmount: Integer;
-//  ScrollLines: DWORD;
-//  WheelFactor: Double;
-//begin
-//  inherited;
-//  if Message.Result = 0  then
-//  begin
-//    with Message do
-//    begin
-//     Result := 1;
-//     if ([psPainting, {psScrolling,} psUpdating] * FStates) <> [] then Exit;
-//     if ssShift in ShiftState then
-//      begin
-//       if WheelDelta > 0 then PresetScaleY := PresetScaleY+1 else PresetScaleY := PresetScaleY-1
-//      end
-//     else if Range > ScrollRect.Height then
-//      begin
-//       WheelFactor := WheelDelta / WHEEL_DELTA;
-//       if ssCtrl in ShiftState then ScrollAmount := Trunc(WheelFactor * ScrollRect.Height)
-//       else
-//        begin
-//         SystemParametersInfo(SPI_GETWHEELSCROLLLINES, 0, @ScrollLines, 0);
-//         if ScrollLines = WHEEL_PAGESCROLL then ScrollAmount := Trunc(WheelFactor * ScrollRect.Height)
-//         else ScrollAmount := Trunc(WheelFactor * ScrollLines * Ydpmm);
-//        end;
-//       SetOffsetY(OffsetY + Mirror*ScrollAmount);
-//       Exclude(FStates, psScrolling);
-//      end
-//    end;
-//  end;
-//end;
-
-//procedure TCustomPlot.WMVScroll(var Message: TWMVScroll);
-//  function GetRealScrollPosition: Integer;
-//   var
-//    SI: TScrollInfo;
-//    Code: Integer;
-//  begin
-//    SI.cbSize := SizeOf(TScrollInfo);
-//    SI.fMask := SIF_TRACKPOS;
-//    Code := SB_VERT;
-//    FlatSB_GetScrollInfo(Handle, Code, SI);
-//    if Mirror = 1 then Result := SI.nTrackPos
-//    else Result := Range - SI.nTrackPos - ScrollRect.Height
-//  end;
-//begin
-//  case Message.ScrollCode of
-//    SB_BOTTOM:      SetOffsetY(-Range);
-//    SB_ENDSCROLL:
-//     begin
-//      UpdateVerticalScrollBar();
-//      Exclude(FStates, psScrolling);
-//     end;
-//    SB_LINEUP:      SetOffsetY(OffsetY + Mirror*FIncrementY);
-//    SB_LINEDOWN:    SetOffsetY(OffsetY - Mirror*FIncrementY);
-//    SB_PAGEUP:      SetOffsetY(OffsetY + Mirror*ScrollRect.Height);
-//    SB_PAGEDOWN:    SetOffsetY(OffsetY - Mirror*ScrollRect.Height);
-//    SB_THUMBPOSITION,
-//    SB_THUMBTRACK:  SetOffsetY(-GetRealScrollPosition);
-//    SB_TOP:         SetOffsetY(0);
-//  end;
-//  Message.Result := 0;
-//end;       }
-{$ENDREGION 'SCROLL BAR'}
-
-{$REGION 'MOVE, RESIZE COLUMN HIT'}
-
-//procedure TCustomPlot.DrawCrossLine(X, Y: Integer);
-// procedure DrowCr;
-// begin
-//   if ShowLegend then Canvas.MoveTo(FChangeLeft, LegendHeight)
-//   else Canvas.MoveTo(FChangeLeft, 0);
-//   Canvas.LineTo(FChangeLeft, ClientHeight);
-//   Canvas.MoveTo(0, FChangePos);
-//   Canvas.LineTo(Clientwidth, FChangePos);
-// end;
-//begin
-//  Canvas.Pen.Color := clBlack;
-//  Canvas.Pen.Style := psDot;
-//  Canvas.Pen.Mode := pmXor;
-//  Canvas.Pen.Width := 1;
-//  if FHorizontShowed then DrowCr;
-//  FChangeLeft := X;
-//  FChangePos := Y;
-//  DrowCr;
-//  FHorizontShowed := True;
-//end;
-
-procedure TCustomPlot.DrawMovingLine;
-begin
-  Canvas.Pen.Color := clWhite;
-  Canvas.Pen.Style := psDot;
-  Canvas.Pen.Mode := pmXor;
-  Canvas.Pen.Width := 5;
-//  Canvas.MoveTo(FChangeLeft, 0);
-//  Canvas.LineTo(FChangeLeft, ClientHeight);
-end;
-
-procedure TCustomPlot.DrawSizingLine;
-begin
-  Canvas.Pen.Color := clBlack;
-  Canvas.Pen.Style := psDot;
-  Canvas.Pen.Mode := pmXor;
-  Canvas.Pen.Width := 1;
-//  Canvas.MoveTo(FChangePos, 0);
-//  Canvas.LineTo(FChangePos, ClientHeight);
-end;
-
-function TCustomPlot.GetRow(pos: TPoint): TPlotRow;
+function TCustomPlot.HitRow(pos: TPoint): TPlotRow;
  var
   r: TPlotRow;
 begin
- // Result := Rows[Rows.Count-1];
-  for r in Rows do if (pos.Y >= r.Top) and (pos.Y <= r.Down) then Exit(r);
-  raise EBaseException.Create('Нет рада в данном месте');
+  for r in Rows do if (pos.Y >= r.Top) and (pos.Y <= r.Bottom) then Exit(r);
+  raise EBaseException.Create('Нет ряда в данном месте');
 end;
 
 procedure TCustomPlot.WMNCHitTest(var Msg: TWMNCHitTest);
@@ -885,46 +941,23 @@ begin
   FHitTest := ScreenToClient(SmallPointToPoint(Msg.Pos));
 end;
 
-{function TCustomPlot.CheckMousePosition(cms: PlotState; X, Y: Integer; func: TCheckMouseFunc): Boolean;
- var
-  c: TPlotColumn;
-  Yd: integer;
-begin
-  Result := False;
-  if cmColSize in cms then for c in Columns do
-    if (Abs(c.Right - X) < 7) then Exit(func(cmColSize, c, X, Y));
-
-  if (cmColMove in cms) and (Y < 32) then for c in Columns do
-    if (X > c.Left + CHECKBOX_SIZE + CHECKBOX_SIZE div 2) and (X < c.Right) then Exit(func(cmColMove, c, X, Y));
-
-  if ShowLegend and (cmColLegend in cms) and (Y < LegendHeight) then
-    for c in Columns do
-     if (X > c.Left) and (X < c.Right) then Exit(func(cmColLegend, c, X, Y));
-
-  if FShowLegend then Yd := Y - LegendHeight
-  else Yd := Y;
-  if (cmColData in cms) and (ClientHeight-Yd > 10) and (Yd > 10) then
-    for c in Columns do
-     if (X > c.Left+5) and (X < c.Right-5) then Exit(func(cmColData, c, X, Y));
-end; }
-
-function TCustomPlot.IsMouseSizeMove(Pos: TPoint; var ps: PlotState; out Item: TRegionCollectionItem): Boolean;
+function TCustomPlot.IsMouseSizeMove(Pos: TPoint; var ps: PlotState; out Item: TColRowCollectionItem): Boolean;
  const
   MM = 4;
  var
   c: TPlotColumn;
   r: TPlotRow;
-  function Setps(s: PlotState; ri: TRegionCollectionItem): Boolean;
+  function Setps(s: PlotState; ri: TColRowCollectionItem): Boolean;
   begin
     Item := ri;
     ps := s;
     Result := True;
   end;
 begin
-  if (Pos.Y < MM*2) then for r in Rows do if (r.Top < Pos.Y) and (Pos.Y < r.Down) then Exit(Setps(pcsRowMoving, r))
-  else if (Pos.X < MM*2) then for c in Columns do if (c.Left < Pos.X) < (Pos.X < c.Right) then Exit(Setps(pcsColMoving, c));
-  for c in Columns do if Abs(c.Right - Pos.X) < MM then Exit(Setps(pcsColSizing, c));
-  for r in Rows do if Abs(r.Down - Pos.Y) < MM then Exit(Setps(pcsRowSizing, r));
+  if Pos.Y < MM*2 then for c in Columns do if (c.Left < Pos.X) and (Pos.X < c.Right) then  Exit(Setps(pcsColMoving, c));
+  if Pos.X < MM*2 then for r in Rows do    if (r.Top < Pos.Y)  and (Pos.Y < r.Bottom)  then  Exit(Setps(pcsRowMoving, r));
+  if Pos.X < ClientWidth  - MM*2 then for c in Columns do if Abs(c.Right - Pos.X) < MM then Exit(Setps(pcsColSizing, c));
+  if Pos.Y < ClientHeight - MM*2 then for r in Rows do    if Abs(r.Bottom -  Pos.Y) < MM then Exit(Setps(pcsRowSizing, r));
   Result := False;
   ps := pcsNormal;
   Item := nil;
@@ -942,12 +975,18 @@ function TCustomPlot.IsMouseSizeMove(Pos: TPoint; var ps: PlotState): Boolean;
     Result := True;
   end;
 begin
-  if (Pos.Y < MM*2) then Exit(Setps(pcsRowMoving))
-  else if (Pos.X < MM*2) then Exit(Setps(pcsColMoving));
-  for c in Columns do if Abs(c.Right - Pos.X) < MM then Exit(Setps(pcsColSizing));
-  for r in Rows do if Abs(r.Down - Pos.Y) < MM then Exit(Setps(pcsRowSizing));
+  if (Pos.Y < MM*2) then Exit(Setps(pcsColMoving));
+  if (Pos.X < MM*2) then Exit(Setps(pcsRowMoving));
+  if Pos.X < ClientWidth  - MM*2 then for c in Columns do if Abs(c.Right - Pos.X) < MM then Exit(Setps(pcsColSizing));
+  if Pos.Y < ClientHeight - MM*2 then for r in Rows do    if Abs(r.Bottom -  Pos.Y) < MM then Exit(Setps(pcsRowSizing));
   Result := False;
   ps := pcsNormal;
+end;
+
+procedure TCustomPlot.Loaded;
+begin
+  inherited;
+  UpdateColRowRegionSizes;
 end;
 
 procedure TCustomPlot.WMSetCursor(var Msg: TWMSetCursor);
@@ -960,7 +999,7 @@ begin
   if Msg.HitTest = HTCLIENT then
    begin
     if FState <> pcsNormal then State := FState
-    else if not IsMouseSizeMove(FHitTest, State) then Cur := Screen.Cursors[GetRow(FHitTest).Cursor];
+    else if not IsMouseSizeMove(FHitTest, State) then Cur := Screen.Cursors[HitRow(FHitTest).Cursor];
     /// setup cursors
     if (State = pcsColSizing) then Cur := Screen.Cursors[crHSplit]
     else if (State = pcsRowSizing) then Cur := Screen.Cursors[crVSplit]
@@ -969,10 +1008,23 @@ begin
   if Cur <> 0 then SetCursor(Cur) else inherited;
 end;
 
+procedure TCustomPlot.WMSize(var Message: TWMSize);
+begin
+  inherited;
+  if HandleAllocated and (FState = pcsNormal) and (ClientHeight > 0) and (ClientWidth > 0) and not (csLoading in ComponentState) then
+   try
+//    Include(FStates, psSizing);
+    UpdateColRowRegionSizes;
+   finally
+//   Exclude(FStates, psSizing);
+   end;
+end;
+
 procedure TCustomPlot.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+ const
+  CCLS: array [PlotState] of TCustomEditDlotClass = (TCustomEditDlot, TColSizing, TColMoving, TRowSizing, TRowMoving);
  var
-  s: PlotState;
-  r: TRegionCollectionItem;
+  r: TColRowCollectionItem;
 begin
   try
    if not (csDesigning in ComponentState) and (CanFocus or (GetParentForm(Self) = nil)) then
@@ -981,50 +1033,12 @@ begin
     end;
    if (Button = mbLeft) and (ssDouble in Shift) then  DblClick
    else if Button = mbLeft then
-    if IsMouseSizeMove(Tpoint.Create(X,Y), s, r) then
+    if IsMouseSizeMove(Tpoint.Create(X,Y), FState, r) then FEditPlot := CCLS[FState].Create(Self, Tpoint.Create(X,Y), FState, r)
+    else
      begin
-      FState := s;
-     case s of
-       pcsColSizing, pcsRowSizing: ;
-       pcsColMoving, pcsRowMoving : ;
-     end
-     end
-    else { TODO : Region Mouse down }
-
-    function (cm: TCheckMouse; Col: TPlotColumn; X, Y: integer): boolean
-    begin
-      Result := True;
-      case cm of
-       cmColSize:
-        begin
-         FColState := pcsSizing;
-         FChangeColumn := Col;
-         FChangePos := Col.Right;
-         FChangeLeft := Col.Left;
-         DrawSizingLine;
-        end;
-       cmColMove:
-        begin
-         FColState := pcsMoving;
-         FChangeColumn := Col;
-         FSwapColumn := Col;
-         FChangeLeft := Col.Left;
-         DrawMovingLine;
-         SetCursor(Screen.Cursors[crDrag]);
-        end;
-       cmColData:
-        begin
-         FSelectedColumn := Col;
-         if Col.CheckMouseDownInData(X, Y, Shift) then
-          begin
-           FColState := pcsColumnData;
-           FChangeColumn := Col;
-           FChangeLeft := Col.Left;
-          end;
-        end;
-       cmColLegend: Col.DoMouseDownInLegend(X, Y);
-      end;
-    end)
+      FHitRegion := HitRegion(Tpoint.Create(X,Y));
+      if Assigned(FHitRegion) then FHitRegion.MouseDown(Button, Shift, X, Y);
+     end;
   finally
    inherited;
   end;
@@ -1032,319 +1046,62 @@ end;
 
 procedure TCustomPlot.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
-//  TDebug.Log(FloatToStr(ParamYToY(MouseYtoParamY(Y))));
-
- { case FColState of
-   pcsSizing:
-    begin
-     DrawSizingLine();
-     FChangePos := X;
-     DrawSizingLine();
-    end;
-   pcsMoving: for c in Columns do if (X < c.Right) and (X > c.Left) and (FSwapColumn <> c) then
-    begin
-     DrawMovingLine;
-     FSwapColumn := c;
-     FChangeLeft := c.Left;
-     DrawMovingLine;
-     Break;
-    end;
-   pcsColumnData:
-    begin
-     if FShowLegend then Y := Y - LegendHeight;
-     FChangeColumn.DoMouseMoveInData(X, Y);
-    end;
-   pcsNormal: if not IsLegend(Y) then DrawCrossLine(X, Y);
-  end;
-  inherited; }
+  if Assigned(FEditPlot) then FEditPlot.Move(TPoint.Create(X,Y))
+  else if Assigned(FHitRegion) then FHitRegion.MouseMove(Shift, X, Y);
+  inherited;
 end;
-
-//procedure TCustomPlot.AsyncRepaint;
-//begin
-//  if ([psPainting, psScrolling, psUpdating] * FStates) <> [] then Exit;
-//  DoPrepareLegend;
-//  if ShowLegend then DoPaintLegend;
-//  AsyncRun(DoPrepareData, DoPaintData);
-//end;
 
 procedure TCustomPlot.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-//  procedure rep;
-//  begin
-//    UpdateColumns;
-//    AsyncRepaint;
-//  end;
 begin
-{  try
-   case FColState of
-    pcsSizing:
-     begin
-      DrawSizingLine();
-      FChangePos := X;
-      FChangeColumn.Width := FChangePos - FChangeLeft;
-      rep;
-     end;
-    pcsMoving:
-     begin
-      DrawMovingLine();
-      FChangeColumn.Index := FSwapColumn.Index;
-      rep;
-     end;
-    pcsColumnData:
-     begin
-      if FShowLegend then Y := Y - LegendHeight;
-      FChangeColumn.DoMouseUpInData(X, Y);
-     end;
-  end;
-  finally
-   FColState := pcsNormal;
-  end;
-  inherited;}
+  if Assigned(FEditPlot) then FreeAndNil(FEditPlot)
+  else if Assigned(FHitRegion) then
+   begin
+    FHitRegion.MouseUp(Button, Shift, X, Y);
+    FHitRegion := nil;
+   end;
+  inherited;
 end;
+
+{$ENDREGION}
+
+{$REGION 'TCustomPlot ----- P A I N T'}
 
 procedure TCustomPlot.Paint;
  var
-  i: Integer;
- var
   c: TPlotColumn;
   r: TPlotRow;
+  p: TPlotRegion;
 begin
-  Canvas.FillRect(ClientRect);
+  TDebug.Log('TCustomPlot ----- P A I N T');
+  for c in Columns do
+   for p in c.Regions do
+    p.Paint;
+//  Canvas.FillRect(ClientRect);
   Canvas.Pen.Color := clBlack;
   Canvas.Pen.Width := 1;
   Canvas.Pen.Style := psSolid;
   Canvas.Pen.Mode := pmCopy;
 //  Canvas.Rectangle(ClientRect);
-  for c in Columns do
+  for c in Columns do if c.Visible then
    begin
     Canvas.moveTo(c.Right, 0);
     Canvas.LineTo(c.Right, Height);
    end;
-  for r in Rows do
+  for r in Rows do if r.Visible then
    begin
-    Canvas.moveTo(0, r.Down);
-    Canvas.LineTo(width, r.Down);
+    Canvas.moveTo(0, r.Bottom);
+    Canvas.LineTo(width, r.Bottom);
    end;
+end;
+
+procedure TCustomPlot.SetYAxis(const Value: TPlotParam);
+begin
+  FYAxis := Value;
 end;
 
 {$ENDREGION}
-
-{function TCustomPlot.MouseYtoParamY(Y: Integer): Double;
-begin
-  if ShowLegend then Y := Y-LegendHeight;
- //scaledY
-  if Mirror = 1 then Result := -OffsetY+Y else Result := OffsetY - ScrollRect.Height + Y;
- //RealY
-  Result := Result/(Mirror*Ydpmm*ScaleY) + FirstY;
-end;
-
-function TCustomPlot.ParamYToY(Y: Double): Double;
-begin
- //scaledY
-  Y := (Y-FirstY)*Mirror*Ydpmm*ScaleY;
- //screenY
-  if Mirror = 1 then Result := OffsetY+Y else Result := -OffsetY + ScrollRect.Height + Y;
-end;
-
-procedure TCustomPlot.GoToBookmark;
- var
-  y: Double;
-  off: double;
-begin
-  if FCursorY = NULL_VALL then Exit;
-  Y := ParamYToY(FCursorY);
-  off := ScrollRect.Height/2;
-  if ShowLegend then off := off - LegendHeight/2;
-  SetOffsetY(Round(OffsetY +Mirror*(off - Y)));
-  Exclude(FStates, psScrolling);
-end;   }
-
-
-{$REGION 'P A I N T'}
-{procedure TCustomPlot.ShowYWalls(G: TGPGraphics; top, Height: integer);
- var
-  pn: TGPPen;
-  i: Integer;
-begin
-  pn := TGPPen.Create(aclBlack, 1);
-  try
-  for i := 1 to Columns.Count-1 do G.DrawLine(pn, TPlotColumn(Columns.Items[i]).Left, top, TPlotColumn(Columns.Items[i]).Left, Height);
-  finally
-   pn.Free;
-  end;
-end;
-
-procedure TCustomPlot.ShowCursorY(G: TGPGraphics);
-  var
-   Y: Double;
-  pn: TGPPen;
-begin
-  if FCursorY <> NULL_VALL then
-   begin
-    Y := ParamYToY(FCursorY);
-    if (Y >= 0) and (Y <= ScrollRect.Height) then
-     begin
-      pn := TGPPen.Create(ACL_CURSOR, 8);
-      try
-       G.DrawLine(pn, 0, Y, ClientWidth, Y);
-      finally
-       pn.Free;
-      end;
-     end;
-   end;
-end;
-
-procedure TCustomPlot.ShowXAxis(G: TGPGraphics);
-  var
-   pn: TGPPen;
-   Y: Double;
-begin
-  pn := TGPPen.Create(ACL_AXIS, 1);
-  try
-    if Mirror = 1 then g.TranslateTransform(0, OffsetY)
-    else g.TranslateTransform(0, -OffsetY+ScrollRect.Height);
-
-    Y := 2*Ydpmm*Trunc(-OffsetY/Ydpmm/2);
-    while Y < (-OffsetY + ScrollRect.Height) do
-     begin
-      G.DrawLine(pn, 0, Y*Mirror, ClientWidth, Y*Mirror);
-      Y := Y + Ydpmm*2;
-     end;
-  finally
-   pn.Free;
-  end;
-end;
-
-procedure TCustomPlot.DoPrepareData();
- var
-  c: TPlotColumn;
-  g: TGPGraphics;
-  sb: TGPSolidBrush;
-begin
-  if psUpdating in FStates then Exit;
-  Include(FStates, psUpdating);
-//  TDebug.Log('  PrepareData() START---------');
-  DataBitmap.Canvas.Lock;
-//  TDebug.Log('  PrepareData() START++++++++++');
-  try
-   GDIPlus.Lock;
-//   TDebug.Log('  PrepareData() START===== ');
-   g := TGPGraphics.Create(DataBitmap.Canvas.Handle);
-   sb := TGPSolidBrush.Create(ColorRefToARGB(color));
-   try
-    G.FillRectangle(sb, MakeRect(ScrollRect));
-    ShowCursorY(G);
-    ShowXAxis(G);
-    G.ResetTransform;
-    for c in Columns do
-     begin
-      c.ShowData(G);
-      G.TranslateTransform(TPlotColumn(c).Width, 0);
-     end;
-    G.ResetTransform;
-    ShowYWalls(G, 0, ScrollRect.Height);
-   finally
-    sb.Free;
-    g.Free;
-    GDIPlus.UnLock;
-   end;
-  finally
-   DataBitmap.Canvas.Unlock;
-//   TDebug.Log('  PrepareData() E N D ');
-   Exclude(FStates, psUpdating);
-  end;
-end;
-
-procedure TCustomPlot.DoPrepareLegend();
- var
-  c: TPlotColumn;
-  g: TGPGraphics;
-  sb: TGPSolidBrush;
-  p : TGPPen;
-begin
-  GDIPlus.Lock;
-  G := TGPGraphics.Create(LegendBitmap.Canvas.Handle);
-  sb := TGPSolidBrush.Create(ColorRefToARGB(color));
-  p := TGPPen.Create(aclBlack, 1);
-  try
-   G.FillRectangle(sb, MakeRect(LegendRect));
-   for c in Columns do
-    begin
-     c.ShowLegend(G, LegendHeight);
-     G.TranslateTransform(TPlotColumn(c).Width, 0);
-    end;
-   G.ResetTransform;
-   ShowYWalls(G, 0, LegendHeight-1);
-   G.DrawLine(p, 0, LegendHeight-1, ClientWidth, LegendHeight-1);
-  finally
-   p.Free;
-   sb.Free;
-   g.free;
-   GDIPlus.UnLock;
-  end;
-end;
-
-procedure TCustomPlot.DoPaintData();
-begin
-//  TDebug.Log('  DoPaintData() START ');
-  DataBitmap.Canvas.Lock;
-  try
-   if ShowLegend then BitBlt(Canvas.Handle, 0, LegendHeight, ClientWidth, ScrollRect.Height, DataBitmap.Canvas.Handle, 0, 0, SRCCOPY)
-   else BitBlt(Canvas.Handle, 0, 0, ClientWidth, ScrollRect.Height, DataBitmap.Canvas.Handle, 0, 0, SRCCOPY);
-   FHorizontShowed := False;
-  finally
-   DataBitmap.Canvas.Unlock;
-  end;
-//  TDebug.Log('  DoPaintData() E N D ');
-end;
-
-procedure TCustomPlot.DoPaintLegend();
-begin
-  BitBlt(Canvas.Handle, 0,0, ClientWidth, LegendHeight, LegendBitmap.Canvas.Handle, 0, 0, SRCCOPY);
-end;
-
-procedure TCustomPlot.DoParamXAxisChanged(Column: TGraphColumn; Param: TGraphParam; ChangeState: TChangeStateParam);
-begin
-  if Assigned(FOnParamXAxisChanged) then FOnParamXAxisChanged(Column, Param, ChangeState);
-end;
-
-procedure TCustomPlot.WMEraseBkgnd(var Msg: TWMEraseBkgnd);
-begin
-  Msg.Result := 1;
-end;
-
-procedure TCustomPlot.WMPaint(var Message: TWMPaint);
- var
-  PS: TPaintStruct;
-begin
-//  TDebug.Log('  P A I N T   ');                                                      ;
-  if (([psPainting, psScrolling, psUpdating] * FStates) <> []) or (Columns.Count <= 0) then Exit;
-  Include(FStates, psPainting);
-  BeginPaint(Handle, PS);
-  try
-   if ShowLegend then DoPaintLegend();
-   DoPaintData();
-  finally
-   EndPaint(Handle, PS);
-   Exclude(FStates, psPainting);
-  end;
-end;   }
-
-{$ENDREGION}
-
-{ TPlotColumns }
-
-function TPlotColumns.GetAllLen: Integer;
-begin
-  Result := FPlot.Width;
-end;
-
-{ TPlotRows }
-
-function TPlotRows.GetAllLen: Integer;
-begin
-  Result := FPlot.Height;
-end;
 
 initialization
-//  RegisterClasses([TPlotCollection, TPlotColumns, TPlotColumn, TYColumn, TGraphColumn, TPlot, TGraphParams, TGraphParam]);
+  RegisterClasses([TCustomPlotLegend, TCustomPlotData, TCustomPlotInfo]);
+  RegisterClasses([TPlot, TPlotRegion, TPlotColumn, TPlotRow]);
 end.
