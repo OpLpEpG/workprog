@@ -240,19 +240,48 @@ type
   ['{421A0AD1-48C0-4DB0-A08D-281E0121C13D}']
 
   end;
+
+  TCustomDataLinkClass = class of TCustomDataLink;
+  TCustomDataLink = class(TInterfacedPersistent , IDataLink)
+  private
+    FOwner: TPlotParam;
+  public
+    constructor Create(AOwner: TPlotParam); virtual;
+  end;
+
+  TFileDataLink = class(TCustomDataLink)
+  private
+    FFileName: string;
+    FXParamPath: string;
+    FYParamPath: string;
+    procedure SetXParamPath(const Value: string);
+    procedure SetYParamPath(const Value: string);
+  public
+    constructor Create(AOwner: TPlotParam); override;
+  published
+   [ShowProp('‘айл', True)]  property FileName: string read FFileName write FFileName;
+   [ShowProp('X')]  property XParamPath: string read FXParamPath write SetXParamPath;
+   [ShowProp('Y')]  property YParamPath: string read FYParamPath write SetYParamPath;
+  end;
+
   TPlotParamClass = class of TPlotParam;
   TPlotParam = class(TColumnCollectionItem, IDataLink)
   private
-    FLink: IDataLink;
+    FLink: TCustomDataLink;
     FOnContextPopup: TContextPopupEvent;
     FTitle: string;
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean);
     procedure SetTitle(const Value: string);
+    function GetLinkClass: string;
+    procedure SetLinkClass(const Value: string);
+    procedure SetLink(const Value: TCustomDataLink);
   public
-    property Link: IDataLink read FLink implements IDataLink;
+    destructor Destroy; override;
   published
-    property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
+    property LinkClass: string read GetLinkClass write SetLinkClass;
     [ShowProp('»м€')] property Title: string read FTitle write SetTitle;
+    [ShowProp('»сточник', True)] property Link: TCustomDataLink read FLink write SetLink implements IDataLink;
+    property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
   end;
   TPlotParams = class(TColumnCollection<TPlotParam>);
 {$ENDREGION}
@@ -720,16 +749,64 @@ end;
 
 { TPlotParam }
 
+destructor TPlotParam.Destroy;
+begin
+  if Assigned(FLink) then FreeAndNil(Flink);
+  inherited;
+end;
+
 procedure TPlotParam.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
 begin
   if Assigned(FOnContextPopup) then FOnContextPopup(Self, MousePos, Handled);
 end;
 
 
+{ TCustomDataLink }
+
+constructor TCustomDataLink.Create(AOwner: TPlotParam);
+begin
+  FOwner := AOwner;
+end;
+
+{ TFileDataLink }
+
+constructor TFileDataLink.Create(AOwner: TPlotParam);
+begin
+  inherited;
+
+end;
+
+procedure TFileDataLink.SetXParamPath(const Value: string);
+begin
+  FXParamPath := Value;
+end;
+
+procedure TFileDataLink.SetYParamPath(const Value: string);
+begin
+  FYParamPath := Value;
+end;
 
 {$ENDREGION Collection}
 
 {$REGION ' классы выполн€юшие PlotState '}
+function TPlotParam.GetLinkClass: string;
+begin
+  if Assigned(FLink) then Result := FLink.ClassName
+  else Result :=  '';
+end;
+
+procedure TPlotParam.SetLink(const Value: TCustomDataLink);
+begin
+  if Assigned(FLink) then FLink.Free;
+  FLink := Value;
+end;
+
+procedure TPlotParam.SetLinkClass(const Value: string);
+begin
+  if Assigned(FLink) then FreeAndNil(Flink);
+  if Value <> '' then FLink := TCustomDataLinkClass(FindClass(Value)).Create(Self);
+end;
+
 procedure TPlotParam.SetTitle(const Value: string);
 begin
   FTitle := Value;
@@ -1098,10 +1175,12 @@ procedure TCustomPlot.SetYAxis(const Value: TPlotParam);
 begin
   FYAxis := Value;
 end;
-
 {$ENDREGION}
+
+
 
 initialization
   RegisterClasses([TCustomPlotLegend, TCustomPlotData, TCustomPlotInfo]);
   RegisterClasses([TPlot, TPlotRegion, TPlotColumn, TPlotRow]);
+  RegisterClasses([TPlotParam, TFileDataLink]);
 end.

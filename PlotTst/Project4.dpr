@@ -3,7 +3,8 @@ program Project4;
 uses
   Vcl.Forms,
   Unit4 in 'Unit4.pas' {Form4},
-  CustomPlot in '..\Core\CustomPlot.pas';
+  CustomPlot in '..\Core\CustomPlot.pas',
+  DlgEditParam in 'DlgEditParam.pas' {FormEditParam};
 
 {$R *.res}
 

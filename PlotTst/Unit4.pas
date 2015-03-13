@@ -3,17 +3,19 @@ unit Unit4;
 interface
 
 uses CustomPlot, System.IOUtils,
+  RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RTTI, Container, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
 
 type
   TForm4 = class(TForm)
-    Button1: TButton;
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
     CheckBox1: TCheckBox;
     CheckBox2: TCheckBox;
+    Button1: TButton;
+    Button5: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -21,6 +23,7 @@ type
     procedure Button4Click(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
     procedure CheckBox2Click(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
   private
     Plot: TCustomPlot;
   public
@@ -34,9 +37,26 @@ implementation
 
 {$R *.dfm}
 
+uses DlgEditParam;
+
 procedure TForm4.Button1Click(Sender: TObject);
+ var
+  c: TPlotColumn;
+  p: TPlotParam;
 begin
-  Plot.Columns.Add<TPlotColumn>;
+  c := Plot.Columns.Add<TPlotColumn>;
+  p := c.Params.Add<TPlotParam>;
+  p.Title := 'p1';
+  p.link := TFileDataLink.Create(p);
+  TFileDataLink(p.Link).FileName := 'FileName_p1';
+  TFileDataLink(p.Link).XParamPath := 'X_p1';
+  TFileDataLink(p.Link).YParamPath := 'X_p1';
+  p := c.Params.Add<TPlotParam>;
+  p.Title := 'p2';
+//  p.link := TFileDataLink.Create(p);
+//  TFileDataLink(p.Link).FileName := 'FileName_p2';
+//  TFileDataLink(p.Link).XParamPath := 'X_p2';
+//  TFileDataLink(p.Link).YParamPath := 'X_p2';
   Plot.Repaint;
 end;
 
@@ -88,6 +108,13 @@ begin
    ss.Free;
    ms.Free;
   end;
+end;
+
+procedure TForm4.Button5Click(Sender: TObject);
+ var
+  d: Idialog;
+begin
+  if RegisterDialog.TryGet<Dialog_EditViewParameters>(d) then (d as IDialog<TPlotParam>).Execute(Plot.Columns[0].Params[0]);
 end;
 
 procedure TForm4.CheckBox1Click(Sender: TObject);

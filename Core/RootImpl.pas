@@ -989,28 +989,87 @@ begin
 end;
 
 { ShowPropAttribute }
+type
+ TCustomInspectorDataClassName = class(TJvCustomInspectorData)
+ private
+   FData: string;
+ protected
+   function GetAsString: string; override;
+  public
+   function HasValue: Boolean; override;
+   function IsAssigned: Boolean; override;
+   function IsInitialized: Boolean; override;
+   class function New(const AParent: TJvCustomInspectorItem; const Data: string; pt: PTypeInfo): TJvCustomInspectorItem;
+ end;
+function TCustomInspectorDataClassName.IsAssigned: Boolean;
+begin
+  Result := True;
+end;
+function TCustomInspectorDataClassName.IsInitialized: Boolean;
+begin
+  Result := True
+end;
+function TCustomInspectorDataClassName.HasValue: Boolean;
+begin
+  Result := True;
+end;
+function TCustomInspectorDataClassName.GetAsString: string;
+begin
+  Result := '('+ FData+')';
+end;
+class function TCustomInspectorDataClassName.New(const AParent: TJvCustomInspectorItem; const Data: string; pt: PTypeInfo): TJvCustomInspectorItem;
+ var
+  dat: TCustomInspectorDataClassName;
+begin
+  Dat := CreatePrim(Data, pt);
+  Dat.FData := Data;
+  Dat := TCustomInspectorDataClassName(DataRegister.Add(Dat));
+  if Dat <> nil then Result := Dat.NewItem(AParent)
+  else Result := nil;
+end;
 
 class procedure ShowPropAttribute.Apply(Obj: TObject; Insp: TJvInspector);
  var
   c : TRttiContext;
-  t : TRttiType;
-  p : TRttiProperty;
-  a : TCustomAttribute;
-  ii: TJvCustomInspectorItem;
+  procedure Apply(root: TJvCustomInspectorItem; o: TObject);
+   var
+    t : TRttiType;
+    p : TRttiProperty;
+    a : TCustomAttribute;
+    ii: TJvCustomInspectorItem;
+    oo: TObject;
+    s: string;
+  begin
+     if not Assigned(o) then Exit;
+     t := c.GetType(o.ClassType);
+     for p in t.getProperties do
+      for a in p.GetAttributes do
+       if a is ShowPropAttribute then
+         if p.PropertyType.TypeKind = tkClass then
+          begin
+           oo := p.GetValue(o).AsObject;
+           if not Assigned(oo) then s := string(p.PropertyType.Handle.Name)
+           else s := oo.ClassName;
+           ii := TCustomInspectorDataClassName.New(Root, s, TypeInfo(string));
+           ii.DisplayName := ShowPropAttribute(a).DisplayName;
+           ii.SortKind := iskNone;
+           ii.Expanded := True;
+           ii.ReadOnly := ShowPropAttribute(a).ReadOnly;
+           Apply(ii, oo);
+          end
+         else
+          begin
+           ii := TJvInspectorPropData.New(Root, o, TRttiInstanceProperty(p).PropInfo);
+           ii.DisplayName := ShowPropAttribute(a).DisplayName;
+           ii.ReadOnly := ShowPropAttribute(a).ReadOnly;
+           if ii is TJvInspectorBooleanItem then TJvInspectorBooleanItem(ii).ShowAsCheckbox := True;
+          end;
+  end;
 begin
   Insp.Clear;
   c := TRttiContext.Create;
   try
-   t := c.GetType(Obj.ClassType);
-   for p in t.getProperties do
-    for a in p.GetAttributes do
-     if a is ShowPropAttribute then
-      begin
-       ii := TJvInspectorPropData.New(Insp.Root, Obj, TRttiInstanceProperty(p).PropInfo);
-       ii.DisplayName := ShowPropAttribute(a).DisplayName;
-       ii.ReadOnly := ShowPropAttribute(a).ReadOnly;
-       if ii is TJvInspectorBooleanItem then TJvInspectorBooleanItem(ii).ShowAsCheckbox := True;
-      end;
+   Apply(Insp.Root, Obj);
   finally
    c.Free;
   end;

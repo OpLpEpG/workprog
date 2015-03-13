@@ -14,22 +14,13 @@ object Form4: TForm4
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Button1: TButton
-    Left = 26
-    Top = 18
-    Width = 57
-    Height = 25
-    Caption = 'AddColl'
-    TabOrder = 0
-    OnClick = Button1Click
-  end
   object Button2: TButton
     Left = 26
     Top = 49
     Width = 57
     Height = 25
     Caption = 'Create'
-    TabOrder = 1
+    TabOrder = 0
     OnClick = Button2Click
   end
   object Button3: TButton
@@ -38,7 +29,7 @@ object Form4: TForm4
     Width = 57
     Height = 25
     Caption = 'Load'
-    TabOrder = 2
+    TabOrder = 1
     OnClick = Button3Click
   end
   object Button4: TButton
@@ -47,7 +38,7 @@ object Form4: TForm4
     Width = 57
     Height = 25
     Caption = 'Save'
-    TabOrder = 3
+    TabOrder = 2
     OnClick = Button4Click
   end
   object CheckBox1: TCheckBox
@@ -58,7 +49,7 @@ object Form4: TForm4
     Caption = 'legend'
     Checked = True
     State = cbChecked
-    TabOrder = 4
+    TabOrder = 3
     OnClick = CheckBox1Click
   end
   object CheckBox2: TCheckBox
@@ -69,7 +60,25 @@ object Form4: TForm4
     Caption = 'info'
     Checked = True
     State = cbChecked
-    TabOrder = 5
+    TabOrder = 4
     OnClick = CheckBox2Click
+  end
+  object Button1: TButton
+    Left = 26
+    Top = 18
+    Width = 57
+    Height = 25
+    Caption = 'AddColl'
+    TabOrder = 5
+    OnClick = Button1Click
+  end
+  object Button5: TButton
+    Left = 26
+    Top = 142
+    Width = 57
+    Height = 25
+    Caption = 'Dialog'
+    TabOrder = 6
+    OnClick = Button5Click
   end
 end
