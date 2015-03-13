@@ -270,20 +270,40 @@ type
     FLink: TCustomDataLink;
     FOnContextPopup: TContextPopupEvent;
     FTitle: string;
+    FVisible: Boolean;
+    FColor: TColor;
+    FScale: Double;
+    FDeltaX: Double;
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean);
     procedure SetTitle(const Value: string);
     function GetLinkClass: string;
     procedure SetLinkClass(const Value: string);
     procedure SetLink(const Value: TCustomDataLink);
+    procedure SetVisible(const Value: Boolean);
+    procedure SetColor(const Value: TColor);
+    procedure SetScale(const Value: Double);
+    procedure SetDeltaX(const Value: Double);
+  protected
+    property Color: TColor read FColor write SetColor default clBlack;
+//    property DeltaX: Double read FDeltaX write SetDeltaX;
   public
     destructor Destroy; override;
   published
     property LinkClass: string read GetLinkClass write SetLinkClass;
-    [ShowProp('Имя')] property Title: string read FTitle write SetTitle;
     [ShowProp('Источник', True)] property Link: TCustomDataLink read FLink write SetLink implements IDataLink;
+    [ShowProp('Имя')]            property Title: string read FTitle write SetTitle;
+    [ShowProp('Показать')]       property Visible: Boolean read FVisible write SetVisible default True;
+//    [ShowProp('Масштаб')]        property Scale        : Double read FScale write SetScale;
     property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
   end;
   TPlotParams = class(TColumnCollection<TPlotParam>);
+
+  TStringParam = class(TPlotParam)
+  published
+    [ShowProp('Цвет')] property Color;
+  end;
+
+
 {$ENDREGION}
 
   /// перемещение или изменение размера рядов или колонок мышкой
@@ -786,13 +806,20 @@ begin
   FYParamPath := Value;
 end;
 
-{$ENDREGION Collection}
-
-{$REGION ' классы выполняюшие PlotState '}
 function TPlotParam.GetLinkClass: string;
 begin
   if Assigned(FLink) then Result := FLink.ClassName
   else Result :=  '';
+end;
+
+procedure TPlotParam.SetColor(const Value: TColor);
+begin
+  FColor := Value;
+end;
+
+procedure TPlotParam.SetDeltaX(const Value: Double);
+begin
+  FDeltaX := Value;
 end;
 
 procedure TPlotParam.SetLink(const Value: TCustomDataLink);
@@ -807,10 +834,24 @@ begin
   if Value <> '' then FLink := TCustomDataLinkClass(FindClass(Value)).Create(Self);
 end;
 
+procedure TPlotParam.SetScale(const Value: Double);
+begin
+  FScale := Value;
+end;
+
 procedure TPlotParam.SetTitle(const Value: string);
 begin
   FTitle := Value;
 end;
+
+procedure TPlotParam.SetVisible(const Value: Boolean);
+begin
+  FVisible := Value;
+end;
+
+{$ENDREGION Collection}
+
+{$REGION ' классы выполняюшие PlotState '}
 
 { TCustomEditDlot }
 
