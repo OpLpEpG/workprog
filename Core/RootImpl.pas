@@ -90,10 +90,40 @@ type
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
   end;
 
+{$ENDREGION}
+
+  EnumCaptionsAttribute = class;
+  TJvInspectorEnumCaptionsItem = class(TJvInspectorEnumItem)
+  private
+    FCaptions: TArray<string>;
+  protected
+    function GetDisplayValue: string; override;
+    procedure GetValueList(const Strings: TStrings); override;
+    procedure SetDisplayValue(const Value: string); override;
+  public
+    constructor Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData); override;
+  end;
+
+  TJvInspectorPropDataEx = class(TJvInspectorPropData)
+    class function ItemRegister: TJvInspectorRegister; override;
+  end;
+
+  EnumCaptionsAttribute = class (TCustomAttribute)
+  private
+    FCaptions: TArray<string>;
+  public
+    constructor Create(const ACaptions: string);
+    property Captions: TArray<string> read FCaptions;
+  end;
+
   ShowPropAttribute = class (TCustomAttribute)
   private
     FDisplayName: string;
     FReadOnly: Boolean;
+    class var RttiContext : TRttiContext;
+    class function StrObj2Str(const s: string): string;
+    class procedure ApplyItem(root: TJvCustomInspectorItem; o: TObject); static;
+    class procedure ApplyICollection(root: TJvCustomInspectorItem; cl: TICollection); static;
   public
    constructor Create(const ADisplayName: String; AReadOnly: Boolean = False);
    class procedure Apply(Obj: TObject; Insp: TJvInspector);
@@ -101,7 +131,6 @@ type
    property ReadOnly: Boolean read FReadOnly write FReadOnly;
   end;
 
-{$ENDREGION}
 
 {$REGION 'TIComponent TIForm'}
   //  основные классы для построения всего
@@ -1015,7 +1044,7 @@ begin
 end;
 function TCustomInspectorDataClassName.GetAsString: string;
 begin
-  Result := '('+ FData+')';
+  Result := FData;
 end;
 class function TCustomInspectorDataClassName.New(const AParent: TJvCustomInspectorItem; const Data: string; pt: PTypeInfo): TJvCustomInspectorItem;
  var
@@ -1028,50 +1057,86 @@ begin
   else Result := nil;
 end;
 
-class procedure ShowPropAttribute.Apply(Obj: TObject; Insp: TJvInspector);
+class function ShowPropAttribute.StrObj2Str(const s: string): string;
+begin
+  Result := '('+s+')';
+end;
+
+class procedure ShowPropAttribute.ApplyItem(root: TJvCustomInspectorItem; o: TObject);
  var
-  c : TRttiContext;
-  procedure Apply(root: TJvCustomInspectorItem; o: TObject);
-   var
-    t : TRttiType;
-    p : TRttiProperty;
-    a : TCustomAttribute;
-    ii: TJvCustomInspectorItem;
-    oo: TObject;
-    s: string;
-  begin
-     if not Assigned(o) then Exit;
-     t := c.GetType(o.ClassType);
-     for p in t.getProperties do
-      for a in p.GetAttributes do
-       if a is ShowPropAttribute then
-         if p.PropertyType.TypeKind = tkClass then
-          begin
-           oo := p.GetValue(o).AsObject;
-           if not Assigned(oo) then s := string(p.PropertyType.Handle.Name)
-           else s := oo.ClassName;
-           ii := TCustomInspectorDataClassName.New(Root, s, TypeInfo(string));
-           ii.DisplayName := ShowPropAttribute(a).DisplayName;
-           ii.SortKind := iskNone;
-           ii.Expanded := True;
-           ii.ReadOnly := ShowPropAttribute(a).ReadOnly;
-           Apply(ii, oo);
-          end
-         else
-          begin
-           ii := TJvInspectorPropData.New(Root, o, TRttiInstanceProperty(p).PropInfo);
-           ii.DisplayName := ShowPropAttribute(a).DisplayName;
-           ii.ReadOnly := ShowPropAttribute(a).ReadOnly;
-           if ii is TJvInspectorBooleanItem then TJvInspectorBooleanItem(ii).ShowAsCheckbox := True;
-          end;
-  end;
+  t : TRttiType;
+  p : TRttiProperty;
+  a : TCustomAttribute;
+  ii: TJvCustomInspectorItem;
+  oo: TObject;
+  s: string;
+begin
+  if not Assigned(o) then Exit;
+  t := RttiContext.GetType(o.ClassType);
+  for p in t.getProperties do
+  for a in p.GetAttributes do
+   if a is ShowPropAttribute then
+     if p.PropertyType.TypeKind = tkClass then
+      begin
+       oo := p.GetValue(o).AsObject;
+       if not Assigned(oo) then s := string(p.PropertyType.Handle.Name)
+       else s := oo.ClassName;
+       ii := TCustomInspectorDataClassName.New(Root, StrObj2Str(s), TypeInfo(string));
+       ii.DisplayName := ShowPropAttribute(a).DisplayName;
+       ii.SortKind := iskNone;
+       ii.Expanded := True;
+       ii.ReadOnly := True;
+       if Assigned(oo) and (oo is TICollection) then ApplyICollection(ii,  TICollection(oo));
+       ApplyItem(ii, oo);
+      end
+     else
+      begin
+       ii := TJvInspectorPropDataEx.New(Root, o, TRttiInstanceProperty(p).PropInfo);
+       ii.DisplayName := ShowPropAttribute(a).DisplayName;
+       ii.ReadOnly := ShowPropAttribute(a).ReadOnly or not p.IsWritable;
+       if ii is TJvInspectorBooleanItem then TJvInspectorBooleanItem(ii).ShowAsCheckbox := True;
+//       if ii is TJvInspectorEnumItem then
+//        for e in p.PropertyType.GetAttributes do
+//         if e is EnumCaptionsAttribute then
+//          ii.DropDownCount
+      end;
+end;
+
+class procedure ShowPropAttribute.ApplyICollection(root: TJvCustomInspectorItem; cl: TICollection);
+ var
+  ii: TJvCustomInspectorItem;
+  ci: TCollectionItem;
+  s: string;
+  ca: ICaption;
+begin
+  if Supports(cl, ICaption, ca) then s := ca.Text
+  else s := 'Items';
+  Root := TCustomInspectorDataClassName.New(Root, '', TypeInfo(string));
+  Root.DisplayName := s;
+  Root.SortKind := iskNone;
+  Root.Expanded := True;
+  Root.ReadOnly := True;
+  for ci in cl do
+   begin
+    if Supports(ci, ICaption, ca) then s := ca.Text
+    else s := 'Item';
+    ii := TCustomInspectorDataClassName.New(Root, StrObj2Str(ci.ClassName), TypeInfo(string));
+    ii.DisplayName := s;
+    ii.SortKind := iskNone;
+    ii.Expanded := True;
+    ii.ReadOnly := True;
+    ApplyItem(ii, ci);
+   end;
+end;
+
+class procedure ShowPropAttribute.Apply(Obj: TObject; Insp: TJvInspector);
 begin
   Insp.Clear;
-  c := TRttiContext.Create;
+  RttiContext := TRttiContext.Create;
   try
-   Apply(Insp.Root, Obj);
+   ApplyItem(Insp.Root, Obj);
   finally
-   c.Free;
+   RttiContext.Free;
   end;
 end;
 
@@ -1480,6 +1545,76 @@ class procedure GDIPlus.UnLock;
 begin
   Flock.Release;
 //  TDebug.Log('GDI After RELEASE');
+end;
+
+{ EnumCaptionsAttribute }
+
+constructor EnumCaptionsAttribute.Create(const ACaptions: string);
+ var
+  i: Integer;
+begin
+  FCaptions := ACaptions.Split([',',';']);
+  for I := 0 to High(FCaptions) do FCaptions[i] := FCaptions[i].Trim;
+end;
+
+{ TJvEnumCaptionsInspectorData }
+
+class function TJvInspectorPropDataEx.ItemRegister: TJvInspectorRegister;
+begin
+  Result := inherited;
+  Result.Delete(TJvInspectorEnumItem);
+  Result.Add(TJvInspectorTypeKindRegItem.Create(TJvInspectorEnumCaptionsItem, tkEnumeration));
+end;
+
+{ TJvInspectorEnumCaptionsItem }
+
+constructor TJvInspectorEnumCaptionsItem.Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData);
+ var
+  c: TRttiContext;
+  a : TCustomAttribute;
+begin
+  inherited;
+  c := TRttiContext.Create;
+  try
+  for a in c.GetType(Data.TypeInfo).GetAttributes do if a is EnumCaptionsAttribute then
+   begin
+    FCaptions := EnumCaptionsAttribute(a).Captions;
+    Break;
+   end;
+  finally
+    c.Free;
+  end;
+end;
+
+function TJvInspectorEnumCaptionsItem.GetDisplayValue: string;
+begin
+  if Length(FCaptions) = 0 then Result := inherited
+  else Result := FCaptions[Data.AsOrdinal];
+end;
+
+procedure TJvInspectorEnumCaptionsItem.GetValueList(const Strings: TStrings);
+ var
+  s: string;
+begin
+  if Length(FCaptions) = 0 then inherited
+  else for s in FCaptions do Strings.Add(s)
+end;
+
+procedure TJvInspectorEnumCaptionsItem.SetDisplayValue(const Value: string);
+ var
+  i: Integer;
+begin
+  if Length(FCaptions) = 0 then inherited
+  else
+   begin
+    for I := 0 to High(FCaptions) do if SameText(Value, FCaptions[i]) then
+     begin
+      Data.AsOrdinal := i;
+      Exit;
+     end;
+    i := StrToIntDef(Value, -1);
+    if i >= 0 then Data.AsOrdinal := i;
+   end;
 end;
 
 initialization

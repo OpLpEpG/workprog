@@ -2190,7 +2190,7 @@ begin
   ScrollInfo.cbSize := SizeOf(ScrollInfo);
   ScrollInfo.fMask := SIF_ALL;
   ScrollInfo.nMin := 0;
-  if Range > ScrollRect.Height then ScrollInfo.nMax := Range else  ScrollInfo.nMax := 0;
+  if Range > ScrollRect.Height then ScrollInfo.nMax := Range else ScrollInfo.nMax := 0;
   ScrollInfo.nPage := Max(1, ScrollRect.Height);
   if Mirror = 1 then ofY :=  -OffsetY
   else ofY := Range + OffsetY - ScrollRect.Height;

@@ -2,7 +2,7 @@ unit CustomPlot;
 
 interface
 
-uses RootImpl, tools, debug_except,
+uses RootImpl, RootIntf, tools, debug_except,
      Vcl.Grids,
      SysUtils, Controls, Messages, Winapi.Windows, Classes, System.Rtti, types,
      Vcl.Graphics, Vcl.Forms, Vcl.ExtCtrls, Vcl.Menus, Vcl.Themes, Vcl.GraphUtil;
@@ -26,6 +26,8 @@ type
   /// строки коллекция
   TPlotRow = class;
   TPlotRows = class;
+
+  TAxisY = (axyID, axyKadr, axyDept, axyTime);
 
   {$REGION 'всякие коллекции сохраняемые'}
   TPlotCollection = class;
@@ -53,8 +55,6 @@ type
 
   TPlotCollection<T: TPlotCollectionItem> = class(TPlotCollection)
   private
-    function GetItem(Index: Integer): T;
-    procedure SetItem(Index: Integer; const Value: T);
   type
    TEnumerator = record
    private
@@ -66,6 +66,8 @@ type
     function MoveNext: Boolean; inline;
   end;
   protected
+    function GetItem(Index: Integer): T;
+    procedure SetItem(Index: Integer; const Value: T);
   public
     function Add<C: T>: C; reintroduce; overload;
     function GetEnumerator: TEnumerator; reintroduce;
@@ -180,7 +182,7 @@ type
   TPlotColumnsClass = class of TPlotColumns;
 {$ENDREGION}
 
-   {$REGION 'коллекции хранящиеся в колонке параметры: регионы, мeтки глубины'}
+   {$REGION 'коллекции хранящиеся в колонке: параметры, регионы, мeтки глубины'}
   /// коллекция колонки общее
   TColumnCollectionItem = class(TPlotCollectionItem)
   private
@@ -236,11 +238,13 @@ type
   TPlotRegions = class(TColumnCollection<TPlotRegion>);
   {$ENDREGION}
 
+  {$REGION 'Параметры колонки'}
+
+  {$REGION 'DataLink'}
   IDataLink = interface
   ['{421A0AD1-48C0-4DB0-A08D-281E0121C13D}']
 
   end;
-
   TCustomDataLinkClass = class of TCustomDataLink;
   TCustomDataLink = class(TInterfacedPersistent , IDataLink)
   private
@@ -263,10 +267,15 @@ type
    [ShowProp('X')]  property XParamPath: string read FXParamPath write SetXParamPath;
    [ShowProp('Y')]  property YParamPath: string read FYParamPath write SetYParamPath;
   end;
+  {$ENDREGION}
+
+  TParamFilters = class;
+  TParamFilter = class;
 
   TPlotParamClass = class of TPlotParam;
   TPlotParam = class(TColumnCollectionItem, IDataLink)
   private
+    FFilters: TParamFilters;
     FLink: TCustomDataLink;
     FOnContextPopup: TContextPopupEvent;
     FTitle: string;
@@ -274,6 +283,7 @@ type
     FColor: TColor;
     FScale: Double;
     FDeltaX: Double;
+    FDeltaY: Double;
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean);
     procedure SetTitle(const Value: string);
     function GetLinkClass: string;
@@ -283,16 +293,21 @@ type
     procedure SetColor(const Value: TColor);
     procedure SetScale(const Value: Double);
     procedure SetDeltaX(const Value: Double);
+    procedure SetDeltaY(const Value: Double);
   protected
+    procedure DefineProperties(Filer: TFiler); override;
     property Color: TColor read FColor write SetColor default clBlack;
-//    property DeltaX: Double read FDeltaX write SetDeltaX;
   public
+    constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
+    [ShowProp('История изменений')] property Filters: TParamFilters read FFilters;
   published
     property LinkClass: string read GetLinkClass write SetLinkClass;
     [ShowProp('Источник', True)] property Link: TCustomDataLink read FLink write SetLink implements IDataLink;
     [ShowProp('Имя')]            property Title: string read FTitle write SetTitle;
     [ShowProp('Показать')]       property Visible: Boolean read FVisible write SetVisible default True;
+    [ShowProp('Смещение X')]     property DeltaX: Double read FDeltaX write SetDeltaX;
+    [ShowProp('Смещение Y')]     property DeltaY: Double read FDeltaY write SetDeltaY;
 //    [ShowProp('Масштаб')]        property Scale        : Double read FScale write SetScale;
     property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
   end;
@@ -303,7 +318,49 @@ type
     [ShowProp('Цвет')] property Color;
   end;
 
+    {$REGION 'коллекции хранящиеся в параметрe'}
+  /// коллекция Параметра общее
+  TParamCollectionItem = class(TColumnCollectionItem)
+  private
+    FParam: TPlotParam;
+  public
+    constructor Create(Collection: TCollection); override;
+    property Param: TPlotParam read FParam;
+  end;
+  TParamCollection<T: TParamCollectionItem> = class(TColumnCollection<T>)
+  private
+    FParam: TPlotParam;
+  public
+    constructor Create(AOwner: TObject); override;
+    property Param: TPlotParam read FParam;
+  end;
+       {$REGION 'коллекции параметра:  Фильтр'}
+  TParamFilter = class(TParamCollectionItem, ICaption)
+  protected
+    function GetCaption: string; virtual; abstract;
+    procedure SetCaption(const Value: string);
+  end;
+  TWaveletFilter = class(TParamFilter)
+  private
+    FDisplayName: string;
+  protected
+    function GetCaption: string; override;
+  published
+   [ShowProp('Настройка')] property DisplayName: string read FDisplayName write FDisplayName;
+  end;
 
+  TParamFilters = class(TParamCollection<TParamFilter>, ICaption)
+  private
+    FDisplayName: string;
+  protected
+    function GetCaption: string;
+    procedure SetCaption(const Value: string);
+  published
+   [ShowProp('Название файла', True)] property DisplayName: string read FDisplayName write FDisplayName;
+  end;
+      {$ENDREGION}
+    {$ENDREGION}
+  {$ENDREGION}
 {$ENDREGION}
 
   /// перемещение или изменение размера рядов или колонок мышкой
@@ -340,6 +397,12 @@ type
   ///  клласс основной
   EPlotException = EBaseException;
   TCustomPlot = class(TICustomControl)
+  public
+   const
+    C_AXIS_Y_NAME: array[TAxisY] of string = ('ID','Кадр','Глубина(м.)','Время');
+   type
+    [EnumCaptions('Указать начало, Сначала, Последние, Все')]
+    TYFrom = (yfmUser, yfmFirst, yfmLast, yfmALL);
   private
     FHitTest: TPoint;
     FState: PlotState;
@@ -347,7 +410,15 @@ type
     FColumns: TPlotColumns;
     FRows: TPlotRows;
     FHitRegion: TPlotRegion;
-    FYAxis: TPlotParam;
+    FYPosition: Double;
+    FYScale: Double;
+    FMirror: Boolean;
+    FYCount: Double;
+    FYFrom: Double;
+    FYFromType: TYFrom;
+    FYFirstAvail: Double;
+    FYLastAvail: Double;
+    FOnDataAdded: TNotifyEvent;
 
     procedure UpdateColRowRegionSizes;
     procedure UpdateRegionSizes;
@@ -357,27 +428,52 @@ type
     procedure WMNCHitTest(var Msg: TWMNCHitTest); message WM_NCHITTEST;
     procedure WMSetCursor(var Msg: TWMSetCursor); message WM_SETCURSOR;
     procedure WMSize(var Message: TWMSize); message WM_SIZE;
-    procedure SetYAxis(const Value: TPlotParam);
+    function GetDefaultYAxisCaption: string;
+    procedure SetMirror(const Value: Boolean);
+    procedure SetYFrom(const Value: Double);
+    procedure SetYPosition(const Value: Double);
+    procedure SetYScale(const Value: Double);
+    procedure SetYCount(const Value: Double);
+    procedure SetYFromType(const Value: TYFrom);
   protected
+    /// Иызывается источником данных при поступлении данных
+    procedure DataAdded; virtual;
+    function GetDefaultYAxis: TAxisY; virtual;
     procedure Loaded; override;
     procedure DefineProperties(Filer: TFiler); override;
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean); override;
-//    procedure CreateWnd; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure Paint; override;
-  public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
+
     function HitRow(pos: TPoint): TPlotRow;
     function HitColumn(pos: TPoint): TPlotColumn;
     function HitRegion(pos: TPoint): TPlotRegion; overload;
     function HitRegion(c: TPlotColumn; r: TPlotRow): TPlotRegion; overload;
+
+    property YFirstAvail: Double read FYFirstAvail;
+    property YLastAvail: Double read FYLastAvail;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    /// пересчет границ Y, scrollbar
+    /// перерисовка обновленных колонок
+    /// для события OnDataAdded
+    procedure UpdateData;
     property Columns: TPlotColumns read FColumns;
     property Rows: TPlotRows read FRows;
+    [ShowProp('Ось Y по умолчанию')] property DefaultYAxis: string read GetDefaultYAxisCaption;
   published
-    property YAxis: TPlotParam read FYAxis write SetYAxis;
+    [ShowProp('Инвертировать Y')] property Mirror: Boolean read FMirror write SetMirror;
+    [ShowProp('Масштаб по Y')]    property YScale: Double read FYScale write SetYScale;
+    [ShowProp('Диапазон по Y')]   property YFromType: TYFrom read FYFromType write SetYFromType;
+    [ShowProp('Начать Y с')]      property YFromData: Double read FYFrom write SetYFrom;
+    [ShowProp('Диапазон Y')]    property YCountData: Double read FYCount write SetYCount;
+
+    property YPosition: Double read FYPosition write SetYPosition;
+
+    property OnDataAdded: TNotifyEvent read FOnDataAdded write FOnDataAdded;
   end;
 
   TPlot = class(TCustomPlot)
@@ -396,6 +492,8 @@ implementation
 uses System.Math, Winapi.CommCtrl;
 
 {$REGION 'Collection'}
+
+ {$REGION 'PlotCollection'}
 
 { TPlotCollectionItem }
 
@@ -461,9 +559,9 @@ begin
   Inc(i);
   Result := i < FCollection.Count;
 end;
+{$ENDREGION}
 
-
-{ TRegionCollectionItem }
+  {$REGION ' ColRowCollection строки колонки общее'}
 
 function TColRowCollectionItem.AutoSize: Boolean;
 begin
@@ -499,12 +597,59 @@ begin
    end;
 end;
 
-{ TPlotColumns }
-
-function TPlotColumns.GetAllLen: Integer;
+function TCollectionColRows<T>.LastToResize(FromLast: integer; ToFirst: Integer = 0): TColRowCollectionItem;
+ var
+  i: Integer;
 begin
-  Result := FPlot.Width;
+  for i := FromLast downto ToFirst do
+   if Items[i].Visible then
+    if Items[i].AutoSize then Exit(Items[i])
+    else Result := Items[i];
 end;
+
+procedure TCollectionColRows<T>.Notify(Item: TCollectionItem; Action: TCollectionNotification);
+ var
+  r: TColRowCollectionItem;
+  len: Integer;
+begin
+  inherited;
+  if FPlot.ComponentState * [csLoading, csDestroying] <> [] then Exit;
+  if (Action = cnAdded) then
+   if (Count >= 2) then
+    begin
+     r := LastToResize(Count - 2);
+     r.SetLen(r.FLen div 2);
+     TColRowCollectionItem(Item).FLen := r.FLen;
+    end
+   else TColRowCollectionItem(Item).FLen := GetAllLen;
+  UpdateSizes;
+  Plot.UpdateRegionSizes;
+end;
+
+procedure TCollectionColRows<T>.UpdateSizes;
+ var
+  lf, i, j, wf: Integer;
+  r, rs: TColRowCollectionItem;
+begin
+  if (Count = 0) or (FPlot.ComponentState * [csLoading, csDestroying] <> []) then Exit;
+  rs := LastToResize(Count - 1);
+  lf := 0;
+  for i := 0 to Count-1 do if Items[i].Visible then
+   begin
+    r := Items[i];
+    r.FFrom := lf;
+    if rs = r then
+     begin
+      wf := 0;
+      for j := i + 1 to Count - 1 do if Items[j].Visible then wf := wf + Items[j].Flen;
+      r.SetLen(GetAllLen - lf- wf);
+     end;
+    Inc(lf, r.FLen);
+   end;
+end;
+  {$ENDREGION}
+
+  {$REGION 'Column, Row'}
 
 { TPlotRows }
 
@@ -541,6 +686,21 @@ end;
 function TNoSizeblePlotRow.AutoSize: Boolean;
 begin
   Result := False;
+end;
+
+{ TCustomPlotData }
+
+constructor TCustomPlotData.Create(Collection: TCollection);
+begin
+  inherited;
+  FCursor := crCross;
+end;
+
+{ TPlotColumns }
+
+function TPlotColumns.GetAllLen: Integer;
+begin
+  Result := FPlot.Width;
 end;
 
 { TPlotColumn }
@@ -608,67 +768,11 @@ function TPlotColumn.GetRegionsCount: Integer;
 begin
   Result := FRegions.Count;
 end;
+ {$ENDREGION}
 
-{ TCustomPlotData }
+  {$REGION 'структура колонки: Regions, Parameters'}
 
-constructor TCustomPlotData.Create(Collection: TCollection);
-begin
-  inherited;
-  FCursor := crCross;
-end;
-
-{ TPlotRegions<T> }
-
-function TCollectionColRows<T>.LastToResize(FromLast: integer; ToFirst: Integer = 0): TColRowCollectionItem;
- var
-  i: Integer;
-begin
-  for i := FromLast downto ToFirst do
-   if Items[i].Visible then
-    if Items[i].AutoSize then Exit(Items[i])
-    else Result := Items[i];
-end;
-
-procedure TCollectionColRows<T>.Notify(Item: TCollectionItem; Action: TCollectionNotification);
- var
-  r: TColRowCollectionItem;
-  len: Integer;
-begin
-  inherited;
-  if FPlot.ComponentState * [csLoading, csDestroying] <> [] then Exit;
-  if (Action = cnAdded) then
-   if (Count >= 2) then
-    begin
-     r := LastToResize(Count - 2);
-     r.SetLen(r.FLen div 2);
-     TColRowCollectionItem(Item).FLen := r.FLen;
-    end
-   else TColRowCollectionItem(Item).FLen := GetAllLen;
-  UpdateSizes;
-  Plot.UpdateRegionSizes;
-end;
-
-procedure TCollectionColRows<T>.UpdateSizes;
- var
-  lf, i, j, wf: Integer;
-  r, rs: TColRowCollectionItem;
-begin
-  if (Count = 0) or (FPlot.ComponentState * [csLoading, csDestroying] <> []) then Exit;
-  rs := LastToResize(Count - 1);
-  lf := 0;
-  for i := 0 to Count-1 do if Items[i].Visible then
-   begin
-    r := Items[i];
-    r.FFrom := lf;
-    if rs = r then
-     begin
-      wf := 0;
-      for j := i + 1 to Count - 1 do if Items[j].Visible then wf := wf + Items[j].Flen;
-      r.SetLen(GetAllLen - lf- wf);
-     end;
-    Inc(lf, r.FLen);
-   end;
-end;
+  /// коллекция колонки общее
 
 { TColumnCollection<T> }
 
@@ -686,6 +790,7 @@ begin
   inherited Create(Collection);
 end;
 
+    {$REGION 'PlotRegion'}
 { TPlotRegion }
 
 procedure TPlotRegion.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
@@ -766,20 +871,7 @@ function TPlotRegion.TryHitParametr(pos: TPoint; out Par: TPlotParam): Boolean;
 begin
   Result := False;
 end;
-
-{ TPlotParam }
-
-destructor TPlotParam.Destroy;
-begin
-  if Assigned(FLink) then FreeAndNil(Flink);
-  inherited;
-end;
-
-procedure TPlotParam.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
-begin
-  if Assigned(FOnContextPopup) then FOnContextPopup(Self, MousePos, Handled);
-end;
-
+   {$ENDREGION}
 
 { TCustomDataLink }
 
@@ -806,6 +898,37 @@ begin
   FYParamPath := Value;
 end;
 
+   {$REGION 'PlotParam'}
+
+{ TPlotParam }
+
+constructor TPlotParam.Create(Collection: TCollection);
+begin
+  FVisible := True;
+  FPlot := TPlotParams(Collection).Plot;
+  FColumn := TPlotParams(Collection).Column;
+  FFilters := TParamFilters.Create(Self);
+  inherited Create(Collection);
+end;
+
+procedure TPlotParam.DefineProperties(Filer: TFiler);
+begin
+  inherited;
+  FFilters.RegisterProperty(Filer, 'Filters');
+end;
+
+destructor TPlotParam.Destroy;
+begin
+  if Assigned(FLink) then FreeAndNil(Flink);
+  FFilters.Free;
+  inherited;
+end;
+
+procedure TPlotParam.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+begin
+  if Assigned(FOnContextPopup) then FOnContextPopup(Self, MousePos, Handled);
+end;
+
 function TPlotParam.GetLinkClass: string;
 begin
   if Assigned(FLink) then Result := FLink.ClassName
@@ -820,6 +943,11 @@ end;
 procedure TPlotParam.SetDeltaX(const Value: Double);
 begin
   FDeltaX := Value;
+end;
+
+procedure TPlotParam.SetDeltaY(const Value: Double);
+begin
+  FDeltaY := Value;
 end;
 
 procedure TPlotParam.SetLink(const Value: TCustomDataLink);
@@ -848,7 +976,53 @@ procedure TPlotParam.SetVisible(const Value: Boolean);
 begin
   FVisible := Value;
 end;
+    {$ENDREGION}
+  {$ENDREGION 'структура колонки Region, Parameters'}
 
+   {$REGION 'структура параметра: История изменений'}
+/// коллекция Параметра общее
+
+{ TParamCollectionItem }
+
+constructor TParamCollectionItem.Create(Collection: TCollection);
+begin
+  FParam := TParamCollection<TParamCollectionItem>(Collection).FParam;
+  inherited Create(Collection);
+end;
+
+{ TParamCollection<T> }
+
+constructor TParamCollection<T>.Create(AOwner: TObject);
+begin
+  FParam := TPlotParam(AOwner);
+  inherited Create(TPlotParam(AOwner).Plot);
+end;
+     {$REGION 'История изменений (Фильтров) параметра'}
+
+{ TParamFilter }
+
+procedure TParamFilter.SetCaption(const Value: string);
+begin
+end;
+
+{ TParamFilters }
+
+function TParamFilters.GetCaption: string;
+begin
+  Result := 'Фильтр'
+end;
+procedure TParamFilters.SetCaption(const Value: string);
+begin
+end;
+
+{ TWaveletFilter }
+
+function TWaveletFilter.GetCaption: string;
+begin
+  Result := 'Вейвлет'
+end;
+     {$ENDREGION}
+   {$ENDREGION}
 {$ENDREGION Collection}
 
 {$REGION ' классы выполняюшие PlotState '}
@@ -976,6 +1150,8 @@ end;
 constructor TCustomPlot.Create(AOwner: TComponent);
 begin
   inherited;
+  FYFirstAvail := 10.676;
+  FYLastAvail := 10000.3445;
   FRows := TPlotRows.Create(Self);
   FColumns := TPlotColumns.Create(Self);
 end;
@@ -995,6 +1171,11 @@ begin
   if not Handled then  HitColumn(MousePos).DoContextPopup(MousePos, Handled);
 end;
 
+procedure TCustomPlot.DataAdded;
+begin
+  if Assigned(FOnDataAdded) then FOnDataAdded(self);
+end;
+
 procedure TCustomPlot.DefineProperties(Filer: TFiler);
 begin
   inherited DefineProperties(Filer);
@@ -1004,9 +1185,15 @@ end;
 {$ENDREGION}
 
 {$REGION 'TCustomPlot ----- SCROLL DATA'}
+
 {$ENDREGION 'TCustomPlot ----- SCROLL BAR'}
 
 {$REGION 'TCustomPlot ----- MOVE, RESIZE HIT'}
+
+procedure TCustomPlot.UpdateData;
+begin
+
+end;
 
 procedure TCustomPlot.UpdateColRowRegionSizes;
 begin
@@ -1211,17 +1398,51 @@ begin
     Canvas.LineTo(width, r.Bottom);
    end;
 end;
-
-procedure TCustomPlot.SetYAxis(const Value: TPlotParam);
-begin
-  FYAxis := Value;
-end;
 {$ENDREGION}
 
+procedure TCustomPlot.SetMirror(const Value: Boolean);
+begin
+  FMirror := Value;
+end;
+
+procedure TCustomPlot.SetYFrom(const Value: Double);
+begin
+  FYFrom := Value;
+end;
+
+procedure TCustomPlot.SetYFromType(const Value: TYFrom);
+begin
+  FYFromType := Value;
+end;
+
+procedure TCustomPlot.SetYPosition(const Value: Double);
+begin
+  FYPosition := Value;
+end;
+
+procedure TCustomPlot.SetYScale(const Value: Double);
+begin
+  FYScale := Value;
+end;
+
+procedure TCustomPlot.SetYCount(const Value: Double);
+begin
+  FYCount := Value;
+end;
+
+function TCustomPlot.GetDefaultYAxis: TAxisY;
+begin
+  Result := axyID;
+end;
+
+function TCustomPlot.GetDefaultYAxisCaption: string;
+begin
+  Result := C_AXIS_Y_NAME[GetDefaultYAxis];
+end;
 
 
 initialization
   RegisterClasses([TCustomPlotLegend, TCustomPlotData, TCustomPlotInfo]);
   RegisterClasses([TPlot, TPlotRegion, TPlotColumn, TPlotRow]);
-  RegisterClasses([TPlotParam, TFileDataLink]);
+  RegisterClasses([TPlotParam, TFileDataLink, TWaveletFilter]);
 end.

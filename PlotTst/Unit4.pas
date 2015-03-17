@@ -16,6 +16,7 @@ type
     CheckBox2: TCheckBox;
     Button1: TButton;
     Button5: TButton;
+    Button6: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -24,8 +25,10 @@ type
     procedure CheckBox1Click(Sender: TObject);
     procedure CheckBox2Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
+    procedure Button6Click(Sender: TObject);
   private
     Plot: TCustomPlot;
+    procedure OnData(Sender: TObject);
   public
     { Public declarations }
   end;
@@ -43,14 +46,22 @@ procedure TForm4.Button1Click(Sender: TObject);
  var
   c: TPlotColumn;
   p: TPlotParam;
+  f: TWaveletFilter;
 begin
   c := Plot.Columns.Add<TPlotColumn>;
   p := c.Params.Add<TPlotParam>;
   p.Title := 'p1';
+
   p.link := TFileDataLink.Create(p);
   TFileDataLink(p.Link).FileName := 'FileName_p1';
   TFileDataLink(p.Link).XParamPath := 'X_p1';
   TFileDataLink(p.Link).YParamPath := 'X_p1';
+
+  f := P.Filters.Add<TWaveletFilter>;
+  f.DisplayName := 'ParamFilter_1';
+  f := P.Filters.Add<TWaveletFilter>;
+  f.DisplayName := 'ParamFilter_2';
+
   p := c.Params.Add<TPlotParam>;
   p.Title := 'p2';
 //  p.link := TFileDataLink.Create(p);
@@ -117,6 +128,13 @@ begin
   if RegisterDialog.TryGet<Dialog_EditViewParameters>(d) then (d as IDialog<TPlotParam>).Execute(Plot.Columns[0].Params[0]);
 end;
 
+procedure TForm4.Button6Click(Sender: TObject);
+ var
+  d: Idialog;
+begin
+  if RegisterDialog.TryGet<Dialog_EditViewParameters>(d) then (d as IDialog<TObject>).Execute(Plot);
+end;
+
 procedure TForm4.CheckBox1Click(Sender: TObject);
  var
   a: TArray<TPlotRow>;
@@ -140,6 +158,13 @@ end;
 procedure TForm4.FormCreate(Sender: TObject);
 begin
   Plot := TPlot.Create(Self);
+  Plot.OnDataAdded := OnData;
+end;
+
+procedure TForm4.OnData(Sender: TObject);
+begin
+  Plot.UpdateData;
+  Plot.Repaint;
 end;
 
 end.
