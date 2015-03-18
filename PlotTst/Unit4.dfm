@@ -90,4 +90,13 @@ object Form4: TForm4
     TabOrder = 7
     OnClick = Button6Click
   end
+  object CheckBox3: TCheckBox
+    Left = 104
+    Top = 70
+    Width = 47
+    Height = 17
+    Caption = 'mirror'
+    TabOrder = 8
+    OnClick = CheckBox3Click
+  end
 end

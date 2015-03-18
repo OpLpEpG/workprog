@@ -17,6 +17,7 @@ type
     Button1: TButton;
     Button5: TButton;
     Button6: TButton;
+    CheckBox3: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -26,6 +27,7 @@ type
     procedure CheckBox2Click(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
+    procedure CheckBox3Click(Sender: TObject);
   private
     Plot: TCustomPlot;
     procedure OnData(Sender: TObject);
@@ -153,6 +155,11 @@ begin
   a := Plot.Rows.FindRows(TCustomPlotInfo);
   for r in a do r.Visible := CheckBox2.Checked;
   Plot.Repaint;
+end;
+
+procedure TForm4.CheckBox3Click(Sender: TObject);
+begin
+  Plot.Mirror := CheckBox3.Checked;
 end;
 
 procedure TForm4.FormCreate(Sender: TObject);
