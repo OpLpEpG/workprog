@@ -4,7 +4,8 @@ uses
   Vcl.Forms,
   Unit4 in 'Unit4.pas' {Form4},
   CustomPlot in '..\Core\CustomPlot.pas',
-  DlgEditParam in 'DlgEditParam.pas' {FormEditParam};
+  DlgEditParam in 'DlgEditParam.pas' {FormEditParam},
+  SetGPClolor in '..\VCLData\SetGPClolor.pas' {FormSetGPColor};
 
 {$R *.res}
 

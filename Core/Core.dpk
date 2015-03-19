@@ -51,7 +51,8 @@ requires
   JvDocking,
   fs_oleg,
   JvRuntimeDesign,
-  fs21;
+  fs21,
+  GR32_RSXE7;
 
 contains
   AbstractPlugin in '..\AbstractPlugin.pas',
@@ -95,7 +96,8 @@ contains
   StolGKIntf in '..\StolGKIntf.pas',
   Math.Telesistem in 'Math.Telesistem.pas',
   XMLScript.IKN in 'XMLScript.IKN.pas',
-  Plot in 'Plot.pas';
+  Plot in 'Plot.pas',
+  Plot.GR32 in 'Plot.GR32.pas';
 
 end.
 

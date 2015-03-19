@@ -131,4 +131,5 @@ end;
 
 initialization
   TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TGPColor)));
+  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TColor)));
 end.

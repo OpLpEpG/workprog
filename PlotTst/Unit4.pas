@@ -2,7 +2,7 @@ unit Unit4;
 
 interface
 
-uses CustomPlot, System.IOUtils,
+uses CustomPlot, System.IOUtils, Plot.GR32, gr32,
   RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RTTI, Container, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
@@ -50,9 +50,22 @@ procedure TForm4.Button1Click(Sender: TObject);
   p: TPlotParam;
   f: TWaveletFilter;
 begin
-  c := Plot.Columns.Add<TPlotColumn>;
-  p := c.Params.Add<TPlotParam>;
+  c := Plot.Columns.Add<TGR32GraphicCollumn>;
+  p := c.Params.Add<TLineParam>;
   p.Title := 'p1';
+  p.Color := clRed32;
+  p := c.Params.Add<TLineParam>;
+  p.Title := 'p2';
+  p.Color := clBlue32;
+  p := c.Params.Add<TLineParam>;
+  p.Title := 'p3';
+  p.Color := clGreen32;
+  p := c.Params.Add<TLineParam>;
+  p.Title := 'p4';
+  p.Color := clTeal32;
+  p := c.Params.Add<TLineParam>;
+  p.Title := 'p5';
+  p.Color := clAqua32;
 
   p.link := TFileDataLink.Create(p);
   TFileDataLink(p.Link).FileName := 'FileName_p1';
@@ -78,7 +91,7 @@ begin
   Plot.Parent := Self;
   Plot.Align := alClient;
   Plot.SendToBack;
-  Plot.Rows.Add<TCustomPlotLegend>;
+  Plot.Rows.Add<TGR32Legend>;
   Plot.Rows.Add<TCustomPlotData>;
   Plot.Rows.Add<TCustomPlotInfo>;
 end;

@@ -1,4 +1,4 @@
-unit CustomPlot;
+﻿unit CustomPlot;
 
 interface
 
@@ -85,6 +85,7 @@ type
   protected
     FFrom: Integer;
     FLen: Integer;
+    procedure DoVisibleChanged; virtual;
     function GetItem(Index: Integer): TPlotRegion; virtual; abstract;
     function GetRegionsCount: Integer; virtual; abstract;
     function GetTo: Integer; inline;
@@ -159,6 +160,8 @@ type
     procedure DefineProperties(Filer: TFiler); override;
     function GetItem(Index: Integer): TPlotRegion; override;
     function GetRegionsCount: Integer; override;
+    procedure ColumnCollectionChanged(Collection: TPlotCollection); virtual;
+    procedure ColumnCollectionItemChanged(Item: TPlotCollectionItem); virtual;
     // Хранилище типов колонок
     class procedure ColClsRegister(acc: TPlotColumnClass; const DisplayName: string);
   public
@@ -170,7 +173,7 @@ type
     property Left: Integer read FFrom;
     property Right: Integer read GetTo;
     property Regions: TPlotRegions read FRegions;
-    property Params: TPlotParams read FParams;
+   [ShowProp('Params')] property Params: TPlotParams read FParams;
   published
     property Width: Integer read FLen write SetLen;
     property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
@@ -218,10 +221,11 @@ type
     end;
     class var GRegClsItems: TArray<TRegClsData>;
   protected
+    procedure ParentFontChanged; virtual;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); virtual;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); virtual;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); virtual;
-    procedure SetClientRect(const Value: TRect);
+    procedure SetClientRect(const Value: TRect); virtual;
     procedure UpdateSize;
     procedure Paint; virtual;
   public
@@ -281,9 +285,12 @@ type
     FTitle: string;
     FVisible: Boolean;
     FColor: TColor;
-    FScale: Double;
     FDeltaX: Double;
     FDeltaY: Double;
+    FHideInLegend: boolean;
+    FFixedParam: boolean;
+    FEUnit: string;
+    FPresizion: Integer;
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean);
     procedure SetTitle(const Value: string);
     function GetLinkClass: string;
@@ -291,15 +298,21 @@ type
     procedure SetLink(const Value: TCustomDataLink);
     procedure SetVisible(const Value: Boolean);
     procedure SetColor(const Value: TColor);
-    procedure SetScale(const Value: Double);
     procedure SetDeltaX(const Value: Double);
     procedure SetDeltaY(const Value: Double);
+    procedure SetEUnit(const Value: string);
+    procedure SetHideInLegend(const Value: boolean);
+    procedure NotifyCollumn;
   protected
     procedure DefineProperties(Filer: TFiler); override;
-    property Color: TColor read FColor write SetColor default clBlack;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
+    property Color: TColor read FColor write SetColor default clBlack;
+    property EUnit: string read FEUnit write SetEUnit;
+    property Presizion: Integer read FPresizion write FPresizion default 2;
+    property FixedParam: boolean read FFixedParam write FFixedParam;
+    property HideInLegend: boolean read FHideInLegend write SetHideInLegend;
     [ShowProp('История изменений')] property Filters: TParamFilters read FFilters;
   published
     property LinkClass: string read GetLinkClass write SetLinkClass;
@@ -311,7 +324,45 @@ type
 //    [ShowProp('Масштаб')]        property Scale        : Double read FScale write SetScale;
     property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
   end;
-  TPlotParams = class(TColumnCollection<TPlotParam>);
+
+  TPlotParams = class(TColumnCollection<TPlotParam>)
+  protected
+    procedure Notify(Item: TCollectionItem; Action: TCollectionNotification); override;
+  end;
+
+  TXScalableParam = class(TPlotParam)
+  private
+    FScaleX: Double;
+    procedure SetScale(const Value: Double);
+  published
+    [ShowProp('Масштаб')] property ScaleX: Double read FScaleX write SetScale;
+  end;
+
+  TLineDashStyle = (ldsSolid, ldsDot, ldsDash, ldsDashDot, ldsDashDotDot);
+
+  TLineParam = class(TXScalableParam)
+  private
+    FWidth: Integer;
+    FDashStyle: TLineDashStyle;
+    procedure SetWidth(const Value: Integer);
+    procedure SetDashStyle(const Value: TLineDashStyle);
+  public
+    constructor Create(Collection: TCollection); override;
+  published
+    [ShowProp('Ширина линии')] property Width: Integer read FWidth write SetWidth default 2;
+    [ShowProp('Цвет')] property Color;
+    [ShowProp('Стиль штрихов')] property DashStyle: TLineDashStyle read FDashStyle write SetDashStyle default ldsSolid;
+  end;
+
+  TGamma = TColor;
+
+  TWaveParam = class(TXScalableParam)
+  private
+    FGamma: TGamma;
+    procedure SetGamma(const Value: TGamma);
+  published
+    [ShowProp('Гамма')] property Gamma: TGamma read FGamma write SetGamma;
+  end;
 
   TStringParam = class(TPlotParam)
   published
@@ -452,10 +503,9 @@ type
     procedure UpdateRegionSizes;
     function IsMouseSizeMove(Pos: TPoint; var ps: PlotState; out Item: TColRowCollectionItem): Boolean; overload;
     function IsMouseSizeMove(Pos: TPoint; var ps: PlotState): Boolean; overload;
-
     procedure WMVScroll(var Message: TWMVScroll); message WM_VSCROLL;
     procedure CMMouseWheel(var Message: TCMMouseWheel); message CM_MOUSEWHEEL;
-
+    procedure CMParentFontChanged(var Message: TCMParentFontChanged); message CM_PARENTFONTCHANGED;
     procedure WMNCHitTest(var Msg: TWMNCHitTest); message WM_NCHITTEST;
     procedure WMSetCursor(var Msg: TWMSetCursor); message WM_SETCURSOR;
     procedure WMSize(var Message: TWMSize); message WM_SIZE;
@@ -498,7 +548,9 @@ type
     /// перерисовка обновленных колонок
     /// для события OnDataAdded
     procedure UpdateData;
-    property Columns: TPlotColumns read FColumns;
+    function CanvasHandle: HDC;
+    property Font;
+    [ShowProp('Columns')] property Columns: TPlotColumns read FColumns;
     property Rows: TPlotRows read FRows;
     [ShowProp('Ось Y по умолчанию')] property DefaultYAxis: string read GetDefaultYAxisCaption;
   published
@@ -611,6 +663,13 @@ begin
   inherited;
 end;
 
+procedure TColRowCollectionItem.DoVisibleChanged;
+begin
+  TCollectionColRows<TColRowCollectionItem>(Collection).UpdateSizes;
+  Plot.FYScrollBar.Update;
+  Plot.UpdateRegionSizes;
+end;
+
 function TColRowCollectionItem.GetTo: Integer;
 begin
   Result := FFrom + FLen;
@@ -628,9 +687,7 @@ begin
    begin
     FVisible := Value;
     if csLoading in Plot.ComponentState then Exit;
-    TCollectionColRows<TColRowCollectionItem>(Collection).UpdateSizes;
-    Plot.FYScrollBar.Update;
-    Plot.UpdateRegionSizes;
+    DoVisibleChanged;
    end;
 end;
 
@@ -699,7 +756,7 @@ end;
 
 function TPlotRows.GetAllLen: Integer;
 begin
-  Result := FPlot.Height;
+  Result := FPlot.ClientHeight;
 end;
 
 { TPlotRow }
@@ -737,7 +794,7 @@ end;
 
 function TPlotColumns.GetAllLen: Integer;
 begin
-  Result := FPlot.Width;
+  Result := FPlot.ClientWidth;
 end;
 
 { TPlotColumn }
@@ -749,6 +806,14 @@ begin
   d.ColCls := acc;
   d.DisplayName := DisplayName;
   CArray.Add<TColClassData>(ColClassItems, d);
+end;
+
+procedure TPlotColumn.ColumnCollectionChanged(Collection: TPlotCollection);
+begin
+end;
+
+procedure TPlotColumn.ColumnCollectionItemChanged(Item: TPlotCollectionItem);
+begin
 end;
 
 constructor TPlotColumn.Create(Collection: TCollection);
@@ -843,6 +908,9 @@ begin
   Result :=  FPlotRow.ClassName;
 end;
 
+procedure TPlotRegion.ParentFontChanged;
+begin
+end;
 procedure TPlotRegion.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
 end;
@@ -860,6 +928,7 @@ begin
     Plot.Canvas.TextRect(ClientRect, ClientRect.Left + ClientRect.Width div 2, ClientRect.Top + ClientRect.Height div 2, 'NOP');
    end;
 end;
+
 procedure TPlotRegion.UpdateSize;
  var
   r: TRect;
@@ -942,6 +1011,7 @@ end;
 constructor TPlotParam.Create(Collection: TCollection);
 begin
   FVisible := True;
+  FPresizion := 2;
   FPlot := TPlotParams(Collection).Plot;
   FColumn := TPlotParams(Collection).Column;
   FFilters := TParamFilters.Create(Self);
@@ -972,25 +1042,46 @@ begin
   else Result :=  '';
 end;
 
+procedure TPlotParam.NotifyCollumn;
+begin
+  Column.ColumnCollectionItemChanged(Self);
+end;
+
 procedure TPlotParam.SetColor(const Value: TColor);
 begin
   FColor := Value;
+  NotifyCollumn;
 end;
 
 procedure TPlotParam.SetDeltaX(const Value: Double);
 begin
   FDeltaX := Value;
+  NotifyCollumn;
 end;
 
 procedure TPlotParam.SetDeltaY(const Value: Double);
 begin
   FDeltaY := Value;
+  NotifyCollumn;
+end;
+
+procedure TPlotParam.SetEUnit(const Value: string);
+begin
+  FEUnit := Value;
+  NotifyCollumn;
+end;
+
+procedure TPlotParam.SetHideInLegend(const Value: boolean);
+begin
+  FHideInLegend := Value;
+  NotifyCollumn;
 end;
 
 procedure TPlotParam.SetLink(const Value: TCustomDataLink);
 begin
   if Assigned(FLink) then FLink.Free;
   FLink := Value;
+  NotifyCollumn;
 end;
 
 procedure TPlotParam.SetLinkClass(const Value: string);
@@ -999,20 +1090,27 @@ begin
   if Value <> '' then FLink := TCustomDataLinkClass(FindClass(Value)).Create(Self);
 end;
 
-procedure TPlotParam.SetScale(const Value: Double);
-begin
-  FScale := Value;
-end;
-
 procedure TPlotParam.SetTitle(const Value: string);
 begin
   FTitle := Value;
+  NotifyCollumn;
 end;
 
 procedure TPlotParam.SetVisible(const Value: Boolean);
 begin
   FVisible := Value;
+  NotifyCollumn;
 end;
+
+{ TPlotParams }
+
+procedure TPlotParams.Notify(Item: TCollectionItem; Action: TCollectionNotification);
+begin
+  inherited;
+  FColumn.ColumnCollectionChanged(Self);
+end;
+
+
     {$ENDREGION}
   {$ENDREGION 'структура колонки Region, Parameters'}
 
@@ -1390,6 +1488,16 @@ begin
   end
 end;
 
+procedure TCustomPlot.CMParentFontChanged(var Message: TCMParentFontChanged);
+ var
+  c: TPlotColumn;
+  r: TPlotRegion;
+begin
+  inherited;
+  if not HandleAllocated then Exit;
+  for c in Columns do for r in c.Regions do r.ParentFontChanged;
+end;
+
 {$ENDREGION 'TCustomPlot ----- SCROLL BAR'}
 
 {$REGION 'TCustomPlot ----- MOVE, RESIZE HIT'}
@@ -1401,6 +1509,7 @@ end;
 
 procedure TCustomPlot.UpdateColRowRegionSizes;
 begin
+  if not HandleAllocated then Exit;
   Rows.UpdateSizes;
   Columns.UpdateSizes;
   UpdateRegionSizes;
@@ -1620,6 +1729,11 @@ begin
    end;
 end;
 
+function TCustomPlot.CanvasHandle: HDC;
+begin
+  Result := Canvas.Handle;
+end;
+
 procedure TCustomPlot.ChekYPosition;
 begin
   if FYPosition < FYFrom then FYPosition := FYFrom
@@ -1764,8 +1878,44 @@ end;
 {$ENDREGION}
 
 
+{ TXScalableParam }
+
+procedure TXScalableParam.SetScale(const Value: Double);
+begin
+  FScaleX := Value;
+  NotifyCollumn;
+end;
+
+{ TLineParam }
+
+constructor TLineParam.Create(Collection: TCollection);
+begin
+  FWidth := 2;
+  inherited;
+end;
+
+procedure TLineParam.SetDashStyle(const Value: TLineDashStyle);
+begin
+  FDashStyle := Value;
+  NotifyCollumn;
+end;
+
+procedure TLineParam.SetWidth(const Value: Integer);
+begin
+  FWidth := Value;
+  NotifyCollumn;
+end;
+
+{ TWaveParam }
+
+procedure TWaveParam.SetGamma(const Value: TGamma);
+begin
+  FGamma := Value;
+  NotifyCollumn;
+end;
+
 initialization
   RegisterClasses([TCustomPlotLegend, TCustomPlotData, TCustomPlotInfo]);
   RegisterClasses([TPlot, TPlotRegion, TPlotColumn, TPlotRow]);
-  RegisterClasses([TPlotParam, TFileDataLink, TWaveletFilter]);
+  RegisterClasses([TPlotParam, TLineParam, TWaveParam, TFileDataLink, TWaveletFilter]);
 end.
