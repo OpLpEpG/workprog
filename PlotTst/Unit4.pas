@@ -54,6 +54,16 @@ begin
   p := c.Params.Add<TLineParam>;
   p.Title := 'p1';
   p.Color := clRed32;
+  p.link := TFileDataLink.Create(p);
+  TFileDataLink(p.Link).FileName := 'FileName_p1';
+  TFileDataLink(p.Link).XParamPath := 'X_p1';
+  TFileDataLink(p.Link).YParamPath := 'X_p1';
+
+  f := P.Filters.Add<TWaveletFilter>;
+  f.DisplayName := 'ParamFilter_1';
+  f := P.Filters.Add<TWaveletFilter>;
+  f.DisplayName := 'ParamFilter_2';
+
   p := c.Params.Add<TLineParam>;
   p.Title := 'p2';
   p.Color := clBlue32;
@@ -67,18 +77,9 @@ begin
   p.Title := 'p5';
   p.Color := clAqua32;
 
-  p.link := TFileDataLink.Create(p);
-  TFileDataLink(p.Link).FileName := 'FileName_p1';
-  TFileDataLink(p.Link).XParamPath := 'X_p1';
-  TFileDataLink(p.Link).YParamPath := 'X_p1';
 
-  f := P.Filters.Add<TWaveletFilter>;
-  f.DisplayName := 'ParamFilter_1';
-  f := P.Filters.Add<TWaveletFilter>;
-  f.DisplayName := 'ParamFilter_2';
-
-  p := c.Params.Add<TPlotParam>;
-  p.Title := 'p2';
+//  p := c.Params.Add<TPlotParam>;
+//  p.Title := 'p2';
 //  p.link := TFileDataLink.Create(p);
 //  TFileDataLink(p.Link).FileName := 'FileName_p2';
 //  TFileDataLink(p.Link).XParamPath := 'X_p2';

@@ -68,7 +68,6 @@ contains
   Actns in 'Actns.pas',
   LasImpl in 'LasImpl.pas',
   Parser in 'Parser.pas',
-  CustomPlot in 'CustomPlot.pas',
   Plot.DB in 'Plot.DB.pas',
   XMLScript in 'XMLScript.pas',
   ImportExport in 'ImportExport.pas',
@@ -96,8 +95,7 @@ contains
   StolGKIntf in '..\StolGKIntf.pas',
   Math.Telesistem in 'Math.Telesistem.pas',
   XMLScript.IKN in 'XMLScript.IKN.pas',
-  Plot in 'Plot.pas',
-  Plot.GR32 in 'Plot.GR32.pas';
+  Plot in 'Plot.pas';
 
 end.
 

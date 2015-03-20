@@ -102,6 +102,9 @@
         <Projects Include="PlotTst\Project4.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\..\Libs\Graphics32\Examples\Drawing\ArrowHead\ArrowHead.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -407,14 +410,23 @@
     <Target Name="Project4:Make">
         <MSBuild Projects="PlotTst\Project4.dproj" Targets="Make"/>
     </Target>
+    <Target Name="ArrowHead">
+        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\ArrowHead\ArrowHead.dproj"/>
+    </Target>
+    <Target Name="ArrowHead:Clean">
+        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\ArrowHead\ArrowHead.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ArrowHead:Make">
+        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\ArrowHead\ArrowHead.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;ProjectManager3;ComDev;VCLTelesis;Monitor;VCLData;VCLControl3;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;DelphiAdvD2DGeometries;QPIXELS;Project2;Project3;GradLines;ImgView_Layers;RotLayer;Sprites;ConwaysLife;Project4"/>
+        <CallTarget Targets="Core;ProjectManager;ProjectManager3;ComDev;VCLTelesis;Monitor;VCLData;VCLControl3;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;DelphiAdvD2DGeometries;QPIXELS;Project2;Project3;GradLines;ImgView_Layers;RotLayer;Sprites;ConwaysLife;Project4;ArrowHead"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ProjectManager3:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl3:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;DelphiAdvD2DGeometries:Clean;QPIXELS:Clean;Project2:Clean;Project3:Clean;GradLines:Clean;ImgView_Layers:Clean;RotLayer:Clean;Sprites:Clean;ConwaysLife:Clean;Project4:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ProjectManager3:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl3:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;DelphiAdvD2DGeometries:Clean;QPIXELS:Clean;Project2:Clean;Project3:Clean;GradLines:Clean;ImgView_Layers:Clean;RotLayer:Clean;Sprites:Clean;ConwaysLife:Clean;Project4:Clean;ArrowHead:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;ProjectManager3:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl3:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;DelphiAdvD2DGeometries:Make;QPIXELS:Make;Project2:Make;Project3:Make;GradLines:Make;ImgView_Layers:Make;RotLayer:Make;Sprites:Make;ConwaysLife:Make;Project4:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;ProjectManager3:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl3:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;DelphiAdvD2DGeometries:Make;QPIXELS:Make;Project2:Make;Project3:Make;GradLines:Make;ImgView_Layers:Make;RotLayer:Make;Sprites:Make;ConwaysLife:Make;Project4:Make;ArrowHead:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
@@ -424,11 +436,11 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+        <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
+            <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="Metrol\Metrol.dproj">
             <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
@@ -468,6 +480,12 @@
         </BuildGroupProject>
         <BuildGroupProject Include="Glubinomer\Glut.dproj">
             <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\ArrowHead\ArrowHead.dproj">
+            <ProjectGuid>{263B9152-BDBE-4FA3-AE28-4F6BEC81543A}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -604,14 +622,14 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
-            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
-            <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
+        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
+            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -624,9 +642,9 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\GradLines\GradLines.dproj">
-            <ProjectGuid>{779431F2-6DCD-4395-823B-F9A60AC69FF9}</ProjectGuid>
-            <Configurations>Debug</Configurations>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
@@ -668,6 +686,12 @@
         </BuildGroupProject>
         <BuildGroupProject Include="Glubinomer\Glut.dproj">
             <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\ArrowHead\ArrowHead.dproj">
+            <ProjectGuid>{263B9152-BDBE-4FA3-AE28-4F6BEC81543A}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -798,6 +822,12 @@
             <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\GradLines\GradLines.dproj">
+            <ProjectGuid>{779431F2-6DCD-4395-823B-F9A60AC69FF9}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
             <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -807,12 +837,6 @@
         <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
             <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
             <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
-            <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>

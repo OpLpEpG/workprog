@@ -1094,7 +1094,8 @@ begin
        ii := TJvInspectorPropDataEx.New(Root, o, TRttiInstanceProperty(p).PropInfo);
        ii.DisplayName := ShowPropAttribute(a).DisplayName;
        ii.ReadOnly := ShowPropAttribute(a).ReadOnly or not p.IsWritable;
-       if ii is TJvInspectorBooleanItem then TJvInspectorBooleanItem(ii).ShowAsCheckbox := True;
+       if ii is TJvInspectorBooleanItem then
+         TJvInspectorBooleanItem(ii).ShowAsCheckbox := True;
 //       if ii is TJvInspectorEnumItem then
 //        for e in p.PropertyType.GetAttributes do
 //         if e is EnumCaptionsAttribute then
@@ -1562,8 +1563,15 @@ end;
 class function TJvInspectorPropDataEx.ItemRegister: TJvInspectorRegister;
 begin
   Result := inherited;
-  Result.Delete(TJvInspectorEnumItem);
-  Result.Add(TJvInspectorTypeKindRegItem.Create(TJvInspectorEnumCaptionsItem, tkEnumeration));
+  with Result do
+   begin
+    Delete(TJvInspectorEnumItem);
+    Add(TJvInspectorTypeKindRegItem.Create(TJvInspectorEnumCaptionsItem, tkEnumeration));
+    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(Boolean)));
+    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(ByteBool)));
+    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(WordBool)));
+    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(LongBool)));
+   end;
 end;
 
 { TJvInspectorEnumCaptionsItem }

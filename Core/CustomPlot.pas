@@ -233,6 +233,7 @@ type
     class procedure RegClsRegister(apc: TPlotRegionClass; arc: TPlotRowClass; acc: TPlotColumnClass);
     class function RegClsFind(arc: TPlotRowClass; acc: TPlotColumnClass): TPlotRegionClass;
     function TryHitParametr(pos: TPoint; out Par: TPlotParam): Boolean; virtual;
+    function MouseToClient(pos: TPoint): TPoint;
     property Row: TPlotRow read FPlotRow write FPlotRow;
     property ClientRect: TRect read FClientRect write SetClientRect;
   published
@@ -334,10 +335,13 @@ type
   private
     FScaleX: Double;
     procedure SetScale(const Value: Double);
+  public
+    constructor Create(Collection: TCollection); override;
   published
     [ShowProp('Масштаб')] property ScaleX: Double read FScaleX write SetScale;
   end;
 
+  [EnumCaptions('сплошная, точка, тире, точка тире, точка точка тире')]
   TLineDashStyle = (ldsSolid, ldsDot, ldsDash, ldsDashDot, ldsDashDotDot);
 
   TLineParam = class(TXScalableParam)
@@ -352,6 +356,10 @@ type
     [ShowProp('Ширина линии')] property Width: Integer read FWidth write SetWidth default 2;
     [ShowProp('Цвет')] property Color;
     [ShowProp('Стиль штрихов')] property DashStyle: TLineDashStyle read FDashStyle write SetDashStyle default ldsSolid;
+    [ShowProp('Заморозить')]                    property FixedParam;
+    [ShowProp('Скрыть легенду')]                property HideInLegend;
+    [ShowProp('Единицы измерения')]             property EUnit;
+    [ShowProp('Точность(цифр после запятой)')]  property Presizion;
   end;
 
   TGamma = TColor;
@@ -530,6 +538,7 @@ type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure DrowRegionsBounds;
     procedure Paint; override;
 
     function HitRow(pos: TPoint): TPlotRow;
@@ -917,6 +926,11 @@ end;
 procedure TPlotRegion.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
 end;
+function TPlotRegion.MouseToClient(pos: TPoint): TPoint;
+begin
+  Result := pos - clientRect.TopLeft;
+end;
+
 procedure TPlotRegion.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
 end;
@@ -933,7 +947,7 @@ procedure TPlotRegion.UpdateSize;
  var
   r: TRect;
 begin
-  r := TRect.Create(Column.Left, Row.Top, Column.Right, Row.Bottom);
+  r := TRect.Create(Column.Left+1, Row.Top+1, Column.Right-1, Row.Bottom-1);
   if r <> ClientRect then ClientRect := r;
 end;
 
@@ -1110,6 +1124,49 @@ begin
   FColumn.ColumnCollectionChanged(Self);
 end;
 
+{ TXScalableParam }
+
+constructor TXScalableParam.Create(Collection: TCollection);
+begin
+  FScaleX := 1;
+  inherited;
+end;
+
+procedure TXScalableParam.SetScale(const Value: Double);
+begin
+  if Value = 0 then Exit;   
+  FScaleX := Value;
+  NotifyCollumn;
+end;
+
+{ TLineParam }
+
+constructor TLineParam.Create(Collection: TCollection);
+begin
+  FWidth := 2;
+  inherited;
+end;
+
+procedure TLineParam.SetDashStyle(const Value: TLineDashStyle);
+begin
+  FDashStyle := Value;
+  NotifyCollumn;
+end;
+
+procedure TLineParam.SetWidth(const Value: Integer);
+begin
+  if FWidth = 0 then Exit;
+  FWidth := Value;
+  NotifyCollumn;
+end;
+
+{ TWaveParam }
+
+procedure TWaveParam.SetGamma(const Value: TGamma);
+begin
+  FGamma := Value;
+  NotifyCollumn;
+end;
 
     {$ENDREGION}
   {$ENDREGION 'структура колонки Region, Parameters'}
@@ -1528,7 +1585,8 @@ function TCustomPlot.HitColumn(pos: TPoint): TPlotColumn;
  var
   r: TPlotColumn;
 begin
-  for r in Columns do if (pos.Y >= r.Left) and (pos.Y <= r.Right) then Exit(r);
+  for r in Columns do
+    if (pos.X >= r.Left) and (pos.X <= r.Right) then Exit(r);
   raise EBaseException.Create('Нет колонки в данном месте');
 end;
 
@@ -1686,22 +1744,16 @@ end;
 
 {$REGION 'TCustomPlot ----- P A I N T'}
 
-procedure TCustomPlot.Paint;
+procedure TCustomPlot.DrowRegionsBounds;
  var
   c: TPlotColumn;
   r: TPlotRow;
-  p: TPlotRegion;
 begin
-  TDebug.Log('TCustomPlot ----- P A I N T');
-  for c in Columns do
-   for p in c.Regions do
-    p.Paint;
-//  Canvas.FillRect(ClientRect);
   Canvas.Pen.Color := clBlack;
   Canvas.Pen.Width := 1;
   Canvas.Pen.Style := psSolid;
   Canvas.Pen.Mode := pmCopy;
-//  Canvas.Rectangle(ClientRect);
+  Canvas.Rectangle(ClientRect);
   for c in Columns do if c.Visible then
    begin
     Canvas.moveTo(c.Right, 0);
@@ -1712,6 +1764,18 @@ begin
     Canvas.moveTo(0, r.Bottom);
     Canvas.LineTo(width, r.Bottom);
    end;
+end;
+
+procedure TCustomPlot.Paint;
+ var
+  c: TPlotColumn;
+  p: TPlotRegion;
+begin
+  TDebug.Log('TCustomPlot ----- P A I N T');
+  DrowRegionsBounds;
+  for c in Columns do
+   for p in c.Regions do
+    p.Paint;
 end;
 {$ENDREGION}
 
@@ -1877,42 +1941,6 @@ begin
 end;
 {$ENDREGION}
 
-
-{ TXScalableParam }
-
-procedure TXScalableParam.SetScale(const Value: Double);
-begin
-  FScaleX := Value;
-  NotifyCollumn;
-end;
-
-{ TLineParam }
-
-constructor TLineParam.Create(Collection: TCollection);
-begin
-  FWidth := 2;
-  inherited;
-end;
-
-procedure TLineParam.SetDashStyle(const Value: TLineDashStyle);
-begin
-  FDashStyle := Value;
-  NotifyCollumn;
-end;
-
-procedure TLineParam.SetWidth(const Value: Integer);
-begin
-  FWidth := Value;
-  NotifyCollumn;
-end;
-
-{ TWaveParam }
-
-procedure TWaveParam.SetGamma(const Value: TGamma);
-begin
-  FGamma := Value;
-  NotifyCollumn;
-end;
 
 initialization
   RegisterClasses([TCustomPlotLegend, TCustomPlotData, TCustomPlotInfo]);
