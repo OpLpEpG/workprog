@@ -506,6 +506,7 @@ type
     FYLastAvail: Double;
     FOnDataAdded: TNotifyEvent;
     FYScrollBar: TYScrollBar;
+    FPropertyChanged: string;
 
     procedure UpdateColRowRegionSizes;
     procedure UpdateRegionSizes;
@@ -528,6 +529,7 @@ type
     function GetYLast: Double; inline;
     procedure SetYLast(const Value: Double);
     procedure ChekYPosition;
+    procedure SetPropertyChanged(const Value: string);
   protected
     /// Иызывается источником данных при поступлении данных
     procedure DataAdded; virtual;
@@ -559,8 +561,10 @@ type
     procedure UpdateData;
     function CanvasHandle: HDC;
     property Font;
+    property SPropertyChanged: string read FPropertyChanged write SetPropertyChanged;
     [ShowProp('Columns')] property Columns: TPlotColumns read FColumns;
     property Rows: TPlotRows read FRows;
+    /// ID , кадр, глубина
     [ShowProp('Ось Y по умолчанию')] property DefaultYAxis: string read GetDefaultYAxisCaption;
   published
     [ShowProp('Инвертировать Y')] property Mirror: Boolean read FMirror write SetMirror;
@@ -1791,6 +1795,11 @@ begin
     FYScrollBar := CSB[FMirror].Create(Self);
     FYScrollBar.Position := FYScrollBar.Position - FYScrollBar.Page;
    end;
+end;
+
+procedure TCustomPlot.SetPropertyChanged(const Value: string);
+begin
+  FPropertyChanged := Value;
 end;
 
 function TCustomPlot.CanvasHandle: HDC;

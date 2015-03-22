@@ -22,6 +22,8 @@ type
   TGR32Region = class(TPlotRegion)
   protected
     procedure SetVisible(Visible: Boolean); virtual;
+    procedure ParamCollectionChanged; virtual; abstract;
+    procedure ParamPropChanged; virtual; abstract;
   end;
 
   TGR32GraphicLegend = class(TGR32Region)
@@ -44,8 +46,8 @@ type
     function GetCheckBoxRect(Par: TLineParam): TRect;
   protected
     procedure SetVisible(Visible: Boolean); override;
-    procedure ParamChanged;
-    procedure ParamPropChanged;
+    procedure ParamCollectionChanged; override;
+    procedure ParamPropChanged; override;
     procedure ParentFontChanged; override;
     procedure Paint; override;
     procedure SetClientRect(const Value: TRect); override;
@@ -56,6 +58,24 @@ type
     function TryHitParametr(pos: TPoint; out Par: TPlotParam): Boolean; override;
     destructor Destroy; override;
   end;
+
+  TGraphicDataState = (gdsNornal, gdsMoving, gdsSceling);
+
+  TGR32GraphicData = class(TGR32Region, IBind)
+  protected
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure SetVisible(Visible: Boolean); override;
+    procedure ParamCollectionChanged; override;
+    procedure ParamPropChanged; override;
+    procedure ParentFontChanged; override;
+    procedure Paint; override;
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+  end;
+
 
 implementation
 
@@ -130,14 +150,14 @@ procedure TGR32GraphicCollumn.ColumnCollectionChanged(ColumnCollection: TPlotCol
  var
   r: TPlotRegion;
 begin
-  if ColumnCollection is TPlotParams then for r in Regions do if r is TGR32GraphicLegend then TGR32GraphicLegend(r).ParamChanged;
+  if ColumnCollection is TPlotParams then for r in Regions do if r is TGR32Region then TGR32Region(r).ParamCollectionChanged;
 end;
 
 procedure TGR32GraphicCollumn.ColumnCollectionItemChanged(Item: TPlotCollectionItem);
  var
   r: TPlotRegion;
 begin
-  for r in Regions do if r is TGR32GraphicLegend then TGR32GraphicLegend(r).ParamPropChanged;
+  for r in Regions do if r is TGR32Region then TGR32Region(r).ParamPropChanged;
 end;
 
 
@@ -193,7 +213,7 @@ begin
   if Column.Visible and Row.Visible then FBitmap.DrawTo(Plot.CanvasHandle, FCanvasShowRect, FBitmapShowRect);
 end;
 
-procedure TGR32GraphicLegend.ParamChanged;
+procedure TGR32GraphicLegend.ParamCollectionChanged;
 begin
   UpdateRange;
   FRangeBar.SetParams(FRange, ClientRect.Height);
@@ -206,7 +226,7 @@ end;
 
 procedure TGR32GraphicLegend.ParamPropChanged;
 begin
-  ParamChanged;
+  ParamCollectionChanged;
 end;
 
 procedure TGR32GraphicLegend.ParentFontChanged;
@@ -358,6 +378,67 @@ begin
   FBitmapShowRect := TRect.Create(origin, FCanvasShowRect.Width, FCanvasShowRect.Height);
 end;
 {$ENDREGION}
+
+
+{ TGR32GraphicData }
+
+constructor TGR32GraphicData.Create(Collection: TCollection);
+begin
+  inherited;
+
+end;
+
+destructor TGR32GraphicData.Destroy;
+begin
+
+  inherited;
+end;
+
+procedure TGR32GraphicData.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  inherited;
+
+end;
+
+procedure TGR32GraphicData.MouseMove(Shift: TShiftState; X, Y: Integer);
+begin
+  inherited;
+
+end;
+
+procedure TGR32GraphicData.MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  inherited;
+
+end;
+
+procedure TGR32GraphicData.Paint;
+begin
+  inherited;
+
+end;
+
+procedure TGR32GraphicData.ParamCollectionChanged;
+begin
+
+end;
+
+procedure TGR32GraphicData.ParamPropChanged;
+begin
+
+end;
+
+procedure TGR32GraphicData.ParentFontChanged;
+begin
+  inherited;
+
+end;
+
+procedure TGR32GraphicData.SetVisible(Visible: Boolean);
+begin
+  inherited;
+
+end;
 
 initialization
   TPlotRegion.RegClsRegister(TGR32GraphicLegend, TGR32Legend, TGR32GraphicCollumn);
