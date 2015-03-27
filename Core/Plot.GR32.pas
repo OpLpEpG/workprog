@@ -3,7 +3,7 @@ unit Plot.GR32;
 interface
 
 uses System.SysUtils, System.Classes, System.Types, System.UITypes,
-     Vcl.Forms, Vcl.Graphics, Vcl.Themes, Winapi.Windows,
+     Vcl.Forms, Vcl.Graphics, Vcl.Themes, Winapi.Windows, Winapi.Messages, System.Math,
      GR32, GR32_Image, GR32_RangeBars, GR32_Blend, GR32_Polygons, GR32_VectorUtils,
      RootImpl, RootIntf, tools, debug_except, CustomPlot;
 
@@ -14,7 +14,7 @@ type
     procedure ColumnCollectionItemChanged(Item: TPlotCollectionItem); override;
   end;
 
-  TGR32Legend = class(TCustomPlotLegend)
+  TGR32LegendRow = class(TCustomPlotLegend)
   protected
     procedure DoVisibleChanged; override;
   end;
@@ -33,7 +33,6 @@ type
     FRangeBar: TCustomRangeBar;
     FRange: Integer;
     FBitmap: TBitmap32;
-    Fpp2mm: Double;
     procedure UpdateShowRect;
     procedure UpdateRange;
     procedure UpdateBitmapBaund;
@@ -54,19 +53,30 @@ type
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
   public
     constructor Create(Collection: TCollection); override;
-    property pp2mm: Double read Fpp2mm;
+//    property pp2mm: Double read Fpp2mm;
     function TryHitParametr(pos: TPoint; out Par: TPlotParam): Boolean; override;
     destructor Destroy; override;
   end;
 
   TGraphicDataState = (gdsNornal, gdsMoving, gdsSceling);
 
-  TGR32GraphicData = class(TGR32Region, IBind)
+  TGR32GraphicData = class(TGR32Region)
+   const
+    ACL_AXIS   = $F0A8A8A8;
+    ACL_AXIS_LABEL   = clBlack32;
+  private
+    FBitmapShowRect: TRect;
+    FBitmap: TBitmap32;
+    FPropertyChanged: string;
+    procedure SetPropertyChanged(const Value: string);
+    procedure Render;
   protected
+    procedure DrowAxis(ShowYlegend: boolean = True);
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
     procedure SetVisible(Visible: Boolean); override;
+    procedure SetClientRect(const Value: TRect); override;
     procedure ParamCollectionChanged; override;
     procedure ParamPropChanged; override;
     procedure ParentFontChanged; override;
@@ -74,11 +84,13 @@ type
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
+    property C_PropertyChanged: string read FPropertyChanged write SetPropertyChanged;
   end;
 
 
 implementation
 
+{$REGION 't o o l s'}
 const
   CHECKBOX_SIZE = 10;
 
@@ -129,7 +141,7 @@ end;
 
 { TGR32Legend }
 
-procedure TGR32Legend.DoVisibleChanged;
+procedure TGR32LegendRow.DoVisibleChanged;
  var
   i: Integer;
 begin
@@ -141,7 +153,6 @@ end;
 
 procedure TGR32Region.SetVisible(Visible: Boolean);
 begin
-
 end;
 
 { TGR32GraphicCollumn }
@@ -157,9 +168,9 @@ procedure TGR32GraphicCollumn.ColumnCollectionItemChanged(Item: TPlotCollectionI
  var
   r: TPlotRegion;
 begin
-  for r in Regions do if r is TGR32Region then TGR32Region(r).ParamPropChanged;
+ if Item is TPlotParam then for r in Regions do if r is TGR32Region then TGR32Region(r).ParamPropChanged;
 end;
-
+{$ENDREGION}
 
 {$REGION 'TGR32GraphicLegend'}
 
@@ -168,7 +179,6 @@ end;
 constructor TGR32GraphicLegend.Create(Collection: TCollection);
 begin
   inherited;
-  Fpp2mm := Screen.PixelsPerInch/2.54*2;
   FRangeBar := TCustomRangeBar.Create(nil);
   FRangeBar.Kind := sbVertical;
   FRangeBar.Width := 4;
@@ -210,7 +220,7 @@ end;
 
 procedure TGR32GraphicLegend.Paint;
 begin
-  if Column.Visible and Row.Visible then FBitmap.DrawTo(Plot.CanvasHandle, FCanvasShowRect, FBitmapShowRect);
+  if  Column.Visible and Row.Visible then FBitmap.DrawTo(Plot.Canvas.Handle, FCanvasShowRect, FBitmapShowRect);
 end;
 
 procedure TGR32GraphicLegend.ParamCollectionChanged;
@@ -259,8 +269,9 @@ procedure TGR32GraphicLegend.RenderLinePatam(Y: Integer; p: TLineParam);
   s: Tsize;
   AxisLabel: Double;
   posX: Double;
-
+  Fpp2mm: Double;
 begin
+  Fpp2mm := Screen.PixelsPerInch/2.54*2;
   s := FBitmap.TextExtent(p.Title);
   CaptionX := (FBitmap.Width - s.cx) div 2;
   if CaptionX < 0 then CaptionX := 0;
@@ -279,7 +290,7 @@ begin
    begin
     FBitmap.VertLineTS(Round(posX), ym, ym+8, p.Color);
     FBitmap.RenderText(Round(posX), ym, Format('%-10.5g', [AxisLabel]), 1, p.Color);
-    posX := posX + pp2mm;
+    posX := posX + Fpp2mm;
     AxisLabel := AxisLabel + 2.0/p.ScaleX;
     if Abs(AxisLabel) < 0.0000001 then AxisLabel := 0;
    end;
@@ -379,19 +390,56 @@ begin
 end;
 {$ENDREGION}
 
+{$REGION 'TGR32GraphicData'}
 
 { TGR32GraphicData }
 
 constructor TGR32GraphicData.Create(Collection: TCollection);
 begin
   inherited;
-
+  FBitmap := TBitmap32.Create;
+  TBindHelper.Bind(Self, 'C_PropertyChanged', Plot as IInterface, ['S_PropertyChanged']);
 end;
 
 destructor TGR32GraphicData.Destroy;
 begin
-
+  TBindHelper.RemoveExpressions(Self);
+  FBitmap.Free;
   inherited;
+end;
+
+procedure TGR32GraphicData.DrowAxis(ShowYlegend: boolean);
+ var
+  pp2mm: Double;
+  x, y, ylb: Double;
+  m: Integer;
+  function nextAxis(var a: Double): Integer;
+  begin
+    a := a + pp2mm;
+    Result := Round(a);
+  end;
+  function YtoBitmap(Ypos: Double): Integer;
+   var
+    pos: Double;
+  begin
+    Pos := Ypos - plot.YTopScreen;
+    Pos := Pos * pp2mm * Plot.YScale;
+    Result := Round(pos);
+  end;
+begin
+  pp2mm := Screen.PixelsPerInch/2.54*2;
+  if Plot.YMirror then m := -1 else m := 1;
+  x := 0;
+  while x < FBitmap.Width do FBitmap.VertLineTS(nextAxis(x), 0, FBitmap.Height, ACL_AXIS);
+  ylb := Trunc(Plot.YTopScreen*Plot.YScale)/Plot.YScale;// ceil mirror ????
+  y := m*YtoBitmap(ylb); { TODO : write function }
+  while y < FBitmap.Height do
+   begin
+    FBitmap.HorzLineTS(0, Round(y), FBitmap.Width, ACL_AXIS);
+    FBitmap.RenderText(0, Round(y), FloatToStr(SimpleRoundTo(Ylb, -4)), 1, ACL_AXIS_LABEL);
+    ylb := ylb + m/Plot.YScale;
+    Y := Y + pp2mm;
+   end;
 end;
 
 procedure TGR32GraphicData.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -414,8 +462,7 @@ end;
 
 procedure TGR32GraphicData.Paint;
 begin
-  inherited;
-
+  if Column.Visible and Row.Visible then FBitmap.DrawTo(Plot.Canvas.Handle, ClientRect, FBitmapShowRect);
 end;
 
 procedure TGR32GraphicData.ParamCollectionChanged;
@@ -434,13 +481,47 @@ begin
 
 end;
 
+procedure TGR32GraphicData.Render;
+ var
+  p: TPlotParam;
+  Y: Integer;
+begin
+  FBitmap.FillRect(0, 0, FBitmap.Width, FBitmap.Height, clWhite32);
+  //for p in Column do if p.Visible then p as IDataLink
+
+
+  DrowAxis;
+end;
+
+procedure TGR32GraphicData.SetClientRect(const Value: TRect);
+begin
+  inherited;
+  FBitmap.SetSize(Value.Width, value.Height);
+  FBitmapShowRect := FBitmap.BoundsRect;
+  Render;
+  Paint;
+end;
+
+procedure TGR32GraphicData.SetPropertyChanged(const Value: string);
+begin
+  FPropertyChanged := Value;
+  if Value = 'Screen' then
+   begin
+    Render;
+    Paint;
+   end;
+end;
+
 procedure TGR32GraphicData.SetVisible(Visible: Boolean);
 begin
   inherited;
 
 end;
 
+{$ENDREGION}
+
 initialization
-  TPlotRegion.RegClsRegister(TGR32GraphicLegend, TGR32Legend, TGR32GraphicCollumn);
-  RegisterClasses([TGR32GraphicCollumn, TGR32GraphicLegend, TGR32Legend]);
+  TPlotRegion.RegClsRegister(TGR32GraphicLegend, TGR32LegendRow, TGR32GraphicCollumn);
+  TPlotRegion.RegClsRegister(TGR32GraphicData, TCustomPlotData, TGR32GraphicCollumn);
+  RegisterClasses([TGR32GraphicCollumn, TGR32GraphicLegend, TGR32GraphicData, TGR32LegendRow]);
 end.

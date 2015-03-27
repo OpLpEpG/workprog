@@ -1,4 +1,4 @@
-unit PrjTool3;
+unit FileCachImpl;
 
 interface
 
@@ -6,14 +6,10 @@ uses
       DeviceIntf, ExtendIntf, RootIntf, debug_except, rootimpl, PluginAPI, Container, System.TypInfo,
       System.SyncObjs, System.DateUtils, SysUtils, Xml.XMLIntf, Xml.XMLDoc, Xml.xmldom, System.IOUtils,
       Winapi.Windows,
-      JclFileUtils,
       System.Generics.Collections,
       System.Generics.Defaults,
       System.Bindings.Helper,
-      System.Classes, tools, DBimpl,
-      FireDAC.Comp.Client,
-      FireDAC.Stan.Option,
-      Data.DB, RTTI, System.Variants;
+      System.Classes, tools;
 
 type
   EFileMappingCash = class(EBaseException);
@@ -63,8 +59,8 @@ type
 
   GFileDataFactory = record
     class function ConstructFileName(const Root: IXMLNode): string;  static;
-    class function Factory(cls: TFileDataclass; const FileName: string): IFileData; overload;  static;
-    class function Factory(cls: TFileDataclass; const Root: IXMLNode): IFileData;  overload;  static;
+    class function Factory(cls: TFileDataclass; const FileName: string): IFileData; overload; static;
+    class function Factory(cls: TFileDataclass; const Root: IXMLNode): IFileData;  overload; static;
   end;
 
 implementation
@@ -121,9 +117,12 @@ end;
 {$REGION 'TFileMappingCash'}
 
 constructor TFileMappingCash.Create(FileStrm: TFileStream);
+ var
+  gm: IGlobalMemory;
 begin
   FFile := FileStrm;
-  Cash := (GContainer as IGlobalMemory).GetMemorySize(MaxCash);
+  if Supports(GContainer, IGlobalMemory, gm) then Cash := (GContainer as IGlobalMemory).GetMemorySize(MaxCash)
+  else Cash := MaxCash;
 end;
 
 destructor TFileMappingCash.Destroy;

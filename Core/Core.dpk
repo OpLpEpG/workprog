@@ -95,7 +95,8 @@ contains
   StolGKIntf in '..\StolGKIntf.pas',
   Math.Telesistem in 'Math.Telesistem.pas',
   XMLScript.IKN in 'XMLScript.IKN.pas',
-  Plot in 'Plot.pas';
+  Plot in 'Plot.pas',
+  FileCachImpl in 'FileCachImpl.pas';
 
 end.
 

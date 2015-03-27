@@ -2,7 +2,8 @@
 
 interface
 
-uses RootImpl, RootIntf, tools, debug_except,
+uses RootImpl, RootIntf, tools, debug_except, ExtendIntf, FileCachImpl,
+     System.Bindings.Helper, System.IOUtils,
      Vcl.Grids,
      SysUtils, Controls, Messages, Winapi.Windows, Classes, System.Rtti, types,
      Vcl.Graphics, Vcl.Forms, Vcl.ExtCtrls, Vcl.Menus, Vcl.Themes, Vcl.GraphUtil;
@@ -10,15 +11,12 @@ uses RootImpl, RootIntf, tools, debug_except,
 type
   /// основной класс графиков
   TCustomPlot = class;
+  EPlotException = EBaseException;
 
   /// прямоугольник отрисовки  графиков легенды информации
   TPlotRegion = class;
   /// коллекция хранится в колонке
   TPlotRegions = class;
-
-  /// содержимое таблиц графиков
-  TPlotParam = class;
-  TPlotParams = class;
 
   /// колонки коллекция
   TPlotColumn = class;
@@ -26,6 +24,16 @@ type
   /// строки коллекция
   TPlotRow = class;
   TPlotRows = class;
+
+  /// содержимое таблиц графиков
+  EParamException = class(EPlotException);
+  TPlotParam = class;
+  TPlotParams = class;
+  /// содержимое PARAM
+  EParamFilter = class(EParamException);
+  TParamFilter = class;
+  TParamFilters = class;
+
 
   TAxisY = (axyID, axyKadr, axyDept, axyTime);
 
@@ -120,7 +128,6 @@ type
     function GetRegionsCount: Integer; override;
   published
     property Height: Integer read FLen write SetLen;
-    property Visible;
   end;
   TPlotRowClass = class of TPlotRow;
   TPlotRows = class(TCollectionColRows<TPlotRow>)
@@ -134,8 +141,14 @@ type
   protected
     function AutoSize: Boolean; override;
   end;
-  TCustomPlotLegend = class(TNoSizeblePlotRow);
-  TCustomPlotInfo = class(TNoSizeblePlotRow);
+  TCustomPlotLegend = class(TNoSizeblePlotRow)
+  published
+    [ShowProp('Показать легенду')] property Visible;
+  end;
+  TCustomPlotInfo = class(TNoSizeblePlotRow)
+    [ShowProp('Показать информацию')] property Visible;
+  end;
+
   TCustomPlotData = class(TPlotRow)
   public
     constructor Create(Collection: TCollection); override;
@@ -248,7 +261,7 @@ type
   {$REGION 'DataLink'}
   IDataLink = interface
   ['{421A0AD1-48C0-4DB0-A08D-281E0121C13D}']
-
+  //  function Get(
   end;
   TCustomDataLinkClass = class of TCustomDataLink;
   TCustomDataLink = class(TInterfacedPersistent , IDataLink)
@@ -274,9 +287,6 @@ type
   end;
   {$ENDREGION}
 
-  TParamFilters = class;
-  TParamFilter = class;
-
   TPlotParamClass = class of TPlotParam;
   TPlotParam = class(TColumnCollectionItem, IDataLink)
   private
@@ -292,6 +302,7 @@ type
     FFixedParam: boolean;
     FEUnit: string;
     FPresizion: Integer;
+    FActiveFilter: Integer;
     procedure DoContextPopup(MousePos: TPoint; var Handled: Boolean);
     procedure SetTitle(const Value: string);
     function GetLinkClass: string;
@@ -394,19 +405,26 @@ type
     property Param: TPlotParam read FParam;
   end;
        {$REGION 'коллекции параметра:  Фильтр'}
-  TParamFilter = class(TParamCollectionItem, ICaption)
+  TParamFilter = class(TParamCollectionItem, ICaption, IFileData)
+  private
+    FSourceFile: string;
+    FActiv: Boolean;
+    FIData: IFileData;
+    procedure SetSourceFile(const Value: string);
+    procedure SetActiv(const Value: Boolean);
   protected
     function GetCaption: string; virtual; abstract;
     procedure SetCaption(const Value: string);
+    property  FileData: IFileData read FIData implements IFileData;
+  published
+    [ShowProp('Активный')] property Activ: Boolean read FActiv write SetActiv default False;
+    [ShowProp('Название файла', True)] property SourceFile: string read FSourceFile write SetSourceFile;
   end;
+
   TParamFilters = class(TParamCollection<TParamFilter>, ICaption)
-  private
-    FDisplayName: string;
   protected
     function GetCaption: string;
     procedure SetCaption(const Value: string);
-  published
-   [ShowProp('Название файла', True)] property DisplayName: string read FDisplayName write FDisplayName;
   end;
 
   TWaveletFilter = class(TParamFilter)
@@ -458,6 +476,7 @@ type
   TYScrollBar = class
     Plot: TCustomPlot;
     FRow: TCustomPlotData;
+    Fpp2mm: Double;
     function GetRealScrollPosition: Integer;
     function GetRow: TCustomPlotData;
     constructor Create(Owner: TCustomPlot);
@@ -472,20 +491,23 @@ type
     property Row: TCustomPlotData read GetRow;
     function GetPosition: Integer; virtual;
     procedure SetPlotPosition(Y: Integer); virtual;
+    procedure SetPlotYScreen; virtual;
     property Position: Integer read GetPosition write SetPosition;
   end;
   TMirrorYScrollBar = class(TYScrollBar)
     function GetPosition: Integer; override;
+    procedure SetPlotYScreen; override;
     procedure SetPlotPosition(Y: Integer); override;
   end;
   {$ENDREGION}
 
   ///  клласс основной
-  EPlotException = EBaseException;
   TCustomPlot = class(TICustomControl)
   public
    const
     C_AXIS_Y_NAME: array[TAxisY] of string = ('ID','Кадр','Глубина(м.)','Время');
+    SCALE_PRESET: array[0..17] of Double =(0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5,
+                                       1, 2, 5, 10, 20, 50);
    type
     [EnumCaptions('Указать начало, Сначала, Последние, Все')]
     TYFrom = (yfmUser, yfmFirst, yfmLast, yfmALL);
@@ -507,6 +529,8 @@ type
     FOnDataAdded: TNotifyEvent;
     FYScrollBar: TYScrollBar;
     FPropertyChanged: string;
+    FYTopScreen: Double;
+    FYButtomScreen: Double;
 
     procedure UpdateColRowRegionSizes;
     procedure UpdateRegionSizes;
@@ -518,6 +542,7 @@ type
     procedure WMNCHitTest(var Msg: TWMNCHitTest); message WM_NCHITTEST;
     procedure WMSetCursor(var Msg: TWMSetCursor); message WM_SETCURSOR;
     procedure WMSize(var Message: TWMSize); message WM_SIZE;
+    procedure WMEraseBkgnd(var Msg: TWMEraseBkgnd); message WM_ERASEBKGND;
     function GetDefaultYAxisCaption: string;
     procedure SetMirror(const Value: Boolean);
     procedure SetYFrom(const Value: Double);
@@ -530,6 +555,7 @@ type
     procedure SetYLast(const Value: Double);
     procedure ChekYPosition;
     procedure SetPropertyChanged(const Value: string);
+    procedure UpdateYScreen(t, d: Double);
   protected
     /// Иызывается источником данных при поступлении данных
     procedure DataAdded; virtual;
@@ -548,10 +574,6 @@ type
     function HitRegion(pos: TPoint): TPlotRegion; overload;
     function HitRegion(c: TPlotColumn; r: TPlotRow): TPlotRegion; overload;
 
-    property YFirstAvail: Double read FYFirstAvail;
-    property YLastAvail: Double read FYLastAvail;
-    property YRangeAvail: Double read GetYRangeAvail;
-    property YLast: Double read GetYLast write SetYLast;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -559,20 +581,32 @@ type
     /// перерисовка обновленных колонок
     /// для события OnDataAdded
     procedure UpdateData;
-    function CanvasHandle: HDC;
+
+    property Canvas;
     property Font;
-    property SPropertyChanged: string read FPropertyChanged write SetPropertyChanged;
+
+    property YFirstAvail: Double read FYFirstAvail;
+    property YLastAvail: Double read FYLastAvail;
+    property YRangeAvail: Double read GetYRangeAvail;
+    property YLast: Double read GetYLast write SetYLast;
+
+    [ShowProp('TOP Y', true)] property YTopScreen: Double read FYTopScreen;
+    [ShowProp('BOT Y', true)] property YButtomScreen: Double read FYButtomScreen;
+
+
     [ShowProp('Columns')] property Columns: TPlotColumns read FColumns;
-    property Rows: TPlotRows read FRows;
+    [ShowProp('Rows')]    property Rows: TPlotRows read FRows;
     /// ID , кадр, глубина
     [ShowProp('Ось Y по умолчанию')] property DefaultYAxis: string read GetDefaultYAxisCaption;
+
+    property S_PropertyChanged: string read FPropertyChanged write SetPropertyChanged;
   published
-    [ShowProp('Инвертировать Y')] property Mirror: Boolean read FMirror write SetMirror;
-    [ShowProp('Масштаб по Y')]    property YScale: Double read FYScale write SetYScale;
+    [ShowProp('Инвертировать Y')] property YMirror: Boolean read FMirror write SetMirror;
     [ShowProp('Диапазон по Y')]   property YFromType: TYFrom read FYFromType write SetYFromType;
     [ShowProp('Начать Y с')]      property YFromData: Double read FYFrom write SetYFrom;
     [ShowProp('Диапазон Y')]      property YRangeData: Double read FYRange write SetYRange;
     [ShowProp('Позиция Y')]       property YPosition: Double read FYPosition write SetYPosition;
+    [ShowProp('Масштаб по Y')]    property YScale: Double read FYScale write SetYScale;
 
     property OnDataAdded: TNotifyEvent read FOnDataAdded write FOnDataAdded;
   end;
@@ -594,7 +628,7 @@ uses System.Math, Winapi.CommCtrl;
 
 {$REGION 'Collection'}
 
- {$REGION 'PlotCollection'}
+   {$REGION 'PlotCollection'}
 
 { TPlotCollectionItem }
 
@@ -662,7 +696,7 @@ begin
 end;
 {$ENDREGION}
 
-  {$REGION ' ColRowCollection строки колонки общее'}
+   {$REGION ' ColRowCollection строки колонки общее'}
 
 function TColRowCollectionItem.AutoSize: Boolean;
 begin
@@ -680,6 +714,7 @@ procedure TColRowCollectionItem.DoVisibleChanged;
 begin
   TCollectionColRows<TColRowCollectionItem>(Collection).UpdateSizes;
   Plot.FYScrollBar.Update;
+  Plot.FYScrollBar.SetPlotYScreen;
   Plot.UpdateRegionSizes;
 end;
 
@@ -701,6 +736,7 @@ begin
     FVisible := Value;
     if csLoading in Plot.ComponentState then Exit;
     DoVisibleChanged;
+    Plot.Repaint;
    end;
 end;
 
@@ -730,6 +766,7 @@ begin
     end
    else TColRowCollectionItem(Item).FLen := GetAllLen;
   UpdateSizes;
+  Plot.FYScrollBar.SetPlotYScreen;
   Plot.UpdateRegionSizes;
 end;
 
@@ -756,7 +793,7 @@ begin
 end;
   {$ENDREGION}
 
-  {$REGION 'Column, Row'}
+   {$REGION 'Column, Row'}
 
 { TPlotRows }
 
@@ -885,7 +922,7 @@ begin
 end;
  {$ENDREGION}
 
-  {$REGION 'структура колонки: Regions, Parameters'}
+   {$REGION 'структура колонки: Regions, Parameters'}
 
   /// коллекция колонки общее
 
@@ -951,7 +988,7 @@ procedure TPlotRegion.UpdateSize;
  var
   r: TRect;
 begin
-  r := TRect.Create(Column.Left+1, Row.Top+1, Column.Right-1, Row.Bottom-1);
+  r := TRect.Create(Column.Left+1, Row.Top+1, Column.Right, Row.Bottom);
   if r <> ClientRect then ClientRect := r;
 end;
 
@@ -1197,8 +1234,27 @@ end;
 
 { TParamFilter }
 
+procedure TParamFilter.SetActiv(const Value: Boolean);
+ var
+  f: TParamFilter;
+begin
+  if Value = True then
+   begin
+    for f in Param.Filters do f.Activ := False;
+    FActiv := True;
+    if not TFile.Exists(FSourceFile) then FIData := GFileDataFactory.Factory(TFileData, FSourceFile);
+   end
+  else FIData := nil;
+end;
+
 procedure TParamFilter.SetCaption(const Value: string);
 begin
+end;
+procedure TParamFilter.SetSourceFile(const Value: string);
+begin
+  if FSourceFile <> '' then raise EParamFilter.CreateFmt('файл %s нельзя заменить на %s',[FSourceFile, Value]);
+  if not TFile.Exists(Value) then raise EParamFilter.CreateFmt('файл %s не найден',[Value]);
+  FSourceFile := Value;
 end;
 
 { TParamFilters }
@@ -1292,7 +1348,11 @@ begin
    begin
     FItem.Index := FSwap.Index;
     if FState = pcsColMoving then FOwner.Columns.UpdateSizes()
-    else FOwner.Rows.UpdateSizes();
+    else
+     begin
+      FOwner.Rows.UpdateSizes();
+      FOwner.FYScrollBar.SetPlotYScreen;
+     end;
     FOwner.UpdateRegionSizes;
     FOwner.Repaint;
    end
@@ -1334,6 +1394,8 @@ begin
      begin
       FOwner.Rows.UpdateSizes();
       FOwner.FYScrollBar.Update;
+      FOwner.FYScrollBar.SetPlotYScreen;
+
      end;
     FOwner.UpdateRegionSizes;
     FOwner.Repaint;
@@ -1349,6 +1411,7 @@ end;
 constructor TYScrollBar.Create(Owner: TCustomPlot);
 begin
   Plot := Owner;
+  Fpp2mm := Screen.PixelsPerInch/2.54*2;
   Update
 end;
 
@@ -1377,29 +1440,29 @@ end;
 
 function TYScrollBar.Line: Integer;
 begin
-  Result := 200;
+  Result := Round(1000/3/Plot.YScale);
 end;
 
 function TYScrollBar.Page: Integer;
 begin
   Result := 1;
-  if Assigned(Row) then Result := Round(FRow.Height / Plot.YScale*100);
+  if Assigned(Row) then Result := Round(FRow.Height/Fpp2mm/Plot.YScale*1000);
   if Result = 0 then Result := 1;
 end;
 
 function TMirrorYScrollBar.GetPosition: Integer;
 begin
-  Result := Round((plot.YRangeData - (plot.YPosition - Plot.YFromData))*100);
+  Result := Round((plot.YRangeData - (plot.YPosition - Plot.YFromData))*1000);
 end;
 
 function TYScrollBar.GetPosition: Integer;
 begin
-  Result := Round((plot.YPosition - Plot.YFromData) *100);
+  Result := Round((plot.YPosition - Plot.YFromData) * 1000);
 end;
 
 function TYScrollBar.Range: Integer;
 begin
-  Result := Round(Plot.YRangeData*100);
+  Result := Round(Plot.YRangeData*1000);
 end;
 
 procedure TYScrollBar.SetPosition(Y: Integer);
@@ -1433,12 +1496,55 @@ end;
 
 procedure TMirrorYScrollBar.SetPlotPosition(Y: Integer);
 begin
-  Plot.FYPosition := Plot.YRangeData -  Y/100 + Plot.YFromData;
+  Plot.FYPosition := Plot.YRangeData - Y/1000 + Plot.YFromData;
+  SetPlotYScreen;
 end;
 
 procedure TYScrollBar.SetPlotPosition(Y: Integer);
 begin
-  Plot.FYPosition := Plot.YFromData + Y/100;
+  Plot.FYPosition := Plot.YFromData + Y/1000;
+  SetPlotYScreen;
+end;
+
+procedure TMirrorYScrollBar.SetPlotYScreen;
+ var
+  t, d, dl: Double;
+begin
+  if not Assigned(Row) then Exit;
+  dl := FRow.Height/Fpp2mm/Plot.YScale;
+  t := Plot.YPosition;
+  d := t - dl;
+  if dl > Plot.YRangeData then
+   begin
+    t := Plot.YLast;
+    d := t - dl;
+   end else if d < Plot.YFromData then
+    begin
+     d := Plot.YFromData;
+     t := d + dl;
+    end;
+  if (t <> Plot.YTopScreen) or (d <> Plot.YButtomScreen) then Plot.UpdateYScreen(t, d);
+end;
+
+procedure TYScrollBar.SetPlotYScreen;
+ var
+  t, d, dl: Double;
+begin
+  if not Assigned(Row) then Exit;
+  dl := FRow.Height/Fpp2mm /Plot.YScale;
+  t := Plot.YPosition;
+  d := t + dl;
+  if dl > Plot.YRangeData then
+   begin
+    t := Plot.YFromData;
+    d := t + dl;
+   end
+  else if d > Plot.YLast then
+   begin
+    d := Plot.YLast;
+    t := d - dl;
+   end;
+  if (t <> Plot.YTopScreen) or (d <> Plot.YButtomScreen) then Plot.UpdateYScreen(t, d);
 end;
 
 procedure TYScrollBar.UpdatePosition;
@@ -1537,14 +1643,32 @@ begin
 end;
 
 procedure TCustomPlot.CMMouseWheel(var Message: TCMMouseWheel);
+ var
+  dlt: Double;
+  i, idx: Integer;
 begin
   if Message.Result <> 0  then Exit;
   with Message do
   begin
    Result := 1;
    if ssShift in ShiftState then
-    if WheelDelta > 0 then YScale := YScale * 2
-    else YScale := YScale / 2
+    begin
+     dlt := 1000000;
+     idx := -1;
+     for i:= 0 to High(SCALE_PRESET) do if Abs(SCALE_PRESET[i]-YScale) < dlt then
+      begin
+       idx := i;
+       dlt := Abs(SCALE_PRESET[i]-YScale);
+      end;
+     if idx = -1 then
+       if WheelDelta > 0 then YScale := YScale * 2
+       else YScale := YScale / 2
+     else
+      begin
+       idx := idx + Sign(WheelDelta);
+       if (idx >= 0) and (idx < Length(SCALE_PRESET)) then YScale := SCALE_PRESET[idx];
+      end;
+    end
    else FYScrollBar.Wheel(Message);
   end
 end;
@@ -1572,6 +1696,7 @@ procedure TCustomPlot.UpdateColRowRegionSizes;
 begin
   if not HandleAllocated then Exit;
   Rows.UpdateSizes;
+  FYScrollBar.SetPlotYScreen;
   Columns.UpdateSizes;
   UpdateRegionSizes;
 end;
@@ -1583,6 +1708,13 @@ procedure TCustomPlot.UpdateRegionSizes;
 begin
   if csLoading in ComponentState then Exit;
   for c in Columns do for p in c.Regions do p.UpdateSize;
+end;
+
+procedure TCustomPlot.UpdateYScreen(t, d: Double);
+begin
+  FYTopScreen := SimpleRoundTo(t);
+  FYButtomScreen := SimpleRoundTo(d);
+  S_PropertyChanged := 'Screen';
 end;
 
 function TCustomPlot.HitColumn(pos: TPoint): TPlotColumn;
@@ -1613,6 +1745,11 @@ function TCustomPlot.HitRow(pos: TPoint): TPlotRow;
 begin
   for r in Rows do if (pos.Y >= r.Top) and (pos.Y <= r.Bottom) then Exit(r);
   raise EBaseException.Create('Нет ряда в данном месте');
+end;
+
+procedure TCustomPlot.WMEraseBkgnd(var Msg: TWMEraseBkgnd);
+begin
+  Msg.Result := 1;
 end;
 
 procedure TCustomPlot.WMNCHitTest(var Msg: TWMNCHitTest);
@@ -1757,16 +1894,18 @@ begin
   Canvas.Pen.Width := 1;
   Canvas.Pen.Style := psSolid;
   Canvas.Pen.Mode := pmCopy;
-  Canvas.Rectangle(ClientRect);
+  Canvas.moveTo(ClientWidth, 0);
+  Canvas.LineTo(0, 0);
+  Canvas.LineTo(0, ClientHeight);
   for c in Columns do if c.Visible then
    begin
     Canvas.moveTo(c.Right, 0);
-    Canvas.LineTo(c.Right, Height);
+    Canvas.LineTo(c.Right, ClientHeight);
    end;
   for r in Rows do if r.Visible then
    begin
     Canvas.moveTo(0, r.Bottom);
-    Canvas.LineTo(width, r.Bottom);
+    Canvas.LineTo(ClientWidth, r.Bottom);
    end;
 end;
 
@@ -1794,17 +1933,15 @@ begin
     FYScrollBar.Free;
     FYScrollBar := CSB[FMirror].Create(Self);
     FYScrollBar.Position := FYScrollBar.Position - FYScrollBar.Page;
+    FYScrollBar.SetPlotYScreen;
+    S_PropertyChanged := 'YMirror';
    end;
 end;
 
 procedure TCustomPlot.SetPropertyChanged(const Value: string);
 begin
   FPropertyChanged := Value;
-end;
-
-function TCustomPlot.CanvasHandle: HDC;
-begin
-  Result := Canvas.Handle;
+  TBindings.Notify(Self, 'S_PropertyChanged');
 end;
 
 procedure TCustomPlot.ChekYPosition;
@@ -1824,6 +1961,8 @@ begin
     if YLast > YLastAvail then YLast := YLastAvail;
     ChekYPosition;
     FYScrollBar.Update;
+    FYScrollBar.SetPlotYScreen;
+    S_PropertyChanged := 'YFrom';
    end;
 end;
 
@@ -1837,31 +1976,27 @@ begin
       begin
        if FYFrom < FYFirstAvail then FYFrom := FYFirstAvail;
        if YLast > YLastAvail then YLast := YLastAvail;
-       ChekYPosition;
-       FYScrollBar.Update;
       end;
      yfmFirst:
       begin
        FYFrom := FYFirstAvail;
        if FYRange > YRangeAvail then FYRange := YRangeAvail;
-       ChekYPosition;
-       FYScrollBar.Update;
       end;
      yfmLast:
       begin
        if FYRange > YRangeAvail then FYRange := YRangeAvail;
        FYFrom := FYLastAvail - FYRange;
-       ChekYPosition;
-       FYScrollBar.Update;
       end;
      yfmALL:
       begin
        FYFrom := FYFirstAvail;
        FYRange := YRangeAvail;
-       ChekYPosition;
-       FYScrollBar.Update;
       end;
    end;
+   ChekYPosition;
+   FYScrollBar.Update;
+   FYScrollBar.SetPlotYScreen;
+   S_PropertyChanged := 'YFromType';
   end;
 end;
 
@@ -1873,6 +2008,8 @@ begin
     if YLast > YLastAvail then FYRange := YLastAvail - FYFrom;
     if FYRange < 0 then FYRange := 0;
     FYScrollBar.Update;
+    FYScrollBar.SetPlotYScreen;
+    S_PropertyChanged := 'YLast';
    end;
 end;
 
@@ -1883,6 +2020,8 @@ begin
     FYPosition := Value;
     ChekYPosition;
     FYScrollBar.UpdatePosition;
+    FYScrollBar.SetPlotYScreen;
+    S_PropertyChanged := 'YPosition';
    end;
 end;
 
@@ -1893,6 +2032,8 @@ begin
     FYScale := Value;
     ChekYPosition;
     FYScrollBar.Update;
+    FYScrollBar.SetPlotYScreen;
+    S_PropertyChanged := 'YScale';
    end;
 end;
 
@@ -1906,6 +2047,8 @@ begin
       if YLast > YLastAvail then YLast := YLastAvail;
       ChekYPosition;
       FYScrollBar.Update;
+      FYScrollBar.SetPlotYScreen;
+      S_PropertyChanged := 'YRange';
      end;
     yfmLast: if (FYRange <> Value) or (YLast > YLastAvail) then
      begin
@@ -1918,6 +2061,8 @@ begin
        end;
        ChekYPosition;
        FYScrollBar.Update;
+       FYScrollBar.SetPlotYScreen;
+       S_PropertyChanged := 'YRange';
      end;
     yfmALL: if (FYRange <> YRangeAvail) or (FYFrom <> FYFirstAvail) then
      begin
@@ -1925,8 +2070,11 @@ begin
       FYRange := YRangeAvail;
       ChekYPosition;
       FYScrollBar.Update;
+      FYScrollBar.SetPlotYScreen;
+      S_PropertyChanged := 'YRange';
      end;
   end;
+
 end;
 
 function TCustomPlot.GetYLast: Double;

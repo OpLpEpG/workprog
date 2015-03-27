@@ -2,7 +2,8 @@ unit Dev.StolGK;
 
 interface
 
-uses System.SysUtils, System.Classes, Vcl.Graphics, tools, Xml.XMLIntf,
+uses System.SysUtils, System.Classes, tools, Xml.XMLIntf,
+     Vcl.Dialogs, Vcl.Graphics, System.UITypes,
      StolGKIntf, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl;
 
 type
@@ -453,6 +454,11 @@ begin
   else if Assigned(xcmd) then
    begin
     if not xcmd.HasAttribute('SYNC') and not (ssSync in FStatusStol) then raise EStolGKException.Create('Метка не найдена !!!');
+
+    if not (ssSync in FStatusStol) and not xcmd.NodeName.Contains('HOME') then
+    if MessageDlg(Format('Синхронизация положения отсутствует. Точка замера %s[%s] полжна находиться поблизости и правее текущего положения',
+     [xcmd.NodeName, xcmd.Attributes['SYNC']]), TMsgDlgType.mtWarning, [mbOK, mbCancel], 0) = mrCancel then Exit;
+
     ScennaBegin;
     setPos := False;
     dp := Fposition;

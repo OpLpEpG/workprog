@@ -2,8 +2,8 @@ object Form4: TForm4
   Left = 0
   Top = 0
   Caption = 'Form4'
-  ClientHeight = 598
-  ClientWidth = 805
+  ClientHeight = 351
+  ClientWidth = 687
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,7 +11,10 @@ object Form4: TForm4
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  OnCreate = FormCreate
+  OnShow = FormShow
+  DesignSize = (
+    687
+    351)
   PixelsPerInch = 96
   TextHeight = 13
   object Button2: TButton
@@ -98,5 +101,39 @@ object Form4: TForm4
     Caption = 'mirror'
     TabOrder = 8
     OnClick = CheckBox3Click
+  end
+  object DBGrid1: TDBGrid
+    Left = 167
+    Top = 8
+    Width = 512
+    Height = 335
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    DataSource = DataSource1
+    TabOrder = 9
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+  end
+  object DataSource1: TDataSource
+    DataSet = JvMemoryData1
+    Left = 120
+    Top = 200
+  end
+  object JvMemoryData1: TJvMemoryData
+    Active = True
+    FieldDefs = <
+      item
+        Name = 'JvMemoryData1Field1'
+        DataType = ftInteger
+      end
+      item
+        Name = 'JvMemoryData1Field2'
+        DataType = ftString
+        Size = 20
+      end>
+    Left = 112
+    Top = 264
   end
 end

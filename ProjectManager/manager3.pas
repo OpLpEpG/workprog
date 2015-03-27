@@ -109,7 +109,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
 
 implementation
 
-uses tools, PrjTool3;//, PrjTool;
+uses tools, FileCachImpl;//, PrjTool;
 
 const
   IFORMS_INI_DIR = 'IFormObjs';

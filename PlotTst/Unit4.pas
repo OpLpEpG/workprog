@@ -3,9 +3,10 @@ unit Unit4;
 interface
 
 uses CustomPlot, System.IOUtils, Plot.GR32, gr32,
+  Plot.DataSet,
   RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RTTI, Container, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Data.DB, JvMemoryDataset;
 
 type
   TForm4 = class(TForm)
@@ -18,7 +19,9 @@ type
     Button5: TButton;
     Button6: TButton;
     CheckBox3: TCheckBox;
-    procedure FormCreate(Sender: TObject);
+    DBGrid1: TDBGrid;
+    DataSource1: TDataSource;
+    JvMemoryData1: TJvMemoryData;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -28,9 +31,10 @@ type
     procedure Button5Click(Sender: TObject);
     procedure Button6Click(Sender: TObject);
     procedure CheckBox3Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     Plot: TCustomPlot;
-    procedure OnData(Sender: TObject);
+    ds: TplotDataSet;
   public
     { Public declarations }
   end;
@@ -42,7 +46,7 @@ implementation
 
 {$R *.dfm}
 
-uses DlgEditParam;
+uses DlgEditParam, Unit1;
 
 procedure TForm4.Button1Click(Sender: TObject);
  var
@@ -89,10 +93,10 @@ end;
 
 procedure TForm4.Button2Click(Sender: TObject);
 begin
-  Plot.Parent := Self;
+  Plot.Parent := Form1;
   Plot.Align := alClient;
   Plot.SendToBack;
-  Plot.Rows.Add<TGR32Legend>;
+  Plot.Rows.Add<TGR32LegendRow>;
   Plot.Rows.Add<TCustomPlotData>;
   Plot.Rows.Add<TCustomPlotInfo>;
 end;
@@ -158,7 +162,6 @@ procedure TForm4.CheckBox1Click(Sender: TObject);
 begin
   a := Plot.Rows.FindRows(TCustomPlotLegend);
   for r in a do r.Visible := CheckBox1.Checked;
-  Plot.Repaint;
 end;
 
 procedure TForm4.CheckBox2Click(Sender: TObject);
@@ -168,24 +171,27 @@ procedure TForm4.CheckBox2Click(Sender: TObject);
 begin
   a := Plot.Rows.FindRows(TCustomPlotInfo);
   for r in a do r.Visible := CheckBox2.Checked;
-  Plot.Repaint;
 end;
 
 procedure TForm4.CheckBox3Click(Sender: TObject);
 begin
-  Plot.Mirror := CheckBox3.Checked;
+  Plot.YMirror := CheckBox3.Checked;
 end;
 
-procedure TForm4.FormCreate(Sender: TObject);
+procedure TForm4.FormShow(Sender: TObject);
 begin
-  Plot := TPlot.Create(Self);
-  Plot.OnDataAdded := OnData;
-end;
-
-procedure TForm4.OnData(Sender: TObject);
-begin
-  Plot.UpdateData;
-  Plot.Repaint;
+  Form1.Show;
+  Plot := Form1.Plot;
+  ds := TplotDataSet.Create(Plot);
+  DataSource1.DataSet := ds;
+  ds.Active := True;
+//  DataSource1.DataSet.Refresh;
+//  DataSource1.DataSet.AppendRecord([1,'1111']);
+//  DataSource1.DataSet.AppendRecord([2,'1111']);
+//  DataSource1.DataSet.AppendRecord([3,'1111']);
+//  DataSource1.DataSet.AppendRecord([4,'1111']);
+//  DataSource1.DataSet.AppendRecord([5,'1111']);
+//  DataSource1.DataSet.AppendRecord([6,'1111']);
 end;
 
 end.

@@ -21,8 +21,7 @@ uses
   AbstractPlugin,
   System.Classes,
   manager3 in 'manager3.pas',
-  XMLEnumers in 'XMLEnumers.pas',
-  PrjTool3 in 'PrjTool3.pas';
+  XMLEnumers in 'XMLEnumers.pas';
 
 {$R *.res}
 

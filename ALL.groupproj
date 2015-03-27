@@ -78,6 +78,12 @@
         <Projects Include="PlotTst\Project4.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\DirectPixel\Project3.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\UserDataset\UnComponents.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -311,23 +317,35 @@
     <Target Name="Project4:Make">
         <MSBuild Projects="PlotTst\Project4.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Project3">
+        <MSBuild Projects="..\DirectPixel\Project3.dproj"/>
+    </Target>
+    <Target Name="Project3:Clean">
+        <MSBuild Projects="..\DirectPixel\Project3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project3:Make">
+        <MSBuild Projects="..\DirectPixel\Project3.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="UnComponents">
+        <MSBuild Projects="..\UserDataset\UnComponents.dproj"/>
+    </Target>
+    <Target Name="UnComponents:Clean">
+        <MSBuild Projects="..\UserDataset\UnComponents.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="UnComponents:Make">
+        <MSBuild Projects="..\UserDataset\UnComponents.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;ProjectManager3;ComDev;VCLTelesis;Monitor;VCLData;VCLControl3;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;ConwaysLife;Project4"/>
+        <CallTarget Targets="Core;ProjectManager;ProjectManager3;ComDev;VCLTelesis;Monitor;VCLData;VCLControl3;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;ConwaysLife;Project4;Project3;UnComponents"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ProjectManager3:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl3:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;ConwaysLife:Clean;Project4:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ProjectManager3:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl3:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;ConwaysLife:Clean;Project4:Clean;Project3:Clean;UnComponents:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;ProjectManager3:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl3:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;ConwaysLife:Make;Project4:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;ProjectManager3:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl3:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;ConwaysLife:Make;Project4:Make;Project3:Make;UnComponents:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
-        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
-            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="Metrol\Metrol.dproj">
             <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
@@ -346,16 +364,16 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
+            <ProjectGuid>{FD581887-6F0D-484F-A9BC-69B94BDC1A84}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Glubinomer\Glut.dproj">
             <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
-            <ProjectGuid>{C11B8C42-7D62-454F-9BAE-AFD5054779B7}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="BootLoader\bootLoader.dproj">
@@ -382,12 +400,6 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
-            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
             <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -400,8 +412,20 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
             <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\DirectPixel\Project3.dproj">
+            <ProjectGuid>{C34EE684-21D1-4710-94D6-46279A44C337}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -448,6 +472,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\UserDataset\UnComponents.dproj">
+            <ProjectGuid>{A5CAEF53-8783-444F-B3A1-CC83DE52DE7D}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
             <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
@@ -462,6 +492,12 @@
         </BuildGroupProject>
         <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
             <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
+            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -474,12 +510,6 @@
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='D1'">
-        <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
-            <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="Metrol\Metrol.dproj">
             <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
             <Configurations>Release</Configurations>
@@ -498,16 +528,16 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
+            <ProjectGuid>{FD581887-6F0D-484F-A9BC-69B94BDC1A84}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Glubinomer\Glut.dproj">
             <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
-            <ProjectGuid>{C11B8C42-7D62-454F-9BAE-AFD5054779B7}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="BootLoader\bootLoader.dproj">
@@ -534,12 +564,6 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
-            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
             <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -552,8 +576,20 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
             <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\DirectPixel\Project3.dproj">
+            <ProjectGuid>{C34EE684-21D1-4710-94D6-46279A44C337}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -600,6 +636,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\UserDataset\UnComponents.dproj">
+            <ProjectGuid>{A5CAEF53-8783-444F-B3A1-CC83DE52DE7D}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
             <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
             <Configurations>Release</Configurations>
@@ -610,6 +652,12 @@
             <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
             <Configurations/>
             <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
+            <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">

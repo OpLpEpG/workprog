@@ -99,6 +99,12 @@
             <Form>FormSetGPColor</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Unit1.pas">
+            <Form>Form1</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Core\FileCachImpl.pas"/>
+        <DCCReference Include="..\Core\Plot.DataSet.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
