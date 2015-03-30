@@ -5,6 +5,13 @@ interface
 uses sysutils, Classes, Controls, Db, VCL.forms, debug_except;
 
 type
+  PBuffer = ^TBuffer;
+
+  TBuffer = record
+    BookmarkData: Integer;
+    BookmarkFlag: TBookmarkFlag;
+  end;
+
   TPlotDataSet = class(TDataSet)
   private
     FRealRecordPos: Integer;
@@ -14,7 +21,9 @@ type
     function AllocRecordBuffer: TRecordBuffer; override;
     procedure FreeRecordBuffer(var Buffer: TRecordBuffer); override;
     function GetRecord(Buffer: TRecordBuffer; GetMode: TGetMode; DoCheck: Boolean): TGetResult; override;
-    function GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean; override;
+    procedure InternalInitRecord(Buffer: TRecordBuffer); override;
+    procedure InternalFirst; override;
+    procedure InternalLast; override;
     procedure InternalClose; override;
     procedure InternalHandleException; override;
     procedure InternalInitFieldDefs; override;
@@ -32,6 +41,8 @@ type
     property RecordPos: Integer read FRealRecordPos write SetRecordPosition;
   public
     constructor Create(AOwner: TComponent); override;
+    function GetCurrentRecord(Buffer: TRecBuf): Boolean; override;
+    function GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean; override;
   end;
 
 
@@ -42,39 +53,54 @@ implementation
 
 function TPlotDataSet.AllocRecordBuffer: TRecordBuffer;
 begin
-  GetMem(Result, 1000);
+  GetMem(Result, SizeOf(TBuffer));
   InternalInitRecord(Result);
 end;
 
 constructor TPlotDataSet.Create(AOwner: TComponent);
 begin
   inherited;
- BookmarkSize := Sizeof(Integer);
- RecordPos := -1;
+  BookmarkSize := Sizeof(TBuffer);
+  RecordPos := -1;
 end;
 
 procedure TPlotDataSet.FreeRecordBuffer(var Buffer: TRecordBuffer);
 begin
-  FreeMem(Buffer, 1000);
+  FreeMem(Buffer);
   Buffer := nil;
 end;
 
 procedure TPlotDataSet.GetBookmarkData(Buffer: TRecordBuffer; Data: Pointer);
 begin
-  inherited;
-
+  PBuffer(Data)^ := PBuffer(Buffer)^;
 end;
 
 function TPlotDataSet.GetBookmarkFlag(Buffer: TRecordBuffer): TBookmarkFlag;
 begin
+  Result := PBuffer(Buffer).BookmarkFlag
+end;
 
+function TPlotDataSet.GetCurrentRecord(Buffer: TRecBuf): Boolean;
+begin
+  Result := False;
+  if not IsEmpty and (GetBookmarkFlag(ActiveBuffer) = bfCurrent) then
+  begin
+    UpdateCursorPos;
+    if (RecordPos >= 0) and (RecordPos < RecordCount) then
+    begin
+     PBuffer(Buffer).BookmarkData := RecordPos;
+     PBuffer(Buffer).BookmarkFlag := bfCurrent;
+     Result := True;
+    end;
+  end;
 end;
 
 function TPlotDataSet.GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean;
- var
-  s: string;
+// var
+//  s: string;
 begin
-  if Field.Index = 0 then Pinteger(Buffer)^ := RecordPos
+  if IsEmpty then Exit(False);
+  if Field.Index = 0 then Pinteger(Buffer)^ := PBuffer(ActiveBuffer).BookmarkData
   else
    begin
    // s := RecordPos.ToString();
@@ -85,11 +111,12 @@ end;
 
 function TPlotDataSet.GetRecNo: Integer;
 begin
+  CheckActive;
+  UpdateCursorPos;
   Result := RecordPos;
 end;
 
 function TPlotDataSet.GetRecord(Buffer: TRecordBuffer; GetMode: TGetMode; DoCheck: Boolean): TGetResult;
-var Accept: Boolean;
 begin   // Дать запись. Космический код ! Править нельзя !
   Result := grOk;
   if not Assigned(Buffer) then Exit(grError);
@@ -143,8 +170,9 @@ begin   // Дать запись. Космический код ! Править нельзя !
   end;
   if Result = grOk then
    begin // Проверки на здравый смысл
-     Pinteger(Buffer)^ := RecordPos;
-     GetCalcFields(Buffer);
+     PBuffer(Buffer).BookmarkData := RecordPos;
+     PBuffer(Buffer).BookmarkFlag := bfInserted;
+//     GetCalcFields(Buffer);
    end
   else
    if (Result = grError) and DoCheck then DatabaseError('str_No_Record', Self);
@@ -157,7 +185,7 @@ end;
 
 function TPlotDataSet.GetRecordSize: Word;
 begin
-  Result := 1000;
+  Result := SizeOf(TBuffer);
 end;
 
 procedure TPlotDataSet.InternalClose;
@@ -165,10 +193,14 @@ begin
   if DefaultFields then  DestroyFields;
 end;
 
+procedure TPlotDataSet.InternalFirst;
+begin
+  RecordPos := -1;
+end;
+
 procedure TPlotDataSet.InternalGotoBookmark(Bookmark: Pointer);
 begin
-  inherited;
-
+  RecordPos := PBuffer(Bookmark).BookmarkData
 end;
 
 procedure TPlotDataSet.InternalHandleException;
@@ -191,6 +223,17 @@ begin
     end;
 end;
 
+procedure TPlotDataSet.InternalInitRecord(Buffer: TRecordBuffer);
+begin
+  PBuffer(Buffer).BookmarkData := RecordPos;
+  PBuffer(Buffer).BookmarkFlag := bfInserted;
+end;
+
+procedure TPlotDataSet.InternalLast;
+begin
+  RecordPos := GetRecordCount -1;
+end;
+
 procedure TPlotDataSet.InternalOpen;
 begin
   FieldDefs.Updated := False;
@@ -200,12 +243,12 @@ begin
   if DefaultFields then CreateFields;
   BindFields(True);
 //  ActivateBuffers;
-  InternalFirst;
 end;
 
 procedure TPlotDataSet.InternalSetToRecord(Buffer: TRecordBuffer);
 begin
-
+  RecordPos := PBuffer(Buffer).BookmarkData;
+  PBuffer(Buffer).BookmarkFlag := bfCurrent;
 end;
 
 function TPlotDataSet.IsCursorOpen: Boolean;
@@ -215,19 +258,23 @@ end;
 
 procedure TPlotDataSet.SetBookmarkData(Buffer: TRecordBuffer; Data: Pointer);
 begin
-  inherited;
-
+  PBuffer(Buffer)^ := PBuffer(Data)^;
 end;
 
 procedure TPlotDataSet.SetBookmarkFlag(Buffer: TRecordBuffer; Value: TBookmarkFlag);
 begin
-  inherited;
-
+  PBuffer(Buffer).BookmarkFlag := Value;
 end;
 
 procedure TPlotDataSet.SetRecNo(Value: Integer);
 begin
-  RecordPos := Value;
+  if (Value >= 0) and (Value < RecordCount) then
+  begin
+    DoBeforeScroll;
+    RecordPos := Value;
+    Resync([]);
+    DoAfterScroll;
+  end;
 end;
 
 procedure TPlotDataSet.SetRecordPosition(const Value: Integer);
