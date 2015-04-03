@@ -33,7 +33,6 @@ object FormRunCodes: TFormRunCodes
     BevelOuter = bvNone
     Caption = 'Panel'
     TabOrder = 0
-    ExplicitLeft = -3
     object Splitter1: TSplitter
       Left = 0
       Top = 129
@@ -80,8 +79,6 @@ object FormRunCodes: TFormRunCodes
       BevelOuter = bvNone
       PopupMenu = PopupMenu
       TabOrder = 0
-      ExplicitTop = -3
-      ExplicitWidth = 337
       DefaultCanvas = 'TTeeCanvas3D'
       PrintMargins = (
         15
@@ -138,10 +135,6 @@ object FormRunCodes: TFormRunCodes
       BevelOuter = bvNone
       PopupMenu = PopupMenu
       TabOrder = 1
-      ExplicitLeft = -3
-      ExplicitTop = 135
-      ExplicitWidth = 419
-      ExplicitHeight = 239
       DefaultCanvas = 'TTeeCanvas3D'
       PrintMargins = (
         15
@@ -248,7 +241,6 @@ object FormRunCodes: TFormRunCodes
     BorderStyle = bsNone
     PopupMenu = PopupMenu
     TabOrder = 1
-    ExplicitLeft = 384
   end
   object PopupMenu: TPopupMenu
     Left = 152

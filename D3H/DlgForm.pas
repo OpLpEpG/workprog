@@ -24,7 +24,7 @@ type
     NICON = 78;
    var
     d: array[0..256] of Byte;
-    function GetDevice: ILowLevelDeviceIO;
+    function GetDevice(var adr: Integer): ILowLevelDeviceIO;
   protected
     class function ClassIcon: Integer; override;
   public
@@ -55,12 +55,13 @@ procedure TFormDH3.btSendClick(Sender: TObject);
     i, c, saveW: Integer;
     ss: TStrings;
     lld: ILowLevelDeviceIO;
+    adr: Integer;
   begin
-    lld := GetDevice;
+    lld := GetDevice(adr);
     if Assigned(lld.IConnect) then saveW := lld.IConnect.Wait
     else saveW := 500;
     ss := TStringList.Create;
-    d[0] := $3B;
+    d[0] := (adr shl 4) or  $0B;
     d[1] := muldiv(saveW,1000,65536); // 65ms * 7
     try
      ss.Delimiter := ',';
@@ -99,14 +100,18 @@ begin
   edSend.Text := '20,11,D9,2B,A9';
 end;
 
-function TFormDH3.GetDevice: ILowLevelDeviceIO;
+function TFormDH3.GetDevice(var adr: Integer): ILowLevelDeviceIO;
  var
   d: IDevice;
   a: Integer;
   de: IDeviceEnum;
 begin
-  if Supports(GContainer, IDeviceEnum, de) then for d in de do for a in d.GetAddrs do if a = 3 then Exit(d as ILowLevelDeviceIO);
-  raise EFormDH3Error.Create('Нет устройств с адресом 3(Inclin)');
+  if Supports(GContainer, IDeviceEnum, de) then for d in de do for a in d.GetAddrs do if a in [3,14] then
+   begin
+    adr := a;
+    Exit(d as ILowLevelDeviceIO);
+   end;
+  raise EFormDH3Error.Create('Нет устройств с адресом 3, 14(Inclin)');
 end;
 
 initialization

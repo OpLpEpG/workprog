@@ -128,10 +128,14 @@ begin
 end;
 
 procedure TFormSetupRootDevice.NRemoveClick(Sender: TObject);
+ var
+  i: Integer;
 begin
   if Assigned(FEditData.SubDevice) then
    begin
-    FDev.Remove(FEditData.SubDevice);
+    i := FDev.Index(FEditData.SubDevice);
+    FEditData.SubDevice := nil;
+    FDev.Remove(i);
     UpdateTree;
     (FDev as IBind).Notify('S_PublishedChanged');
    end;
@@ -222,12 +226,17 @@ function TFormSetupRootDevice.Execute(InputData: IRootDevice): Boolean;
     smd: TSubDevaModelData;
   begin
     SetLength(FModels, 0);
-    for m in d do if GContainer.TryGetInstance(m, i) and Supports(i, ISubDevice, sd) then
+    for m in d do
      begin
-      smd.Model := m;
-      smd.DevInfo := sd.Category;
-      smd.Caption := sd.Caption;
-      CArray.Add<TSubDevaModelData>(FModels, smd);
+    //  TRegistration.Create(m).AddInstance('tmp', '');
+      if GContainer.TryGetInstance(m, i) and Supports(i, ISubDevice, sd) then
+       begin
+        smd.Model := m;
+        smd.DevInfo := sd.Category;
+        smd.Caption := sd.Caption;
+        CArray.Add<TSubDevaModelData>(FModels, smd);
+      //  GContainer.RemoveInstance(m, 'tmp');
+       end;
      end;
   end;
 begin

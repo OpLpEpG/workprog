@@ -14,6 +14,7 @@ type
 
   TPlotDataSet = class(TDataSet)
   private
+    FActive: Boolean;
     FRealRecordPos: Integer;
     procedure SetRecordPosition(const Value: Integer);
   protected
@@ -39,6 +40,7 @@ type
     procedure SetBookmarkFlag(Buffer:TRecordBuffer; Value: TBookmarkFlag); override;
     procedure InternalGotoBookmark(Bookmark: Pointer); override;
     property RecordPos: Integer read FRealRecordPos write SetRecordPosition;
+    function getID(pos: Integer): Integer;
   public
     constructor Create(AOwner: TComponent); override;
     function GetCurrentRecord(Buffer: TRecBuf): Boolean; override;
@@ -96,17 +98,27 @@ begin
 end;
 
 function TPlotDataSet.GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean;
-// var
-//  s: string;
+ var
+  s: AnsiString;
 begin
   if IsEmpty then Exit(False);
-  if Field.Index = 0 then Pinteger(Buffer)^ := PBuffer(ActiveBuffer).BookmarkData
+  if Field.Index = 0 then Pinteger(Buffer)^ := getID(PBuffer(ActiveBuffer).BookmarkData)
   else
    begin
-   // s := RecordPos.ToString();
-   // Move(s, Buffer, Field.Size);
+    case PBuffer(ActiveBuffer).BookmarkFlag of
+      bfCurrent: s := 'Current';
+      bfBOF: s := 'BOF';
+      bfEOF: s := 'EOF';
+      bfInserted: s := 'Inserted';
+    end;
+    Move(s[1], Buffer[0], Length(s)*SizeOf(AnsiChar));
    end;
   Result := True;
+end;
+
+function TPlotDataSet.getID(pos: Integer): integer;
+begin
+  Result := RecordCount - pos - 1;
 end;
 
 function TPlotDataSet.GetRecNo: Integer;
@@ -171,7 +183,7 @@ begin   // Дать запись. Космический код ! Править нельзя !
   if Result = grOk then
    begin // Проверки на здравый смысл
      PBuffer(Buffer).BookmarkData := RecordPos;
-     PBuffer(Buffer).BookmarkFlag := bfInserted;
+     PBuffer(Buffer).BookmarkFlag := bfCurrent;
 //     GetCalcFields(Buffer);
    end
   else
@@ -180,7 +192,7 @@ end;
 
 function TPlotDataSet.GetRecordCount: Integer;
 begin
-  Result := 200;
+  Result := 100;
 end;
 
 function TPlotDataSet.GetRecordSize: Word;
@@ -190,6 +202,7 @@ end;
 
 procedure TPlotDataSet.InternalClose;
 begin
+  FActive := False;
   if DefaultFields then  DestroyFields;
 end;
 
@@ -225,8 +238,8 @@ end;
 
 procedure TPlotDataSet.InternalInitRecord(Buffer: TRecordBuffer);
 begin
-  PBuffer(Buffer).BookmarkData := RecordPos;
-  PBuffer(Buffer).BookmarkFlag := bfInserted;
+//  PBuffer(Buffer).BookmarkData := RecordPos;
+//  PBuffer(Buffer).BookmarkFlag := bfCurrent;
 end;
 
 procedure TPlotDataSet.InternalLast;
@@ -236,6 +249,7 @@ end;
 
 procedure TPlotDataSet.InternalOpen;
 begin
+  FActive := True;
   FieldDefs.Updated := False;
   FieldDefs.Update;
   FieldDefList.Update;
@@ -248,12 +262,12 @@ end;
 procedure TPlotDataSet.InternalSetToRecord(Buffer: TRecordBuffer);
 begin
   RecordPos := PBuffer(Buffer).BookmarkData;
-  PBuffer(Buffer).BookmarkFlag := bfCurrent;
+//  PBuffer(Buffer).BookmarkFlag := bfCurrent;
 end;
 
 function TPlotDataSet.IsCursorOpen: Boolean;
 begin
-  Result := Active
+  Result := FActive
 end;
 
 procedure TPlotDataSet.SetBookmarkData(Buffer: TRecordBuffer; Data: Pointer);

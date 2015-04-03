@@ -214,7 +214,8 @@ type
   IRootDevice = interface
   ['{3B0C08A9-E077-4F97-AC56-3A064B443C6D}']
     function GetSubDevices: TArray<ISubDevice>;
-    procedure Remove(SubDevice: ISubDevice);
+    function Index(SubDevice: ISubDevice): Integer;
+    procedure Remove(Index: Integer);
     function AddOrReplase(SubDeviceType: ModelType): ISubDevice;
     function TryMove(SubDevice: ISubDevice; UpTrueDownFalse: Boolean): Boolean;
     function GetService: PTypeInfo;

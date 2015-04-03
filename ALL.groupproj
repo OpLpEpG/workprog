@@ -9,9 +9,6 @@
         <Projects Include="ProjectManager\ProjectManager.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="ProjectManager\ProjectManager3.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="ComDll\ComDev.dproj">
             <Dependencies/>
         </Projects>
@@ -22,9 +19,6 @@
             <Dependencies/>
         </Projects>
         <Projects Include="VCLData\VCLData.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="VCLControl\VCLControl3.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="VCLControl\VCLControl.dproj">
@@ -75,7 +69,16 @@
         <Projects Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="ProjectManager\ProjectManager3.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="PlotTst\Project4.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLControl\VCLControl3.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -103,15 +106,6 @@
     </Target>
     <Target Name="ProjectManager:Make">
         <MSBuild Projects="ProjectManager\ProjectManager.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="ProjectManager3">
-        <MSBuild Projects="ProjectManager\ProjectManager3.dproj"/>
-    </Target>
-    <Target Name="ProjectManager3:Clean">
-        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="ProjectManager3:Make">
-        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Make"/>
     </Target>
     <Target Name="ComDev">
         <MSBuild Projects="ComDll\ComDev.dproj"/>
@@ -148,15 +142,6 @@
     </Target>
     <Target Name="VCLData:Make">
         <MSBuild Projects="VCLData\VCLData.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="VCLControl3">
-        <MSBuild Projects="VCLControl\VCLControl3.dproj"/>
-    </Target>
-    <Target Name="VCLControl3:Clean">
-        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="VCLControl3:Make">
-        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Make"/>
     </Target>
     <Target Name="VCLControl">
         <MSBuild Projects="VCLControl\VCLControl.dproj"/>
@@ -302,6 +287,15 @@
     <Target Name="ConwaysLife:Make">
         <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj" Targets="Make"/>
     </Target>
+    <Target Name="ProjectManager3">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj"/>
+    </Target>
+    <Target Name="ProjectManager3:Clean">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProjectManager3:Make">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Project4">
         <MSBuild Projects="PlotTst\Project4.dproj"/>
     </Target>
@@ -311,17 +305,41 @@
     <Target Name="Project4:Make">
         <MSBuild Projects="PlotTst\Project4.dproj" Targets="Make"/>
     </Target>
+    <Target Name="ObjectFields">
+        <MSBuild Projects="..\mULTILINE_TDbGrid_title\ObjectFields.dproj"/>
+    </Target>
+    <Target Name="ObjectFields:Clean">
+        <MSBuild Projects="..\mULTILINE_TDbGrid_title\ObjectFields.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ObjectFields:Make">
+        <MSBuild Projects="..\mULTILINE_TDbGrid_title\ObjectFields.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLControl3">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj"/>
+    </Target>
+    <Target Name="VCLControl3:Clean">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLControl3:Make">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;ProjectManager3;ComDev;VCLTelesis;Monitor;VCLData;VCLControl3;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;ConwaysLife;Project4"/>
+        <CallTarget Targets="Core;ProjectManager;ComDev;VCLTelesis;Monitor;VCLData;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;ConwaysLife;ProjectManager3;Project4;ObjectFields;VCLControl3"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ProjectManager3:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl3:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;ConwaysLife:Clean;Project4:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;ConwaysLife:Clean;ProjectManager3:Clean;Project4:Clean;ObjectFields:Clean;VCLControl3:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;ProjectManager3:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl3:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;ConwaysLife:Make;Project4:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;ConwaysLife:Make;ProjectManager3:Make;Project4:Make;ObjectFields:Make;VCLControl3:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
+        <BuildGroupProject Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
+            <ProjectGuid>{3F5B4110-95F0-4BF2-BBD2-7380C565B4FD}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Metrol\Metrol.dproj">
             <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
@@ -340,16 +358,16 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
+            <ProjectGuid>{FD581887-6F0D-484F-A9BC-69B94BDC1A84}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Glubinomer\Glut.dproj">
             <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
-            <ProjectGuid>{C11B8C42-7D62-454F-9BAE-AFD5054779B7}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="BootLoader\bootLoader.dproj">
@@ -382,17 +400,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
-            <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="D3H\D3H.dproj">
             <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
+            <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
             <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
@@ -448,10 +466,10 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
-            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
+        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
+            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
@@ -460,10 +478,10 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
-            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
+        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
+            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
@@ -474,6 +492,12 @@
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='D1'">
+        <BuildGroupProject Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
+            <ProjectGuid>{3F5B4110-95F0-4BF2-BBD2-7380C565B4FD}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Metrol\Metrol.dproj">
             <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
             <Configurations>Release</Configurations>
@@ -492,16 +516,16 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
+            <ProjectGuid>{FD581887-6F0D-484F-A9BC-69B94BDC1A84}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Glubinomer\Glut.dproj">
             <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
-            <ProjectGuid>{C11B8C42-7D62-454F-9BAE-AFD5054779B7}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="BootLoader\bootLoader.dproj">
@@ -534,15 +558,15 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
-            <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="D3H\D3H.dproj">
             <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
             <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
+            <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>

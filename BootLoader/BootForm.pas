@@ -123,6 +123,7 @@ begin
   inherited ;
   CArray.Add<TChip>(Chips, Tchip.Create(1,  64, $34, 128, 'ATMega88'));
   CArray.Add<TChip>(Chips, Tchip.Create(2, 128, $7C, 128, 'ATMega164'));
+  CArray.Add<TChip>(Chips, Tchip.Create(3, 128, $A9, 128, 'ATMega164_0xA9'));
   SetAdr(-1);
   SetChip(-1);
   SetSerial(-1);

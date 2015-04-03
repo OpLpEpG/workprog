@@ -546,7 +546,7 @@ begin
   case fLiveTime of
    ltAttribute: raise Exception.Create('ltAttribute');
    ltSingletonNamed: raise Exception.Create('ltSingletonNamed');
-   ltTransientNamed: raise Exception.Create('ltTransientNamed');
+//   ltTransientNamed: raise Exception.Create('ltTransientNamed');
   end;
   CreateInstance.GetInterface(IInterface, Result);
   if fLiveTime = ltSingleton then fSingleton := Result;    // AtomicCmpExchange(fSingleton, Result, nil);

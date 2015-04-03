@@ -506,7 +506,7 @@ begin
        begin
         TPars.SetInfo(FMetaDataInfo.Info, Data, n); // parse all data for device
 
-     //   FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'caliper.xml');
+        //FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'Devices\tst_telesis1.xml');
 
         CArray.Add<Integer>(TmpGood,  adr);
        end

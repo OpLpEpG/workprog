@@ -39,9 +39,10 @@ type
      constructor Create; reintroduce; overload; virtual;
      constructor Create(Collection: TCollection); overload; override; final;
      destructor Destroy; override;
-     function Owner: TRootDevice; inline;
+     function GetOwner: TRootDevice; inline;
      property Category: TSubDeviceInfo read GetCategory;
      property Caption: string read GetCaption;
+     property Owner: TRootDevice read GetOwner;
    published
      property IName: String read GetItemName write FIName;
    end;
@@ -79,7 +80,7 @@ type
      property OwnerDevice: TIComponent read FOwner;
   end;
 
-  TRootDevice = class(TDevice, IRootDevice, INotifyBeforeRemove)
+  TRootDevice = class(TAbstractDevice, IRootDevice, INotifyBeforeRemove)
   private
     function TryFindAvailIndex(const Category: string; out idx: Integer; needFreeUniqe: boolean): Boolean;
     procedure UpdateParents;
@@ -87,7 +88,8 @@ type
     FSubDevs: TSubDevCollection;
     procedure DefineProperties(Filer: TFiler); override;
     function GetSubDevices: TArray<ISubDevice>;
-    procedure Remove(SubDevice: ISubDevice);
+    function Index(SubDevice: ISubDevice): Integer;
+    procedure Remove(Index: Integer);
     function AddOrReplase(SubDeviceType: ModelType): ISubDevice;
     function TryMove(SubDevice: ISubDevice; UpTrueDownFalse: Boolean): Boolean;
     function GetService: PTypeInfo; virtual; abstract;
@@ -128,12 +130,12 @@ procedure TRootDevice.UpdateParents;
   i: Integer;
 begin
   if FSubDevs.Count = 0 then Exit;
+  TSubDev(FSubDevs.Items[FSubDevs.Count-1]).FSubDevice := nil;
   for i := 1 to FSubDevs.Count-1 do
    begin
     TDebug.Log('%d ', [i]);
     TSubDev(FSubDevs.Items[i-1]).FSubDevice := TSubDev(FSubDevs.Items[i]);
    end;
-  TSubDev(FSubDevs.Items[FSubDevs.Count-1]).FSubDevice := nil;
 end;
 
 destructor TRootDevice.Destroy;
@@ -206,19 +208,21 @@ begin
   UpdateParents;
 end;
 
-procedure TRootDevice.Remove(SubDevice: ISubDevice);
+function TRootDevice.Index(SubDevice: ISubDevice): Integer;
  var
   i: Integer;
 begin
-  for i := 0 to FSubDevs.Count-1 do if TSubDev(FSubDevs.Items[i]) as ISubDevice = SubDevice then
-   begin
-    GContainer.RemoveInstKnownServ(GetService(), SubDevice.IName);
-    TSubDev(FSubDevs.Items[i]).OnUserRemove;
-    FSubDevs.Delete(i);
-    UpdateParents;
-    MainScreenChanged;
-    Break;
-   end;
+  Result := -1;
+  for i := 0 to FSubDevs.Count-1 do if TSubDev(FSubDevs.Items[i]) as ISubDevice = SubDevice then Exit(i);
+end;
+
+procedure TRootDevice.Remove(Index: Integer);
+begin
+  GContainer.RemoveInstKnownServ(GetService(), TSubDev(FSubDevs.Items[Index]).IName);
+  TSubDev(FSubDevs.Items[Index]).OnUserRemove;
+  FSubDevs.Delete(Index);
+  UpdateParents;
+  MainScreenChanged;
 end;
 
 function TRootDevice.TryFindAvailIndex(const Category: string; out idx: Integer; needFreeUniqe: boolean): Boolean;
@@ -272,8 +276,8 @@ end;
 
 constructor TSubDev.Create(Collection: TCollection);
 begin
-  Create;
   inherited;
+  Create;
 end;
 
 destructor TSubDev.Destroy;
@@ -306,9 +310,10 @@ begin
   Result := FIName;
 end;
 
-function TSubDev.Owner: TRootDevice;
+function TSubDev.GetOwner: TRootDevice;
 begin
-  Result := TRootDevice(TSubDevCollection(Collection).OwnerDevice)
+  if Assigned(Collection) then Result := TRootDevice(TSubDevCollection(Collection).OwnerDevice)
+  else Result := nil;
 end;
 
 //procedure TSubDev.SetChild(SubDevice: ISubDevice);

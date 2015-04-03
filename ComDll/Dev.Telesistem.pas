@@ -4,7 +4,7 @@ interface
 
 uses System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Dev.Telesistem.Decoder,
      Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools,
-     Math.Telesistem, System.IOUtils, Vcl.Graphics,  System.Types,
+     Math.Telesistem, System.IOUtils, Vcl.Graphics,  System.Types, Parser,   Xml.XMLIntf,
      JvExControls, JvInspector, JvComponentBase,  JvResources,
      Vcl.ExtCtrls, Vcl.Dialogs, Vcl.Forms;
 
@@ -13,12 +13,14 @@ const
 //   TELESIS_FLT: TSubDeviceInfo = (Category: 'Фильтры');
 //   TELESIS_DECODER: TSubDeviceInfo = (typ: [sdtUniqe, sdtMastExist]; Category: 'Декодер');
 
-   TELESIS_STRUCURE: array[0..4] of TSubDeviceInfo = (
+   TELESIS_STRUCURE: array[0..5] of TSubDeviceInfo = (
    (typ: [sdtUniqe, sdtMastExist]; Category: 'Усо'),
                                   (Category: 'Фильтры'),
    (typ: [sdtUniqe, sdtMastExist]; Category: 'Коррелятор'),
                                   (Category: 'Фильтры-2'),
-   (typ: [sdtUniqe, sdtMastExist]; Category: 'Декодер'));
+   (typ: [sdtUniqe, sdtMastExist]; Category: 'Декодер'),
+   (typ: [sdtUniqe, sdtMastExist]; Category: 'Данные')
+   );
 
 type
   TTelesistem = class;
@@ -32,7 +34,7 @@ type
     constructor Create(telesis: TTelesistem);
   end;
 
-  TTelesistem = class(TRootDevice)
+  TTelesistem = class(TRootDevice, IDataDevice)
   private
     procedure Start(AIConnectIO: IConnectIO);
     procedure Stop(AIConnectIO: IConnectIO);
@@ -45,7 +47,14 @@ type
     procedure Loaded; override;
     function CanClose: Boolean; override;
     procedure BeforeRemove(); override;
-  public
+
+    procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false);
+public
+    procedure InitMetaData(ev: TInfoEvent);
+    procedure RemoveMetaData;
+    procedure ExecMetrology;
+    procedure CheckWorkData;
+    procedure SaveLogData;
     procedure CheckConnect(); override;
     [DynamicAction('Установки телесистемы <I> ', '<I>', 52, '0:Телесистема', 'Установки телесистемы')]
     procedure DoSetup(Sender: IAction); override;
@@ -291,6 +300,8 @@ type
 implementation
 
 {$REGION ' Telesis '}
+
+uses Dev.Telesistem.Data;
 { TProtocolTelesis }
 
 constructor TProtocolTelesis.Create(telesis: TTelesistem);
@@ -375,6 +386,11 @@ begin
   inherited;
 end;
 
+procedure TTelesistem.ExecMetrology;
+begin
+  FExeMetr.Execute(T_WRK, 1000);
+end;
+
 function TTelesistem.GetService: PTypeInfo;
 begin
   Result := TypeInfo(ITelesistem);
@@ -386,10 +402,81 @@ begin
   Move(TELESIS_STRUCURE[0], Result[0], Length(TELESIS_STRUCURE)*SizeOf(TSubDeviceInfo));
 end;
 
+procedure TTelesistem.RemoveMetaData;
+begin
+  FMetaDataInfo.ErrAdr := FAddressArray;
+  FMetaDataInfo.Info := nil;
+  FWorkEventInfo.Work := nil;
+  fStatus := dsNoInit;
+  Notify('S_MetaDataInfo');
+end;
+
+procedure TTelesistem.InitMetaData(ev: TInfoEvent);
+ var
+  ip: IProjectData;
+  c: TCollectionItem;
+begin
+  with FMetaDataInfo do
+   begin
+    if Length(ErrAdr) = 0 then Exit;
+    if Length(FAddressArray) <> 1 then raise EBaseException.Create('Длина массива адресов устройств равна нулю');
+
+    for c in FSubDevs do if c is TCustomTeleData then
+     begin
+      Info := TCustomTeleData(c).GetMetaData;
+      break;
+     end;
+    SetLength(ErrAdr, 0);
+    if not Assigned(Info) then CArray.Add<Integer>(ErrAdr, FAddressArray[0])
+    else
+     try
+      TPars.SetMetr(Info, FExeMetr, True);
+      finally
+       try
+        if Supports(GlobalCore, IProjectData, ip) then
+           ip.SetMetaData(Self as IDevice, FAddressArray[0], FindDev(Info, FAddressArray[0]));
+
+        FWorkEventInfo.DevAdr := FAddressArray[0];
+        FWorkEventInfo.Work := FindWork(Info, FAddressArray[0]);
+
+        S_Status := dsReady;
+        if Assigned(ev) then ev(FMetaDataInfo);
+       finally
+        Notify('S_MetaDataInfo');
+       end;
+     end;
+   end;
+end;
+
 procedure TTelesistem.Loaded;
 begin
   inherited;
   Start(IConnect);
+end;
+
+procedure TTelesistem.ReadWork(ev: TWorkEvent; StdOnly: Boolean);
+begin
+  raise EBaseException.Create('ReadWork неподдерживается');
+end;
+
+procedure TTelesistem.CheckWorkData;
+begin
+  if not Assigned(FWorkEventInfo.Work) and Assigned(FMetaDataInfo.Info) then
+   begin
+    FWorkEventInfo.DevAdr := FAddressArray[0];
+    FWorkEventInfo.Work := FindWork(FMetaDataInfo.Info, FAddressArray[0]);
+   end;
+end;
+
+procedure TTelesistem.SaveLogData;
+ var
+  ip: IProjectData;
+//  ix: IProjectDataFile;
+begin
+  CheckWorkData;
+//  if Supports(GlobalCore, IProjectDataFile, ix) then ix.SaveLogData(Self as IDevice, 1000, Work, Data, n)
+  //else
+  if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, 1000, FWorkEventInfo.Work, false);
 end;
 
 procedure TTelesistem.SetConnect(AIConnectIO: IConnectIO);
@@ -1178,7 +1265,7 @@ constructor TDecoder2.Create;
 begin
   inherited;
   InitConst('TDecoderECHOForm', 'DecoderECHO_');
-  DataCnt := 16;
+  DataCnt := 11;
   DataCodLen := 17;
   FIsMul := True;
   FFltZerro := True;

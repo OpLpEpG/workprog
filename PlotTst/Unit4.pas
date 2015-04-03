@@ -21,7 +21,7 @@ type
     CheckBox3: TCheckBox;
     DBGrid1: TDBGrid;
     DataSource1: TDataSource;
-    JvMemoryData1: TJvMemoryData;
+    ms: TJvMemoryData;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -183,9 +183,10 @@ begin
   Form1.Show;
   Plot := Form1.Plot;
   ds := TplotDataSet.Create(Plot);
-  DataSource1.DataSet := ds;
-  ds.Active := True;
-//  DataSource1.DataSet.Refresh;
+//  DataSource1.DataSet := ds;
+  DataSource1.DataSet := ms;
+  DataSource1.DataSet.Active := True;
+  DataSource1.DataSet.Refresh;
 //  DataSource1.DataSet.AppendRecord([1,'1111']);
 //  DataSource1.DataSet.AppendRecord([2,'1111']);
 //  DataSource1.DataSet.AppendRecord([3,'1111']);

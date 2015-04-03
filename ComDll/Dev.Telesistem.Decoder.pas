@@ -162,6 +162,7 @@ end;
 procedure TCustomDecoder.OnDecoder(Sender: TObject);
 begin
   NotifyData;
+  if Assigned(FSubDevice) then FSubDevice.InputData(FDecoder, $12345678);
 end;
 
 end.

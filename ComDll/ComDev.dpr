@@ -32,7 +32,8 @@ uses
   SubDevImpl in 'SubDevImpl.pas',
   Dev.Telesistem.Decoder in 'Dev.Telesistem.Decoder.pas',
   Dev.StolGK in 'Dev.StolGK.pas',
-  Dev.Telesistem.Shum in 'Dev.Telesistem.Shum.pas';
+  Dev.Telesistem.Shum in 'Dev.Telesistem.Shum.pas',
+  Dev.Telesistem.Data in 'Dev.Telesistem.Data.pas';
 
 {$R *.res}
 

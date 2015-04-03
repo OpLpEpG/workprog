@@ -3,7 +3,7 @@ object Form4: TForm4
   Top = 0
   Caption = 'Form4'
   ClientHeight = 351
-  ClientWidth = 687
+  ClientWidth = 807
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,7 @@ object Form4: TForm4
   OldCreateOrder = False
   OnShow = FormShow
   DesignSize = (
-    687
+    807
     351)
   PixelsPerInch = 96
   TextHeight = 13
@@ -105,7 +105,7 @@ object Form4: TForm4
   object DBGrid1: TDBGrid
     Left = 167
     Top = 8
-    Width = 512
+    Width = 632
     Height = 335
     Anchors = [akLeft, akTop, akRight, akBottom]
     DataSource = DataSource1
@@ -117,22 +117,36 @@ object Form4: TForm4
     TitleFont.Style = []
   end
   object DataSource1: TDataSource
-    DataSet = JvMemoryData1
+    DataSet = ms
     Left = 120
     Top = 200
   end
-  object JvMemoryData1: TJvMemoryData
+  object ms: TJvMemoryData
     Active = True
     FieldDefs = <
       item
         Name = 'JvMemoryData1Field1'
-        DataType = ftInteger
+        ChildDefs = <
+          item
+            Name = 'JvMemoryData1Field1Field1'
+            DataType = ftSingle
+          end
+          item
+            Name = 'JvMemoryData1Field1Field2'
+            DataType = ftSingle
+          end
+          item
+            Name = 'JvMemoryData1Field1Field3'
+            DataType = ftSingle
+          end>
+        Size = 3
       end
       item
         Name = 'JvMemoryData1Field2'
         DataType = ftString
         Size = 20
       end>
+    ObjectView = True
     Left = 112
     Top = 264
   end

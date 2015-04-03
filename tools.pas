@@ -134,10 +134,10 @@ procedure ExecXTree(root: IXMLNode; func: Tproc<IXMLNode>; Dec: Boolean = False)
 procedure FindAllWorks(root: IXMLNode; func: TWorkDataRef);
 procedure FindAllRam(root: IXMLNode; func: TWorkDataRef);
 procedure FindAllEeprom(root: IXMLNode; func: TWorkDataRef);
-function FindDev(root: IXMLNode; adr: Byte): IXMLNode;
-function FindWork(root: IXMLNode; adr: Byte): IXMLNode;
-function FindRam(root: IXMLNode; adr: Byte): IXMLNode;
-function FindEeprom(root: IXMLNode; adr: Byte): IXMLNode;
+function FindDev(root: IXMLNode; adr: Integer): IXMLNode;
+function FindWork(root: IXMLNode; adr: Integer): IXMLNode;
+function FindRam(root: IXMLNode; adr: Integer): IXMLNode;
+function FindEeprom(root: IXMLNode; adr: Integer): IXMLNode;
 
 //function MyTimeToStr(t: TTime): string;
 //function MyStrToTime(s: string): TTime;
@@ -948,13 +948,15 @@ begin
   rec(Etalon, Test);
 end;
 
-function FindDev(root: IXMLNode; adr: Byte): IXMLNode;
+function FindDev(root: IXMLNode; adr: Integer): IXMLNode;
  var
   u: IXMLNode;
 begin
   Result := nil;
 //  if not Assigned(root) then Exit;
-  for u in XEnum(root) do if u.HasAttribute(AT_ADDR) and (u.Attributes[AT_ADDR] = adr) then Exit(u);
+  for u in XEnum(root) do
+    if u.HasAttribute(AT_ADDR) and (u.Attributes[AT_ADDR] = adr) then
+     Exit(u);
 //  Result := ExecXTree(root, function(n: IXMLNode): boolean
 //   begin
 //    if n.HasAttribute(AT_ADDR) and (n.Attributes[AT_ADDR] = adr) then Result := True
@@ -962,7 +964,7 @@ begin
 //   end);
 end;
 
-function FindWork(root: IXMLNode; adr: Byte): IXMLNode;
+function FindWork(root: IXMLNode; adr: Integer): IXMLNode;
 begin
   Result := FindDev(root, adr);
   if Assigned(Result) then
@@ -972,7 +974,7 @@ begin
    end;
 end;
 
-function FindRam(root: IXMLNode; adr: Byte): IXMLNode;
+function FindRam(root: IXMLNode; adr: Integer): IXMLNode;
 begin
   Result := FindDev(root, adr);
   if Assigned(Result) then
@@ -982,7 +984,7 @@ begin
    end;
 end;
 
-function FindEeprom(root: IXMLNode; adr: Byte): IXMLNode;
+function FindEeprom(root: IXMLNode; adr: Integer): IXMLNode;
 begin
   Result := FindDev(root, adr);
   if Assigned(Result) then

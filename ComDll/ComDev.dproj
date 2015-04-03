@@ -139,6 +139,7 @@
         <DCCReference Include="Dev.Telesistem.Decoder.pas"/>
         <DCCReference Include="Dev.StolGK.pas"/>
         <DCCReference Include="Dev.Telesistem.Shum.pas"/>
+        <DCCReference Include="Dev.Telesistem.Data.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

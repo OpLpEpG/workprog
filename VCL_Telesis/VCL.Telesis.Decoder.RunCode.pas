@@ -141,7 +141,8 @@ begin
         SeriesPorog.AddXY(0, TFSKDecoder(Data).PorogAmpCod);
         SeriesPorog.AddXY(ChartCode.BottomAxis.Maximum, TFSKDecoder(Data).PorogAmpCod);
        end;
-      Memo.Lines.Add(Format('%5d %5d %5d %15.0f',[CodeCnt, BadCodes, CodData[CodeCnt-1].Code, CodData[CodeCnt-1].Porog]));
+      if CodeCnt in [1,6,11] then Memo.Lines.Add(Format('%5d %5d %5d %15.0f',[CodeCnt, BadCodes, CodData[CodeCnt-1].Code, CodData[CodeCnt-1].Porog]))
+      else Memo.Lines.Add(Format('%5d %5d %5d %15.0f',[CodeCnt, BadCodes, CodData[CodeCnt-1].Code-1292, CodData[CodeCnt-1].Porog]))
      end;
     csCheckSP: with Data.SPData, Data.CheckSPIndex do
      begin
