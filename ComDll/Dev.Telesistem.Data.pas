@@ -4,21 +4,23 @@ interface
 
 uses System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Math.Telesistem,
      XMLScript.Math, Xml.XMLIntf,
-     Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools;
+     Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools, AVRtypes;
 
 
 type
 
-  TCustomTeleData = class(TSubDevWithForm<TTelesistemDecoder>)
+  TCustomTeleData = class(TSubDevWithForm<TPriborData>)
   private
     FFileName: string;
     FPorogXY: Integer;
     FPorogZ: Integer;
     FDMetka: Double;
+    prbo, prbz, prbao, prba: Double;
     procedure SetPorogXY(const Value: Integer);
     procedure SetPorogZ(const Value: Integer);
     function TryGetRoot(var v: Variant): Boolean;
     procedure SetDMetka(const Value: Double);
+    procedure SetPrbData(tip: TDataType; const Value, Probability: Double);
   protected
     procedure SetCollection(Value: TCollection); override;
     function GetCategory: TSubDeviceInfo; override;
@@ -31,9 +33,8 @@ type
     procedure InputData(Data: Pointer; DataSize: integer); override;
     function GetMetaData: IXMLInfo; virtual;
     property FileName: string read FFileName;
-//    property S_Otk
-//    property S_Azi
-//    property S_Otk
+    [DynamicAction('Показать окно Отклонителя', '<I>', 55, '0:Телесистема.<I>', 'Показать окно Отклонителя')]
+    procedure DoSetup(Sender: IAction); override;
   published
     [ShowProp('Порог вибрации XY')] property PorogXY: Integer read FPorogXY write SetPorogXY default 10;
     [ShowProp('Порог вибрации Z')]  property PorogZ: Integer read FPorogZ write SetPorogZ default 10;
@@ -48,9 +49,15 @@ uses Dev.Telesistem;
 
 constructor TCustomTeleData.Create;
 begin
-  inherited;
   FPorogXY := 10;
   FPorogZ := 10;
+  inherited;
+  InitConst('TOtkForm', 'OtkForm_');
+end;
+
+procedure TCustomTeleData.DoSetup(Sender: IAction);
+begin
+  inherited;
 end;
 
 function TCustomTeleData.GetCaption: string;
@@ -114,6 +121,8 @@ begin
           v.Inclin.маг_отклон1.DEV.VALUE := cor360(CodData[CodeCnt-1].Code + DMetka);
           v.Inclin.маг_отклон1.CLC.VALUE :=  cor360(CodData[CodeCnt-1].Code + deltaOtk + DMetka);
           v.Inclin.Q_маг_отклон1.DEV.VALUE := Round(CodData[CodeCnt-1].Porog);
+          SetPrbData(dtOtklonitel, v.Inclin.маг_отклон1.CLC.VALUE, v.Inclin.Q_маг_отклон1.DEV.VALUE);
+          SetPrbData(dtAO, v.Inclin.маг_отклон1.DEV.VALUE, v.Inclin.Q_маг_отклон1.DEV.VALUE);
          end;
         cdAX:
          begin
@@ -141,6 +150,8 @@ begin
           v.Inclin.маг_отклон2.DEV.VALUE := cor360(CodData[CodeCnt-1].Code + DMetka);
           v.Inclin.маг_отклон2.CLC.VALUE :=  cor360(CodData[CodeCnt-1].Code + deltaOtk + DMetka);
           v.Inclin.Q_маг_отклон2.DEV.VALUE := Round(CodData[CodeCnt-1].Porog);
+          SetPrbData(dtOtklonitel, v.Inclin.маг_отклон2.CLC.VALUE, v.Inclin.Q_маг_отклон2.DEV.VALUE);
+          SetPrbData(dtAO, v.Inclin.маг_отклон2.DEV.VALUE, v.Inclin.Q_маг_отклон2.DEV.VALUE);
          end;
         cdMy:
          begin
@@ -154,6 +165,18 @@ begin
           TTelesistem(Owner).ExecMetrology;
           v.Inclin.отклонитель.CLC.VALUE := cor360(v.Inclin.отклонитель.CLC.VALUE + DMetka);
           v.Inclin.маг_отклон.CLC.VALUE := cor360(v.Inclin.маг_отклон.CLC.VALUE + DMetka);
+
+          prbo := Min(v.Inclin.accel.Q_X.DEV.VALUE, v.Inclin.accel.Q_Y.DEV.VALUE);
+          prbz := Min(prbo, v.Inclin.accel.Q_Z.DEV.VALUE);
+
+          SetPrbData(dtOtklonitelZamer, v.Inclin.отклонитель.CLC.VALUE, prbo);
+          SetPrbData(dtZenit, v.Inclin.зенит.CLC.VALUE, prbz);
+
+          prbao := Min(v.Inclin.magnit.Q_X.DEV.VALUE, v.Inclin.magnit.Q_Y.DEV.VALUE);
+          prba := MinValue([prbao, prbz, v.Inclin.magnit.Q_Z.DEV.VALUE]);
+
+          SetPrbData(dtAOZamer, v.Inclin.маг_отклон.CLC.VALUE, prbao);
+          SetPrbData(dtAzimut, v.Inclin.азимут.CLC.VALUE, prba);
          end;
         cdDxy:
          begin
@@ -168,6 +191,9 @@ begin
            begin
             v.Inclin.статика.отклонитель.CLC.VALUE := v.Inclin.отклонитель.CLC.VALUE;
             v.Inclin.статика.маг_отклон.CLC.VALUE := v.Inclin.маг_отклон.CLC.VALUE;
+
+            SetPrbData(dtZamerZenit, v.Inclin.зенит.CLC.VALUE, prbz);
+            SetPrbData(dtZamerAzimut, v.Inclin.азимут.CLC.VALUE, prba);
            end;
          end;
         cdMOtk3:
@@ -176,6 +202,8 @@ begin
           v.Inclin.маг_отклон3.DEV.VALUE := cor360(CodData[CodeCnt-1].Code + DMetka);
           v.Inclin.маг_отклон3.CLC.VALUE :=  cor360(CodData[CodeCnt-1].Code + deltaOtk + DMetka);
           v.Inclin.Q_маг_отклон3.DEV.VALUE := Round(CodData[CodeCnt-1].Porog);
+          SetPrbData(dtOtklonitel, v.Inclin.маг_отклон3.CLC.VALUE, v.Inclin.Q_маг_отклон3.DEV.VALUE);
+          SetPrbData(dtAO, v.Inclin.маг_отклон3.DEV.VALUE, v.Inclin.Q_маг_отклон3.DEV.VALUE);
           TTelesistem(Owner).SaveLogData;
          end;
       end;
@@ -211,6 +239,14 @@ end;
 procedure TCustomTeleData.SetPorogZ(const Value: Integer);
 begin
   FPorogZ := Value;
+end;
+
+procedure TCustomTeleData.SetPrbData(tip: TDataType; const Value, Probability: Double);
+begin
+  FS_Data.DataType := tip;
+  FS_Data.Data := Value;
+  FS_Data.Probability := Probability;
+  NotifyData;
 end;
 
 function TCustomTeleData.TryGetRoot(var v: Variant): Boolean;

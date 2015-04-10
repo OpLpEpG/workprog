@@ -2,12 +2,24 @@ unit Plot.GR32;
 
 interface
 
-uses System.SysUtils, System.Classes, System.Types, System.UITypes,
+uses System.SysUtils, System.Classes, System.Types, System.UITypes, ExtendIntf,
      Vcl.Forms, Vcl.Graphics, Vcl.Themes, Winapi.Windows, Winapi.Messages, System.Math,
      GR32, GR32_Image, GR32_RangeBars, GR32_Blend, GR32_Polygons, GR32_VectorUtils,
      RootImpl, RootIntf, tools, debug_except, CustomPlot;
 
 type
+  IGR32LineCash = interface(ICashedData)
+  ['{BDB9C4F0-5B3E-43A2-8B53-C2323DC139ED}']
+  end;
+
+  TGR32LineCash = class(TAggObject, IGR32LineCash)
+
+  end;
+
+  TGR32FileDataLink = class(TFileDataLink)
+  //property Cash: ICashedData read FCash implements ICashedData
+  end;
+
   TGR32GraphicCollumn = class(TPlotColumn)
   protected
     procedure ColumnCollectionChanged(ColumnCollection: TPlotCollection); override;
@@ -487,7 +499,11 @@ procedure TGR32GraphicData.Render;
   Y: Integer;
 begin
   FBitmap.FillRect(0, 0, FBitmap.Width, FBitmap.Height, clWhite32);
-  //for p in Column do if p.Visible then p as IDataLink
+  for p in Column do if p.Visible then
+   if p is TLineParam then
+    begin
+      p as IDataLink
+    end;
 
 
   DrowAxis;

@@ -165,10 +165,11 @@ begin
   if From >= 0 then FMapPosition := From;
   if Count > Cash then Count := Cash;
   if FMapPosition < FMapFrom then Remap(FMapPosition)
-  else if (FMapPosition + Count > FMapFrom + Cash) then Remap(FMapPosition);
+  else if FMapPosition + Count > FMapFrom + Cash then Remap(FMapPosition);
   PData := FMemory + FMapPosition - FMapFrom;
-  Result := Count;
-  Inc(FMapPosition, Count);
+  if FMapPosition + Count > FMapFrom + Cash then Result := FMapFrom + Cash - FMapPosition
+  else Result := Count;
+  Inc(FMapPosition, Result);
 end;
 
 function TFileMappingCash.GetCashSize: Integer;

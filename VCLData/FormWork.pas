@@ -210,6 +210,7 @@ begin
        xd: PNodeExData;
        i: Integer;
      begin
+       if u.HasAttribute('HIDDEN') and (u.Attributes['HIDDEN'] = True) then Exit;
        chn := Tree.AddChild(Parent);
        Include(chn.States, vsExpanded);
        xd := Tree.GetNodeData(chn);

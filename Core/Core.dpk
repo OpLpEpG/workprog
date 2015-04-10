@@ -8,6 +8,7 @@
 package Core;
 
 {$R *.res}
+{$R 'OtklonitelPaintClass.dcr'}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -96,7 +97,9 @@ contains
   Math.Telesistem in 'Math.Telesistem.pas',
   XMLScript.IKN in 'XMLScript.IKN.pas',
   Plot in 'Plot.pas',
-  FileCachImpl in 'FileCachImpl.pas';
+  FileCachImpl in 'FileCachImpl.pas',
+  OtklonitelPaintClass in 'OtklonitelPaintClass.pas',
+  AVRtypes in 'AVRtypes.pas';
 
 end.
 

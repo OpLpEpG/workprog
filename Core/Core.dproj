@@ -103,7 +103,7 @@
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_Release>1</VerInfo_Release>
-        <DCC_UsePackage>vcl;rtl;vclactnband;vclimg;xmlrtl;bindengine;Jcl;JvCore;JvDocking;fs17;DataSnapCommon;DbxClientDriver;CustomIPTransport;dbexpress;vcldb;dbxcds;DBXMySQLDriver;DBXSqliteDriver;DBXFirebirdDriver;DBXSybaseASEDriver;DBXSybaseASADriver;DBXOracleDriver;DBXMSSQLDriver;DBXInformixDriver;DBXDb2Driver;DBXOdbcDriver;DBXInterBaseDriver;dbrtl;AnyDAC_Phys_D17;AnyDAC_ComI_D17;AnyDAC_Comp_D17;FireDACCommon;FireDACCommonDriver;FireDAC;fs_oleg;bindcomp;bindcompfmx;bindcompvcl;JvRuntimeDesign;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>vcl;rtl;vclactnband;vclimg;xmlrtl;bindengine;Jcl;JvCore;JvDocking;fs17;DataSnapCommon;DbxClientDriver;CustomIPTransport;dbexpress;vcldb;dbxcds;DBXMySQLDriver;DBXSqliteDriver;DBXFirebirdDriver;DBXSybaseASEDriver;DBXSybaseASADriver;DBXOracleDriver;DBXMSSQLDriver;DBXInformixDriver;DBXDb2Driver;DBXOdbcDriver;DBXInterBaseDriver;dbrtl;AnyDAC_Phys_D17;AnyDAC_ComI_D17;AnyDAC_Comp_D17;FireDACCommon;FireDACCommonDriver;FireDAC;fs_oleg;bindcomp;bindcompfmx;bindcompvcl;JvRuntimeDesign;GR32_RSXE7;fs21;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.1.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -158,6 +158,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="OtklonitelPaintClass.dcr"/>
         <DCCReference Include="xmlrtl.dcp"/>
         <DCCReference Include="rtl.dcp"/>
         <DCCReference Include="vclactnband.dcp"/>
@@ -217,6 +218,8 @@
         <DCCReference Include="XMLScript.IKN.pas"/>
         <DCCReference Include="Plot.pas"/>
         <DCCReference Include="FileCachImpl.pas"/>
+        <DCCReference Include="OtklonitelPaintClass.pas"/>
+        <DCCReference Include="AVRtypes.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -2,7 +2,7 @@ unit SetGPClolor;
 
 interface
 
-uses
+uses GR32,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Winapi.GDIPAPI, WinAPI.GDIPObj,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, JvExControls, JvInspector, JvComponentBase;
 
@@ -132,4 +132,5 @@ end;
 initialization
   TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TGPColor)));
   TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TColor)));
+  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TColor32)));
 end.

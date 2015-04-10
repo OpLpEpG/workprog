@@ -261,14 +261,39 @@ type
   {$REGION 'DataLink'}
   IDataLink = interface
   ['{421A0AD1-48C0-4DB0-A08D-281E0121C13D}']
-  //  function Get(
+    function TryRead(id: Integer; out Data: TValue): Boolean;
   end;
+
+  TYpoint = record
+   Y: Double;
+   id: Integer;
+  end;
+
+  IYDataLink = interface
+  ['{CB3CD728-5FEA-4F9F-A223-2D1E4B629FB0}']
+//    function YtoID(Y: Double): Integer;
+//    function IDtoY(id: Integer): Double;
+    procedure First;
+    function Next: Boolean;
+    function Data: TYpoint;
+  end;
+
+  TCustomYDataLink = class(TInterfacedPersistent, IYDataLink)
+  protected
+    procedure First;
+    function Next: Boolean;
+    function Data: TYpoint;
+  end;
+
   TCustomDataLinkClass = class of TCustomDataLink;
-  TCustomDataLink = class(TInterfacedPersistent , IDataLink)
+  TCustomDataLink = class(TInterfacedPersistent , IDataLink, IYDataLink)
   private
     FOwner: TPlotParam;
+  protected
+    function TryRead(id: Integer; out Data: TValue): Boolean; virtual; abstract;
   public
     constructor Create(AOwner: TPlotParam); virtual;
+  published
   end;
 
   TFileDataLink = class(TCustomDataLink)
@@ -412,10 +437,11 @@ type
     FIData: IFileData;
     procedure SetSourceFile(const Value: string);
     procedure SetActiv(const Value: Boolean);
+    function GetIData: IFileData;
   protected
     function GetCaption: string; virtual; abstract;
     procedure SetCaption(const Value: string);
-    property  FileData: IFileData read FIData implements IFileData;
+    property  FileData: IFileData read GetIData implements IFileData;
   published
     [ShowProp('Активный')] property Activ: Boolean read FActiv write SetActiv default False;
     [ShowProp('Название файла', True)] property SourceFile: string read FSourceFile write SetSourceFile;
@@ -1234,6 +1260,12 @@ end;
 
 { TParamFilter }
 
+function TParamFilter.GetIData: IFileData;
+begin
+  if not Assigned(FIData) and TFile.Exists(FSourceFile) then FIData := GFileDataFactory.Factory(TFileData, FSourceFile);
+  Result := FIData;
+end;
+
 procedure TParamFilter.SetActiv(const Value: Boolean);
  var
   f: TParamFilter;
@@ -1242,7 +1274,7 @@ begin
    begin
     for f in Param.Filters do f.Activ := False;
     FActiv := True;
-    if not TFile.Exists(FSourceFile) then FIData := GFileDataFactory.Factory(TFileData, FSourceFile);
+
    end
   else FIData := nil;
 end;

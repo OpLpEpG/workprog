@@ -81,6 +81,12 @@
         <Projects Include="VCLControl\VCLControl3.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -323,14 +329,32 @@
     <Target Name="VCLControl3:Make">
         <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Make"/>
     </Target>
+    <Target Name="CubicSpline">
+        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj"/>
+    </Target>
+    <Target Name="CubicSpline:Clean">
+        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CubicSpline:Make">
+        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Curves">
+        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj"/>
+    </Target>
+    <Target Name="Curves:Clean">
+        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Curves:Make">
+        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;ComDev;VCLTelesis;Monitor;VCLData;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;ConwaysLife;ProjectManager3;Project4;ObjectFields;VCLControl3"/>
+        <CallTarget Targets="Core;ProjectManager;ComDev;VCLTelesis;Monitor;VCLData;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;ConwaysLife;ProjectManager3;Project4;ObjectFields;VCLControl3;CubicSpline;Curves"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;ConwaysLife:Clean;ProjectManager3:Clean;Project4:Clean;ObjectFields:Clean;VCLControl3:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;ConwaysLife:Clean;ProjectManager3:Clean;Project4:Clean;ObjectFields:Clean;VCLControl3:Clean;CubicSpline:Clean;Curves:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;ConwaysLife:Make;ProjectManager3:Make;Project4:Make;ObjectFields:Make;VCLControl3:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;ConwaysLife:Make;ProjectManager3:Make;Project4:Make;ObjectFields:Make;VCLControl3:Make;CubicSpline:Make;Curves:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
@@ -366,6 +390,12 @@
         </BuildGroupProject>
         <BuildGroupProject Include="Glubinomer\Glut.dproj">
             <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
+            <ProjectGuid>{6418D24F-105B-489D-9B56-CC557926FDB4}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -408,6 +438,12 @@
         </BuildGroupProject>
         <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
             <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
+            <ProjectGuid>{24115A53-7E77-408F-9A8D-C33ED1529772}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -528,6 +564,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
+            <ProjectGuid>{6418D24F-105B-489D-9B56-CC557926FDB4}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="BootLoader\bootLoader.dproj">
             <ProjectGuid>{6A5832E5-091D-4003-992D-36A2C2F3F43D}</ProjectGuid>
             <Configurations>Release</Configurations>
@@ -566,6 +608,12 @@
         </BuildGroupProject>
         <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
             <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
+            <ProjectGuid>{24115A53-7E77-408F-9A8D-C33ED1529772}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
