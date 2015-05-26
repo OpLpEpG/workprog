@@ -115,9 +115,9 @@ begin
     if Res.DevAdr = Adr then
      begin
 //      ee.GetMetaData.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'EEP.xml');
-      FDac1 := root.DAC.нк1.DEV.VALUE shr 6;
-      FDac2 := root.DAC.нк2.DEV.VALUE shr 6;
-      FGamma := root.DAC.нгк.DEV.VALUE shr 6;
+      FDac1 := root.DAC.нк1.DEV.VALUE shr 4;
+      FDac2 := root.DAC.нк2.DEV.VALUE shr 4;
+      FGamma := root.DAC.нгк.DEV.VALUE shr 4;
       insp.RefreshValues;
       st.Panels[0].Text := 'Read GOOD';
      end;
@@ -131,9 +131,9 @@ procedure TFormDACNNk.btWriteClick(Sender: TObject);
 begin
   ee := GetDevice;
   root := XToVar(FindEeprom(ee.GetMetaData.Info, Adr));
-  Root.DAC.нк1.DEV.VALUE := FDac1 shl 6;
-  Root.DAC.нк2.DEV.VALUE := FDac2 shl 6;
-  Root.DAC.нгк.DEV.VALUE := FGamma shl 6;
+  Root.DAC.нк1.DEV.VALUE := FDac1 shl 4;
+  Root.DAC.нк2.DEV.VALUE := FDac2 shl 4;
+  Root.DAC.нгк.DEV.VALUE := FGamma shl 4;
   ee.WriteEeprom(Adr, procedure (Res: Boolean)
   begin
     if Res then st.Panels[0].Text := 'write GOOD'

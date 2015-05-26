@@ -4,7 +4,7 @@ interface
 
 uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, DBIntf, DBImpl, System.DateUtils, Actns, System.UITypes,
      RootImpl, AbstractPlugin, PluginAPI, DockIForm, DButil, System.SyncObjs, DBEnumers,
-     Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows, System.IOUtils,   ShellAPI, messages,
+     Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows, System.IOUtils,   Winapi.ShellAPI,  Winapi.Messages,
      System.SysUtils, Vcl.Graphics, System.Classes, System.Generics.Collections, System.Generics.Defaults, RTTI, System.TypInfo, Xml.XMLIntf,
      FireDAC.Phys.SQLiteWrapper,
      FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
@@ -15,6 +15,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, DBIntf, DBImpl, 
 
   TManager = class(TAbstractPlugin,
                                IManager,
+                               IProjectMetaData,
                                IProjectData,
                                IProjectOptions,
                                IMetrology{,
@@ -41,8 +42,8 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, DBIntf, DBImpl, 
     function ProjectName: string;
     procedure LoadScreen();
     procedure SaveScreen();
-    procedure NewProject(const FileName: string);
-    procedure LoadProject(const FileName: string);
+    procedure NewProject(const FileName: string; AfterCreateProject: Tproc = nil);
+    procedure LoadProject(const FileName: string; AfterCreateProject: Tproc = nil);
 
     // IProjectData,
     procedure SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
@@ -503,7 +504,7 @@ begin
   else
     Result := false;
 end;
-procedure TManager.LoadProject(const FileName: string);
+procedure TManager.LoadProject(const FileName: string; AfterCreateProject: Tproc = nil);
  procedure Exec;
  begin
     FDBConnection := nil;
@@ -513,6 +514,8 @@ procedure TManager.LoadProject(const FileName: string);
       FProject := FileName;
       FDBConnection := ConnectionsPool.GetConnection(FileName, True);
     //    InternalInitDelay;
+      if Assigned(AfterCreateProject) then AfterCreateProject();
+
       ((GlobalCore as IConnectIOEnum) as IStorable).Load;
       ((GlobalCore as IDeviceEnum) as IStorable).Load;
       Notify('S_ProjectChange');
@@ -520,6 +523,9 @@ procedure TManager.LoadProject(const FileName: string);
     else
      begin
       FProject := '';
+
+      if Assigned(AfterCreateProject) then AfterCreateProject();
+
       Notify('S_ProjectChange');
      end;
  end;
@@ -543,7 +549,7 @@ begin
   end;
 end;
 
-procedure TManager.NewProject(const FileName: string);
+procedure TManager.NewProject(const FileName: string; AfterCreateProject: Tproc = nil);
 begin
   if FileExists(FileName) then raise EManagerexception.CreateFmt('Проект %s уже существует',[FileName]);
   FileClose(FileCreate(FileName));
@@ -553,6 +559,8 @@ begin
   FDBConnection := ConnectionsPool.GetConnection(FileName, True);
   CreateTables; //project
 //  InternalInitDelay;
+  if Assigned(AfterCreateProject) then AfterCreateProject();
+
   ((GlobalCore as IConnectIOEnum) as IStorable).New;
   ((GlobalCore as IDeviceEnum) as IStorable).New;
   Notify('S_ProjectChange');

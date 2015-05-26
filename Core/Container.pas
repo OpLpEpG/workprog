@@ -294,6 +294,7 @@ type
     function Add<I1,I2,I3,I4,I5,I6: IInterface>: TRegistration<T>; overload;
     function Add<I1,I2,I3,I4,I5,I6,I7: IInterface>: TRegistration<T>; overload;
     function Add<I1,I2,I3,I4,I5,I6,I7,I8: IInterface>: TRegistration<T>; overload;
+    function Add<I1,I2,I3,I4,I5,I6,I7,I8,I9: IInterface>: TRegistration<T>; overload;
     function LiveTime(const lt: TLiveTime): TRegistration<T>;
     function SingletonPriority(const pr: Integer): TRegistration<T>;
     function AddInstance(const Inst: IInterface): TRegistration<T>; overload;
@@ -313,6 +314,7 @@ type
     class function AddType<T: class; I1,I2,I3,I4,I5,I6: IInterface>: TRegistration<T>; overload;
     class function AddType<T: class; I1,I2,I3,I4,I5,I6,I7: IInterface>: TRegistration<T>; overload;
     class function AddType<T: class; I1,I2,I3,I4,I5,I6,I7,I8: IInterface>: TRegistration<T>; overload;
+    class function AddType<T: class; I1,I2,I3,I4,I5,I6,I7,I8, I9: IInterface>: TRegistration<T>; overload;
   end;
 {$ENDREGION}
 
@@ -1168,6 +1170,12 @@ end;
 
 { TRegister}
 
+class function TRegister.AddType<T, I1, I2, I3, I4, I5, I6, I7, I8, I9>: TRegistration<T>;
+begin
+  Result.fRegist := TRegistration.Create(TypeInfo(T));
+  Result.Add<I1, I2, I3,I4,I5,I6,I7,I8,I9>;
+end;
+
 class function TRegister.AddType<T, I1, I2, I3, I4, I5, I6, I7, I8>: TRegistration<T>;
 begin
   Result.fRegist := TRegistration.Create(TypeInfo(T));
@@ -1276,6 +1284,12 @@ begin
 end;
 
 { TRegistration<T> }
+
+function TRegistration<T>.Add<I1, I2, I3, I4, I5, I6, I7, I8, I9>: TRegistration<T>;
+begin
+  Result := Self;
+  fRegist.Add(TypeInfo(I1)).Add(TypeInfo(I2)).Add(TypeInfo(I3)).Add(TypeInfo(I4)).Add(TypeInfo(I5)).Add(TypeInfo(I6)).Add(TypeInfo(I7)).Add(TypeInfo(I8)).Add(TypeInfo(I9));
+end;
 
 function TRegistration<T>.Add<I1, I2, I3, I4, I5, I6, I7, I8>: TRegistration<T>;
 begin

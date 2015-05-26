@@ -9,6 +9,9 @@
         <Projects Include="ProjectManager\ProjectManager.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="VCLControl\VCLControl.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="ComDll\ComDev.dproj">
             <Dependencies/>
         </Projects>
@@ -19,9 +22,6 @@
             <Dependencies/>
         </Projects>
         <Projects Include="VCLData\VCLData.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="VCLControl\VCLControl.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="VCLDialogs\VCLDialogs.dproj">
@@ -48,6 +48,12 @@
         <Projects Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="ProjectManager\ProjectManager3.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLControl\VCLControl3.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="GeneratePSK\CreateDev.dproj">
             <Dependencies/>
         </Projects>
@@ -66,25 +72,22 @@
         <Projects Include="Tst_Fibonachi\tstD2D1.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="ProjectManager\ProjectManager3.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="PlotTst\Project4.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="VCLControl\VCLControl3.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\DirectPixel\Project2.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\DirectPixel\Project3.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -112,6 +115,15 @@
     </Target>
     <Target Name="ProjectManager:Make">
         <MSBuild Projects="ProjectManager\ProjectManager.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLControl">
+        <MSBuild Projects="VCLControl\VCLControl.dproj"/>
+    </Target>
+    <Target Name="VCLControl:Clean">
+        <MSBuild Projects="VCLControl\VCLControl.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLControl:Make">
+        <MSBuild Projects="VCLControl\VCLControl.dproj" Targets="Make"/>
     </Target>
     <Target Name="ComDev">
         <MSBuild Projects="ComDll\ComDev.dproj"/>
@@ -148,15 +160,6 @@
     </Target>
     <Target Name="VCLData:Make">
         <MSBuild Projects="VCLData\VCLData.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="VCLControl">
-        <MSBuild Projects="VCLControl\VCLControl.dproj"/>
-    </Target>
-    <Target Name="VCLControl:Clean">
-        <MSBuild Projects="VCLControl\VCLControl.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="VCLControl:Make">
-        <MSBuild Projects="VCLControl\VCLControl.dproj" Targets="Make"/>
     </Target>
     <Target Name="VCLDialogs">
         <MSBuild Projects="VCLDialogs\VCLDialogs.dproj"/>
@@ -230,6 +233,24 @@
     <Target Name="VCLNNKDAC:Make">
         <MSBuild Projects="VCL_NNK_DAC\VCLNNKDAC.dproj" Targets="Make"/>
     </Target>
+    <Target Name="ProjectManager3">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj"/>
+    </Target>
+    <Target Name="ProjectManager3:Clean">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProjectManager3:Make">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLControl3">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj"/>
+    </Target>
+    <Target Name="VCLControl3:Clean">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLControl3:Make">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Make"/>
+    </Target>
     <Target Name="CreateDev">
         <MSBuild Projects="GeneratePSK\CreateDev.dproj"/>
     </Target>
@@ -284,24 +305,6 @@
     <Target Name="tstD2D1:Make">
         <MSBuild Projects="Tst_Fibonachi\tstD2D1.dproj" Targets="Make"/>
     </Target>
-    <Target Name="ConwaysLife">
-        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj"/>
-    </Target>
-    <Target Name="ConwaysLife:Clean">
-        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="ConwaysLife:Make">
-        <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="ProjectManager3">
-        <MSBuild Projects="ProjectManager\ProjectManager3.dproj"/>
-    </Target>
-    <Target Name="ProjectManager3:Clean">
-        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="ProjectManager3:Make">
-        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Project4">
         <MSBuild Projects="PlotTst\Project4.dproj"/>
     </Target>
@@ -319,15 +322,6 @@
     </Target>
     <Target Name="ObjectFields:Make">
         <MSBuild Projects="..\mULTILINE_TDbGrid_title\ObjectFields.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="VCLControl3">
-        <MSBuild Projects="VCLControl\VCLControl3.dproj"/>
-    </Target>
-    <Target Name="VCLControl3:Clean">
-        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="VCLControl3:Make">
-        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Make"/>
     </Target>
     <Target Name="CubicSpline">
         <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj"/>
@@ -347,14 +341,32 @@
     <Target Name="Curves:Make">
         <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Project2">
+        <MSBuild Projects="..\DirectPixel\Project2.dproj"/>
+    </Target>
+    <Target Name="Project2:Clean">
+        <MSBuild Projects="..\DirectPixel\Project2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project2:Make">
+        <MSBuild Projects="..\DirectPixel\Project2.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Project3">
+        <MSBuild Projects="..\DirectPixel\Project3.dproj"/>
+    </Target>
+    <Target Name="Project3:Clean">
+        <MSBuild Projects="..\DirectPixel\Project3.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project3:Make">
+        <MSBuild Projects="..\DirectPixel\Project3.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;ComDev;VCLTelesis;Monitor;VCLData;VCLControl;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;ConwaysLife;ProjectManager3;Project4;ObjectFields;VCLControl3;CubicSpline;Curves"/>
+        <CallTarget Targets="Core;ProjectManager;VCLControl;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;ProjectManager3;VCLControl3;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;CubicSpline;Curves;Project2;Project3"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLControl:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;ConwaysLife:Clean;ProjectManager3:Clean;Project4:Clean;ObjectFields:Clean;VCLControl3:Clean;CubicSpline:Clean;Curves:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;VCLControl:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;ProjectManager3:Clean;VCLControl3:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;CubicSpline:Clean;Curves:Clean;Project2:Clean;Project3:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLControl:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;ConwaysLife:Make;ProjectManager3:Make;Project4:Make;ObjectFields:Make;VCLControl3:Make;CubicSpline:Make;Curves:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;VCLControl:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;ProjectManager3:Make;VCLControl3:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;CubicSpline:Make;Curves:Make;Project2:Make;Project3:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
@@ -382,12 +394,6 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
-            <ProjectGuid>{FD581887-6F0D-484F-A9BC-69B94BDC1A84}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="Glubinomer\Glut.dproj">
             <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -411,6 +417,12 @@
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\DirectPixel\Project2.dproj">
+            <ProjectGuid>{003D3646-D87A-40DF-8D47-0307C92B2C13}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="CreatePSK\CreateData.dproj">
             <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
@@ -452,6 +464,12 @@
             <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\DirectPixel\Project3.dproj">
+            <ProjectGuid>{C34EE684-21D1-4710-94D6-46279A44C337}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
@@ -464,7 +482,7 @@
             <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCLData\VCLData.dproj">
             <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
@@ -552,12 +570,6 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\15.0\Samples\Object Pascal\RTL\Parallel Library\VCL\ConwaysLife.dproj">
-            <ProjectGuid>{FD581887-6F0D-484F-A9BC-69B94BDC1A84}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="Glubinomer\Glut.dproj">
             <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -579,6 +591,12 @@
         <BuildGroupProject Include="Monitor\Monitor.dproj">
             <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
             <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\DirectPixel\Project2.dproj">
+            <ProjectGuid>{003D3646-D87A-40DF-8D47-0307C92B2C13}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
@@ -620,6 +638,12 @@
         </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
             <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\DirectPixel\Project3.dproj">
+            <ProjectGuid>{C34EE684-21D1-4710-94D6-46279A44C337}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>

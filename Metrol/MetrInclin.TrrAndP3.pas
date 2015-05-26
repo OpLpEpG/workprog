@@ -61,6 +61,7 @@ function TFormInclinTrrAndP3.UserExecStep(Step: Integer; alg, trr: IXMLNode): Bo
   NMAX = 436;
 begin
   Result := True;
+  //UserExecStepUpdateStolAngle(Step, alg, trr);
   if Step = NMAX then
    begin
     if FNewAlg then

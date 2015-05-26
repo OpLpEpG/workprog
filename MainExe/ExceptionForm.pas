@@ -4,32 +4,27 @@ interface
 
 uses System.SysUtils,  ExtendIntf, RootImpl, debug_except, DeviceIntf, DockIForm,
   Winapi.Windows, Winapi.Messages, System.Variants, System.Classes, Vcl.Graphics, Rtti,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Menus,  ActiveX, ComObj, JvDockControlForm,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Menus,  Winapi.ActiveX, System.Win.ComObj, JvDockControlForm,
   Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, PluginAPI, Vcl.ActnList, Vcl.StdActns, System.Actions;
 
 type
-  TFormExceptions = class(TDockIForm, INotifyBeforeClean)
+  TFormExceptions = class(TDockIForm)
     Memo: TMemo;
-    ppM: TPopupActionBar;
-    NClear: TMenuItem;
-    N2: TMenuItem;
-    N3: TMenuItem;
-    ActionList: TActionList;
-    FileSaveAs: TFileSaveAs;
-    NShowDebug: TMenuItem;
-    NDialog: TMenuItem;
-    procedure NClearClick(Sender: TObject);
-    procedure FileSaveAsAccept(Sender: TObject);
-    procedure NDialogClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
+    procedure NDialogClick(Sender: TObject);
+    procedure NClearClick(Sender: TObject);
+    procedure NSaveAsClick(Sender: TObject);
     procedure NCloseClick(Sender: TObject);
     class procedure AsyncException(const CsName, msg, StackTrace: WideString);
   protected
-    procedure BeforeClean(var CanClean: Boolean);
+    procedure BeforeClean(var CanClean: Boolean); override;
+    procedure InitializeNewForm; override;
     function Priority: Integer; override;
     class function ClassIcon: Integer; override;
   public
+    NShowDebug: TMenuItem;
+    NDialog: TMenuItem;
     class var This: TFormExceptions;
     destructor Destroy; override;
     class procedure Init();
@@ -61,6 +56,23 @@ begin
   if Supports(Plugins, IFormEnum, fe)then fe.Add(This as Iform);
 end;
 
+procedure TFormExceptions.InitializeNewForm;
+ var
+  Item : TMenuItem;
+begin
+  inherited;
+  AddToNCMenu('-', nil, Item);
+  AddToNCMenu('Очистить', NClearClick, Item);
+  AddToNCMenu('-', nil, Item);
+  AddToNCMenu('Показывать диалог', NDialogClick, NDialog);
+  NDialog.AutoCheck := True;
+  AddToNCMenu('Показывать отладочную информацию', nil, NShowDebug);
+  NShowDebug.AutoCheck := True;
+  NShowDebug.Checked := True;
+  AddToNCMenu('-', nil, Item);
+  AddToNCMenu('Сохранить в файл...', NSaveAsClick, Item);
+end;
+
 class procedure TFormExceptions.DeInit;
 begin
   if Assigned(This) then FreeAndNil(This);
@@ -77,7 +89,7 @@ end;
 procedure TFormExceptions.BeforeClean(var CanClean: Boolean);
 begin
   CanClean := False;
-  HideDockForm(Self);
+  inherited;
 end;
 
 procedure TFormExceptions.NCloseClick(Sender: TObject);
@@ -91,14 +103,23 @@ begin
   else TDebug.ExeptionEvent := AsyncException;
 end;
 
+procedure TFormExceptions.NSaveAsClick(Sender: TObject);
+begin
+  with TSaveDialog.Create(nil) do
+  try
+   InitialDir := ExtractFilePath(ParamStr(0));
+   DefaultExt := 'txt';
+   Options := Options + [ofOverwritePrompt, ofPathMustExist];
+   Filter := 'Файл (*.txt)|*.txt';
+   if Execute(Handle) then Memo.Lines.SaveToFile(FileName);
+  finally
+   Free;
+  end;
+end;
+
 function TFormExceptions.Priority: Integer;
 begin
   Result := PRIORITY_NoStore;
-end;
-
-procedure TFormExceptions.FileSaveAsAccept(Sender: TObject);
-begin
-  Memo.Lines.SaveToFile(FileSaveAs.Dialog.FileName);
 end;
 
 procedure TFormExceptions.FormShow(Sender: TObject);

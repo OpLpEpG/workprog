@@ -4,6 +4,35 @@ interface
 
 uses System.SysUtils, Vcl.Forms, winapi.Windows, nduWlanAPI, nduWlanTypes, nduL2cmn;
 
+const
+  XML_PROFIL =
+'<?xml version="1.0" encoding="US-ASCII"?>'+
+'<WLANProfile xmlns="http://www.microsoft.com/networking/WLAN/profile/v1">'+
+    '<name>%s</name>'+
+    '<SSIDConfig>'+
+        '<SSID>'+
+            '<name>%s</name>'+
+        '</SSID>'+
+    '</SSIDConfig>'+
+    '<connectionType>ESS</connectionType>'+
+    '<connectionMode>auto</connectionMode>'+
+    '<autoSwitch>false</autoSwitch>'+
+    '<MSM>'+
+        '<security>'+
+            '<authEncryption>'+
+                '<authentication>open</authentication>'+
+                '<encryption>WEP</encryption>'+
+                '<useOneX>false</useOneX>'+
+            '</authEncryption>'+
+            '<sharedKey>'+
+                '<keyType>networkKey</keyType>'+
+                '<protected>false</protected>'+
+                '<keyMaterial>%s</keyMaterial>'+
+            '</sharedKey>'+
+        '</security>'+
+    '</MSM>'+
+'</WLANProfile>';
+
 type
   TWlan_Notification_ACM =
    (autoconf_enabled=1,
@@ -85,8 +114,8 @@ type
     function Interfaces(Update: Boolean = False): TInterfacesEnumerator;
 //    function Networks(InterfaceIndex: Cardinal = 0): TNetworksEnumerator; overload;
     function Networks(InterfaceID: TGUID): TNetworksEnumerator; overload;
-    procedure Connect(InterfaceID: TGUID; const ssid: string; Secure: Boolean; func: TResultConnect); overload;
-    procedure Connect(InterfaceID: TGUID; const ssid: string; Secure: Boolean); overload;
+    procedure Connect(InterfaceID: TGUID; const ssid, password: string; func: TResultConnect); overload;
+    procedure Connect(InterfaceID: TGUID; const ssid, password: string); overload;
     procedure DisConnect(InterfaceID: TGUID);
 //    function EditProfile(InterfaceID: TGUID; const Name: String; h: HWND): Tndu_WLAN_REASON_CODE;
     class function InterfaceStateToStr(state: Tndu_WLAN_INTERFACE_STATE): string;
@@ -246,7 +275,7 @@ end;
 //  Result.i := -1;
 //end;
 
-procedure TWlanConnection.Connect(InterfaceID: TGUID; const ssid: string; Secure: Boolean; func: TResultConnect);
+procedure TWlanConnection.Connect(InterfaceID: TGUID; const ssid, password: string; func: TResultConnect);
  var
   Res: DWORD;
   ConnParams: Tndu_WLAN_CONNECTION_PARAMETERS;
@@ -256,8 +285,8 @@ begin
   for n in Networks(InterfaceID) do if SameText(ssid, string(PAnsiChar(@n.dot11Ssid.ucSSID))) then
    begin
     ConnParams := default(Tndu_WLAN_CONNECTION_PARAMETERS);// FillChar(ConnParams, SizeOf(ConnParams), 0);
-    if Secure then ConnParams.wlanConnectionMode := wlan_connection_mode_discovery_secure
-    else ConnParams.wlanConnectionMode := wlan_connection_mode_discovery_unsecure;
+    ConnParams.wlanConnectionMode := wlan_connection_mode_temporary_profile;
+    ConnParams.strProfile := PwideChar(Format(XML_PROFIL, [ssid, ssid, password]));
     ConnParams.dot11BssType := n.dot11BssType;
     ConnParams.pDot11Ssid := @n.dot11Ssid;
     Res := WlanConnect(FClientHandle, @InterfaceID, @ConnParams, nil);
@@ -268,7 +297,7 @@ begin
   raise EWlanConnectIOException.CreateFmt('Сеть %s не найдена!', [ssid]);
 end;
 
-procedure TWlanConnection.Connect(InterfaceID: TGUID; const ssid: string; Secure: Boolean);
+procedure TWlanConnection.Connect(InterfaceID: TGUID; const ssid, password: string);
  var
   fwait: Boolean;
   reason: Tndu_WLAN_REASON_CODE;
@@ -277,7 +306,7 @@ begin
   fwait := True;
   FInnConn := True;
   try
-    Connect(InterfaceID, ssid, Secure, procedure(Code: TWlan_Notification_ACM; pD: Pndu_WLAN_CONNECTION_NOTIFICATION_DATA)
+    Connect(InterfaceID, ssid, password, procedure(Code: TWlan_Notification_ACM; pD: Pndu_WLAN_CONNECTION_NOTIFICATION_DATA)
     begin
       if Code = connection_complete then
        begin

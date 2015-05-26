@@ -120,17 +120,20 @@ type
 //  end;
 
   // Внутренний  интерфейс IManager
+  IProjectMetaData = interface
+  ['{E273ADFF-A2D3-419D-970F-5F9C31D57481}']
+    procedure SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
+  end;
+
+
   IProjectData = interface
   ['{E77FDE33-3D81-465E-9E85-B8EFB0CE1FDE}']
-//    procedure InitMetaData(Dev: IDevice; var MetaData: TMetaData);
-    procedure SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
     procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; StdOnly: Boolean = False);
     procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; CurAdr, CurKadr: Integer; CurTime: TDateTime; ModulID: Integer);
   end;
   // Внутренний  интерфейс IManager3
   IProjectDataFile = interface
   ['{BFD4B4E0-2F3D-4D46-91A6-C5EE6AA97703}']
-    procedure SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
     procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
     procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
   end;
@@ -215,7 +218,7 @@ type
   end;
 
 
-  // ************  core ********************** //
+  // ************  MainForm  ********************** //
 
   ITabFormProvider = interface
   ['{2A6743BA-EA91-41A0-A32F-3A6FEBDDB2B2}']
@@ -254,14 +257,14 @@ type
  // TWideStrings = array of WideString;
 
   ///	<summary>
-  ///	  Читает и Пишет в корень текущего экрана
+  ///	  Читает и Пишет в проект или в реестр
   ///	</summary>
   IRegistry = interface
   ['{BAABFFB6-4B3F-4788-BE0E-29FB35A787EC}']
-    procedure SaveString(const Name, Value: String);
-    function LoadString(const Name, DefValue: String): String;
-    procedure SaveArrayString(const Root: String; const Value: TArray<string>);
-    procedure LoadArrayString(const Root: String; var Value: TArray<string>);
+    procedure SaveString(const Name, Value: String; Registry: Boolean = False);
+    function LoadString(const Name, DefValue: String; Registry: Boolean = False): String;
+    procedure SaveArrayString(const Root: String; const Value: TArray<string>; Registry: Boolean = False);
+    procedure LoadArrayString(const Root: String; var Value: TArray<string>; Registry: Boolean = False);
   end;
 
   IMainScreen = interface
@@ -275,6 +278,19 @@ type
     procedure UnLock;
     property StatusBarText[index: Integer]: string read GetStatusBar write SetStatusBar;
   end;
+
+  ///	<summary>
+  ///   Основная форма проекта поддерживает
+  ///   создаются диалоги, сообщения
+  ///	</summary>
+  IProject = interface
+  ['{B3F9B7C5-D224-49B0-A7B4-5EB4541BEF5A}']
+    function New(out ProjectName: string): Boolean;
+    function Load(out ProjectName: string): Boolean;
+    function Setup: Boolean;
+    procedure Close;
+  end;
+
 
   // **********  плугин ************************
 
@@ -353,6 +369,11 @@ type
 
   ITelesistem = interface
   ['{BE13ED50-EC96-4BFD-B77D-61A32828143A}']
+  end;
+
+  ITelesisCMD = interface
+  ['{5CCFAD9E-3063-4350-8908-804D2E45E0B4}']
+    procedure SendCmd(Cmd: Byte);
   end;
 
 {$REGION 'внутренние события между динамическими классами плугинов' }

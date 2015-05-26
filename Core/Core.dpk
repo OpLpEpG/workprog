@@ -51,9 +51,8 @@ requires
   JvCore,
   JvDocking,
   fs_oleg,
-  JvRuntimeDesign,
-  fs21,
-  GR32_RSXE7;
+  GR32_RSXE8,
+  JvRuntimeDesign;
 
 contains
   AbstractPlugin in '..\AbstractPlugin.pas',

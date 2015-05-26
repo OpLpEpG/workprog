@@ -69,7 +69,7 @@ type
 
 implementation
 
-uses  Themes, UxTheme, Types;
+uses  Themes, Winapi.UxTheme, Types;
 
 {$R *.dfm}
 

@@ -11,7 +11,7 @@ const
   WM_STARTEDITING = WM_USER + 778;
   WM_ENDEDITING = WM_USER + 779;
 type
-  TFormPsk = class(TDockIForm,  IVTEditLink, INotifyBeforeClean)
+  TFormPsk = class(TDockIForm,  IVTEditLink)
     ppM: TPopupActionBar;
     N1: TMenuItem;
     NTest: TMenuItem;
@@ -131,7 +131,7 @@ type
    procedure IVTEditLink.SetBounds = SetBounds2; procedure SetBounds2(R: TRect); stdcall;
    procedure Loaded; override;
    class function ClassIcon: Integer; override;
-   procedure BeforeClean(var CanClean: Boolean);
+   procedure BeforeClean(var CanClean: Boolean);override;
    procedure BeforeRemove();  override;
   public
     [StaticAction('Новый Редактор приборов ПСК', 'Отладочные', NICON, '0:Показать.Отладочные:0')]
@@ -189,6 +189,7 @@ end;
 procedure TFormPsk.BeforeClean(var CanClean: Boolean);
 begin
   Tree.CancelEditNode;
+  inherited;
 end;
 
 procedure TFormPsk.BeforeRemove;

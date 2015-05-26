@@ -673,7 +673,7 @@ end;
 
 procedure TAbstractPsk.InitMetaData(ev: TInfoEvent);
  var
-  ip: IProjectData;
+  ip: IProjectMetaData;
 begin
   with FMetaDataInfo do
    begin
@@ -687,7 +687,10 @@ begin
       TPars.SetMetr(Info, FExeMetr, True);
       finally
        try
-        if Supports(GlobalCore, IProjectData, ip) then ip.SetMetaData(Self as IDevice, FAddressArray[0], FindDev(Info, FAddressArray[0]));
+        if Supports(GlobalCore, IProjectMetaData, ip) then
+         begin
+          ip.SetMetaData(Self as IDevice, FAddressArray[0], FindDev(Info, FAddressArray[0]));
+         end;
         S_Status := dsReady;
         FOldStatus := S_Status;
         if Assigned(ev) then ev(FMetaDataInfo);
@@ -1260,8 +1263,8 @@ procedure TPskStd.FlowDataEvent(Res: boolean; DataB: PByte; DataSize: integer);
     ww := FWorkLen div 2;
     if FSpHi = 0 then
      begin
-      //if (Data[0] = 0) and (FWorkLen+2 <= cnt) and (Data[ww] = 0) then Result := True;
-      if (Data[0] = 0) {and (FWorkLen <= cnt)} then Result := True;
+      if (Data[0] = 0) and (FWorkLen+2 <= cnt) and (Data[ww] = 0) then Result := True;
+      //if (Data[0] = 0) and (FWorkLen <= cnt) then Result := True;
      end
     else if {(FWorkLen+2+2+2 <= cnt)
          and} (Data[0] = Word(FSpHi shl 8))
@@ -1288,8 +1291,8 @@ begin
   else
    try
     i := 0;
-    //for i := 0 to DataSize-2 do if TestSP(@DataB[i], DataSize-i) then
-    if (DataSize >= FWorkLen) and TestSP(@DataB[0], DataSize) then
+    for i := 0 to DataSize-2 do if TestSP(@DataB[i], DataSize-i) then
+   // if (DataSize >= FWorkLen) and TestSP(@DataB[0], DataSize) then  // пашин вакиант
      begin
       with ConnectIO do
        begin

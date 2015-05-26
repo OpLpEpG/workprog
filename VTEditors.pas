@@ -3,7 +3,7 @@ unit VTEditors;
 interface
 
 uses Xml.XMLIntf,
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+  Winapi.Windows, Winapi.Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
   StdCtrls, VirtualTrees, ExtDlgs, ImgList, Buttons, ExtCtrls, ComCtrls,
   Mask;
 

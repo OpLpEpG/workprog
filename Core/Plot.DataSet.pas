@@ -118,7 +118,7 @@ end;
 
 function TPlotDataSet.getID(pos: Integer): integer;
 begin
-  Result := RecordCount - pos - 1;
+  Result := RecordCount - pos - 1; // pos
 end;
 
 function TPlotDataSet.GetRecNo: Integer;

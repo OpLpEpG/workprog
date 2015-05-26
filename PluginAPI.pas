@@ -2,7 +2,7 @@ unit PluginAPI;
 
 interface
 
-uses {Winapi.Messages,} System.TypInfo;
+uses {Winapi.Messages,} System.TypInfo, System.SysUtils;
 
 //const
 //     WM_SYNC = WM_USER + 10;
@@ -63,8 +63,8 @@ type
 
     function ProjectName: string;
 
-    procedure NewProject(const FileName: string);
-    procedure LoadProject(const FileName: string);
+    procedure NewProject(const FileName: string; AfterCreateProject: Tproc = nil);
+    procedure LoadProject(const FileName: string; AfterCreateProject: Tproc = nil);
   end;
 
   IManagerEx = interface

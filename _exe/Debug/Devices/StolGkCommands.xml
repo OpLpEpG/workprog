@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<COMMANDS MaxSpeed="180" DeltaStep="0.01666666666666666666666666666667" MinSpeed="60" AccellAmp="60">
+<COMMANDS MaxSpeed="180" DeltaStep="15" MinSpeed="60" AccellAmp="60">
   <P0_HOME COMMAND="CF4*;GOTO:M0" SYNC="4370" />
   <P5_HOME COMMAND="GOTO:M0;SF4*" SYNC="4370" />
   <P10 COMMAND="GOTO:M1" SYNC="3095" />

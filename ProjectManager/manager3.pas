@@ -4,7 +4,7 @@ interface
 
 uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils, Actns, System.UITypes,
      RootImpl, AbstractPlugin, PluginAPI, DockIForm, System.SyncObjs, XMLEnumers,
-     Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows, System.IOUtils,   ShellAPI, messages,
+     Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows, System.IOUtils,
      System.SysUtils, Vcl.Graphics, System.Classes, System.Generics.Collections, System.Generics.Defaults,
      RTTI, System.TypInfo, Xml.XMLIntf;
 
@@ -17,6 +17,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
 
   TManager = class(TAbstractPlugin,
                                IManager, IManagerEx,
+                               IProjectMetaData,
                                IProjectDataFile,
                                IProjectOptions,
                                IALLMetaDataFactory, IALLMetaData,
@@ -56,8 +57,8 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
     function ProjectName: string;
     procedure LoadScreen();
     procedure SaveScreen();
-    procedure NewProject(const FileName: string);
-    procedure LoadProject(const FileName: string);
+    procedure NewProject(const FileName: string; AfterCreateProject: Tproc = nil);
+    procedure LoadProject(const FileName: string; AfterCreateProject: Tproc = nil);
     { IManagerEx }
     function GetProjectFilter: string;
     function GetProjectDefaultExt: string;
@@ -81,7 +82,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
                           ReadOnly: Boolean = False;
                           DataType: Integer = -1);
 
-    // IDelayManager = interface
+   // IDelayManager = interface
 //    procedure InternalInitDelay;
 //    procedure SetDelay(SetTime, Delay, WorkTime: Variant);
 //    procedure GetDelay(var SetTime, Delay, WorkTime: Variant; var ds: DelayStatus);
@@ -224,11 +225,15 @@ function TManager.GetOption(const Name: string): Variant;
   c, v: IXMLNode;
 begin
   Result := null;
-  for c in XEnum(Foptions) do
+  if Assigned(Foptions) then for c in XEnum(Foptions) do
   begin
+   TDebug.Log(c.NodeName);
    v := c.ChildNodes.FindNode(Name);
-   if Assigned(v) then Result := v.Attributes['Значение'];
-   Break;
+   if Assigned(v) then
+    begin
+     if v.HasAttribute('Значение') then Result := v.Attributes['Значение'];
+     Break;
+    end;
   end;
 end;
 
@@ -236,11 +241,15 @@ procedure TManager.SetOption(const Name: string; const Value: Variant);
  var
   c, v: IXMLNode;
 begin
-  for c in XEnum(Foptions) do
+  if Assigned(Foptions) then for c in XEnum(Foptions) do
   begin
    v := c.ChildNodes.FindNode(Name);
-   if Assigned(v) and v.HasAttribute('Значение') then v.Attributes['Значение'] := Value;
-   Break;
+   if Assigned(v) then
+    begin
+     v.Attributes['Значение'] := Value;
+     save;
+     Break;
+    end;
   end;
 end;
 
@@ -248,6 +257,7 @@ procedure TManager.AddOrIgnore(const Name, Section, Description, SectionDescript
  var
   c, v: IXMLNode;
 begin
+   if not Assigned(Foptions) then Exit;
    c := Foptions.ChildNodes.FindNode(Section);
    if not Assigned(c) then
     begin
@@ -420,21 +430,27 @@ begin
   Notify('S_TableUpdate');
 end;
 
-procedure TManager.LoadProject(const FileName: string);
+procedure TManager.LoadProject(const FileName: string; AfterCreateProject: Tproc = nil);
 begin
   ClearItems([ecIO, ecDevice]);
   if FileExists(FileName) then
    begin
     FProjectFile := FileName;
     FProjecDoc := NewXDocument();
-    FProjecDoc.LoadFromFile(FProjectFile);
-    Froot := FProjecDoc.DocumentElement;
-    FConnect := Froot.ChildNodes.FindNode(T_CON);
-    FDevices := Froot.ChildNodes.FindNode(T_DEV);
-    Foptions := Froot.ChildNodes.FindNode(T_OPT);
+    try
+      FProjecDoc.LoadFromFile(FProjectFile);
+      Froot := FProjecDoc.DocumentElement;
+      FConnect := Froot.ChildNodes.FindNode(T_CON);
+      FDevices := Froot.ChildNodes.FindNode(T_DEV);
+      Foptions := Froot.ChildNodes.FindNode(T_OPT);
 
-    ((GlobalCore as IConnectIOEnum) as IStorable).Load;
-    ((GlobalCore as IDeviceEnum) as IStorable).Load;
+      if Assigned(AfterCreateProject) then AfterCreateProject();
+
+      ((GlobalCore as IConnectIOEnum) as IStorable).Load;
+      ((GlobalCore as IDeviceEnum) as IStorable).Load;
+    except
+      on E: Exception do TDebug.DoException(E, False);
+    end;
     Notify('S_ProjectChange');
    end
   else
@@ -445,11 +461,12 @@ begin
     Foptions := nil;
     FProjecDoc := nil;
     FProjectFile := '';
+    if Assigned(AfterCreateProject) then AfterCreateProject();
     Notify('S_ProjectChange');
    end;
 end;
 
-procedure TManager.NewProject(const FileName: string);
+procedure TManager.NewProject(const FileName: string; AfterCreateProject: Tproc = nil);
  var
   dir, flName, ladtDir: string;
   last: TArray<string>;
@@ -478,6 +495,8 @@ begin
   LDoc := NewXDocument();
   LDoc.LoadFromFile(ExtractFilePath(ParamStr(0))+'Devices\Options.xml');
   Froot.ChildNodes.Add(Ldoc.DocumentElement);
+
+  if Assigned(AfterCreateProject) then AfterCreateProject();
 
   ((GlobalCore as IConnectIOEnum) as IStorable).New;
   ((GlobalCore as IDeviceEnum) as IStorable).New;

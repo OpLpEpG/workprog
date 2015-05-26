@@ -10,6 +10,7 @@ const
     ADR_AXIS_ZU   =  2;
     ADR_AXIS_VIZ  = 12;
     ADR_UAKI      = 2412;
+    ADR_UAKI2     = 2413;
 
 type
   IAxis = interface
@@ -36,6 +37,8 @@ type
     function GetAdr: Integer;
 
     function GetCurrentAngle: TAngle;
+    procedure SetCurrentAngle(Value: TAngle);
+
     function GetNeedAngle: TAngle;
 
     function GetDeltaAngle: TAngle;
@@ -46,7 +49,7 @@ type
   // public
     property Adr: Integer read GetAdr;
 
-    property CurrentAngle: TAngle read GetCurrentAngle;
+    property CurrentAngle: TAngle read GetCurrentAngle write SetCurrentAngle;
     property NeedAngle: TAngle read GetNeedAngle;
     property DeltaAngle: TAngle read GetDeltaAngle write SetDeltaAngle;
 
@@ -80,6 +83,7 @@ type
    function GetTemperature: TArray<Double>;
 
    procedure TenStop;
+   procedure TermimateMoving;
 
    property Azi: IAxisAZI read GetAzi;
    property Zen: IAxisZEN read GetZen;

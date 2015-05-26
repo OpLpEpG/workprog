@@ -29,7 +29,7 @@ function Init(): PTypeInfo;
 begin
   FFDGUIxSilentMode  := True;
   Result := TypeInfo(TManager);
-  TRegister.AddType<TManager, IPlugin, IManager, IManagerEx, IProjectData,
+  TRegister.AddType<TManager, IPlugin, IManager, IManagerEx, IProjectDataFile, IProjectMetaData,
   IMetrology, IProjectOptions, IALLMetaDataFactory, IGlobalMemory>.LiveTime(ltSingleton);
   TManager.ProjectDir;
 end;

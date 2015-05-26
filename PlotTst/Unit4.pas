@@ -6,7 +6,9 @@ uses CustomPlot, System.IOUtils, Plot.GR32, gr32,
   Plot.DataSet,
   RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RTTI, Container, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Data.DB, JvMemoryDataset;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Data.DB, JvMemoryDataset, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
   TForm4 = class(TForm)
@@ -22,6 +24,7 @@ type
     DBGrid1: TDBGrid;
     DataSource1: TDataSource;
     ms: TJvMemoryData;
+    FDTable1: TFDTable;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -61,7 +64,7 @@ begin
   p.link := TFileDataLink.Create(p);
   TFileDataLink(p.Link).FileName := 'FileName_p1';
   TFileDataLink(p.Link).XParamPath := 'X_p1';
-  TFileDataLink(p.Link).YParamPath := 'X_p1';
+ // TFileDataLink(p.Link).YParamPath := 'X_p1';
 
   f := P.Filters.Add<TWaveletFilter>;
   f.DisplayName := 'ParamFilter_1';
@@ -183,8 +186,8 @@ begin
   Form1.Show;
   Plot := Form1.Plot;
   ds := TplotDataSet.Create(Plot);
-//  DataSource1.DataSet := ds;
-  DataSource1.DataSet := ms;
+  DataSource1.DataSet := ds;
+//  DataSource1.DataSet := ms;
   DataSource1.DataSet.Active := True;
   DataSource1.DataSet.Refresh;
 //  DataSource1.DataSet.AppendRecord([1,'1111']);

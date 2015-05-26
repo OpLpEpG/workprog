@@ -8,7 +8,7 @@ uses DeviceIntf, ExtendIntf, RootIntf,  Winapi.Messages, System.Variants, Vcl.Ht
   Vcl.AppEvnts, Vcl.ExtCtrls, JvFormPlacement, JvDockVIDStyle, JvComponentBase, System.Actions,
   System.Generics.Collections,
   System.Generics.Defaults,
-  JvDockVSNetStyle, JvDockTree, Vcl.ToolWin, Vcl.PlatformDefaultStyleActnCtrls;
+  JvDockVSNetStyle, JvDockTree, Vcl.ToolWin, Vcl.PlatformDefaultStyleActnCtrls, System.ImageList, JvAppXMLStorage;
 
 const
   DEF_SCREEN = 'ScreenDefault';
@@ -16,7 +16,7 @@ const
 
 
 type
-  TFormMain = class(TForm, IImagProvider, IActionProvider, IRegistry, ITabFormProvider, IMainScreen)
+  TFormMain = class(TForm, IImagProvider, IActionProvider, IRegistry, ITabFormProvider, IMainScreen, IProject)
     ActionManager: TActionManager;
     CustomizeActionBars: TCustomizeActionBars;
     ActionUpdate: TAction;
@@ -25,7 +25,7 @@ type
     ActionLoadDesktop: TAction;
     ActionPluginSetup: TAction;
     ImageList: TImageList;
-    ini: TJvAppRegistryStorage;
+    rini: TJvAppRegistryStorage;
     ControlBar: TControlBar;
     MainMenu: TActionMainMenuBar;
     ToolBar1: TActionToolBar;
@@ -37,6 +37,7 @@ type
     pc: TPageControl;
     JvDockServer: TJvDockServer;
     JvDockVSNetStyle: TJvDockVSNetStyle;
+    xini: TJvAppXMLFileStorage;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ActionExitExecute(Sender: TObject);
@@ -73,12 +74,12 @@ type
     procedure UpdateWidthBars;
     function HideUnusedMenus: boolean;
     procedure SaveActionManager();
-    procedure ResetActions;
+    procedure ResetActions();
     // IRegistry
-    procedure SaveString(const Name, Value: String);
-    function LoadString(const Name, DefValue: String): String;
-    procedure SaveArrayString(const Root: String; const Value: TArray<string>);
-    procedure LoadArrayString(const Root: String; var Value: TArray<string>);
+    procedure SaveString(const Name, Value: String; Registry: Boolean = False);
+    function LoadString(const Name, DefValue: String; Registry: Boolean = False): String;
+    procedure SaveArrayString(const Root: String; const Value: TArray<string>; Registry: Boolean = False);
+    procedure LoadArrayString(const Root: String; var Value: TArray<string>; Registry: Boolean = False);
     //  ITabFormProvider (зависит от версии компилятора т.к. использ TDockIForm, TJvDockClient
     function IsTab(const Form: IForm): Boolean;
     procedure Tab(const Form: IForm);
@@ -93,6 +94,18 @@ type
 
     procedure Lock;
     procedure UnLock;
+
+    //IProject = interface
+    function IProject.New = IProjectNew;
+    function IProjectNew(out ProjectName: string): Boolean;
+    function IProject.Load = IProjectLoad;
+    function IProjectLoad(out ProjectName: string): Boolean;
+    function IProject.Setup =IProjectSetup;
+    function IProjectSetup: Boolean;
+    procedure IProject.Close = IProjectClose;
+    procedure IProjectClose;
+    procedure IProjectInnerLoad(const PrjName: string; isNew: Boolean);
+
   private
     FMainScreenChange: Boolean;
     procedure SaveScreeDialog;
@@ -101,10 +114,6 @@ type
 //    procedure AfterLoadScreen;
 //    procedure SetProjectFile(const Value: WideString);
 //    procedure SowPrg(sho: Boolean);
-//    procedure SetShowDebugErrorData(const Value: boolean);
-//    procedure SetShowErrorDialog(const Value: boolean);
-//    function GetShowDebugErrorData: boolean;
-//    function GetShowErrorDialog: boolean;
 //    procedure WMSync(var Message: TMessage); message WM_SYNC;
   public
     FCurrentScreen: string;
@@ -115,9 +124,6 @@ type
     procedure SaveTabForms();
     procedure LoadTabForms();
     property StatusBar[index: Integer]: string read GetStatusBar write SetStatusBar;
-//  published
-//    property ShowErrorDialog: boolean read GetShowErrorDialog write SetShowErrorDialog;
-//    property ShowDebugErrorData: boolean read GetShowDebugErrorData write SetShowDebugErrorData;
   end;
 
 
@@ -147,11 +153,10 @@ begin
   StatusBar[1] := ExtractFilePath(ParamStr(0)) + 'Default.xml';
 
   TFormExceptions.This.Icon := 257;
-
   //  *******************************************8
   //     Регистрация провайдеров сервисов ядра
   //  *******************************************8
-  TRegister.AddType<TFormMain, IImagProvider, IActionProvider, IRegistry, ITabFormProvider, IMainScreen>.LiveTime(ltSingleton).AddInstance(Self as IInterface);
+  TRegister.AddType<TFormMain, IImagProvider, IActionProvider, IRegistry, ITabFormProvider, IMainScreen, IProject>.LiveTime(ltSingleton).AddInstance(Self as IInterface);
 end;
 
 procedure TFormMain.RegisterProviders;
@@ -169,15 +174,18 @@ begin
     // загрузка плагинов с событием LoadNotify после загрузки осгновной формы !!!
     //  *******************************************
     { TODO : создание разных рабочих столов }
-   ini.Root := REG_PATH;
-   FCurrentScreen := ini.ReadString('screen', DEF_SCREEN);
-   ini.Root := REG_PATH + '\' + FCurrentScreen;
-   TFormPluginSetup.LoadPlugins(ini.Root, nil, True);
+   rini.Root := REG_PATH;
+   FCurrentScreen := rini.ReadString('screen', DEF_SCREEN);
+   rini.Root := REG_PATH + '\' + FCurrentScreen;
+   TFormPluginSetup.LoadPlugins(rini.Root, nil, True);
+
     // LoadNotify функция вызывается после загрузки плугинов и перед событием LoadNotify
     // регистрируем провайдеры которым нужны для регистрации плугины но желательно до
     // события LoadNotify (LoadNotify провайдеров происходит после пругинов)
   finally
   // if Assigned(FormSplash) then FreeAndNil(FormSplash);
+   TFormExceptions.This.NShowDebug.Checked := FormStorage.StoredValue['ErrorInfo'];
+   TFormExceptions.This.NDialog.Checked := FormStorage.StoredValue['ErrorDialog'];
   end;
 
   OutputDebugString(PChar('==================  НАЧАЛО РАБОТЫ ПРОГРАММЫ  ================================='));
@@ -237,7 +245,7 @@ begin
   SaveScreeDialog;
   if Supports(Plugins, IManager, m) and not ChildFormsBusy and not DeviceBusy then
    begin
-    m.ClearItems([ecForm]);
+    (GlobalCore as IFormEnum).Clear;
     LoadScreen();
    end;
 end;
@@ -250,8 +258,8 @@ begin
   ss := TStringList.Create;
   try
    for i:=0 to pc.PageCount-1 do ss.Add(TForm(pc.Pages[i].Tag).Name);
-   ini.WriteStringList('Tabs', ss);
-   ini.WriteInteger('Tabs\ActiveTab', pc.ActivePageIndex);
+   xini.WriteStringList('Tabs', ss);
+   xini.WriteInteger('Tabs\ActiveTab', pc.ActivePageIndex);
   finally
    ss.Free;
   end;
@@ -268,7 +276,7 @@ begin
   begin
    ss := TStringList.Create;
    try
-    ini.ReadStringList('Tabs', ss);
+    xini.ReadStringList('Tabs', ss);
     for i := 0 to SS.Count-1 do
      for f in d do
       if SameText((f as IManagItem).IName, ss[i]) then
@@ -279,7 +287,7 @@ begin
    finally
     ss.Free;
    end;
-   i := ini.ReadInteger('Tabs\ActiveTab', 0);
+   i := xini.ReadInteger('Tabs\ActiveTab', 0);
    if (i >= 0) and (i < pc.PageCount) then  pc.ActivePageIndex := i;
   end;
 end;
@@ -297,7 +305,8 @@ begin
    ActionManager.SaveToStream(ms);
    ms.Position := 0;
    ObjectBinaryToText(ms, ss);
-   ini.WriteString('ActionManager\ObjectText', ss.DataString);
+   //(GContainer as IProjectOptions).Option['ActionManager'] := ss.DataString;
+   xini.WriteString('ActionManager\ObjectText', ss.DataString);
   finally
    ss.Free;
    ms.Free;
@@ -317,12 +326,17 @@ procedure TFormMain.SaveScreenClick(Sender: TObject);
   m: IManager;
 begin
   FMainScreenChange := False;
+  FormStorage.StoredValue['ErrorInfo'] := TFormExceptions.This.NShowDebug.Checked;
+  FormStorage.StoredValue['ErrorDialog'] := TFormExceptions.This.NDialog.Checked;
   if Supports(Plugins, IManager, m) then m.SaveScreen();                // формы  обьекты
-  SaveDockTreeToAppStorage(ini, 'DockTree'); // Dock manager (зависит от версии компилятора т.к. использ TForm, TJvDockClient)
+  SaveDockTreeToAppStorage(xini, 'DockTree'); // Dock manager (зависит от версии компилятора т.к. использ TForm, TJvDockClient)
   SaveTabForms();                         // Tab forms (зависит от версии компилятора т.к. использ TForm, TJvDockClient)
   SaveActionManager;                 // Action manager основной формы
   FormStorage.SaveFormPlacement;      // сохранение cool bar основной формы
-  ini.Flush; // !!!
+  //FormPlacement.SaveFormPlacement;      // сохранение cool bar основной формы
+  //xini.Flush; // !!!
+  (GContainer as IProjectOptions).Option['CurrentScreen'] := xini.AsString;
+  rini.Flush;
 end;
 
 //procedure TFormMain.AfterLoadScreen;
@@ -364,12 +378,14 @@ procedure TFormMain.LoadActionManager;
   ss: TStringStream;
   ms: TMemoryStream;
 begin
-  if  ini.ValueStored('ActionManager\ObjectText') then
+  if  xini.ValueStored('ActionManager\ObjectText') then
+//  if  not VarIsNull((GContainer as IProjectOptions).Option['ActionManager']) then
    begin
     ss := TStringStream.Create;
     ms := TMemoryStream.Create;
     try
-     ss.WriteString(ini.ReadString('ActionManager\ObjectText', ''));
+     ss.WriteString(xini.ReadString('ActionManager\ObjectText', ''));
+     //ss.WriteString((GContainer as IProjectOptions).Option['ActionManager']);
      ss.Position := 0;
      ObjectTextToBinary(ss, ms);
      ms.Position := 0;
@@ -381,7 +397,7 @@ begin
    end;
 end;
 
-procedure TFormMain.ResetActions;
+procedure TFormMain.ResetActions();
  var
   a: IAction;
   ar: TArray<IAction>;
@@ -391,10 +407,17 @@ begin
   begin
     Result := string.Compare(Left.GetPath, Right.GetPath);
   end));
+  LoadActionManager; // скрывает часть { TODO : проблемма с - и логикой действий}
   for a in ar do
    begin
-    if not a.OwnerExists then GContainer.RemoveInstance(a.Model, a.IName);
-    if not Assigned(ActionManager.FindItemByAction(TCustomAction(a.GetComponent))) then a.DefaultShow;
+    if not a.OwnerExists then
+     begin
+      GContainer.RemoveInstance(a.Model, a.IName);
+     end
+    else if not Assigned(ActionManager.FindItemByAction(TCustomAction(a.GetComponent))) then
+     begin
+      a.DefaultShow;
+     end;
    end;
   if HideUnusedMenus then
    begin
@@ -407,32 +430,38 @@ procedure TFormMain.LoadScreen(LoadProject: Boolean = False);
  var
   m: IManager;
 begin
-  BeginDockLoading;
+  StatusBar[1] := rini.ReadString('CurrentProject');
+  IProjectInnerLoad(StatusBar[1], False);
+ { BeginDockLoading;
   try
-    ini.Reload; // !!!
-    StatusBar[1] := ini.ReadString('CurrentProject');
+    //xini.Reload; // !!!
+    StatusBar[1] := rini.ReadString('CurrentProject');
     if Supports(Plugins, IManager, m) then
      begin
-      m.LoadScreen();                 //  загрузка текстов обьектов - форм actions
       if LoadProject and (StatusBar[1] <> '') then m.LoadProject(StatusBar[1]);
+      (GContainer as IProjectOptions).AddOrIgnore('CurrentScreen', 'Screen');
+
+      if not VarIsNull((GContainer as IProjectOptions).Option['CurrentScreen']) then
+         xini.AsString := (GContainer as IProjectOptions).Option['CurrentScreen'];
+
+      m.LoadScreen();                 //  загрузка текстов обьектов - форм actions
      end;
 
-    LoadActionManager; // скрывает часть { TODO : проблемма с - и логикой действий}
     // create actions
-    ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
+    ResetActions;     // показывает все
 
     // create forms
     GContainer.InstancesAsArray<IForm>(True);
 
 
-    LoadDockTreeFromAppStorage(ini, 'DockTree');
+    LoadDockTreeFromAppStorage(xini, 'DockTree');
     LoadTabForms();
 
     FormStorage.RestoreFormPlacement;
 //    AfterLoadScreen;
   finally
     EndDockLoading;
-  end;
+  end; }
 end;
 
 {procedure TFormMain.PrjCloseExecute(Sender: TObject);
@@ -487,31 +516,41 @@ end;    }
 
 {$REGION  '*********** Providers ****************'}
 // IRegistry
-procedure TFormMain.SaveArrayString(const Root: String; const Value: TArray<string>);
+procedure TFormMain.SaveArrayString(const Root: String; const Value: TArray<string>; Registry: Boolean = False);
  var
   i: Integer;
+  s: TJvCustomAppStorage;
 begin
-  ini.DeleteSubTree(Root);
-  ini.WriteInteger(Root+ '\ItemCount', Length(Value));
-  for i := 0 to Length(Value)-1 do ini.WriteString(Root+ '\Item'+i.ToString, Value[i]);
+  if Registry then s := rini else s := xini;
+  s.DeleteSubTree(Root);
+  s.WriteInteger(Root+ '\ItemCount', Length(Value));
+  for i := 0 to Length(Value)-1 do s.WriteString(Root+ '\Item'+i.ToString, Value[i]);
 end;
 
-procedure TFormMain.LoadArrayString(const Root: String; var Value: TArray<string>);
+procedure TFormMain.LoadArrayString(const Root: String; var Value: TArray<string>; Registry: Boolean = False);
  var
   i: Integer;
+  s: TJvCustomAppStorage;
 begin
-  SetLength(Value, ini.ReadInteger(Root+ '\ItemCount',0));
-  for i := 0 to Length(Value)-1 do Value[i] := ini.ReadString(Root+ '\Item'+i.ToString, '');
+  if Registry then s := rini else s := xini;
+  SetLength(Value, s.ReadInteger(Root+ '\ItemCount',0));
+  for i := 0 to Length(Value)-1 do Value[i] := s.ReadString(Root+ '\Item'+i.ToString, '');
 end;
 
-function TFormMain.LoadString(const Name, DefValue: String): String;
+function TFormMain.LoadString(const Name, DefValue: String; Registry: Boolean = False): String;
+ var
+  s: TJvCustomAppStorage;
 begin
-  Result := ini.ReadString(Name, DefValue);
+  if Registry then s := rini else s := xini;
+  Result := s.ReadString(Name, DefValue);
 end;
 
-procedure TFormMain.SaveString(const Name, Value: String);
+procedure TFormMain.SaveString(const Name, Value: String; Registry: Boolean = False);
+ var
+  s: TJvCustomAppStorage;
 begin
-  ini.WriteString(Name, Value);
+  if Registry then s := rini else s := xini;
+  s.WriteString(Name, Value);
 end;
 
 //ITabFormProvider
@@ -683,6 +722,141 @@ begin
   sb.Panels[index].Text := Value;
 end;
 
+ /// IProject
+procedure TFormMain.IProjectInnerLoad(const PrjName: string; isNew: Boolean);
+ var
+  m: IManager;
+  AfterCreateProject: Tproc;
+begin
+  AfterCreateProject := procedure
+   var
+    sa: TArray<IStorable>;
+    s: IStorable;
+  begin
+    (GlobalCore as IFormEnum).Clear;
+
+    (GContainer as IProjectOptions).AddOrIgnore('CurrentScreen', 'Screen');
+
+    if not VarIsNull((GContainer as IProjectOptions).Option['CurrentScreen']) then
+       xini.AsString := (GContainer as IProjectOptions).Option['CurrentScreen'];
+
+    // m.LoadScreen();                 //  загрузка текстов!!! обьектов - форм actions
+    sa := GContainer.InstancesAsArray<IStorable>(true);
+    TArray.Sort<IStorable>(sa, TManagItemComparer<IStorable>.Create);
+    for s in sa do s.Load;
+  end;
+
+  BeginDockLoading;
+  try
+    //xini.Reload; // !!!
+    if Supports(Plugins, IManager, m) then
+     if isNew then m.NewProject(PrjName, AfterCreateProject)
+     else m.LoadProject(PrjName, AfterCreateProject);
+
+    // create actions
+    ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
+
+    // create forms
+    GContainer.InstancesAsArray<IForm>(True);
+
+    LoadDockTreeFromAppStorage(xini, 'DockTree');
+    LoadTabForms();
+
+    FormStorage.RestoreFormPlacement;
+    //FormPlacement.RestoreFormPlacement;
+  finally
+    EndDockLoading;
+  end;
+end;
+
+function TFormMain.IProjectNew(out ProjectName: string): Boolean;
+ var
+  me: IManagerEx;
+begin
+  Result := True;
+  with TOpenDialog.Create(nil) do
+  try
+   if Supports(GContainer, IManagerEx, me) then
+    begin
+     DefaultExt := me.GetProjectDefaultExt;
+     Filter :=  me.GetProjectFilter;
+     InitialDir := me.GetProjectDirectory;
+    end
+   else
+    begin
+     DefaultExt := 'db';
+     Filter := 'Файл проекта (*.db)|*.db';
+     InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
+    end;
+   Options := [ofOverwritePrompt,ofHideReadOnly,ofEnableSizing];
+   if not Execute() then Exit(False);
+   IProjectInnerLoad(FileName, True);
+   rini.WriteString('CurrentProject', FileName);
+   ProjectName := FileName;
+   StatusBar[1] := FileName;
+  finally
+   Free;
+  end;
+end;
+
+procedure TFormMain.IProjectClose;
+ var
+  m: IManager;
+begin
+  BeginDockLoading;
+  try
+    (GlobalCore as IFormEnum).Clear;
+    //xini.Reload; // !!!
+    if Supports(Plugins, IManager, m) then m.LoadProject('');
+
+    // create actions
+    ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
+    rini.WriteString('CurrentProject', '');
+    StatusBar[1] := '';
+  finally
+    EndDockLoading;
+  end;
+end;
+
+function TFormMain.IProjectLoad(out ProjectName: string): Boolean;
+ var
+  me: IManagerEx;
+begin
+  Result := True;
+  with TOpenDialog.Create(nil) do
+  try
+   if Supports(GContainer, IManagerEx, me) then
+    begin
+     DefaultExt := me.GetProjectDefaultExt;
+     Filter :=  me.GetProjectFilter;
+     InitialDir := me.GetProjectDirectory;
+    end
+   else
+    begin
+     DefaultExt := 'db';
+     Filter := 'Файл проекта (*.db)|*.db';
+     InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
+    end;
+   Options := [ofReadOnly,ofHideReadOnly,ofPathMustExist,ofFileMustExist,ofEnableSizing];
+   if not Execute() then Exit(False);
+   IProjectInnerLoad(FileName, False);
+   rini.WriteString('CurrentProject', FileName);
+   ProjectName := FileName;
+   StatusBar[1] := FileName;
+  finally
+   Free;
+  end;
+end;
+
+function TFormMain.IProjectSetup: Boolean;
+ var
+  d: Idialog;
+  dp: IDialog<Pointer>;
+begin
+  Result := (StatusBar[1] <> '') and RegisterDialog.TryGet<Dialog_SetupProject>(d) and Supports(d, IDialog<Pointer>, dp);
+  if Result then dp.Execute(nil);
+end;
+
 
 {$ENDREGION  '*********** Providers ****************'}
 
@@ -693,27 +867,6 @@ end;
 //  StatusBar[1] := Value;
 //  sb.Panels[1].Text := FProjectFile;
 //end;
-
-{procedure TFormMain.SetShowDebugErrorData(const Value: boolean);
-begin
-  TFormExceptions.This.NDialog.Checked := Value;
-end;
-
-procedure TFormMain.SetShowErrorDialog(const Value: boolean);
-begin
-  TFormExceptions.This.NShowDebug.Checked := Value;
-end;
-
-function TFormMain.GetShowDebugErrorData: boolean;
-begin
-  Result := TFormExceptions.This.NShowDebug.Checked;
-end;
-
-function TFormMain.GetShowErrorDialog: boolean;
-begin
-  Result := TFormExceptions.This.NDialog.Checked;
-end;}
-
 
 {procedure TFormMain.SetupProjectExecute(Sender: TObject);
  var

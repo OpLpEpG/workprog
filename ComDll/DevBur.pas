@@ -8,6 +8,8 @@ uses    System.IOUtils,
   DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl;
 
 
+  const
+    LEN_MAX_SHORT = 251; //не 252 из-за фая вая
  type
   EReadRamBurException = class(EReadRamException);
     EAsyncReadRamBurException = class(EAsyncReadRamException);
@@ -259,6 +261,9 @@ begin
    end
   else Wait := WAIT_RLEN;
 
+  if FPacketLen > 0 then Wait := -1;
+
+
   FCurAdr := FFromAdr;
   ErrCnt := 0;
 
@@ -500,7 +505,7 @@ begin
    for a in ErrAdr do ReadInfoAdr(a, procedure (Exc: Integer; Adr: Integer; Data: PByte; n: Integer)
       var
        i: Integer;
-       ip: IProjectData;
+       ip: IProjectMetaData;
     begin
       if Exc = 0 then
        begin
@@ -524,7 +529,7 @@ begin
 
         TPars.SetMetr(FMetaDataInfo.Info, FExeMetr, True);
 
-        if Supports(GlobalCore, IProjectData, ip) then
+        if Supports(GlobalCore, IProjectMetaData, ip) then
           for i in TmpGood do
             ip.SetMetaData(Self as IDevice, i, FindDev(FMetaDataInfo.Info, i));
 
@@ -624,7 +629,7 @@ begin
                     inc(bads);
                     if bads > 7 then ev(-1, adr, pr, nr);
                    end;
-                  if savelen-from > 252 then D := TAdvStdRead.Create(adr, CMD_INFO, 252, from)
+                  if savelen-from > LEN_MAX_SHORT then D := TAdvStdRead.Create(adr, CMD_INFO, LEN_MAX_SHORT, from)
                   else D := TAdvStdRead.Create(adr, CMD_INFO, savelen-from, from);
                   Send(@D, Sizeof(D), recur);
                 end)

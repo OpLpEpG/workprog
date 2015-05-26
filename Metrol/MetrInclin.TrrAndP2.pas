@@ -205,6 +205,7 @@ end;
 function TFormInclinTrrAndP2.UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean;
 begin
   Result := True;
+  //UserExecStepUpdateStolAngle(Step, alg, trr);
   case Step of
    64:
       begin

@@ -289,7 +289,7 @@ object FormMain: TFormMain
     Left = 34
     Top = 49
     Bitmap = {
-      494C010167019001600310001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010167019001900310001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000A0050000010020000000000000A0
       0500000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -12176,7 +12176,7 @@ object FormMain: TFormMain
       FE7FFFFFFE7F0000FFFFFFFFFFFF000000000000000000000000000000000000
       000000000000}
   end
-  object ini: TJvAppRegistryStorage
+  object rini: TJvAppRegistryStorage
     StorageOptions.BooleanStringTrueValues = 'TRUE, YES, Y'
     StorageOptions.BooleanStringFalseValues = 'FALSE, NO, N'
     Root = '%NONE%'
@@ -12186,7 +12186,7 @@ object FormMain: TFormMain
   end
   object FormStorage: TJvFormStorage
     Active = False
-    AppStorage = ini
+    AppStorage = xini
     AppStoragePath = 'ControllBar\'
     Options = []
     StoredProps.Strings = (
@@ -12202,7 +12202,15 @@ object FormMain: TFormMain
       'ToolBar2.Top'
       'ToolBar2.Width'
       'ToolBar2.Height')
-    StoredValues = <>
+    StoredValues = <
+      item
+        Name = 'ErrorDialog'
+        Value = False
+      end
+      item
+        Name = 'ErrorInfo'
+        Value = True
+      end>
     Left = 256
     Top = 48
   end
@@ -12241,5 +12249,15 @@ object FormMain: TFormMain
     TabServerOption.ShowCloseButtonOnTabs = False
     Left = 40
     Top = 120
+  end
+  object xini: TJvAppXMLFileStorage
+    StorageOptions.BooleanStringTrueValues = 'TRUE, YES, Y'
+    StorageOptions.BooleanStringFalseValues = 'FALSE, NO, N'
+    StorageOptions.InvalidCharReplacement = '_'
+    Location = flCustom
+    RootNodeName = 'Configuration'
+    SubStorages = <>
+    Left = 336
+    Top = 112
   end
 end

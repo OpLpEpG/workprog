@@ -9,7 +9,7 @@ library ComDev;
 
 uses
   System.TypInfo,
-  Windows,
+  Winapi.Windows,
   System.SysUtils,
   System.Classes,
   Xml.XMLIntf,
@@ -33,7 +33,8 @@ uses
   Dev.Telesistem.Decoder in 'Dev.Telesistem.Decoder.pas',
   Dev.StolGK in 'Dev.StolGK.pas',
   Dev.Telesistem.Shum in 'Dev.Telesistem.Shum.pas',
-  Dev.Telesistem.Data in 'Dev.Telesistem.Data.pas';
+  Dev.Telesistem.Data in 'Dev.Telesistem.Data.pas',
+  DevUaki2 in 'DevUaki2.pas';
 
 {$R *.res}
 
@@ -126,6 +127,7 @@ begin
     if Adr[0] = 100 then Result := TUso.CreateWithAddr(Adr, DeviceName) as IDevice
     else if Adr[0] = 101 then Result := TGlu.CreateWithAddr(Adr, DeviceName) as IDevice
     else if Adr[0] = ADR_UAKI then Result := TDevUaki.CreateWithAddr(Adr, DeviceName) as IDevice
+    else if Adr[0] = ADR_UAKI2 then Result := TDevUaki2.CreateWithAddr(Adr, DeviceName) as IDevice
     else if Adr[0] = ADR_STOL_GK then Result := TStolGK.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (Adr[0] > 101) and (adr[0] < 200) then  Result := TPskStd.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (adr[0] = 1000) then Result := TTelesistem.CreateWithAddr(Adr, DeviceName) as IDevice

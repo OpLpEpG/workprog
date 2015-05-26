@@ -105,8 +105,8 @@ begin
   inherited;
   if Supports(GContainer, IProjectOptions, opt) then
    begin
-    FDBTimeStart := opt.Option['TIME_START'];
-    FDBIntervalWork := opt.Option['WORK_INTERVAL'];
+    FDBTimeStart := StrToDateTime(opt.Option['TIME_START']);
+    FDBIntervalWork := StrToDateTimeDef(opt.Option['WORK_INTERVAL'], 0);
    end;
   AddToNCMenu('Интервал задержки', IsDelayIntervalMenuClick, IsDelayIntervalMenu);
   IsDelayIntervalMenu.AutoCheck := True;
@@ -325,6 +325,7 @@ begin
       WriteToBD(FApplStartTime, FApplWork);
       UpdateDelayed;
      end;
+/// закоментировал для версии 3
     ConnectionsPool.Query.Acquire;
     try
      ConnectionsPool.Query.ExecSQL('UPDATE Device SET TimeSetupDelay = :P1 WHERE (IName = :P2)', [Res.SetTime, (DelayDevice as IManagItem).IName], [ftDateTime, ftString]);

@@ -34,13 +34,14 @@ type
     constructor Create(telesis: TTelesistem);
   end;
 
-  TTelesistem = class(TRootDevice, IDataDevice)
+  TTelesistem = class(TRootDevice, IDataDevice, ITelesisCMD)
   private
     procedure Start(AIConnectIO: IConnectIO);
     procedure Stop(AIConnectIO: IConnectIO);
     procedure BindPortStstus(isLost: Boolean);
   protected
     FlagLostPort: Boolean;
+    procedure SendCmd(Cmd: Byte);
     procedure SetConnect(AIConnectIO: IConnectIO); override;
     function GetService: PTypeInfo; override;
     function GetStructure: TArray<TSubDeviceInfo>; override;
@@ -55,6 +56,7 @@ public
     procedure ExecMetrology;
     procedure CheckWorkData;
     procedure SaveLogData;
+
     procedure CheckConnect(); override;
     [DynamicAction('Установки телесистемы <I> ', '<I>', 52, '0:Телесистема', 'Установки телесистемы')]
     procedure DoSetup(Sender: IAction); override;
@@ -104,14 +106,17 @@ type
     Tst_Data: TArray<Boolean>;
     FTestUsoData: TTestUsoData;
     FWriteToFile: Boolean;
+    FCmd: Byte;
     procedure SetTestUsoData(const Value: TTestUsoData);
     procedure SetWriteToFile(const Value: Boolean);
+    procedure SetCmd(const Value: Byte);
   protected
     function GetCaption: string; override;
   public
     procedure InputData(Data: Pointer; DataSize: integer); override;
     [DynamicAction('Показать осцилограмму усо <I> ', '<I>', 52, '0:Телесистема.<I>', 'Показать осцилограмму усо')]
     procedure DoSetup(Sender: IAction); override;
+    [ShowProp('послать команду в УСО')] property Cmd: Byte read FCmd write SetCmd;
   published
     [ShowProp('Тестовые данные')] property TestUsoData: TTestUsoData read FTestUsoData write SetTestUsoData default tudNone;
     [ShowProp('Вести запись в файл')] property WriteToFile: Boolean read FWriteToFile write SetWriteToFile default False;
@@ -413,7 +418,7 @@ end;
 
 procedure TTelesistem.InitMetaData(ev: TInfoEvent);
  var
-  ip: IProjectData;
+  ip: IProjectMetaData;
   c: TCollectionItem;
 begin
   with FMetaDataInfo do
@@ -433,7 +438,7 @@ begin
       TPars.SetMetr(Info, FExeMetr, True);
       finally
        try
-        if Supports(GlobalCore, IProjectData, ip) then
+        if Supports(GlobalCore, IProjectMetaData, ip) then
            ip.SetMetaData(Self as IDevice, FAddressArray[0], FindDev(Info, FAddressArray[0]));
 
         FWorkEventInfo.DevAdr := FAddressArray[0];
@@ -477,6 +482,17 @@ begin
 //  if Supports(GlobalCore, IProjectDataFile, ix) then ix.SaveLogData(Self as IDevice, 1000, Work, Data, n)
   //else
   if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, 1000, FWorkEventInfo.Work, false);
+end;
+
+procedure TTelesistem.SendCmd(Cmd: Byte);
+begin
+  SendROW(@Cmd, 1, procedure(Data: Pointer; DataSize: integer)
+    begin
+      BindPortStstus(False);
+      if (FSubDevs.Count>0) then
+       with TSubDev(FSubDevs.Items[0]) do
+         if Category.Category = TELESIS_STRUCURE[0].Category then InputData(Data, DataSize);
+    end);
 end;
 
 procedure TTelesistem.SetConnect(AIConnectIO: IConnectIO);
@@ -679,6 +695,12 @@ begin
     Dec(DataSize);
     Inc(p);
    end;
+end;
+
+procedure TUso1.SetCmd(const Value: Byte);
+begin
+  FCmd := Value;
+  TTelesistem(Owner).SendCmd(Value);
 end;
 
 procedure TUso1.SetTestUsoData(const Value: TTestUsoData);
@@ -1265,7 +1287,7 @@ constructor TDecoder2.Create;
 begin
   inherited;
   InitConst('TDecoderECHOForm', 'DecoderECHO_');
-  DataCnt := 11;
+  DataCnt := 16;
   DataCodLen := 17;
   FIsMul := True;
   FFltZerro := True;

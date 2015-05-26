@@ -14,4 +14,19 @@ object Form1: TForm1
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
+  object VirtualStringTree1: TVirtualStringTree
+    Left = 200
+    Top = 104
+    Width = 200
+    Height = 100
+    Header.AutoSizeIndex = 0
+    Header.Font.Charset = DEFAULT_CHARSET
+    Header.Font.Color = clWindowText
+    Header.Font.Height = -11
+    Header.Font.Name = 'Tahoma'
+    Header.Font.Style = []
+    Header.MainColumn = -1
+    TabOrder = 0
+    Columns = <>
+  end
 end

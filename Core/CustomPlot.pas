@@ -35,6 +35,7 @@ type
   TParamFilters = class;
 
 
+  [EnumCaptions('ID, Кадр, Глубина(м.), Время')]
   TAxisY = (axyID, axyKadr, axyDept, axyTime);
 
   {$REGION 'всякие коллекции сохраняемые'}
@@ -262,6 +263,7 @@ type
   IDataLink = interface
   ['{421A0AD1-48C0-4DB0-A08D-281E0121C13D}']
     function TryRead(id: Integer; out Data: TValue): Boolean;
+    function Count: Integer; //ID
   end;
 
   TYpoint = record
@@ -274,26 +276,55 @@ type
 //    function YtoID(Y: Double): Integer;
 //    function IDtoY(id: Integer): Double;
     procedure First;
+    procedure Last;
+    function Previous: Boolean;
     function Next: Boolean;
     function Data: TYpoint;
   end;
 
-  TCustomYDataLink = class(TInterfacedPersistent, IYDataLink)
+  TCustomDataLink = class;
+
+  TCustomYDataLink = class(TInterfacedPersistent)
+  private
+    FLink: TCustomDataLink;
+    FPlot: TCustomPlot;
   protected
-    procedure First;
-    function Next: Boolean;
-    function Data: TYpoint;
+    procedure First; virtual; abstract;
+    function Next: Boolean; virtual; abstract;
+    procedure Last; virtual; abstract;
+    function Previous: Boolean; virtual; abstract;
+    function Data: TYpoint; virtual; abstract;
+  public
+    constructor Create(AOwner: TCustomDataLink); virtual;
+    property Plot: TCustomPlot read FPlot;
   end;
 
+  TLogDataLink = class(TCustomYDataLink)
+  private
+    Findex: Integer;
+  protected
+    procedure First; override;
+    procedure Last; override;
+    function Previous: Boolean; override;
+    function Next: Boolean; override;
+    function Data: TYpoint; override;
+  end;
+
+  // привязка к проекту БД, las, lines, или директории с файлами Log Ram Glu
+  // или к файлу активного фильтра
   TCustomDataLinkClass = class of TCustomDataLink;
-  TCustomDataLink = class(TInterfacedPersistent , IDataLink, IYDataLink)
+  TCustomDataLink = class(TInterfacedPersistent, IDataLink, IYDataLink)
   private
     FOwner: TPlotParam;
+    FYLink: TCustomYDataLink;
+    function GetYDataLink: TCustomYDataLink; virtual;
   protected
     function TryRead(id: Integer; out Data: TValue): Boolean; virtual; abstract;
+    function Count: Integer; virtual; abstract;
+    property YDataLink: TCustomYDataLink read GetYDataLink implements IYDataLink;
   public
     constructor Create(AOwner: TPlotParam); virtual;
-  published
+    destructor Destroy; override;
   end;
 
   TFileDataLink = class(TCustomDataLink)
@@ -308,7 +339,7 @@ type
   published
    [ShowProp('Файл', True)]  property FileName: string read FFileName write FFileName;
    [ShowProp('X')]  property XParamPath: string read FXParamPath write SetXParamPath;
-   [ShowProp('Y')]  property YParamPath: string read FYParamPath write SetYParamPath;
+  // [ShowProp('Y')]  property YParamPath: string read FYParamPath write SetYParamPath;
   end;
   {$ENDREGION}
 
@@ -528,10 +559,9 @@ type
   {$ENDREGION}
 
   ///  клласс основной
-  TCustomPlot = class(TICustomControl)
+  TCustomPlot = class(TICustomControl{, IYDataLink})
   public
    const
-    C_AXIS_Y_NAME: array[TAxisY] of string = ('ID','Кадр','Глубина(м.)','Время');
     SCALE_PRESET: array[0..17] of Double =(0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.5,
                                        1, 2, 5, 10, 20, 50);
    type
@@ -557,6 +587,7 @@ type
     FPropertyChanged: string;
     FYTopScreen: Double;
     FYButtomScreen: Double;
+ //   FYDataLink: TCustomYDataLink;
 
     procedure UpdateColRowRegionSizes;
     procedure UpdateRegionSizes;
@@ -569,7 +600,6 @@ type
     procedure WMSetCursor(var Msg: TWMSetCursor); message WM_SETCURSOR;
     procedure WMSize(var Message: TWMSize); message WM_SIZE;
     procedure WMEraseBkgnd(var Msg: TWMEraseBkgnd); message WM_ERASEBKGND;
-    function GetDefaultYAxisCaption: string;
     procedure SetMirror(const Value: Boolean);
     procedure SetYFrom(const Value: Double);
     procedure SetYPosition(const Value: Double);
@@ -600,6 +630,7 @@ type
     function HitRegion(pos: TPoint): TPlotRegion; overload;
     function HitRegion(c: TPlotColumn; r: TPlotRow): TPlotRegion; overload;
 
+  //  property YDataLink: TCustomYDataLink read FYDataLink implements IYDataLink;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -623,7 +654,7 @@ type
     [ShowProp('Columns')] property Columns: TPlotColumns read FColumns;
     [ShowProp('Rows')]    property Rows: TPlotRows read FRows;
     /// ID , кадр, глубина
-    [ShowProp('Ось Y по умолчанию')] property DefaultYAxis: string read GetDefaultYAxisCaption;
+    [ShowProp('Ось Y по умолчанию'), True] property DefaultYAxis: TAxisY read GetDefaultYAxis;
 
     property S_PropertyChanged: string read FPropertyChanged write SetPropertyChanged;
   published
@@ -1065,6 +1096,22 @@ end;
 constructor TCustomDataLink.Create(AOwner: TPlotParam);
 begin
   FOwner := AOwner;
+end;
+
+destructor TCustomDataLink.Destroy;
+begin
+  if Assigned(FYLink) then FYLink.Free;
+  inherited;
+end;
+
+function TCustomDataLink.GetYDataLink: TCustomYDataLink;
+begin
+  if Assigned(FYLink) then Result := FYLink
+  else
+   begin
+
+   end;
+//  Result := FOwner.Plot.YDataLink;
 end;
 
 { TFileDataLink }
@@ -2124,12 +2171,45 @@ begin
   Result := axyID;
 end;
 
-function TCustomPlot.GetDefaultYAxisCaption: string;
-begin
-  Result := C_AXIS_Y_NAME[GetDefaultYAxis];
-end;
 {$ENDREGION}
 
+{ TLogDataLink }
+
+function TLogDataLink.Data: TYpoint;
+begin
+  Result.id := Findex;
+  Result.Y := Findex+1;
+end;
+
+procedure TLogDataLink.First;
+begin
+  Findex := 0;
+end;
+
+procedure TLogDataLink.Last;
+begin
+  Findex := FLink.Count-1;
+end;
+
+function TLogDataLink.Next: Boolean;
+begin
+  Inc(Findex);
+  Result := Findex > Plot.YLast;
+end;
+
+function TLogDataLink.Previous: Boolean;
+begin
+  Dec(Findex);
+  Result := Findex >= 0;
+end;
+
+{ TCustomYDataLink }
+
+constructor TCustomYDataLink.Create(AOwner: TCustomDataLink);
+begin
+  FLink := AOwner;
+  FPlot := FLink.FOwner.Plot;
+end;
 
 initialization
   RegisterClasses([TCustomPlotLegend, TCustomPlotData, TCustomPlotInfo]);

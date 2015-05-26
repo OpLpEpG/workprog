@@ -13,7 +13,9 @@ type
   end;
 
   TGR32LineCash = class(TAggObject, IGR32LineCash)
-
+    procedure SetCashSize(const Value: Integer); virtual; abstract;
+    function GetCashSize: Integer; virtual; abstract;
+    function GetMaxCashSize: Int64; virtual; abstract;
   end;
 
   TGR32FileDataLink = class(TFileDataLink)
@@ -499,13 +501,11 @@ procedure TGR32GraphicData.Render;
   Y: Integer;
 begin
   FBitmap.FillRect(0, 0, FBitmap.Width, FBitmap.Height, clWhite32);
-  for p in Column do if p.Visible then
+{  for p in Column.Params do if p.Visible then
    if p is TLineParam then
     begin
       p as IDataLink
-    end;
-
-
+    end;}
   DrowAxis;
 end;
 

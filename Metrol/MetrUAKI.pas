@@ -30,6 +30,7 @@ type
     procedure SetC_AxisUpdate(const Value: Integer);
     procedure btGoClick(Sender: TObject);
     procedure NToleranceClick(Sender: TObject);
+    procedure NSurrentSetClick(Sender: TObject);
     procedure btReperClick(Sender: TObject);
     procedure InitFrame(var Frame: TFrameUakiUI; const Capt, Nm: string; Addr: Integer);
     procedure SetC_PublishedChanged(const Value: string);
@@ -38,6 +39,9 @@ type
   protected
    const
     NICON = 273;
+    function AdressUaki: Integer; virtual;
+    function ConnectionType: Integer; virtual;
+    procedure DoTenSupport; virtual;
     procedure CanClose(var CanClose: Boolean);
     procedure BeforeRemove(); override;
     procedure InitializeNewForm; override;
@@ -52,6 +56,17 @@ type
     property C_PublishedChanged: string read FC_PublishedChanged write SetC_PublishedChanged;
   end;
 
+  TFormUAKI2 = class(TFormUAKI)
+  protected
+   const
+    NICON = 274;
+    function AdressUaki: Integer; override;
+    function ConnectionType: Integer; override;
+    procedure DoTenSupport; override;
+  public
+    [StaticAction('УАК-СИ Ноябрьск', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
+    class procedure DoCreateForm(Sender: IAction); override;
+  end;
 
 implementation
 
@@ -60,6 +75,11 @@ implementation
 uses tools, MetrUAKI.ToleranceForm;
 
 { TFormUAKI }
+
+function TFormUAKI.AdressUaki: Integer;
+begin
+  Result := ADR_UAKI;
+end;
 
 procedure TFormUAKI.BeforeRemove;
 begin
@@ -94,9 +114,7 @@ end;
 
 procedure TFormUAKI.Button1Click(Sender: TObject);
 begin
-  Uaki.Azi.TermimateMoving;
-  Uaki.Zen.TermimateMoving;
-  Uaki.Viz.TermimateMoving;
+  Uaki.TermimateMoving;
 end;
 
 procedure TFormUAKI.CanClose(var CanClose: Boolean);
@@ -121,9 +139,23 @@ begin
   Result := NICON;
 end;
 
+function TFormUAKI.ConnectionType: Integer;
+begin
+  Result := 4;
+end;
+
 class procedure TFormUAKI.DoCreateForm(Sender: IAction);
 begin
   GetUniqueForm('GlobalUakiForm');
+end;
+
+procedure TFormUAKI.DoTenSupport;
+begin
+  FuiT := CreateUnLoad<TFrameUakiTEN>;
+  FuiT.Name := 'FuiT';
+  FuiT.Parent := Self;
+  FuiT.FuncUaki := GetUaki;
+  FuiT.Show;
 end;
 
 procedure TFormUAKI.edDvisKeyPress(Sender: TObject; var Key: Char);
@@ -145,6 +177,7 @@ begin
     Frame.Show;
    end;
   Frame.NTolerance.OnClick := NToleranceClick;
+  Frame.NCurrentSet.OnClick := NSurrentSetClick;
   Frame.btGo.OnClick := btGoClick;
   Frame.lbReper.OnClick := btReperClick;
   Frame.lbName.Caption := Capt;
@@ -163,11 +196,7 @@ end;
 procedure TFormUAKI.Loaded;
 begin
   inherited Loaded;
-  FuiT := CreateUnLoad<TFrameUakiTEN>;
-  FuiT.Name := 'FuiT';
-  FuiT.Parent := Self;
-  FuiT.FuncUaki := GetUaki;
-  FuiT.Show;
+  DoTenSupport;
 //  btCycl.Caption := 'Опрос+';
   InitFrame(FuiV, 'Визир','FuiV', ADR_AXIS_VIZ);
   InitFrame(FuiZ, 'Зенит','FuiZ', ADR_AXIS_ZU);
@@ -191,13 +220,28 @@ begin
    begin
     if Supports(GlobalCore, IConnectIOEnum, ge) and Supports(GlobalCore, IGetConnectIO, gc) then
      begin
-       c := gc.ConnectIO(4);
+       c := gc.ConnectIO(ConnectionType);
        if RegisterDialog.TryGet<Dialog_SetupConnectIO>(d) then (d as IDialog<IConnectIO>).Execute(c);
        u.IConnect := c;
        ge.Add(c);
      end
    end
    else if RegisterDialog.TryGet<Dialog_SetupConnectIO>(d) then (d as IDialog<IConnectIO>).Execute(u.IConnect);
+end;
+
+procedure TFormUAKI.NSurrentSetClick(Sender: TObject);
+  procedure SetCurr(f: TFrameUakiUI; a: IAxis);
+  begin
+    a.CurrentAngle := StrToFloat(f.edNeed.Text);
+    f.lbCurAng.Caption := f.edNeed.Text;
+  end;
+begin
+  with TFrameUakiUI(TMenuItem(Sender).Owner) do
+  case Adr of
+   ADR_AXIS_AZI: SetCurr(FuiA, Uaki.Azi);
+   ADR_AXIS_ZU:  SetCurr(FuiZ, Uaki.Zen);
+   ADR_AXIS_VIZ: SetCurr(FuiV, Uaki.Viz);
+  end;
 end;
 
 procedure TFormUAKI.NToleranceClick(Sender: TObject);
@@ -233,7 +277,7 @@ end;
 procedure TFormUAKI.SetC_TenUpdate(const Value: Integer);
 begin
   FC_TenUpdate := Value;
-  FuiT.UpdateScreen(Value, Uaki);
+  if Assigned(FuiT) then FuiT.UpdateScreen(Value, Uaki);
 end;
 
 function TFormUAKI.GetUaki: IUaki;
@@ -248,7 +292,7 @@ begin
    begin
     for d in de.Enum() do if Supports(d, IUaki, Result) then Exit;
     SetLength(a, 1);
-    a[0] := ADR_UAKI;
+    a[0] := AdressUaki;
     d := g.Device(a, 'UAKI');
     de.Add(d);
     FBinded := False;
@@ -266,9 +310,34 @@ begin
   end;
 end;
 
+{ TFormUAKI2 }
+
+function TFormUAKI2.AdressUaki: Integer;
+begin
+  Result := ADR_UAKI2;
+end;
+
+function TFormUAKI2.ConnectionType: Integer;
+begin
+  Result := 1;
+end;
+
+class procedure TFormUAKI2.DoCreateForm(Sender: IAction);
+begin
+  GetUniqueForm('GlobalUaki2Form');
+end;
+
+procedure TFormUAKI2.DoTenSupport;
+begin
+  Caption := 'УАК-СИ Ноябрьск'
+end;
+
 initialization
   RegisterClass(TFormUAKI);
   TRegister.AddType<TFormUAKI, IForm>.LiveTime(ltSingletonNamed);
+  RegisterClass(TFormUAKI2);
+  TRegister.AddType<TFormUAKI2, IForm>.LiveTime(ltSingletonNamed);
 finalization
   GContainer.RemoveModel<TFormUAKI>;
+  GContainer.RemoveModel<TFormUAKI2>;
 end.

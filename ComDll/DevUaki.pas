@@ -8,14 +8,9 @@ type
 
   TAxis = class(TAggObject, IAxis)
   private
-    FCurrentAngle: TAngle;
     FNeedAngle: TAngle;
     FDeltaAngle: TAngle;
     FAdr: Integer;
-    FMotor: Char;
-    FReper: Char;
-    FEndTumbler: Char;
-    FError: Byte;
     FInfo: string;
     procedure OnCurrentData(const Data: string; status: integer);
   protected
@@ -25,11 +20,11 @@ type
                                    'ЂWDGї Ч заклинивание'#$A,
                                    'ЂMINї Ч выход за минимальную позицию'#$A,
                                    'ЂMAXї Ч выход за максимальную позицию'#$A, 'ЂWDTRї Ч срабатывание сторожевого таймера');
-    procedure UpdateAngleData;
-    procedure FindMarker;
+    procedure UpdateAngleData; virtual;
+    procedure FindMarker; virtual;
     procedure ClearDeltaAngle;
-    procedure TermimateMoving;
-    procedure GotoAngle(Angle: TAngle; MaxSpeed: Integer = 255);
+    procedure TermimateMoving; virtual;
+    procedure GotoAngle(Angle: TAngle; MaxSpeed: Integer = 255); virtual;
 
     function MotorToString: string;
     function MotorToColor: TColor;
@@ -47,18 +42,25 @@ type
     function GetAdr: Integer;
 
     function GetCurrentAngle: TAngle;
+    procedure SetCurrentAngle(Value: TAngle);
     function GetNeedAngle: TAngle;
     function GetDeltaAngle: TAngle;
     procedure SetDeltaAngle(Value: TAngle);
 
     procedure SetNeedAngle(Value: TAngle);
 
-    function GetTOlerance: Double;
-    procedure SetTolerance(const Value: Double);
+    function GetTOlerance: Double; virtual;
+    procedure SetTolerance(const Value: Double); virtual;
    public
+    FCurrentAngle: TAngle;
+    FMotor: Char;
+    FReper: Char;
+    FEndTumbler: Char;
+    FError: Byte;
     constructor Create(const Controller: IInterface; addr: Integer);
     property NeedAngle: TAngle read FNeedAngle write SetNeedAngle;
   end;
+  TAxisClass = class of TAxis;
 
   TAxisAzi = class(TAxis, IAxisAZI);
   TAxisZen = class(TAxis, IAxisZEN);
@@ -68,9 +70,9 @@ type
 
   TDevUaki = class(TDevice, IDevice, IUaki, ICycle, IAxisAZI, IAxisZEN, IAxisVIZ)
   private
-    FAzi: TAxisAzi;
-    FZen: TAxisZen;
-    FViz: TAxisViz;
+    FAzi: TAxis;
+    FZen: TAxis;
+    FViz: TAxis;
     FS_AxisUpdate: Integer;
     FTemp: TArray<Double>;
     FTen: array[0..2] of Integer;
@@ -84,6 +86,8 @@ type
    var
     FCycle: TCycleUAK;
   protected
+    procedure DoCycle; virtual;
+
     procedure UpdateTenData;
     procedure OnCurrentData(const Data: string; status: integer);
     // IUaki
@@ -95,15 +99,25 @@ type
     function GetTemperature: TArray<Double>;
     procedure TenStop;
 
+    procedure TermimateMoving; virtual;
+
+    function GetAxisAziClass: TAxisClass; virtual;
+    function GetAxisZenClass: TAxisClass; virtual;
+    function GetAxisVizClass: TAxisClass; virtual;
+
     procedure SetConnect(AIConnectIO: IConnectIO); override;
+
+    procedure DoSetConnect(AIConnectIO: IConnectIO); virtual;
+    procedure DoRegister; virtual;
+
   public
     constructor Create(); override;
     constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); override;
     destructor Destroy; override;
     property Cycle: TCycleUAK read FCycle implements  ICycle;
-    property Azi: TAxisAzi read FAzi implements  IAxisAZI;
-    property Zen: TAxisZen read FZen implements  IAxisZEN;
-    property Viz: TAxisViz read FViz implements  IAxisVIZ;
+    property Azi: TAxis read FAzi implements  IAxisAZI;
+    property Zen: TAxis read FZen implements  IAxisZEN;
+    property Viz: TAxis read FViz implements  IAxisVIZ;
     property S_AxisUpdate: Integer read FS_AxisUpdate write SetS_AxisUpdate;
     property S_TenUpdate: Integer read FS_TenUpdate write FS_TenUpdate;
   published
@@ -116,13 +130,7 @@ implementation
 
 procedure TDevUaki.TCycleUAK.DoCycle;
 begin
-  TDevUaki(Controller).UpdateTenData;
-  with Controller as IUaki do
-   begin
-    Azi.UpdateAngleData;
-    Zen.UpdateAngleData;
-    Viz.UpdateAngleData;
-   end;
+  TDevUaki(Controller).DoCycle;
 end;
 
 { TDevUaki }
@@ -130,9 +138,9 @@ end;
 constructor TDevUaki.Create;
 begin
   inherited;
-  FAzi := TAxisAzi.Create(self, ADR_AXIS_AZI);
-  FZen := TAxisZen.Create(self, ADR_AXIS_ZU);
-  FViz := TAxisViz.Create(self, ADR_AXIS_VIZ);
+  FAzi := GetAxisAziClass.Create(self as IInterface, ADR_AXIS_AZI);
+  FZen := GetAxisZenClass.Create(self as IInterface, ADR_AXIS_ZU);
+  FViz := GetAxisVizClass.Create(self as IInterface, ADR_AXIS_VIZ);
   FCycle := TCycleUAK.Create(Self);
   FAddressArray := TAddressRec(ADR_UAKI.ToString());
   FDName := 'UAKI';
@@ -144,11 +152,13 @@ end;
 constructor TDevUaki.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
 begin
   inherited;
-  TRegister.AddType<TDevUaki>.AddInstance(Name, Self as IInterface);
+  DoRegister;
 end;
 
 destructor TDevUaki.Destroy;
 begin
+  FCycle.SetCycle(False);
+  while FCycle.GetCycle do TThread.Yield;
   FCycle.Free;
   FAzi.Free;
   FZen.Free;
@@ -156,9 +166,37 @@ begin
   inherited;
 end;
 
+procedure TDevUaki.DoRegister;
+begin
+  TRegister.AddType<TDevUaki>.AddInstance(Name, Self as IInterface);
+end;
+
+procedure TDevUaki.DoCycle;
+begin
+  UpdateTenData;
+  Azi.UpdateAngleData;
+  Zen.UpdateAngleData;
+  Viz.UpdateAngleData;
+end;
+
+function TDevUaki.GetAxisAziClass: TAxisClass;
+begin
+  Result := TAxisAzi;
+end;
+
+function TDevUaki.GetAxisVizClass: TAxisClass;
+begin
+  Result := TAxisViz;
+end;
+
+function TDevUaki.GetAxisZenClass: TAxisClass;
+begin
+  Result := TAxisZen;
+end;
+
 function TDevUaki.GetAzi: IAxisAZI;
 begin
-  Result := Fazi;
+  Fazi.QueryInterface(IAxisAZI, Result)
 end;
 
 function TDevUaki.GetTemperature: TArray<Double>;
@@ -173,17 +211,22 @@ end;
 
 function TDevUaki.GetViz: IAxisVIZ;
 begin
-  Result := FViz;
+  FViz.QueryInterface(IAxisVIZ, Result)
 end;
 
 function TDevUaki.GetZen: IAxisZEN;
 begin
-  Result := FZen;
+  FZen.QueryInterface(IAxisZEN, Result)
+end;
+
+procedure TDevUaki.DoSetConnect(AIConnectIO: IConnectIO);
+begin
+  if Assigned(AIConnectIO) and not Supports(AIConnectIO, IUDPConnectIO) then raise EDevUakiException.Create('¬озможно только UDP соединение!');
 end;
 
 procedure TDevUaki.SetConnect(AIConnectIO: IConnectIO);
 begin
-  if Assigned(AIConnectIO) and not Supports(AIConnectIO, IUDPConnectIO) then raise EDevUakiException.Create('¬озможно только UDP соединение!');
+  DoSetConnect(AIConnectIO);
   inherited;
 end;
 
@@ -208,6 +251,13 @@ end;
 procedure TDevUaki.TenStop;
 begin
   (IConnect as IUDPConnectIO).Send('14p0,0,0');
+end;
+
+procedure TDevUaki.TermimateMoving;
+begin
+  Azi.TermimateMoving;
+  Zen.TermimateMoving;
+  Viz.TermimateMoving;
 end;
 
 procedure TDevUaki.UpdateTenData;
@@ -296,6 +346,11 @@ begin
    'E': Result := 'ошибка';
   else  Result := 'неопознано: (' + FReper +')';
   end;
+end;
+
+procedure TAxis.SetCurrentAngle(Value: TAngle);
+begin
+  FCurrentAngle := Value - FDeltaAngle;
 end;
 
 procedure TAxis.SetDeltaAngle(Value: TAngle);

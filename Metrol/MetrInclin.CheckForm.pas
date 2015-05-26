@@ -18,6 +18,9 @@ type
     procedure TreeAddToSelection(Sender: TBaseVirtualTree; Node: PVirtualNode);
   private
     FAutomatMetrology: TinclAuto;
+    FStolVizir: Double;
+    FStolAzimut: Double;
+    FStolZenit: Double;
     procedure NParamClick(Sender: TObject);
   protected
     FStep: record
@@ -31,10 +34,15 @@ type
     NICON = 86;
     procedure DoStopAtt(AttNode: IXMLNode); override;
     function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; override;
+//    procedure UserExecStepUpdateStolAngle(Step: Integer; alg, trr: IXMLNode);
     function UserSetupAlg(alg: IXMLNode): Boolean; override;
     class function ClassIcon: Integer; override;
   public
     destructor Destroy; override;
+    property StolVizir: Double read FStolVizir;
+    property StolZenit: Double read FStolZenit;
+    property StolAzimut: Double read FStolAzimut;
+
     [StaticAction('Новая поверка', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
@@ -69,10 +77,25 @@ end;
 procedure TFormInclinCheck.DoStopAtt(AttNode: IXMLNode);
  var
   v: Variant;
+  n: IXMLNode;
 begin
+  if TryGetX(AttNode, 'TASK', n) then
+   begin
+    if n.HasAttribute('Vizir_Stol') then FStolVizir := Double(n.Attributes['Vizir_Stol']);
+    if n.HasAttribute('Azimut_Stol') then FStolAzimut := Double(n.Attributes['Azimut_Stol']);
+    if n.HasAttribute('Zenit_Stol') then FStolZenit := Double(n.Attributes['Zenit_Stol']);
+   end;
   v := XToVar(AttNode);
-  v.СТОЛ.азимут := Double(FAutomatMetrology.uaki.Azi.CurrentAngle);
-  v.СТОЛ.зенит := Double(FAutomatMetrology.uaki.Zen.CurrentAngle);
+  if FAutomatMetrology.UakiExists then
+   begin
+    v.СТОЛ.азимут := Double(FAutomatMetrology.uaki.Azi.CurrentAngle);
+    v.СТОЛ.зенит := Double(FAutomatMetrology.uaki.Zen.CurrentAngle);
+   end
+  else
+   begin
+    v.СТОЛ.азимут := StolAzimut;
+    v.СТОЛ.зенит := StolZenit;
+   end;
   v.СТОЛ.err_азимут := TMetrInclinMath.DeltaAngle(v.азимут.CLC.VALUE - v.СТОЛ.азимут);
   if v.СТОЛ.зенит > 180 then v.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(v.зенит.CLC.VALUE -(360 - v.СТОЛ.зенит))
   else v.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(v.зенит.CLC.VALUE - v.СТОЛ.зенит);
@@ -287,6 +310,7 @@ end;
 function TFormInclinCheck.UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean;
 begin
   Result := True;
+//  UserExecStepUpdateStolAngle(Step, alg, trr);
   case Step of
    32 :
        begin
@@ -296,6 +320,18 @@ begin
    104: alg.Attributes['ErrAZ5'] := FindMaxErr(alg, 81,  105, 'err_азимут');
   end;
 end;
+
+{procedure TFormInclinCheck.UserExecStepUpdateStolAngle(Step: Integer; alg, trr: IXMLNode);
+ var
+  n: IXMLNode;
+begin
+  if TryGetX(alg, Format('STEP%d.TASK',[Step]), n) then
+   begin
+     if n.HasAttribute('Vizir_Stol') then FStolVizir := Double(n.Attributes['Vizir_Stol']);
+     if n.HasAttribute('Azimut_Stol') then FStolAzimut := Double(n.Attributes['Azimut_Stol']);
+     if n.HasAttribute('Zenit_Stol') then FStolZenit := Double(n.Attributes['Zenit_Stol']);
+   end;
+end;}
 
 initialization
   RegisterClass(TFormInclinCheck);

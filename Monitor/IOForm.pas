@@ -16,7 +16,9 @@ type
     FConnectIO: string;
     FLConnectInfo: string;
     FProject: string;
+    FMaxLenHex: Integer;
     procedure NSaveAsClick(Sender: TObject);
+    procedure NMaxLenHexClick(Sender: TObject);
     procedure NClearClick(Sender: TObject);
     procedure OnIOEvent(IOStatus: EnumIOStatus; Data: PByteArray; DataSize: Integer);
     procedure OnIOEventString(IOStatus: EnumIOStatus; const Data: string);
@@ -39,6 +41,7 @@ type
   published
     property C_Project: string read FProject write SetProjectChange;
     property ConnectIO: string read FConnectIO write SetConnectIO;
+    property MaxLenHex: Integer read FMaxLenHex write FMaxLenHex default 16;
   end;
 
 implementation
@@ -87,9 +90,11 @@ procedure TFormIO.InitializeNewForm;
   Item : TMenuItem;
 begin
   inherited;
+  FMaxLenHex := 16;
   AddToNCMenu('-', nil, Item);
   AddToNCMenu('Очистить', NClearClick, Item);
   AddToNCMenu('Сохранить в файл...', NSaveAsClick, Item);
+  AddToNCMenu('Длинна выводимых данных...', NMaxLenHexClick, Item);
   //Item.Action := FileSaveAs;
   AddToNCMenu('Подключить к устойству ввода-вывода', nil, NConnections);
   if Supports(GlobalCore, IConnectIOEnum, ce) then Bind('C_BeforeRemove', ce, ['S_BeforeRemove']); //(ce as IBind).CreateManagedBinding(Self, 'LBeforeRemove', ['S_BeforeRemove']);
@@ -127,6 +132,11 @@ begin
    end;
 end;
 
+procedure TFormIO.NMaxLenHexClick(Sender: TObject);
+begin
+  FMaxLenHex := InputBox('Длинна данных', 'Длинна данных', FMaxLenHex.ToString()).ToInteger;
+end;
+
 procedure TFormIO.NSaveAsClick(Sender: TObject);
 begin
   with TSaveDialog.Create(nil) do
@@ -147,7 +157,7 @@ procedure TFormIO.OnIOEvent(IOStatus: EnumIOStatus; Data: PByteArray; DataSize: 
    i,n: Integer;
  begin
    Result := '';
-   if DataSize > 16 then n := 16
+   if DataSize > MaxLenHex then n := MaxLenHex
    else n := DataSize;
    for i := 0 to n-1 do Result := Result + ' ' + IntToHex(Data^[i],2);
    if DataSize > 16 then Result := Result +'...';

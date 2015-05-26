@@ -3,7 +3,7 @@ unit PluginManager;
 interface
 
 uses
-  Windows,
+  Winapi.Windows,
   SysUtils,
   Classes,
   RTTI,
@@ -60,7 +60,7 @@ implementation
 uses
   Contnrs,
   Forms,
-  Registry;
+  System.Win.Registry;
 
 resourcestring
   rsPluginsLoadError = 'One or more plugins has failed to load:' + sLineBreak + '%s';

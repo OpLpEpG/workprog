@@ -40,7 +40,7 @@ uses
 type
  TVCLControl = class(TAbstractPlugin)
  private
-  class procedure InnerProject(const PrjName: string; isNew: Boolean);
+//  class procedure InnerProject(const PrjName: string; isNew: Boolean);
  protected
    class function GetHInstance: THandle; override;
  public
@@ -83,7 +83,7 @@ begin
   Result := HInstance;
 end;
 
-class procedure TVCLControl.InnerProject(const PrjName: string; isNew: Boolean);
+{class procedure TVCLControl.InnerProject(const PrjName: string; isNew: Boolean);
 begin
   (GContainer as IMainScreen).Lock;
   try
@@ -91,79 +91,37 @@ begin
          (GContainer as IManager).NewProject(PrjName)
    else  (GContainer as IManager).LoadProject(PrjName);
    (GContainer as IMainScreen).StatusBarText[1] := (GContainer as IManager).ProjectName;
-   (GContainer as IRegistry).SaveString('CurrentProject', (GContainer as IManager).ProjectName);
+   (GContainer as IRegistry).SaveString('CurrentProject', (GContainer as IManager).ProjectName, True);
    (GContainer as IActionProvider).ResetActions;
   finally
    (GContainer as IMainScreen).UnLock;
   end;
-end;
+end;   }
 
 class procedure TVCLControl.DoNewProject(Sender: IAction);
  var
-  me: IManagerEx;
+  s: string;
 begin
-  with TOpenDialog.Create(nil) do
-  try
-   if Supports(GContainer, IManagerEx, me) then
-    begin
-     DefaultExt := me.GetProjectDefaultExt;
-     Filter :=  me.GetProjectFilter;
-     InitialDir := me.GetProjectDirectory;
-    end
-   else
-    begin
-     DefaultExt := 'db';
-     Filter := 'Файл проекта (*.db)|*.db';
-     InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
-    end;
-   Options := [ofOverwritePrompt,ofHideReadOnly,ofEnableSizing];
-   if not Execute() then Exit;
-   InnerProject(FileName, True);
-  finally
-   Free;
-  end;
+  (GContainer as IProject).New(s);
 end;
 
 class procedure TVCLControl.DoOpenProject(Sender: IAction);
  var
-  me: IManagerEx;
+  s: string;
 begin
-  with TOpenDialog.Create(nil) do
-  try
-   if Supports(GContainer, IManagerEx, me) then
-    begin
-     DefaultExt := me.GetProjectDefaultExt;
-     Filter :=  me.GetProjectFilter;
-     InitialDir := me.GetProjectDirectory;
-    end
-   else
-    begin
-     DefaultExt := 'db';
-     Filter := 'Файл проекта (*.db)|*.db';
-     InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
-    end;
-   Options := [ofReadOnly,ofHideReadOnly,ofPathMustExist,ofFileMustExist,ofEnableSizing];
-   if not Execute() then Exit;
-   InnerProject(FileName, False);
-  finally
-   Free;
-  end;
+  (GContainer as IProject).Load(s);
 end;
 
 class procedure TVCLControl.DoSloseProject(Sender: IAction);
 begin
-   InnerProject('', False);
+  (GContainer as IProject).Close;
 end;
 
 class procedure TVCLControl.DoZPropertyProject(Sender: IAction);
- var
-  d: Idialog;
-  dp: IDialog<Pointer>;
 begin
-  if (GContainer as IManager).ProjectName <> '' then
-    if RegisterDialog.TryGet<Dialog_SetupProject>(d) then
-      if Supports(d, IDialog<Pointer>, dp ) then dp.Execute(nil);
+  (GContainer as IProject).Setup;
 end;
+
 
 begin
 end.

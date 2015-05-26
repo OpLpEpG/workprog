@@ -150,4 +150,8 @@ object Form4: TForm4
     Left = 112
     Top = 264
   end
+  object FDTable1: TFDTable
+    Left = 336
+    Top = 240
+  end
 end

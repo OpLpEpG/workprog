@@ -325,7 +325,7 @@ begin
           a: AnsiString;
         begin
           if n = -1 then DoEvent(Event, esTimeOut, '')
-          else if n >=4 then
+          else if n >= 4 then
            begin
             ConnectIO.FTimerRxTimeOut.Enabled := False;
             SetString(a, PAnsiChar(p), n);

@@ -875,7 +875,8 @@ begin
    begin
     X := Root.AttributeNodes.FindNode(AttrName);
     Result := Assigned(X);
-   end;
+   end
+  else X := Root;
 end;
 
 function GetXNode(Root: IXMLNode; const Path: string; CreatePathNotExists: Boolean = False): IXMLNode;

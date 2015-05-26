@@ -208,7 +208,7 @@ begin
    UpdateControls(False);
    try
     if not IsImport then
-     if cbShortPack.Checked then (FDev as IReadRamDevice).Execute(od.FileName, 0, 0, cbToFF.Checked, rg.ItemIndex+1, ds['Адрес'], ReadRamEvent, FModulID, 252)
+     if cbShortPack.Checked then (FDev as IReadRamDevice).Execute(od.FileName, 0, 0, cbToFF.Checked, rg.ItemIndex+1, ds['Адрес'], ReadRamEvent, FModulID, 128)
      else (FDev as IReadRamDevice).Execute(od.FileName,0, 0, cbToFF.Checked, rg.ItemIndex+1, ds['Адрес'], ReadRamEvent, FModulID)
     else ri.Import(flName, flIndex,0,0, cbToFF.Checked, ds['Адрес'], ReadRamEvent, FModulID);
    except

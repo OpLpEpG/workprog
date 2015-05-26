@@ -39,7 +39,7 @@ type
     [ShowProp('Число ошибочных данных')]   property NumBadCode : Integer read FNumBadCode write SetNumBadCode default 8;
     [ShowProp('Битовый фильтр')]           property BitFilter: Boolean  read FBitFilter   write SetBitFilter  default False;
     property Bits: Integer read FBits write SetBits default 8;
-    property DataCnt: Integer read FDataCnt write SetDataCnt default 32;
+    [ShowProp('Число данных')] property DataCnt: Integer read FDataCnt write SetDataCnt default 32;
     property DataCodLen: Integer read FDataCodLen write SetDataCodLen default 32;
     property SPCodLen: Integer read FSPCodLen write SetSPCodLen default 128;
   end;

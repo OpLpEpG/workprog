@@ -4,34 +4,112 @@ object TPlot
   Width = 819
   Height = 554
   YMirror = False
-  YFromType = yfmUser
-  YScale = 1.000000000000000000
+  YFromType = yfmLast
+  YFromData = 2000.344499999999000000
+  YRangeData = 8000.000000000000000000
+  YPosition = 4355.900499999999000000
+  YScale = 0.100000000000000000
   Align = alClient
   Parent = Form1.Owner
   PlotRows = <
     item
       ItemClassName = 'TGR32LegendRow'
-      Height = 277
+      Height = 89
     end
     item
       ItemClassName = 'TCustomPlotData'
-      Height = 139
+      Height = 363
     end
     item
       ItemClassName = 'TCustomPlotInfo'
-      Height = 138
+      Height = 102
     end>
   PlotColumns = <
     item
       ItemClassName = 'TGR32GraphicCollumn'
-      Width = 819
+      Width = 465
       Params = <
         item
           ItemClassName = 'TLineParam'
           LinkClass = 'TFileDataLink'
           Link.FileName = 'FileName_p1'
           Link.XParamPath = 'X_p1'
-          Link.YParamPath = 'X_p1'
+          Title = 'p1'
+          ScaleX = 0.100000000000000000
+          Color = -65536
+          FixedParam = False
+          HideInLegend = False
+          EUnit = 'mm'
+          Filters = <
+            item
+              ItemClassName = 'TWaveletFilter'
+              DisplayName = 'ParamFilter_1'
+            end
+            item
+              ItemClassName = 'TWaveletFilter'
+              Activ = True
+              DisplayName = 'ParamFilter_2'
+            end>
+        end
+        item
+          ItemClassName = 'TLineParam'
+          Title = 'p2'
+          ScaleX = 1.000000000000000000
+          Color = -16776961
+          FixedParam = False
+          HideInLegend = False
+          Filters = <>
+        end
+        item
+          ItemClassName = 'TLineParam'
+          Title = 'p3'
+          ScaleX = 1.000000000000000000
+          Color = -16744704
+          FixedParam = False
+          HideInLegend = False
+          Filters = <>
+        end
+        item
+          ItemClassName = 'TLineParam'
+          Title = 'p4'
+          ScaleX = 1.000000000000000000
+          Color = -16744577
+          FixedParam = False
+          HideInLegend = False
+          Filters = <>
+        end
+        item
+          ItemClassName = 'TLineParam'
+          Title = 'p5'
+          ScaleX = 1.000000000000000000
+          Color = -16711681
+          FixedParam = False
+          HideInLegend = False
+          Filters = <>
+        end>
+      Regions = <
+        item
+          ItemClassName = 'TGR32GraphicLegend'
+          PropRow = 'TGR32LegendRow'
+        end
+        item
+          ItemClassName = 'TGR32GraphicData'
+          PropRow = 'TCustomPlotData'
+        end
+        item
+          ItemClassName = 'TPlotRegion'
+          PropRow = 'TCustomPlotInfo'
+        end>
+    end
+    item
+      ItemClassName = 'TGR32GraphicCollumn'
+      Width = 337
+      Params = <
+        item
+          ItemClassName = 'TLineParam'
+          LinkClass = 'TFileDataLink'
+          Link.FileName = 'FileName_p1'
+          Link.XParamPath = 'X_p1'
           Title = 'p1'
           ScaleX = 1.000000000000000000
           Color = -65536
@@ -44,7 +122,6 @@ object TPlot
             end
             item
               ItemClassName = 'TWaveletFilter'
-              Activ = True
               DisplayName = 'ParamFilter_2'
             end>
         end

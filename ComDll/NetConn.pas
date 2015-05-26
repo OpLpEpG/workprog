@@ -2,7 +2,7 @@ unit NetConn;
 
 interface
 
-uses System.SysUtils, System.Classes, System.SyncObjs, ActiveX,
+uses System.SysUtils, System.Classes, System.SyncObjs, Winapi.ActiveX,
      AbstractDev, IdTCPClient, IdGlobal, RootImpl, DeviceIntf, debug_except, RootIntf, ExtendIntf, tools, Container;
 
 type

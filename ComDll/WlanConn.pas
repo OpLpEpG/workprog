@@ -17,6 +17,7 @@ type
     class function ExtractHost(const Info: string): string; override;
     class function ExtractPort(const Info: string): Word; override;
     class function ExtractSSID(const Info: string): string; virtual;
+    class function ExtractPassw(const Info: string): string; virtual;
   public
     constructor Create(); override;
     destructor Destroy; override;
@@ -52,6 +53,11 @@ begin
   if Length(a) >= 2 then Result := inherited ExtractHost(a[1])
 end;
 
+class function TWlanConnectIO.ExtractPassw(const Info: string): string;
+begin
+
+end;
+
 class function TWlanConnectIO.ExtractPort(const Info: string): Word;
  var
   a: TArray<string>;
@@ -80,7 +86,7 @@ end;
 procedure TWlanConnectIO.Open;
 begin
   try
-   Fwifi.Connect(Fwifi.DefaultInterfaceID, ExtractSSID(FConnectInfo), false);
+   Fwifi.Connect(Fwifi.DefaultInterfaceID, ExtractSSID(FConnectInfo), '0407112014');
    inherited Open;
   except
    S_Status := S_Status + [iosError];

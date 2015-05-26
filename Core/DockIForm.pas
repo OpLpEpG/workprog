@@ -15,7 +15,7 @@ type
 
   TDockIFormClass = class of TDockIForm;
 
-  TDockIForm = class(TIForm, IDockClient, INotifyBeforeRemove)
+  TDockIForm = class(TIForm, IDockClient, INotifyBeforeRemove, INotifyBeforeClean)
   private
 //    FShowAction: IAction;
     FDockClient: TJvDockClient;
@@ -32,6 +32,7 @@ type
     NCanClose: Boolean;
     NClose, NTab, NDock: TMenuItem;
     procedure BeforeRemove(); virtual;
+   procedure BeforeClean(var CanClean: Boolean); virtual;
     procedure InitializeNewForm; override;
     procedure IShow; override;
 //    procedure LoadBeroreAdd(); virtual;
@@ -205,6 +206,11 @@ procedure TDockIForm.LoadBeroreAdd;
 begin
   CreateShowAction
 end;}
+
+procedure TDockIForm.BeforeClean(var CanClean: Boolean);
+begin
+  HideDockForm(Self); // не удалять !!!
+end;
 
 procedure TDockIForm.BeforeRemove;
 begin

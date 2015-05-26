@@ -31,7 +31,7 @@ function Init(): PTypeInfo;
 begin
   FFDGUIxSilentMode  := True;
   Result := TypeInfo(TManager);
-  TRegister.AddType<TManager, IPlugin, IManager, IProjectData, IMetrology, IProjectOptions>.LiveTime(ltSingleton);
+  TRegister.AddType<TManager, IPlugin, IManager, IProjectData, IProjectMetaData, IMetrology, IProjectOptions>.LiveTime(ltSingleton);
 end;
 
 procedure Done;

@@ -2,12 +2,10 @@ object FrameUakiUI: TFrameUakiUI
   Left = 0
   Top = 0
   Width = 106
-  Height = 252
+  Height = 305
   Align = alLeft
   PopupMenu = pp
   TabOrder = 0
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object lbName: TLabel
     Left = 8
     Top = 8
@@ -152,6 +150,9 @@ object FrameUakiUI: TFrameUakiUI
     Top = 136
     object NTolerance: TMenuItem
       Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1072' '#1090#1086#1095#1085#1086#1089#1090#1080'...'
+    end
+    object NCurrentSet: TMenuItem
+      Caption = #1055#1088#1080#1085#1103#1090#1100' '#1090#1088#1077#1073#1091#1077#1084#1086#1077' '#1079#1085#1072#1095#1077#1085#1080#1077' '#1091#1075#1083#1072' '#1079#1072' '#1090#1077#1082#1091#1097#1077#1077
     end
   end
 end

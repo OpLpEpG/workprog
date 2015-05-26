@@ -55,6 +55,7 @@ type
   public
     constructor Create(const Controller: IInterface; Rep: TStepMetrologyEvent); reintroduce;
     destructor Destroy; override;
+    function UakiExists: Boolean;
     property uaki: IUaki read GetUaki;
     property C_AxisUpdate: Integer read FC_AxisUpdate write SetC_AxisUpdate;
   end;
@@ -214,7 +215,7 @@ begin
       Exit(Fuaki);
      end;
   Result := nil;
-  raise EFormMetrolog.Create('Устройство УАК-СИ-АЗВ-Т отсутствует');
+  raise EFormMetrolog.Create('Устройство УАК-СИ отсутствует');
 end;
 
 procedure TinclAuto.DoStop;
@@ -351,6 +352,16 @@ begin
   uaki.Zen.TermimateMoving;
   uaki.Viz.TermimateMoving;
   Report(samUserStop, 'Прервано пользователем');
+end;
+
+function TinclAuto.UakiExists: Boolean;
+begin
+  Result := True;
+  try
+   uaki;
+  except
+   Result := False;
+  end;
 end;
 
 end.

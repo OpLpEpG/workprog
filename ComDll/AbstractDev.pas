@@ -3,7 +3,7 @@ unit AbstractDev;
 interface
 
 uses RootImpl, DeviceIntf, debug_except, RootIntf, ExtendIntf, tools, XMLScript, Parser, Container,
-     Menus, Generics.Collections, System.SyncObjs, Math, ActiveX,
+     Menus, Generics.Collections, System.SyncObjs, Math, Winapi.ActiveX,
      Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc,
      System.Bindings.Outputs, RTTI;
 
@@ -278,8 +278,8 @@ type
     ///	<summary>
     ///	  возвращает значение до открытия
     ///	</summary>
-    function ConnectOpen(): boolean; inline;
-    procedure ConnectClose();
+    function ConnectOpen(): boolean; virtual;
+    procedure ConnectClose(); virtual;
     function IsConnectLocked: boolean; inline;
     procedure ConnectUnLock; inline;
     procedure ConnectLock; inline;

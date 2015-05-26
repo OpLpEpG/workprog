@@ -18,6 +18,7 @@ type
     edNeed: TEdit;
     pp: TPopupMenu;
     NTolerance: TMenuItem;
+    NCurrentSet: TMenuItem;
   private
     { Private declarations }
   public
