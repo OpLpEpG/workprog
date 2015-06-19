@@ -9,6 +9,8 @@ type
    TUsoData = record
     Data: PDouble;
     Size: Integer;
+    BookMark: LongWord;
+    IsBookMark: Boolean;
     Fifo: TFifoDouble;
    end;
 
@@ -84,6 +86,8 @@ type
 {$ENDREGION}
 
 {$REGION 'TTelesistemDecoder'}
+   TTelesistemDecoder = class;
+   TSPEvent = procedure (Sender: TTelesistemDecoder; Takt: LongWord) of object;
    TTelesistemDecoder = class
    public
     type
@@ -122,10 +126,12 @@ type
      TSPIndex = record
       Faza: Integer;
       Idx: Integer;
+      GlobalTakt: LongWord;
      end;
      TCheckSPIndex = record
       FazaNew: Integer;
       Dkadr: Integer;
+      GlobalTakt: LongWord;
      end;
      TCodData = record
       Code: Integer;
@@ -140,7 +146,7 @@ type
      end;
    private
      // установки пакета
-     FBits, FDataCnt, FDataCodLen, FSPcodLen: Integer;
+     FBits, FDataCnt, FNoiseCnt, FDataCodLen, FSPcodLen: Integer;
      // состояние автомата
      FState: TCorrelatorState;
 
@@ -157,10 +163,12 @@ type
      FCHIndex: TCheckSPIndex;
      FBitFilterOn: Boolean;
      FBitFilter: Tarray<Double>;
+    FFirst: LongWord;
      procedure SetState(const Value: TCorrelatorState);
      function GetFindSPData: TFindSPData;
      procedure RunAutomat;
     function GetCodeTypes: TSetBufferType;
+    function GetKadrBezShuma: Integer;
    protected
      Buf: TArray<Double>;
      ///	<summary>
@@ -170,6 +178,7 @@ type
      Index: integer;
      // польсобытие
      FEvent: TNotifyEvent;
+     FSPEvent: TSPEvent;
 
      function GetOversampDataLen: Integer; virtual;
      function GetDataLen: Integer; virtual;
@@ -189,8 +198,9 @@ type
      property Count: Integer read GetCount;
      property Buffer: PDoubleArray read GetBuffer;
      class function ToPorog(Amp, Amp2: Double): Double; static; inline;
+     class function ToPorogSP(Amp, Amp2: Double): Double; static; inline;
    public
-     constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent); virtual;
+     constructor Create(ABits, ADataCnt, ANoiseCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent; ASPEvent: TSPEvent); virtual;
      procedure AddData(data: PDouble; len: Integer; DelEvent: TDeleteEvent);
 
      function IndexBuffer(ExtBuff: TFifoDouble): PDoubleArray;
@@ -198,12 +208,15 @@ type
      property State: TCorrelatorState read FState write SetState;
      // константы
      property KadrLen: Integer read GetKadrLen;
+     property KadrBezShumaLen: Integer read GetKadrBezShuma;
      property SPLen: Integer read GetSPLen;
      property DataLen: Integer read GetDataLen;
      property OversampDataLen: Integer read GetOversampDataLen;
 
      property SPCodLen: Integer read FSPcodLen;
      property DataCnt: Integer read FDataCnt;
+     property NoiseCnt: Integer read FNoiseCnt;
+
      property DataCodLen: Integer read FDataCodLen;
      property Bits: Integer read FBits;
      property CodeTypes: TSetBufferType read GetCodeTypes;
@@ -233,6 +246,7 @@ type
      property Codes: TPaketCodes read FCodes;
      property SPIndex: TSPIndex read FSPIndex;
      property CheckSPIndex: TCheckSPIndex read FCHIndex;
+     property First: LongWord read FFirst;
    end;
    TDecoderClass = class of TTelesistemDecoder;
 {$ENDREGION}
@@ -258,7 +272,7 @@ type
   protected
     function CorrCode(var cd: TTelesistemDecoder.TCodData):Integer; override;
   public
-    constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent); override;
+    constructor Create(ABits, ADataCnt, ANoiseCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent; ASPEvent: TSPEvent); override;
     property PorogAmpCod: Double read FPorogAmpCod;
 //    property AlgIsMull: Boolean read FAlgIsMull write FAlgIsMull;
   end;
@@ -272,7 +286,7 @@ type
     function GetOversampDataLen: Integer; override;
     function CorrCode(var cd: TTelesistemDecoder.TCodData):Integer; override;
   public
-    constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent); override;
+    constructor Create(ABits, ADataCnt, ANoiseCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent; ASPEvent: TSPEvent); override;
     property PorogAmpCod: Double read FPorogAmpCod;
     property AlgIsMull: Boolean read FAlgIsMull write FAlgIsMull;
   end;
@@ -288,7 +302,7 @@ type
     function GetOversampDataLen: Integer; override;
     function CorrCode(var cd: TTelesistemDecoder.TCodData):Integer; override;
   public
-    constructor Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent); override;
+    constructor Create(ABits, ADataCnt, ANoiseCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent; ASPEvent: TSPEvent); override;
     property Data: TFFTData read FData;
   end;
 
@@ -382,15 +396,17 @@ end;
 {$REGION 'OLD ECHO'}
 { TTelesistemDecoder }
 
-constructor TTelesistemDecoder.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
+constructor TTelesistemDecoder.Create(ABits, ADataCnt,  ANoiseCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent;  ASPEvent: TSPEvent);
  var
   i: Integer;
 begin
   FBits := ABits;
   FDataCnt := ADataCnt;
+  FNoiseCnt := ANoiseCnt;
   FDataCodLen := ADataCodLen;
   FSPcodLen := ASPCodLen;
   FEvent := AEvent;
+  FSPEvent := ASPEvent;
             //ADC USO 16 бит
   FAmpPorogSP := $8000 * 0.85;
   FPorogSP := 70;  //%
@@ -399,6 +415,11 @@ begin
 
   SetLength(FBitFilter, FBits);
   for i := 0 to FBits-1 do  FBitFilter[i] := Sin(i/Bits*pi);
+end;
+
+function TTelesistemDecoder.GetKadrBezShuma: Integer;
+begin
+  Result := Bits * ((DataCnt - NoiseCnt) * DataCodLen + SPcodLen)
 end;
 
 function TTelesistemDecoder.GetKadrLen: Integer;
@@ -484,9 +505,10 @@ begin
    begin
     Delete(Buf,0, n);
     Dec(Index, n);
+    inc(FFirst, n);
+    DelEvent(n);
     Assert(Index >= 0, 'Index < 0');
 //    TDebug.Log('NEW CORR LEN %d  INDEX %d     N %d', [Length(Buf), index, n] );
-    DelEvent(n);
    end;
   RunAutomat;
 end;
@@ -595,7 +617,14 @@ end;
 
 class function TTelesistemDecoder.ToPorog(Amp, Amp2: Double): Double;
 begin
-  if (Amp = 0) or (Amp2 > Amp) then Result := 0
+  if (Amp2 = 0) or (Amp < 0) then Result := 0
+  else if Amp > amp2 then Result := 100
+  else Result := (1 - Amp/Amp2) * 100;
+end;
+
+class function TTelesistemDecoder.ToPorogSP(Amp, Amp2: Double): Double;
+begin
+  if (Amp = 0) or (Amp2 > amp) then Result := 0
   else Result := (1 - Amp2/Amp) * 100;
 end;
 
@@ -614,12 +643,15 @@ procedure TTelesistemDecoder.RunAutomat;
     z: TArray<Double>;
     d: TFindSPData;
   begin
+   { TODO : set bookmark uso }
     with FSPData, FSPIndex do
      begin
       Faza := Fz;
       Idx := SPidx;
       Amp := spAmp;
       Porog := Prg;
+      GlobalTakt := First + Index + SPidx;
+      if Assigned(FSPEvent) then FSPEvent(Self, GlobalTakt);
      end;
     si := FSPIndex.Idx - Bits*2;
     if si + Index < 0 then
@@ -663,7 +695,7 @@ begin
          begin
           if (Max1 > -Min1) then
            begin
-            pr := ToPorog(Max1,  Max2);
+            pr := ToPorogSP(Max1,  Max2);
             if (pr >= FPorogSP) or UniqeCaseSP(Max1Index, Max2Index) then
              begin
               SetcsSP( 1, Max1Index,  Max1, pr);
@@ -672,7 +704,7 @@ begin
            end
           else
            begin
-            pr := ToPorog(-Min1, -Min2);
+            pr := ToPorogSP(-Min1, -Min2);
             if (pr >= FPorogSP) or UniqeCaseSP(Min1Index, Min2Index) then
              begin
               SetcsSP(-1, Min1Index, -Min1, pr);
@@ -686,9 +718,9 @@ begin
          // Амплитуда СП настоько большая что можно принять решение не дожидаясь конца пакета
          if (Max1 > -Min1) then
           if (Max1Index > FindSPCount + Bits*2) and (Max1 > FAmpPorogSP) then
-              SetcsSP( 1, Max1Index,  Max1, ToPorog( Max1,  Max2))
+              SetcsSP( 1, Max1Index,  Max1, ToPorogSP( Max1,  Max2))
           else if (Min1Index > FindSPCount + Bits*2) and (-Min1 > FAmpPorogSP) then
-              SetcsSP(-1, Min1Index, -Min1, ToPorog(-Min1, -Min2));
+              SetcsSP(-1, Min1Index, -Min1, ToPorogSP(-Min1, -Min2));
        end;
      end;
     csSP:
@@ -725,14 +757,18 @@ begin
         FazaNew := 1;
         Dkadr := fs.Max1Index;
         Amp := fs.Max1;
-        Porog := ToPorog(fs.Max1, fs.Max2);
+        Porog := ToPorogSP(fs.Max1, fs.Max2);
+        GlobalTakt := First + Index + Dkadr;
+        if Assigned(FSPEvent) then FSPEvent(Self, GlobalTakt);
        end
       else
        begin
         FazaNew := -1;
         Dkadr := fs.Min1Index;
         Amp := -fs.Min1;
-        Porog := ToPorog(-fs.Min1, -fs.Min2);
+        Porog := ToPorogSP(-fs.Min1, -fs.Min2);
+        GlobalTakt := First + Index + Dkadr;
+        if Assigned(FSPEvent) then FSPEvent(Self, GlobalTakt);
        end;
       SafeExceEvent();
       if (FazaNew = FSPIndex.Faza) and (Porog >= FPorogSP) and (Dkadr < 8) then
@@ -751,8 +787,8 @@ begin
      begin
       SafeExceEvent();
       with FFindSPData do
-       if (Max1 > -Min1) then SetcsSP( 1, Max1Index,  Max1, ToPorog( Max1,  Max2))
-       else SetcsSP(-1, Min1Index, -Min1, ToPorog(-Min1, -Min2));
+       if (Max1 > -Min1) then SetcsSP( 1, Max1Index,  Max1, ToPorogSP( Max1,  Max2))
+       else SetcsSP(-1, Min1Index, -Min1, ToPorogSP(-Min1, -Min2));
      end
   end;
 end;
@@ -823,10 +859,12 @@ begin
      end
     else if zeroes < amp then zeroes := amp;
    end;
-  if FAlgIsMull then cd.Porog := ToPorog(ones, Abs(Abs(zeroes) - FSPData.Amp))
+  if FAlgIsMull then cd.Porog := Min(ToPorog(ones, Abs(FSPData.Amp)), ToPorog(-zeroes,  Abs(FSPData.Amp)))
   else cd.Porog := ToPorog(ones, zeroes);
   cd.IsBad := Odd(cd.Code); //!!! в две строчки
   cd.IsBad := not Decode(cd.Code shr 1, cd.Code) or cd.IsBad; //!!!
+  if cd.IsBad then cd.Porog := 0;
+
   if cd.IsBad then Result := 1 else Result := 0;
 end;
 {$ENDREGION}
@@ -857,7 +895,7 @@ begin
   if cd.IsBad then Result := 1 else Result := 0;
 end;
 
-constructor TFSKDecoder.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
+constructor TFSKDecoder.Create(ABits, ADataCnt, ANoiseCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent; ASPEvent: TSPEvent);
  var
   i: Integer;
 begin
@@ -914,7 +952,7 @@ begin
   if cd.IsBad then Result := 1 else Result := 0;
 end;
 
-constructor TFSKDecoderFFT.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
+constructor TFSKDecoderFFT.Create(ABits, ADataCnt, ANoiseCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent; ASPEvent: TSPEvent);
   const
    AVL_FF: array [0..5] of Integer = (32,64,128,256,512,1024);
   var
@@ -1102,7 +1140,7 @@ begin
   if cd.IsBad then Result := 1 else Result := 0;
 end;
 
-constructor TFSK2Decoder.Create(ABits, ADataCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent);
+constructor TFSK2Decoder.Create(ABits, ADataCnt, ANoiseCnt, ADataCodLen, ASPCodLen: Integer; AEvent: TNotifyEvent; ASPEvent: TSPEvent);
  var
   i: Integer;
 begin

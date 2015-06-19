@@ -35,7 +35,9 @@ uses
   DlgViewParam in 'DlgViewParam.pas',
   DlgFromToGlu in 'DlgFromToGlu.pas' {FormDlgGluFilter},
   DialogOpenLas in 'DialogOpenLas.pas' {DlgOpenLAS},
-  VCL.FormShowArray in 'VCL.FormShowArray.pas' {FormShowArray};
+  VCL.FormShowArray in 'VCL.FormShowArray.pas' {FormShowArray},
+  VCL.CustomDataForm in 'VCL.CustomDataForm.pas',
+  VCL.GraphDataForm in 'VCL.GraphDataForm.pas' {GraphDataForm};
 
 {$R *.res}
 

@@ -98,7 +98,13 @@ contains
   Plot in 'Plot.pas',
   FileCachImpl in 'FileCachImpl.pas',
   OtklonitelPaintClass in 'OtklonitelPaintClass.pas',
-  AVRtypes in 'AVRtypes.pas';
+  AVRtypes in 'AVRtypes.pas',
+  IDataSets in 'IDataSets.pas',
+  DataSetIntf in '..\DataSetIntf.pas',
+  CustomPlot in 'CustomPlot.pas',
+  Plot.GR32 in 'Plot.GR32.pas',
+  DataImportIntf in '..\DataImportIntf.pas',
+  DataImportImpl in 'DataImportImpl.pas';
 
 end.
 

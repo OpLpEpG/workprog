@@ -100,7 +100,7 @@ type
     [ShowProp('Частота прибора')] property Frequency: TTelesisFrequency read FFrequency write SetFrequency default afq10;
   end;
 
-  TUso1 = class(TUsoRoot)
+  TUso1 = class(TUsoRoot, ISetBookMark)
   private
     RecRun: TRecRun;
     Tst_Data: TArray<Boolean>;
@@ -112,6 +112,7 @@ type
     procedure SetCmd(const Value: Byte);
   protected
     function GetCaption: string; override;
+    procedure SetBookMark(BookMark: LongWord);
   public
     procedure InputData(Data: Pointer; DataSize: integer); override;
     [DynamicAction('Показать осцилограмму усо <I> ', '<I>', 52, '0:Телесистема.<I>', 'Показать осцилограмму усо')]
@@ -531,8 +532,11 @@ begin
     end, 3000);
     S_Status := dsData;
    except
-    ConnectIO.FTimerRxTimeOut.Enabled := True;
-    raise;
+    on E: Exception do
+     begin
+      TDebug.DoException(E);
+      ConnectIO.FTimerRxTimeOut.Enabled := True;
+     end;
    end;
 end;
 
@@ -669,6 +673,11 @@ begin
            end;
           SumDat := 0;
           inc(i);
+          if (FS_Data.BookMark = FS_Data.Fifo.Last + i) and FS_Data.IsBookMark then
+           begin
+            FS_Data.IsBookMark := False;
+            Cmd := FCmd;
+           end;
           if i = Length(FData) then
            begin
             i := 0;
@@ -695,6 +704,16 @@ begin
     Dec(DataSize);
     Inc(p);
    end;
+end;
+
+procedure TUso1.SetBookMark(BookMark: LongWord);
+begin
+  FS_Data.BookMark := BookMark;
+  FS_Data.IsBookMark := True;
+  TDebug.Log('USO========= F:%d L:%d C:%d B%d B-L:%d===============',[FS_Data.Fifo.First,
+                                                               FS_Data.Fifo.Last,
+                                                               FS_Data.Fifo.Count,
+                                                               BookMark, BookMark - FS_Data.Fifo.Last]);
 end;
 
 procedure TUso1.SetCmd(const Value: Byte);

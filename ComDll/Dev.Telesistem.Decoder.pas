@@ -15,6 +15,7 @@ type
     FDataCodLen: Integer;
     FBits: Integer;
     FBitFilter: Boolean;
+    FDataNoiseCnt: Integer;
     procedure SetNumBadCode(const Value: Integer);
     procedure SetPorogCode(const Value: Real);
     procedure SetPorogSP(const Value: Real);
@@ -23,6 +24,8 @@ type
     procedure SetDataCodLen(const Value: Integer);
     procedure SetSPCodLen(const Value: Integer);
     procedure SetBitFilter(const Value: Boolean);
+    procedure SetDataNoiseCnt(const Value: Integer);
+    procedure OnSPTakt(Sender: TTelesistemDecoder; Takt: LongWord);
   protected
     FDecoder: TTelesistemDecoder;
     procedure OnDecoder(Sender: TObject);
@@ -40,6 +43,7 @@ type
     [ShowProp('Битовый фильтр')]           property BitFilter: Boolean  read FBitFilter   write SetBitFilter  default False;
     property Bits: Integer read FBits write SetBits default 8;
     [ShowProp('Число данных')] property DataCnt: Integer read FDataCnt write SetDataCnt default 32;
+    [ShowProp('Число шумов')] property DataNoiseCnt: Integer read FDataNoiseCnt write SetDataNoiseCnt default 0;
     property DataCodLen: Integer read FDataCodLen write SetDataCodLen default 32;
     property SPCodLen: Integer read FSPCodLen write SetSPCodLen default 128;
   end;
@@ -102,6 +106,15 @@ begin
    end;
 end;
 
+procedure TCustomDecoder.SetDataNoiseCnt(const Value: Integer);
+begin
+  if FDataNoiseCnt <> Value then
+   begin
+    FDataNoiseCnt := Value;
+    if Assigned(FDecoder) then FreeAndNil(FDecoder);
+   end;
+end;
+
 procedure TCustomDecoder.SetSPCodLen(const Value: Integer);
 begin
   if FSPCodLen <> Value then
@@ -147,7 +160,7 @@ procedure TCustomDecoder.InputData(Data: Pointer; DataSize: integer);
 begin
   if not Assigned(FDecoder) then
    begin
-    FDecoder := GetDecoderClass.Create(Bits, DataCnt, DataCodLen, SPCodLen, OnDecoder);
+    FDecoder := GetDecoderClass.Create(Bits, DataCnt, DataNoiseCnt, DataCodLen, SPCodLen, OnDecoder, OnSPTakt);
     FS_Data := FDecoder;
     SetupNewDecoder;
    end;
@@ -163,6 +176,25 @@ procedure TCustomDecoder.OnDecoder(Sender: TObject);
 begin
   NotifyData;
   if Assigned(FSubDevice) then FSubDevice.InputData(FDecoder, $12345678);
+end;
+
+procedure TCustomDecoder.OnSPTakt(Sender: TTelesistemDecoder; Takt: LongWord);
+ var
+  sd: ISubDevice;
+  bm: ISetBookMark;
+  t: LongWord;
+begin
+  for sd in (Owner as IRootDevice).GetSubDevices() do
+   if (sd.Category.Category = 'Усо') and Supports(sd, ISetBookMark, bm) then
+    begin
+     t := Takt + Sender.KadrBezShumaLen;
+      TDebug.Log('DECODER======== F:%d T:%d DF:%d B%d KD:%d===============',[Sender.First,
+                                                               Takt,
+                                                               Takt-Sender.First,
+                                                               t, Sender.KadrBezShumaLen]);
+
+     bm.SetBookMark(t);
+    end;
 end;
 
 end.

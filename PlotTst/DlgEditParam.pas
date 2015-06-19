@@ -7,16 +7,16 @@ uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RTTI,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, JvExControls, JvInspector, Vcl.ExtCtrls, JvComponentBase, CustomPlot;
 
 type
-  TFormEditParam = class(TDialogIForm, IDialog, IDialog<TPlotParam>)
+  TFormEditParam = class(TDialogIForm, IDialog, IDialog<TGraphPar>)
     btExit: TButton;
     insp: TJvInspector;
     InspectorBorlandPainter: TJvInspectorBorlandPainter;
     procedure btExitClick(Sender: TObject);
   private
-    FEditParam: TPlotParam;
+    FEditParam: TGraphPar;
   public
     function GetInfo: PTypeInfo; override;
-    function Execute(InputData: TPlotParam): Boolean;
+    function Execute(InputData: TGraphPar): Boolean;
   end;
 
 implementation
@@ -30,7 +30,7 @@ begin
   RegisterDialog.UnInitialize<Dialog_EditViewParameters>;
 end;
 
-function TFormEditParam.Execute(InputData: TPlotParam): Boolean;
+function TFormEditParam.Execute(InputData: TGraphPar): Boolean;
 begin
   Result := True;
   FEditParam := InputData;

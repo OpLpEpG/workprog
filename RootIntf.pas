@@ -213,6 +213,7 @@ type
 //    property Path: string read GetPath write SetPath;
   end;
 
+
 implementation
 
 { ServiceManager }

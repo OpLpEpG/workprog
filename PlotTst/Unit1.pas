@@ -13,7 +13,7 @@ type
   private
     procedure WMEraseBkgnd(var Msg: TWMEraseBkgnd); message WM_ERASEBKGND;
   public
-    Plot: TCustomPlot;
+    Plot: TCustomGraph;
     procedure OnData(Sender: TObject);
   end;
 
@@ -28,7 +28,7 @@ uses Unit4;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  Plot := TPlot.Create(Self);
+  Plot := TGraph.Create(Self);
   Plot.OnDataAdded := OnData;
 //  Form4.Button3Click(Self);
 end;

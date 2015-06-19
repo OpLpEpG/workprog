@@ -154,4 +154,34 @@ object Form4: TForm4
     Left = 336
     Top = 240
   end
+  object FDLocalSQL1: TFDLocalSQL
+    Connection = FDConnection1
+    Active = True
+    Left = 120
+    Top = 152
+  end
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'DriverID=SQLite')
+    Connected = True
+    LoginPrompt = False
+    Left = 120
+    Top = 104
+  end
+  object FDQuery1: TFDQuery
+    Connection = FDConnection1
+    SQL.Strings = (
+      'select * from ds_1 where field1 < 50 and field1 > 10')
+    Left = 192
+    Top = 152
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 280
+    Top = 160
+  end
+  object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
+    Left = 408
+    Top = 160
+  end
 end

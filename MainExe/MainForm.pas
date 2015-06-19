@@ -135,7 +135,7 @@ implementation
 {$R *.dfm}
 
 
-uses WinAPI.GDIPObj, WinAPI.GDIPApi, RootImpl, VCLTee.TeEngine,
+uses WinAPI.GDIPObj, WinAPI.GDIPApi, RootImpl, VCLTee.TeEngine, DataImportImpl,
     PluginManager, PluginSetupForm, ExceptionForm, tools, DockIForm, debug_except, ActionBarHelper, FirstForm, Container;//, Hock_Exept;
 
 {$REGION  '*********** Create Destroy ****************'}

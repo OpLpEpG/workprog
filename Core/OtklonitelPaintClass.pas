@@ -11,6 +11,7 @@ interface
   TOtkProbabData = record
    Dt: Real;
    Pr: Real;
+   Color: TColor32;
   end;
 
   TOtklonitelPaint = class(TPaintBox32)
@@ -37,11 +38,12 @@ interface
     FAO: array[0..10] of TOtkProbabData;
     FColorFontAZOE: TColor32;
     FColorAO: TColor32;
-    FColorOtkE: TColor32;
-    FColorAOE: TColor32;
+//    FColorOtkE: TColor32;
+//    FColorAOE: TColor32;
     FColorFontAZOZ: TColor32;
     FColorOtklZamer: TColor32;
     FColorAOZamer: TColor32;
+    FPorog: Double;
     procedure SetPrbData(const Value: TPriborData);
     procedure SeTColor32FontAZO(const Value: TColor32);
     procedure SeTColor32Label(const Value: TColor32);
@@ -56,11 +58,12 @@ interface
     procedure SetOtklRaiusPart(const Value: Real);
     procedure SeTColor32FontAZOE(const Value: TColor32);
     procedure SeTColor32AO(const Value: TColor32);
-    procedure SeTColor32AOE(const Value: TColor32);
-    procedure SeTColor32OtkE(const Value: TColor32);
+//    procedure SeTColor32AOE(const Value: TColor32);
+//    procedure SeTColor32OtkE(const Value: TColor32);
     procedure SeTColor32FontAZOZ(const Value: TColor32);
-//    procedure SeTColor32AOZamer(const Value: TColor32);
-//    procedure SeTColor32OtklZamer(const Value: TColor32);
+    procedure SeTColor32AOZamer(const Value: TColor32);
+    procedure SeTColor32OtklZamer(const Value: TColor32);
+    function SetColorOrErrColor(c: TColor32; prb, porog: Double): TColor32;
   protected
     FRenderer: TPolygonRenderer32VPR;
     procedure DoPaintBuffer; override;
@@ -75,12 +78,12 @@ interface
     [ShowProp('OtklRaiusPart')] property OtklRaiusPart: Real read FOtklRaiusPart write SetOtklRaiusPart;
     [ShowProp('OtklAngle')] property OtklAngle: Real read FOtklAngle write SetOtklAngle;
     [ShowProp('SectorPart')] property SectorPart: Real read FSectorPart write SetSectorPart;
-//    property ColorOtklZamer: TColor32 read FColorOtklZamer write SeTColor32OtklZamer;
+    [ShowProp('Цвет отклонителя в статике')] property ColorOtklZamer: TColor32 read FColorOtklZamer write SeTColor32OtklZamer;
     [ShowProp('Цвет отклонителя')] property ColorOtkl: TColor32 read FColorOtkl write SeTColor32Otkl;
-    [ShowProp('Цвет отклонителя с ошибкой')] property ColorOtkE: TColor32 read FColorOtkE write SeTColor32OtkE;
-//    property ColorAOZamer: TColor32 read FColorAOZamer write SeTColor32AOZamer;
+//    [ShowProp('Цвет отклонителя с ошибкой')] property ColorOtkE: TColor32 read FColorOtkE write SeTColor32OtkE;
+    [ShowProp('Цвет азимута отклонителя в статике')] property ColorAOZamer: TColor32 read FColorAOZamer write SeTColor32AOZamer;
     [ShowProp('Цвет азимута отклонителя')] property ColorAO: TColor32 read FColorAO write SeTColor32AO;
-    [ShowProp('Цвет азимута отклонителя с ошибкой')] property ColorAOE: TColor32 read FColorAOE write SeTColor32AOE;
+  //  [ShowProp('Цвет азимута отклонителя с ошибкой')] property ColorAOE: TColor32 read FColorAOE write SeTColor32AOE;
     [ShowProp('Цвет сектора')]property ColorSector: TColor32 read FColorSector write SeTColor32Sector;
     [ShowProp('ColorShkala')] property ColorShkala: TColor32 read FColorShkala write SeTColor32Shkala;
     [ShowProp('ColorLabel')] property ColorLabel: TColor32 read FColorLabel write SeTColor32Label;
@@ -115,10 +118,16 @@ begin
   inherited Create(AOwner);
   FRenderer := TPolygonRenderer32VPR.Create(Buffer);
   FColorFontAZO := clBlue32;
+  FColorFontAZOE := clBlue32;
+  FColorFontAZOZ := clBlue32;
   FColorLabel := clBlack32;
-  FColorOtkl := clYellow32;
-  FColorSector := clRed32;
+  FColorOtkl := clRed32;
+  FColorAO := clDarkRed32;
+  FColorSector := clGreen32;
   FColorShkala := clNavy32;
+  FColorOtklZamer := clGreen32;
+  FColorAOZamer := clDarkGreen32;
+  FPorog := 30;
   FSectorPart := 25;
   FOtklDopusk := 10;
   FOtklCount := 3;
@@ -146,7 +155,7 @@ procedure TOtklonitelPaint.DoPaintBuffer;
   center: TFloatPoint;
   radius: Single;
   oneed, dopusk, wdth: Single;
-  procedure paintOtk(const o: array of TOtkProbabData; cnt: Integer; cl, clErr: TColor32);
+  procedure paintOtk(const o: array of TOtkProbabData);// cnt: Integer; cl, clErr: TColor32);
    var
     i: Integer;
     p1,p2, p3: TFloatPoint;
@@ -156,14 +165,14 @@ procedure TOtklonitelPaint.DoPaintBuffer;
     X1 := radius;
     for i := 0 to FOtklCount-1 do
      begin
-      X2 := radius - radius*(i+1)/100 * FOtklRaiusPart/cnt;
+      X2 := radius - radius*(i+1)/100 * FOtklRaiusPart/FOtklCount;//cnt;
       p1 := AngleToPoint(o[i].Dt, radius, radius, X1 , 0, 0);
       p2 := AngleToPoint(o[i].Dt-FOtklAngle, radius, radius, X2, 0, 0);
       p3 := AngleToPoint(o[i].Dt+FOtklAngle, radius, radius, X2, 0, 0);
       X1 := X2;
-      if FOtkl[i].Pr > 30 then c := cl else c := clErr;
+      c := SetColorOrErrColor(o[i].Color, o[i].Pr, FPorog);
       c := SetAlpha(c, AlphaComponent(c)-i*$10);
-      if FOtkl[i].Dt<>-1 then
+      if o[i].Dt<>-1 then
        begin
         FRenderer.Color := c;
         FRenderer.PolygonFS([p1, p2, p3]);
@@ -223,8 +232,8 @@ begin
     sz := TextExtent(FAziText);
     RenderText(R - sz.cx div 2, R + 2* sz.cy, FAziText, 1, FAziTexTColor32);
 
-    paintOtk(FOtkl, FOtklCount, FColorOtkl, FColorOtkE);
-    paintOtk(FAO, FOtklCount, FColorAO, FColorAOE);
+    paintOtk(FOtkl);//, FOtklCount, FColorOtkl, FColorOtkE);
+    paintOtk(FAO);//, FOtklCount, FColorAO, FColorAOE);
    end;
   inherited;
 end;
@@ -247,11 +256,11 @@ begin
   Repaint;
 end;
 
-//procedure TOtklonitelPaint.SeTColor32OtklZamer(const Value: TColor32);
-//begin
-//  FColorOtklZamer := Value;
-//  Paint;
-//end;
+procedure TOtklonitelPaint.SeTColor32OtklZamer(const Value: TColor32);
+begin
+  FColorOtklZamer := Value;
+  Paint;
+end;
 
 procedure TOtklonitelPaint.SeTColor32Sector(const Value: TColor32);
 begin
@@ -263,6 +272,13 @@ procedure TOtklonitelPaint.SeTColor32Shkala(const Value: TColor32);
 begin
   FColorShkala := Value;
   Repaint;
+end;
+
+function TOtklonitelPaint.SetColorOrErrColor(c: TColor32; prb, porog: Double): TColor32;
+begin
+  if prb >= porog then Result := c
+  else Result := SetAlpha(c, AlphaComponent(c) div 2);
+  //  Color32(RedComponent(c), Round(GreenComponent(c)/1.1), Round(BlueComponent(c)/1.1));
 end;
 
 procedure TOtklonitelPaint.SetOtklAngle(const Value: Real);
@@ -306,6 +322,17 @@ begin
      for i := 10 downto 1 do FOtkl[i] := FOtkl[i-1];
      FOtkl[0].Dt := FPrbData.Data;
      FOtkl[0].Pr := FPrbData.Probability;
+     FOtkl[0].Color := ColorOtkl;
+     FOtkText := Format('%2.1f',[FPrbData.Data]);
+     if FPrbData.Probability <= 30 then FOtkTexTColor32 := FColorFontAZOE
+     else FOtkTexTColor32 := FColorFontAZO;
+    end;
+   dtOtklonitelZamer:
+    begin
+     for i := 10 downto 1 do FOtkl[i] := FOtkl[i-1];
+     FOtkl[0].Dt := FPrbData.Data;
+     FOtkl[0].Pr := FPrbData.Probability;
+     FOtkl[0].Color := ColorOtklZamer;
      FOtkText := Format('%2.1f',[FPrbData.Data]);
      if FPrbData.Probability <= 30 then FOtkTexTColor32 := FColorFontAZOE
      else FOtkTexTColor32 := FColorFontAZO;
@@ -315,6 +342,14 @@ begin
      for i := 10 downto 1 do FAO[i] := FAO[i-1];
      FAO[0].Dt := FPrbData.Data;
      FAO[0].Pr := FPrbData.Probability;
+     FAO[0].Color := ColorAO;
+    end;
+   dtAOZamer:
+    begin
+     for i := 10 downto 1 do FAO[i] := FAO[i-1];
+     FAO[0].Dt := FPrbData.Data;
+     FAO[0].Pr := FPrbData.Probability;
+     FAO[0].Color := ColorAOZamer;
     end;
    dtZenit:
     begin
@@ -383,13 +418,13 @@ begin
 end;
 
 
-//procedure TOtklonitelPaint.SeTColor32AOZamer(const Value: TColor32);
-//begin
-//  FColorAOZamer := Value;
-//  Paint;
-//end;
+procedure TOtklonitelPaint.SeTColor32AOZamer(const Value: TColor32);
+begin
+  FColorAOZamer := Value;
+  Paint;
+end;
 
-procedure TOtklonitelPaint.SeTColor32AOE(const Value: TColor32);
+{procedure TOtklonitelPaint.SeTColor32AOE(const Value: TColor32);
 begin
   FColorAOE := Value;
   Repaint;
@@ -399,7 +434,7 @@ procedure TOtklonitelPaint.SeTColor32OtkE(const Value: TColor32);
 begin
   FColorOtkE := Value;
   Repaint;
-end;
+end;}
 
 procedure TOtklonitelPaint.SeTColor32FontAZOZ(const Value: TColor32);
 begin

@@ -15,10 +15,10 @@ object Form1: TForm1
   PixelsPerInch = 96
   TextHeight = 13
   object VirtualStringTree1: TVirtualStringTree
-    Left = 200
-    Top = 104
-    Width = 200
-    Height = 100
+    Left = 8
+    Top = 8
+    Width = 49
+    Height = 41
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET
     Header.Font.Color = clWindowText

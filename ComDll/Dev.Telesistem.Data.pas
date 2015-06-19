@@ -15,7 +15,7 @@ type
     FPorogXY: Integer;
     FPorogZ: Integer;
     FDMetka: Double;
-    prbo, prbz, prbao, prba: Double;
+    prbo, prbz, prbao, prba, prbvib: Double;
     procedure SetPorogXY(const Value: Integer);
     procedure SetPorogZ(const Value: Integer);
     function TryGetRoot(var v: Variant): Boolean;
@@ -28,10 +28,11 @@ type
      procedure OnUserRemove; override;
   public
     type
-     CodeData = (cdMOtk1, cdAX, cdAy, adAz, cdMx, cdMOtk2, cdMy, cdMz,cdDxy, cdDz, cdMOtk3);
+     CodeData = (cdMOtk1, cdAX, cdAy, adAz, cdMx, cdMOtk2, cdMy, cdMz,cdDxy, cdDz, cdMOtk3, cdCMD);
     constructor Create; override;
     procedure InputData(Data: Pointer; DataSize: integer); override;
     function GetMetaData: IXMLInfo; virtual;
+    function MinPorog: Double;
     property FileName: string read FFileName;
     [DynamicAction('Показать окно Отклонителя', '<I>', 55, '0:Телесистема.<I>', 'Показать окно Отклонителя')]
     procedure DoSetup(Sender: IAction); override;
@@ -121,8 +122,8 @@ begin
           v.Inclin.маг_отклон1.DEV.VALUE := cor360(CodData[CodeCnt-1].Code + DMetka);
           v.Inclin.маг_отклон1.CLC.VALUE :=  cor360(CodData[CodeCnt-1].Code + deltaOtk + DMetka);
           v.Inclin.Q_маг_отклон1.DEV.VALUE := Round(CodData[CodeCnt-1].Porog);
-          SetPrbData(dtOtklonitel, v.Inclin.маг_отклон1.CLC.VALUE, v.Inclin.Q_маг_отклон1.DEV.VALUE);
           SetPrbData(dtAO, v.Inclin.маг_отклон1.DEV.VALUE, v.Inclin.Q_маг_отклон1.DEV.VALUE);
+          SetPrbData(dtOtklonitel, v.Inclin.маг_отклон1.CLC.VALUE, v.Inclin.Q_маг_отклон1.DEV.VALUE);
          end;
         cdAX:
          begin
@@ -150,8 +151,8 @@ begin
           v.Inclin.маг_отклон2.DEV.VALUE := cor360(CodData[CodeCnt-1].Code + DMetka);
           v.Inclin.маг_отклон2.CLC.VALUE :=  cor360(CodData[CodeCnt-1].Code + deltaOtk + DMetka);
           v.Inclin.Q_маг_отклон2.DEV.VALUE := Round(CodData[CodeCnt-1].Porog);
-          SetPrbData(dtOtklonitel, v.Inclin.маг_отклон2.CLC.VALUE, v.Inclin.Q_маг_отклон2.DEV.VALUE);
           SetPrbData(dtAO, v.Inclin.маг_отклон2.DEV.VALUE, v.Inclin.Q_маг_отклон2.DEV.VALUE);
+          SetPrbData(dtOtklonitel, v.Inclin.маг_отклон2.CLC.VALUE, v.Inclin.Q_маг_отклон2.DEV.VALUE);
          end;
         cdMy:
          begin
@@ -169,28 +170,35 @@ begin
           prbo := Min(v.Inclin.accel.Q_X.DEV.VALUE, v.Inclin.accel.Q_Y.DEV.VALUE);
           prbz := Min(prbo, v.Inclin.accel.Q_Z.DEV.VALUE);
 
-          SetPrbData(dtOtklonitelZamer, v.Inclin.отклонитель.CLC.VALUE, prbo);
+          SetPrbData(dtOtklonitel, v.Inclin.отклонитель.CLC.VALUE, prbo);
           SetPrbData(dtZenit, v.Inclin.зенит.CLC.VALUE, prbz);
 
           prbao := Min(v.Inclin.magnit.Q_X.DEV.VALUE, v.Inclin.magnit.Q_Y.DEV.VALUE);
           prba := MinValue([prbao, prbz, v.Inclin.magnit.Q_Z.DEV.VALUE]);
 
-          SetPrbData(dtAOZamer, v.Inclin.маг_отклон.CLC.VALUE, prbao);
+          SetPrbData(dtAO, v.Inclin.маг_отклон.CLC.VALUE, prbao);
           SetPrbData(dtAzimut, v.Inclin.азимут.CLC.VALUE, prba);
          end;
         cdDxy:
          begin
           v.Inclin.accel.DXY.DEV.VALUE := (CodData[CodeCnt-1].Code-1292)/2;
           v.Inclin.accel.Q_DXY.DEV.VALUE := Round(CodData[CodeCnt-1].Porog);
+          if v.Inclin.accel.DXY.DEV.VALUE < 0 then v.Inclin.accel.Q_DXY.DEV.VALUE := 0;
          end;
         cdDz:
          begin
           v.Inclin.accel.DZ.DEV.VALUE := CodData[CodeCnt-1].Code-1292;
           v.Inclin.accel.Q_DZ.DEV.VALUE := Round(CodData[CodeCnt-1].Porog);
-          if (v.Inclin.accel.DXY.DEV.VALUE < PorogXY) and (v.Inclin.accel.DZ.DEV.VALUE < PorogZ) then
+          if v.Inclin.accel.DZ.DEV.VALUE < 0 then v.Inclin.accel.Q_DZ.DEV.VALUE := 0;
+          prbvib := Min(v.Inclin.accel.Q_DZ.DEV.VALUE, v.Inclin.accel.Q_DXY.DEV.VALUE);
+          if (v.Inclin.accel.DXY.DEV.VALUE < PorogXY) and (v.Inclin.accel.DZ.DEV.VALUE < PorogZ) and
+          (Min(prbo,prbao,prbvib) > MinPorog) then
            begin
             v.Inclin.статика.отклонитель.CLC.VALUE := v.Inclin.отклонитель.CLC.VALUE;
             v.Inclin.статика.маг_отклон.CLC.VALUE := v.Inclin.маг_отклон.CLC.VALUE;
+
+            SetPrbData(dtOtklonitelZamer, v.Inclin.отклонитель.CLC.VALUE, prbo);
+            SetPrbData(dtAOZamer, v.Inclin.маг_отклон.CLC.VALUE, prbao);
 
             SetPrbData(dtZamerZenit, v.Inclin.зенит.CLC.VALUE, prbz);
             SetPrbData(dtZamerAzimut, v.Inclin.азимут.CLC.VALUE, prba);
@@ -200,10 +208,15 @@ begin
          begin
           deltaOtk := v.Inclin.статика.отклонитель.CLC.VALUE - v.Inclin.статика.маг_отклон.CLC.VALUE;
           v.Inclin.маг_отклон3.DEV.VALUE := cor360(CodData[CodeCnt-1].Code + DMetka);
-          v.Inclin.маг_отклон3.CLC.VALUE :=  cor360(CodData[CodeCnt-1].Code + deltaOtk + DMetka);
+          v.Inclin.маг_отклон3.CLC.VALUE := cor360(CodData[CodeCnt-1].Code + deltaOtk + DMetka);
           v.Inclin.Q_маг_отклон3.DEV.VALUE := Round(CodData[CodeCnt-1].Porog);
-          SetPrbData(dtOtklonitel, v.Inclin.маг_отклон3.CLC.VALUE, v.Inclin.Q_маг_отклон3.DEV.VALUE);
           SetPrbData(dtAO, v.Inclin.маг_отклон3.DEV.VALUE, v.Inclin.Q_маг_отклон3.DEV.VALUE);
+          SetPrbData(dtOtklonitel, v.Inclin.маг_отклон3.CLC.VALUE, v.Inclin.Q_маг_отклон3.DEV.VALUE);
+         end;
+        cdCMD:
+         begin
+          v.Cmd.DEV.VALUE := CodData[CodeCnt-1].Code;
+          v.Q_Cmd.DEV.VALUE := Round(CodData[CodeCnt-1].Porog);
           TTelesistem(Owner).SaveLogData;
          end;
       end;
@@ -212,6 +225,11 @@ begin
      end;
   end;
    end;
+end;
+
+function TCustomTeleData.MinPorog: Double;
+begin
+  Result := 30;
 end;
 
 procedure TCustomTeleData.OnUserRemove;

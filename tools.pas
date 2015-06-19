@@ -234,10 +234,12 @@ type
   TFifoRec<T> = record
    type PointerT = ^T;
    var
+    First: LongWord;
     Data: TArray<T>;
     function Count: Integer; inline;
+    function Last: LongWord; inline;
     procedure Add(const pData: PointerT; Len: integer);
-    procedure Delete(Len: Integer; From: Integer = 0);
+    function Delete(Len: Integer{; From: Integer = 0}): Integer;
   end;
 
   PFifoDouble = ^TFifoDouble;
@@ -524,6 +526,11 @@ begin
   Result := Length(Data);
 end;
 
+function TFifoRec<T>.Last: LongWord;
+begin
+  Result := First + Length(Data);
+end;
+
 procedure TFifoRec<T>.Add(const pData: PointerT; Len: integer);
  var
   n: Integer;
@@ -533,12 +540,21 @@ begin
   Move(pData^, Data[n], len*SizeOf(T));
 end;
 
-procedure TFifoRec<T>.Delete(Len: Integer; From: Integer = 0);
- var
-  n: Integer;
+function TFifoRec<T>.Delete(Len: Integer{; From: Integer = 0}): Integer;
+// var
+//  n: Integer;
 begin
-  n := Length(Data) - (From + Len);
-  if n > 0 then System.Delete(Data, From, Len);
+  if Length(Data) - Len < 0 then Result := Length(Data) else Result := Len;
+  Inc(First, Result);
+  System.Delete(Data, 0, Result);
+
+{  n := Length(Data) - (From + Len);
+  if n > 0 then
+   begin
+    Inc(First, Len);
+    System.Delete(Data, 0 From, Len)
+   end
+  else SetLength(Data, 0);}
 end;
 
 { CNode }

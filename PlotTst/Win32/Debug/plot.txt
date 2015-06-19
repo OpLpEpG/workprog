@@ -2,32 +2,33 @@ object TPlot
   Left = 0
   Top = 0
   Width = 819
-  Height = 554
+  Height = 653
   YMirror = False
   YFromType = yfmLast
   YFromData = 2000.344499999999000000
   YRangeData = 8000.000000000000000000
-  YPosition = 4355.900499999999000000
+  YPosition = 2857.532499999999000000
   YScale = 0.100000000000000000
   Align = alClient
   Parent = Form1.Owner
+  ExplicitHeight = 554
   PlotRows = <
     item
-      ItemClassName = 'TGR32LegendRow'
-      Height = 89
-    end
-    item
       ItemClassName = 'TCustomPlotData'
-      Height = 363
+      Height = 462
     end
     item
       ItemClassName = 'TCustomPlotInfo'
       Height = 102
+    end
+    item
+      ItemClassName = 'TGR32LegendRow'
+      Height = 89
     end>
   PlotColumns = <
     item
       ItemClassName = 'TGR32GraphicCollumn'
-      Width = 465
+      Width = 430
       Params = <
         item
           ItemClassName = 'TLineParam'
@@ -103,7 +104,7 @@ object TPlot
     end
     item
       ItemClassName = 'TGR32GraphicCollumn'
-      Width = 337
+      Width = 372
       Params = <
         item
           ItemClassName = 'TLineParam'

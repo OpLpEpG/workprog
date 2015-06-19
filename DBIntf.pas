@@ -28,6 +28,8 @@ type
     procedure Release; virtual; abstract;
   end;
 
+
+
   IQuery = interface(IInterfaceComponentReference)
   ['{E6104805-4A5E-4E67-9C84-F86CCD60B1AC}']
     procedure Acquire;

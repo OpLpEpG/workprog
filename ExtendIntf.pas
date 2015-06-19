@@ -376,6 +376,11 @@ type
     procedure SendCmd(Cmd: Byte);
   end;
 
+  ISetBookMark = interface
+  ['{134D0265-857C-4F4D-97C3-AFD80CB8CC87}']
+    procedure SetBookMark(BookMark: LongWord);
+  end;
+
 {$REGION 'внутренние события между динамическими классами плугинов' }
 
   ///	<summary>

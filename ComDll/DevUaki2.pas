@@ -96,9 +96,9 @@ end;
 procedure TDevUaki2.DoCycle;
  const
    TST_STR = 'post name=lir sens0=0 val0=0.999 sens1=1 val1=1.999 sens2=2 val2=2.999'+
-   'sens3=3 val3=3.333 sens4=4 val4=4.333 sens5=5 val5=5.333'+
-   'sens6=85 val6=6.777 sens7=0 val7=7.777 sens8=85 val8=8.777'+
-   'sens9=9 sens10=10 sens11=11 sens12=12 sens13=13 sens14=14 sens15=15';
+   ' sens3=3 val3=3.333 sens4=4 val4=4.333 sens5=5 val5=5.333'+
+   ' sens6=85 val6=6.777 sens7=0 val7=7.777 sens8=85 val8=8.777'+
+   ' sens9=9 sens10=10 sens11=11 sens12=12 sens13=13 sens14=14 sens15=15';
    POS_A = 6;
    POS_Z = 10;
    POS_V = 14;
@@ -128,7 +128,7 @@ begin
   begin
     if n >= $F7 then
      begin
-      a := string(TST_STR{LastAns}).Split([' ', '=', #$D], ExcludeEmpty);
+      a := string({TST_STR}LastAns).Split([' ', '=', #$D], ExcludeEmpty);
       Azi.FCurrentAngle := a[POS_A].ToDouble();
       Zen.FCurrentAngle := a[POS_Z].ToDouble();
       Viz.FCurrentAngle := a[POS_V].ToDouble();
@@ -141,6 +141,9 @@ begin
       Azi.FEndTumbler := 'o';
       Zen.FEndTumbler := 'o';
       Viz.FEndTumbler := 'o';
+      S_AxisUpdate := ADR_AXIS_AZI;
+      S_AxisUpdate := ADR_AXIS_ZU;
+      S_AxisUpdate := ADR_AXIS_VIZ;
      end;
   end);
 end;

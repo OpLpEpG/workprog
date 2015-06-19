@@ -2,7 +2,7 @@ unit Plot.DataSet;
 
 interface
 
-uses sysutils, Classes, Controls, Db, VCL.forms, debug_except;
+uses sysutils, Classes, Controls, Db, VCL.forms, debug_except, IDataSets;
 
 type
   PBuffer = ^TBuffer;
@@ -12,7 +12,7 @@ type
     BookmarkFlag: TBookmarkFlag;
   end;
 
-  TPlotDataSet = class(TDataSet)
+  TPlotDataSet = class(TIDataSet)
   private
     FActive: Boolean;
     FRealRecordPos: Integer;
@@ -42,7 +42,7 @@ type
     property RecordPos: Integer read FRealRecordPos write SetRecordPosition;
     function getID(pos: Integer): Integer;
   public
-    constructor Create(AOwner: TComponent); override;
+    constructor Create(); override;
     function GetCurrentRecord(Buffer: TRecBuf): Boolean; override;
     function GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean; override;
   end;
@@ -59,7 +59,7 @@ begin
   InternalInitRecord(Result);
 end;
 
-constructor TPlotDataSet.Create(AOwner: TComponent);
+constructor TPlotDataSet.Create;
 begin
   inherited;
   BookmarkSize := Sizeof(TBuffer);
