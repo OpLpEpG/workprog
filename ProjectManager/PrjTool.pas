@@ -677,7 +677,11 @@ begin
    try
     if tmax > rmax then
      begin
-      DBTimeStart := (GContainer as IProjectOptions).Option['TIME_START'];
+      try
+       DBTimeStart := (GContainer as IProjectOptions).Option['TIME_START'];
+      except
+       DBTimeStart := StrToDateTime((GContainer as IProjectOptions).Option['TIME_START']);
+      end;
       for i := rmax+1 to tmax do ExecSQL(ADD_RAM, [i, DateTimeToJulianDate(DBTimeStart+CTime.FromKadr(i))], [ftInteger, ftFloat])
      end
     else if tmax < rmax then ExecSQL(Format(DEL_RAM, [tmax]))

@@ -192,7 +192,7 @@ begin
           if v.Inclin.accel.DZ.DEV.VALUE < 0 then v.Inclin.accel.Q_DZ.DEV.VALUE := 0;
           prbvib := Min(v.Inclin.accel.Q_DZ.DEV.VALUE, v.Inclin.accel.Q_DXY.DEV.VALUE);
           if (v.Inclin.accel.DXY.DEV.VALUE < PorogXY) and (v.Inclin.accel.DZ.DEV.VALUE < PorogZ) and
-          (Min(prbo,prbao,prbvib) > MinPorog) then
+          (MinValue([prbo,prbao, prbvib]) > MinPorog) then
            begin
             v.Inclin.статика.отклонитель.CLC.VALUE := v.Inclin.отклонитель.CLC.VALUE;
             v.Inclin.статика.маг_отклон.CLC.VALUE := v.Inclin.маг_отклон.CLC.VALUE;

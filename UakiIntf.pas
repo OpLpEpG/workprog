@@ -10,7 +10,7 @@ const
     ADR_AXIS_ZU   =  2;
     ADR_AXIS_VIZ  = 12;
     ADR_UAKI      = 2412;
-    ADR_UAKI2     = 2413;
+    ADR_UAKI2     = 2414;
 
 type
   IAxis = interface

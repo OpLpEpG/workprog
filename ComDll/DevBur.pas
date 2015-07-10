@@ -44,8 +44,13 @@ uses    System.IOUtils,
   TDeviceBur = class(TAbstractDevice, IDevice, ILowLevelDeviceIO, IDataDevice,
                      IDelayDevice, ITurbo, ICycle, ICycleEx, IReadRamDevice, IEepromDevice)
   private
+    Ftimer: TTimer;
+
     FTmpSender: IAction;
     FCycle: TCycleEx;
+
+    procedure OnTimer(Sender: TObject);
+
     function GetSerialQe: TProtocolBur;
     procedure InfoEvent(Res: TInfoEventRes);
     procedure ReadEepromAdrRef(root: IXMLNode; adr: Byte; ev: TEepromEventRef);
@@ -350,6 +355,12 @@ constructor TDeviceBur.Create;
 begin
   inherited;
   FCycle := TCycleEx.Create(Self);
+  /////
+  Ftimer := TTimer.Create(Self);
+  Ftimer.OnTimer := OnTimer;
+  Ftimer.Interval := 3000;
+  Ftimer.Enabled := False;
+  /////
 end;
 
 constructor TDeviceBur.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
@@ -366,6 +377,7 @@ end;
 
 procedure TDeviceBur.DoData(Sender: IAction);
 begin
+  //Ftimer.Enabled := True;
   if (Self as ICycle).Cycle then
    begin
     (Self as ICycle).Cycle := False;
@@ -548,6 +560,11 @@ begin
   end;
 end;
 
+procedure TDeviceBur.OnTimer(Sender: TObject);
+begin
+  DoData(FTmpSender);
+end;
+
 procedure TDeviceBur.Turbo(speed: integer);
  const
   SPD: array[0..6]of Integer = (125000, 500000, 1200000, 2000000, 3000000, 8000000, 12000000);
@@ -596,10 +613,14 @@ begin
             recur: TReceiveDataRef;
             Data: TArray<Byte>;
             bads: Integer;
+            tst: TInfoDataHeader;
          begin
            if (n1 = SizeOf(TInfoDataHeader)) and (PInfoDataHeader(p1).CmdAdr = d1.CmdAdr) then
             begin
+
+             tst := PInfoDataHeader(p1)^;
              savelen := PInfoDataHeader(p1).Length;
+             Tdebug.Log('%d', [savelen]);
              from := 0;
              bads := 0;
              SetLength(Data, savelen + 1);
@@ -619,8 +640,11 @@ begin
                     if from >= savelen then
                      begin
                       Tdebug.Log(from.ToString + '  ' + savelen.ToString());
-
-                      ev(0, adr, @Data[0], savelen+1);
+                      try
+                       ev(0, adr, @Data[0], savelen+1);
+                      finally
+                       Next;
+                      end;
                       Exit;
                      end;
                    end

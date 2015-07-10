@@ -105,7 +105,11 @@ begin
   inherited;
   if Supports(GContainer, IProjectOptions, opt) then
    begin
-    FDBTimeStart := StrToDateTime(opt.Option['TIME_START']);
+    try
+     FDBTimeStart := StrToDateTime(opt.Option['TIME_START']);
+    except
+     FDBTimeStart := Double(opt.Option['TIME_START']);
+    end;
     FDBIntervalWork := StrToDateTimeDef(opt.Option['WORK_INTERVAL'], 0);
    end;
   AddToNCMenu('Интервал задержки', IsDelayIntervalMenuClick, IsDelayIntervalMenu);
@@ -131,8 +135,8 @@ begin
   FDBIntervalWork := IntervalWork;
   if Supports(GContainer, IProjectOptions, opt) then
    begin
-    opt.Option['TIME_START'] := FDBTimeStart;
-    opt.Option['WORK_INTERVAL'] := FDBIntervalWork;
+    opt.Option['TIME_START'] := DateTimeToStr(FDBTimeStart);
+    opt.Option['WORK_INTERVAL'] := TimeToStr(FDBIntervalWork);
    end;
 end;
 

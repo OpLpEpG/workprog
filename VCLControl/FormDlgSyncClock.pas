@@ -154,7 +154,11 @@ begin
   TBindHelper.RemoveExpressions(Self);
   Device := InputData;
   Caption := Format('[%s] Синхронизация часов',[(Device as ICaption).Text]);
-  FDBTimeStart := (GContainer as IProjectOptions).Option['TIME_START'];
+  try
+   FDBTimeStart := (GContainer as IProjectOptions).Option['TIME_START'];
+  except
+   FDBTimeStart := StrToDateTime((GContainer as IProjectOptions).Option['TIME_START']);
+  end;
   ConnectionsPool.Query.Acquire;
   try
    ConnectionsPool.Query.Open('SELECT id, TimeSetupDelay FROM Device WHERE IName = :P1', [(Device as IManagItem).IName], [ftString]);

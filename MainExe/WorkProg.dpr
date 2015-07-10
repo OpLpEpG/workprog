@@ -29,7 +29,7 @@ begin
   Application.CreateForm(TFormMain, FormMain);
   //  {$IFDEF DEBUG}
   Application.CreateForm(TFormSplash, FormSplash);
-  FormSplash.Show;
+//  FormSplash.Show;
 //{$ENDIF}
   Application.Run;
 end.

@@ -338,7 +338,7 @@ begin
       d.Intf := TSaveData.Create(Data, ADD_RAM_VAL, Adr, id);
      end;
     (d.Intf as ISaveDataCash).SaveData(nil);
-    Query.ExecSQL('UPDATE Modul SET ToAdr=:p1, ToKadr=:p2, ToTime=:p3 WHERE id = :p4', [CurAdr, CurKadr, DateTimeToJulianDate(CurTime), FModulID],
+    Query.ExecSQL('UPDATE Modul SET ToAdr=:p1, ToKadr=:p2, ToTime=:p3 WHERE id = :p4', [CurAdr, CurKadr, {DateTimeToJulianDate}(CurTime), FModulID],
                                                                                         [ftInteger, ftFloat, ftTime, ftInteger]);
   finally
    Query.Release;

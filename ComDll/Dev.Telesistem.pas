@@ -163,12 +163,17 @@ type
     FFVch1: Integer;
     FFNch2: Integer;
     FFNch1: Integer;
+    FFchw: Integer;
+    FFch: Integer;
     procedure SetFNch1(const Value: Integer);
     procedure SetFNch2(const Value: Integer);
     procedure SetFVch1(const Value: Integer);
     procedure SetFVch2(const Value: Integer);
     procedure SetupFilter;
+    procedure SetFch(const Value: Integer);
+    procedure SetFchw(const Value: Integer);
    protected
+     procedure FPCH(fq, width: Integer);
      procedure FBCH(from, too: Integer);
      procedure FNCH(from, too: Integer);
      procedure DoOutputData(Data: Pointer; DataSize: integer); virtual;
@@ -186,6 +191,8 @@ type
     [ShowProp('ÔÍ× 2')] property FNch2: Integer read FFNch2 write SetFNch2;
     [ShowProp('ÔÂ× 1')] property FVch1: Integer read FFVch1 write SetFVch1;
     [ShowProp('ÔÂ× 2')] property FVch2: Integer read FFVch2 write SetFVch2;
+    [ShowProp('Ô×')] property Fch: Integer read FFch write SetFch;
+    [ShowProp('Ô× øèðèíà')] property FVchw: Integer read FFchw write SetFchw;
    end;
 
    TbitFlt = class(TSubDevWithForm<TUsoData>, ITelesistem)
@@ -719,7 +726,7 @@ end;
 procedure TUso1.SetCmd(const Value: Byte);
 begin
   FCmd := Value;
-  TTelesistem(Owner).SendCmd(Value);
+  if FCmd < 5 then TTelesistem(Owner).SendCmd(Value);
 end;
 
 procedure TUso1.SetTestUsoData(const Value: TTestUsoData);
@@ -1097,6 +1104,19 @@ begin
   for i := too to FFT_AMP_LEN div 4 do FltCoeff[i] := 0;
 end;
 
+procedure TFltBPF.FPCH(fq, width: Integer);
+ var
+  i: Integer;
+begin
+  if width = 0 then Exit;
+  FltCoeff[fq] := 0;
+  for i := 0 to width do
+   begin
+    FltCoeff[fq+i] := Sin(i * PI/2 / (width));
+    if fq-i >= 0 then FltCoeff[fq-i] := FltCoeff[fq+i];
+   end;
+end;
+
 constructor TFltBPF.Create;
  var
   i: Integer;
@@ -1241,6 +1261,18 @@ begin
   if Assigned(FSubDevice) and (FDataCnt > FFT_OVERSAMP) then FSubDevice.InputData(@FDataIn[FFT_OVERSAMP], FDataCnt - FFT_OVERSAMP);
 end;
 
+procedure TFltBPF.SetFch(const Value: Integer);
+begin
+  FFch := Value;
+  SetupFilter;
+end;
+
+procedure TFltBPF.SetFchw(const Value: Integer);
+begin
+  FFchw := Value;
+  SetupFilter;
+end;
+
 procedure TFltBPF.SetFNch1(const Value: Integer);
 begin
   FFNch1 := Value;
@@ -1272,6 +1304,7 @@ begin
   for i := 0 to FFT_AMP_LEN div 4-1  do FltCoeff[i] := 1;
   FNCH(FFNch1, FFNch2);
   FBCH(FFVch1, FFVch2);
+  FPCH(FFch, FFchw);
 end;
 
 {$ENDREGION}
