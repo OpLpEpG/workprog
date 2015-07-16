@@ -248,14 +248,14 @@ begin
 end;
 
 procedure TBurReadRam.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
- var
-  FuncRead: TReceiveDataRef;
-  ErrCnt: Integer;
-  Wait: Integer;
-  FFileStream: TFileStream;
+   var
+    FuncRead: TReceiveDataRef;
+    ErrCnt: Integer;
+    Wait: Integer;
+    FFileStream: TFileStream;
+    t: Integer;
 begin
   inherited ;//Execute(evInfoRead, Addrs);
-
   if FPacketLen = 0 then FPacketLen := RLEN;
 
   if FFastSpeed > 0 then
@@ -289,14 +289,20 @@ begin
       l: Integer;
     begin
       if DataSize < 0 then Exit;
-      l :=  Length(Fifo);
-      SetLength(fifo,l+DataSize);
-      move(Data^, fifo[l], DataSize);
-
+//      Acquire;
+//      try
+       l := Length(Fifo);
+       SetLength(fifo,l+DataSize);
+       move(Data^, fifo[l], DataSize);
+//      finally
+//       Release;
+//      end;
       if Assigned(FFileStream) then FFileStream.Write(Data^, DataSize);
       //fifo.Push(Data, DataSize);
       Inc(FCurAdr, DataSize);
-      FEvent.SetEvent;
+
+      //FEvent.SetEvent;
+       WriteToBD;
     end;
     procedure NextRead(Status: EnumReadRam);
     begin
@@ -306,15 +312,18 @@ begin
     end;
     procedure EndWrite(Reason: EnumReadRam);
     begin
-      WriteStream();
       FFlagEndRead := True;
+      WriteStream();
       FEndReason := Reason;
-      FEvent.SetEvent;
+      //FEvent.SetEvent;
+      WriteToBD;
       CloseAny;
     end;
   begin
     if FFlagTerminate then
      begin
+      FFlagEndRead := True;
+      WriteToBD;
       CloseAny;
       Exit;
      end;

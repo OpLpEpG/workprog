@@ -3,7 +3,7 @@ unit AbstractDev;
 interface
 
 uses RootImpl, DeviceIntf, debug_except, RootIntf, ExtendIntf, tools, XMLScript, Parser, Container,
-     Menus, Generics.Collections, System.SyncObjs, Math, Winapi.ActiveX,
+     Menus, Generics.Collections, System.SyncObjs, Math, Winapi.ActiveX, Vcl.Forms,
      Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc,
      System.Bindings.Outputs, RTTI;
 
@@ -143,9 +143,10 @@ type
     MAX_RAM = $420000;
     BUFF_LEN = $16000;
    var
-    FReadRamThtead: TReadRamThtead;
+    //FReadRamThtead: TReadRamThtead;
   protected
-    FEvent: TEvent;
+    //FEvent: TEvent;
+    //FLock: TCriticalSection;
 //    Fifo: TFifoBuffer<Byte>;
     Fifo: TArray<Byte>;// TQueueBuffer<Byte>;
     FAbstractDevice: TAbstractDevice;
@@ -191,6 +192,12 @@ type
 //    procedure FreeStream; virtual;
 
     IsOldClose: Boolean;
+
+//    FAcquire: Boolean;
+//    procedure Acquire;
+//    procedure Release;
+
+    procedure WriteToBD;
 
     function ProcToEnd: Double;
     function TestFF(P: PByte; n: Integer): Boolean;
@@ -1418,21 +1425,26 @@ begin
     t := GetTickCount;
     with Owner do
      repeat
-      Fevent.WaitFor();
-      Fevent.ResetEvent;
+      //Fevent.WaitFor();
+      //Fevent.ResetEvent;
       try
        if Terminated then Exit;
        while Length(Fifo) >= FRecSize {Fifo.pop(ptr, FRecSize)} do
         try
   //        Synchronize(DoSync);
          if Terminated or FFlagTerminate then Break;
-         DoSetData(@Fifo[0]);
-         Delete(Fifo, 0 , FRecSize);
-         if FFlagEndRead and ((GetTickCount - t) > 1000) then
+//         Acquire;
+         try
+          DoSetData(@Fifo[0]);
+          Delete(Fifo, 0 , FRecSize);
+         finally
+  //        Release;
+         end;
+         if {FFlagEndRead and }((GetTickCount - t) > 1000) then
          Synchronize(procedure
          begin
            t := GetTickCount;
-           if FFlagEndRead and Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
+           if {FFlagEndRead and }Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
          end);
         except
          on E: Exception do TDebug.DoException(E, False);
@@ -1457,6 +1469,16 @@ end;
 
 { TReadRam }
 
+//procedure TReadRam.Acquire;
+//begin
+//  while FAcquire do
+//   begin
+//    TThread.Yield;
+//    application.HandleMessage;
+//   end;
+//  FAcquire := True;
+//end;
+
 constructor TReadRam.Create(AAbstractDevice: TAbstractDevice);
 begin
   inherited Create(AAbstractDevice as IInterface);
@@ -1468,18 +1490,20 @@ begin
   FFromTime := 0;
   FToTime:= 0;
   FFlagTerminate := True;
-  FEvent := TEvent.Create;
-  FReadRamThtead := TReadRamThtead.Create;
-  FReadRamThtead.Owner := Self;
+  //FEvent := TEvent.Create;
+  //FLock := TCriticalSection.Create;
+//  FReadRamThtead := TReadRamThtead.Create;
+//  FReadRamThtead.Owner := Self;
 end;
 
 destructor TReadRam.Destroy;
 begin
-  FReadRamThtead.Terminate;
-  FEvent.SetEvent;
-  FReadRamThtead.WaitFor;
-  FReadRamThtead.Destroy;
-  FEvent.Destroy;
+//  FReadRamThtead.Terminate;
+//  FEvent.SetEvent;
+//  FReadRamThtead.WaitFor;
+//  FReadRamThtead.Destroy;
+//  FEvent.Destroy;
+  //FLock.Free;
  // Fifo.Free;
   inherited;
 end;
@@ -1651,9 +1675,15 @@ end;  }
 
 function TReadRam.ProcToEnd: Double;
 begin
-  Result := max((FToAdr - FCurAdr)/(FToAdr - FFromAdr)*100, Length(Fifo)/10);
+//  Result := max((FToAdr - FCurAdr)/(FToAdr - FFromAdr)*100, Length(Fifo)/10);
+  Result := (FToAdr - FCurAdr)/(FToAdr - FFromAdr)*100;
   if Result > 100 then Result := 100;
 end;
+
+//procedure TReadRam.Release;
+//begin
+//  FAcquire := False;
+//end;
 
 function TReadRam.TestFF(P: PByte; n: Integer): Boolean;
  var
@@ -1664,12 +1694,38 @@ begin
   for i := 0 to n-1 do if P[i] <> $FF then Exit(False);
 end;
 
+procedure TReadRam.WriteToBD;
+  {$J+}
+  const
+    t: Integer = 0;
+  {$J-}
+begin
+  while Length(Fifo) >= FRecSize {Fifo.pop(ptr, FRecSize)} do
+    try
+     DoSetData(@Fifo[0]);
+     Delete(Fifo, 0 , FRecSize);
+     if ((GetTickCount - t) > 1000) then
+     begin
+       t := GetTickCount;
+       if Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
+     end;
+    except
+     on E: Exception do TDebug.DoException(E, False);
+    end;
+   if FFlagEndRead then
+    begin
+     FFlagEndRead := False;
+     EndExecute;
+    end;
+end;
+
 procedure TReadRam.Terminate(Res: TResultEvent);
 begin
   FFlagTerminate := True;
   FFlagEndRead := True;
   FEndReason := eirTerminate;
-  Fevent.SetEvent;
+  //Fevent.SetEvent;
+  WriteToBD;
   if Assigned(Res) then Res(True);
 end;
 

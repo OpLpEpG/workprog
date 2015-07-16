@@ -3,7 +3,7 @@ object FrmDlgRam: TFrmDlgRam
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1095#1090#1077#1085#1080#1103' '#1087#1072#1084#1103#1090#1080
   ClientHeight = 219
-  ClientWidth = 336
+  ClientWidth = 333
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,7 @@ object FrmDlgRam: TFrmDlgRam
   OldCreateOrder = False
   Position = poMainFormCenter
   DesignSize = (
-    336
+    333
     219)
   PixelsPerInch = 96
   TextHeight = 13
@@ -54,10 +54,11 @@ object FrmDlgRam: TFrmDlgRam
   object Progress: TProgressBar
     Left = 18
     Top = 134
-    Width = 301
+    Width = 298
     Height = 17
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 3
+    ExplicitWidth = 301
   end
   object btTerminate: TButton
     Left = 98
@@ -71,12 +72,13 @@ object FrmDlgRam: TFrmDlgRam
   object sb: TStatusBar
     Left = 0
     Top = 200
-    Width = 336
+    Width = 333
     Height = 19
     Panels = <
       item
         Width = 50
       end>
+    ExplicitWidth = 336
   end
   object cbShortPack: TCheckBox
     Left = 18
@@ -105,7 +107,7 @@ object FrmDlgRam: TFrmDlgRam
   object od: TJvFilenameEdit
     Left = 18
     Top = 32
-    Width = 300
+    Width = 297
     Height = 21
     OnBeforeDialog = odBeforeDialog
     DialogKind = dkSave
@@ -116,5 +118,6 @@ object FrmDlgRam: TFrmDlgRam
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 8
     Text = ''
+    ExplicitWidth = 300
   end
 end

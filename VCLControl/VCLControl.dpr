@@ -33,7 +33,8 @@ uses
   FormDlgSetupProject in 'FormDlgSetupProject.pas' {FormSetupProject},
   DlgSetupDate in 'DlgSetupDate.pas' {FormCalendar},
   FormDelay2 in 'FormDelay2.pas' {DialogDelay},
-  FormDlgSyncClock in 'FormDlgSyncClock.pas' {DialogSyncDelay};
+  FormDlgSyncClock in 'FormDlgSyncClock.pas' {DialogSyncDelay},
+  ExportToPSK6 in 'ExportToPSK6.pas' {FormExportToPSK6};
 
 {$R *.res}
 
@@ -54,6 +55,8 @@ type
    class procedure DoOpenProject(Sender: IAction);
    [StaticAction('-Закрыть проект', 'Проект', 226, '0:Файл.Проект|1:2')]
    class procedure DoSloseProject(Sender: IAction);
+//   [StaticAction('-Сохранить как ПСК6...', 'Экспорт', 226, '0:Файл.Экспорт|1:2')]
+//   class procedure DoExportPSK6(Sender: IAction);
  end;
 
 function Init(): PTypeInfo;
@@ -97,6 +100,11 @@ begin
    (GContainer as IMainScreen).UnLock;
   end;
 end;   }
+
+//class procedure TVCLControl.DoExportPSK6(Sender: IAction);
+//begin
+//  (GContainer as IExportToPSK).ExportToPSK6();
+//end;
 
 class procedure TVCLControl.DoNewProject(Sender: IAction);
  var

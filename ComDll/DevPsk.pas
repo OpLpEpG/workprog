@@ -1381,7 +1381,7 @@ begin
     begin
       FFlagEndRead := True;
       FEndReason := Reason;
-      FEvent.SetEvent;
+      //FEvent.SetEvent;
     end;
     procedure ToFifo(n: Integer);
      var
@@ -1392,7 +1392,7 @@ begin
       move(FAbstractDevice.ConnectIO.FInput[1], fifo[l], n);
      // fifo.Push(@FAbstractDevice.ConnectIO.FInput[1], n);
       Inc(FCurAdr, n);
-      FEvent.SetEvent;
+      //FEvent.SetEvent;
     end;
 {    procedure DoSwapData(a: PWord);
      var
@@ -1480,7 +1480,7 @@ procedure TGluReadRam.Import(const FileName: string; FilterIndex: Integer;
       move(b[0], fifo[l], n);
   //  fifo.Push(@b[0], n);
     Inc(FCurAdr, n);
-    FEvent.SetEvent;
+    //FEvent.SetEvent;
   end;
 begin
   inherited Execute('', FromTime, ToTime,ReadToFF,0, Adr, evInfoRead, ModulID);
@@ -1499,7 +1499,7 @@ begin
   FCurAdr := FToAdr;
   FEndReason := eirEnd;
   FFlagEndRead := True;
-  FEvent.SetEvent;
+  //FEvent.SetEvent;
 end;
 
 { TGlu }

@@ -291,6 +291,11 @@ type
     procedure Close;
   end;
 
+//  IExportToPSK = interface
+//  ['{83AF1A77-DF8A-4CDD-8AD9-A076F73DF487}']
+//   procedure ExportToPSK6(const IfFileName: string);
+//  end;
+
 
   // **********  плугин ************************
 

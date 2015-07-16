@@ -80,6 +80,7 @@ type
 implementation
 
 uses tools;
+
 {$REGION 'TParser'}
 
 { TParser }

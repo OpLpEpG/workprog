@@ -36,6 +36,7 @@ type
 //    function GetInfo: string;
 //    procedure SetXInfo(const Value: string);
     procedure NSelectParamsClick(Sender: TObject);
+    procedure NExportToLASClick(Sender: TObject);
     procedure NFilterGluClick(Sender: TObject);
     procedure CreateConnection(const dbn: string);
   protected
@@ -106,7 +107,7 @@ type
 
 implementation
 
- uses tools, Vcl.Dialogs, DlgFromToGlu;
+ uses tools, Vcl.Dialogs, DlgFromToGlu, ExportLas;
 
 {procedure DecodeFmt(const Fmt: string; var digit, pres: integer);
  var
@@ -132,6 +133,7 @@ procedure TFormDataDB.CreateConnection(const dbn: string);
   var
    q: TCustomAsyncADQuery;
 begin
+  try
   if dbn <> '' then
    begin
     FDBName := dbn;
@@ -141,6 +143,9 @@ begin
     Bind('C_UpdateFields', q as IInterface, ['S_UpdateFields']);
     if q.Active then ResetParamsAndScreen;
    end;
+  except
+    on E: Exception do TDebug.DoException(E);
+  end;
 end;
 
 constructor TFormDataDB.CreateFromDialog(AOwner: TComponent; tdsh: TypeDataShow; const ADBName: string);
@@ -216,6 +221,8 @@ begin
   AddToNCMenu('‘ильтр данных...', NSelectParamsClick, n);
   AddToNCMenu('-', nil, n);
   AddToNCMenu(TXTDT[DataType], NFilterGluClick, n);
+  AddToNCMenu('-', nil, n);
+  AddToNCMenu('Ёкспортировать в LAS...', NExportToLASClick, n);
 
   Bind('ProjectChange', GlobalCore as IManager , ['S_ProjectChange']);
   CreateConnection(FDBName);
@@ -251,6 +258,11 @@ begin
   finally
    FDataSet.EnableControls;
   end;
+end;
+
+procedure TFormDataDB.NExportToLASClick(Sender: TObject);
+begin
+
 end;
 
 procedure TFormDataDB.NFilterGluClick(Sender: TObject);
