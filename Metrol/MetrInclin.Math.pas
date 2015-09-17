@@ -144,6 +144,9 @@ type
    // наЙти:
     ZenMetr: TMetr;
     AziMetr: TMetr;
+    class procedure func_cb_zen_nostol(const k, f: PDoubleArray); static; cdecl;
+    class procedure func_cb_azi_nostol(const k, f: PDoubleArray); static; cdecl;
+
     class procedure func_cb_amp_zen(const k, f: PDoubleArray); static; cdecl;
     class procedure func_cb_amp_azi(const k, f: PDoubleArray); static; cdecl;
     class procedure func_cb_zen(const k, f: PDoubleArray); static; cdecl;
@@ -151,6 +154,8 @@ type
   public
     class procedure RunZ(AInp: TInput; out Res: TMetr);
     class procedure RunA(AInp: TInput; out Res: TMetr);
+    class procedure RunZ_nostol(AInp: TInput; out Res: TMetr);
+    class procedure RunA_nostol(AInp: TInput; out Res: TMetr);
   end;
 
   TMetrInclinMath = class
@@ -192,7 +197,15 @@ type
     class procedure FindAzim(incl, trr: Variant); static;
   end;
 
+function GetAxis(stp: Integer; const tip, axis: string; alg: IXMLNode): Double;
+
+
 implementation
+
+function GetAxis(stp: Integer; const tip, axis: string; alg: IXMLNode): Double;
+begin
+  Result := GetXNode(alg, Format('STEP%d.%s.%s.%s', [stp, tip, axis, T_DEV])).Attributes[AT_VALUE];
+end;
 
 { TMedianSum }
 
@@ -1291,6 +1304,55 @@ begin
     dang := TMetrInclinMath.DeltaAngle(Azi - AziStol);
     f[i] := sqr(dang);
    end;
+end;
+
+class procedure TAngleFtting.func_cb_azi_nostol(const k, f: PDoubleArray);
+begin
+
+end;
+
+class procedure TAngleFtting.func_cb_zen_nostol(const k, f: PDoubleArray);
+ var
+  xi,yi,zi: Double;
+  i: Integer;
+begin
+  with PMetr(k)^ do for i:= 0 to Length(Inp)-1 do with Inp[i] do
+   begin
+    xi := gx*m11 + gy*m12 + gz*m13 + m14;
+    yi :=          gy + gz*m23 + m24;
+    zi := gx*m31 + gy*m32 + gz*m33 + m34;
+    f[i] := sqr(m21 - TXMLScriptMath.Hypot3D(xi,yi,zi));
+   end;
+end;
+
+class procedure TAngleFtting.RunZ_nostol(AInp: TInput; out Res: TMetr);
+ var
+  e: ILMFitting;
+  rep: PLMFittingReport;
+  GIn: TMetr;
+  GOut: PMetr;
+  k: Double;
+//  Aout: PDoubleArray;
+//  ain: Double;
+begin
+  Inp := AInp;
+  GIn.Reset;
+  Gin.m21 := 10000;
+  Gin.m22 := 1;
+  LMFittingFactory(e);
+  CheckMath(e, e.FitV(GIn.LenAzi, Length(Inp), @Gin, 0.000001, 0, 0, 0, 10000, func_cb_zen_nostol, PDoubleArray(GOut), rep));
+  k := 1000/GOut.m21;
+  GOut.m21 := 0;
+  GOut.m22 := 1;
+  GOut.MulVect(@k);
+  ZenMetr := GOut^;
+  ZenMetr.m21 := 0;
+  Res := ZenMetr;
+end;
+
+class procedure TAngleFtting.RunA_nostol(AInp: TInput; out Res: TMetr);
+begin
+
 end;
 
 class procedure TAngleFtting.func_cb_zen(const k, f: PDoubleArray);

@@ -72,7 +72,7 @@ type
     procedure Loaded; override;
   public
    const
-    MAX_BUF = $8000;
+    MAX_BUF = $80000;
    var
     FTimerRxTimeOut: TTimer;
     FEventReceiveData: TReceiveDataRef;
@@ -1089,13 +1089,14 @@ begin
   FCom := TComPort.Create(nil);
   FCom.BaudRate := brCustom;
   Fcom.CustomBaudRate := 125000;
-  Fcom.Buffer.InputSize := $8000;
+  Fcom.Buffer.InputSize := MAX_BUF;
   Fcom.Buffer.OutputSize := $100;
   Fcom.Events := [evRxChar];
   Fcom.SyncMethod := smWindowSync;
   Fcom.TriggersOnRxChar := True;
   Fcom.OnRxChar := ComRxChar;
   Fcom.Port := FConnectInfo;
+//  Fcom.Timeouts.ReadInterval := 200;
 end;
 
 procedure TComConnectIO.InnerClose;
@@ -1138,15 +1139,18 @@ procedure TComConnectIO.ComRxChar(Sender: TObject; Count: Integer);
   var
    a: AnsiString;
 begin
-  if (FICount+Count) > $8000 then FICount := 0;
-  FCom.Read(FInput[FICount], Count);
+  if (FICount+Count) > MAX_BUF then FICount := 0;
+  Com.Read(FInput[FICount], Count);
   Inc(FICount, Count);
   if AsString and Assigned(FIOEventString) then
    begin
     SetString(a, PAnsiChar(@FInput[FICount-Count]), Count);
     FIOEventString(iosRx, string(a));
    end
-  else if Assigned(FIOEvent) then FIOEvent(iosRx, @FInput[FICount-Count], Count);
+  else if Assigned(FIOEvent) then FIOEvent(iosRx, @FInput[FICount-Count], Count)
+  else Application.MainForm.Repaint; // чтобы небыло потерь данных ???/
+
+
   if Assigned(FProtocol) then FProtocol.EventRxChar(Self);
 end;
 
@@ -1239,6 +1243,8 @@ begin
       FIOEventString(iosTx, string(a));
      end
     else if Assigned(FIOEvent) then FIOEvent(iosTx, @b[0], cnt);
+ //   Sleep(1);
+
    end
   else raise EComConnectIOException.Create(RS_SendData);
 end;
@@ -1295,7 +1301,7 @@ begin
 end;
 procedure TProtocolBur.EventRxChar(Sender: TAbstractConnectIO);
 begin
-  with Sender do if TestCRC16(@FInput[0], Word(FICount)) then
+  with Sender do if TestCRC16(@FInput[0], FICount) then
    begin
     FTimerRxTimeOut.Enabled := False;
     try
@@ -1309,6 +1315,8 @@ procedure TProtocolBur.EventRxTimeOut(Sender: TAbstractConnectIO);
 begin
   try
    Sender.DoEvent(nil, -1);
+    with Sender do if TestCRC16(@FInput[0], FICount) then TDebug.Log('GOOD')
+         else TDebug.Log('BAAD    %x %x /// %x %x   %x  ', [FInput[0], FInput[1], FInput[FICount-2], FInput[FICount-1], FICount]);
   finally
    Next; //AsyncSend далее
   end;
@@ -1440,7 +1448,7 @@ begin
          finally
   //        Release;
          end;
-         if {FFlagEndRead and }((GetTickCount - t) > 1000) then
+         if {FFlagEndRead and }((GetTickCount - t) > 10000) then
          Synchronize(procedure
          begin
            t := GetTickCount;
@@ -1557,6 +1565,8 @@ begin
     FBinFile:= BinFile;
 
     FRamXml := FindRam(FMetaDataInfo.Info, Adr);
+
+    FRamXml.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'CalipTst1.xml');
 
     if not Assigned(FRamXml) or not FRamXml.HasAttribute(AT_SIZE) then raise EReadRamException.CreateFmt(RS_NoRamMeta, [FAdr]);
     FRecSize := FRamXml.Attributes[AT_SIZE];

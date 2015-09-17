@@ -18,11 +18,11 @@ uses    System.IOUtils,
    const
     MAX_RAM = $420000;
     MAX_BAD = 70;
-    RLEN = 3000;// $580-$36;// $4000;
+    RLEN =  $7FFFF-3;
     WAIT_RLEN = 2000;
   private
     type TResRef = reference to procedure;
-    procedure Read(RamPtr: Integer; len: Word;  ev: TReceiveDataRef; WaitTime: Integer = -1);
+    procedure Read(RamPtr: Integer; len: DWord;  ev: TReceiveDataRef; WaitTime: Integer = -1);
   protected
     procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
   end;
@@ -220,7 +220,7 @@ end;
 {$REGION  'TBurReadRam - все процедуры и функции'}
 { TBurReadRam }
 //Чтение одной секции данных по адресу RamPtr
-procedure TBurReadRam.Read(RamPtr: Integer; len: Word;  ev: TReceiveDataRef; WaitTime: Integer = -1);
+procedure TBurReadRam.Read(RamPtr: Integer; len: DWord;  ev: TReceiveDataRef; WaitTime: Integer = -1);
 begin
 //  if FFlagTerminate then Exit;
   with TDeviceBur(FAbstractDevice) do
@@ -307,7 +307,7 @@ begin
     procedure NextRead(Status: EnumReadRam);
     begin
       WriteStream;
-      if Assigned(FReadRamEvent) then FReadRamEvent(Status, FAdr, ProcToEnd);
+     // if Assigned(FReadRamEvent) then FReadRamEvent(Status, FAdr, ProcToEnd);
       Read(DWord(FCurAdr), FPacketLen, FuncRead, wait); //рекурсия
     end;
     procedure EndWrite(Reason: EnumReadRam);
@@ -554,7 +554,7 @@ begin
           for i in TmpGood do
             ip.SetMetaData(Self as IDevice, i, FindDev(FMetaDataInfo.Info, i));
 
-       // FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'InclTst.xml');
+   //     FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'CalipTst.xml');
 
        finally
         try
@@ -576,7 +576,7 @@ end;
 
 procedure TDeviceBur.Turbo(speed: integer);
  const
-  SPD: array[0..6]of Integer = (125000, 500000, 1200000, 2000000, 3000000, 8000000, 12000000);
+  SPD: array[0..6]of Integer = (125000, 500000, 1000000, 2000000, 3000000, 8000000, 12000000);
 begin
   with SerialQe, ConnectIO do
    begin

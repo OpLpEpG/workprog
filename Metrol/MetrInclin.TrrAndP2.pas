@@ -179,9 +179,11 @@ end;
 
 procedure TFormInclinTrrAndP2.FindAccel(from, too: Integer; alg, trr: IXMLNode);
  var
-  m: TAngleFtting.TMetr;
+  m,m2: TAngleFtting.TMetr;
 begin
   TAngleFtting.RunZ(ToInp(alg, from, too), m);
+  TAngleFtting.RunZ_nostol(ToInp(alg, from, too), m2);
+  m2.AssignTo(XToVar(GetXNode(trr, 'accel')));
   m.AssignTo(XToVar(GetXNode(trr, 'accel')));
 end;
 

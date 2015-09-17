@@ -2,15 +2,15 @@ unit CRC16;
 
 interface
 
-uses  System.SysUtils;
+uses  System.SysUtils, Winapi.Windows;
 
-function  runCRC16( Data: Pbyte; First, Count: word; var CRCLo, CRCHi: byte): word;
+function  runCRC16( Data: Pbyte; First: word; Count: Dword; var CRCLo, CRCHi: byte): word;
 
 procedure  SetCRC16(Data: Pbyte; Count, CRCFirst: word); overload;
 procedure  SetCRC16( Data: Pbyte; Count: word);  overload;
 
-function TestCRC16(Data: Pbyte; Count, CRCFirst: word): boolean; overload;
-function  TestCRC16(Data: Pbyte; Count: word): boolean; overload;
+function TestCRC16(Data: Pbyte; Count: DWord; CRCFirst: word): boolean; overload;
+function  TestCRC16(Data: Pbyte; Count: Dword): boolean; overload;
 
 function  RVCRC16(Data: Pbyte; First: Word; Count: Integer): word;
 
@@ -58,7 +58,7 @@ $9C,$5C,$5D,$9D,$5F,$9F,$9E,$5E,$5A,$9A,$9B,$5B,$99,$59,$58,$98,
 $88,$48,$49,$89,$4B,$8B,$8A,$4A,$4E,$8E,$8F,$4F,$8D,$4D,$4C,$8C,
 $44,$84,$85,$45,$87,$47,$46,$86,$82,$42,$43,$83,$41,$81,$80,$40);
 
-function  runCRC16( Data: Pbyte; First, Count: word; var CRCLo, CRCHi: byte): word;
+function  runCRC16( Data: Pbyte; First: word; Count: DWORD; var CRCLo, CRCHi: byte): word;
  var
   i,t: integer;
 begin
@@ -79,7 +79,7 @@ begin
   Result := word(CRCHi shl 8 or CRCLo);
 end;
 
-function TestCRC16(Data: Pbyte; Count, CRCFirst: word): boolean; overload;
+function TestCRC16(Data: Pbyte; Count: DWord; CRCFirst: word): boolean; overload;
  var
   CRCLo, CRCHi: byte;
 begin
@@ -93,7 +93,7 @@ begin
    end
 end;
 
-function TestCRC16(Data: Pbyte; Count: word): boolean; overload;
+function TestCRC16(Data: Pbyte; Count: Dword): boolean; overload;
  var
   CRCLo, CRCHi: byte;
 begin
@@ -108,7 +108,7 @@ begin
    end
 end;
 
-procedure  SetCRC16(Data: Pbyte; Count, CRCFirst: word); overload;
+procedure  SetCRC16(Data: Pbyte; Count: word; CRCFirst: word); overload;
  var
   CRCLo, CRCHi: byte;
 begin

@@ -26,7 +26,7 @@ type
     FNewAlgoritm: TMenuItem;
     FFrmGraph: TArray<TFrmInclinGraph>;
     function GetRoll(const tip, axis: string; alg: IXMLNode): TRollData;
-    function GetAxis(stp: Integer; const tip, axis: string; alg: IXMLNode):Double;
+//    function GetAxis(stp: Integer; const tip, axis: string; alg: IXMLNode):Double;
     procedure SolvRol(const tip, axis: string; alg: IXMLNode; ShowGraph: TFrmInclinGraph; out rez: TResultSolvRoll);
     {$IFDEF TEST_1}
     procedure _TEST_(Step: Integer; alg, trr: IXMLNode);
@@ -93,10 +93,10 @@ begin
   inherited;
 end;
 
-function TFormInclinADV.GetAxis(stp: Integer; const tip, axis: string; alg: IXMLNode): Double;
-begin
-  Result := GetXNode(alg, Format('STEP%d.%s.%s.%s', [stp, tip, axis, T_DEV])).Attributes[AT_VALUE];
-end;
+//function TFormInclinADV.GetAxis(stp: Integer; const tip, axis: string; alg: IXMLNode): Double;
+//begin
+//  Result := GetXNode(alg, Format('STEP%d.%s.%s.%s', [stp, tip, axis, T_DEV])).Attributes[AT_VALUE];
+//end;
 
 procedure TFormInclinADV.Loaded;
  var

@@ -93,6 +93,9 @@
         <Projects Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\..\Libs\ComPort\Source\CPortLibDXE.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -371,19 +374,34 @@
     <Target Name="LSQLMega:Make">
         <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj" Targets="Make"/>
     </Target>
+    <Target Name="CPortLibDXE">
+        <MSBuild Projects="..\..\Libs\ComPort\Source\CPortLibDXE.dproj"/>
+    </Target>
+    <Target Name="CPortLibDXE:Clean">
+        <MSBuild Projects="..\..\Libs\ComPort\Source\CPortLibDXE.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="CPortLibDXE:Make">
+        <MSBuild Projects="..\..\Libs\ComPort\Source\CPortLibDXE.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;VCLControl;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;ProjectManager3;VCLControl3;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;CubicSpline;Curves;Project2;Project3;LSQLMega"/>
+        <CallTarget Targets="Core;ProjectManager;VCLControl;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;ProjectManager3;VCLControl3;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;CubicSpline;Curves;Project2;Project3;LSQLMega;CPortLibDXE"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;VCLControl:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;ProjectManager3:Clean;VCLControl3:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;CubicSpline:Clean;Curves:Clean;Project2:Clean;Project3:Clean;LSQLMega:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;VCLControl:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;ProjectManager3:Clean;VCLControl3:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;CubicSpline:Clean;Curves:Clean;Project2:Clean;Project3:Clean;LSQLMega:Clean;CPortLibDXE:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;VCLControl:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;ProjectManager3:Make;VCLControl3:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;CubicSpline:Make;Curves:Make;Project2:Make;Project3:Make;LSQLMega:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;VCLControl:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;ProjectManager3:Make;VCLControl3:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;CubicSpline:Make;Curves:Make;Project2:Make;Project3:Make;LSQLMega:Make;CPortLibDXE:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
-        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
-            <ProjectGuid>{30C9E9B1-BD49-4873-965A-0596B6D8A932}</ProjectGuid>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\ComPort\Source\CPortLibDXE.dproj">
+            <ProjectGuid>{2C50A57B-5EE2-4D5D-8234-A3C9FC004851}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -544,6 +562,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
+            <ProjectGuid>{30C9E9B1-BD49-4873-965A-0596B6D8A932}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
             <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
@@ -555,17 +579,17 @@
             <Configurations/>
             <Platforms/>
             <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='D1'">
-        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
-            <ProjectGuid>{30C9E9B1-BD49-4873-965A-0596B6D8A932}</ProjectGuid>
+        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
+            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\ComPort\Source\CPortLibDXE.dproj">
+            <ProjectGuid>{2C50A57B-5EE2-4D5D-8234-A3C9FC004851}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -726,6 +750,12 @@
             <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
+            <ProjectGuid>{30C9E9B1-BD49-4873-965A-0596B6D8A932}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
             <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -735,12 +765,6 @@
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
             <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
-            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
-            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>

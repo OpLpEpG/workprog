@@ -44,6 +44,7 @@ type
      Checked: Boolean;
      ModulName: string;
      TableName: string;
+     IdName: string;
      Data: TArray<TFldRec>;
     end;
   private
@@ -166,6 +167,7 @@ procedure TFormExportToPSK6.btStartClick(Sender: TObject);
     SetLength(d.Data, Length(drm));
     d.TableName := 'Ram_'+IntToStr(ix.Адрес) +'_'+ IntToStr(ix.fk);
     d.ModulName := ix.Модуль;
+    d.IdName := d.ModulName +'.время.DEV';
     for I := 0 to High(drm) do
      begin
       d.Data[i].FieldName := d.ModulName+'.' + drm[i].name;
@@ -230,7 +232,8 @@ begin
     s := '';
     for f in r.Data do s := Format('%s,%s."%s"',[s, alias,  f.FieldName]);
     CArray.Add<string>(flds, s);
-    CArray.Add<string>(LeftOuterJoins, Format('LEFT OUTER JOIN %s AS %s ON %s.id = Ram.ID',[r.TableName, alias, alias]));
+//    CArray.Add<string>(LeftOuterJoins, Format('LEFT OUTER JOIN %s AS %s ON %s.id = Ram.ID',[r.TableName, alias, alias])); // по номеру записи
+    CArray.Add<string>(LeftOuterJoins, Format('LEFT OUTER JOIN %s AS %s ON %s."%s" = Ram.ID',[r.TableName, alias, alias, r.IdName])); // по кадру
     inc(alias);
    end;                                      //LIMIT %d,%d
    sql := Format('SELECT Ram.ID AS "ID"%s FROM Ram %s ',[string.Join('', flds), string.Join(' ', LeftOuterJoins)]);

@@ -428,7 +428,9 @@ type
 //  end;
 
 // Вспомогательные интерфейсы
+
   TReceiveDataRef = reference to procedure(Data: Pointer; DataSize: integer);
+
   ILowLevelDeviceIO = interface(IDevice)
   ['{3754E9DF-B976-47D0-A25A-486041E7CCDB}']
     procedure SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1);
