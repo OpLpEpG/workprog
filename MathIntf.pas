@@ -171,6 +171,28 @@ type
 
   TLMFittingCB = procedure(const x, f: PDoubleArray); cdecl;
 
+{  /*************************************************************************
+Optimization report, filled by MinLMResults() function
+
+FIELDS:
+* TerminationType, completetion code:
+    * -7    derivative correctness check failed;
+            see Rep.WrongNum, Rep.WrongI, Rep.WrongJ for
+            more information.
+    *  1    relative function improvement is no more than
+            EpsF.
+    *  2    relative step is no more than EpsX.
+    *  4    gradient is no more than EpsG.
+    *  5    MaxIts steps was taken
+    *  7    stopping conditions are too stringent,
+            further improvement is impossible
+* IterationsCount, contains iterations count
+* NFunc, number of function calculations
+* NJac, number of Jacobi matrix calculations
+* NGrad, number of gradient calculations
+* NHess, number of Hessian calculations
+* NCholesky, number of Cholesky decomposition calculations
+*************************************************************************/}
   ILMFitting = interface(ILastMathError)
     function FitVB(n, m: Integer; const xin, bndL, bndU: PDoubleArray; const diffstep, epsg, epsf, epsx: Double; const maxits: Integer;
                   func: TLMFittingCB; out xout: PDoubleArray; out Rep: PLMFittingReport): HRESULT; stdcall;
@@ -209,6 +231,78 @@ __interface Iwavelet : public ILastMathError
     function idw(out sig: PDoubleArray; out len: Integer): HRESULT; stdcall;
   end;
 
+//__interface Ieig : public ILastMathError
+{
+	SAFECALL sevdi(const double *a, const ae_int_t n, const ae_int_t zneeded, const ae_int_t i1, const ae_int_t i2, bool &Res, const double **w, const IDoubleMatrix **z);
+	SAFECALL sevd(const double *a, const ae_int_t n, const ae_int_t zneeded, bool &Res, const double **w, const IDoubleMatrix **z);
+}
+
+  Ieig = interface(ILastMathError)
+///Subroutine for finding the eigenvalues and  eigenvectors  of  a  symmetric
+///matrix with given indexes by using bisection and inverse iteration methods.
+///
+///Input parameters:
+///    A       -   symmetric matrix which is given by its upper or lower
+///                triangular part. Array whose indexes range within [0..N-1, 0..N-1].
+///    N       -   size of matrix A.
+///    ZNeeded -   flag controlling whether the eigenvectors are needed or not.
+///                If ZNeeded is equal to:
+///                 * 0, the eigenvectors are not returned;
+///                 * 1, the eigenvectors are returned.
+///    IsUpperA -  storage format of matrix A.
+///    I1, I2 -    index interval for searching (from I1 to I2).
+///                0 <= I1 <= I2 <= N-1.
+///
+///Output parameters:
+///    W       -   array of the eigenvalues found.
+///                Array whose index ranges within [0..I2-I1].
+///    Z       -   if ZNeeded is equal to:
+///                 * 0, Z hasn’t changed;
+///                 * 1, Z contains eigenvectors.
+///                Array whose indexes range within [0..N-1, 0..I2-I1].
+///                In that case, the eigenvectors are stored in the matrix columns.
+///
+///Result:
+///    True, if successful. W contains the eigenvalues, Z contains the
+///    eigenvectors (if needed).
+///
+///    False, if the bisection method subroutine wasn't able to find the
+///    eigenvalues in the given interval or if the inverse iteration subroutine
+///    wasn't able to find all the corresponding eigenvectors.
+///    In that case, the eigenvalues and eigenvectors are not returned.
+    function sevdi(const a: PDouble; n, zneeded, i1, i2: Integer;
+                   out Res: LongBool; out w: PDoubleArray; out z: IDoubleMatrix): HRESULT; stdcall;
+///Finding the eigenvalues and eigenvectors of a symmetric matrix
+///
+///The algorithm finds eigen pairs of a symmetric matrix by reducing it to
+///tridiagonal form and using the QL/QR algorithm.
+///
+///Input parameters:
+///    A       -   symmetric matrix which is given by its upper or lower
+///                triangular part.
+///                Array whose indexes range within [0..N-1, 0..N-1].
+///    N       -   size of matrix A.
+///    ZNeeded -   flag controlling whether the eigenvectors are needed or not.
+///                If ZNeeded is equal to:
+///                 * 0, the eigenvectors are not returned;
+///                 * 1, the eigenvectors are returned.
+///    IsUpper -   storage format.
+///
+///Output parameters:
+///    D       -   eigenvalues in ascending order.
+///                Array whose index ranges within [0..N-1].
+///    Z       -   if ZNeeded is equal to:
+///                 * 0, Z hasn’t changed;
+///                 * 1, Z contains the eigenvectors.
+///                Array whose indexes range within [0..N-1, 0..N-1].
+///                The eigenvectors are stored in the matrix columns.
+///Result:
+///    True, if the algorithm has converged.
+///    False, if the algorithm hasn't converged (rare case).
+    function  sevd(const a: PDouble; n, zneeded: Integer; out Res: LongBool;
+                   out w: PDoubleArray; out z: IDoubleMatrix): HRESULT; stdcall;
+  end;
+
 {$WARN SYMBOL_PLATFORM OFF}
 procedure RbfFactory(out Rbf: IRbf); cdecl; external 'matlab.dll' delayed;
 procedure BaryCentricFactory(out BaryCentric: IBaryCentric); cdecl; external 'matlab.dll' delayed;
@@ -219,6 +313,7 @@ procedure LMFittingFactory(out LMFitting: ILMFitting); cdecl; external 'matlab.d
 procedure ToDoubleMatrix(Src: Pointer; out mtx: IDoubleMatrix); cdecl; external 'matlab.dll' delayed;
 procedure EquationsFactory(out Equations: IEquations); cdecl; external 'matlab.dll' delayed;
 procedure WaveletFactory(out wavelet: Iwavelet); cdecl; external 'matlab.dll' delayed;
+procedure EigFactory(out eig: Ieig); cdecl; external 'matlab.dll' delayed;
 {$WARN SYMBOL_PLATFORM ON}
 
 procedure CheckMath(lme: ILastMathError; res: HRESULT);

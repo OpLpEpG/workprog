@@ -128,7 +128,7 @@ function GetXNode(Root: IXMLNode; const Path: string; CreatePathNotExists: Boole
 // проверяет содержит ли Test Etalon структуру и атрибуты
 // для каждого атрибута вызывается действие
 // прiменяется для копирования только данных
-function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil): Boolean;
+function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True): Boolean;
 function ExecXTree(root: IXMLNode; func: TTestRef): IXMLNode; overload; //возвращает первое совпадение
 procedure ExecXTree(root: IXMLNode; func: Tproc<IXMLNode>; Dec: Boolean = False); overload;
 procedure FindAllWorks(root: IXMLNode; func: TWorkDataRef);
@@ -941,21 +941,31 @@ begin
   if Assigned(root) then rec(root);
 end;
 
-function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil): Boolean;
+function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True): Boolean;
   procedure rec(e, t: IXMLNode);
    var
     ie, it: IXMLNode;
   begin
-    for ie in XEnumAttr(e) do
+    if not CheckRootAttr then CheckRootAttr := True
+    else for ie in XEnumAttr(e) do
      begin
       it := t.AttributeNodes.FindNode(ie.NodeName);
-      if not Assigned(it) then Result := False
+      if not Assigned(it) then
+       begin
+        Result := False;
+        ie.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'ie.xml');
+        TDebug.Log(ie.NodeName);
+       end
       else if Assigned(Action) then Action(e, ie, t, it)
      end;
     for ie in XEnum(e) do
      begin
       it := t.ChildNodes.FindNode(ie.NodeName);
-      if not Assigned(it) then Result := False
+      if not Assigned(it) then
+       begin
+        Result := False;
+        TDebug.Log(ie.NodeName);
+       end
       else rec(ie, it)
      end;
   end;

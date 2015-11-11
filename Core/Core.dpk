@@ -104,7 +104,8 @@ contains
   CustomPlot in 'CustomPlot.pas',
   Plot.GR32 in 'Plot.GR32.pas',
   DataImportIntf in '..\DataImportIntf.pas',
-  DataImportImpl in 'DataImportImpl.pas';
+  DataImportImpl in 'DataImportImpl.pas',
+  Vector in '..\Vector.pas';
 
 end.
 

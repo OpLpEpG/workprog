@@ -489,8 +489,14 @@ begin
      and HasXTree(GetMetr([], FDevData), GetMetr([], FileData),
      procedure(devroot, dev, failRoot, fail: IXMLNode)
      begin
-       if dev.NodeValue <> fail.NodeValue then Res := Res or 1;
-     end)) then Res := Res or 2;
+       if dev.NodeValue <> fail.NodeValue then
+        begin
+         Res := Res or 1;
+        end;
+     end, false)) then
+      begin
+       Res := Res or 2;
+      end;
   if Res = 0 then  FStatusBar.Panels[0].Text := 'Поправки в устройстве:G'
   else if Res = 1 then FStatusBar.Panels[0].Text := 'Поправки ДРУГИЕ!!!:RB';
 end;

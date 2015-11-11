@@ -468,6 +468,8 @@ type
     TQe = TQueue<TRunSerialQeRef>;
    var
     FQe: TQe;
+    FOldCount: Integer;
+    FCRC: Word;
   protected
     procedure EventRxTimeOut(Sender : TAbstractConnectIO); override;
     procedure EventRxChar(Sender : TAbstractConnectIO);override;
@@ -1296,12 +1298,18 @@ begin
   Sender.FICount := 0;
   Inc(Cnt, 2);
 
-
+  FOldCount := 0;
+  FCRC := $FFFF;
 //  Cnt := 1;
 end;
 procedure TProtocolBur.EventRxChar(Sender: TAbstractConnectIO);
+ var
+  n, o: Integer;
 begin
-  with Sender do if TestCRC16(@FInput[0], FICount) then
+  n := Sender.FICount - FOldCount;
+  o := FOldCount;
+  FOldCount := Sender.FICount;
+  with Sender do if CRC16_Find(@FInput[o], n, FCRC) then
    begin
     FTimerRxTimeOut.Enabled := False;
     try
@@ -1314,9 +1322,10 @@ end;
 procedure TProtocolBur.EventRxTimeOut(Sender: TAbstractConnectIO);
 begin
   try
+    with Sender do
+     if TestCRC16(@FInput[0], FICount) then TDebug.Log('GOOD')
+     else TDebug.Log('BAAD    %x %x /// %x %x   %x  ', [FInput[0], FInput[1], FInput[FICount-2], FInput[FICount-1], FICount]);
    Sender.DoEvent(nil, -1);
-    with Sender do if TestCRC16(@FInput[0], FICount) then TDebug.Log('GOOD')
-         else TDebug.Log('BAAD    %x %x /// %x %x   %x  ', [FInput[0], FInput[1], FInput[FICount-2], FInput[FICount-1], FICount]);
   finally
    Next; //AsyncSend далее
   end;
@@ -1566,7 +1575,7 @@ begin
 
     FRamXml := FindRam(FMetaDataInfo.Info, Adr);
 
-    FRamXml.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'CalipTst1.xml');
+   // FRamXml.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'CalipTst1.xml');
 
     if not Assigned(FRamXml) or not FRamXml.HasAttribute(AT_SIZE) then raise EReadRamException.CreateFmt(RS_NoRamMeta, [FAdr]);
     FRecSize := FRamXml.Attributes[AT_SIZE];
@@ -1712,7 +1721,7 @@ procedure TReadRam.WriteToBD;
 begin
   while Length(Fifo) >= FRecSize {Fifo.pop(ptr, FRecSize)} do
     try
-     DoSetData(@Fifo[0]);
+     DoSetData(@Fifo[0]); /// восстановить
      Delete(Fifo, 0 , FRecSize);
      if ((GetTickCount - t) > 1000) then
      begin

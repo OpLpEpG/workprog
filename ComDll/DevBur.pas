@@ -18,7 +18,7 @@ uses    System.IOUtils,
    const
     MAX_RAM = $420000;
     MAX_BAD = 70;
-    RLEN =  $7FFFF-3;
+    RLEN =  $7FF-3;// $7FFFF-3;
     WAIT_RLEN = 2000;
   private
     type TResRef = reference to procedure;
@@ -253,7 +253,7 @@ procedure TBurReadRam.Execute(const binFile: string; FromTime, ToTime: TDateTime
     ErrCnt: Integer;
     Wait: Integer;
     FFileStream: TFileStream;
-    t: Integer;
+//    t: Integer;
 begin
   inherited ;//Execute(evInfoRead, Addrs);
   if FPacketLen = 0 then FPacketLen := RLEN;
@@ -615,6 +615,7 @@ begin
         D1: TStdRead;
       begin
         D1 := TStdRead.Create(adr, CMD_INFO, SizeOf(TInfoDataHeader)-1); // SizeOf(TInfoDataHeader)-1 так как в TInfoDataHeader присутствует первый байт адреса-команды
+      //   Tdebug.Log('std SEND %x', [d1.CmdAdr]);
         Send(@D1, Sizeof(D1), procedure(p1: Pointer; n1: integer)
            var
             savelen: Word;
@@ -622,51 +623,57 @@ begin
             recur: TReceiveDataRef;
             Data: TArray<Byte>;
             bads: Integer;
-            tst: TInfoDataHeader;
+           // tst: TInfoDataHeader;
          begin
+       //    if assigned(p1) then Tdebug.Log('std READ Header = %x  D1 = %x', [PInfoDataHeader(p1).CmdAdr, d1.CmdAdr])
+       //    else Tdebug.Log('std READ Header = nil  D1 = %x', [d1.CmdAdr]);
            if (n1 = SizeOf(TInfoDataHeader)) and (PInfoDataHeader(p1).CmdAdr = d1.CmdAdr) then
             begin
-
-             tst := PInfoDataHeader(p1)^;
+           //  tst := PInfoDataHeader(p1)^;
              savelen := PInfoDataHeader(p1).Length;
-             Tdebug.Log('%d', [savelen]);
+            // Tdebug.Log('%d', [savelen]);
              from := 0;
              bads := 0;
              SetLength(Data, savelen + 1);
              Data[0] := d1.CmdAdr;
+
              recur := procedure(pr: Pointer; nr: integer)
-             begin
+               var
+                pb: PByteArray;
+              begin
+                pb := pr;
+           //     if Assigned(Pb) then Tdebug.Log('adv recur READ Header=%x adr=%x S=%x', [pb[0], adr, saveCmdAdr])
+           //     else Tdebug.Log('adv recur READ Header=NIL adr = %x  D1 = %x', [adr, saveCmdAdr]);
+                if (nr > 1) and (pb[0] = ToAdrCmd(adr, CMD_INFO)) then
+                 begin
+                  move(pb[1], Data[from+1], nr-1);
+                  Inc(from, nr-1);
+                  if from >= savelen then
+                   begin
+                    //Tdebug.Log(from.ToString + '  ' + savelen.ToString());
+                    ev(0, adr, @Data[0], savelen+1);
+                    Exit;
+                   end;
+                 end
+                else
+                 begin
+                  inc(bads);
+                  if bads > 7 then
+                   begin
+                    ev(-1, adr, pr, nr);
+                    Exit;
+                   end;
+                 end;
                Add(procedure()
                  var
                   D: TAdvStdRead;
-                  pb: PByteArray;
                 begin
-                  pb := pr;
-                  if (nr > 1) and (pb[0] = d1.CmdAdr) then
-                   begin
-                    move(pb[1], Data[from+1], nr-1);
-                    Inc(from, nr-1);
-                    if from >= savelen then
-                     begin
-                      Tdebug.Log(from.ToString + '  ' + savelen.ToString());
-                      try
-                       ev(0, adr, @Data[0], savelen+1);
-                      finally
-                       Next;
-                      end;
-                      Exit;
-                     end;
-                   end
-                  else
-                   begin
-                    inc(bads);
-                    if bads > 7 then ev(-1, adr, pr, nr);
-                   end;
                   if savelen-from > LEN_MAX_SHORT then D := TAdvStdRead.Create(adr, CMD_INFO, LEN_MAX_SHORT, from)
                   else D := TAdvStdRead.Create(adr, CMD_INFO, savelen-from, from);
+                //  Tdebug.Log('adv recur SEND %x', [d.CmdAdr]);
                   Send(@D, Sizeof(D), recur);
                 end)
-             end;
+              end;
              recur(nil, -1);
              //if savelen > 252 then raise EAsyncBurException.CreateFmt('Поддерживается длина метаданных меньше 252 текущая: %d', [savelen]);
             end

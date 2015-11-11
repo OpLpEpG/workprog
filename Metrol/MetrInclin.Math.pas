@@ -2,7 +2,8 @@
 
 interface
 
-uses  SysUtils, System.Classes, math, System.Variants, Container, RootImpl, System.Generics.Collections, Winapi.ActiveX,
+uses  Vector,
+      SysUtils, System.Classes, math, System.Variants, Container, RootImpl, System.Generics.Collections, Winapi.ActiveX,
       XMLScript, XMLScript.Math, tools, debug_except, MathIntf, Xml.XMLIntf, ExtendIntf;
 
 type
@@ -158,6 +159,27 @@ type
     class procedure RunA_nostol(AInp: TInput; out Res: TMetr);
   end;
 
+ { TInclinVector = record
+   X,Y,Z: Double;
+    class operator Multiply(a: TInclinVector; Factor: Double): TInclinVector; static;
+  end;}
+
+   TInclPoint = record
+    G, H: TVector3;// TInclinVector;
+    class operator Implicit(V: Variant): TInclPoint;
+   end;
+
+{  TInclinMetr3x4 = record
+    m11, m12, m13, m14: Double;
+    m21, m22, m23, m24: Double;
+    m31, m32, m33, m34: Double;
+    class operator Multiply(a: TInclinMetr3x4; v: TInclinVector): TInclinVector; static;
+    class function Scale(Factor: Double; matrix: TInclinMetr3x4): TInclinMetr3x4; static;
+    function Invert: TInclinMetr3x4;
+    procedure AssignTo(v: Variant);
+    procedure Default;
+  end;}
+
   TMetrInclinMath = class
   private
     class procedure SetCell(Sheet: Variant; const cel: string; data: string); static;
@@ -195,10 +217,14 @@ type
 //    class function GetSum(Root: IXMLNode): Double; inline; static;
     class procedure FindZenViz(incl, trr: Variant); static;
     class procedure FindAzim(incl, trr: Variant); static;
+    // обратная залача для тестовых целей
+    class function FindXYZ(A, Z, O, I, Amp: Double): TInclPoint; static;
   end;
+
 
 function GetAxis(stp: Integer; const tip, axis: string; alg: IXMLNode): Double;
 
+procedure Matrix4AssignToVariant(m: TMatrix4; v: Variant);
 
 implementation
 
@@ -889,6 +915,30 @@ begin
   incl.маг_наклон.CLC.VALUE  := TXMLScriptMath.RadToDeg360(b);
 end;
 
+class function TMetrInclinMath.FindXYZ(A, Z, O, I, Amp: Double): TInclPoint;
+ var
+  co, so: Double;
+  cz, sz: Double;
+  ca, sa: Double;
+  ci, si: Double;
+begin
+  so := Sin(DegToRad(O));
+  co := Cos(DegToRad(O));
+  sz := Sin(DegToRad(Z));
+  cz := Cos(DegToRad(Z));
+  sa := Sin(DegToRad(A));
+  ca := Cos(DegToRad(A));
+  i := 90 - i;
+  si := Sin(DegToRad(I));
+  ci := Cos(DegToRad(I));
+  Result.H.X := -Amp*(ci*(sa*so - ca*co*cz) + co*si*sz);
+  Result.H.Y := -Amp*(ci*(co*sa + ca*cz*so) - si*so*sz);
+  Result.H.Z :=  Amp*(cz*si + ca*ci*sz);
+  Result.G.X := -Amp*co*sz;
+  Result.G.Y :=  Amp*so*sz;
+  Result.G.Z :=  Amp*cz;
+end;
+
 class procedure TMetrInclinMath.FindZenViz(incl, trr: Variant);
  var
   o, zu, x,y,z: Double;
@@ -1319,7 +1369,7 @@ begin
   with PMetr(k)^ do for i:= 0 to Length(Inp)-1 do with Inp[i] do
    begin
     xi := gx*m11 + gy*m12 + gz*m13 + m14;
-    yi :=          gy + gz*m23 + m24;
+    yi :=          gy  + gz*m23 + m24;
     zi := gx*m31 + gy*m32 + gz*m33 + m34;
     f[i] := sqr(m21 - TXMLScriptMath.Hypot3D(xi,yi,zi));
    end;
@@ -1337,7 +1387,7 @@ class procedure TAngleFtting.RunZ_nostol(AInp: TInput; out Res: TMetr);
 begin
   Inp := AInp;
   GIn.Reset;
-  Gin.m21 := 10000;
+  with AInp[0] do Gin.m21 := TXMLScriptMath.Hypot3D(gx,gy,gz)*1.001;
   Gin.m22 := 1;
   LMFittingFactory(e);
   CheckMath(e, e.FitV(GIn.LenAzi, Length(Inp), @Gin, 0.000001, 0, 0, 0, 10000, func_cb_zen_nostol, PDoubleArray(GOut), rep));
@@ -1415,6 +1465,87 @@ begin
   CheckMath(e, e.FitV(1, Length(Inp), @ain, 0.000001, 0, 0, 0, 10000, func_cb_amp_azi, Aout, rep));
   AziMetr.MulVect(Aout);
   Res := AziMetr;
+end;
+
+procedure Matrix4AssignToVariant(m: TMatrix4; v: Variant);
+begin
+  with m do
+   begin
+    v.m3x4.m11 := m11; v.m3x4.m12 := m12; v.m3x4.m13 := m13; v.m3x4.m14 := m14;
+    v.m3x4.m21 := m21; v.m3x4.m22 := m22; v.m3x4.m23 := m23; v.m3x4.m24 := m24;
+    v.m3x4.m31 := m31; v.m3x4.m32 := m32; v.m3x4.m33 := m33; v.m3x4.m34 := m34;
+   end;
+end;
+
+{ TInclinMetr3x4 }
+
+{procedure TInclinMetr3x4.AssignTo(v: Variant);
+begin
+  v.m3x4.m11 := m11; v.m3x4.m12 := m12; v.m3x4.m13 := m13; v.m3x4.m14 := m14;
+  v.m3x4.m21 := m21; v.m3x4.m22 := m22; v.m3x4.m23 := m23; v.m3x4.m24 := m24;
+  v.m3x4.m31 := m31; v.m3x4.m32 := m32; v.m3x4.m33 := m33; v.m3x4.m34 := m34;
+end;
+
+procedure TInclinMetr3x4.Default;
+begin
+  Self := system.default(TInclinMetr3x4);
+  m11 := 1;
+  m22 := 1;
+  m33 := 1;
+end;
+
+function TInclinMetr3x4.Invert: TInclinMetr3x4;
+begin
+  Result.m11 := m22*m33 - m23*m32; Result.m12 := m13*m32 - m12*m33; Result.m13 := m12*m23 - m13*m22;
+  Result.m21 := m23*m31 - m21*m33; Result.m22 := m11*m33 - m13*m31; Result.m23 := m13*m21 - m11*m23;
+  Result.m31 := m21*m32 - m22*m31; Result.m32 := m12*m31 - m11*m32; Result.m33 := m11*m22 - m12*m21;
+
+  Result.m14 := -(Result.m11*m14 + Result.m12*m24 + Result.m13*m34);
+  Result.m24 := -(Result.m21*m14 + Result.m22*m24 + Result.m23*m34);
+  Result.m34 := -(Result.m31*m14 + Result.m32*m24 + Result.m33*m34);
+
+  Result := Scale(1/(m11*m22*m33 - m11*m23*m32 - m12*m21*m33 + m12*m23*m31 + m13*m21*m32 - m13*m22*m31), Result);
+end;
+
+class operator TInclinMetr3x4.Multiply(a: TInclinMetr3x4; v: TInclinVector): TInclinVector;
+begin
+  with a, v do
+   begin
+    Result.X := m11*x + m12*y + m13*z + m14;
+    Result.Y := m21*x + m22*y + m23*z + m24;
+    Result.Z := m31*x + m32*y + m33*z + m34;
+   end;
+end;
+
+class function TInclinMetr3x4.Scale(Factor: Double; matrix: TInclinMetr3x4): TInclinMetr3x4;
+begin
+  with matrix do
+   begin
+    Result.m11 := m11*Factor; Result.m12 := m12*Factor; Result.m13 := m13*Factor; Result.m14 := m14*Factor;
+    Result.m21 := m21*Factor; Result.m22 := m22*Factor; Result.m23 := m23*Factor; Result.m24 := m24*Factor;
+    Result.m31 := m31*Factor; Result.m32 := m32*Factor; Result.m33 := m33*Factor; Result.m34 := m34*Factor;
+   end;
+end;  }
+
+{ TInclinVector }
+
+{class operator TInclinVector.Multiply(a: TInclinVector; Factor: Double): TInclinVector;
+begin
+  Result.X := a.X*Factor;
+  Result.Y := a.Y*Factor;
+  Result.Z := a.Z*Factor;
+end;}
+
+{ TInclPoint }
+
+class operator TInclPoint.Implicit(V: Variant): TInclPoint;
+begin
+  Result.G.X := v.accel.X.DEV.VALUE;
+  Result.G.y := v.accel.Y.DEV.VALUE;
+  Result.G.z := v.accel.Z.DEV.VALUE;
+  Result.h.x := v.magnit.X.DEV.VALUE;
+  Result.h.y := v.magnit.Y.DEV.VALUE;
+  Result.h.z := v.magnit.Z.DEV.VALUE;
 end;
 
 end.

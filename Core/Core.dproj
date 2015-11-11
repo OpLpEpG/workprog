@@ -77,8 +77,8 @@
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>854</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.1.854;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>856</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.1.856;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_DUPLICATE_CTOR_DTOR>false</DCC_DUPLICATE_CTOR_DTOR>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -173,6 +173,7 @@
         <DCCReference Include="Plot.GR32.pas"/>
         <DCCReference Include="..\DataImportIntf.pas"/>
         <DCCReference Include="DataImportImpl.pas"/>
+        <DCCReference Include="..\Vector.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -225,7 +226,7 @@
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp220.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
-            <Deployment Version="1">
+            <Deployment Version="2">
                 <DeployFile LocalName="..\_exe\Debug\Core.bpl" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Core.bpl</RemoteName>
@@ -552,13 +553,13 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
+                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
-                <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
                 <Platform value="Win32">True</Platform>

@@ -39,7 +39,8 @@ uses
   MetrInclin.CheckFormSetup in 'MetrInclin.CheckFormSetup.pas',
   MetrGK.CheckFormSetup in 'MetrGK.CheckFormSetup.pas',
   UakiUI.Ten in 'UakiUI.Ten.pas' {FrameUakiTEN: TFrame},
-  MetrInclin.T12 in 'MetrInclin.T12.pas';
+  MetrInclin.T12 in 'MetrInclin.T12.pas',
+  MetrInclin.Math2 in 'MetrInclin.Math2.pas';
 
 {$R *.res}
 
