@@ -13,11 +13,21 @@ object FormInclinCheck: TFormInclinCheck
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
+  object Splitter: TSplitter
+    Left = 0
+    Top = 227
+    Width = 757
+    Height = 3
+    Cursor = crVSplit
+    Align = alBottom
+    ExplicitTop = 0
+    ExplicitWidth = 280
+  end
   object PanelM: TPanel
     Left = 0
     Top = 0
     Width = 757
-    Height = 314
+    Height = 227
     Align = alClient
     BevelOuter = bvNone
     Caption = 'PanelM'
@@ -25,7 +35,7 @@ object FormInclinCheck: TFormInclinCheck
     TabOrder = 0
     object lbInfo: TLabel
       Left = 0
-      Top = 301
+      Top = 214
       Width = 757
       Height = 13
       Align = alBottom
@@ -37,7 +47,7 @@ object FormInclinCheck: TFormInclinCheck
       Left = 0
       Top = 0
       Width = 757
-      Height = 301
+      Height = 214
       Align = alClient
       TabOrder = 1
     end
@@ -45,7 +55,7 @@ object FormInclinCheck: TFormInclinCheck
       Left = 0
       Top = 0
       Width = 757
-      Height = 301
+      Height = 214
       Align = alClient
       BorderWidth = 1
       Header.AutoSizeIndex = -1
@@ -195,6 +205,113 @@ object FormInclinCheck: TFormInclinCheck
           Position = 23
           Width = 271
           WideText = 'Hz.'#1090#1072#1088#1080#1088'.'
+        end>
+    end
+  end
+  object PanelP: TPanel
+    Left = 0
+    Top = 230
+    Width = 757
+    Height = 84
+    Align = alBottom
+    BevelOuter = bvNone
+    Caption = 'PanelP'
+    ShowCaption = False
+    TabOrder = 1
+    Visible = False
+    object Splitter2: TSplitter
+      Left = 321
+      Top = 0
+      Height = 84
+      ExplicitLeft = 392
+      ExplicitTop = 40
+      ExplicitHeight = 100
+    end
+    object TreeA: TVirtualStringTree
+      Left = 0
+      Top = 0
+      Width = 321
+      Height = 84
+      Align = alLeft
+      BorderWidth = 1
+      Header.AutoSizeIndex = -1
+      Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
+      Header.ParentFont = True
+      TabOrder = 0
+      TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
+      TreeOptions.MiscOptions = [toAcceptOLEDrop, toEditable, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning]
+      TreeOptions.PaintOptions = [toHotTrack, toShowButtons, toShowDropmark, toShowHorzGridLines, toShowVertGridLines, toThemeAware, toUseBlendedImages]
+      TreeOptions.SelectionOptions = [toDisableDrawSelection, toExtendedFocus, toMiddleClickSelect, toMultiSelect, toRightClickSelect]
+      OnGetText = TreeAHGetText
+      Columns = <
+        item
+          Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
+          Position = 0
+          Width = 24
+          WideText = 'G'
+        end
+        item
+          Position = 1
+          Width = 75
+          WideText = 'X'
+        end
+        item
+          Position = 2
+          Width = 75
+          WideText = 'Y'
+        end
+        item
+          Position = 3
+          Width = 75
+          WideText = 'Z'
+        end
+        item
+          Position = 4
+          Width = 66
+          WideText = 'D'
+        end>
+    end
+    object TreeH: TVirtualStringTree
+      Left = 324
+      Top = 0
+      Width = 433
+      Height = 84
+      Align = alClient
+      BorderWidth = 1
+      Header.AutoSizeIndex = -1
+      Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
+      Header.ParentFont = True
+      TabOrder = 1
+      TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
+      TreeOptions.PaintOptions = [toHotTrack, toShowButtons, toShowDropmark, toShowHorzGridLines, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages]
+      TreeOptions.SelectionOptions = [toDisableDrawSelection, toExtendedFocus, toSimpleDrawSelection]
+      OnGetText = TreeAHGetText
+      Columns = <
+        item
+          Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
+          Position = 0
+          Width = 24
+          WideText = 'H'
+        end
+        item
+          Position = 1
+          Width = 75
+          WideText = 'X'
+        end
+        item
+          Position = 2
+          Width = 75
+          WideText = 'Y'
+        end
+        item
+          Position = 3
+          Width = 75
+          WideText = 'Z'
+        end
+        item
+          Position = 4
+          Width = 178
+          WideText = 'D'
         end>
     end
   end

@@ -250,14 +250,12 @@ begin
 end;
 
 procedure TFormGK.Loaded;
- var
-  n: TMenuItem;
 begin
   SetupStepTree(Tree);
   inherited;
   AttestatPanel.Align := alBottom;
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Параметры метрологии...', NParamClick, n);
+  AddToNCMenu('-');
+  AddToNCMenu('Параметры метрологии...', NParamClick);
   FAutomatMetrology := TGKAuto.Create(Self);
   FAutomatMetrology.Report := AutoReport;
 end;

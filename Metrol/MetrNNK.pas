@@ -2,7 +2,8 @@ unit MetrNNK;
 
 interface
 
-uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, MetrForm, tools, XMLScript.Math,
+uses system.UITypes,
+  DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, MetrForm, tools, XMLScript.Math,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, VirtualTrees,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Menus,
@@ -33,7 +34,7 @@ type
     procedure DoStopAtt(AttNode: IXMLNode); override;
     procedure DoUpdateData(NewFileData: Boolean = False); override;
     procedure TreeUpdate; override;
-    procedure TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer); override;
+    procedure TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex); override;
     procedure TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType); override;
    const
     NICON = 94;
@@ -90,14 +91,12 @@ begin
 end;
 
 procedure TFormNNK.Loaded;
- var
-  n: TMenuItem;
 begin
   SetupStepTree(Tree);
   inherited;
   AttestatPanel.Align := alBottom;
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Источник...', NSetupInclClick, n);
+  AddToNCMenu('-');
+  AddToNCMenu('Источник...', NSetupInclClick);
 end;
 
 class procedure TFormNNK.DoCreateForm(Sender: IAction);
@@ -179,7 +178,7 @@ begin
   AttestatLabel.Caption := 'Аттестация';
 end;
 
-procedure TFormNNK.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer);
+procedure TFormNNK.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex);
 begin
   if Sender.GetNodeLevel(Node) = 0 then Exit;
   inherited;

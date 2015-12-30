@@ -130,6 +130,8 @@ type
      procedure Reset;
      procedure AssignTo(v: Variant);
      procedure MulVect(ks: PDoubleArray);
+     class operator Explicit(const M: TMetr): TMatrix4;
+     class operator Explicit(const M: TMatrix4): TMetr;
      class function LenZu: Integer; static;
      class function LenAzi: Integer; static;
     end;
@@ -143,6 +145,7 @@ type
    // Дано:
     Inp: TInput;
    // наЙти:
+    WeitAzi,WeitZen: Double;
     ZenMetr: TMetr;
     AziMetr: TMetr;
     class procedure func_cb_zen_nostol(const k, f: PDoubleArray); static; cdecl;
@@ -153,8 +156,8 @@ type
     class procedure func_cb_zen(const k, f: PDoubleArray); static; cdecl;
     class procedure func_cb_azi(const k, f: PDoubleArray); static; cdecl;
   public
-    class procedure RunZ(AInp: TInput; out Res: TMetr);
-    class procedure RunA(AInp: TInput; out Res: TMetr);
+    class procedure RunZ(AInp: TInput; var Res: TMetr; AWeitZen: Double = 0.018);
+    class procedure RunA(AInp: TInput; out Res: TMetr; AWeitAzi: Double = 0.03);
     class procedure RunZ_nostol(AInp: TInput; out Res: TMetr);
     class procedure RunA_nostol(AInp: TInput; out Res: TMetr);
   end;
@@ -1216,6 +1219,21 @@ begin
   v.m3x4.m31 := m31; v.m3x4.m32 := m32; v.m3x4.m33 := m33; v.m3x4.m34 := m34;
 end;
 
+class operator TAngleFtting.TMetr.Explicit(const M: TMetr): TMatrix4;
+begin
+  Result.m11 := M.m11; Result.m12 := M.m12; Result.m13 := M.m13; Result.m14 := M.m14;
+  Result.m21 := M.m21; Result.m22 := M.m22; Result.m23 := M.m23; Result.m24 := M.m24;
+  Result.m31 := M.m31; Result.m32 := M.m32; Result.m33 := M.m33; Result.m34 := M.m34;
+  Result.m41 := 0;     Result.m42 := 0;     Result.m43 := 0;     Result.m44 := 1;
+end;
+
+class operator TAngleFtting.TMetr.Explicit(const M: TMatrix4): TMetr;
+begin
+  Result.m11 := M.m11; Result.m12 := M.m12; Result.m13 := M.m13; Result.m14 := M.m14;
+  Result.m21 := M.m21; Result.m22 := M.m22; Result.m23 := M.m23; Result.m24 := M.m24;
+  Result.m31 := M.m31; Result.m32 := M.m32; Result.m33 := M.m33; Result.m34 := M.m34;
+end;
+
 class function TAngleFtting.TMetr.LenAzi: Integer;
 begin
   Result := SizeOf(TMetr) div SizeOf(Double) - 1;
@@ -1343,7 +1361,8 @@ begin
     UpdateZen;
 
     xi := hx*m11 + hy*m12 + hz*m13 + m14;
-    yi := hx*m21 + hy     + hz*m23 + m24;
+    yi := hx*m21 + hy*m22 + hz*m23 + m24;
+//    yi := hx*m21 + hy     + hz*m23 + m24;
     zi := hx*m31 + hy*m32 + hz*m33 + m34;
 
     Hix := (xi*oc - yi*os)*zc + zi*zs;
@@ -1353,6 +1372,8 @@ begin
 
     dang := TMetrInclinMath.DeltaAngle(Azi - AziStol);
     f[i] := sqr(dang);
+
+    f[Length(Inp)+i] := sqr(1000 - TXMLScriptMath.Hypot3D(xi,yi,zi))*WeitAzi;
    end;
 end;
 
@@ -1413,7 +1434,8 @@ begin
   with PMetr(k)^ do for i:= 0 to Length(Inp)-1 do with Inp[i] do
    begin
     xi := gx*m11 + gy*m12 + gz*m13 + m14;
-    yi :=          gy     + gz*m23 + m24;
+    yi :=          gy*m21 + gz*m23 + m24;
+//    yi :=          gy     + gz*m23 + m24;
     zi := gx*m31 + gy*m32 + gz*m33 + m34;
     zu := DegNormalize(RadToDeg(arctan2(Hypot(xi, yi), zi)));
     if ZenStol > 180 then
@@ -1421,10 +1443,11 @@ begin
     else
       dang := TMetrInclinMath.DeltaAngle(Zu-ZenStol);
     f[i] := sqr(dang);
+    f[Length(Inp)+i] := sqr(1000 - TXMLScriptMath.Hypot3D(xi,yi,zi))*WeitZen;
    end;
 end;
 
-class procedure TAngleFtting.RunZ(AInp: TInput; out Res: TMetr);
+class procedure TAngleFtting.RunZ(AInp: TInput; var Res: TMetr; AWeitZen: Double);
  var
   e: ILMFitting;
   rep: PLMFittingReport;
@@ -1434,19 +1457,21 @@ class procedure TAngleFtting.RunZ(AInp: TInput; out Res: TMetr);
   ain: Double;
 begin
   Inp := AInp;
-  GIn.Reset;
+  WeitZen := AWeitZen;
+  GIn := Res;
   LMFittingFactory(e);
-  CheckMath(e, e.FitV(Gin.LenZu, Length(Inp), @Gin, 0.000001, 0, 0, 0, 10000, func_cb_zen, PDoubleArray(GOut), rep));
+//  CheckMath(e, e.FitV(Gin.LenZu, Length(Inp), @Gin, 0.000001, 0, 0, 0, 10000, func_cb_zen, PDoubleArray(GOut), rep));
+  CheckMath(e, e.FitV(Gin.LenZu+1, Length(Inp)*2, @Gin, 0.000001, 0, 0, 0, 100000, func_cb_zen, PDoubleArray(GOut), rep));
   ZenMetr := GOut^;
+  ZenMetr.m22 := ZenMetr.m21;
   ZenMetr.m21 := 0;
-  ZenMetr.m22 := 1;
-  ain := 1;
-  CheckMath(e, e.FitV(1, Length(Inp), @ain, 0.000001, 0, 0, 0, 10000, func_cb_amp_zen, Aout, rep));
-  ZenMetr.MulVect(Aout);
+//  ain := 1;
+//  CheckMath(e, e.FitV(1, Length(Inp), @ain, 0.000001, 0, 0, 0, 10000, func_cb_amp_zen, Aout, rep));
+//  ZenMetr.MulVect(Aout);
   Res := ZenMetr;
 end;
 
-class procedure TAngleFtting.RunA(AInp: TInput; out Res: TMetr);
+class procedure TAngleFtting.RunA(AInp: TInput; out Res: TMetr; AWeitAzi: Double);
  var
   e: ILMFitting;
   rep: PLMFittingReport;
@@ -1456,14 +1481,16 @@ class procedure TAngleFtting.RunA(AInp: TInput; out Res: TMetr);
   ain: Double;
 begin
   Inp := AInp;
+  WeitAzi := AWeitAzi;
   HIn.Reset;
   LMFittingFactory(e);
-  CheckMath(e, e.FitV(Hin.LenAzi, Length(Inp), @Hin, 0.000001, 0, 0, 0, 10000, func_cb_azi, PDoubleArray(HOut), rep));
+  CheckMath(e, e.FitV(Hin.LenAzi+1, Length(Inp)*2, @Hin, 0.000001, 0, 0, 0, 100000, func_cb_azi, PDoubleArray(HOut), rep));
   AziMetr := HOut^;
-  AziMetr.m22 := 1;
+
+{  AziMetr.m22 := 1;
   ain := 1;
   CheckMath(e, e.FitV(1, Length(Inp), @ain, 0.000001, 0, 0, 0, 10000, func_cb_amp_azi, Aout, rep));
-  AziMetr.MulVect(Aout);
+  AziMetr.MulVect(Aout);}
   Res := AziMetr;
 end;
 

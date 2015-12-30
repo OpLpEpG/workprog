@@ -168,6 +168,12 @@ type
   Dialog_EditViewParameters = interface
   ['{94008161-8717-4C14-862D-1271DE6FDB6C}']
   end;
+  Dialog_EditArrayParameters = interface
+  ['{5C798048-DA44-4988-B467-198968FF07CC}']
+  end;
+  Dialog_AddParameters = interface
+  ['{B42F5BE0-78B6-47DB-9190-63E69AC12516}']
+  end;
   Dialog_GlubionmerTRR = interface
   ['{FE2AECD1-5510-4CC5-B5E2-3B1899D738E1}']
   end;

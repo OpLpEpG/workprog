@@ -112,10 +112,10 @@ begin
     end;
     FDBIntervalWork := StrToDateTimeDef(opt.Option['WORK_INTERVAL'], 0);
    end;
-  AddToNCMenu('Интервал задержки', IsDelayIntervalMenuClick, IsDelayIntervalMenu);
+  IsDelayIntervalMenu := AddToNCMenu('Интервал задержки', IsDelayIntervalMenuClick);
   IsDelayIntervalMenu.AutoCheck := True;
-  AddToNCMenu('-', nil, ResetDelayMenu);
-  AddToNCMenu('Сбросить задержку(время включения, интервал работы)...', ResetDelayMenuClick, ResetDelayMenu);
+  AddToNCMenu('-');
+  ResetDelayMenu := AddToNCMenu('Сбросить задержку(время включения, интервал работы)...', ResetDelayMenuClick);
 end;
 
 procedure TDialogDelay.UpdateDelayed;

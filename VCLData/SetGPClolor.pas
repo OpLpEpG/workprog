@@ -2,7 +2,7 @@ unit SetGPClolor;
 
 interface
 
-uses GR32,
+uses GR32, JDtools,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Winapi.GDIPAPI, WinAPI.GDIPObj,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, JvExControls, JvInspector, JvComponentBase;
 
@@ -60,7 +60,7 @@ procedure TInspGPColorItem.DrawValue(const ACanvas: TCanvas);
   sb: TGPSolidBrush;
 begin
   if not Data.HasValue then Exit;
-  c := Data.AsOrdinal;
+  c := Cardinal(Data.AsOrdinal);
   G := TGPGraphics.Create(ACanvas.Handle);
   sb := TGPSolidBrush.Create(c);
   try
@@ -130,7 +130,10 @@ begin
 end;
 
 initialization
-  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TGPColor)));
-  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TColor)));
-  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TColor32)));
+  with TJvCustomInspectorData.ItemRegister do
+   begin
+    Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TGPColor)));
+    Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TColor)));
+    Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TColor32)));
+   end;
 end.

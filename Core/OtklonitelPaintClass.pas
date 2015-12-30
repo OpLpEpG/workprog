@@ -3,7 +3,7 @@ unit OtklonitelPaintClass;
 interface
 
   uses
-    GR32, GR32_Image,  GR32_VectorUtils, GR32_polygons,
+    GR32, GR32_Image,  GR32_VectorUtils, GR32_polygons, JDtools,
     Controls, Classes, StdCtrls, SysUtils, AVRTypes, math, RootImpl, actns, System.Types,
     JvInspector;
 

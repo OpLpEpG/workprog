@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{1D9792DF-3297-4EB3-B380-FE36F2A8A6C8}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Project4.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="WorkProgPreviewHandler.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Project4">
+        <MSBuild Projects="Project4.dproj"/>
+    </Target>
+    <Target Name="Project4:Clean">
+        <MSBuild Projects="Project4.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project4:Make">
+        <MSBuild Projects="Project4.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="WorkProgPreviewHandler">
+        <MSBuild Projects="WorkProgPreviewHandler.dproj"/>
+    </Target>
+    <Target Name="WorkProgPreviewHandler:Clean">
+        <MSBuild Projects="WorkProgPreviewHandler.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="WorkProgPreviewHandler:Make">
+        <MSBuild Projects="WorkProgPreviewHandler.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Project4;WorkProgPreviewHandler"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Project4:Clean;WorkProgPreviewHandler:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Project4:Make;WorkProgPreviewHandler:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

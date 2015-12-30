@@ -103,10 +103,10 @@ procedure TFormInclinADV.Loaded;
   s: string;
 begin
   inherited;
-  AddToNCMenu('Рассчет новый', nil, FNewAlgoritm);
-  FNewAlgoritm.AutoCheck := True;
-  FNewAlgoritm.Checked := True;
-  FNewAlgoritm.MenuIndex := 7;
+  FNewAlgoritm := AddToNCMenu('Рассчет новый', nil, 7, 1);
+//  FNewAlgoritm.AutoCheck := True;
+//  FNewAlgoritm.Checked := True;
+//  FNewAlgoritm.MenuIndex := 7;
   for s in ARR_TITLE do AddGraph(AddTabSheet(s, s));
   pc.ActivePageIndex := 0;
 end;
@@ -401,7 +401,7 @@ end;
 initialization
   TMetrInclinMath.Nop();
   RegisterClasses([TFormInclinADV, TTabSheet]);
-  TRegister.AddType<TFormInclinADV, IForm>.LiveTime(ltSingletonNamed);
+//  TRegister.AddType<TFormInclinADV, IForm>.LiveTime(ltSingletonNamed);
 finalization
-  GContainer.RemoveModel<TFormInclinADV>;
+//  GContainer.RemoveModel<TFormInclinADV>;
 end.

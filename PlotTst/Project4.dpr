@@ -8,7 +8,10 @@ uses
   SetGPClolor in '..\VCLData\SetGPClolor.pas' {FormSetGPColor},
   Unit1 in 'Unit1.pas' {Form1},
   FileCachImpl in '..\Core\FileCachImpl.pas',
-  Plot.DataSet in '..\Core\Plot.DataSet.pas';
+  Plot.DataSet in '..\Core\Plot.DataSet.pas',
+  Plot.Controls in '..\Core\Plot.Controls.pas',
+  JDtools in '..\Core\JDtools.pas',
+  VCLOpenDialog in '..\Core\VCLOpenDialog.pas';
 
 {$R *.res}
 

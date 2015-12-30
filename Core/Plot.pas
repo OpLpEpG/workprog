@@ -2,7 +2,7 @@ unit Plot;
 
 interface
 
-uses RootImpl, tools,
+uses RootImpl, tools, JDtools,
      SysUtils, Controls, Messages, Winapi.Windows, Classes, Winapi.GDIPAPI, WinAPI.GDIPObj,  Vcl.Graphics, System.Rtti, Vcl.Forms, types, Vcl.ExtCtrls,
      Vcl.Menus, Vcl.Themes, Vcl.GraphUtil, System.SyncObjs;
 
@@ -140,6 +140,7 @@ type
     FParentTitle: string;
     FFixedParam: boolean;
     FHideInLegend: boolean;
+    FSelected: boolean;
     procedure SetColor(const Value: TGPColor);
     procedure SetDashStyle(const Value: TDashStyle);
     procedure SetDelta(const Value: Double);
@@ -199,6 +200,7 @@ type
     [ShowProp('Ширина линии')]                  property Width        : Single read FWidth write SetWidth;
     [ShowProp('Цвет')]                          property Color        : TGPColor read FColor write SetColor default aclBlack;
     [ShowProp('Стиль штрихов')]                 property DashStyle    : TDashStyle read FDashStyle write SetDashStyle default DashStyleSolid;
+    [ShowProp('Выбрать')]                    property Selected: boolean read FSelected write FSelected;
 
     property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
   end;
@@ -1561,7 +1563,7 @@ procedure TGraphParam.DoMouseDownInLegend(X, Y, Top, Height: integer);
   cbR: TRect;
   X0,y0: Integer;
   G: TGPGraphics;
-  f: Boolean;
+  f, f2: Boolean;
   b: TGPBitmap;
 begin
   GDIPlus.Lock;
@@ -1581,11 +1583,24 @@ begin
       b.Free;
      end;
     end;
+   X0 := Column.Left + CHECKBOX_SIZE + 1 + CHECKBOX_SIZE div 2;
+   cbR := Rect(X0, Y0, X0 + CHECKBOX_SIZE, Y0 + CHECKBOX_SIZE);
+   f2 := cbR.Contains(Point(X,Y));
+   if f2 then
+    begin
+     FSelected := not FSelected;
+     CheckBoxToGDIP(FSelected, b);
+     try
+      G.DrawCachedBitmap(TGPCachedBitmap.Create(b, G), X0, Y0);
+     finally
+      b.Free;
+     end;
+    end;
   finally
    g.Free;
    GDIPlus.UnLock;
   end;
-  if f then ShowColumnData();
+  if f or f2 then ShowColumnData();
 end;
 
 procedure TGraphParam.ShowLegend(Gdip: TGPGraphics);
@@ -1670,6 +1685,13 @@ begin
   CheckBoxToGDIP(FVisible, b);
   try
    Gdip.DrawCachedBitmap(TGPCachedBitmap.Create(b, Gdip), CHECKBOX_SIZE div 2, Trunc(Y-CHECKBOX_SIZE)-1);
+   Gdip.ResetClip;
+  finally
+   b.Free;
+  end;
+  CheckBoxToGDIP(FSelected, b);
+  try
+   Gdip.DrawCachedBitmap(TGPCachedBitmap.Create(b, Gdip), CHECKBOX_SIZE + 1 + CHECKBOX_SIZE div 2, Trunc(Y-CHECKBOX_SIZE)-1);
    Gdip.ResetClip;
   finally
    b.Free;
@@ -2502,7 +2524,7 @@ begin
     if (Abs(c.Right - X) < 7) then Exit(func(cmColSize, c, X, Y));
 
   if (cmColMove in cms) and (Y < 32) then for c in Columns do
-    if (X > c.Left + CHECKBOX_SIZE + CHECKBOX_SIZE div 2) and (X < c.Right) then Exit(func(cmColMove, c, X, Y));
+    if (X > c.Left + CHECKBOX_SIZE*2 + CHECKBOX_SIZE div 2) and (X < c.Right) then Exit(func(cmColMove, c, X, Y));
 
   if ShowLegend and (cmColLegend in cms) and (Y < LegendHeight) then
     for c in Columns do

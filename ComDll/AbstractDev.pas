@@ -1457,7 +1457,7 @@ begin
          finally
   //        Release;
          end;
-         if {FFlagEndRead and }((GetTickCount - t) > 10000) then
+         if not FFlagEndRead and ((GetTickCount - t) > 10000) then
          Synchronize(procedure
          begin
            t := GetTickCount;
@@ -1469,7 +1469,7 @@ begin
        if FFlagEndRead then
         begin
          FFlagEndRead := False;
-         Synchronize(EndExecute);
+        // Synchronize(EndExecute);
         end;
       except
        on E: Exception do

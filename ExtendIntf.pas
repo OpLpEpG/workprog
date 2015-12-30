@@ -3,7 +3,7 @@ unit ExtendIntf;
 interface
 
 uses DeviceIntf, PluginAPI, RootIntf, System.UITypes, System.TypInfo, Xml.XMLIntf, Rtti,
-     Windows, Vcl.Graphics, SysUtils, VCL.Controls, VCL.Menus, System.Bindings.Expression, System.Classes, Data.DB;
+     winapi.Windows, Vcl.Graphics, SysUtils, VCL.Controls, VCL.Menus, System.Bindings.Expression, System.Classes, Data.DB;
 
 type
 
@@ -46,6 +46,7 @@ type
     function OwnerExists: Boolean;
     function GetPath: String;
     function DividerBefore: Boolean;
+    function Execute: Boolean;
 //   public
     property Caption: String read GetCaption write SetCaption;
     property Category: String read GetCategory write SetCategory;
@@ -63,6 +64,12 @@ type
   ['{0AC2EF7D-DACE-49FC-82D1-7607F8EE47AB}']
     procedure Show;
   end;
+  ISetDevice = interface
+  ['{E52C6567-7F1E-4EED-842A-B6EEA2D71380}']
+    procedure SetDataDevice(const Value: string);
+  end;
+
+
 
   IControlForm = interface(IForm)
   ['{1CBBE75B-6C6B-4C62-8458-79E98D99A4E8}']

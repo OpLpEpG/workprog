@@ -3,7 +3,7 @@ unit NNKDacForm;
 interface
 
 uses RootIntf, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, Container, Actns, RootImpl, System.TypInfo,
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, JDtools,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, JvExControls, JvInspector, JvComponentBase;
 
 type

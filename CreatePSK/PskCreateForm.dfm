@@ -75,7 +75,6 @@ object FormPsk: TFormPsk
       OnEditing = TreeEditing
       OnFocusChanged = TreeFocusChanged
       OnGetText = TreeGetText
-      OnGetImageIndex = TreeGetImageIndex
       Columns = <
         item
           Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coEditable]
@@ -388,7 +387,8 @@ object FormPsk: TFormPsk
         '1- '#1089#1090#1072#1085#1076#1072#1088#1090#1085#1099#1081' ('#1087#1086#1090#1086#1082#1086#1074#1099#1081')'
         '2- '#1059#1057#1054
         '3 - '#1043#1083#1091#1073#1080#1085#1086#1084#1077#1088' '#1056#1055'-45'
-        '4- '#1048#1050#1053'-'#1040#1052#1050)
+        '4- '#1048#1050#1053'-'#1040#1052#1050
+        '5- '#1043#1083#1091#1073#1080#1085#1086#1084#1077#1088' '#1047#1074#1091#1082#1086#1074#1086#1081)
     end
     object edWrkTimeout: TEdit
       Left = 16

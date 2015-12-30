@@ -2,7 +2,7 @@ unit Parser;
 
 interface
 
-uses debug_except,
+uses debug_except, Xml.Win.msxmldom, Winapi.ActiveX,
      XMLScript, System.Variants, Data.DB, System.Rtti,
      SysUtils, Xml.XMLIntf, Xml.XMLDoc, Xml.xmldom, System.Generics.Collections, System.Generics.Defaults, System.Classes, Vcl.Dialogs;
 
@@ -60,6 +60,8 @@ type
     class function VarTypeToStr(vt: Integer): string;
     class function ArrayValToVar(PData: Pointer; Len: integer): Variant; static;
     class function ArrayStrToArray(const Data: string): TArray<Double>; static;
+    class procedure Init;
+    class procedure DeInit;
   private
     const
 //     MAIN = 'MAIN_METR';
@@ -67,8 +69,6 @@ type
      EXEC = 'EXEC_METR';
      SETUP = 'SETUP_METR';
 //    class
-    class procedure Init;
-    class procedure DeInit;
     { TODO : сделать ToValue(Data: Pointer; vt: Integer): TValue }
     class function ToVar(Data: Pointer; vt: Integer): Variant;
     class procedure FromVar(Data: Variant; vt: Integer; pOutData: Pointer); overload;
@@ -736,6 +736,7 @@ end;
 {$ENDREGION}
 
 initialization
+//  CoInitialize(nil); { TODO : Easy interface требует CoInitialize}
   TPars.Init;
 finalization
   TPars.DeInit;

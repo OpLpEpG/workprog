@@ -7,10 +7,13 @@ uses System.SysUtils, Vcl.Controls, debug_except, Winapi.Windows, Vcl.Graphics, 
      Vcl.ComCtrls;
 
 type
+  ShowNCMenu = set of (sncClose, sncTab, sncDock);
+
   IDockClient = interface
   ['{978365AC-9C3B-461A-8668-E668D2CCFE96}']
     function GetDockClient: TJvDockClient;
     property DockClient: TJvDockClient read GetDockClient;
+    procedure SetNCMenusVisible(const snc: ShowNCMenu);
   end;
 
   TDockIFormClass = class of TDockIForm;
@@ -29,6 +32,9 @@ type
 //    procedure CreateShowAction;
     procedure SetCaption(const Value: string);
   protected
+   const
+    AUTO_CHECK: array[Boolean]of Integer = (0,1);
+   var
     NCanClose: Boolean;
     NClose, NTab, NDock: TMenuItem;
     procedure BeforeRemove(); virtual;
@@ -41,11 +47,13 @@ type
     class function ClassIcon: Integer; virtual;
     procedure Close_ItemClick(Sender: TObject); virtual;
     procedure NCPopup(Sender: TObject); virtual;
-    procedure AddToNCMenu(const ACaption: string; AClick: TNotifyEvent; out Item : TMenuItem);
+//    procedure AddToNCMenu(const ACaption: string; AClick: TNotifyEvent; out Item: TMenuItem; Index: Integer = -1; Autocheck: Integer = -1; Root: TMenuItem = nil); overload;
+    function AddToNCMenu(const ACaption: string; AClick: TNotifyEvent = nil; Index: Integer = -1; Autocheck: Integer = -1; Root: TMenuItem = nil): TMenuItem;
     class function GetUniqueForm(const FormName: string): IForm;
   public
     class procedure DoCreateForm(Sender: IAction); virtual;
     destructor Destroy; override;
+    procedure SetNCMenusVisible(const snc: ShowNCMenu);
     function GetDockClient: TJvDockClient;
     procedure OnShowAction(Sender: IAction);
   published
@@ -108,6 +116,7 @@ end;
 procedure TDockIForm.InitializeNewForm;
  var
   n: TMenuItem;
+  pp: TPopupActionBar;
 begin
   inherited;
   FDockClient := CreateUnLoad<TJvDockClient>;
@@ -117,11 +126,11 @@ begin
   FDockClient.DockStyle := FDockVSNetStyle;
   FDockClient.NCPopupMenu := CreateUnLoad<TPopupActionBar>;
   FDockClient.NCPopupMenu.OnPopup := NCPopup;
-  AddToNCMenu('Закрыть Окно', Close_ItemClick, NClose);
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Вкладка', Tab_ItemClick, NTab);
-  AddToNCMenu('Закрепляемое', Dock_ItemClick, NDock);
-  AddToNCMenu('-', nil, n);
+  NClose := AddToNCMenu('Закрыть Окно', Close_ItemClick);
+  AddToNCMenu('-');
+  NTab := AddToNCMenu('Вкладка', Tab_ItemClick);
+  NDock := AddToNCMenu('Закрепляемое', Dock_ItemClick);
+  AddToNCMenu('-');
   Icon := ClassIcon;
   NCanClose := True;
 end;
@@ -177,13 +186,27 @@ begin
 //  if Assigned(FShowAction) then FShowAction.Caption := FCaption;
 end;
 
-procedure TDockIForm.AddToNCMenu(const ACaption: string; AClick: TNotifyEvent; out Item : TMenuItem);
+procedure TDockIForm.SetNCMenusVisible(const snc: ShowNCMenu);
+begin
+  NClose.Visible := sncClose in snc;
+  NTab.Visible := sncTab in snc;
+  NDock.Visible := sncDock in snc;
+end;
+
+{procedure TDockIForm.AddToNCMenu(const ACaption: string; AClick: TNotifyEvent; out Item : TMenuItem; Index, Autocheck: Integer; Root: TMenuItem);
 begin
   Item := TMenuItem.Create(FDockClient.NCPopupMenu);
   Item.Caption := ACaption;
   Item.OnClick := AClick;
-  FDockClient.NCPopupMenu.Items.Add(Item);
-end;
+  if Assigned(Root) then Root.Add(Item)
+  else FDockClient.NCPopupMenu.Items.Add(Item);
+  if Index <> -1 then Item.MenuIndex := Index;
+  if Autocheck <> -1 then
+   begin
+    Item.AutoCheck := True;
+    Item.Checked := Autocheck = 1;
+   end;
+end;}
 
 {procedure TDockIForm.AfteActionManagerLoad;
  var
@@ -206,6 +229,21 @@ procedure TDockIForm.LoadBeroreAdd;
 begin
   CreateShowAction
 end;}
+
+function TDockIForm.AddToNCMenu(const ACaption: string; AClick: TNotifyEvent; Index, Autocheck: Integer; Root: TMenuItem): TMenuItem;
+begin
+  Result := TMenuItem.Create(FDockClient.NCPopupMenu);
+  Result.Caption := ACaption;
+  Result.OnClick := AClick;
+  if Assigned(Root) then Root.Add(Result)
+  else FDockClient.NCPopupMenu.Items.Add(Result);
+  if Index <> -1 then Result.MenuIndex := Index;
+  if Autocheck <> -1 then
+   begin
+    Result.AutoCheck := True;
+    Result.Checked := Autocheck = 1;
+   end;
+end;
 
 procedure TDockIForm.BeforeClean(var CanClean: Boolean);
 begin
@@ -323,7 +361,7 @@ end;
 procedure TCustomFontIForm.InitializeNewForm;
 begin
   inherited;
-  AddToNCMenu('Выбрать шрифт', NFontClick, NFont);
+  NFont := AddToNCMenu('Выбрать шрифт', NFontClick);
 end;
 
 procedure TCustomFontIForm.DoSetFont(const AFont: TFont);

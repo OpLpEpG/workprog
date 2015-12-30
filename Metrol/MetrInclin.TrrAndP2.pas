@@ -2,7 +2,7 @@ unit MetrInclin.TrrAndP2;
 
 interface
 
-uses System.SysUtils, Xml.XMLIntf, System.Classes, Vcl.Menus, Vector,
+uses System.SysUtils, Xml.XMLIntf, System.Classes, Vcl.Menus, Vector,  MathIntf,  Vcl.Dialogs,
      PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, math, MetrForm, AutoMetr.Inclin, RootImpl,
      MetrInclin.Math, MetrInclin.Math2, XMLScript.Math, UakiIntf, MetrInclin.CheckForm;
 
@@ -11,15 +11,18 @@ type
   private
     FNNoStol: TMenuItem;
     FNProblemML: TMenuItem;
+    FNsolver: TMenuItem;
     FSaveAccel: TMatrix4;
+    ErrOld, tG , tH: TMatrix4;
     class procedure _TEST_ApplyHGfromStol(alg: IXMLNode; from, too: Integer; Incl, Amp: Double; TrrA, TrrH: TMatrix4);
   protected
     FCurAzim, FCurViz: Double;
     FDirAzim, FDirViz: Integer;
     FNewAlg: Boolean;
     procedure NNewAlgClick(Sender: TObject);
-    procedure NNoStolClick(Sender: TObject);
-    procedure NProblemMLClick(Sender: TObject);
+//    procedure NNoStolClick(Sender: TObject);
+//    procedure NProblemMLClick(Sender: TObject);
+//    procedure NsolverClick(Sender: TObject);
     procedure FindMagnit(from, too: Integer; alg, trr: IXMLNode);
     procedure FindAccel(from, too: Integer; alg, trr: IXMLNode);
     function ToInpML(alg: IXMLNode; from, too: Integer): TArray<TInclPoint>;
@@ -82,9 +85,10 @@ procedure TFormInclinTrrAndP2.NNewAlgClick(Sender: TObject);
 begin
   FNewAlg := True;
   ReCalc();
+  DoUpdateData();
 end;
 
-procedure TFormInclinTrrAndP2.NNoStolClick(Sender: TObject);
+{procedure TFormInclinTrrAndP2.NNoStolClick(Sender: TObject);
 begin
 
 end;
@@ -93,6 +97,11 @@ procedure TFormInclinTrrAndP2.NProblemMLClick(Sender: TObject);
 begin
 
 end;
+
+procedure TFormInclinTrrAndP2.NsolverClick(Sender: TObject);
+begin
+
+end;}
 
 function TFormInclinTrrAndP2.AddVizir(v: Double): Variant;
 begin
@@ -147,10 +156,22 @@ begin
 end;
 
 class procedure TFormInclinTrrAndP2._TEST_ApplyHGfromStol(alg: IXMLNode; from, too: Integer; Incl, Amp: Double; TrrA, TrrH: TMatrix4);
+type
+  Tfdata = array[0..65*3] of double;
+  Pfdata = ^Tfdata;
+
  var
   i: Integer;
   v:Variant;
   P: TInclPoint;
+  m3G, m3H: TMatrix3;
+  v3G, v3H: TVector3;
+
+  e: INoise;
+  noise: Pfdata;
+
+
+
   const
    {$J+}
    a: Double = 90;
@@ -158,6 +179,14 @@ class procedure TFormInclinTrrAndP2._TEST_ApplyHGfromStol(alg: IXMLNode; from, t
    o: Double = 90;
    {$J-}
 begin
+  m3H := TMatrix3(TrrH).inv;
+  m3G := TMatrix3(TrrA).inv;
+  v3H := TrrH.Vector(3);
+  v3G := TrrA.Vector(3);
+
+  NoiseFactory(e);
+  CheckMath(e, e.normal(too-from+1, 1, PdoubleArray(noise)));
+
   for i := from to too do
    begin
      v := XToVar(GetXNode(alg, Format('STEP%d',[I])));
@@ -174,13 +203,13 @@ begin
      except
      end;
      P := TMetrInclinMath.FindXYZ(a,z, o, Incl, Amp);
-     P.G := TrrA * P.G;
-     P.H := TrrH * P.H;
+     P.G := m3G * (P.G-v3G);
+     P.H := m3H * (P.H-v3H);
      v.accel.X.DEV.VALUE := p.G.X;
      v.accel.Y.DEV.VALUE := p.G.Y;
      v.accel.Z.DEV.VALUE := p.G.Z;
      v.magnit.X.DEV.VALUE := p.H.X;
-     v.magnit.Y.DEV.VALUE := p.H.Y;
+     v.magnit.Y.DEV.VALUE := p.H.Y + noise[i];
      v.magnit.Z.DEV.VALUE := p.H.Z;
      v.СТОЛ.азимут := a;
      v.СТОЛ.зенит := z;
@@ -204,8 +233,8 @@ begin
       hx := v.magnit.X.DEV.VALUE;
       hy := v.magnit.Y.DEV.VALUE;
       hz := v.magnit.Z.DEV.VALUE;
-      AziStol := v.СТОЛ.азимут;
-      ZenStol := v.СТОЛ.зенит;
+      AziStol := v.СТОЛ.азимут + FAziCorr;
+      ZenStol := v.СТОЛ.зенит + FZenCorr;
      end;
    end;
 end;
@@ -293,14 +322,16 @@ procedure TFormInclinTrrAndP2.RefindZen(from, too: Integer; alg, trr: IXMLNode);
  var
   i: Integer;
   t, a: variant;
+  crZen: Double;
 begin
   t := XtoVar(trr);
   for I := from to too do
    begin
     a := XToVar(GetXNode(alg, Format('STEP%d',[I])));
     TMetrInclinMath.FindZenViz(a, t);
-    if a.СТОЛ.зенит > 180 then a.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(a.зенит.CLC.VALUE -(360 - a.СТОЛ.зенит))
-    else a.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(a.зенит.CLC.VALUE - a.СТОЛ.зенит);
+    crZen := (a.СТОЛ.зенит + FZenCorr);
+    if crZen > 180 then a.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(a.зенит.CLC.VALUE -(360 - crZen))
+    else a.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(a.зенит.CLC.VALUE - crZen);
    end;
 end;
 
@@ -314,7 +345,7 @@ begin
    begin
     a := XToVar(GetXNode(alg, Format('STEP%d',[I])));
     TMetrInclinMath.FindAzim(a, t);
-    a.СТОЛ.err_азимут := TMetrInclinMath.DeltaAngle(a.азимут.CLC.VALUE - a.СТОЛ.азимут);
+    a.СТОЛ.err_азимут := TMetrInclinMath.DeltaAngle(a.азимут.CLC.VALUE - (a.СТОЛ.азимут + FAziCorr));
    end;
 end;
 
@@ -324,29 +355,32 @@ procedure TFormInclinTrrAndP2.FindAccel(from, too: Integer; alg, trr: IXMLNode);
  var
   m: TAngleFtting.TMetr;
   inp: TAngleFtting.TInput;
-  Res, tG , tH: TMatrix4;
+  Res: TMatrix4;
   alignInp: TZAlignLS.TInput;
   i: Integer;
   a, b : Double;
 
 begin
-//  with tG do
-//   begin
-//    m11 :=	1.1;      m12 :=	0.0012;        m13 :=	 -0.0013;   m14 := -100;
-//    m21 :=	0;        m22 :=	1.2;           m23 :=	0.0023;     m24 := 200;
-//    m31 :=	0.0031;   m32 :=	-0.00625;      m33 :=	 1.3;  m34 := -300;
-//   end;
-//
-//  with tH do
-//   begin
-//    m11 :=	 1.11;         m21 :=	0.003;       m31 :=	-0.0031;
-//    m12 :=	-0.0012;       m22 :=	1.22;         m32 :=	-0.0032;
-//    m13 :=	-0.0013;       m23 :=	0.0023;       m33 :=	1.33;
-//    m14 :=	-1.4;          m24 :=	2.4;          m34 :=	-3.4;
-//   end;
-  //_TEST_ApplyHGfromStol(alg, from, too, 10.9, 1000, tG.Invert, tH.Invert);
+{  tG := Matrix4Identity;
+  tH := Matrix4Identity;
+  with tG do
+   begin
+    m11 :=	0.91;      m12 :=	0.0012;        m13 :=	 -0.0013;   m14 := -1.4;
+    m21 :=	0;        m22 :=	0.92;           m23 :=	0.0023;     m24 := 2.4;
+    m31 :=	0.0031;   m32 :=	-0.0032;      m33 :=	 0.93;  m34 := -3.4;
+   end;
+
+  with tH do
+   begin
+    m11 :=	 1.71;         m21 :=	0.003;       m31 :=	-0.0031;
+    m12 :=	-0.0112;       m22 :=	1.72;         m32 :=	-0.0032;
+    m13 :=	-0.0013;       m23 :=	0.0023;       m33 :=	1.73;
+    m14 :=	-10.4;          m24 :=	20.4;          m34 :=	-30.4;
+   end;}
+//  _TEST_ApplyHGfromStol(alg, from, too, 10.9, 1000, tG, tH);
 
   inp := ToInp(alg, from, too);
+
   if FNNoStol.Checked then
    begin
     // без стола
@@ -356,18 +390,33 @@ begin
     //  SetLength(alignInp, 1);
     //  i := 1;
     //  alignInp[0] := ToInp(alg, 35+i*5, 39+i*5, True, Res);
-    TZAlignLS.Run(alignInp, a,b);
-    FSaveAccel := TZAlignLS.Apply(Res, a, b);
 
-//    TZAlignLS.RunLeMa(alignInp, a,b);
-//    FSaveAccel := TZAlignLS.ApplyLeMa(FSaveAccel, a, b);
+   if FNsolver.Checked then
+    begin
+     TZAlignLS.RunLeMa(alignInp, a,b);
+     FSaveAccel := TZAlignLS.ApplyLeMa(Res, a, b);
+    end
+   else
+    begin
+     TZAlignLS.Run(alignInp, a,b);
+     FSaveAccel := TZAlignLS.Apply(Res, a, b);
+    end;
 
     Matrix4AssignToVariant(FSaveAccel, XToVar(GetXNode(trr, 'accel')));
    end
   else
    begin
+    TSphereLS.RunZ(inp, Res);
+    SetLength(alignInp, 12);//6
+    for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, True, Res);
+    TZAlignLS.Run(alignInp, a,b);
+    FSaveAccel := TZAlignLS.Apply(Res, a, b);
+    m := TAngleFtting.Tmetr(FSaveAccel);// {* (1/FSaveAccel.m22)   }
+    m.m21 := m.m22;
     // LEVENBERG
+//    m.Reset;
     TAngleFtting.RunZ(inp, m);
+//    m := TAngleFtting.Tmetr(FSaveAccel {* (1/FSaveAccel.m22)});
     m.AssignTo(XToVar(GetXNode(trr, 'accel')));
    end;
 end;
@@ -397,7 +446,7 @@ procedure TFormInclinTrrAndP2.FindMagnit(from, too: Integer; alg, trr: IXMLNode)
  var
   m: TAngleFtting.TMetr;
   inp: TAngleFtting.TInput;
-  Res, m2, m3, m4: TMatrix4;
+  Res, m2, m3, m4, e: TMatrix4;
   alignInp: TZAlignLS.TInput;
   i: Integer;
   a, b, incl, inclML: Double;
@@ -410,41 +459,53 @@ begin
     TSphereLS.RunA(inp, Res);
     SetLength(alignInp, 12);//6
     for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, False, Res);
-    TZAlignLS.Run(alignInp, a,b);
-    m2 := TZAlignLS.Apply(Res, a, b);
-//    TZAlignLS.RunLeMa(alignInp, a,b);
-//    m2 := TZAlignLS.ApplyLeMa(m2, a, b);
-    TCrossConstLS.Run(ToInp(alg, from, too, FSaveAccel, m2), a, b);
-    m3 := TCrossConstLS.Apply(m2, a);
-//    m4 := TCrossConstLS.CorrectInclLeMa(ToInp(alg, from, too, FSaveAccel), m3, b);
+
+   if FNsolver.Checked then
+    begin
+//   LEVENBERG
+     TZAlignLS.RunLeMa(alignInp, a,b);
+     m2 := TZAlignLS.ApplyLeMa(Res, a, b);
+     TCrossConstLS.RunLeMa(ToInp(alg, from, too, FSaveAccel, m2), a, b);
+     m3 := TCrossConstLS.ApplyLeMa(m2, a);
+    end
+   else
+    begin
+//   NMK
+     TZAlignLS.Run(alignInp, a,b);
+     m2 := TZAlignLS.Apply(Res, a, b);
+     TCrossConstLS.Run(ToInp(alg, from, too, FSaveAccel, m2), a, b);
+     m3 := TCrossConstLS.Apply(m2, a);
+    end;
 //    incl := RadToDeg(Arccos(b/1000/1000));
-//    Matrix4AssignToVariant(m3, XToVar(GetXNode(trr, 'magnit')));
     if FNProblemML.Checked then TTrrML.Run(b, m3, FSaveAccel, ToInpML(alg, 1, too), m4, inclML)
     else m4 := m3;
 
     Matrix4AssignToVariant(m4, XToVar(GetXNode(trr, 'magnit')));
+
+//    e := -m4 + tH;
+//    ErrOld := e;
    end
   else
    begin
     // LEVENBERG
     TAngleFtting.RunA(inp, m);
     m.AssignTo(XToVar(GetXNode(trr, 'magnit')));
+
+//    e := -Tmatrix4(m) + tH;
+//    ErrOld := e;
    end;
 end;
 
 procedure TFormInclinTrrAndP2.Loaded;
- var
-  n: TMenuItem;
+// var
+//  n: TMenuItem;
 begin
   inherited;
-  AddToNCMenu('Рассчет новых поправок', NNewAlgClick, n);
-  AddToNCMenu('Не использовать данные стола', NNoStolClick, FNNoStol);
-  AddToNCMenu('Использовать метод МП', NProblemMLClick, FNProblemML);
-  FNNoStol.AutoCheck := True;
-  FNProblemML.AutoCheck := True;
-  n.MenuIndex := 9;
-  FNNoStol.MenuIndex := 10;
-  FNProblemML.MenuIndex := 11;
+  FNNoStol := AddToNCMenu('Не использовать данные стола', nil, 9, 0);
+  FNProblemML := AddToNCMenu('Использовать метод МП', nil, 10, 0);
+  FNsolver := AddToNCMenu('Не использовать НМК', nil, 11, 0);
+  AddToNCMenu('Рассчет новых поправок', NNewAlgClick, 12);
+  AddToNCMenu('-', nil, 12);
 end;
 
 function TFormInclinTrrAndP2.UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean;

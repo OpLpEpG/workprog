@@ -3,7 +3,7 @@ unit ExceptionForm;
 interface
 
 uses System.SysUtils,  ExtendIntf, RootImpl, debug_except, DeviceIntf, DockIForm,
-  Winapi.Windows, Winapi.Messages, System.Variants, System.Classes, Vcl.Graphics, Rtti,
+  Winapi.Windows, Winapi.Messages, System.Variants, System.Classes, Vcl.Graphics, System.Rtti,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Menus,  Winapi.ActiveX, System.Win.ComObj, JvDockControlForm,
   Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, PluginAPI, Vcl.ActnList, Vcl.StdActns, System.Actions;
 
@@ -35,7 +35,7 @@ implementation
 
 {$R *.dfm}
 
-uses PluginManager, MainForm;
+uses PluginManager;
 
 { TFormDebug }
 
@@ -57,20 +57,18 @@ begin
 end;
 
 procedure TFormExceptions.InitializeNewForm;
- var
-  Item : TMenuItem;
 begin
   inherited;
-  AddToNCMenu('-', nil, Item);
-  AddToNCMenu('Очистить', NClearClick, Item);
-  AddToNCMenu('-', nil, Item);
-  AddToNCMenu('Показывать диалог', NDialogClick, NDialog);
-  NDialog.AutoCheck := True;
-  AddToNCMenu('Показывать отладочную информацию', nil, NShowDebug);
-  NShowDebug.AutoCheck := True;
-  NShowDebug.Checked := True;
-  AddToNCMenu('-', nil, Item);
-  AddToNCMenu('Сохранить в файл...', NSaveAsClick, Item);
+  AddToNCMenu('-');
+  AddToNCMenu('Очистить', NClearClick);
+  AddToNCMenu('-');
+  NDialog := AddToNCMenu('Показывать диалог', NDialogClick, -1, 0);
+//  NDialog.AutoCheck := True;
+  NShowDebug := AddToNCMenu('Показывать отладочную информацию', nil, -1, 1);
+//  NShowDebug.AutoCheck := True;
+//  NShowDebug.Checked := True;
+  AddToNCMenu('-');
+  AddToNCMenu('Сохранить в файл...', NSaveAsClick);
 end;
 
 class procedure TFormExceptions.DeInit;

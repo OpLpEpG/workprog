@@ -14,7 +14,7 @@ type
     XMNode: IXMLNode;
   end;
 
-  TFormWrok = class(TCustomFontIForm)
+  TFormWrok = class(TCustomFontIForm, ISetDevice)
     Tree: TVirtualStringTree;
     ppM: TPopupActionBar;
     NShow: TMenuItem;
@@ -79,7 +79,7 @@ begin
   inherited;
   Tree.NodeDataSize := SizeOf(TNodeExData);
   if Supports(GlobalCore, IImagProvider, ip) then Tree.Images := ip.GetImagList;
-  AddToNCMenu('Подключить к устройству', nil, NConnect);
+  NConnect := AddToNCMenu('Подключить к устройству');
   if Supports(GlobalCore, IDeviceEnum, de) then
    begin
     Bind('C_RemoveDevice', de, ['S_BeforeRemove']);// (de as IBind).CreateManagedBinding(Self, 'LRemoveDevice', ['S_BeforeRemove']);

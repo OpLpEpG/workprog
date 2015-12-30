@@ -92,7 +92,7 @@ type
 
 {$ENDREGION}
 
-  EnumCaptionsAttribute = class;
+ { EnumCaptionsAttribute = class;
   TJvInspectorEnumCaptionsItem = class(TJvInspectorEnumItem)
   private
     FCaptions: TArray<string>;
@@ -114,22 +114,24 @@ type
   public
     constructor Create(const ACaptions: string);
     property Captions: TArray<string> read FCaptions;
-  end;
+  end;}
 
-  ShowPropAttribute = class (TCustomAttribute)
+{  ShowPropAttribute = class (TCustomAttribute)
   private
     FDisplayName: string;
     FReadOnly: Boolean;
     class var RttiContext : TRttiContext;
     class function StrObj2Str(const s: string): string;
     class procedure ApplyItem(root: TJvCustomInspectorItem; o: TObject); static;
+    class procedure ApplyItemArray(root: TJvCustomInspectorItem; o: TArray<TObject>); static;
     class procedure ApplyICollection(root: TJvCustomInspectorItem; cl: TICollection); static;
   public
    constructor Create(const ADisplayName: String; AReadOnly: Boolean = False);
-   class procedure Apply(Obj: TObject; Insp: TJvInspector);
+   class procedure Apply(Obj: TObject; Insp: TJvInspector); overload;
+   class procedure Apply(Obj: TArray<TObject>; Insp: TJvInspector); overload;
    property DisplayName: string read FDisplayName write FDisplayName;
    property ReadOnly: Boolean read FReadOnly write FReadOnly;
-  end;
+  end;}
 
 
 {$REGION 'TIComponent TIForm'}
@@ -293,7 +295,7 @@ type
   TRegistryStorable<T: IManagItem> = class(TInterfacedObject, IStorable)
   public
    type
-    TOnSaveFunc = reference to function(const InData: string): WideString;
+    TOnSaveFunc = reference to function(const InData: string): string;
   private
     FPath: string;
     FOwner: TRootServiceManager<T>;
@@ -428,7 +430,7 @@ end;
 
 procedure TFormEnum.Save;
 begin
-  (TRegistryStorable<IForm>.Create(Self, IFORMS_INI_DIR, function(const s: string): WideString
+  (TRegistryStorable<IForm>.Create(Self, IFORMS_INI_DIR, function(const s: string): String
   begin
     Result := RemoveProp(s)
   end) as IStorable).Save;
@@ -1018,7 +1020,7 @@ begin
 end;
 
 { ShowPropAttribute }
-type
+{type
  TCustomInspectorDataClassName = class(TJvCustomInspectorData)
  private
    FData: string;
@@ -1103,6 +1105,17 @@ begin
       end;
 end;
 
+class procedure ShowPropAttribute.Apply(Obj: TArray<TObject>; Insp: TJvInspector);
+begin
+  Insp.Clear;
+  RttiContext := TRttiContext.Create;
+  try
+   ApplyItemArray(Insp.Root, Obj);
+  finally
+   RttiContext.Free;
+  end;
+end;
+
 class procedure ShowPropAttribute.ApplyICollection(root: TJvCustomInspectorItem; cl: TICollection);
  var
   ii: TJvCustomInspectorItem;
@@ -1130,6 +1143,33 @@ begin
    end;
 end;
 
+class procedure ShowPropAttribute.ApplyItemArray(root: TJvCustomInspectorItem; o: TArray<TObject>);
+ var
+  t : TRttiType;
+  p : TRttiProperty;
+  a : TCustomAttribute;
+  ii: TJvCustomInspectorItem;
+  oo, no: TObject;
+  i, j: Integer;
+  s: string;
+  aa: TArray<TArray<ShowPropAttribute>>;
+begin
+  SetLength(aa, Length(o));
+  for i := 0 to Length(o)-1 do if Assigned(o[i]) then
+   begin
+    t := RttiContext.GetType(o[i].ClassType);
+     for p in t.getProperties do
+      for a in p.GetAttributes do
+       if (a is ShowPropAttribute) and (p.PropertyType.TypeKind <> tkClass) then
+        Carray.add<ShowPropAttribute>(aa[i], ShowPropAttribute(a))
+   end;
+  for i := 0 to Length(o)-1 do for j := Length(o[)-1 downto Length(o)-1 do
+   begin
+
+   end;
+
+end;
+
 class procedure ShowPropAttribute.Apply(Obj: TObject; Insp: TJvInspector);
 begin
   Insp.Clear;
@@ -1145,7 +1185,7 @@ constructor ShowPropAttribute.Create(const ADisplayName: String; AReadOnly: Bool
 begin
   FDisplayName := ADisplayName;
   FReadOnly := AReadOnly;
-end;
+end;    }
 
 {$ENDREGION}
 
@@ -1403,7 +1443,7 @@ end;
 constructor TRegistryStorable<T>.Create(AOwner: TRootServiceManager<T>; const Path: string; func: TOnSaveFunc);
 begin
   FOwner := AOwner;
-  if not Assigned(func) then Ffunc := function(const InData: string): WideString
+  if not Assigned(func) then Ffunc := function(const InData: string): String
   begin
     Result := InData;
   end
@@ -1550,33 +1590,33 @@ end;
 
 { EnumCaptionsAttribute }
 
-constructor EnumCaptionsAttribute.Create(const ACaptions: string);
- var
-  i: Integer;
-begin
-  FCaptions := ACaptions.Split([',',';']);
-  for I := 0 to High(FCaptions) do FCaptions[i] := FCaptions[i].Trim;
-end;
+//constructor EnumCaptionsAttribute.Create(const ACaptions: string);
+// var
+//  i: Integer;
+//begin
+//  FCaptions := ACaptions.Split([',',';']);
+//  for I := 0 to High(FCaptions) do FCaptions[i] := FCaptions[i].Trim;
+//end;
 
 { TJvEnumCaptionsInspectorData }
 
-class function TJvInspectorPropDataEx.ItemRegister: TJvInspectorRegister;
-begin
-  Result := inherited;
-  with Result do
-   begin
-    Delete(TJvInspectorEnumItem);
-    Add(TJvInspectorTypeKindRegItem.Create(TJvInspectorEnumCaptionsItem, tkEnumeration));
-    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(Boolean)));
-    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(ByteBool)));
-    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(WordBool)));
-    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(LongBool)));
-   end;
-end;
-
+//class function TJvInspectorPropDataEx.ItemRegister: TJvInspectorRegister;
+//begin
+//  Result := inherited;
+//  with Result do
+//   begin
+//    Delete(TJvInspectorEnumItem);
+//    Add(TJvInspectorTypeKindRegItem.Create(TJvInspectorEnumCaptionsItem, tkEnumeration));
+//    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(Boolean)));
+//    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(ByteBool)));
+//    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(WordBool)));
+//    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(LongBool)));
+//   end;
+//end;
+//
 { TJvInspectorEnumCaptionsItem }
 
-constructor TJvInspectorEnumCaptionsItem.Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData);
+{constructor TJvInspectorEnumCaptionsItem.Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData);
  var
   c: TRttiContext;
   a : TCustomAttribute;
@@ -1623,7 +1663,7 @@ begin
     i := StrToIntDef(Value, -1);
     if i >= 0 then Data.AsOrdinal := i;
    end;
-end;
+end;       }
 
 initialization
   TRegister.AddType<TFormEnum, IFormEnum, IStorable>.LiveTime(ltSingleton);

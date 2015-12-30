@@ -51,6 +51,7 @@ type
     class procedure UpdateNoise(const m0n: TVector3; const TrrMag: TMatrix4; const rot: TArray<TMatrix4>); static;
 
     class function FindRotations(const m0n: TVector3): TArray<TMatrix4>; static;
+
     class procedure Run(DotAH: Double; TrrMag, TrrAcc: TMatrix4; InclData: TArray<TInclPoint>;out TrrML: TMatrix4; out Incl: Double); static;
   end;
 
@@ -748,7 +749,7 @@ begin
   Din.G.Identity;
   Din.H.Identity;
 
-  CheckMath(e, e.FitV(6*2, Length(RealIncl)*2+2, @Din, 0.0000001, 0, 0, 0, 100000, cb_noise, PDoubleArray(DOut), rep));
+  CheckMath(e, e.FitV(6*2, Length(RealIncl)*2{+2}, @Din, 0.0000001, 0, 0, 0, 100000, cb_noise, PDoubleArray(DOut), rep));
   NoiseGinv := Tmatrix3(DOut^.G).inv;
   NoiseHinv := Tmatrix3(DOut^.H).inv;
 
@@ -777,6 +778,13 @@ begin
 
   for I := 0 to High(rot) do //шумы в системе координат измеряемой
    begin
+//    vg := rot[i] * z0n;
+//    vh := rot[i] * m0n;
+//    NoiseIncl[i].G := TrrIncl[i].G - vg;
+//    NoiseIncl[i].H := TrrIncl[i].H - vh;
+
+//    NoiseIncl[i].G := RealIncl[i].G - m3G*(TrrIncl[i].G-v3G);
+//    NoiseIncl[i].H := RealIncl[i].H - m3H*(TrrIncl[i].H-v3H);
     NoiseIncl[i].G := RealIncl[i].G - m3G*((rot[i] * z0n)-v3G);
     NoiseIncl[i].H := RealIncl[i].H - m3H*((rot[i] * m0n)-v3H);
    end;
@@ -804,8 +812,16 @@ begin
     f[i]    := G.dot(mginv * G);
     f[i+ke] := H.dot(mhinv * H);
    end;
-  f[ke] := Sqr(ke/2*ln(mg.det));
-  F[ke+1] := Sqr(ke/2*ln(mh.det));
+
+{  f[ke] := Sqr(ke/2*abs(ln(mg.det)));
+  if mh.det > 0 then
+   begin
+    F[ke+1] := Sqr(ke/2*ln(mh.det));
+   end
+   else
+    begin
+    F[ke+1] := Sqr(ke/2*abs(ln(mh.det)));
+    end;}
 end;
 
 

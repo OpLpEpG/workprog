@@ -303,6 +303,17 @@ __interface Iwavelet : public ILastMathError
                    out w: PDoubleArray; out z: IDoubleMatrix): HRESULT; stdcall;
   end;
 
+
+//__interface INoise : public ILastMathError
+{
+	SAFECALL normal(const ae_int_t n, const double ampl, const double **noise);
+}
+
+ INoise = interface(ILastMathError)
+    function  normal(n: Integer; ampl: Double; out noise: PDoubleArray): HRESULT; stdcall;
+ end;
+
+
 {$WARN SYMBOL_PLATFORM OFF}
 procedure RbfFactory(out Rbf: IRbf); cdecl; external 'matlab.dll' delayed;
 procedure BaryCentricFactory(out BaryCentric: IBaryCentric); cdecl; external 'matlab.dll' delayed;
@@ -314,6 +325,7 @@ procedure ToDoubleMatrix(Src: Pointer; out mtx: IDoubleMatrix); cdecl; external 
 procedure EquationsFactory(out Equations: IEquations); cdecl; external 'matlab.dll' delayed;
 procedure WaveletFactory(out wavelet: Iwavelet); cdecl; external 'matlab.dll' delayed;
 procedure EigFactory(out eig: Ieig); cdecl; external 'matlab.dll' delayed;
+procedure NoiseFactory(out Noise: INoise); cdecl; external 'matlab.dll' delayed;
 {$WARN SYMBOL_PLATFORM ON}
 
 procedure CheckMath(lme: ILastMathError; res: HRESULT);

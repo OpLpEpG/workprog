@@ -16,10 +16,11 @@ type
     Progress: TProgressBar;
     btTerminate: TButton;
     sb: TStatusBar;
-    cbShortPack: TCheckBox;
     rg: TRadioGroup;
     Label1: TLabel;
     od: TJvFilenameEdit;
+    edLen: TEdit;
+    Label2: TLabel;
     procedure btExitClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
     procedure btStartClick(Sender: TObject);
@@ -85,13 +86,13 @@ begin
 end;
 
 procedure TFrmDlgRam.Loaded;
- var
-  n: TMenuItem;
+// var
+//  n: TMenuItem;
 begin
   inherited;
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Импортировать...', NImportClick, n);
-  AddToNCMenu('Экспортировать...', NExportClick, n);
+  AddToNCMenu('-');
+  AddToNCMenu('Импортировать...', NImportClick);
+  AddToNCMenu('Экспортировать...', NExportClick);
 end;
 
 procedure TFrmDlgRam.NExportClick(Sender: TObject);
@@ -132,7 +133,7 @@ begin
    eirReadOk:        sb.Panels[0].Text := Format('Чтение памяти Адрес: %d осталось %1.3f',[DevAdr, ProcToEnd]);
    eirReadErrSector: sb.Panels[0].Text := Format('Ошибка чтения памяти Адрес: %d осталось %1.3f', [DevAdr, ProcToEnd]);
    eirCantRead:  Stop(Format('Невозможно считать память Адрес: %d', [DevAdr]));
-   eirEnd:       Stop('чтение памяти окончено');
+   eirEnd:       Stop('чтение памяти ОКОНЧЕНО');
    eirTerminate: Stop('чтение памяти прервано');
   end;
 end;
@@ -208,8 +209,7 @@ begin
    UpdateControls(False);
    try
     if not IsImport then
-     if cbShortPack.Checked then (FDev as IReadRamDevice).Execute(od.FileName, 0, 0, cbToFF.Checked, rg.ItemIndex+1, ds['Адрес'], ReadRamEvent, FModulID, 128)
-     else (FDev as IReadRamDevice).Execute(od.FileName,0, 0, cbToFF.Checked, rg.ItemIndex+1, ds['Адрес'], ReadRamEvent, FModulID)
+     (FDev as IReadRamDevice).Execute(od.FileName, 0, 0, cbToFF.Checked, rg.ItemIndex, ds['Адрес'], ReadRamEvent, FModulID, StrToInt('$'+edLen.Text))
     else ri.Import(flName, flIndex,0,0, cbToFF.Checked, ds['Адрес'], ReadRamEvent, FModulID);
    except
     UpdateControls(True);

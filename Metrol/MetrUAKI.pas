@@ -186,11 +186,9 @@ begin
 end;
 
 procedure TFormUAKI.InitializeNewForm;
- var
-  m: TMenuItem;
 begin
   inherited;
-  AddToNCMenu('Установки соединения...', NetSetupClick, m);
+  AddToNCMenu('Установки соединения...', NetSetupClick);
 end;
 
 procedure TFormUAKI.Loaded;

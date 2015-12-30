@@ -361,7 +361,7 @@ procedure TFormPsk.LoadDev(const FileName: string);
   GDoc: IXMLDocument;
   d,r,w: IXMLNode;
 begin
-  if FFileDev = '' then Exit;
+  if (FFileDev = '') or not FileExists(FFileDev) then Exit;
   GDoc := NewXMLDocument();
   GDoc.LoadFromFile(FileName);
   FXMLInfo := GDoc.DocumentElement;

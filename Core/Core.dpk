@@ -51,7 +51,7 @@ requires
   JvCore,
   JvDocking,
   fs_oleg,
-  GR32_RSXE8,
+  GR32_RSXE10,
   JvRuntimeDesign;
 
 contains
@@ -105,7 +105,9 @@ contains
   Plot.GR32 in 'Plot.GR32.pas',
   DataImportIntf in '..\DataImportIntf.pas',
   DataImportImpl in 'DataImportImpl.pas',
-  Vector in '..\Vector.pas';
+  Vector in '..\Vector.pas',
+  Plot.Controls in 'Plot.Controls.pas',
+  JDtools in 'JDtools.pas';
 
 end.
 

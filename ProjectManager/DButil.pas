@@ -2,7 +2,7 @@ unit DButil;
 
 interface
 
-uses Winapi.Windows, DateUtils, DBIntf, DBImpl, FireDAC.Phys.Intf, System.Classes, RootIntf,
+uses Winapi.Windows, System.DateUtils, DBIntf, DBImpl, FireDAC.Phys.Intf, System.Classes, RootIntf,
     System.SysUtils, Xml.XMLIntf, RootImpl, Data.DB, FireDAC.Comp.Client, DeviceIntf, ExtendIntf, debug_except, System.Variants;
 
 const // по устройствам
@@ -177,7 +177,7 @@ function GetDevID(Con: TAsyncADQuery; dev: IDevice; out Id: Integer): Boolean;
 
 implementation
 
-uses tools,Parser, FireDAC.Stan.Intf, forms;
+uses tools,Parser, FireDAC.Stan.Intf, VCL.forms;
 
 function GetDevID(Con: TAsyncADQuery; dev: IDevice; out Id: Integer): Boolean;
 begin

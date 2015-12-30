@@ -40,6 +40,7 @@ type
     procedure ShowBookmarkInTableClick(Sender: TObject);
     procedure RemoveColumnClick(Sender: TObject);
     procedure SelectParametersClick(Sender: TObject);
+    procedure EditParametersClick(Sender: TObject);
     procedure ImportLASClick(Sender: TObject);
     procedure EditParameterClick(Sender: TObject);
     procedure DeleteParameterClick(Sender: TObject);
@@ -119,8 +120,7 @@ begin
     Plt.ScaleFactor := 0.1;
     Plt.PresizionY := 0;
    end;
-  AddToNCMenu('Показывать легенду', ShowLegendClick, FShowLegendMenu);
-  FShowLegendMenu.MenuIndex := 0;
+  FShowLegendMenu := AddToNCMenu('Показывать легенду', ShowLegendClick, 0);
   FPltMenu := CreateUnLoad<TPopupMenu>;
   Plt.Popupmenu := FPltMenu;
 end;
@@ -287,6 +287,7 @@ begin
   if Sender is TGraphColumn then
    begin
     AddToMenu('Выбрать параметры колонки ...', SelectParametersClick, Sender, MousePos);
+    AddToMenu('Редактировать выбранные параметры...', EditParametersClick, Sender, MousePos);
     if DataType <> hdtLog then AddToMenu('Импорт LAS...', ImportLASClick, Sender, MousePos);
    end;
 end;
@@ -303,6 +304,18 @@ procedure TFormGraph.EditParameterClick(Sender: TObject);
   d: Idialog;
 begin
   if RegisterDialog.TryGet<Dialog_EditViewParameters>(d) then (d as IDialog<TGraphParam>).Execute(TGraphParam(TContextMenuItem(Sender).ContextObj));
+end;
+
+procedure TFormGraph.EditParametersClick(Sender: TObject);
+ var
+  d: Idialog;
+  cch: TGraphColumn;
+  p: TGraphParam;
+  a: TArray<TObject>;
+begin
+  cch := TGraphColumn(TContextMenuItem(Sender).ContextObj);
+  for p in cch.Params do if p.Selected then CArray.Add<TObject>(a, p);
+  if RegisterDialog.TryGet<Dialog_EditArrayParameters>(d) then (d as IDialog<TArray<TObject>>).Execute(a);
 end;
 
 procedure TFormGraph.DeleteParameterClick(Sender: TObject);

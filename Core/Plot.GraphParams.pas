@@ -2,7 +2,7 @@ unit Plot.GraphParams;
 
 interface
 
-uses SysUtils, Classes, Plot, RootImpl, debug_except, LAS, LasImpl, Container, System.Variants;
+uses SysUtils, Classes, Plot, RootImpl, debug_except, LAS, LasImpl, Container, System.Variants,JDtools;
 
 type
   TGraphParamArrayArrayVariant = class(TGraphParam)

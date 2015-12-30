@@ -2,7 +2,8 @@ unit MetrForm;
 
 interface
 
-uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, tools,XMLScript, Parser, RootImpl, System.IOUtils,
+uses system.UITypes,
+  DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, tools,XMLScript, Parser, RootImpl, System.IOUtils,
   Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls, Xml.XMLDoc,   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, System.Bindings.Expression,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf, VirtualTrees,
   Vcl.ActnPopup, ImportExport, Winapi.mmSystem;
@@ -19,7 +20,7 @@ type
   end;
 
  TAutomatMetrology = class;
- TFormMetrolog = class(TCustomFontIForm)
+ TFormMetrolog = class(TCustomFontIForm, ISetDevice)
   private
     FImportExport: IImportExport;
     FStepTree: TVirtualStringTree;
@@ -106,7 +107,7 @@ type
     procedure ReCalc(NeedSave: Boolean = True);
     function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; virtual;
     function UserSetupAlg(alg: IXMLNode): Boolean; virtual;
-    procedure TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer); virtual;
+    procedure TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex); virtual;
     procedure TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType); virtual;
     procedure TreeClear;
     procedure TreeUpdate; virtual;
@@ -374,21 +375,23 @@ begin
   FLabel.SetBounds(260, 1, 60, 13);
   FLabel.Caption := 'Аттестация';
 
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Подключить к устройству', nil, NConnect);
-  AddToNCMenu('Копировать поправки в устройство', NTrrApplyClick, NTrrApply);
-  AddToNCMenu('Медианный метод осреднения', NIsMedianClick, NIsMedian);
-  NIsMedian.Visible := False;
-  NIsMedian.AutoCheck := True;
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Создать новый файл тарировки...', NFileNewClick, NFileNew);
-  AddToNCMenu('Открыть существующий...', NFileOpenClick, NFileOpen);
-  AddToNCMenu('Сохранить как...', NFileSaveAsClick, NFileSaveAs);
-  NTrrApply.Enabled := False;
+  AddToNCMenu('-');
+  n := AddToNCMenu('Файл');
+  NFileNew := AddToNCMenu('Создать новый файл тарировки...', NFileNewClick, -1, -1, n);
+  NFileOpen := AddToNCMenu('Открыть существующий...', NFileOpenClick, -1, -1, n);
+  NFileSaveAs:= AddToNCMenu('Сохранить как...', NFileSaveAsClick, -1, -1, n);
   NFileNew.Enabled := False;
   NFileSaveAs.Enabled := False;
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Установки...', NStandartSetupClick, n);
+
+  AddToNCMenu('-');
+  NConnect := AddToNCMenu('Подключить к устройству');
+  NTrrApply := AddToNCMenu('Копировать поправки в устройство', NTrrApplyClick);
+  NTrrApply.Enabled := False;
+  NIsMedian := AddToNCMenu('Медианный метод осреднения', NIsMedianClick, -1, 0);
+  NIsMedian.Visible := False;
+
+  AddToNCMenu('-');
+  AddToNCMenu('Установки...', NStandartSetupClick);
 
   Doc := NewXDocument();
   FEtalonData := Doc.AddChild(MetrolMame);
@@ -632,7 +635,7 @@ begin
   FStepTree.Clear;
 end;
 
-procedure TFormMetrolog.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer);
+procedure TFormMetrolog.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex);
  var
   xd: PNodeExData;
 begin

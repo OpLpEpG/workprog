@@ -90,10 +90,10 @@ begin
     try
       srDev.Clear;
       a := TPars.ArrayStrToArray(n.NodeValue);
-      if Length(a) <> 681 then
-       begin
-        TDebug.Log('  BAD LEM ARRAY %d',[Length(a)]);
-       end;
+//      if Length(a) <> 681 then
+//       begin
+//        TDebug.Log('  BAD LEM ARRAY %d',[Length(a)]);
+//       end;
   //    for d in a do srDev.Add(d);
       srDev.AddArray(a);
     finally

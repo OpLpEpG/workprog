@@ -272,7 +272,7 @@ end;
 initialization
   TMetrInclinMath.Nop();
   RegisterClasses([TFormInclinT12, TTabSheet]);
-  TRegister.AddType<TFormInclinT12, IForm>.LiveTime(ltSingletonNamed);
+//  TRegister.AddType<TFormInclinT12, IForm>.LiveTime(ltSingletonNamed);
 finalization
-  GContainer.RemoveModel<TFormInclinT12>;
+//  GContainer.RemoveModel<TFormInclinT12>;
 end.

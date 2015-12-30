@@ -2,7 +2,7 @@ unit VCL.Dlg.RootDevice;
 
 interface
 
-uses RootIntf, DeviceIntf, debug_except, ExtendIntf, DockIForm, PluginAPI, RootImpl, Container,
+uses RootIntf, DeviceIntf, debug_except, ExtendIntf, DockIForm, PluginAPI, RootImpl, Container, JDtools,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.TypInfo,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls, VirtualTrees, Vcl.Menus,
   Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, JvComponentBase, JvInspector, JvExControls;

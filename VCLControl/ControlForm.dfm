@@ -34,8 +34,6 @@ object FormControl: TFormControl
     OnGetText = TreeGetText
     OnPaintText = TreePaintText
     OnGetImageIndex = TreeGetImageIndex
-    ExplicitWidth = 443
-    ExplicitHeight = 231
     Columns = <
       item
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]

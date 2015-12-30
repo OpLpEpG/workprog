@@ -2,7 +2,8 @@ unit Dev.Telesistem;
 
 interface
 
-uses System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Dev.Telesistem.Decoder,
+uses JDtools,
+     System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Dev.Telesistem.Decoder,
      Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools,
      Math.Telesistem, System.IOUtils, Vcl.Graphics,  System.Types, Parser,   Xml.XMLIntf,
      JvExControls, JvInspector, JvComponentBase,  JvResources,

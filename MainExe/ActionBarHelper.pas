@@ -2,7 +2,7 @@ unit ActionBarHelper;
 
 interface
 
-uses debug_except, System.SysUtils, ExtendIntf, Vcl.ActnMan, ActnList, System.Classes, AnsiStrings, System.Actions;
+uses debug_except, System.SysUtils, ExtendIntf, Vcl.ActnMan, VCL.ActnList, System.Classes, System.Actions, System.AnsiStrings;
 
 type
  TActionBarHelper = class
@@ -20,6 +20,7 @@ type
  public
   class procedure ShowArr(ActionBar: TActionClient; const path: TArray<TMenuPath>; Action: IAction; ActionIndex: Integer = -1);
   class procedure Show(ActionBar: TActionClient; path: string; Action: IAction; Index: Integer = -1);
+//  class procedure Show2(ActionBar: TActionClient; path: string; Action: TContainedAction; Index: Integer = -1);
   class procedure Index(ActionBar: TActionClient; capt: string; Index: Integer);
   class procedure Hide(ActionBar: TActionClient; Action: IAction);
   class function HideUnusedMenus(ActionMan: TActionManager): boolean;
@@ -137,9 +138,32 @@ begin
    end;
   if Assigned(FindByAction(root, Action)) then Exit;
   root := root.Items.Add;
-  root.Action := FAction;
+  if FAction.Caption = '-' then root.Caption := '-'
+  else root.Action := FAction;
   if (Index >= 0) and (Index < root.OwningCollection.Count) then root.Index := Index;
 end;
+
+{class procedure TActionBarHelper.Show2(ActionBar: TActionClient; path: string; Action: TContainedAction; Index: Integer);
+ var
+  a, root: TActionClientItem;
+  s: string;
+begin
+  TActionClient(root) := ActionBar;
+  for s in path.Split(['.'], ExcludeEmpty) do
+   begin
+    a := FindByCaption(root, s);
+    if Assigned(a) then root := a
+    else
+     begin
+      root := root.Items.Add;
+      root.Caption := s;
+      root.Visible := True;
+     end;
+   end;
+  root := root.Items.Add;
+  root.Action := Action;
+  if (Index >= 0) and (Index < root.OwningCollection.Count) then root.Index := Index;
+end; }
 
 class procedure TActionBarHelper.ShowArr(ActionBar: TActionClient; const path: TArray<TMenuPath>; Action: IAction;  ActionIndex: Integer);
  var

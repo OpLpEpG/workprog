@@ -213,16 +213,14 @@ end;
 procedure TFormDataDB.Loaded;
  const
   TXTDT: array [TypeDataShow] of string = (' оличество данных...', '‘ильтр по кадрам...', '‘ильтр по глубине...');
- var
-  n: TMenuItem;
 begin
   inherited;
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('‘ильтр данных...', NSelectParamsClick, n);
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu(TXTDT[DataType], NFilterGluClick, n);
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Ёкспортировать в LAS...', NExportToLASClick, n);
+  AddToNCMenu('-');
+  AddToNCMenu('‘ильтр данных...', NSelectParamsClick);
+  AddToNCMenu('-');
+  AddToNCMenu(TXTDT[DataType], NFilterGluClick);
+  AddToNCMenu('-');
+  AddToNCMenu('Ёкспортировать в LAS...', NExportToLASClick);
 
   Bind('ProjectChange', GlobalCore as IManager , ['S_ProjectChange']);
   CreateConnection(FDBName);

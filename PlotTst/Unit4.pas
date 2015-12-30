@@ -2,7 +2,7 @@ unit Unit4;
 
 interface
 
-uses CustomPlot, System.IOUtils, Plot.GR32, gr32, DataSetIntf,
+uses CustomPlot, System.IOUtils, Plot.GR32, gr32, DataSetIntf, Plot.Controls,
   Plot.DataSet,
   RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RTTI, Container, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
@@ -32,6 +32,9 @@ type
     FDQuery1: TFDQuery;
     FDGUIxWaitCursor1: TFDGUIxWaitCursor;
     FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink;
+    Button7: TButton;
+    Button8: TButton;
+    Button9: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -42,6 +45,9 @@ type
     procedure Button6Click(Sender: TObject);
     procedure CheckBox3Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure Button7Click(Sender: TObject);
+    procedure Button8Click(Sender: TObject);
+    procedure Button9Click(Sender: TObject);
   private
     Graph: TCustomGraph;
     ds: TPlotDataSet;
@@ -65,32 +71,34 @@ procedure TForm4.Button1Click(Sender: TObject);
   p: TGraphPar;
   f: TWaveletFilter;
 begin
-  c := Graph.Columns.Add<TGR32GraphicCollumn>;
-  p := c.Params.Add<TLineParam>;
-  p.Title := 'p1';
-  p.Color := clRed32;
-  p.link := TFileDataLink.Create(p);
-  TFileDataLink(p.Link).FileName := 'FileName_p1';
-  TFileDataLink(p.Link).XParamPath := 'X_p1';
- // TFileDataLink(p.Link).YParamPath := 'X_p1';
+  Graph.Frost;
+  try
+    c := Graph.Columns.Add<TGR32GraphicCollumn>;
+    p := c.Params.Add<TLineParam>;
+    p.Title := 'p1';
+    p.Color := clRed32;
+    p.link := TFileDataLink.Create(p);
+    TFileDataLink(p.Link).FileName := 'FileName_p1';
+    TFileDataLink(p.Link).XParamPath := 'X_p1';
+   // TFileDataLink(p.Link).YParamPath := 'X_p1';
 
-  f := P.Filters.Add<TWaveletFilter>;
-  f.DisplayName := 'ParamFilter_1';
-  f := P.Filters.Add<TWaveletFilter>;
-  f.DisplayName := 'ParamFilter_2';
+    f := P.Filters.Add<TWaveletFilter>;
+    f.DisplayName := 'ParamFilter_1';
+    f := P.Filters.Add<TWaveletFilter>;
+    f.DisplayName := 'ParamFilter_2';
 
-  p := c.Params.Add<TLineParam>;
-  p.Title := 'p2';
-  p.Color := clBlue32;
-  p := c.Params.Add<TLineParam>;
-  p.Title := 'p3';
-  p.Color := clGreen32;
-  p := c.Params.Add<TLineParam>;
-  p.Title := 'p4';
-  p.Color := clTeal32;
-  p := c.Params.Add<TLineParam>;
-  p.Title := 'p5';
-  p.Color := clAqua32;
+    p := c.Params.Add<TLineParam>;
+    p.Title := 'p2';
+    p.Color := clBlue32;
+    p := c.Params.Add<TLineParam>;
+    p.Title := 'p3';
+    p.Color := clGreen32;
+    p := c.Params.Add<TLineParam>;
+    p.Title := 'p4';
+    p.Color := clTeal32;
+    p := c.Params.Add<TLineParam>;
+    p.Title := 'p5';
+    p.Color := clAqua32;
 
 
 //  p := c.Params.Add<TGraphParam>;
@@ -99,17 +107,25 @@ begin
 //  TFileDataLink(p.Link).FileName := 'FileName_p2';
 //  TFileDataLink(p.Link).XParamPath := 'X_p2';
 //  TFileDataLink(p.Link).YParamPath := 'X_p2';
-  Graph.Repaint;
+
+  finally
+   Graph.DeFrost;
+  end;
 end;
 
 procedure TForm4.Button2Click(Sender: TObject);
 begin
-  Graph.Parent := Form1;
-  Graph.Align := alClient;
-  Graph.SendToBack;
-  Graph.Rows.Add<TGR32LegendRow>;
-  Graph.Rows.Add<TCustomGraphData>;
-  Graph.Rows.Add<TCustomGraphInfo>;
+  Graph.Frost;
+  try
+   Graph.Parent := Form1;
+   Graph.Align := alClient;
+   Graph.SendToBack;
+   Graph.Rows.Add<TGR32LegendRow>;
+   Graph.Rows.Add<TCustomGraphData>;
+   Graph.Rows.Add<TCustomGraphInfo>;
+  finally
+   Graph.DeFrost;
+  end;
 end;
 
 procedure TForm4.Button3Click(Sender: TObject);
@@ -117,20 +133,24 @@ procedure TForm4.Button3Click(Sender: TObject);
   ss: TStringStream;
   ms: TMemoryStream;
 begin
-  ss := TStringStream.Create;
-  ms := TMemoryStream.Create;
+  Graph.Frost;
   try
-   ss.LoadFromFile(Tpath.GetDirectoryName(ParamStr(0))+'\Graph.txt');
-   ss.Position := 0;
-   ObjectTextToBinary(ss, ms);
-   ms.Position := 0;
-   ms.ReadComponent(Graph);
+   ss := TStringStream.Create;
+   ms := TMemoryStream.Create;
+   try
+    ss.LoadFromFile(Tpath.GetDirectoryName(ParamStr(0))+'\Graph.txt');
+    ss.Position := 0;
+    ObjectTextToBinary(ss, ms);
+    ms.Position := 0;
+    ms.ReadComponent(Graph);
+   finally
+    ss.Free;
+    ms.Free;
+   end;
+   Graph.SendToBack;
   finally
-   ss.Free;
-   ms.Free;
+   Graph.DeFrost;
   end;
-  Graph.SendToBack;
-  Graph.Repaint;
 end;
 
 procedure TForm4.Button4Click(Sender: TObject);
@@ -166,13 +186,48 @@ begin
   if RegisterDialog.TryGet<Dialog_EditViewParameters>(d) then (d as IDialog<TObject>).Execute(Graph);
 end;
 
+procedure TForm4.Button7Click(Sender: TObject);
+begin
+  Graph.Frost;
+  try
+   Graph.Rows.Add<TCustomGraphInfo>;
+  finally
+   Graph.DeFrost;
+  end;
+end;
+
+procedure TForm4.Button8Click(Sender: TObject);
+begin
+  Graph.Frost;
+  try
+   Graph.Rows.Delete(Graph.Rows.Count-1);
+  finally
+   Graph.DeFrost;
+  end;
+end;
+
+procedure TForm4.Button9Click(Sender: TObject);
+begin
+  Graph.Frost;
+  try
+   Graph.Columns.Delete(Graph.Columns.Count-1);
+  finally
+   Graph.DeFrost;
+  end;
+end;
+
 procedure TForm4.CheckBox1Click(Sender: TObject);
  var
   a: TArray<TGraphRow>;
   r: TGraphRow;
 begin
-  a := Graph.Rows.FindRows(TCustomGraphLegend);
-  for r in a do r.Visible := CheckBox1.Checked;
+  Graph.Frost;
+  try
+   a := Graph.Rows.FindRows(TCustomGraphLegend);
+   for r in a do r.Visible := CheckBox1.Checked;
+  finally
+   Graph.DeFrost;
+  end;
 end;
 
 procedure TForm4.CheckBox2Click(Sender: TObject);
@@ -180,8 +235,13 @@ procedure TForm4.CheckBox2Click(Sender: TObject);
   a: TArray<TGraphRow>;
   r: TGraphRow;
 begin
-  a := Graph.Rows.FindRows(TCustomGraphInfo);
-  for r in a do r.Visible := CheckBox2.Checked;
+  Graph.Frost;
+  Try
+   a := Graph.Rows.FindRows(TCustomGraphInfo);
+   for r in a do r.Visible := CheckBox2.Checked;
+  Finally
+   Graph.DeFrost;
+  End;
 end;
 
 procedure TForm4.CheckBox3Click(Sender: TObject);

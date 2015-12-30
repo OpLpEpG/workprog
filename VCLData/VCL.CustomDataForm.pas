@@ -21,12 +21,9 @@ implementation
 { TCustomFormData }
 
 procedure TCustomFormData.Loaded;
- var
-  n: TMenuItem;
 begin
   inherited;
-  AddToNCMenu('Добавить данные...', NAddDataClick, n);
-//  n.MenuIndex := 9;
+  AddToNCMenu('Добавить данные...', NAddDataClick);
 end;
 
 procedure TCustomFormData.NAddDataClick(Sender: TObject);

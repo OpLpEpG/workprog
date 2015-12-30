@@ -134,13 +134,10 @@ begin
 end;
 
 procedure TFormCursor.Loaded;
- var
-  n: TMenuItem;
 begin
   inherited;
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Переходить к поступивщим данным', NGotoFirstClick, n);
-  n.Checked := FGotoFirst;
+  AddToNCMenu('-');
+  AddToNCMenu('Переходить к поступивщим данным', NGotoFirstClick, -1, AUTO_CHECK[FGotoFirst]);
 end;
 
 //procedure TFormCursor.MouseWheel(Sender: TObject; Shift: TShiftState; MousePos: TPoint; var Handled: Boolean);

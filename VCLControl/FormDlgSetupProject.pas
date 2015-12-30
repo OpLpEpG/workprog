@@ -109,6 +109,7 @@ begin
    PRG_TIP_DATE_TIME: tip := System.TypeInfo(TDateTime);
    PRG_TIP_DATE     : tip := System.TypeInfo(TDate);
    PRG_TIP_TIME     : tip := System.TypeInfo(TTime);
+   PRG_TIP_BOOL     : tip := System.TypeInfo(Boolean);
    else               tip := System.TypeInfo(Variant);
   end;
 

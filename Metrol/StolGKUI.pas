@@ -61,11 +61,9 @@ begin
 end;
 
 procedure TFormStolGK.InitializeNewForm;
- var
-  m: TMenuItem;
 begin
   inherited;
-  AddToNCMenu('Установки соединения...', ComSetupClick, m);
+  AddToNCMenu('Установки соединения...', ComSetupClick);
 end;
 
 procedure TFormStolGK.Loaded;

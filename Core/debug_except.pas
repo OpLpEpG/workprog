@@ -3,7 +3,7 @@ unit debug_except;
 interface
 
 uses
-     ComObj, SysUtils, Winapi.Windows, Classes, Generics.Collections, JvDockControlForm, Vcl.Controls, ActiveX;
+     system.Win.comobj, SysUtils, Winapi.Windows, Classes, Generics.Collections, JvDockControlForm, Vcl.Controls, winapi.ActiveX;
 
 type
   EBaseException = class(EOleException)

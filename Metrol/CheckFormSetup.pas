@@ -2,7 +2,7 @@
 
 interface
 
-uses RootImpl,  debug_except,
+uses RootImpl,  debug_except, JDtools,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, JvComponentBase, JvInspector, JvExControls;
 

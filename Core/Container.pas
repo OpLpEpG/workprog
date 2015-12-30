@@ -199,6 +199,9 @@ type
     function TryGetInstRecKnownServ(serv: ServiceType; const InstanceName: string; out Rec: TInstanceRec): Boolean;
     function TryGetInstRec(Model: ModelType; const InstanceName: string; out Rec: TInstanceRec): Boolean;
 
+    function CreateValuedInstance<T>(const ClassName, ConstructorName: string; Data: T): IInterface;
+
+
     function GetService(const IID: TGUID; out Obj): HResult; overload; inline;
     function GetService<Service: IInterface>(out Obj): HResult; overload;
 
@@ -657,6 +660,24 @@ begin
   FServices := TServiceDict.Create;
   FModels := TModelDict.Create;
   FModels.fSrv := FServices;
+end;
+
+function TContainer.CreateValuedInstance<T>(const ClassName, ConstructorName: string; Data: T): IInterface;
+ var
+  model: PTypeInfo;
+  m: TComponentModel;
+  method: TRttiMethod;
+  o: TObject;
+begin
+  Result := nil;
+  model := GetModelType(ClassName);
+  if Assigned(model) and FModels.TryGetValue(Model, m) then  for method in m.fInstanceType.GetMethods do
+   if method.IsConstructor and (Length(method.GetParameters) = 1) and SameText(method.Name, ConstructorName) then
+    begin
+     o := method.Invoke(m.fInstanceType.MetaclassType, [TValue.From<T>(Data)]).AsObject;
+     o.GetInterface(IInterface, Result);
+     Exit;
+    end;
 end;
 
 destructor TContainer.Destroy;

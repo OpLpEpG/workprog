@@ -2,7 +2,7 @@ unit DeviceIntf;
 
 interface
 
-uses Windows, SysUtils, XMLIntf, Classes, RootIntf, System.TypInfo;//, Controls;
+uses winapi.Windows, SysUtils, XMLIntf, Classes, RootIntf, System.TypInfo;//, Controls;
 
 type
   IXMLInfo = IXMLNode;

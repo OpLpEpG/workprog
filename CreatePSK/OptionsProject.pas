@@ -23,23 +23,25 @@ type
     NDelete: TMenuItem;
     NEdit: TMenuItem;
     N1: TMenuItem;
-    N2: TMenuItem;
-    NSave: TMenuItem;
     procedure NCategeryClick(Sender: TObject);
     procedure NNewClick(Sender: TObject);
     procedure NDeleteClick(Sender: TObject);
     procedure NEditClick(Sender: TObject);
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
-    procedure NSaveClick(Sender: TObject);
   private
     FOptions: IXMLNode;
+    FFileName: string;
+    NSave: TMenuItem;
+    procedure NSaveClick(Sender: TObject);
+    procedure NNewFileClick(Sender: TObject);
     procedure ClearTree;
     procedure UpdateTree;
+    procedure ReLoad;
   protected
 //    class function ClassIcon: Integer; override;
     procedure Loaded; override;
   public
-    [StaticAction('Окно управления устройствами', 'Отладочные', 45, '0:Показать.Отладочные:0')]
+    [StaticAction('Настройки опций', 'Отладочные', 45, '0:Показать.Отладочные:0')]
     class procedure DoCreateForm(Sender: IAction); override;
     destructor Destroy; override;
   end;
@@ -66,11 +68,13 @@ procedure TFormProjectOptions.Loaded;
   GDoc: IXMLDocument;
 begin
   inherited;
+  FFileName := ExtractFilePath(ParamStr(0))+'Devices\Options.xml';
+  AddToNCMenu('-');
+  AddToNCMenu('Выбрать файл...', NNewFileClick);
+  NSave := AddToNCMenu('Сохранить', NSaveClick);
+  NSave.Enabled := False;
   Tree.NodeDataSize := SizeOf(TNodeExData);
-  GDoc := NewXDocument();
-  GDoc.LoadFromFile(ExtractFilePath(ParamStr(0))+'Devices\Options.xml');
-  FOptions := GDoc.DocumentElement;
-  UpdateTree;
+  ReLoad;
 end;
 
 destructor TFormProjectOptions.Destroy;
@@ -142,8 +146,18 @@ end;
 
 procedure TFormProjectOptions.NSaveClick(Sender: TObject);
 begin
-  FOptions.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'Devices\Options.xml');
+  FOptions.OwnerDocument.SaveToFile(FFileName);
   NSave.Enabled := False;
+end;
+
+procedure TFormProjectOptions.ReLoad;
+ var
+  GDoc: IXMLDocument;
+begin
+  GDoc := NewXDocument();
+  GDoc.LoadFromFile(FFileName);
+  FOptions := GDoc.DocumentElement;
+  UpdateTree;
 end;
 
 procedure TFormProjectOptions.NCategeryClick(Sender: TObject);
@@ -237,6 +251,24 @@ begin
       UpdateTree;
      end;
     Break;
+   end;
+end;
+
+procedure TFormProjectOptions.NNewFileClick(Sender: TObject);
+begin
+  with TOpenDialog.Create(nil) do
+   try
+    InitialDir := ExtractFilePath(ParamStr(0)) + 'Devices';
+    Options := Options + [ofPathMustExist, ofFileMustExist];
+    DefaultExt := 'xml';
+    Filter := 'Файл опций (*.xml)|*.xml';
+    if Execute(Handle) then
+     begin
+      FFileName := FileName;
+      ReLoad;
+     end;
+   finally
+    Free;
    end;
 end;
 

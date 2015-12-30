@@ -33,7 +33,6 @@ type
     FfmtOve: string;
     FAutomatMetrology: TinclAuto;
     procedure NSetupInclClick(Sender: TObject);
-    procedure UpdateAH(T: TVirtualStringTree; Root: IXMLNode);
   protected
     procedure Loaded; override;
     procedure DoSetFont(const AFont: TFont); override;
@@ -48,6 +47,8 @@ type
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
     class function MetrolType: string; override;
+    class procedure UpdateAH(T: TVirtualStringTree; Root: IXMLNode; const AfmtDiag, AfmtDz, AfmtOve: string);
+    class procedure InitT(T: TVirtualStringTree); static;
     property AutomatMetrology: TinclAuto read FAutomatMetrology implements IAutomatMetrology;
   published
     property fmtData: string read FfmtData write FfmtData;
@@ -90,16 +91,15 @@ begin
   Result := 'T21'
 end;
 
+class procedure TFormInclin.InitT(T: TVirtualStringTree);
+begin
+ T.NodeDataSize := SizeOf(TNodeTData);
+ PNodeTData(T.GetNodeData(T.AddChild(nil))).Item := 'X';
+ PNodeTData(T.GetNodeData(T.AddChild(nil))).Item := 'Y';
+ PNodeTData(T.GetNodeData(T.AddChild(nil))).Item := 'Z';
+end;
+
 procedure TFormInclin.Loaded;
-  procedure InitT(T: TVirtualStringTree);
-  begin
-   T.NodeDataSize := SizeOf(TNodeTData);
-   PNodeTData(Tree.GetNodeData(T.AddChild(nil))).Item := 'X';
-   PNodeTData(Tree.GetNodeData(T.AddChild(nil))).Item := 'Y';
-   PNodeTData(Tree.GetNodeData(T.AddChild(nil))).Item := 'Z';
-  end;
- var
-  n: TMenuItem;
 begin
   // сначала инит Tree
   SetupStepTree(Tree);
@@ -109,8 +109,8 @@ begin
   inherited;
   NIsMedian.Visible := True;
   AttestatPanel.Align := alBottom;
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Установки Инклинометрии...', NSetupInclClick, n);
+  AddToNCMenu('-');
+  AddToNCMenu('Установки Инклинометрии...', NSetupInclClick);
   FAutomatMetrology := TinclAuto.Create(Self, AutoReport);
 end;
 
@@ -124,15 +124,15 @@ end;
 procedure TFormInclin.DoStopAtt(AttNode: IXMLNode);
 begin
   inherited;
-  UpdateAH(TreeA, GetMetr(['accel','m3x4'], GetFileOrDevData));
-  UpdateAH(TreeH, GetMetr(['magnit','m3x4'], GetFileOrDevData));
+  UpdateAH(TreeA, GetMetr(['accel','m3x4'], GetFileOrDevData), fmtDiag, fmtDz, fmtOve);
+  UpdateAH(TreeH, GetMetr(['magnit','m3x4'], GetFileOrDevData), fmtDiag, fmtDz, fmtOve);
 end;
 
 procedure TFormInclin.DoUpdateData(NewFileData: Boolean = False);
 begin
   inherited;
-  UpdateAH(TreeA, GetMetr(['accel','m3x4'], GetFileOrDevData));
-  UpdateAH(TreeH, GetMetr(['magnit','m3x4'], GetFileOrDevData));
+  UpdateAH(TreeA, GetMetr(['accel','m3x4'], GetFileOrDevData), fmtDiag, fmtDz, fmtOve);
+  UpdateAH(TreeH, GetMetr(['magnit','m3x4'], GetFileOrDevData), fmtDiag, fmtDz, fmtOve);
 end;
 
 procedure TFormInclin.NSetupInclClick(Sender: TObject);
@@ -140,20 +140,20 @@ begin
  if TFormInclSetup.Execute(FfmtData, FfmtDiag, FfmtDz, FfmtOve) then
   begin
    Tree.Repaint;
-   UpdateAH(TreeA, GetMetr(['accel','m3x4'], GetFileOrDevData));
-   UpdateAH(TreeH, GetMetr(['magnit','m3x4'], GetFileOrDevData));
+   UpdateAH(TreeA, GetMetr(['accel','m3x4'], GetFileOrDevData), fmtDiag, fmtDz, fmtOve);
+   UpdateAH(TreeH, GetMetr(['magnit','m3x4'], GetFileOrDevData), fmtDiag, fmtDz, fmtOve);
   end;
 end;
 
-procedure TFormInclin.UpdateAH(T: TVirtualStringTree; Root: IXMLNode);
+class procedure TFormInclin.UpdateAH(T: TVirtualStringTree; Root: IXMLNode; const AfmtDiag, AfmtDz, AfmtOve: string);
   procedure UpdRow(pv: PVirtualNode);
    var
     p: PNodeTData;
     sx,sy,sz,sd4: string;
     function getFmt(const f: string): string;
     begin
-     if (f = 'm11') or (f = 'm22') or (f = 'm33') then Result := fmtDiag
-     else Result := fmtOve;
+     if (f = 'm11') or (f = 'm22') or (f = 'm33') then Result := AfmtDiag
+     else Result := AfmtOve;
      if Result = '' then Result := '%g'
     end;
   begin
@@ -167,8 +167,8 @@ procedure TFormInclin.UpdateAH(T: TVirtualStringTree; Root: IXMLNode);
     if Root.HasAttribute(sx) then p.x := Format(getFmt(sx), [Double(Root.Attributes[sx])]);
     if Root.HasAttribute(sy) then p.y := Format(getFmt(sy), [Double(Root.Attributes[sy])]);
     if Root.HasAttribute(sz) then p.z := Format(getFmt(sz), [Double(Root.Attributes[sz])]);
-    if Root.HasAttribute(sd4) then if fmtDz = '' then p.d4 := Root.Attributes[sd4]
-    else p.d4 := Format(fmtDz, [Double(Root.Attributes[sd4])]);
+    if Root.HasAttribute(sd4) then if AfmtDz = '' then p.d4 := Root.Attributes[sd4]
+    else p.d4 := Format(AfmtDz, [Double(Root.Attributes[sd4])]);
     T.InvalidateNode(pv);
   end;
   var
@@ -243,7 +243,7 @@ end;
 initialization
   RegisterClass(TSaveDialog);
   RegisterClass(TFormInclin);
-  TRegister.AddType<TFormInclin, IForm>.LiveTime(ltSingletonNamed);
+//  TRegister.AddType<TFormInclin, IForm>.LiveTime(ltSingletonNamed);
 finalization
-  GContainer.RemoveModel<TFormInclin>;
+//  GContainer.RemoveModel<TFormInclin>;
 end.

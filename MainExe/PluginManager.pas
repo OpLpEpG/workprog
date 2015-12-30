@@ -4,9 +4,9 @@ interface
 
 uses
   Winapi.Windows,
-  SysUtils,
-  Classes,
-  RTTI,
+  system.SysUtils,
+  system.Classes,
+  system.RTTI,
   System.TypInfo,
   Container,
   System.Generics.Collections,
@@ -58,8 +58,8 @@ function Plugins: IPluginManager;
 implementation
 
 uses
-  Contnrs,
-  Forms,
+  system.Contnrs,
+  VCL.Forms,
   System.Win.Registry;
 
 resourcestring

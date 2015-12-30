@@ -2,7 +2,7 @@ unit Plot.DB;
 
 interface
 
-uses SysUtils, Classes, Plot, DB, RootImpl, debug_except, DBintf;
+uses SysUtils, Classes, Plot, DB, RootImpl, debug_except, DBintf, JDtools;
 
 type
   TGraphParamDB = class(TGraphParam)

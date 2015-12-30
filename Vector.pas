@@ -63,6 +63,7 @@ uses System.SysUtils, System.Math;
 //    class operator Implicit(const M: TMatrix4): variant;
     class operator Multiply(const APoint1, APoint2: TMatrix4): TMatrix4;
     class operator Multiply(const M: TMatrix4; V:TVector3): TVector3;
+    class operator Multiply(const M: TMatrix4; F: Double): TMatrix4;
     class operator Add(const a, b: TMatrix4): TMatrix4;
     class operator Negative(const m: TMatrix4): TMatrix4;
     function T: TMatrix4;
@@ -342,6 +343,11 @@ end;
 function TMatrix4.inv: TMatrix4;
 begin
   Result := Self.Adjoint.Scale(1/det);
+end;
+
+class operator TMatrix4.Multiply(const M: TMatrix4; F: Double): TMatrix4;
+begin
+  Result := M.Scale(F);
 end;
 
 class operator TMatrix4.Multiply(const M: TMatrix4; V: TVector3): TVector3;

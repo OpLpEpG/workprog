@@ -87,16 +87,15 @@ procedure TFormIO.InitializeNewForm;
  var
   ce: IConnectIOEnum;
   m: IManager;
-  Item : TMenuItem;
 begin
   inherited;
   FMaxLenHex := 16;
-  AddToNCMenu('-', nil, Item);
-  AddToNCMenu('Очистить', NClearClick, Item);
-  AddToNCMenu('Сохранить в файл...', NSaveAsClick, Item);
-  AddToNCMenu('Длинна выводимых данных...', NMaxLenHexClick, Item);
+  AddToNCMenu('-');
+  AddToNCMenu('Очистить', NClearClick);
+  AddToNCMenu('Сохранить в файл...', NSaveAsClick);
+  AddToNCMenu('Длинна выводимых данных...', NMaxLenHexClick);
   //Item.Action := FileSaveAs;
-  AddToNCMenu('Подключить к устойству ввода-вывода', nil, NConnections);
+  NConnections := AddToNCMenu('Подключить к устойству ввода-вывода');
   if Supports(GlobalCore, IConnectIOEnum, ce) then Bind('C_BeforeRemove', ce, ['S_BeforeRemove']); //(ce as IBind).CreateManagedBinding(Self, 'LBeforeRemove', ['S_BeforeRemove']);
   if Supports(GlobalCore, IManager, m) then Bind('C_Project', m, ['S_ProjectChange']); //  (m as IBind).CreateManagedBinding(Self, 'Project', ['LProject']);
 end;

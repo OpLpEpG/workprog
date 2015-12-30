@@ -36,19 +36,12 @@ object FormInclin: TFormInclin
     object lbInfo: TLabel
       Left = 0
       Top = 276
-      Width = 3
+      Width = 646
       Height = 13
       Align = alBottom
       Alignment = taCenter
       WordWrap = True
-    end
-    object pc: TCPageControl
-      Left = 0
-      Top = 0
-      Width = 646
-      Height = 276
-      Align = alClient
-      TabOrder = 1
+      ExplicitWidth = 3
     end
     object Tree: TVirtualStringTree
       Left = 0
@@ -199,7 +192,7 @@ object FormInclin: TFormInclin
         end
         item
           Position = 4
-          Width = 72
+          Width = 66
           WideText = 'D'
         end>
     end
@@ -242,7 +235,7 @@ object FormInclin: TFormInclin
         end
         item
           Position = 4
-          Width = 73
+          Width = 67
           WideText = 'D'
         end>
     end

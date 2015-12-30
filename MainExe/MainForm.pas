@@ -135,7 +135,7 @@ implementation
 {$R *.dfm}
 
 
-uses WinAPI.GDIPObj, WinAPI.GDIPApi, RootImpl, VCLTee.TeEngine, DataImportImpl,
+uses GR32, WinAPI.GDIPObj, WinAPI.GDIPApi, RootImpl, VCLTee.TeEngine, DataImportImpl,
     PluginManager, PluginSetupForm, ExceptionForm, tools, DockIForm, debug_except, ActionBarHelper, FirstForm, Container;//, Hock_Exept;
 
 {$REGION  '*********** Create Destroy ****************'}
@@ -202,7 +202,12 @@ end;
 procedure TFormMain.LoadNotify; // call LoadPlugins
 begin
   if (ParamCount >= 1) and (Trim(ParamStr(1)) = '-nl') then ResetActions
-  else LoadScreen(True);
+  else
+   begin
+    LoadScreen(True);
+//    TActionBarHelper.ShowHidenActions(ActionManager);
+//    UpdateWidthBars;
+   end;
 end;
 
 
@@ -427,8 +432,8 @@ begin
 end;
 
 procedure TFormMain.LoadScreen(LoadProject: Boolean = False);
- var
-  m: IManager;
+// var
+//  m: IManager;
 begin
   StatusBar[1] := rini.ReadString('CurrentProject');
   IProjectInnerLoad(StatusBar[1], False);
@@ -749,21 +754,24 @@ begin
   BeginDockLoading;
   try
     //xini.Reload; // !!!
-    if Supports(Plugins, IManager, m) then
-     if isNew then m.NewProject(PrjName, AfterCreateProject)
-     else m.LoadProject(PrjName, AfterCreateProject);
+    try
+      if Supports(Plugins, IManager, m) then
+       if isNew then m.NewProject(PrjName, AfterCreateProject)
+       else m.LoadProject(PrjName, AfterCreateProject);
+    finally
+      // create actions
+      ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
 
-    // create actions
-    ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
+      // create forms
+      GContainer.InstancesAsArray<IForm>(True);
 
-    // create forms
-    GContainer.InstancesAsArray<IForm>(True);
+      LoadDockTreeFromAppStorage(xini, 'DockTree');
+      LoadTabForms();
 
-    LoadDockTreeFromAppStorage(xini, 'DockTree');
-    LoadTabForms();
+      FormStorage.RestoreFormPlacement;
 
-    FormStorage.RestoreFormPlacement;
-    //FormPlacement.RestoreFormPlacement;
+      //FormPlacement.RestoreFormPlacement;
+    end;
   finally
     EndDockLoading;
   end;

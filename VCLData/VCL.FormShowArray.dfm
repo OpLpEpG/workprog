@@ -62,7 +62,7 @@ object FormShowArray: TFormShowArray
     object srDev: TFastLineSeries
       Title = #1089#1099#1088#1099#1077
       LinePen.Color = 15054131
-      LinePen.Width = 2
+      LinePen.Width = 0
       TreatNulls = tnDontPaint
       XValues.Name = 'X'
       XValues.Order = loAscending

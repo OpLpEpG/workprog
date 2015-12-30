@@ -25,7 +25,7 @@ type
   TGR32GraphicCollumn = class(TGraphColmn)
   protected
     procedure ColumnCollectionChanged(ColumnCollection: TGraphCollection); override;
-    procedure ColumnCollectionItemChanged(Item: TGraphCollectionItem); override;
+    procedure ColumnCollectionItemChanged(const Item: TColumnCollectionItem); override;
   end;
 
   TGR32LegendRow = class(TCustomGraphLegend)
@@ -56,7 +56,7 @@ type
     procedure RenderLinePatam(Y: Integer; p: TLineParam);
     procedure RenderWavePatam(Y: Integer; p: TWaveParam);
     procedure RenderStringPatam(Y: Integer; p: TStringParam);
-    function GetCheckBoxRect(Par: TLineParam): TRect;
+    function GetCheckBoxRect(Par: TLineParam; nX: Integer = 0): TRect;
   protected
     procedure SetVisible(Visible: Boolean); override;
     procedure ParamCollectionChanged; override;
@@ -79,7 +79,7 @@ type
     ACL_AXIS   = $F0A8A8A8;
     ACL_AXIS_LABEL   = clBlack32;
   private
-    FBitmapShowRect: TRect;
+    FShowRect: TRect;
     FBitmap: TBitmap32;
     FPropertyChanged: string;
     procedure SetPropertyChanged(const Value: string);
@@ -108,7 +108,7 @@ implementation
 const
   CHECKBOX_SIZE = 10;
 
-procedure DrawCheckBox(Bitmap: TBitmap32; Y: Integer; const Checked: Boolean);
+procedure DrawCheckBox(Bitmap: TBitmap32; Y: Integer; const Checked: Boolean; nX: Integer = 0);
  const
   DA: array[Boolean]of TThemedButton = (tbCheckBoxUncheckedNormal, tbCheckBoxCheckedNormal);
  var
@@ -129,7 +129,7 @@ begin
       if Checked then  NonThemedCheckBoxState := NonThemedCheckBoxState or DFCS_CHECKED;
       DrawFrameControl(B.Canvas.Handle, R, DFC_BUTTON, NonThemedCheckBoxState);
      end;
-   Bitmap.Draw(TRect.Create(TPoint.Create(CHECKBOX_SIZE div 2, y-CHECKBOX_SIZE div 2), CHECKBOX_SIZE, CHECKBOX_SIZE), R, b.Canvas.Handle);
+   Bitmap.Draw(TRect.Create(TPoint.Create(nX*(CHECKBOX_SIZE+1) + CHECKBOX_SIZE div 2, y-CHECKBOX_SIZE div 2), CHECKBOX_SIZE, CHECKBOX_SIZE), R, b.Canvas.Handle);
   finally
    B.Free;
   end;
@@ -178,11 +178,11 @@ begin
   if ColumnCollection is TGraphParams then for r in Regions do if r is TGR32Region then TGR32Region(r).ParamCollectionChanged;
 end;
 
-procedure TGR32GraphicCollumn.ColumnCollectionItemChanged(Item: TGraphCollectionItem);
+procedure TGR32GraphicCollumn.ColumnCollectionItemChanged(const Item: TColumnCollectionItem);
  var
   r: TGraphRegion;
 begin
- if Item is TGraphPar then for r in Regions do if r is TGR32Region then TGR32Region(r).ParamPropChanged;
+  if Item is TGraphPar then for r in Regions do if r is TGR32Region then TGR32Region(r).ParamPropChanged;
 end;
 {$ENDREGION}
 
@@ -209,13 +209,14 @@ begin
   inherited;
 end;
 
-function TGR32GraphicLegend.GetCheckBoxRect(Par: TLineParam): TRect;
+function TGR32GraphicLegend.GetCheckBoxRect(Par: TLineParam; nX: Integer = 0): TRect;
  var
   y: Integer;
   p: TGraphPar;
 begin
   y := -Round(FRangeBar.Position);
-  for p in Column.Params do if p = Par then Exit(TRect.Create(TPoint.Create(CHECKBOX_SIZE div 2, y + FBitmap.TextHeight(']') + 1 + par.Width div 2-CHECKBOX_SIZE div 2), CHECKBOX_SIZE, CHECKBOX_SIZE))
+  for p in Column.Params do
+   if p = Par then Exit(TRect.Create(TPoint.Create(nX*(CHECKBOX_SIZE+1) + CHECKBOX_SIZE div 2, y + FBitmap.TextHeight(']') + 1 + par.Width div 2-CHECKBOX_SIZE div 2), CHECKBOX_SIZE, CHECKBOX_SIZE))
   else Inc(Y, GetPatamHeight(p));
 end;
 
@@ -234,7 +235,7 @@ end;
 
 procedure TGR32GraphicLegend.Paint;
 begin
-  if  Column.Visible and Row.Visible then FBitmap.DrawTo(Graph.Canvas.Handle, FCanvasShowRect, FBitmapShowRect);
+  if not Graph.Frosted and Graph.HandleAllocated and Column.Visible and Row.Visible then FBitmap.DrawTo(Graph.Canvas.Handle, FCanvasShowRect, FBitmapShowRect);
 end;
 
 procedure TGR32GraphicLegend.ParamCollectionChanged;
@@ -310,6 +311,7 @@ begin
    end;
   // CheckBox
   DrawCheckBox(FBitmap, LineY, p.Visible);
+  DrawCheckBox(FBitmap, LineY, p.Selected, 1);
 //  yl := y+GetPatamHeight(p);
 //  FBitmap.HorzLineTS(0, yl, FBitmap.Width, clBlack32);
 end;
@@ -351,7 +353,11 @@ procedure TGR32GraphicLegend.MouseDown(Button: TMouseButton; Shift: TShiftState;
 begin
   point := Tpoint.Create(X,Y);
   clPoint := MouseToClient(point);
-  if TryHitParametr(point, p) and (p is TLineParam) and GetCheckBoxRect(TLineParam(p)).Contains(clPoint) then p.Visible := not p.Visible
+  if TryHitParametr(point, p) and (p is TLineParam) then
+   begin
+    if GetCheckBoxRect(TLineParam(p)).Contains(clPoint) then p.Visible := not p.Visible;
+    if GetCheckBoxRect(TLineParam(p), 1).Contains(clPoint) then p.Selected := not p.Selected;
+   end;
 end;
 
 function TGR32GraphicLegend.TryHitParametr(pos: TPoint; out Par: TGraphPar): Boolean;
@@ -450,7 +456,7 @@ begin
   while y < FBitmap.Height do
    begin
     FBitmap.HorzLineTS(0, Round(y), FBitmap.Width, ACL_AXIS);
-    FBitmap.RenderText(0, Round(y), FloatToStr(SimpleRoundTo(Ylb, -4)), 1, ACL_AXIS_LABEL);
+    if ShowYlegend then FBitmap.RenderText(0, Round(y), FloatToStr(SimpleRoundTo(Ylb, -4)), 1, ACL_AXIS_LABEL);
     ylb := ylb + m/Graph.YScale;
     Y := Y + pp2mm;
    end;
@@ -476,7 +482,8 @@ end;
 
 procedure TGR32GraphicData.Paint;
 begin
-  if Column.Visible and Row.Visible then FBitmap.DrawTo(Graph.Canvas.Handle, ClientRect, FBitmapShowRect);
+  if Graph.Frosted then Exit;
+  if Column.Visible and Row.Visible then FBitmap.DrawTo(Graph.Canvas.Handle, ClientRect, FShowRect);
 end;
 
 procedure TGR32GraphicData.ParamCollectionChanged;
@@ -501,11 +508,12 @@ procedure TGR32GraphicData.Render;
   Y: Integer;
 begin
   FBitmap.FillRect(0, 0, FBitmap.Width, FBitmap.Height, clWhite32);
-{  for p in Column.Params do if p.Visible then
+  for p in Column.Params do if p.Visible then
    if p is TLineParam then
     begin
-      p as IDataLink
-    end;}
+   //   (p as IYDataLink).
+    //  (p as IDataLink).TryRead()
+    end;
   DrowAxis;
 end;
 
@@ -513,7 +521,7 @@ procedure TGR32GraphicData.SetClientRect(const Value: TRect);
 begin
   inherited;
   FBitmap.SetSize(Value.Width, value.Height);
-  FBitmapShowRect := FBitmap.BoundsRect;
+  FShowRect := FBitmap.BoundsRect;
   Render;
   Paint;
 end;
@@ -537,6 +545,7 @@ end;
 {$ENDREGION}
 
 initialization
+  TGR32GraphicCollumn.ColClsRegister(TGR32GraphicCollumn, 'Графическая колонка');
   TGraphRegion.RegClsRegister(TGR32GraphicLegend, TGR32LegendRow, TGR32GraphicCollumn);
   TGraphRegion.RegClsRegister(TGR32GraphicData, TCustomGraphData, TGR32GraphicCollumn);
   RegisterClasses([TGR32GraphicCollumn, TGR32GraphicLegend, TGR32GraphicData, TGR32LegendRow]);

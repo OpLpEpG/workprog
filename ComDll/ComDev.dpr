@@ -34,7 +34,8 @@ uses
   Dev.StolGK in 'Dev.StolGK.pas',
   Dev.Telesistem.Shum in 'Dev.Telesistem.Shum.pas',
   Dev.Telesistem.Data in 'Dev.Telesistem.Data.pas',
-  DevUaki2 in 'DevUaki2.pas';
+  DevUaki2 in 'DevUaki2.pas',
+  Dev.GLUSonic in 'Dev.GLUSonic.pas';
 
 {$R *.res}
 
@@ -129,6 +130,7 @@ begin
     else if Adr[0] = ADR_UAKI then Result := TDevUaki.CreateWithAddr(Adr, DeviceName) as IDevice
     else if Adr[0] = ADR_UAKI2 then Result := TDevUaki2.CreateWithAddr(Adr, DeviceName) as IDevice
     else if Adr[0] = ADR_STOL_GK then Result := TStolGK.CreateWithAddr(Adr, DeviceName) as IDevice
+    else if Adr[0] = 111 then Result := TGluSonic.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (Adr[0] > 101) and (adr[0] < 200) then  Result := TPskStd.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (adr[0] = 1000) then Result := TTelesistem.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (adr[0] > 15) then raise EDeviceException.Create('Устройство с неверным адресом')

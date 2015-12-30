@@ -84,16 +84,10 @@
         <Projects Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\DirectPixel\Project2.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\DirectPixel\Project3.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\..\Libs\ComPort\Source\CPortLibDXE.dproj">
+        <Projects Include="EasyInterphase\Easy64Inc.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -347,24 +341,6 @@
     <Target Name="Curves:Make">
         <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Project2">
-        <MSBuild Projects="..\DirectPixel\Project2.dproj"/>
-    </Target>
-    <Target Name="Project2:Clean">
-        <MSBuild Projects="..\DirectPixel\Project2.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Project2:Make">
-        <MSBuild Projects="..\DirectPixel\Project2.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="Project3">
-        <MSBuild Projects="..\DirectPixel\Project3.dproj"/>
-    </Target>
-    <Target Name="Project3:Clean">
-        <MSBuild Projects="..\DirectPixel\Project3.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Project3:Make">
-        <MSBuild Projects="..\DirectPixel\Project3.dproj" Targets="Make"/>
-    </Target>
     <Target Name="LSQLMega">
         <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj"/>
     </Target>
@@ -374,49 +350,115 @@
     <Target Name="LSQLMega:Make">
         <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj" Targets="Make"/>
     </Target>
-    <Target Name="CPortLibDXE">
-        <MSBuild Projects="..\..\Libs\ComPort\Source\CPortLibDXE.dproj"/>
+    <Target Name="Easy64Inc">
+        <MSBuild Projects="EasyInterphase\Easy64Inc.dproj"/>
     </Target>
-    <Target Name="CPortLibDXE:Clean">
-        <MSBuild Projects="..\..\Libs\ComPort\Source\CPortLibDXE.dproj" Targets="Clean"/>
+    <Target Name="Easy64Inc:Clean">
+        <MSBuild Projects="EasyInterphase\Easy64Inc.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="CPortLibDXE:Make">
-        <MSBuild Projects="..\..\Libs\ComPort\Source\CPortLibDXE.dproj" Targets="Make"/>
+    <Target Name="Easy64Inc:Make">
+        <MSBuild Projects="EasyInterphase\Easy64Inc.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;VCLControl;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;ProjectManager3;VCLControl3;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;CubicSpline;Curves;Project2;Project3;LSQLMega;CPortLibDXE"/>
+        <CallTarget Targets="Core;ProjectManager;VCLControl;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;ProjectManager3;VCLControl3;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;CubicSpline;Curves;LSQLMega;Easy64Inc"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;VCLControl:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;ProjectManager3:Clean;VCLControl3:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;CubicSpline:Clean;Curves:Clean;Project2:Clean;Project3:Clean;LSQLMega:Clean;CPortLibDXE:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;VCLControl:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;ProjectManager3:Clean;VCLControl3:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;CubicSpline:Clean;Curves:Clean;LSQLMega:Clean;Easy64Inc:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;VCLControl:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;ProjectManager3:Make;VCLControl3:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;CubicSpline:Make;Curves:Make;Project2:Make;Project3:Make;LSQLMega:Make;CPortLibDXE:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;VCLControl:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;ProjectManager3:Make;VCLControl3:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;CubicSpline:Make;Curves:Make;LSQLMega:Make;Easy64Inc:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+        <BuildGroupProject Include="VCLData\VCLData.dproj">
+            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\ComPort\Source\CPortLibDXE.dproj">
-            <ProjectGuid>{2C50A57B-5EE2-4D5D-8234-A3C9FC004851}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
-            <ProjectGuid>{3F5B4110-95F0-4BF2-BBD2-7380C565B4FD}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Metrol\Metrol.dproj">
-            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
+        <BuildGroupProject Include="VCLControl\VCLControl.dproj">
+            <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
+            <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="BootLoader\bootLoader.dproj">
+            <ProjectGuid>{6A5832E5-091D-4003-992D-36A2C2F3F43D}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="PlotTst\Project4.dproj">
+            <ProjectGuid>{C66BA0B8-3DC1-4FC8-AB47-5A444EEB091A}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ErrAzim_model\ErrAzim.dproj">
+            <ProjectGuid>{5D5A8FC7-D7F1-4343-9CA8-0232344CD4CE}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
+            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Monitor\Monitor.dproj">
+            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="EasyInterphase\Easy64Inc.dproj">
+            <ProjectGuid>{C3D99FCD-AED4-4040-A5D2-43931F19E46B}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
+            <ProjectGuid>{30C9E9B1-BD49-4873-965A-0596B6D8A932}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
+            <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
+            <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
+            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
+            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Tst_Fibonachi\tst.dproj">
+            <ProjectGuid>{651CF745-5C11-41EF-B66C-2F03AAC1782E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="MainExe\WorkProg.dproj">
             <ProjectGuid>{4858CC7A-7A81-48B7-9BAD-D77D360297D0}</ProjectGuid>
@@ -430,11 +472,29 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
+            <ProjectGuid>{24115A53-7E77-408F-9A8D-C33ED1529772}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Glubinomer\Glut.dproj">
             <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Metrol\Metrol.dproj">
+            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
             <ProjectGuid>{6418D24F-105B-489D-9B56-CC557926FDB4}</ProjectGuid>
@@ -442,32 +502,26 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="BootLoader\bootLoader.dproj">
-            <ProjectGuid>{6A5832E5-091D-4003-992D-36A2C2F3F43D}</ProjectGuid>
+        <BuildGroupProject Include="D3H\D3H.dproj">
+            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Monitor\Monitor.dproj">
-            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
+        <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
+            <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\DirectPixel\Project2.dproj">
-            <ProjectGuid>{003D3646-D87A-40DF-8D47-0307C92B2C13}</ProjectGuid>
+        <BuildGroupProject Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
+            <ProjectGuid>{3F5B4110-95F0-4BF2-BBD2-7380C565B4FD}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
-            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="PlotTst\Project4.dproj">
-            <ProjectGuid>{C66BA0B8-3DC1-4FC8-AB47-5A444EEB091A}</ProjectGuid>
+        <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
+            <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -478,14 +532,124 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="D3H\D3H.dproj">
-            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
-            <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
+    </ItemGroup>
+    <ItemGroup Condition="'$(BuildGroup)'=='RELEA'">
+        <BuildGroupProject Include="VCLData\VCLData.dproj">
+            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLControl\VCLControl.dproj">
+            <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
+            <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="BootLoader\bootLoader.dproj">
+            <ProjectGuid>{6A5832E5-091D-4003-992D-36A2C2F3F43D}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ErrAzim_model\ErrAzim.dproj">
+            <ProjectGuid>{5D5A8FC7-D7F1-4343-9CA8-0232344CD4CE}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
+            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="PlotTst\Project4.dproj">
+            <ProjectGuid>{C66BA0B8-3DC1-4FC8-AB47-5A444EEB091A}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Monitor\Monitor.dproj">
+            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="EasyInterphase\Easy64Inc.dproj">
+            <ProjectGuid>{C3D99FCD-AED4-4040-A5D2-43931F19E46B}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
+            <ProjectGuid>{30C9E9B1-BD49-4873-965A-0596B6D8A932}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
+            <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
+            <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
+            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
+            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Tst_Fibonachi\tst.dproj">
+            <ProjectGuid>{651CF745-5C11-41EF-B66C-2F03AAC1782E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="MainExe\WorkProg.dproj">
+            <ProjectGuid>{4858CC7A-7A81-48B7-9BAD-D77D360297D0}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Core\Core.dproj">
+            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -496,100 +660,208 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
-            <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\DirectPixel\Project3.dproj">
-            <ProjectGuid>{C34EE684-21D1-4710-94D6-46279A44C337}</ProjectGuid>
+        <BuildGroupProject Include="Glubinomer\Glut.dproj">
+            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
-            <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCLControl\VCLControl.dproj">
-            <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
+        <BuildGroupProject Include="Metrol\Metrol.dproj">
+            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLData\VCLData.dproj">
-            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Tst_Fibonachi\tst.dproj">
-            <ProjectGuid>{651CF745-5C11-41EF-B66C-2F03AAC1782E}</ProjectGuid>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
+            <ProjectGuid>{6418D24F-105B-489D-9B56-CC557926FDB4}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
-            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ErrAzim_model\ErrAzim.dproj">
-            <ProjectGuid>{5D5A8FC7-D7F1-4343-9CA8-0232344CD4CE}</ProjectGuid>
+        <BuildGroupProject Include="D3H\D3H.dproj">
+            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ComDll\ComDev.dproj">
-            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
-            <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
-            <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
-            <ProjectGuid>{30C9E9B1-BD49-4873-965A-0596B6D8A932}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
             <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
-            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
+        <BuildGroupProject Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
+            <ProjectGuid>{3F5B4110-95F0-4BF2-BBD2-7380C565B4FD}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
+            <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='D1'">
+        <BuildGroupProject Include="VCLData\VCLData.dproj">
+            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLControl\VCLControl.dproj">
+            <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
+            <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="BootLoader\bootLoader.dproj">
+            <ProjectGuid>{6A5832E5-091D-4003-992D-36A2C2F3F43D}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="PlotTst\Project4.dproj">
+            <ProjectGuid>{C66BA0B8-3DC1-4FC8-AB47-5A444EEB091A}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ErrAzim_model\ErrAzim.dproj">
+            <ProjectGuid>{5D5A8FC7-D7F1-4343-9CA8-0232344CD4CE}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="CreateMetaData\CreateMeta.dproj">
             <ProjectGuid>{625C1196-5ED3-46D9-BBC9-78F050ABC318}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\ComPort\Source\CPortLibDXE.dproj">
-            <ProjectGuid>{2C50A57B-5EE2-4D5D-8234-A3C9FC004851}</ProjectGuid>
+        <BuildGroupProject Include="Monitor\Monitor.dproj">
+            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="EasyInterphase\Easy64Inc.dproj">
+            <ProjectGuid>{C3D99FCD-AED4-4040-A5D2-43931F19E46B}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
+            <ProjectGuid>{30C9E9B1-BD49-4873-965A-0596B6D8A932}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
+            <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
+            <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
+            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
+            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Tst_Fibonachi\tst.dproj">
+            <ProjectGuid>{651CF745-5C11-41EF-B66C-2F03AAC1782E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="MainExe\WorkProg.dproj">
+            <ProjectGuid>{4858CC7A-7A81-48B7-9BAD-D77D360297D0}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Core\Core.dproj">
+            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
+            <ProjectGuid>{24115A53-7E77-408F-9A8D-C33ED1529772}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Glubinomer\Glut.dproj">
+            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Metrol\Metrol.dproj">
+            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
+            <ProjectGuid>{6418D24F-105B-489D-9B56-CC557926FDB4}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="D3H\D3H.dproj">
+            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
+            <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -600,122 +872,8 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Metrol\Metrol.dproj">
-            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="MainExe\WorkProg.dproj">
-            <ProjectGuid>{4858CC7A-7A81-48B7-9BAD-D77D360297D0}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Core\Core.dproj">
-            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Glubinomer\Glut.dproj">
-            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
-            <ProjectGuid>{6418D24F-105B-489D-9B56-CC557926FDB4}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="BootLoader\bootLoader.dproj">
-            <ProjectGuid>{6A5832E5-091D-4003-992D-36A2C2F3F43D}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Monitor\Monitor.dproj">
-            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\DirectPixel\Project2.dproj">
-            <ProjectGuid>{003D3646-D87A-40DF-8D47-0307C92B2C13}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
-            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="PlotTst\Project4.dproj">
-            <ProjectGuid>{C66BA0B8-3DC1-4FC8-AB47-5A444EEB091A}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
-            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="D3H\D3H.dproj">
-            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
             <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
-            <ProjectGuid>{24115A53-7E77-408F-9A8D-C33ED1529772}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
-            <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\DirectPixel\Project3.dproj">
-            <ProjectGuid>{C34EE684-21D1-4710-94D6-46279A44C337}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
-            <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCLControl\VCLControl.dproj">
-            <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCLData\VCLData.dproj">
-            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Tst_Fibonachi\tst.dproj">
-            <ProjectGuid>{651CF745-5C11-41EF-B66C-2F03AAC1782E}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -726,47 +884,17 @@
             <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ErrAzim_model\ErrAzim.dproj">
-            <ProjectGuid>{5D5A8FC7-D7F1-4343-9CA8-0232344CD4CE}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ComDll\ComDev.dproj">
-            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
-            <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
-            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
-            <ProjectGuid>{30C9E9B1-BD49-4873-965A-0596B6D8A932}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="GeneratePSK\CreateDev.dproj">
-            <ProjectGuid>{BF79DB79-2C09-4223-9440-DBB7A42B054E}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
             <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
     </ItemGroup>
 </Project>

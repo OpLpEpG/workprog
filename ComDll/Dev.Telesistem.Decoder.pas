@@ -2,7 +2,8 @@ unit Dev.Telesistem.Decoder;
 
 interface
 
-uses System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Math.Telesistem,
+uses JDtools,
+     System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Math.Telesistem,
      Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools;
 type
   TCustomDecoder = class(TSubDevWithForm<TTelesistemDecoder>)

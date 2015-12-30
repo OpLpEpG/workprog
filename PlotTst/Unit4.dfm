@@ -116,6 +116,33 @@ object Form4: TForm4
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
   end
+  object Button7: TButton
+    Left = 26
+    Top = 204
+    Width = 57
+    Height = 25
+    Caption = 'AddRow'
+    TabOrder = 10
+    OnClick = Button7Click
+  end
+  object Button8: TButton
+    Left = 26
+    Top = 235
+    Width = 57
+    Height = 25
+    Caption = 'DElRow'
+    TabOrder = 11
+    OnClick = Button8Click
+  end
+  object Button9: TButton
+    Left = 26
+    Top = 266
+    Width = 57
+    Height = 25
+    Caption = 'DelColl'
+    TabOrder = 12
+    OnClick = Button9Click
+  end
   object DataSource1: TDataSource
     DataSet = ms
     Left = 120

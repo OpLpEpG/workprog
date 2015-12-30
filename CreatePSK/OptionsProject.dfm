@@ -86,13 +86,5 @@ object FormProjectOptions: TFormProjectOptions
       Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100'...'
       OnClick = NEditClick
     end
-    object N2: TMenuItem
-      Caption = '-'
-    end
-    object NSave: TMenuItem
-      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100
-      Enabled = False
-      OnClick = NSaveClick
-    end
   end
 end

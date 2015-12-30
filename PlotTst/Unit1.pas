@@ -2,7 +2,7 @@ unit Unit1;
 
 interface
 
-uses
+uses Plot.Controls,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, CustomPlot,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.DBGrids, Vcl.Grids, Data.DB, Datasnap.DBClient, JvMemoryDataset, VirtualTrees;
 
@@ -13,7 +13,8 @@ type
   private
     procedure WMEraseBkgnd(var Msg: TWMEraseBkgnd); message WM_ERASEBKGND;
   public
-    Plot: TCustomGraph;
+    Plot: TGraph;
+    Popup: TPlotMenu;
     procedure OnData(Sender: TObject);
   end;
 
@@ -30,6 +31,8 @@ procedure TForm1.FormCreate(Sender: TObject);
 begin
   Plot := TGraph.Create(Self);
   Plot.OnDataAdded := OnData;
+  Popup := TPlotMenu.Create(Self);
+  Plot.PopupMenu := Popup;
 //  Form4.Button3Click(Self);
 end;
 

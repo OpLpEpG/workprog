@@ -47,11 +47,10 @@ procedure TOtkForm.InitializeNewForm;
  var
   ce: IConnectIOEnum;
   m: IManager;
-  Item : TMenuItem;
 begin
   inherited;
-  AddToNCMenu('-', nil, Item);
-  AddToNCMenu('Установки Отклонителя...', NSetupClick, Item);
+  AddToNCMenu('-');
+  AddToNCMenu('Установки Отклонителя...', NSetupClick);
 end;
 
 procedure TOtkForm.Loaded;

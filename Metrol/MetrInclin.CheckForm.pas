@@ -14,7 +14,13 @@ type
     lbInfo: TLabel;
     pc: TCPageControl;
     Tree: TVirtualStringTree;
+    PanelP: TPanel;
+    Splitter2: TSplitter;
+    TreeA: TVirtualStringTree;
+    TreeH: TVirtualStringTree;
+    Splitter: TSplitter;
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+    procedure TreeAHGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure TreeAddToSelection(Sender: TBaseVirtualTree; Node: PVirtualNode);
   private
     FAutomatMetrology: TinclAuto;
@@ -22,14 +28,23 @@ type
     FStolAzimut: Double;
     FStolZenit: Double;
     procedure NParamClick(Sender: TObject);
+    procedure NShowTrrClick(Sender: TObject);
+    procedure NAziCorrClick(Sender: TObject);
+    procedure NZenCorrClick(Sender: TObject);
   protected
     FStep: record
             stp: Integer;
             root: Variant;
            end;
+    FAziCorr: Double;
+    FZenCorr: Double;
+    function NAziCorrCaption: string;
+    function NZenCorrCaption: string;
     function FindMaxErr(alg: IXMLNode; from, too: Integer; const attr: string): Double;
     function AddStep(const Info: string; const Args: array of const): Variant;
     procedure Loaded; override;
+    procedure DoSetFont(const AFont: TFont); override;
+    procedure DoUpdateData(NewFileData: Boolean = False); override;
    const
     NICON = 86;
     procedure DoStopAtt(AttNode: IXMLNode); override;
@@ -54,9 +69,23 @@ implementation
 
 {$R *.dfm}
 
-uses tools, MetrInclin.CheckFormSetup;
+uses tools, MetrInclin.CheckFormSetup, MetrInclin;
 
 { TFormInclinCheck }
+
+function TFormInclinCheck.NAziCorrCaption: string;
+begin
+  Result := Format('Поправка азимута стола [%g]...', [FAziCorr])
+end;
+
+
+
+procedure TFormInclinCheck.NAziCorrClick(Sender: TObject);
+begin
+  FAziCorr := InputBox('Поправка азимута стола', 'Новое значение', FAziCorr.ToString()).ToDouble;
+  TMenuItem(Sender).Caption := NAziCorrCaption;
+  ReCalc();
+end;
 
 class function TFormInclinCheck.ClassIcon: Integer;
 begin
@@ -74,10 +103,18 @@ begin
   inherited;
 end;
 
+procedure TFormInclinCheck.DoSetFont(const AFont: TFont);
+begin
+  inherited;
+  TreeSetFont(TreeH);
+  TreeSetFont(TreeA);
+end;
+
 procedure TFormInclinCheck.DoStopAtt(AttNode: IXMLNode);
  var
   v: Variant;
   n: IXMLNode;
+  crZenit: Double;
 begin
   if TryGetX(AttNode, 'TASK', n) then
    begin
@@ -96,22 +133,38 @@ begin
     v.СТОЛ.азимут := StolAzimut;
     v.СТОЛ.зенит := StolZenit;
    end;
-  v.СТОЛ.err_азимут := TMetrInclinMath.DeltaAngle(v.азимут.CLC.VALUE - v.СТОЛ.азимут);
-  if v.СТОЛ.зенит > 180 then v.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(v.зенит.CLC.VALUE -(360 - v.СТОЛ.зенит))
-  else v.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(v.зенит.CLC.VALUE - v.СТОЛ.зенит);
+  v.СТОЛ.err_азимут := TMetrInclinMath.DeltaAngle(v.азимут.CLC.VALUE - (v.СТОЛ.азимут + FAziCorr));
+  crZenit := (v.СТОЛ.зенит + FZenCorr);
+  if crZenit > 180 then v.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(v.зенит.CLC.VALUE -(360 - crZenit))
+  else v.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(v.зенит.CLC.VALUE - crZenit);
   inherited;
+  TFormInclin.UpdateAH(TreeA, GetMetr(['accel','m3x4'], GetFileOrDevData), '%1.5f', '%1.3f', '%1.5f');
+  TFormInclin.UpdateAH(TreeH, GetMetr(['magnit','m3x4'], GetFileOrDevData), '%1.5f', '%1.3f', '%1.5f');
+end;
+
+procedure TFormInclinCheck.DoUpdateData(NewFileData: Boolean);
+begin
+  inherited DoUpdateData(NewFileData);
+  TFormInclin.UpdateAH(TreeA, GetMetr(['accel','m3x4'], GetFileOrDevData), '%1.5f', '%1.3f', '%1.5f');
+  TFormInclin.UpdateAH(TreeH, GetMetr(['magnit','m3x4'], GetFileOrDevData), '%1.5f', '%1.3f', '%1.5f');
 end;
 
 procedure TFormInclinCheck.Loaded;
- var
-  n: TMenuItem;
+// var
+//  n: TMenuItem;
 begin
   FlagNoUpdateFromEtalon := True;
   SetupStepTree(Tree);
+  TFormInclin.InitT(TreeA);
+  TFormInclin.InitT(TreeH);
   inherited;
   NIsMedian.Visible := True;
-  AddToNCMenu('-', nil, n);
-  AddToNCMenu('Параметры поверки...', NParamClick, n);
+  AddToNCMenu('-');
+  AddToNCMenu(NAziCorrCaption, NAziCorrClick);
+  AddToNCMenu(NZenCorrCaption, NZenCorrClick);
+  AddToNCMenu('Показывать поправки', NShowTrrClick, 9, AUTO_CHECK[PanelP.Visible]);
+  //n.Checked := PanelP.Visible;
+  AddToNCMenu('Параметры поверки...', NParamClick);
   FAutomatMetrology := TinclAuto.Create(Self, AutoReport);
   AttestatPanel.Align := alBottom;
 end;
@@ -132,20 +185,54 @@ begin
      if TrrFile <> '' then FileData.OwnerDocument.SaveToFile(TrrFile)
 end;
 
+procedure TFormInclinCheck.NShowTrrClick(Sender: TObject);
+begin
+  PanelP.Visible := TMenuItem(Sender).Checked;
+  Splitter.Top := PanelM.Height;
+end;
+
+function TFormInclinCheck.NZenCorrCaption: string;
+begin
+  Result := Format('Поправка зенита стола [%g]...', [FZenCorr])
+end;
+
+procedure TFormInclinCheck.NZenCorrClick(Sender: TObject);
+begin
+  FZenCorr := InputBox('Поправка зенита стола', 'Новое значение', FZenCorr.ToString()).ToDouble;
+  TMenuItem(Sender).Caption := NZenCorrCaption;
+  ReCalc();
+end;
+
 procedure TFormInclinCheck.TreeAddToSelection(Sender: TBaseVirtualTree; Node: PVirtualNode);
 begin
   lbInfo.Caption := PNodeExData(Tree.GetNodeData(Node)).XMNode.Attributes['INFO'];
 end;
 
+
+procedure TFormInclinCheck.TreeAHGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+ var
+  p: PNodeTData;
+begin
+  p := Sender.GetNodeData(Node);
+  case Column of
+   0: CellText := p.Item;
+   1: CellText := p.x;
+   2: CellText := p.y;
+   3: CellText := p.z;
+   4: CellText := p.d4;
+  end;
+end;
+
+
 procedure TFormInclinCheck.TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
  var
   p: PNodeExData;
   r: IXMLNode;
-  procedure SetData(const path, attr, fmt: string);
+  procedure SetData(const path, attr, fmt: string; Correction: Double = 0);
    var
     V: IXMLNode;
   begin
-    if TryGetX(p.XMNode, path, V, attr) then CellText := Format(fmt,[Double(V.NodeValue)])
+    if TryGetX(p.XMNode, path, V, attr) then CellText := Format(fmt,[Double(V.NodeValue) + Correction])
     else CellText := ''
   end;
 begin
@@ -158,10 +245,10 @@ begin
         if r.HasAttribute('STEP') then CellText := r.Attributes['STEP']
         else CellText := 'STEP';
        end;
-    1: SetData('СТОЛ',             'азимут',     '%7.2f');
+    1: SetData('СТОЛ',             'азимут',     '%7.2f', FaziCorr);
     2: SetData('азимут.CLC',       AT_VALUE,     '%6.1f');
     3: SetData('СТОЛ',             'err_азимут', '%6.2f');
-    4: SetData('СТОЛ',             'зенит',      '%7.2f');
+    4: SetData('СТОЛ',             'зенит',      '%7.2f', FZenCorr);
     5: SetData('зенит.CLC',        AT_VALUE,     '%7.2f');
     6: SetData('СТОЛ',             'err_зенит',  '%6.2f');
     7: SetData('отклонитель.CLC',  AT_VALUE,     '%6.1f');

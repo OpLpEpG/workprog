@@ -3,7 +3,7 @@ object FrmDlgRam: TFrmDlgRam
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1095#1090#1077#1085#1080#1103' '#1087#1072#1084#1103#1090#1080
   ClientHeight = 219
-  ClientWidth = 333
+  ClientWidth = 387
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,7 @@ object FrmDlgRam: TFrmDlgRam
   OldCreateOrder = False
   Position = poMainFormCenter
   DesignSize = (
-    333
+    387
     219)
   PixelsPerInch = 96
   TextHeight = 13
@@ -23,6 +23,13 @@ object FrmDlgRam: TFrmDlgRam
     Width = 125
     Height = 13
     Caption = #1057#1086#1079#1076#1072#1090#1100' '#1073#1080#1085#1072#1088#1085#1099#1081' '#1092#1072#1081#1083
+  end
+  object Label2: TLabel
+    Left = 22
+    Top = 106
+    Width = 85
+    Height = 13
+    Caption = #1076#1083#1080#1085#1072' '#1087#1072#1082#1077#1090#1072' 0x'
   end
   object btStart: TButton
     Left = 17
@@ -34,7 +41,7 @@ object FrmDlgRam: TFrmDlgRam
     OnClick = btStartClick
   end
   object btExit: TButton
-    Left = 243
+    Left = 294
     Top = 161
     Width = 75
     Height = 25
@@ -49,16 +56,18 @@ object FrmDlgRam: TFrmDlgRam
     Width = 151
     Height = 17
     Caption = #1063#1080#1090#1072#1090#1100' '#1076#1086' '#1087#1091#1089#1090#1086#1081' '#1087#1072#1084#1103#1090#1080
+    Checked = True
+    State = cbChecked
     TabOrder = 2
   end
   object Progress: TProgressBar
     Left = 18
     Top = 134
-    Width = 298
+    Width = 352
     Height = 17
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 3
-    ExplicitWidth = 301
+    ExplicitWidth = 298
   end
   object btTerminate: TButton
     Left = 98
@@ -72,42 +81,37 @@ object FrmDlgRam: TFrmDlgRam
   object sb: TStatusBar
     Left = 0
     Top = 200
-    Width = 333
+    Width = 387
     Height = 19
     Panels = <
       item
         Width = 50
       end>
-    ExplicitWidth = 336
-  end
-  object cbShortPack: TCheckBox
-    Left = 18
-    Top = 95
-    Width = 112
-    Height = 17
-    Caption = #1082#1086#1088#1086#1090#1082#1080#1077' '#1087#1072#1082#1077#1090#1099
-    TabOrder = 6
+    ExplicitWidth = 333
   end
   object rg: TRadioGroup
-    Left = 175
-    Top = 64
-    Width = 144
+    Left = 168
+    Top = 65
+    Width = 201
     Height = 63
     Caption = #1042#1099#1089#1086#1082#1072#1103' '#1089#1082#1086#1088#1086#1089#1090#1100
-    Columns = 3
+    Columns = 4
+    ItemIndex = 0
     Items.Strings = (
+      '125'#1050
       '0.5M'
       '1M'
       '2M'
       '3M'
       '8M'
-      '12M')
-    TabOrder = 7
+      '12M'
+      '100'#1052)
+    TabOrder = 6
   end
   object od: TJvFilenameEdit
     Left = 18
     Top = 32
-    Width = 297
+    Width = 351
     Height = 21
     OnBeforeDialog = odBeforeDialog
     DialogKind = dkSave
@@ -116,8 +120,16 @@ object FrmDlgRam: TFrmDlgRam
     DialogOptions = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist]
     DirectInput = False
     Anchors = [akLeft, akTop, akRight]
-    TabOrder = 8
+    TabOrder = 7
     Text = ''
-    ExplicitWidth = 300
+    ExplicitWidth = 297
+  end
+  object edLen: TEdit
+    Left = 106
+    Top = 103
+    Width = 57
+    Height = 19
+    TabOrder = 8
+    Text = '3FFF'
   end
 end

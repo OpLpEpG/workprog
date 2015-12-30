@@ -17,6 +17,7 @@ const
   PRG_TIP_DATE_TIME = 3;
   PRG_TIP_DATE = 4;
   PRG_TIP_TIME = 5;
+  PRG_TIP_BOOL = 6;
 
   CMD_BOOT = 8;
   CMD_EXIT = $E;
@@ -953,7 +954,7 @@ function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootA
       if not Assigned(it) then
        begin
         Result := False;
-        ie.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'ie.xml');
+        //OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'ie.xml');
         TDebug.Log(ie.NodeName);
        end
       else if Assigned(Action) then Action(e, ie, t, it)
@@ -1852,7 +1853,7 @@ begin
      if n.ParentNode.HasAttribute(AT_ARRAY) then CArray.Add<TFieldType>(fFieldTypes, ftString)
      else CArray.Add<TFieldType>(fFieldTypes, Tpars.VarTypeToDBField(n.Attributes[AT_TIP]));
     except
-      n.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'GLU45.xml');
+     // n.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'GLU45.xml');
       raise;
     end;
   end);
