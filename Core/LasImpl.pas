@@ -9,7 +9,7 @@ type
   TLasFormatHelper = record helper for TLasFormat
     function GetValue: Variant;
     procedure SetValue(const Value: Variant);
-    constructor Create(const aMnem, aUnits, aData, aDescription: string); overload;
+    constructor Create(const aMnem, aUnits: string; const aData: string = ''; const aDescription: string = ''); overload;
     constructor Create(const line: string); overload;
     property Value: Variant read GetValue write SetValue;
   end;
@@ -88,7 +88,7 @@ type
    FPriambula: TArray<string>;
   protected
    procedure AddLine(const line: String); virtual;
-   procedure ClearFufers(); virtual;
+   procedure ClearBufers(); virtual;
    function Priambula: TArray<string>; // Priambula[0] = '~Well infor...'
   public
    constructor Create(Owner: TLasDoc; const SectID: string; const Priambula: array of string);
@@ -103,9 +103,10 @@ type
     function GetItem(const Mnem: string): PLasFormat;
     procedure Add(const NewItem: TLasFormat); virtual;
     procedure AddLine(const line: String); override;
-    procedure ClearFufers(); override;
+    procedure ClearBufers(); override;
     function Mnems: TArray<string>;
     function Formats: TArray<TLasFormat>;
+    function IndexOff(const Mnem: string): Integer;
   public
     procedure ToStrings(ss: TStrings); override;
   end;
@@ -114,7 +115,7 @@ type
   private
     FDispStr: TArray<string>;
   protected
-    procedure ClearFufers(); override;
+    procedure ClearBufers(); override;
     procedure Add(const NewItem: TLasFormat); override;
     function GetDisplayFormat(const Mnem: string): string;
     procedure SetDisplayFormat(const Mnem, Value: string);
@@ -129,6 +130,7 @@ type
   protected
     function CheckData(const Data: array of Variant): Boolean;
     procedure AddData(const Data: array of Variant);
+    procedure Clear;
     function GetData: TArray<TArray<Variant>>;
     procedure AddLine(const line: String); override;
   public
@@ -139,6 +141,9 @@ type
   TLasDoc = class(TIObject, ILasDoc)
   private
     FSections: array [LasSection] of ILasSection;
+    function GetItem(const Mnem: string; Index: Integer): Variant;
+    procedure SetItem(const Mnem: string; Index: Integer; const Value: Variant);
+    function GetDataCount: Integer;
   protected
     function Well: ILasFormatSection;
     function Curve: ICurveSection;
@@ -149,6 +154,9 @@ type
 
     procedure SaveToFile(const AFileName: String);
     procedure LoadFromFile(const AFileName: String);
+
+    property DataCount: Integer read GetDataCount;
+    property Item[const Mnem: string; Index: Integer]: Variant read GetItem write SetItem;
   public
     constructor Create; reintroduce;
     destructor Destroy; override;
@@ -191,7 +199,7 @@ begin
   CArray.Add<string>(FPriambula, line);
 end;
 
-procedure TSection.ClearFufers;
+procedure TSection.ClearBufers;
 begin
   SetLength(FPriambula, 0);
 end;
@@ -205,7 +213,7 @@ begin
   while i < ss.Count do
    if ss[i].StartsWith(FSectID) then // find section
     begin
-     ClearFufers;
+     ClearBufers;
      CArray.Add<string>(FPriambula, ss[i]);
      inc(i);
      while ss[i].StartsWith('#') and (i < ss.Count) do // parse priamula
@@ -249,7 +257,7 @@ begin
   Add(TLasFormat.Create(line));
 end;
 
-procedure TFSection.ClearFufers;
+procedure TFSection.ClearBufers;
 begin
   inherited;
   SetLength(FItems, 0);
@@ -266,6 +274,14 @@ function TFSection.GetItem(const Mnem: string): PLasFormat;
 begin
   Result := nil;
   for i := 0 to Length(FItems)-1 do if SameText(FItems[i].Mnem, Mnem) then Exit(@FItems[i]);
+end;
+
+function TFSection.IndexOff(const Mnem: string): Integer;
+begin
+  Result := Length(FItems)-1;
+  while Result >= 0 do
+   if SameText(Mnem, FItems[Result].Mnem) then Exit
+   else Dec(Result);
 end;
 
 function TFSection.Mnems: TArray<string>;
@@ -292,7 +308,7 @@ begin
   CArray.Add<string>(FDispStr, '');
 end;
 
-procedure TCSection.ClearFufers;
+procedure TCSection.ClearBufers;
 begin
   inherited;
   SetLength(FDispStr, 0);
@@ -330,7 +346,7 @@ procedure TDSection.AddData(const Data: array of Variant);
 begin
   SetLength(v, Length(Data));
   for i := 0 to Length(v)-1 do v[i] := Data[i];
-  CArray.Add<TArray<Variant>>(FData, v);
+  CArray.Add<TArray<Variant>>(FData, v); // FData := FData + v;
 end;
 
 procedure TDSection.AddLine(const line: String);
@@ -354,6 +370,11 @@ end;
 function TDSection.CheckData(const Data: array of Variant): Boolean;
 begin
   Result := Length(TCSection(FOwner.Curve).FItems) = Length(Data);
+end;
+
+procedure TDSection.Clear;
+begin
+  SetLength(Fdata, 0);
 end;
 
 destructor TDSection.Destroy;
@@ -461,6 +482,31 @@ begin
   inherited;
 end;
 
+function TLasDoc.GetDataCount: Integer;
+begin
+  Result := Length(Data.Items);
+end;
+
+function TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant;
+ var
+  i: Integer;
+begin
+  i := TFSection(Curve).IndexOff(Mnem);
+  if i < 0 then raise Exception.Create('Error Message TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant; i < 0');
+  if Index >= DataCount then raise Exception.Create('Error Message TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant; i < 0');
+  Result := Data.Items[Index][i] ;
+end;
+
+procedure TLasDoc.SetItem(const Mnem: string; Index: Integer; const Value: Variant);
+ var
+  i: Integer;
+begin
+  i := TFSection(Curve).IndexOff(Mnem);
+  if i < 0 then raise Exception.Create('Error Message TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant; i < 0');
+  if Index >= DataCount then raise Exception.Create('Error Message TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant; i < 0');
+  Data.Items[Index][i] := Value;
+end;
+
 function TLasDoc.Well: ILasFormatSection;
 begin
   Result := FSections[lsWell] as ILasFormatSection;
@@ -480,12 +526,16 @@ procedure TLasDoc.LoadFromFile(const AFileName: String);
  var
   ss: TStrings;
   se: ILasSection;
+  c: Char;
 begin
   ss := TStringList.Create;
+  c := FormatSettings.DecimalSeparator;
+  FormatSettings.DecimalSeparator := '.';
   try
    ss.LoadFromFile(AFileName, TEncoding.ANSI);
    for se in FSections do TSection(se).FromStrings(ss);
   finally
+   FormatSettings.DecimalSeparator := c;
    ss.Free;
   end;
 end;
@@ -495,8 +545,11 @@ procedure TLasDoc.SaveToFile(const AFileName: String);
   ss: TStrings;
   se: ILasSection;
   ds: TDSection;
+  c: Char;
 begin
   ss := TStringList.Create;
+  c := FormatSettings.DecimalSeparator;
+  FormatSettings.DecimalSeparator := '.';
   try
    ds := TDSection(Data);
    Well.Items['STRT'].Value := ds.FData[0, 0];
@@ -506,6 +559,7 @@ begin
    for se in FSections do TSection(se).ToStrings(ss);
    ss.SaveToFile(AFileName, TEncoding.ANSI);
   finally
+   FormatSettings.DecimalSeparator := c;
    ss.Free;
   end;
 end;

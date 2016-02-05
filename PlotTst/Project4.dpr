@@ -11,7 +11,9 @@ uses
   Plot.DataSet in '..\Core\Plot.DataSet.pas',
   Plot.Controls in '..\Core\Plot.Controls.pas',
   JDtools in '..\Core\JDtools.pas',
-  VCLOpenDialog in '..\Core\VCLOpenDialog.pas';
+  VCLOpenDialog in '..\Core\VCLOpenDialog.pas',
+  IDataSets in '..\Core\IDataSets.pas',
+  LasDataSet in '..\Core\LasDataSet.pas';
 
 {$R *.res}
 

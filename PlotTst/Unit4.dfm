@@ -2,8 +2,8 @@ object Form4: TForm4
   Left = 0
   Top = 0
   Caption = 'Form4'
-  ClientHeight = 351
-  ClientWidth = 807
+  ClientHeight = 383
+  ClientWidth = 794
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,8 +13,8 @@ object Form4: TForm4
   OldCreateOrder = False
   OnShow = FormShow
   DesignSize = (
-    807
-    351)
+    794
+    383)
   PixelsPerInch = 96
   TextHeight = 13
   object Button2: TButton
@@ -104,9 +104,9 @@ object Form4: TForm4
   end
   object DBGrid1: TDBGrid
     Left = 167
-    Top = 8
-    Width = 632
-    Height = 335
+    Top = 0
+    Width = 619
+    Height = 375
     Anchors = [akLeft, akTop, akRight, akBottom]
     DataSource = DataSource1
     TabOrder = 9
@@ -198,17 +198,17 @@ object Form4: TForm4
   object FDQuery1: TFDQuery
     Connection = FDConnection1
     SQL.Strings = (
-      'select * from ds_1 where field1 < 50 and field1 > 10')
+      'select * from ds_1,ds_2  where ds_2.DEPT = ds_1.field1 ')
     Left = 192
     Top = 152
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'Forms'
-    Left = 280
-    Top = 160
+    Left = 336
+    Top = 120
   end
   object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
-    Left = 408
-    Top = 160
+    Left = 520
+    Top = 88
   end
 end

@@ -114,9 +114,9 @@ begin
 end;
 
 procedure TDockIForm.InitializeNewForm;
- var
-  n: TMenuItem;
-  pp: TPopupActionBar;
+// var
+//  n: TMenuItem;
+//  pp: TPopupActionBar;
 begin
   inherited;
   FDockClient := CreateUnLoad<TJvDockClient>;

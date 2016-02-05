@@ -36,10 +36,12 @@ type
     property MaxCash: Int64 read GetMaxCashSize;
   end;
 
-  TFileData = class(TIObject, IFileData, ICashedData)
+  TFileData = class(TIComponent, IFileData, ICashedData)
   private
     FFile: TFileStream;
     FCash: TFileMappingCash;
+    FS_Write: Integer;
+    procedure SetS_Write(const Value: Integer);
   protected
     // IFileData
     function GetPosition: Int64;
@@ -49,9 +51,10 @@ type
     function Read(Count: Integer; out PData: Pointer; From: Int64 = -1): Integer;
     function Write(Count: Integer; PData: Pointer; From: Int64 = -1): Integer;
   public
-    constructor Create(const FileName: string);
+    constructor CreateUser(const FileName: string);
     destructor Destroy; override;
     property Cash: TFileMappingCash read FCash implements ICashedData;
+    property S_Write: Integer read FS_Write write SetS_Write;
   end;
 
   TFileDataclass = class of TFileData;
@@ -59,7 +62,13 @@ type
 
   GFileDataFactory = record
     class function ConstructFileName(const Root: IXMLNode): string;  static;
+/// <summary>
+///  {week reference}
+/// </summary>
     class function Factory(cls: TFileDataclass; const FileName: string): IFileData; overload; static;
+/// <summary>
+///  {week reference}
+/// </summary>
     class function Factory(cls: TFileDataclass; const Root: IXMLNode): IFileData;  overload; static;
   end;
 
@@ -76,8 +85,9 @@ class function GFileDataFactory.Factory(cls: TFileDataclass; const FileName: str
 begin
   if not (GContainer.TryGetInstance(cls.ClassInfo, FileName, ii) and Supports(ii, IFileData, Result)) then
    begin
-    Result := cls.Create(FileName);
-    TRegistration.Create(cls.ClassInfo).Add(TypeInfo(IFileData)).AddInstance(Result);
+    Result := cls.CreateUser(FileName);
+    TRegistration.Create(cls.ClassInfo).Add(TypeInfo(IFileData)).AddInstance(FileName, Result);
+    TIComponent(Result).WeekContainerReference := True;
    end;
 end;
 
@@ -108,8 +118,9 @@ begin
   FileName := ConstructFileName(Root);
   if not (GContainer.TryGetInstance(cls.ClassInfo, FileName, ii) and Supports(ii, IFileData, Result)) then
    begin
-    Result := cls.Create(FileName);
-    TRegistration.Create(cls.ClassInfo).Add(TypeInfo(IFileData)).AddInstance(Result);
+    Result := cls.CreateUser(FileName);
+    TRegistration.Create(cls.ClassInfo).Add(TypeInfo(IFileData)).AddInstance(FileName, Result);
+    TIComponent(Result).WeekContainerReference := True;
    end;
 end;
 {$ENDREGION}
@@ -198,8 +209,9 @@ end;
 
 { TFileData }
 
-constructor TFileData.Create(const FileName: string);
+constructor TFileData.CreateUser(const FileName: string);
 begin
+  inherited Create;
   if TFile.Exists(FileName) then FFile := TFileStream.Create(FileName, fmOpenReadWrite)
   else FFile := TFileStream.Create(FileName, fmCreate);
   FFile.Position := FFile.Size;
@@ -207,6 +219,7 @@ end;
 
 destructor TFileData.Destroy;
 begin
+  TBindHelper.RemoveExpressions(Self);
   FFile.Free;
   if Assigned(FCash) then FreeAndNil(FCash);
   inherited;
@@ -221,7 +234,8 @@ end;
 function TFileData.Write(Count: Integer; PData: Pointer;  From: Int64 = -1): Integer;
 begin
   if From >= 0 then FFile.Position := From;
-  Result := FFile.Write(PData^, Count)
+  Result := FFile.Write(PData^, Count);
+  S_Write := Result;
 end;
 
 function TFileData.GetFileName: string;
@@ -232,6 +246,12 @@ end;
 procedure TFileData.SetPosition(const Value: Int64);
 begin
   FFile.Position := Value;
+end;
+
+procedure TFileData.SetS_Write(const Value: Integer);
+begin
+  FS_Write := Value;
+  TBindings.Notify(Self, 'S_Write');
 end;
 
 function TFileData.GetPosition: Int64;

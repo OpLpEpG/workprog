@@ -18,22 +18,27 @@ type
     FRealRecordPos: Integer;
     procedure SetRecordPosition(const Value: Integer);
   protected
-    function GetRecordSize: Word; override;
+  // create, close, and so on
+    procedure InternalOpen; override;
+    procedure InternalClose; override;
+    function IsCursorOpen: Boolean; override;
+  // memory management
     function AllocRecordBuffer: TRecordBuffer; override;
-    procedure FreeRecordBuffer(var Buffer: TRecordBuffer); override;
-    function GetRecord(Buffer: TRecordBuffer; GetMode: TGetMode; DoCheck: Boolean): TGetResult; override;
     procedure InternalInitRecord(Buffer: TRecordBuffer); override;
+    procedure FreeRecordBuffer(var Buffer: TRecordBuffer); override;
+    function GetRecordSize: Word; override;
+// movement and optional navigation (used by grids)
+    function GetRecord(Buffer: TRecordBuffer; GetMode: TGetMode; DoCheck: Boolean): TGetResult; override;
     procedure InternalFirst; override;
     procedure InternalLast; override;
-    procedure InternalClose; override;
-    procedure InternalHandleException; override;
-    procedure InternalInitFieldDefs; override;
-    procedure InternalOpen; override;
-    function IsCursorOpen: Boolean; override;
     function GetRecordCount: Integer; override;
     function GetRecNo: Integer; override;
     procedure SetRecNo(Value: Integer); override;
+
+    procedure InternalHandleException; override;
+    procedure InternalInitFieldDefs; override;
     procedure InternalSetToRecord(Buffer: TRecordBuffer); override;
+     // bookmarks
     procedure GetBookmarkData(Buffer: TRecordBuffer; Data: Pointer); override;
     procedure SetBookmarkData(Buffer: TRecordBuffer; Data: Pointer); override;
     function GetBookmarkFlag(Buffer: TRecordBuffer): TBookmarkFlag; override;
@@ -42,7 +47,6 @@ type
     property RecordPos: Integer read FRealRecordPos write SetRecordPosition;
     function getID(pos: Integer): Integer;
   public
-    constructor Create(); override;
     function GetCurrentRecord(Buffer: TRecBuf): Boolean; override;
     function GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean; override;
   end;
@@ -57,13 +61,6 @@ function TPlotDataSet.AllocRecordBuffer: TRecordBuffer;
 begin
   GetMem(Result, SizeOf(TBuffer));
   InternalInitRecord(Result);
-end;
-
-constructor TPlotDataSet.Create;
-begin
-  inherited;
-  BookmarkSize := Sizeof(TBuffer);
-  RecordPos := -1;
 end;
 
 procedure TPlotDataSet.FreeRecordBuffer(var Buffer: TRecordBuffer);
@@ -102,8 +99,11 @@ function TPlotDataSet.GetFieldData(Field: TField; var Buffer: TValueBuffer): Boo
   s: AnsiString;
 begin
   if IsEmpty then Exit(False);
-  if Field.Index = 0 then Pinteger(Buffer)^ := getID(PBuffer(ActiveBuffer).BookmarkData)
-  else
+  if Field.FieldName = 'Field1' then
+   begin
+    Pinteger(Buffer)^ := getID(PBuffer(ActiveBuffer).BookmarkData)
+   end
+  else if Field.FieldName = 'Field2' then
    begin
     case PBuffer(ActiveBuffer).BookmarkFlag of
       bfCurrent: s := 'Current';
@@ -118,7 +118,8 @@ end;
 
 function TPlotDataSet.getID(pos: Integer): integer;
 begin
-  Result := RecordCount - pos - 1; // pos
+//Result := RecordCount - pos - 1; // pos
+  Result := pos;
 end;
 
 function TPlotDataSet.GetRecNo: Integer;
@@ -192,7 +193,7 @@ end;
 
 function TPlotDataSet.GetRecordCount: Integer;
 begin
-  Result := 100;
+  Result := 3000;
 end;
 
 function TPlotDataSet.GetRecordSize: Word;
@@ -249,6 +250,8 @@ end;
 
 procedure TPlotDataSet.InternalOpen;
 begin
+  BookmarkSize := Sizeof(TBuffer);
+  RecordPos := -1;
   FActive := True;
   FieldDefs.Updated := False;
   FieldDefs.Update;

@@ -78,16 +78,19 @@
         <Projects Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="EasyInterphase\Easy64Inc.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\w2001\AVRv3.6\AT3AVR38Z.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCL_Vizard_Sucop\LasToSucop.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\CustomDataSet\dirdemo.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -323,24 +326,6 @@
     <Target Name="ObjectFields:Make">
         <MSBuild Projects="..\mULTILINE_TDbGrid_title\ObjectFields.dproj" Targets="Make"/>
     </Target>
-    <Target Name="CubicSpline">
-        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj"/>
-    </Target>
-    <Target Name="CubicSpline:Clean">
-        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="CubicSpline:Make">
-        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="Curves">
-        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj"/>
-    </Target>
-    <Target Name="Curves:Clean">
-        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Curves:Make">
-        <MSBuild Projects="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj" Targets="Make"/>
-    </Target>
     <Target Name="LSQLMega">
         <MSBuild Projects="C:\Users\Public\Documents\Embarcadero\Studio\16.0\Samples\Object Pascal\Database\FireDAC\Samples\Comp Layer\TFDLocalSQL\MegaFMX\LSQLMega.dproj"/>
     </Target>
@@ -359,14 +344,41 @@
     <Target Name="Easy64Inc:Make">
         <MSBuild Projects="EasyInterphase\Easy64Inc.dproj" Targets="Make"/>
     </Target>
+    <Target Name="AT3AVR38Z">
+        <MSBuild Projects="..\w2001\AVRv3.6\AT3AVR38Z.dproj"/>
+    </Target>
+    <Target Name="AT3AVR38Z:Clean">
+        <MSBuild Projects="..\w2001\AVRv3.6\AT3AVR38Z.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="AT3AVR38Z:Make">
+        <MSBuild Projects="..\w2001\AVRv3.6\AT3AVR38Z.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="LasToSucop">
+        <MSBuild Projects="VCL_Vizard_Sucop\LasToSucop.dproj"/>
+    </Target>
+    <Target Name="LasToSucop:Clean">
+        <MSBuild Projects="VCL_Vizard_Sucop\LasToSucop.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LasToSucop:Make">
+        <MSBuild Projects="VCL_Vizard_Sucop\LasToSucop.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="dirdemo">
+        <MSBuild Projects="..\CustomDataSet\dirdemo.dproj"/>
+    </Target>
+    <Target Name="dirdemo:Clean">
+        <MSBuild Projects="..\CustomDataSet\dirdemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="dirdemo:Make">
+        <MSBuild Projects="..\CustomDataSet\dirdemo.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;VCLControl;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;ProjectManager3;VCLControl3;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;CubicSpline;Curves;LSQLMega;Easy64Inc"/>
+        <CallTarget Targets="Core;ProjectManager;VCLControl;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;VCL_RP45;D3H;VCLNNKDAC;ProjectManager3;VCLControl3;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;LSQLMega;Easy64Inc;AT3AVR38Z;LasToSucop;dirdemo"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;VCLControl:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;ProjectManager3:Clean;VCLControl3:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;CubicSpline:Clean;Curves:Clean;LSQLMega:Clean;Easy64Inc:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;VCLControl:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;VCL_RP45:Clean;D3H:Clean;VCLNNKDAC:Clean;ProjectManager3:Clean;VCLControl3:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;LSQLMega:Clean;Easy64Inc:Clean;AT3AVR38Z:Clean;LasToSucop:Clean;dirdemo:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;VCLControl:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;ProjectManager3:Make;VCLControl3:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;CubicSpline:Make;Curves:Make;LSQLMega:Make;Easy64Inc:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;VCLControl:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;VCL_RP45:Make;D3H:Make;VCLNNKDAC:Make;ProjectManager3:Make;VCLControl3:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;LSQLMega:Make;Easy64Inc:Make;AT3AVR38Z:Make;LasToSucop:Make;dirdemo:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
@@ -381,6 +393,12 @@
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\w2001\AVRv3.6\AT3AVR38Z.dproj">
+            <ProjectGuid>{362FA924-268D-4FED-A6D4-0C599BF014D6}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -454,6 +472,12 @@
             <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="VCL_Vizard_Sucop\LasToSucop.dproj">
+            <ProjectGuid>{BB0B3B1C-3A6E-4FEB-8DCA-63FC1CFE6F0C}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Tst_Fibonachi\tst.dproj">
             <ProjectGuid>{651CF745-5C11-41EF-B66C-2F03AAC1782E}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -478,14 +502,14 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
-            <ProjectGuid>{24115A53-7E77-408F-9A8D-C33ED1529772}</ProjectGuid>
+        <BuildGroupProject Include="Glubinomer\Glut.dproj">
+            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Glubinomer\Glut.dproj">
-            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
+        <BuildGroupProject Include="..\CustomDataSet\dirdemo.dproj">
+            <ProjectGuid>{67ACDD2F-5AAB-4F85-8DA8-95D9D6C8D73C}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -495,12 +519,6 @@
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
-            <ProjectGuid>{6418D24F-105B-489D-9B56-CC557926FDB4}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="D3H\D3H.dproj">
             <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
@@ -558,6 +576,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\w2001\AVRv3.6\AT3AVR38Z.dproj">
+            <ProjectGuid>{362FA924-268D-4FED-A6D4-0C599BF014D6}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -630,6 +654,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="VCL_Vizard_Sucop\LasToSucop.dproj">
+            <ProjectGuid>{BB0B3B1C-3A6E-4FEB-8DCA-63FC1CFE6F0C}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Tst_Fibonachi\tst.dproj">
             <ProjectGuid>{651CF745-5C11-41EF-B66C-2F03AAC1782E}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -654,14 +684,14 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
-            <ProjectGuid>{24115A53-7E77-408F-9A8D-C33ED1529772}</ProjectGuid>
+        <BuildGroupProject Include="Glubinomer\Glut.dproj">
+            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Glubinomer\Glut.dproj">
-            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
+        <BuildGroupProject Include="..\CustomDataSet\dirdemo.dproj">
+            <ProjectGuid>{67ACDD2F-5AAB-4F85-8DA8-95D9D6C8D73C}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -671,12 +701,6 @@
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
-            <ProjectGuid>{6418D24F-105B-489D-9B56-CC557926FDB4}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="D3H\D3H.dproj">
             <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
@@ -733,6 +757,12 @@
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="..\w2001\AVRv3.6\AT3AVR38Z.dproj">
+            <ProjectGuid>{362FA924-268D-4FED-A6D4-0C599BF014D6}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -806,6 +836,12 @@
             <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="VCL_Vizard_Sucop\LasToSucop.dproj">
+            <ProjectGuid>{BB0B3B1C-3A6E-4FEB-8DCA-63FC1CFE6F0C}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Tst_Fibonachi\tst.dproj">
             <ProjectGuid>{651CF745-5C11-41EF-B66C-2F03AAC1782E}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -830,14 +866,14 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\Curves\Curves.dproj">
-            <ProjectGuid>{24115A53-7E77-408F-9A8D-C33ED1529772}</ProjectGuid>
+        <BuildGroupProject Include="Glubinomer\Glut.dproj">
+            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Glubinomer\Glut.dproj">
-            <ProjectGuid>{98934C25-0761-4FCE-AF30-998B47C4DC71}</ProjectGuid>
+        <BuildGroupProject Include="..\CustomDataSet\dirdemo.dproj">
+            <ProjectGuid>{67ACDD2F-5AAB-4F85-8DA8-95D9D6C8D73C}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -847,12 +883,6 @@
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\Graphics32\Examples\Drawing\CubicSpline\CubicSpline.dproj">
-            <ProjectGuid>{6418D24F-105B-489D-9B56-CC557926FDB4}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="D3H\D3H.dproj">
             <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>

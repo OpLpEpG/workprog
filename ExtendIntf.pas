@@ -102,6 +102,19 @@ type
   ['{A1E28461-45D5-4D36-B6D6-15D39D2E3548}']
     function Execute(InputData: T): boolean;
   end;
+  IDialog<T1, T2> = interface(IDialog)
+  ['{24232500-3D6C-4A2A-A95E-6F2D1AFB68A9}']
+    function Execute(InputData1: T1; InputData2: T2): boolean;
+  end;
+  IDialog<T1, T2, T3> = interface(IDialog)
+  ['{FF833A03-550A-4A25-85EA-468918108AA7}']
+    function Execute(InputData1: T1; InputData2: T2; InputData3: T3): boolean;
+  end;
+  IDialog<T1, T2, T3, T4> = interface(IDialog)
+  ['{AA34E9CA-E383-4C21-A940-6F5E39CE7B06}']
+    function Execute(InputData1: T1; InputData2: T2; InputData3: T3; InputData4: T4): boolean;
+  end;
+  TDialogResult = reference to procedure(Sender: IDialog; Res: TModalResult);
 
   IActionEnum = interface(IServiceManager<IAction>)
   ['{F52CA2BA-4085-45A1-9EF8-122E8B9C221B}']

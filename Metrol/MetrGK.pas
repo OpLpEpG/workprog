@@ -22,7 +22,7 @@ type
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
   private
     FAutomatMetrology: TGKAuto;
-    procedure NParamClick(Sender: TObject);
+//    procedure NParamClick(Sender: TObject);
     class constructor Create;
     class destructor Destroy;
     class function CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
@@ -85,7 +85,7 @@ implementation
 
 {$R *.dfm}
 
-uses MetrGK.CheckFormSetup, tools;
+uses {MetrGK.CheckFormSetup,} tools;
 
 {$REGION 'TFormGK'}
 class constructor TFormGK.Create;
@@ -110,11 +110,11 @@ begin
   Result := 'TGK'
 end;
 
-procedure TFormGK.NParamClick(Sender: TObject);
-begin
-  if TFormGKCheckSetup.Execute(GetMetr([MetrolType], FileData)) then
-     if TrrFile <> '' then FileData.OwnerDocument.SaveToFile(TrrFile)
-end;
+//procedure TFormGK.NParamClick(Sender: TObject);
+//begin
+//  if TFormGKCheckSetup.Execute(GetMetr([MetrolType], FileData)) then
+//     if TrrFile <> '' then FileData.OwnerDocument.SaveToFile(TrrFile)
+//end;
 
 class function TFormGK.CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
 begin
@@ -254,8 +254,8 @@ begin
   SetupStepTree(Tree);
   inherited;
   AttestatPanel.Align := alBottom;
-  AddToNCMenu('-');
-  AddToNCMenu('Параметры метрологии...', NParamClick);
+//  AddToNCMenu('-');
+//  AddToNCMenu('Параметры метрологии...', NParamClick);
   FAutomatMetrology := TGKAuto.Create(Self);
   FAutomatMetrology.Report := AutoReport;
 end;

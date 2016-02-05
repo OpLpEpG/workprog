@@ -77,8 +77,8 @@ begin
      end;
     Result := ShowModal = mrOk;
     if not Result then Exit;
-    Frm.AttCount := StrToInt(edNAtt.Text);
-    if Frm.AttCount <= 0  then Frm.AttCount := 1;
+//    Frm.AttCount := StrToInt(edNAtt.Text);
+//    if Frm.AttCount <= 0  then Frm.AttCount := 1;
     if Assigned(Frm.FileData) then
      begin
       if cbAny.Checked then edDev.Text := 'ANY_DEVICE';

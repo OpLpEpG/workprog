@@ -64,18 +64,15 @@ begin
   //UserExecStepUpdateStolAngle(Step, alg, trr);
   if Step = NMAX then
    begin
-    if FNewAlg then
-     begin
-      FNewAlg := False;
-      FindAccel(1, NMAX, alg, trr);
-      RefindZen(1, NMAX, alg, trr);
-      FindMagnit(N10,  N120-1, alg, trr);
-      RefindAzi(1, NMAX, alg, trr);
-     end;
+    if FNewAlg then FindAccel(1, NMAX, alg, trr);
+    RefindZen(1, NMAX, alg, trr);
+    if FNewAlg then FindMagnit(N10,  N120-1, alg, trr);
+    RefindAzi(1, NMAX, alg, trr);
+    FNewAlg := False;
     alg.Attributes['ErrZU']  := FindMaxErr(alg, 1, NMAX, 'err_зенит');
     alg.Attributes['ErrAZ5'] := FindMaxErr(alg, N5, N30-1, 'err_азимут');
     alg.Attributes['ErrAZ']  := FindMaxErr(alg, N30, NMAX, 'err_азимут');
-  end;
+   end;
 end;
 
 initialization

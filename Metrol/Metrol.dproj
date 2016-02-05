@@ -77,10 +77,10 @@
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_RangeChecking>true</DCC_RangeChecking>
         <UsePackages>true</UsePackages>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.185;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.189;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>185</VerInfo_Build>
+        <VerInfo_Build>189</VerInfo_Build>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <DCC_MapFile>3</DCC_MapFile>
         <VerInfo_DLL>true</VerInfo_DLL>
@@ -120,9 +120,6 @@
         <DCCReference Include="MetrNNK.pas">
             <Form>FormNNK</Form>
         </DCCReference>
-        <DCCReference Include="MetrFormSetup.pas">
-            <Form>FormMetrSetup</Form>
-        </DCCReference>
         <DCCReference Include="..\VTEditors.pas"/>
         <DCCReference Include="MetrUAKI.pas">
             <Form>FormUAKI</Form>
@@ -149,19 +146,13 @@
             <Form>FormInclinCheck</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="CheckFormSetup.pas">
-            <Form>FormCheckSetup</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="MetrInclin.TrrAndP2.pas"/>
-        <DCCReference Include="MetrInclin.TrrAndP3.pas"/>
+        <DCCReference Include="MetrInclin.TrrAndP4.pas"/>
         <DCCReference Include="AutoMetr.GK.pas"/>
         <DCCReference Include="StolGKUI.pas">
             <Form>FormStolGK</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="MetrInclin.CheckFormSetup.pas"/>
-        <DCCReference Include="MetrGK.CheckFormSetup.pas"/>
         <DCCReference Include="UakiUI.Ten.pas">
             <Form>FrameUakiTEN</Form>
             <FormType>dfm</FormType>
@@ -169,6 +160,7 @@
         </DCCReference>
         <DCCReference Include="MetrInclin.T12.pas"/>
         <DCCReference Include="MetrInclin.Math2.pas"/>
+        <DCCReference Include="MetrInclin.TrrAndP3.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -229,7 +221,16 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployClass Name="ProjectiOSDeviceResourceRules"/>
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
                     <Platform Name="OSX32">
                         <RemoteDir>Contents\Resources</RemoteDir>
@@ -543,16 +544,7 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                </DeployClass>
+                <DeployClass Name="ProjectiOSDeviceResourceRules"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>

@@ -2,7 +2,7 @@ unit Unit4;
 
 interface
 
-uses CustomPlot, System.IOUtils, Plot.GR32, gr32, DataSetIntf, Plot.Controls,
+uses CustomPlot, System.IOUtils, Plot.GR32, gr32, DataSetIntf, Plot.Controls, LasDataSet,
   Plot.DataSet,
   RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RTTI, Container, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
@@ -10,7 +10,7 @@ uses CustomPlot, System.IOUtils, Plot.GR32, gr32, DataSetIntf, Plot.Controls,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
-  FireDAC.Phys.SQLiteVDataSet, FireDAC.VCLUI.Wait, FireDAC.Comp.UI;
+  FireDAC.Phys.SQLiteVDataSet, FireDAC.VCLUI.Wait, FireDAC.Comp.UI, IDataSets;
 
 type
   TForm4 = class(TForm)
@@ -51,7 +51,7 @@ type
   private
     Graph: TCustomGraph;
     ds: TPlotDataSet;
-    ids: IdataSet;
+    ids, ilds: IdataSet;
   public
     { Public declarations }
   end;
@@ -250,17 +250,43 @@ begin
 end;
 
 procedure TForm4.FormShow(Sender: TObject);
+ var
+  lds: TDataSet;
 begin
+  FormatSettings.DecimalSeparator := '.';
+//  d := TLasDataSet.Create;
+//  d.LasFile := 'c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las';
+
   Form1.Show;
   Graph := Form1.Plot;
-  ds := TPlotDataSet.Create();
+  ds := TPlotDataSet.Create;
   ids := ds as IdataSet;
+  ids._AddRef;
+  ids._AddRef;
+
+  TLasDataSet.New('c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723_corr.las', ilds);
+  TDebug.Log('RFS = %d   ', [ilds._AddRef -1]);
+  ilds._Release;
+  lds := ilds.DataSet;
+  lds.FieldDefs.Find('Hx').Free;
+  lds.FieldDefs.Find('Hy').Free;
+  lds.FieldDefs.Find('Hz').Free;
+  lds.FieldDefs.Find('Gx').Free;
+  lds.FieldDefs.Find('Gy').Free;
+  lds.FieldDefs.Find('Gz').Free;
+
+ // lds.ObjectView := True;
+  FDLocalSQL1.DataSets.Add(lds, '', 'ds_2');
   FDLocalSQL1.DataSets.Add(ds, '', 'ds_1');
 
   DataSource1.DataSet := FDQuery1;
 //  DataSource1.DataSet := ds;
 //  DataSource1.DataSet := ms;
+//  DataSource1.DataSet := lds;
+
   DataSource1.DataSet.Active := True;
+  TDebug.Log('RFS = %d   ', [ilds._AddRef -1]);
+  ilds._Release;
   DataSource1.DataSet.Refresh;
 //  DataSource1.DataSet.AppendRecord([1,'1111']);
 //  DataSource1.DataSet.AppendRecord([2,'1111']);
@@ -268,6 +294,8 @@ begin
 //  DataSource1.DataSet.AppendRecord([4,'1111']);
 //  DataSource1.DataSet.AppendRecord([5,'1111']);
 //  DataSource1.DataSet.AppendRecord([6,'1111']);
+  ids._Release;
+  ids._Release;
 end;
 
 end.

@@ -21,7 +21,6 @@ uses
   MetrInclinSetup in 'MetrInclinSetup.pas' {FormInclSetup},
   MetrGK in 'MetrGK.pas' {FormGK},
   MetrNNK in 'MetrNNK.pas' {FormNNK},
-  MetrFormSetup in 'MetrFormSetup.pas' {FormMetrSetup},
   VTEditors in '..\VTEditors.pas',
   MetrUAKI in 'MetrUAKI.pas' {FormUAKI},
   UakiUI in 'UakiUI.pas' {FrameUakiUI: TFrame},
@@ -31,16 +30,14 @@ uses
   MetrInclin.Math in 'MetrInclin.Math.pas',
   MetrUAKI.ToleranceForm in 'MetrUAKI.ToleranceForm.pas' {FormUAKItolerance},
   MetrInclin.CheckForm in 'MetrInclin.CheckForm.pas' {FormInclinCheck},
-  CheckFormSetup in 'CheckFormSetup.pas' {FormCheckSetup},
   MetrInclin.TrrAndP2 in 'MetrInclin.TrrAndP2.pas',
-  MetrInclin.TrrAndP3 in 'MetrInclin.TrrAndP3.pas',
+  MetrInclin.TrrAndP4 in 'MetrInclin.TrrAndP4.pas',
   AutoMetr.GK in 'AutoMetr.GK.pas',
   StolGKUI in 'StolGKUI.pas' {FormStolGK},
-  MetrInclin.CheckFormSetup in 'MetrInclin.CheckFormSetup.pas',
-  MetrGK.CheckFormSetup in 'MetrGK.CheckFormSetup.pas',
   UakiUI.Ten in 'UakiUI.Ten.pas' {FrameUakiTEN: TFrame},
   MetrInclin.T12 in 'MetrInclin.T12.pas',
-  MetrInclin.Math2 in 'MetrInclin.Math2.pas';
+  MetrInclin.Math2 in 'MetrInclin.Math2.pas',
+  MetrInclin.TrrAndP3 in 'MetrInclin.TrrAndP3.pas';
 
 {$R *.res}
 

@@ -16,22 +16,20 @@ type
     ErrOld, tG , tH: TMatrix4;
     class procedure _TEST_ApplyHGfromStol(alg: IXMLNode; from, too: Integer; Incl, Amp: Double; TrrA, TrrH: TMatrix4);
   protected
-    FCurAzim, FCurViz: Double;
     FDirAzim, FDirViz: Integer;
-    FNewAlg: Boolean;
-    procedure NNewAlgClick(Sender: TObject);
 //    procedure NNoStolClick(Sender: TObject);
 //    procedure NProblemMLClick(Sender: TObject);
 //    procedure NsolverClick(Sender: TObject);
     procedure FindMagnit(from, too: Integer; alg, trr: IXMLNode);
     procedure FindAccel(from, too: Integer; alg, trr: IXMLNode);
+    /// количество поворотов вдоль оси для точек from, too включительно
+    function ToRollCounts(alg: IXMLNode; from, too: Integer): TArray<Integer>;
+    function ToInpRoll(alg: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4):TZAlignLS.TInput;
     function ToInpML(alg: IXMLNode; from, too: Integer): TArray<TInclPoint>;
     function ToInp(alg: IXMLNode; from, too: Integer): TAngleFtting.TInput; overload;
     function ToInp(alg: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4): TZAlignLS.TZConstPoints; overload;
     function ToInp(alg: IXMLNode; from, too: Integer; TrrA, TrrH: TMatrix4): TCrossConstLS.TInclPoints; overload;
     function ToInp(alg: IXMLNode; from, too: Integer; TrrA: TMatrix4): TCrossConstLS.TInclPoints; overload;
-    procedure RefindAzi(from, too: Integer; alg, trr: IXMLNode);
-    procedure RefindZen(from, too: Integer; alg, trr: IXMLNode);
     function AddVizir(v: Double): Variant;
     function UserSetupAlg(alg: IXMLNode): Boolean; override;
     procedure DoSetupAlg; virtual;
@@ -81,13 +79,6 @@ begin
   else Curr := Curr + IncDir * DeltaAngle
 end;
 
-procedure TFormInclinTrrAndP2.NNewAlgClick(Sender: TObject);
-begin
-  FNewAlg := True;
-  ReCalc();
-  DoUpdateData();
-end;
-
 {procedure TFormInclinTrrAndP2.NNoStolClick(Sender: TObject);
 begin
 
@@ -105,7 +96,8 @@ end;}
 
 function TFormInclinTrrAndP2.AddVizir(v: Double): Variant;
 begin
-  Result := AddStep('стол: визирный угол %g градусов.', [v]);
+  FCurViz := v;
+  Result := AddStep('стол: визирный угол %2:g градусов.', FCurAzim, FCurZu, FCurViz);
   Result.TASK.Vizir_Stol := v;
   Result.TASK.Dalay_Kadr := 5;
 end;
@@ -114,7 +106,9 @@ procedure TFormInclinTrrAndP2.CreateStepsFixZU(DeltaA, DeltaV, Zu: Double);
  var
   s: Variant;
 begin
-  s := AddStep('стол: Азимут %g Зенит %g визир %g градусов.', [FCurAzim, Zu, FCurViz]);
+  FCurZu := Zu;
+  s := AddStep('стол: Азимут %g Зенит %g визир %g градусов.', FCurAzim, FCurZu, FCurViz);
+  FCurZu := Zu;
   s.TASK.Azimut_Stol := FCurAzim;
   s.TASK.Zenit_Stol := zu;
   s.TASK.Vizir_Stol := FCurViz;
@@ -122,7 +116,7 @@ begin
   repeat
    while NextAngle(DeltaV, 0, FDirViz, FCurViz) do AddVizir(FCurViz);
    if not NextAngle(DeltaA, 0, FDirAzim, FCurAzim) then Break;
-   s := AddStep('стол: Азимут %g градусов.', [FCurAzim]);
+   s := AddStep('стол: Азимут %g градусов.', FCurAzim, Zu, FCurViz);
    s.TASK.Azimut_Stol := FCurAzim;
    s.TASK.Dalay_Kadr := 5;
   until False;
@@ -142,7 +136,12 @@ begin
   Result := True;
   FStep.root := XToVar(alg);
   FStep.stp := 1;
-  s := AddStep('стол: Зенит 0, визир %d градусов.', [270]);
+
+  FCurAzim := 0;
+  FCurViz := 270;
+  FCurZu := 0;
+
+  s := AddStep('стол: Зенит 0, визир %2:g градусов.', 0, 0, 270);
   s.TASK.Vizir_Stol := 270;
   s.TASK.Zenit_Stol := 0;
   s.TASK.Dalay_Kadr := 5;
@@ -299,6 +298,36 @@ begin
   for i := 0 to High(Result) do Result[i] := XToVar(GetXNode(alg, Format('STEP%d',[I+from])));
 end;
 
+function TFormInclinTrrAndP2.ToRollCounts(alg: IXMLNode; from, too: Integer): TArray<Integer>;
+ var
+  i, n: Integer;
+  v: Variant;
+  zen, azi: Double;
+  function IsRol: Boolean;
+   var
+    a, z: Double;
+  begin
+    v := XToVar(GetXNode(alg, 'STEP'+I.ToString));
+    z := v.СТОЛ.зенит;
+    a := v.СТОЛ.азимут;
+    Result := (Abs(TMetrInclinMath.DeltaAngle(azi - a)) < 10) and (Abs(TMetrInclinMath.DeltaAngle(zen - z)) < 1.5);
+  end;
+begin
+  i := from;
+  v := XToVar(GetXNode(alg, 'STEP'+I.ToString));
+  repeat
+   zen := v.СТОЛ.зенит;
+   azi := v.СТОЛ.азимут;
+   n := 0;
+   while (i <= too) and IsRol do
+    begin
+     inc(n);
+     inc(i);
+    end;
+   Result := Result + [n];
+  until i > too;
+end;
+
 function TFormInclinTrrAndP2.ToInp(alg: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4): TZAlignLS.TZConstPoints;
  const
   AM: array[Boolean] of string = ('magnit', 'accel');
@@ -318,37 +347,20 @@ begin
    end;
 end;
 
-procedure TFormInclinTrrAndP2.RefindZen(from, too: Integer; alg, trr: IXMLNode);
+function TFormInclinTrrAndP2.ToInpRoll(alg: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4): TZAlignLS.TInput;
  var
-  i: Integer;
-  t, a: variant;
-  crZen: Double;
+  ArrCnt: TArray<Integer>;
+  i, first: Integer;
 begin
-  t := XtoVar(trr);
-  for I := from to too do
+  ArrCnt := ToRollCounts(alg, from, too);
+  SetLength(Result, Length(ArrCnt));
+  first := from;
+  for i := 0 to High(ArrCnt) do
    begin
-    a := XToVar(GetXNode(alg, Format('STEP%d',[I])));
-    TMetrInclinMath.FindZenViz(a, t);
-    crZen := (a.СТОЛ.зенит + FZenCorr);
-    if crZen > 180 then a.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(a.зенит.CLC.VALUE -(360 - crZen))
-    else a.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(a.зенит.CLC.VALUE - crZen);
+    Result[i] := ToInp(alg, first, first + ArrCnt[i]-1, TrueAccFalseMag, Trr);
+    Inc(first, ArrCnt[i]);
    end;
 end;
-
-procedure TFormInclinTrrAndP2.RefindAzi(from, too: Integer; alg, trr: IXMLNode);
- var
-  i: Integer;
-  t, a: variant;
-begin
-  t := XtoVar(trr);
-  for I := from to too do
-   begin
-    a := XToVar(GetXNode(alg, Format('STEP%d',[I])));
-    TMetrInclinMath.FindAzim(a, t);
-    a.СТОЛ.err_азимут := TMetrInclinMath.DeltaAngle(a.азимут.CLC.VALUE - (a.СТОЛ.азимут + FAziCorr));
-   end;
-end;
-
 
 
 procedure TFormInclinTrrAndP2.FindAccel(from, too: Integer; alg, trr: IXMLNode);
@@ -385,8 +397,9 @@ begin
    begin
     // без стола
     TSphereLS.RunZ(inp, Res);
-    SetLength(alignInp, 12);//6
-    for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, True, Res);
+{    SetLength(alignInp, 12);//6
+    for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, True, Res);}
+    alignInp := ToInpRoll(alg, from, too, True, Res);
     //  SetLength(alignInp, 1);
     //  i := 1;
     //  alignInp[0] := ToInp(alg, 35+i*5, 39+i*5, True, Res);
@@ -407,8 +420,10 @@ begin
   else
    begin
     TSphereLS.RunZ(inp, Res);
-    SetLength(alignInp, 12);//6
-    for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, True, Res);
+    {SetLength(alignInp, 12);//6
+    for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, True, Res);}
+    alignInp := ToInpRoll(alg, from, too, True, Res);
+
     TZAlignLS.Run(alignInp, a,b);
     FSaveAccel := TZAlignLS.Apply(Res, a, b);
     m := TAngleFtting.Tmetr(FSaveAccel);// {* (1/FSaveAccel.m22)   }
@@ -457,8 +472,9 @@ begin
 //    _sts(alg);
 //     без стола
     TSphereLS.RunA(inp, Res);
-    SetLength(alignInp, 12);//6
-    for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, False, Res);
+    {SetLength(alignInp, 12);//6
+    for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, False, Res);}
+    alignInp := ToInpRoll(alg, from, too, False, Res);
 
    if FNsolver.Checked then
     begin
@@ -480,6 +496,8 @@ begin
     if FNProblemML.Checked then TTrrML.Run(b, m3, FSaveAccel, ToInpML(alg, 1, too), m4, inclML)
     else m4 := m3;
 
+ //   m4 := m2;
+//
     Matrix4AssignToVariant(m4, XToVar(GetXNode(trr, 'magnit')));
 
 //    e := -m4 + tH;
@@ -497,15 +515,12 @@ begin
 end;
 
 procedure TFormInclinTrrAndP2.Loaded;
-// var
-//  n: TMenuItem;
 begin
   inherited;
-  FNNoStol := AddToNCMenu('Не использовать данные стола', nil, 9, 0);
-  FNProblemML := AddToNCMenu('Использовать метод МП', nil, 10, 0);
-  FNsolver := AddToNCMenu('Не использовать НМК', nil, 11, 0);
-  AddToNCMenu('Рассчет новых поправок', NNewAlgClick, 12);
-  AddToNCMenu('-', nil, 12);
+  FNNoStol := AddToNCMenu('Не использовать данные стола', nil, 2, 0, FExtendMenus);
+  FNProblemML := AddToNCMenu('Использовать метод МП', nil, 3, 0, FExtendMenus);
+  FNsolver := AddToNCMenu('Не использовать НМК', nil, 4, 0, FExtendMenus);
+  AddToNCMenu('-', nil, 5, -1, FExtendMenus);
 end;
 
 function TFormInclinTrrAndP2.UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean;
@@ -515,14 +530,11 @@ begin
   case Step of
    64:
       begin
-       if FNewAlg then
-        begin
-         FNewAlg := False;
-         FindAccel(1, 64, alg, trr);
-         RefindZen(1, 64, alg, trr);
-         FindMagnit(5,64, alg, trr);
-         RefindAzi(1, 64, alg, trr);
-        end;
+       if FNewAlg then FindAccel(1, 64, alg, trr);
+       RefindZen(1, 64, alg, trr);
+       if FNewAlg then  FindMagnit(5,64, alg, trr);
+       RefindAzi(1, 64, alg, trr);
+       FNewAlg := False;
        alg.Attributes['ErrZU']  := FindMaxErr(alg, 1, 64, 'err_зенит');
        alg.Attributes['ErrAZ']  := FindMaxErr(alg, 5, 64, 'err_азимут');
        alg.Attributes['ErrAZ5']  := -1000;

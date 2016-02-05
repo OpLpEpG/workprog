@@ -107,7 +107,7 @@ begin
   InitT(TreeH);
   // и только потом заполняем данными Tree
   inherited;
-  NIsMedian.Visible := True;
+//  NIsMedian.Visible := True;
   AttestatPanel.Align := alBottom;
   AddToNCMenu('-');
   AddToNCMenu('Установки Инклинометрии...', NSetupInclClick);

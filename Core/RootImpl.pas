@@ -142,6 +142,7 @@ type
   TIComponent = class(TComponent, IInterface{!!!!!! иначе _AddRef _Release будут иногда старые}, IManagItem, IBind)
   private
     FRefCount: Integer;
+    FWeekContainerReference: Boolean;
   protected
     FIsBindInit: Boolean;
     FPriority: Integer;
@@ -176,6 +177,14 @@ type
     ///	  изменении должны вызывать PubChange
     ///	</summary>
     property S_PublishedChanged: string read GetItemName write SetItemName;
+/// <summary>
+///   После добавления экземпляра в общее хранилище ltSingletonNamed
+///  если WeekContainerReference = ДА, то если осталась тольо ссылка в контейнере то удаляем из контейнера
+/// </summary>
+/// <remarks>
+///  Включать WeekContainerReference только после добавления В глобальный контейнер
+/// </remarks>
+    property WeekContainerReference: Boolean read FWeekContainerReference write FWeekContainerReference;
   end;
   TIComponentClass = class of TIComponent;
 
@@ -311,15 +320,22 @@ type
 
   RegisterDialog = class
   private
-    class var FItems: TDictionary<PTypeInfo, PTypeInfo>;
+   type
+     TDialogData = record
+      DialogID: PTypeInfo;
+      Description, Categoty: string;
+    end;                         // класс   категория
+    class var FItems: TDictionary<PTypeInfo, TDialogData>;
     class constructor Create;
     class destructor Destroy;
   public
-    class procedure Add<T: class; D: IInterface>;
+    class procedure Add<T: class; D: IInterface>(const Description: string = ''; const Category: string = '');
     class procedure Remove<T: class>;
-    class function TryGet<D: IInterface>(out Dialog: IDialog): Boolean;
+    class function TryGet<D: IInterface>(out Dialog: IDialog): Boolean; overload;
+    class function TryGet(const Category, Description: string; out Dialog: IDialog): Boolean; overload;
     class procedure UnInitialize<D: IInterface>; overload;
     class procedure UnInitialize(D: PTypeInfo); overload;
+    class function CategoryDescriptions(const Category: string): TArray<string>;
   end;
 
   GDIPlus = class
@@ -688,7 +704,8 @@ end;
 function TIComponent._Release: Integer;
 begin
   Result := AtomicDecrement(FRefCount);
-  if Result = 0 then Destroy;
+  if WeekContainerReference and (Result = 1) then GContainer.RemoveInstance(Model, Name)
+  else if Result = 0 then Destroy;
 end;
 
 {$ENDREGION}
@@ -1520,9 +1537,16 @@ end;
 
 { RegisterDialog }
 
+class function RegisterDialog.CategoryDescriptions(const Category: string): TArray<string>;
+ var
+  p : TPair<PTypeInfo,TDialogData>;
+begin
+  for p in FItems do if SameText(Category, p.Value.Categoty) then CArray.Add<string>(Result, p.Value.Description);
+end;
+
 class constructor RegisterDialog.Create;
 begin
-  FItems := TDictionary<PTypeInfo, PTypeInfo>.Create;
+  FItems := TDictionary<PTypeInfo, TDialogData>.Create;
 end;
 
 class destructor RegisterDialog.Destroy;
@@ -1530,9 +1554,14 @@ begin
   FItems.Free;
 end;
 
-class procedure RegisterDialog.Add<T, D>;
+class procedure RegisterDialog.Add<T, D>(const Description: string = ''; const Category: string = '');
+ var
+  dd: TDialogData;
 begin
-  FItems.AddOrSetValue(TypeInfo(T), TypeInfo(D));
+  dd.DialogID := TypeInfo(D);
+  dd.Description := Description;
+  dd.Categoty := Category;
+  FItems.AddOrSetValue(TypeInfo(T), dd);
   TRegister.AddType<T, IDialog>.LiveTime(ltSingleton);
 end;
 
@@ -1542,22 +1571,33 @@ begin
   GContainer.RemoveModel<T>;
 end;
 
-class function RegisterDialog.TryGet<D>(out Dialog: IDialog): Boolean;
+class function RegisterDialog.TryGet(const Category, Description: string; out Dialog: IDialog): Boolean;
  var
-  p : TPair<PTypeInfo,PTypeInfo>;
+  p : TPair<PTypeInfo,TDialogData>;
   i : IInterface;
 begin
   Result := False;
-  for p in RegisterDialog.FItems do
-    if (p.Value = TypeInfo(D)) then
+  for p in FItems do
+    if SameText(Category, p.Value.Categoty) and SameText(Description, p.Value.Description) then
+     Exit(Gcontainer.TryGetInstance(p.Key, i) and Supports(i, IDialog, Dialog));
+end;
+
+class function RegisterDialog.TryGet<D>(out Dialog: IDialog): Boolean;
+ var
+  p : TPair<PTypeInfo,TDialogData>;
+  i : IInterface;
+begin
+  Result := False;
+  for p in FItems do
+    if (p.Value.DialogID = TypeInfo(D)) then
      Exit(Gcontainer.TryGetInstance(p.Key, i) and Supports(i, IDialog, Dialog));
 end;
 
 class procedure RegisterDialog.UnInitialize(D: PTypeInfo);
  var
-  p : TPair<PTypeInfo,PTypeInfo>;
+  p : TPair<PTypeInfo,TDialogData>;
 begin
-  for p in RegisterDialog.FItems do if p.Value = D then begin Gcontainer.RemoveInstance(p.Key); Exit; end;
+  for p in FItems do if p.Value.DialogID = D then begin Gcontainer.RemoveInstance(p.Key); Exit; end;
 end;
 
 class procedure RegisterDialog.UnInitialize<D>;

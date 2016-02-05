@@ -2,7 +2,10 @@ unit ImportExport;
 
 interface
 
-uses System.SysUtils, Vcl.Dialogs, System.Variants, Xml.XMLIntf, RootImpl, debug_except;
+uses ExtendIntf,
+     System.SysUtils, Vcl.Dialogs, System.Variants, Xml.XMLIntf, RootImpl, debug_except, System.TypInfo,
+     System.Generics.Defaults,
+     System.Generics.Collections;
 
 type
   IImportExport = interface
@@ -26,6 +29,22 @@ type
   public
     constructor Create(Root: IXMLNode);
   end;
+
+{  GImport = class
+  private
+   type
+    TDialogData = record
+      DialogID: PTypeInfo;
+      Description: string;
+    end;                                 //   категория
+    class var Fitems: TDictionary<TDialogData, string>;
+    class constructor Create;
+    class destructor Destroy;
+  public
+    class procedure Add<DialogID: IInterface>(const Category, Description: string);
+    class function CategoryDescriptions(const Category: string): TArray<string>;
+    class function TryGet(const Category, Description: string; out Dialog: IDialog): Boolean;
+  end;}
 
 implementation
 
@@ -92,5 +111,38 @@ function TImportExport.GetExportFilters: string;
 begin
   Result := GetFilters('EXPORT');
 end;
+
+{ GImport }
+
+{class procedure GImport.Add<DialogID>(const Category, Description: string);
+ var
+  d: TDialogData;
+begin
+  d.DialogID := TypeInfo(DialogID);
+  d.Description := Description;
+  Fitems.AddOrSetValue(d, Category);
+end;
+
+class function GImport.CategoryDescriptions(const Category: string): TArray<string>;
+ var
+  p :TPair<TDialogData, string>;
+begin
+  for p in Fitems do if SameText(p.Value, Category) then CArray.Add<string>(Result, p.Key.Description);
+end;
+
+class constructor GImport.Create;
+begin
+  Fitems := TDictionary<TDialogData, string>.Create();
+end;
+
+class destructor GImport.Destroy;
+begin
+  Fitems.Free;
+end;
+
+class function GImport.TryGet(const Category, Description: string; out Dialog: IDialog): Boolean;
+begin
+
+end;    }
 
 end.

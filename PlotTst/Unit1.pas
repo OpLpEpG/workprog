@@ -4,11 +4,10 @@ interface
 
 uses Plot.Controls,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, CustomPlot,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.DBGrids, Vcl.Grids, Data.DB, Datasnap.DBClient, JvMemoryDataset, VirtualTrees;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.DBGrids, Vcl.Grids, Data.DB, Datasnap.DBClient, JvMemoryDataset;
 
 type
   TForm1 = class(TForm)
-    VirtualStringTree1: TVirtualStringTree;
     procedure FormCreate(Sender: TObject);
   private
     procedure WMEraseBkgnd(var Msg: TWMEraseBkgnd); message WM_ERASEBKGND;

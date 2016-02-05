@@ -156,7 +156,7 @@ begin
   else
    begin
     Result := TALLMetaData.Create(Name);
-    TRegister.AddType<TALLMetaData>.AddInstance(Name, Result as IInterface);
+    TRegister.AddType<TALLMetaData>.AddInstance(Name, Result as IInterface).LiveTime(ltSingletonNamed);
    end
 end;
 

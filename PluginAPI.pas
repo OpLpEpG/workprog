@@ -186,6 +186,9 @@ type
   Dialog_SetupRootDevice = interface
   ['{3937B0BF-C38B-4EDD-8448-FCE62D8C7CAC}']
   end;
+  Dialog_SetupOptions = interface
+  ['{7C787021-291B-4ADE-B7AF-18335E46BC89}']
+  end;
 
 //  DIALOG_SETUP_ComPortConnectIO: TGUID = '{96F45FBD-735E-4350-823A-77DA84785BF0}';
 //  DIALOG_SETUP_NetConnectIO: TGUID     = '{BC171C83-9C49-42A0-B6BC-ED2079BE4742}';

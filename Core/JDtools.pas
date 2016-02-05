@@ -3,7 +3,7 @@ unit JDtools;
 interface
 
 uses
-     debug_except, RootIntf, PluginAPI, ExtendIntf, Container, RootImpl,  System.UITypes,
+     debug_except, RootIntf, PluginAPI, ExtendIntf, Container, RootImpl,  System.UITypes, Xml.XMLIntf,
      Vcl.Controls, Vcl.Graphics, Vcl.ComCtrls, Winapi.Messages, Vcl.Forms, Winapi.Windows, JvInspector,JvResources,
      System.SyncObjs,
 
@@ -103,6 +103,29 @@ type
    property DisplayName: string read FDisplayName write FDisplayName;
    property ReadOnly: Boolean read FReadOnly write FReadOnly;
   end;
+
+  /// для SERIAL_NO
+  TJvInspectorOptionDataEvent = reference to procedure(Item: TJvCustomInspectorItem; Option: IXMLNode; var Data: IXMLNode);
+  TJvInspectorOptionData = class(TJvInspectorCustomConfData)
+  private
+    /// не атрибут а XMLNode
+    FDataNode: IXMLNode;
+    FOption: IXMLNode;
+  protected
+    function GetAsFloat: Extended; override;
+    procedure SetAsFloat(const Value: Extended); override;
+    function ExistingValue: Boolean; override;
+    procedure WriteValue(const Value: string); override;
+    class function ToTypeInfo(atip: Integer): PTypeInfo; overload;
+    class function ToTypeInfo(Option: IXMLNode): PTypeInfo; overload;
+  public
+    function ReadValue: string; override;
+    class function New1(const AParent: TJvCustomInspectorItem;
+          DataNode, Option: IXMLNode; AOnAddOPtion: TJvInspectorOptionDataEvent): TJvCustomInspectorItem;
+    class function New(const AParent: TJvCustomInspectorItem;
+          RootDataNode, RootOption: IXMLNode; AOnAddOPtion: TJvInspectorOptionDataEvent): TJvInspectorItemInstances; reintroduce;
+  end;
+  IDialogOptions = IDialog<IXMLNode, IXMLNode, TJvInspectorOptionDataEvent, TDialogResult>;
 
 
 implementation
@@ -563,6 +586,118 @@ begin
 end;
 
 {$ENDREGION TJvInspectorArrayPropData}
+
+{$REGION 'TJvInspectorOptionData'}
+
+{ TJvInspectorOptionData }
+
+function TJvInspectorOptionData.ExistingValue: Boolean;
+begin
+  if not FDataNode.HasAttribute(key) then FDataNode.Attributes[key] := FOption.Attributes['Значение'];
+  Result := True;
+end;
+
+function TJvInspectorOptionData.ReadValue: string;
+begin
+  Result := FDataNode.Attributes[key];
+end;
+
+procedure TJvInspectorOptionData.SetAsFloat(const Value: Extended);
+begin
+  CheckReadAccess;
+  if TypeInfo = System.TypeInfo(TDateTime) then WriteValue(DateTimeToStr(Value))
+  else if TypeInfo = System.TypeInfo(TTime) then WriteValue(TimeToStr(Value))
+  else if TypeInfo = System.TypeInfo(TDate) then WriteValue(DateToStr(Value))
+  else inherited
+end;
+
+class function TJvInspectorOptionData.ToTypeInfo(Option: IXMLNode): PTypeInfo;
+ var
+  i: Integer;
+begin
+  if Option.HasAttribute('DataType') then i := StrToIntDef(Option.Attributes['DataType'], 0) else i := 0;
+  Result := ToTypeInfo(i);
+end;
+
+class function TJvInspectorOptionData.ToTypeInfo(atip: Integer): PTypeInfo;
+begin
+  case atip of
+   PRG_TIP_INT      : Result := System.TypeInfo(Integer);
+   PRG_TIP_REAL     : Result := System.TypeInfo(Double);
+   PRG_TIP_DATE_TIME: Result := System.TypeInfo(TDateTime);
+   PRG_TIP_DATE     : Result := System.TypeInfo(TDate);
+   PRG_TIP_TIME     : Result := System.TypeInfo(TTime);
+   PRG_TIP_BOOL     : Result := System.TypeInfo(Boolean);
+   else               Result := System.TypeInfo(string);
+  end;
+end;
+
+procedure TJvInspectorOptionData.WriteValue(const Value: string);
+begin
+  FDataNode.Attributes[key] := Value;
+end;
+
+class function TJvInspectorOptionData.New1(const AParent: TJvCustomInspectorItem; DataNode, Option: IXMLNode; AOnAddOPtion: TJvInspectorOptionDataEvent): TJvCustomInspectorItem;
+ var
+  Data: TJvInspectorOptionData;
+begin
+  if not Assigned(DataNode) or not Assigned(Option) then raise EJvInspectorData.CreateRes(@RsEDataSetDataSourceIsUnassigned);
+  if Option.HasAttribute('Hidden') and (Option.Attributes['Hidden'] = '1') then Exit(nil);
+
+  Data := CreatePrim(Option.Attributes['Описание'], Option.ParentNode.Attributes['Категория'], Option.NodeName, ToTypeInfo(Option));
+  Data.FDataNode := DataNode;
+  Data.FOption := Option;
+  Data := TJvInspectorOptionData(DataRegister.Add(Data));
+  if Data <> nil then
+   begin
+    Result := Data.NewItem(AParent);
+    if Option.HasAttribute('ReadOnly') then Result.ReadOnly := Option.Attributes['ReadOnly'] = '1';
+    if Result is TJvInspectorBooleanItem then TJvInspectorBooleanItem(Result).ShowAsCheckbox := True;
+    if Assigned(AOnAddOPtion) then AOnAddOPtion(Result, Option, DataNode);
+    Data.FDataNode := DataNode;
+   end
+  else
+    Result := nil;
+end;
+
+function TJvInspectorOptionData.GetAsFloat: Extended;
+ var
+  d: TDateTime;
+begin
+  if (TypeInfo = System.TypeInfo(TDateTime)) or (TypeInfo = System.TypeInfo(TTime)) or(TypeInfo = System.TypeInfo(TDate)) then
+   begin
+    CheckReadAccess;
+    if TryStrToFloat(FDataNode.Attributes[key], Result) then Exit;
+    if TryStrToDateTime(FDataNode.Attributes[key], d) then Exit(d);
+    Result := Now;
+   end
+  else Result := inherited
+end;
+
+class function TJvInspectorOptionData.New(const AParent: TJvCustomInspectorItem; RootDataNode, RootOption: IXMLNode; AOnAddOPtion: TJvInspectorOptionDataEvent): TJvInspectorItemInstances;
+ var
+  TmpItem: TJvCustomInspectorItem;
+  CatItem: TJvInspectorCustomCategoryItem;
+  c,o: IXMLNode;
+  Res: TArray<TJvCustomInspectorItem>;
+begin
+  for c in XEnum(RootOption) do
+   begin
+    CatItem := TJvInspectorCustomCategoryItem.Create(AParent, nil);
+    CatItem.Name := c.NodeName; // the internal value.  <BUGFIX OCT 23, 2003: WAP.>
+    CatItem.DisplayName := c.Attributes['Категория']; // The displayed value
+    CatItem.SortKind := iskNone;
+    CatItem.Expanded := True;
+    for o in XEnum(c) do
+     begin
+      TmpItem := New1(CatItem, RootDataNode, o, AOnAddOPtion);
+      if Assigned(TmpItem) then CArray.Add<TJvCustomInspectorItem>(Res, TmpItem);
+     end;
+   end;
+   Result := TJvInspectorItemInstances(Res);
+end;
+
+{$ENDREGION}
 
 initialization
   with TJvCustomInspectorData.ItemRegister do

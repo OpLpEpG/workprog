@@ -4,7 +4,7 @@ interface
 
 uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, math, MetrForm, AutoMetr.Inclin, RootImpl,
      MetrInclin.Math, XMLScript.Math, UakiIntf,
-     VirtualTrees, Xml.XMLIntf, Vcl.Menus,
+     VirtualTrees, Xml.XMLIntf, Vcl.Menus, JvInspector,
      Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
      Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls;
 
@@ -27,21 +27,29 @@ type
     FStolVizir: Double;
     FStolAzimut: Double;
     FStolZenit: Double;
-    procedure NParamClick(Sender: TObject);
+//    procedure NParamClick(Sender: TObject);
     procedure NShowTrrClick(Sender: TObject);
     procedure NAziCorrClick(Sender: TObject);
     procedure NZenCorrClick(Sender: TObject);
+    procedure NNewAlgClick(Sender: TObject);
+    procedure NOldAlgClick(Sender: TObject);
   protected
     FStep: record
             stp: Integer;
             root: Variant;
            end;
+    FCurAzim, FCurViz, FCurZu: Double;
+    FExtendMenus: TMenuItem;
+    FNewAlg: Boolean;
     FAziCorr: Double;
     FZenCorr: Double;
+    procedure DoStandartSetup(Item: TJvCustomInspectorItem; Option: IXMLNode; var Data: IXMLNode); override;
     function NAziCorrCaption: string;
     function NZenCorrCaption: string;
     function FindMaxErr(alg: IXMLNode; from, too: Integer; const attr: string): Double;
-    function AddStep(const Info: string; const Args: array of const): Variant;
+    procedure RefindAzi(from, too: Integer; alg, trr: IXMLNode);
+    procedure RefindZen(from, too: Integer; alg, trr: IXMLNode);
+    function AddStep(const Info: string; a, z, o: Double): Variant;
     procedure Loaded; override;
     procedure DoSetFont(const AFont: TFont); override;
     procedure DoUpdateData(NewFileData: Boolean = False); override;
@@ -69,9 +77,28 @@ implementation
 
 {$R *.dfm}
 
-uses tools, MetrInclin.CheckFormSetup, MetrInclin;
+uses tools, {MetrInclin.CheckFormSetup,} MetrInclin;
 
 { TFormInclinCheck }
+
+procedure TFormInclinCheck.NNewAlgClick(Sender: TObject);
+begin
+  FNewAlg := True;
+  ReCalc();
+  DoUpdateData();
+end;
+
+procedure TFormInclinCheck.NOldAlgClick(Sender: TObject);
+begin
+  FNewAlg := False;
+  HasXTree(GetMetr([], DevData), GetMetr([], FileData), procedure(devroot, dev, failRoot, fail: IXMLNode)
+  begin
+    fail.NodeValue := dev.NodeValue;
+  end);
+  ReCalc();
+  DoUpdateData();
+end;
+
 
 function TFormInclinCheck.NAziCorrCaption: string;
 begin
@@ -108,6 +135,12 @@ begin
   inherited;
   TreeSetFont(TreeH);
   TreeSetFont(TreeA);
+end;
+
+procedure TFormInclinCheck.DoStandartSetup(Item: TJvCustomInspectorItem; Option: IXMLNode; var Data: IXMLNode);
+begin
+  inherited;
+  if (Option.NodeName = 'ErrZU') or (Option.NodeName = 'ErrAZ') or (Option.NodeName = 'ErrAZ5') then TJvInspectorFloatItem(Item).Format := '0.00';
 end;
 
 procedure TFormInclinCheck.DoStopAtt(AttNode: IXMLNode);
@@ -158,13 +191,20 @@ begin
   TFormInclin.InitT(TreeA);
   TFormInclin.InitT(TreeH);
   inherited;
-  NIsMedian.Visible := True;
-  AddToNCMenu('-');
-  AddToNCMenu(NAziCorrCaption, NAziCorrClick);
-  AddToNCMenu(NZenCorrCaption, NZenCorrClick);
-  AddToNCMenu('Показывать поправки', NShowTrrClick, 9, AUTO_CHECK[PanelP.Visible]);
+//  NIsMedian.Visible := True;
+  AddToNCMenu('-', nil, 10);
+  FExtendMenus := AddToNCMenu('Дополнительно', nil, 11, -1);
+  AddToNCMenu('-', nil, 12);
+
+  AddToNCMenu('Пересчитать поверку с поправками устройства', NOldAlgClick, -1, -1, FExtendMenus);
+  AddToNCMenu('-', nil, -1, -1, FExtendMenus);
+  AddToNCMenu(NAziCorrCaption, NAziCorrClick, -1, -1, FExtendMenus);
+  AddToNCMenu(NZenCorrCaption, NZenCorrClick, -1, -1, FExtendMenus);
+  AddToNCMenu('Рассчет новых поправок', NNewAlgClick, 14);
+  AddToNCMenu('Показывать поправки', NShowTrrClick, 15, AUTO_CHECK[PanelP.Visible]);
+
   //n.Checked := PanelP.Visible;
-  AddToNCMenu('Параметры поверки...', NParamClick);
+//  AddToNCMenu('Параметры поверки...', NParamClick);
   FAutomatMetrology := TinclAuto.Create(Self, AutoReport);
   AttestatPanel.Align := alBottom;
 end;
@@ -179,11 +219,11 @@ begin
   Result := 'P_1'
 end;
 
-procedure TFormInclinCheck.NParamClick(Sender: TObject);
-begin
-  if TFormInclinCheckSetup.Execute(GetMetr([MetrolType], FileData)) then
-     if TrrFile <> '' then FileData.OwnerDocument.SaveToFile(TrrFile)
-end;
+//procedure TFormInclinCheck.NParamClick(Sender: TObject);
+//begin
+//  if TFormInclinCheckSetup.Execute(GetMetr([MetrolType], FileData)) then
+//     if TrrFile <> '' then FileData.OwnerDocument.SaveToFile(TrrFile)
+//end;
 
 procedure TFormInclinCheck.NShowTrrClick(Sender: TObject);
 begin
@@ -271,9 +311,9 @@ begin
    end;
 end;
 
-function TFormInclinCheck.AddStep(const Info: string; const Args: array of const): Variant;
+function TFormInclinCheck.AddStep(const Info: string; a, z, o: Double): Variant;
 begin
-  Result := TMetrInclinMath.AddStep(FStep.stp, Format(Info, Args), FStep.root);
+  Result := TMetrInclinMath.AddStep(FStep.stp, Format(Info, [a,z,o]), FStep.root);
   TXMLScriptMath.AddXmlPath(Result, 'зенит.CLC');
   TXMLScriptMath.AddXmlPath(Result, 'азимут.CLC');
   TXMLScriptMath.AddXmlPath(Result, 'отклонитель.CLC');
@@ -294,8 +334,9 @@ begin
   Result.маг_наклон.METR := ME_ANGLE;
   Result.амплит_accel.CLC.VALUE := 0;
   Result.амплит_magnit.CLC.VALUE := 0;
-  Result.СТОЛ.азимут := 0;
-  Result.СТОЛ.зенит := 0;
+  Result.СТОЛ.азимут := a;
+  Result.СТОЛ.зенит := z;
+//  Result.СТОЛ.визир := 0;
   Result.СТОЛ.err_азимут := 0;
   Result.СТОЛ.err_зенит := 0;
   Inc(FStep.stp);
@@ -307,52 +348,63 @@ function TFormInclinCheck.UserSetupAlg(alg: IXMLNode): Boolean;
   i, zu: Integer;
   procedure AddVizir(v: Integer);
   begin
-    s := AddStep('прибор: визир %d градусов.',[v*45]);
-    s.TASK.Vizir_Dev := v*45;
+    FCurViz := v*45;
+    s := AddStep('прибор: визир %2:g градусов.', FCurAzim, FCurZu, FCurViz);
+    s.TASK.Vizir_Dev := FCurViz;
     s.TASK.Vizir_tol := 0.5;
     s.TASK.Vizir_NIter := 4;
     s.TASK.Dalay_Kadr := 5;
   end;
   procedure AddAzim(a: Integer);
   begin
-    s := AddStep('стол: Азимут %d градусов.',[a*30]);
-    s.TASK.Azimut_Stol := a*30;
+    FCurAzim := a*30;
+    s := AddStep('стол: Азимут %g градусов.', FCurAzim, FCurZu, FCurViz);
+    s.TASK.Azimut_Stol := FCurAzim;
     s.TASK.Dalay_Kadr := 5;
   end;
 begin
   Result := True;
   FStep.root := XToVar(alg);
   FStep.stp := 1;
-  s := AddStep('стол: Азимут стол 0, Зенит 30, прибор: визир %d градусов.', [0]);
+  FCurZu := 30;
+  FCurAzim := 0;
+  FCurViz := 0;
+  s := AddStep('стол: Азимут стол 0, Зенит 30, прибор: визир 0 градусов.', FCurAzim, FCurZu, FCurViz);
   s.TASK.Azimut_Stol := 0;
   s.TASK.Zenit_Stol := 30;
   s.TASK.Vizir_Dev :=  0;
   s.TASK.Vizir_tol :=  0.5;
   s.TASK.Vizir_NIter :=  4;
   s.TASK.Dalay_Kadr := 5;
+
   for I := 1 to 7 do AddVizir(i);
-  zu := 60;
-  while zu <= 120 do
+
+  FCurZu := 60;
+  while FCurZu <= 120 do
    begin
-    s := AddStep('Зенит %d, прибор: визир 315 градусов.', [zu]);
-    s.TASK.Zenit_Stol := zu;
+    FCurViz := 315;
+    s := AddStep('Зенит %1:g, прибор: визир 315 градусов.', FCurAzim, FCurZu, FCurViz);
+    s.TASK.Zenit_Stol := FCurZu;
     s.TASK.Vizir_Dev :=  315;
     s.TASK.Vizir_tol :=  0.5;
     s.TASK.Vizir_NIter :=  4;
     s.TASK.Dalay_Kadr := 5;
     for I := 6 downto 0 do AddVizir(i);
-    Inc(zu, 30);
-    if zu > 120 then Break;
-    s := AddStep('Зенит %d, прибор: визир 0 градусов.', [zu]);
-    s.TASK.Zenit_Stol := zu;
+    FCurZu := FCurZu + 30;
+    if FCurZu > 120 then Break;
+    s := AddStep('Зенит %1:g, прибор: визир 0 градусов.', FCurAzim, FCurZu, FCurViz);
+    s.TASK.Zenit_Stol := FCurZu;
     s.TASK.Vizir_Dev :=  0;
     s.TASK.Vizir_tol :=  0.5;
     s.TASK.Vizir_NIter :=  4;
     s.TASK.Dalay_Kadr := 5;
     for I := 1 to 7 do AddVizir(i);
-    Inc(zu, 30);
+    FCurZu := FCurZu +30;
    end;
-  s := AddStep('стол: Азимут стол %d, Зенит 120, прибор: визир 180 градусов.', [0]);
+   FCurAzim := 0;
+   FCurZu := 120;
+   FCurViz := 180;
+  s := AddStep('стол: Азимут стол %g, Зенит 120, прибор: визир 180 градусов.', FCurAzim, FCurZu, FCurViz);
   s.TASK.Azimut_Stol := 0;
   s.TASK.Zenit_Stol := 120;
   s.TASK.Vizir_Dev := 180;
@@ -360,26 +412,28 @@ begin
   s.TASK.Vizir_NIter := 4;
   s.TASK.Dalay_Kadr := 5;
   for i := 1 to 11 do AddAzim(i);
-  zu := 90;
-  while zu >= 30 do
+  FCurZu := 90;
+  while FCurZu >= 30 do
    begin
-    s := AddStep('стол: Азимут стол 330, Зенит %d градусов', [zu]);
-    s.TASK.Zenit_Stol := zu;
+    s := AddStep('стол: Азимут стол 330, Зенит %1:g градусов', FCurAzim, FCurZu, FCurViz);
+    s.TASK.Zenit_Stol := FCurZu;
     s.TASK.Dalay_Kadr := 5;
     for i := 10 downto 0 do AddAzim(i);
-    Dec(zu, 30);
-    if zu < 30 then break;
-    s := AddStep('стол: Азимут стол 0, Зенит %d градусов', [zu]);
-    s.TASK.Zenit_Stol := zu;
+    FCurZu := FCurZu - 30;
+    if FCurZu < 30 then break;
+    s := AddStep('стол: Азимут стол 0, Зенит %1:g градусов', FCurAzim, FCurZu, FCurViz);
+    s.TASK.Zenit_Stol := FCurZu;
     s.TASK.Dalay_Kadr := 5;
     for i := 1 to 11 do AddAzim(i);
-    Dec(zu, 30);
+    FCurZu := FCurZu - 30;
    end;
-  s := AddStep('стол: Азимут стол 0, Зенит %d градусов', [10]);
+  FCurZu := 10;
+  s := AddStep('стол: Азимут стол 0, Зенит %1:g градусов', FCurAzim, FCurZu, FCurViz);
   s.TASK.Zenit_Stol := 10;
   s.TASK.Dalay_Kadr := 5;
   for i := 1 to 11 do AddAzim(i);
-  s := AddStep('стол: Азимут стол 330, Зенит %d градусов', [5]);
+  FCurZu := 5;
+  s := AddStep('стол: Азимут стол 330, Зенит %1:g градусов', FCurAzim, FCurZu, FCurViz);
   s.TASK.Zenit_Stol := 5;
   s.TASK.Dalay_Kadr := 5;
   for i := 10 downto 0 do AddAzim(i);
@@ -394,6 +448,38 @@ begin
   for I := from to too do if TryGetX(alg, Format('STEP%d.СТОЛ',[I]), n, attr) and (Abs(Result) < Abs(n.NodeValue)) then Result := n.NodeValue
 end;
 
+
+procedure TFormInclinCheck.RefindZen(from, too: Integer; alg, trr: IXMLNode);
+ var
+  i: Integer;
+  t, a: variant;
+  crZen: Double;
+begin
+  t := XtoVar(trr);
+  for I := from to too do
+   begin
+    a := XToVar(GetXNode(alg, Format('STEP%d',[I])));
+    TMetrInclinMath.FindZenViz(a, t);
+    crZen := (a.СТОЛ.зенит + FZenCorr);
+    if crZen > 180 then a.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(a.зенит.CLC.VALUE -(360 - crZen))
+    else a.СТОЛ.err_зенит := TMetrInclinMath.DeltaAngle(a.зенит.CLC.VALUE - crZen);
+   end;
+end;
+
+procedure TFormInclinCheck.RefindAzi(from, too: Integer; alg, trr: IXMLNode);
+ var
+  i: Integer;
+  t, a: variant;
+begin
+  t := XtoVar(trr);
+  for I := from to too do
+   begin
+    a := XToVar(GetXNode(alg, Format('STEP%d',[I])));
+    TMetrInclinMath.FindAzim(a, t);
+    a.СТОЛ.err_азимут := TMetrInclinMath.DeltaAngle(a.азимут.CLC.VALUE - (a.СТОЛ.азимут + FAziCorr));
+   end;
+end;
+
 function TFormInclinCheck.UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean;
 begin
   Result := True;
@@ -401,10 +487,22 @@ begin
   case Step of
    32 :
        begin
+        RefindZen(1, 32, alg, trr);
+        RefindAzi(1, 32, alg, trr);
         alg.Attributes['ErrZU']  := FindMaxErr(alg, 1,    32, 'err_зенит');
        end;
-   80 : alg.Attributes['ErrAZ']  := FindMaxErr(alg, 33,   80, 'err_азимут');
-   104: alg.Attributes['ErrAZ5'] := FindMaxErr(alg, 81,  105, 'err_азимут');
+   80 :
+     begin
+      RefindZen(33, 80, alg, trr);
+      RefindAzi(33, 80, alg, trr);
+      alg.Attributes['ErrAZ']  := FindMaxErr(alg, 33,   80, 'err_азимут');
+     end;
+   104:
+    begin
+     RefindZen(81, 104, alg, trr);
+     RefindAzi(81, 104, alg, trr);
+     alg.Attributes['ErrAZ5'] := FindMaxErr(alg, 81,  104, 'err_азимут');
+    end;
   end;
 end;
 

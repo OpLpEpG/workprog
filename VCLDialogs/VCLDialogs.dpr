@@ -20,7 +20,8 @@ uses
   VCL.Dlg.ConnectIO.NET in 'VCL.Dlg.ConnectIO.NET.pas' {FormSetupNet},
   VCL.Dlg.ConnectIO.WLAN in 'VCL.Dlg.ConnectIO.WLAN.pas' {FormSetupWlan},
   VCL.Dlg.Device in 'VCL.Dlg.Device.pas' {DlgSetupDev},
-  VCL.Dlg.RootDevice in 'VCL.Dlg.RootDevice.pas' {FormSetupRootDevice};
+  VCL.Dlg.RootDevice in 'VCL.Dlg.RootDevice.pas' {FormSetupRootDevice},
+  VCL.Dlg.OptionSetup in 'VCL.Dlg.OptionSetup.pas' {FormOptionSetup};
 
 {$R *.res}
 

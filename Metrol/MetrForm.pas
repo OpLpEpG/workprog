@@ -2,7 +2,7 @@ unit MetrForm;
 
 interface
 
-uses system.UITypes,
+uses system.UITypes,  JDtools,   JvInspector,
   DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, tools,XMLScript, Parser, RootImpl, System.IOUtils,
   Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls, Xml.XMLDoc,   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, System.Bindings.Expression,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf, VirtualTrees,
@@ -47,7 +47,7 @@ type
     FAttOld: IXMLNode;
     FAttSum: IXMLNode;
     FAttCnt, FAttN: Integer;
-    FAttCount: Integer;
+//    FAttCount: Integer;
     FState: MetrologStates;
     BAttStart: TButton;
     BAttStop: TButton;
@@ -57,7 +57,7 @@ type
     BAutoStop: TButton;
 
     FStepTreePopupMenu : TPopupActionBar;
-    FIsMedian: Boolean;
+//    FIsMedian: Boolean;
 
     procedure BAttStartClick(Sender: TObject);
     procedure BAttCancelClick(Sender: TObject);
@@ -66,7 +66,7 @@ type
     procedure BAutoStartClick(Sender: TObject);
     procedure BAutoStopClick(Sender: TObject);
 
-    procedure NIsMedianClick(Sender: TObject);
+//    procedure NIsMedianClick(Sender: TObject);
     procedure NConnectClick(Sender: TObject);
     procedure NFileOpenClick(Sender: TObject);
     procedure NFileSaveAsClick(Sender: TObject);
@@ -85,10 +85,14 @@ type
     procedure SetTrrFile(const Value: string);
     function NewFFileData(const DevName: string): IXMLNode;
     procedure StatusBarDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel; const Rect: TRect);
+    function GetAttCount: Integer;
+    function GetIsMedian: Boolean;
   protected
-    NIsMedian: TMenuItem;
+//    NIsMedian: TMenuItem;
     FlagNoUpdateFromEtalon: boolean;
     procedure AutoReport(Status: TStatusAutomatMetrology; const info: string);
+
+    procedure DoStandartSetup(Item: TJvCustomInspectorItem; Option: IXMLNode; var Data: IXMLNode); virtual;
 
     procedure InitializeNewForm; override;
     procedure Loaded; override;
@@ -129,6 +133,7 @@ type
     property AutoLabel: TLabel read FLabelAuto;
 
     property FileData: IXMLNode read FFileData;
+    property DevData: IXMLNode read FDevData;
 
     property State: MetrologStates read FState;
 
@@ -136,11 +141,12 @@ type
     property C_MetaDataInfo: TInfoEventRes read FMetaDataInfo write SetMetaDataInfo; //live binding
     property C_RemoveDevice: string read FDataDevice write SetRemoveDevice;
     property C_UpdateDeviceMetrology: TInfoEventRes read FMetaDataInfo write SetUpdateDeviceMetrology;
+
+    property AttCount: Integer read GetAttCount;// write FAttCount default 5;
+    property IsMedian: Boolean read GetIsMedian;// write FIsMedian default False;
   published
     property DataDevice: string read FDataDevice write SetDataDevice;
     property TrrFile: string read FTrrFile write SetTrrFile;
-    property AttCount: Integer read FAttCount write FAttCount default 5;
-    property IsMedian: Boolean read FIsMedian write FIsMedian default False;
 end;
 
   TAutomatMetrology = class(TAggObject, IAutomatMetrology)
@@ -336,7 +342,7 @@ procedure TFormMetrolog.InitializeNewForm;
   ie: IXMLNode;
 begin
   inherited;
-  FAttCount := 5;
+//  FAttCount := 5;
   FAttCnt := 0;
 
   FStatusBar := CreateUnLoad<TStatusBar>;
@@ -387,8 +393,8 @@ begin
   NConnect := AddToNCMenu('Подключить к устройству');
   NTrrApply := AddToNCMenu('Копировать поправки в устройство', NTrrApplyClick);
   NTrrApply.Enabled := False;
-  NIsMedian := AddToNCMenu('Медианный метод осреднения', NIsMedianClick, -1, 0);
-  NIsMedian.Visible := False;
+//  NIsMedian := AddToNCMenu('Медианный метод осреднения', NIsMedianClick, -1, 0);
+//  NIsMedian.Visible := False;
 
   AddToNCMenu('-');
   AddToNCMenu('Установки...', NStandartSetupClick);
@@ -416,7 +422,7 @@ procedure TFormMetrolog.Loaded;
 begin
   Include(FState, mstLockUpdate);
   inherited;
-  NIsMedian.Checked := FIsMedian;
+//  NIsMedian.Checked := IsMedian;
   GlobalCore.QueryInterface(IDeviceEnum, de);
   if Assigned(de) then  Bind('C_RemoveDevice', de, ['S_BeforeRemove']);// (de as IBind).CreateManagedBinding(Self, , ['S_BeforeRemove']);
   FStatusBar.Top := ClientHeight;
@@ -792,6 +798,28 @@ begin
    end;
 end;
 
+function TFormMetrolog.GetAttCount: Integer;
+ var
+  rm: IXMLNode;
+begin
+  try
+   Result := GetMetr([MetrolType], FileData).Attributes['AttCount'];
+  except
+   Result := 5;
+  end;
+end;
+
+function TFormMetrolog.GetIsMedian: Boolean;
+ var
+  rm: IXMLNode;
+begin
+  try
+   Result := GetMetr([MetrolType], FileData).Attributes['IsMedian'];
+  except
+   Result := False;
+  end;
+end;
+
 function TFormMetrolog.GetCurrentNode: IXMLNode;
  var
   pv: PVirtualNode;
@@ -894,10 +922,10 @@ begin
    end;
 end;
 
-procedure TFormMetrolog.NIsMedianClick(Sender: TObject);
-begin
-  FIsMedian := NIsMedian.Checked;
-end;
+//procedure TFormMetrolog.NIsMedianClick(Sender: TObject);
+//begin
+//  FIsMedian := NIsMedian.Checked;
+//end;
 
 procedure TFormMetrolog.NTreeHeaderClick(Sender: TObject);
  var
@@ -961,8 +989,30 @@ begin
 end;
 
 procedure TFormMetrolog.NStandartSetupClick(Sender: TObject);
+ var
+  d: IDialog;
+  rm, ro: IXMLNode;
+  Ldoc: IXMLdocument;
+  optFile: string;
 begin
-  TFormMetrSetup.Execute(Self);
+  rm := GetMetr([MetrolType], FileData);
+
+  Assert(Assigned(rm));
+
+  optFile := Format('%sDevices\Метрология.%s.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame, MetrolType]);
+  if not FileExists(optFile) then optFile := Format('%sDevices\Метрология.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame]);
+  if not FileExists(optFile) then optFile := Format('%sDevices\Метрология.xml', [ExtractFilePath(ParamStr(0))]);
+  LDoc := NewXDocument();
+  LDoc.LoadFromFile(optFile);
+
+  rm.Attributes['DevName'] := rm.ParentNode.ParentNode.ParentNode.NodeName +'.'+rm.ParentNode.NodeName;
+
+  if RegisterDialog.TryGet<Dialog_SetupOptions>(d) then (d as IDialogOptions).Execute(LDoc.DocumentElement, rm, DoStandartSetup,
+  procedure(d: IDialog; Res: TModalResult)
+  begin
+    if (Res = mrOk) and (FTrrFile <> '') then FFileData.OwnerDocument.SaveToFile(FTrrFile)
+  end);
+  //TFormMetrSetup.Execute(Self);
 end;
 
 procedure TFormMetrolog.NConnectClick(Sender: TObject);
@@ -1035,6 +1085,11 @@ procedure TFormMetrolog.DoSetFont(const AFont: TFont);
 begin
   inherited;
   TreeSetFont(FStepTree);
+end;
+
+procedure TFormMetrolog.DoStandartSetup(Item: TJvCustomInspectorItem; Option: IXMLNode; var Data: IXMLNode);
+begin
+  if Option.NodeName = AT_SERIAL then Data := Data.ParentNode.ParentNode.ParentNode;
 end;
 
 procedure TFormMetrolog.DoStartAtt(AttNode: IXMLNode);
@@ -1158,7 +1213,7 @@ begin
     BAttCancel.Enabled := not (mstAutomat in Fstate);
     FAttOld := cur.CloneNode(True);
     if cur.HasAttribute('ATT_COUNT') then FAttCnt := cur.Attributes['ATT_COUNT']
-    else FAttCnt := FAttCount;
+    else FAttCnt := AttCount;
     FAttN := FAttCnt;
     FLabel.Caption := Format('Шаг: %s-Начало аттестации',[cur.Attributes['STEP']]);
     Include(FState, mstAttr);

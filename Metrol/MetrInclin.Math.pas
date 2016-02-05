@@ -211,6 +211,7 @@ type
     class procedure ExportP1ToCalc(const TrrFile: string; NewTrr: Variant); static;
     class procedure ExportP2ToCalc(const TrrFile: string; NewTrr: Variant); static;
     class procedure ExportP3ToCalc(const TrrFile: string; NewTrr: Variant); static;
+    class procedure ExportP4ToCalc(const TrrFile: string; NewTrr: Variant); static;
     class procedure ImportIncFile(const TrrFile: string; NewTrr: Variant); static;
     class function DeltaAngle(ang: Double): Double; static;
     class function CorrAngle(ang: Double): Double; inline; static;
@@ -218,8 +219,13 @@ type
 //    class function UaAngle(Root: IXMLNode): Double; inline; static;
     class procedure AddSum<C: TIObject, constructor>(Root: IXMLNode; Data: Double); static;
 //    class function GetSum(Root: IXMLNode): Double; inline; static;
-    class procedure FindZenViz(incl, trr: Variant); static;
-    class procedure FindAzim(incl, trr: Variant); static;
+    class procedure FindZenViz(incl, trr: Variant); overload; static;
+    class procedure FindAzim(incl, trr: Variant); overload; static;
+                             // X,Y,Z c metrologieq
+    class procedure FindAzim(X,Y,Z, Vizir, Zenit: Double; out Azim, Dip, H: Double); overload; static;
+                             // X,Y,Z c metrologieq
+    class procedure FindZenViz(X,Y,Z: Double; out Vizir, Zenit: Double); overload; static;
+
     // обратная залача для тестовых целей
     class function FindXYZ(A, Z, O, I, Amp: Double): TInclPoint; static;
   end;
@@ -316,6 +322,7 @@ begin
   'procedure ImportIncFile(const TrrFile: string; NewTrr: Variant)',
   'procedure ExportToInc(const TrrFile: string; NewTrr: Variant)',
   'procedure SetupRoll(FirstStep: integer; Zen, Azim: Double; trr: variant)',
+  'procedure ExportP4ToCalc(const TrrFile: string; NewTrr: Variant)',
   'procedure ExportP3ToCalc(const TrrFile: string; NewTrr: Variant)',
   'procedure ExportP2ToCalc(const TrrFile: string; NewTrr: Variant)',
   'procedure ExportP1ToCalc(const TrrFile: string; NewTrr: Variant)'], CallMeth);
@@ -330,6 +337,7 @@ begin
   else if MethodName = 'EXPORTP1TOCALC' then  ExportP1ToCalc(Params[0], Params[1])
   else if MethodName = 'EXPORTP2TOCALC' then  ExportP2ToCalc(Params[0], Params[1])
   else if MethodName = 'EXPORTP3TOCALC' then  ExportP3ToCalc(Params[0], Params[1])
+  else if MethodName = 'EXPORTP4TOCALC' then  ExportP4ToCalc(Params[0], Params[1])
 end;
 
 class function TMetrInclinMath.CorrAngle(ang: Double): Double;
@@ -507,7 +515,7 @@ end;
 procedure TAzimErr.CheckStepData(d: Variant);
 begin
   if     (Abs(TMetrInclinMath.DeltaAngle(FAzimStol - d.СТОЛ.азимут)) < 10)
-     and (Abs(TMetrInclinMath.DeltaAngle(FZenitStol - d.СТОЛ.зенит)) < 2) 
+     and (Abs(TMetrInclinMath.DeltaAngle(FZenitStol - d.СТОЛ.зенит)) < 2)
      and (Abs(ve^[Fj, Fi]) < Abs(d.СТОЛ.err_азимут)) then
     begin 
      ve^[Fj, Fi] := Double(d.СТОЛ.err_азимут);
@@ -571,6 +579,76 @@ begin
        Range.setDataArray(ea);
 
        ShowReportTitle(r, NewTrr.P_3);
+
+       r.SaveAs(TrrFile);
+     finally
+      CoUnInitialize();
+     end;
+    except
+     on E: Exception do TDebug.DoException(E);
+    end;
+  end).Start;
+end;
+
+class procedure TMetrInclinMath.ExportP4ToCalc(const TrrFile: string; NewTrr: Variant);
+  const
+   TBL_ZU_AZ: array[0..5] of Integer = (5,10,30,60,90,120);
+   TBL_ZU_ALL: array[0..6] of Integer = (0,5,10,30,60,90,120);
+begin
+  if not TVxmlData(NewTrr.P_4).Node.HasAttribute('DevName') or
+     not TVxmlData(NewTrr).Node.ParentNode.ParentNode.HasAttribute(AT_SERIAL) then
+     raise EExportReportException.Create('Параметры поверки не установлены');
+  TThread.CreateAnonymousThread(procedure
+   var
+    v: Variant;
+    i, j, index_row: Integer;
+    r: IReport;
+    ste: TArray<IAngleErr>;
+    ae: IAngleErr;
+    Sheet, Range, st: Variant;
+    function Azi_index(idx: integer): Integer;
+    begin
+      Result := (idx div 8) mod 12;
+      if Odd(idx div (8*12)) then Result := 11 - Result;
+    end;
+    function vizir_index(idx: integer): Integer;
+    begin
+      Result := idx mod 8;
+      if Odd(idx div 8) then Result := 7 - Result
+    end;
+  begin
+    try
+     CoInitialize(nil);
+     try
+       r := GlobalCore as IReport;
+       r.OpenDocument(ExtractFilePath(ParamStr(0))+'Devices\ReportInclin4.ods');
+
+       v := VarArrayCreate([0,8{столбцы}, 0, 479{строки}], varVariant);
+
+       for i := 0 to 479 do
+        begin
+         { TODO : fund Index Row }
+         st := XToVar(GetXNode(TVxmlData(NewTrr).Node, 'P_4.STEP'+(i+1).ToString));
+                      //zenit       // azimut             //vizir
+         index_row := (i div (8*12))*8*12 + Azi_index(i) * 8 + vizir_index(i);
+         v[0, index_row] :=  (i mod 8) * 45;//st.СТОЛ.отклонитель;
+         v[1, index_row] :=  Double(st.СТОЛ.зенит);
+         v[2, index_row] :=  Double(st.СТОЛ.азимут);
+
+         v[3, index_row] :=  Double(st.отклонитель.CLC.VALUE);
+         v[4, index_row] :=  Double(st.зенит.CLC.VALUE);
+         v[5, index_row] :=  Double(st.азимут.CLC.VALUE);
+
+         v[6, index_row] :=  '';//st.СТОЛ.отклонитель;
+         v[7, index_row] :=  Double(st.СТОЛ.err_зенит);
+         v[8, index_row] :=  Double(st.СТОЛ.err_азимут);
+        end;
+
+       Sheet := r.Document.GetSheets.getByIndex(1);
+       Range := Sheet.getCellRangeByName('A5:I484');
+       Range.setDataArray(v);
+
+       ShowReportTitle(r, NewTrr.P_4);
 
        r.SaveAs(TrrFile);
      finally
@@ -918,6 +996,30 @@ begin
   incl.маг_наклон.CLC.VALUE  := TXMLScriptMath.RadToDeg360(b);
 end;
 
+class procedure TMetrInclinMath.FindAzim(X,Y,Z, Vizir, Zenit: Double; out Azim, Dip, H: Double);
+ var
+  os,oc,zs,zc,
+  a, zu, o, mo, b,
+  Hx, Hy, Hz: Double;
+begin
+  o := DegToRad(Vizir);
+  zu := DegToRad(Zenit);
+
+  os := sin(o);
+  oc := cos(o);
+  zs := sin(zu);
+  zc := cos(zu);
+
+  Hx := (x*oc - y*os)*zc + z*zs;
+  Hy :=  x*os + y*oc;
+  Hz :=-(x*oc - y*os)*zs + z*zc;
+
+  H := TXMLScriptMath.Hypot3D(x, y, z);
+
+  Azim := TXMLScriptMath.RadToDeg360(-Arctan2(Hy, Hx));
+  Dip := TXMLScriptMath.RadToDeg360(Arctan2(Hypot(Hx, Hy), Hz));
+end;
+
 class function TMetrInclinMath.FindXYZ(A, Z, O, I, Amp: Double): TInclPoint;
  var
   co, so: Double;
@@ -940,6 +1042,12 @@ begin
   Result.G.X := -Amp*co*sz;
   Result.G.Y :=  Amp*so*sz;
   Result.G.Z :=  Amp*cz;
+end;
+
+class procedure TMetrInclinMath.FindZenViz(X, Y, Z: Double; out Vizir, Zenit: Double);
+begin
+  Vizir := TXMLScriptMath.RadToDeg360(Arctan2(y, -x));
+  Zenit := TXMLScriptMath.RadToDeg360(Arctan2(Hypot(x, y), z));
 end;
 
 class procedure TMetrInclinMath.FindZenViz(incl, trr: Variant);

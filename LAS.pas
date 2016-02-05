@@ -38,14 +38,20 @@ interface
 
    ILasDataSection = interface(ILasSection)
    ['{5C20E1FA-D28F-445B-8EA3-AEF9CF43BB91}']
-    function CheckData(const Data: array of Variant): Boolean;
-    procedure AddData(const Data: array of Variant);
+    function CheckData(const Data: array of Variant): Boolean;// ненужно
+    procedure AddData(const Data: array of Variant);// Index: integer = -1; check: boolean = False);
+    procedure Clear;
     function GetData: TArray<TArray<Variant>>;
     property Items: TArray<TArray<Variant>> read GetData;
    end;
 
    ILasDoc = interface
    ['{D2E9C18C-D003-45FC-A5ED-F2D14C339E5D}']
+   //private
+    function GetDataCount: Integer;
+    function GetItem(const Mnem: string; Index: Integer): Variant;
+    procedure SetItem(const Mnem: string; Index: Integer; const Value: Variant);
+   //public
     function Version: ILasFormatSection;
     function Well: ILasFormatSection;
     function Params: ILasFormatSection;
@@ -55,6 +61,9 @@ interface
 
     procedure SaveToFile(const AFileName: String);
     procedure LoadFromFile(const AFileName: String);
+
+    property DataCount: Integer read GetDataCount;
+    property Item[const Mnem: string; Index: Integer]: Variant read GetItem write SetItem; default;
    end;
 
 implementation

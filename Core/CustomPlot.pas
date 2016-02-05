@@ -352,9 +352,9 @@ type
   private
     FFileName: string;
     FXParamPath: string;
-    FYParamPath: string;
+//    FYParamPath: string;
     procedure SetXParamPath(const Value: string);
-    procedure SetYParamPath(const Value: string);
+//    procedure SetYParamPath(const Value: string);
   public
     constructor Create(AOwner: TGraphPar); override;
   published
@@ -1272,10 +1272,10 @@ begin
   FXParamPath := Value;
 end;
 
-procedure TFileDataLink.SetYParamPath(const Value: string);
-begin
-  FYParamPath := Value;
-end;
+//procedure TFileDataLink.SetYParamPath(const Value: string);
+//begin
+//  FYParamPath := Value;
+//end;
 
    {$REGION 'GraphParam'}
 
