@@ -144,7 +144,6 @@ object Form4: TForm4
     OnClick = Button9Click
   end
   object DataSource1: TDataSource
-    DataSet = ms
     Left = 120
     Top = 200
   end
@@ -178,8 +177,8 @@ object Form4: TForm4
     Top = 264
   end
   object FDTable1: TFDTable
-    Left = 336
-    Top = 240
+    Left = 656
+    Top = 152
   end
   object FDLocalSQL1: TFDLocalSQL
     Connection = FDConnection1
@@ -198,17 +197,17 @@ object Form4: TForm4
   object FDQuery1: TFDQuery
     Connection = FDConnection1
     SQL.Strings = (
-      'select * from ds_1,ds_2  where ds_2.DEPT = ds_1.field1 ')
+      'select * from l,x where l.ID = x.ID')
     Left = 192
     Top = 152
   end
   object FDGUIxWaitCursor1: TFDGUIxWaitCursor
     Provider = 'Forms'
-    Left = 336
-    Top = 120
+    Left = 344
+    Top = 152
   end
   object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
-    Left = 520
-    Top = 88
+    Left = 544
+    Top = 152
   end
 end

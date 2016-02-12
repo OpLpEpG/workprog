@@ -43,6 +43,11 @@ const
   T_WRK   = 'WRK';
   T_RAM    = 'RAM';
   T_EEPROM = 'EEP';
+  T_GLU = 'GLU';
+  ARR_META: array[0..3] of string = (T_WRK, T_RAM, T_GLU, T_EEPROM);
+  // ветви где есть данные DataSet
+  ARR_META_RECS: array[0..2] of string = (T_WRK, T_RAM, T_GLU);
+
   T_MTR = 'Метрология';
 
   AT_FILE_NAME = 'FILE_NAME';
@@ -132,13 +137,21 @@ function GetXNode(Root: IXMLNode; const Path: string; CreatePathNotExists: Boole
 function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True): Boolean;
 function ExecXTree(root: IXMLNode; func: TTestRef): IXMLNode; overload; //возвращает первое совпадение
 procedure ExecXTree(root: IXMLNode; func: Tproc<IXMLNode>; Dec: Boolean = False); overload;
+
 procedure FindAllWorks(root: IXMLNode; func: TWorkDataRef);
 procedure FindAllRam(root: IXMLNode; func: TWorkDataRef);
 procedure FindAllEeprom(root: IXMLNode; func: TWorkDataRef);
+
 function FindDev(root: IXMLNode; adr: Integer): IXMLNode;
 function FindWork(root: IXMLNode; adr: Integer): IXMLNode;
 function FindRam(root: IXMLNode; adr: Integer): IXMLNode;
 function FindEeprom(root: IXMLNode; adr: Integer): IXMLNode;
+
+
+// Рекурсивный поиск Dev root  может быть секцией ALL_META_DATA или DEVICES (проект 3)
+function FindDevs(root: IXMLNode): TArray<IXMLNode>;
+// аналог FindAllWorks FindAllRam FindAllEeprom
+function GetDevsSections(Devs: TArray<IXMLNode>; const Section: string): TArray<IXMLNode>;
 
 //function MyTimeToStr(t: TTime): string;
 //function MyStrToTime(s: string): TTime;
@@ -166,7 +179,12 @@ function FindXmlNode(root: IXMLNode; const Section, NodeName: string; var Node: 
 function DevNode(DataNode: IXMLNode): IXMLNode;
 function CalcNode(DataNode: IXMLNode): IXMLNode;
 
+/// <summary>
+/// для проекта 3 или ALL_META_DATA
+/// </summary>
 function GetIDeviceMeta(Doc: IXMLDocument; const Iname: string): IXMLNode;
+
+function StrIn(const Item: string; const InArr: array of string): Boolean;
 //function IsData(Node: IXMLNode): Boolean;
 //function IsWrkRam(Node: IXMLNode): Boolean;
 
@@ -871,7 +889,7 @@ begin
   Result := Node.NodeName;
   Node := Node.ParentNode;
   repeat
-   if (Node.NodeName = T_WRK) or (Node.NodeName = T_RAM) or (Node.NodeName = T_EEPROM) then Exit;
+   if StrIn(Node.NodeName, ARR_META) then Exit;
    Result := Node.NodeName +'.'+ Result;
    Node := Node.ParentNode;
   until not Assigned(Node);
@@ -981,15 +999,40 @@ function FindDev(root: IXMLNode; adr: Integer): IXMLNode;
   u: IXMLNode;
 begin
   Result := nil;
-//  if not Assigned(root) then Exit;
+/// не подходит для проекта версии 3  ??? подходит если выбрать устройство !!!
+
   for u in XEnum(root) do
     if u.HasAttribute(AT_ADDR) and (u.Attributes[AT_ADDR] = adr) then
      Exit(u);
+
+/// подходит для проекта версии 3
 //  Result := ExecXTree(root, function(n: IXMLNode): boolean
 //   begin
 //    if n.HasAttribute(AT_ADDR) and (n.Attributes[AT_ADDR] = adr) then Result := True
 //    else Result := False
 //   end);
+end;
+
+function FindDevs(root: IXMLNode): TArray<IXMLNode>;
+ var
+  Res: TArray<IXMLNode>;
+begin
+  ExecXTree(root, procedure(n: IXMLNode)
+  begin
+    if n.HasAttribute(AT_ADDR) then Carray.Add<IXMLNode>(Res, n);
+  end);
+  Result := Res;
+end;
+
+function GetDevsSections(Devs: TArray<IXMLNode>; const Section: string): TArray<IXMLNode>;
+ var
+  n, s: IXMLNode;
+begin
+  for n in Devs do
+   begin
+    s := n.ChildNodes.FindNode(Section);
+    if Assigned(s) then Carray.Add<IXMLNode>(Result, s);
+   end;
 end;
 
 function FindWork(root: IXMLNode; adr: Integer): IXMLNode;
@@ -1933,6 +1976,14 @@ end;
 function TAngle.ToString: string;
 begin
   Result := FloatToStr(Angle)
+end;
+
+function StrIn(const Item: string; const InArr: array of string): Boolean;
+ var
+  s: string;
+begin
+  for s in InArr do if Item = s then Exit(True);
+  Result := False;
 end;
 
 initialization

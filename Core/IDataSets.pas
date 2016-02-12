@@ -69,6 +69,7 @@ type
     FIsTableOpen: Boolean;
   //  FRecordSize: Integer; // actual data + housekeeping
     FCurrent: Integer;
+    FInternalCalcDataLen: Word;
     // буферизация
     function AllocRecordBuffer: TRecordBuffer; override;
     procedure FreeRecordBuffer(var Buffer: TRecordBuffer); override;
@@ -260,6 +261,7 @@ end;}
 function TRLDataSet.GetRecordSize: Word;
 begin
   Result := SizeOf(TRecBuffer);
+  if AutoCalcFields then inc(Result, FInternalCalcDataLen);
 end;
 
 function TRLDataSet.AllocRecordBuffer: TRecordBuffer;
@@ -338,20 +340,20 @@ begin
   Result := grOK; // default
   case GetMode of
     gmNext: // move on
-      if fCurrent < RecordCount - 1 then Inc(fCurrent)
+      if FCurrent < RecordCount - 1 then Inc(FCurrent)
       else Result := grEOF; // end of file
     gmPrior: // move back
-      if fCurrent > 0 then Dec(fCurrent)
+      if FCurrent > 0 then Dec(FCurrent)
       else Result := grBOF; // begin of file
     gmCurrent: // check if empty
-      if fCurrent >= RecordCount then Result := grEOF;
+      if FCurrent >= RecordCount then Result := grEOF;
   end;
 
   if Result = grOK then // read the data
     with PRecBuffer(Buffer)^ do
     begin
-      ID := fCurrent;
-      BookmarkFlag := bfCurrent;
+     ID := FCurrent;
+     BookmarkFlag := bfCurrent;
     end;
 end;
 

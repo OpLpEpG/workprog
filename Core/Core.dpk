@@ -109,7 +109,8 @@ contains
   Plot.Controls in 'Plot.Controls.pas',
   JDtools in 'JDtools.pas',
   LasDataSet in 'LasDataSet.pas',
-  FileDataSet in 'FileDataSet.pas';
+  FileDataSet in 'FileDataSet.pas',
+  XMLDataSet in 'XMLDataSet.pas';
 
 end.
 

@@ -2,18 +2,18 @@ unit Unit4;
 
 interface
 
-uses CustomPlot, System.IOUtils, Plot.GR32, gr32, DataSetIntf, Plot.Controls, LasDataSet,
-  Plot.DataSet,
+uses CustomPlot, System.IOUtils, Plot.GR32, gr32, DataSetIntf, Plot.Controls, LasDataSet, XMLDataSet, XMLScript.Math,
+  Plot.DataSet, Xml.XMLIntf,
   RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RTTI, Container, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Data.DB, JvMemoryDataset, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
-  FireDAC.Phys.SQLiteVDataSet, FireDAC.VCLUI.Wait, FireDAC.Comp.UI, IDataSets;
+  FireDAC.Phys.SQLiteVDataSet, FireDAC.VCLUI.Wait, FireDAC.Comp.UI, IDataSets, JvExDBGrids, JvDBGrid;
 
 type
-  TForm4 = class(TForm)
+  TForm4 = class(TForm, IALLMetaDataFactory, IALLMetaData)
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
@@ -50,10 +50,14 @@ type
     procedure Button9Click(Sender: TObject);
   private
     Graph: TCustomGraph;
-    ds: TPlotDataSet;
     ids, ilds: IdataSet;
+    d: IXMLDocument;
   public
-    { Public declarations }
+    function Get(const Name: string): IALLMetaData; overload;
+    function Get: IALLMetaData; overload;
+    function IALLMetaData.Get = ALLMetaDataGet;
+    function ALLMetaDataGet: IXMLDocument;
+    procedure Save;
   end;
 
 var
@@ -63,7 +67,7 @@ implementation
 
 {$R *.dfm}
 
-uses DlgEditParam, Unit1;
+uses tools, Unit1, DlgEditParam, manager3.DataImport;
 
 procedure TForm4.Button1Click(Sender: TObject);
  var
@@ -251,38 +255,55 @@ end;
 
 procedure TForm4.FormShow(Sender: TObject);
  var
-  lds: TDataSet;
+  xds, lds: TDataSet;
+  n: IXMLNode;
+  i: Integer;
 begin
+  TXMLScriptMath.Hypot3D(1,1,1);
   FormatSettings.DecimalSeparator := '.';
-//  d := TLasDataSet.Create;
-//  d.LasFile := 'c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las';
+  TRegister.AddType<TForm4, IALLMetaDataFactory>.LiveTime(ltSingleton).AddInstance(Self);
+
+  TLasDataSet.New('c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las', ids);
+  lds := ids.DataSet;
+
+  d := NewXDocument();
+  d.LoadFromFile('C:\Users\Public\Documents\Горизонт\WorkProg\Projects\TEST\TEST.xml');
+
 
   Form1.Show;
   Graph := Form1.Plot;
-  ds := TPlotDataSet.Create;
-  ids := ds as IdataSet;
-  ids._AddRef;
-  ids._AddRef;
 
-  TLasDataSet.New('c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723_corr.las', ilds);
-  TDebug.Log('RFS = %d   ', [ilds._AddRef -1]);
-  ilds._Release;
-  lds := ilds.DataSet;
-  lds.FieldDefs.Find('Hx').Free;
-  lds.FieldDefs.Find('Hy').Free;
-  lds.FieldDefs.Find('Hz').Free;
-  lds.FieldDefs.Find('Gx').Free;
-  lds.FieldDefs.Find('Gy').Free;
-  lds.FieldDefs.Find('Gz').Free;
+  TXMLDataSet.New(GetDevsSections(FindDevs(d.DocumentElement), T_WRK)[0], ilds, false);
 
- // lds.ObjectView := True;
-  FDLocalSQL1.DataSets.Add(lds, '', 'ds_2');
-  FDLocalSQL1.DataSets.Add(ds, '', 'ds_1');
+
+//  TDebug.Log('RFS = %d   ', [ilds._AddRef -1]);
+//  ilds._Release;
+
+  xds := ilds.DataSet;
+  xds.SparseArrays := True;
+
+//  for I := 0 to xds.FieldDefList.Count-1 do xds.FieldDefList[i].Name := 'Fild'+i.ToString;
+
+
+//  xds.Active := True;
+
+ // xds.FieldDefList.SaveToFile(Tpath.GetDirectoryName(ParamStr(0))+'\xds.txt');
+  //lds.ObjectView := True;
+
+//  lds.FieldDefs.Find('Hx').Free;
+//  lds.FieldDefs.Find('Hy').Free;
+//  lds.FieldDefs.Find('Hz').Free;
+//  lds.FieldDefs.Find('Gx').Free;
+//  lds.FieldDefs.Find('Gy').Free;
+//  lds.FieldDefs.Find('Gz').Free;
+
+  FDLocalSQL1.DataSets.Add(xds, '', 'x');
+  FDLocalSQL1.DataSets.Add(lds, '', 'l');
 
   DataSource1.DataSet := FDQuery1;
 //  DataSource1.DataSet := ds;
 //  DataSource1.DataSet := ms;
-//  DataSource1.DataSet := lds;
+//  DataSource1.DataSet := xds;
 
   DataSource1.DataSet.Active := True;
   TDebug.Log('RFS = %d   ', [ilds._AddRef -1]);
@@ -294,8 +315,26 @@ begin
 //  DataSource1.DataSet.AppendRecord([4,'1111']);
 //  DataSource1.DataSet.AppendRecord([5,'1111']);
 //  DataSource1.DataSet.AppendRecord([6,'1111']);
-  ids._Release;
-  ids._Release;
+end;
+
+function TForm4.ALLMetaDataGet: IXMLDocument;
+begin
+  Result := d;
+end;
+
+function TForm4.Get(const Name: string): IALLMetaData;
+begin
+  Result := Self;
+end;
+
+function TForm4.Get: IALLMetaData;
+begin
+  Result := Self;
+end;
+
+procedure TForm4.Save;
+begin
+
 end;
 
 end.

@@ -631,7 +631,7 @@ begin
          st := XToVar(GetXNode(TVxmlData(NewTrr).Node, 'P_4.STEP'+(i+1).ToString));
                       //zenit       // azimut             //vizir
          index_row := (i div (8*12))*8*12 + Azi_index(i) * 8 + vizir_index(i);
-         v[0, index_row] :=  (i mod 8) * 45;//st.СТОЛ.отклонитель;
+         v[0, index_row] :=  (index_row mod 8) * 45;//st.СТОЛ.отклонитель;
          v[1, index_row] :=  Double(st.СТОЛ.зенит);
          v[2, index_row] :=  Double(st.СТОЛ.азимут);
 

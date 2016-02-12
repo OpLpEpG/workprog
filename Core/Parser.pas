@@ -47,7 +47,7 @@ type
     // добавляет метрологию и рассчетные рараметры в XML
     class procedure SetMetr(node: IXMLNode; ExeSc: TXmlScript; ExecSetup: Boolean);
     // заполняет поля root текущими бинарными данными
-    class procedure SetData(root: IXMLNode; const Data: PByte);
+    class procedure SetData(root: IXMLNode; const Data: PByte; ParsArray: Boolean = True);
     class procedure GetData(root: IXMLNode; var Data: TOutArray);
     class procedure SetStd(root: IXMLNode; const Data: PByte);
     class procedure SetPsk(root: IXMLNode; const Data: PWord);
@@ -62,6 +62,8 @@ type
     class function ArrayStrToArray(const Data: string): TArray<Double>; static;
     class procedure Init;
     class procedure DeInit;
+    class procedure FromVar(Data: Variant; vt: Integer; pOutData: Pointer); overload;
+    class procedure FromVar(DataArr: string; vt, arr_len: Integer; pOutData: Pointer); overload;
   private
     const
 //     MAIN = 'MAIN_METR';
@@ -71,8 +73,6 @@ type
 //    class
     { TODO : сделать ToValue(Data: Pointer; vt: Integer): TValue }
     class function ToVar(Data: Pointer; vt: Integer): Variant;
-    class procedure FromVar(Data: Variant; vt: Integer; pOutData: Pointer); overload;
-    class procedure FromVar(DataArr: string; vt, arr_len: Integer; pOutData: Pointer); overload;
     class function HorizontToWord(Data: Word; vt: Integer): Word;
     class function ArrayToString(Data: PByte; cnt, vt: Integer): string;
   end;
@@ -259,15 +259,15 @@ begin
     varOleStr  :Result := ftString;
     varString  :Result := ftString;
     varUString :Result := ftString;
-    varSmallint:Result := ftInteger; { vt_i2           2 }
+    varSmallint:Result := ftSmallint; { vt_i2           2 }
     varInteger :Result := ftInteger; { vt_i4           3 }
-    varSingle  :Result := ftFloat; { vt_r4           4 }
+    varSingle  :Result := ftSingle; { vt_r4           4 }
     varDouble  :Result := ftFloat; { vt_r8           5 }
-    varCurrency:Result := ftFloat; { vt_cy           6 }
+    varCurrency:Result := ftCurrency; { vt_cy           6 }
     varDate    :Result := ftString; { vt_date         7  timestamp}
     varShortInt:Result := ftInteger; { vt_i1          16 }
-    varByte    :Result := ftInteger; { vt_ui1         17 }
-    varWord    :Result := ftInteger; { vt_ui2         18 }
+    varByte    :Result := ftByte; { vt_ui1         17 }
+    varWord    :Result := ftWord; { vt_ui2         18 }
     varLongWord:Result := ftLongWord; { vt_ui4         19 }
     varInt64   :Result := ftInteger; { vt_i8          20 }
     varUInt64  :Result := ftLongWord; { vt_ui8         21 }
@@ -308,6 +308,7 @@ begin
     varLongWord:Result := SizeOf(LongWord); { vt_ui4         19 }
     varInt64   :Result := SizeOf(Int64); { vt_i8          20 }
     varUInt64  :Result := SizeOf(UInt64); { vt_ui8         21 }
+    varString: Result := 255;
     var_i3     :Result := 3;
     var_ui3    :Result := 3;
     var_i2_15b :Result := 2;
@@ -357,12 +358,22 @@ end;
 
 
 class procedure TPars.FromVar(Data: Variant; vt: Integer; pOutData: Pointer);
+ var
+  b: TBytes;
 begin
   case vt of
     varWord        : PWord(pOutData)^ := Word(Data);
     varSmallint    : PSmallint(pOutData)^ := Smallint(Data);
+    varDouble      : PDouble(pOutData)^ := Double(Data);
     varSingle      : PSingle(pOutData)^ := Single(Data);
-    else  raise Exception.Create('НЕВОЗМОЖНО ПРЕОБРАЗОВАТЬ ВАРИАНТ В УКАЗАТЕЛЬ !!!');
+    varInteger     : Pinteger(pOutData)^ := integer(Data);
+    varDate        : PDouble(pOutData)^ := StrToDateTime(Data);
+    varString      :
+     begin
+      b := TEncoding.Default.GetBytes(Data);
+      Move((@b[0])^, pOutData^, Length(b));
+     end
+    else  raise Exception.Create('НЕВОЗМОЖНО ПРЕОБРАЗОВАТЬ ВАРИАНТ В БАЙТЫ !!!');
   end
 end;
 
@@ -589,7 +600,7 @@ begin
   Dec(InfoLen); Inc(Info); // parse cmdadr
   Add(node, Info, InfoLen); // указывает на тип - структуру
 end;
-
+                      //   указывает на device
 class procedure TPars.SetMetr(node: IXMLNode; ExeSc: TXmlScript; ExecSetup: Boolean);
  const
   SF = 'SIMPLE_FORMAT';
@@ -638,6 +649,7 @@ begin
   ExeSc.ClearLines;
   if ExecSetup then sd := TXmlScript.Create(nil);
   try
+   { TODO : Впроекте V3 работать не будет !!!! будет при правильном node}
    for d in XEnum(node) do if d.HasAttribute(AT_ADDR) then
     begin
      adr := d.Attributes[AT_ADDR];
@@ -687,12 +699,12 @@ begin
    Data := d;
 end;
 
-class procedure TPars.SetData(root: IXMLNode; const Data: PByte);
+class procedure TPars.SetData(root: IXMLNode; const Data: PByte; ParsArray: Boolean = True);
 begin
    ExecXTree(root, procedure(n: IXMLNode)
    begin
      if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) then
-      if n.ParentNode.HasAttribute(AT_ARRAY) then
+      if n.ParentNode.HasAttribute(AT_ARRAY) and ParsArray then
         n.Attributes[AT_VALUE] := ArrayToString(Data + Integer(n.Attributes[AT_INDEX]), n.ParentNode.Attributes[AT_ARRAY], n.Attributes[AT_TIP])
       else
         n.Attributes[AT_VALUE] := ToVar(Data + Integer(n.Attributes[AT_INDEX]), n.Attributes[AT_TIP]);

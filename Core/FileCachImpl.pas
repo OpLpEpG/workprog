@@ -134,6 +134,7 @@ begin
   FFile := FileStrm;
   if Supports(GContainer, IGlobalMemory, gm) then Cash := (GContainer as IGlobalMemory).GetMemorySize(MaxCash)
   else Cash := MaxCash;
+  FMapFrom := integer.MaxValue;
 end;
 
 destructor TFileMappingCash.Destroy;
@@ -177,6 +178,8 @@ begin
   if Count > Cash then Count := Cash;
   if FMapPosition < FMapFrom then Remap(FMapPosition)
   else if FMapPosition + Count > FMapFrom + Cash then Remap(FMapPosition);
+ // else if not Assigned(FMemory) then Remap(FMapPosition);
+
   PData := FMemory + FMapPosition - FMapFrom;
   if FMapPosition + Count > FMapFrom + Cash then Result := FMapFrom + Cash - FMapPosition
   else Result := Count;

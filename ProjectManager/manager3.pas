@@ -42,8 +42,8 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
   protected
     // IGlobalMemory
     function GetMemorySize(Need: Int64): Int64;
-   // IALLMetaDataFactory
 
+   // IALLMetaDataFactory
     function Get(const Name: string): IALLMetaData; overload;
     function Get: IALLMetaData; overload;
 

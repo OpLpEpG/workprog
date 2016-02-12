@@ -13,7 +13,11 @@ uses
   JDtools in '..\Core\JDtools.pas',
   VCLOpenDialog in '..\Core\VCLOpenDialog.pas',
   IDataSets in '..\Core\IDataSets.pas',
-  LasDataSet in '..\Core\LasDataSet.pas';
+  LasDataSet in '..\Core\LasDataSet.pas',
+  manager3.DataImport in '..\ProjectManager\manager3.DataImport.pas',
+  XMLDataSet in '..\Core\XMLDataSet.pas',
+  XMLScript.Math in '..\Core\XMLScript.Math.pas',
+  FileDataSet in '..\Core\FileDataSet.pas';
 
 {$R *.res}
 
