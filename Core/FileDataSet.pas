@@ -15,7 +15,8 @@ type
   public
     function IsArrray: Boolean;
     function GetPath: string;
-  published
+// published неподдерживаются
+  public
     property DataOffset: Integer read FDataOffset write FDataOffset;
     property ArraySize: Integer read FArraySize write FArraySize default 0;
     property ArrayType: Integer read FArrayType write FArrayType default 0;
@@ -43,14 +44,16 @@ type
     function FindFieldData(Buffer: PRecBuffer; Field: TField): PByte;
     function GetFieldDefsClass: TFieldDefsClass; override;
     function GetRecordCount: Integer; override;
+//    function GetFileName: string; override;
   public
     function GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean; override;
     property FileData: IFileData read GetFileData;
 /// <summary>
 ///  {week reference container}
 /// </summary>
-    class procedure New(const FileName: string; out Res: IDataSet); //virtual;
-  published
+    class procedure New(const FileName: string; RecordLength: Integer; out Res: IDataSet); //virtual;
+// published неподдерживаются
+  public
     property BinFileName: string read FBinFileName write FBinFileName;
     property RecordLength: Integer read FRecordLength write FRecordLength;
   end;
@@ -68,18 +71,23 @@ end;
 
 { TFileDataSet }
 
-class procedure TFileDataSet.New(const FileName: string; out Res: IDataSet);
+class procedure TFileDataSet.New(const FileName: string; RecordLength: Integer; out Res: IDataSet);
  var
   ii: IInterface;
+//  dse: IDataSetEnum;
 begin
-  if GContainer.TryGetInstance(ClassInfo, FileName, ii, False) then Res := ii as IDataSet
+//  if not Supports(GContainer, IDataSetEnum, dse) then Exit;
+//  if not dse.TryFind(FileName, Res) then
+  if GContainer.TryGetInstance(ClassInfo, FileName, ii) then Res := ii as IDataSet
   else
    begin
     Res := Create as IDataSet;
     TFileDataSet(Res.DataSet).BinFileName := FileName;
-    TRegistration.Create(ClassInfo).AddInstance(FileName, Res);
+    TFileDataSet(Res.DataSet).RecordLength := RecordLength;
+    TRegistration.Create(ClassInfo).AddInstance(Res.IName, Res);
     TFileDataSet(Res.DataSet).WeekContainerReference := True;
     TFileDataSet(Res.DataSet).FCurrDataID := -1;
+//    dse.Add(Res);
    end;
 end;
 
@@ -127,7 +135,7 @@ function TFileDataSet.GetFieldData(Field: TField; var Buffer: TValueBuffer): Boo
 begin
   Result := False;
   if Field.DataType in [ftADT] then Exit;
-//  TDebug.Log('  Field.FieldNo %d  %s   ', [Field.FieldNo, Field.FullName]);
+ // TDebug.Log('  Field.FieldNo %d  %s   ', [Field.FieldNo, Field.FullName]);
   if not GetActiveRecBuf(RecBuf) then Exit;
   Data := FindFieldData(RecBuf, Field);
   if Data <> nil then
@@ -150,6 +158,11 @@ begin
   FFileData := GFileDataFactory.Factory(TFileData, BinFileName);
   Result := FFileData;
 end;
+
+//function TFileDataSet.GetFileName: string;
+//begin
+//  Result := FBinFileName;
+//end;
 
 function TFileDataSet.GetRecordCount: Integer;
  var

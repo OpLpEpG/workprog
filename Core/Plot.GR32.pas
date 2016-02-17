@@ -18,9 +18,9 @@ type
     function GetMaxCashSize: Int64; virtual; abstract;
   end;
 
-  TGR32FileDataLink = class(TFileDataLink)
-  //property Cash: ICashedData read FCash implements ICashedData
-  end;
+//  TGR32FileDataLink = class(TFileDataLink)
+//  property Cash: ICashedData read FCash implements ICashedData
+//  end;
 
   TGR32GraphicCollumn = class(TGraphColmn)
   protected
@@ -506,13 +506,16 @@ procedure TGR32GraphicData.Render;
  var
   p: TGraphPar;
   Y: Integer;
+  points: TArrayOfFloatPoint;
 begin
   FBitmap.FillRect(0, 0, FBitmap.Width, FBitmap.Height, clWhite32);
   for p in Column.Params do if p.Visible then
    if p is TLineParam then
     begin
-   //   (p as IYDataLink).
-    //  (p as IDataLink).TryRead()
+    // points := (p as IDataLink).Read(YTopScreen, YButtomScreen)
+    // points := VertexReduction(points);
+    // (p as IYDataLink).
+    // (p as IDataLink).TryRead()
     end;
   DrowAxis;
 end;

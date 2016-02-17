@@ -2,8 +2,8 @@
 
 interface
 
-uses RootImpl, RootIntf, tools, debug_except, ExtendIntf, FileCachImpl, JDtools,
-     System.Bindings.Helper, System.IOUtils,
+uses RootImpl, RootIntf, tools, debug_except, ExtendIntf, FileCachImpl, JDtools,  Data.DB, DataSetIntf, IDataSets,
+     System.Bindings.Helper, System.IOUtils, System.TypInfo,
      Vcl.Grids,
      SysUtils, Controls, Messages, Winapi.Windows, Classes, System.Rtti, types,
      Vcl.Graphics, Vcl.Forms, Vcl.ExtCtrls, Vcl.Menus, Vcl.Themes, Vcl.GraphUtil;
@@ -281,74 +281,61 @@ type
   {$REGION 'Параметры колонки'}
 
   {$REGION 'DataLink'}
+
+  TAddpointEvent<T> = Reference to procedure(Y: Single; X: T);
+
   IDataLink = interface
+  ['{1D667235-A468-4DEA-B1AD-4EEF12F4BA25}']
+    function GetRecSize: Integer;
+    procedure ReadRec(RecCnt: Integer; out Data: Pointer; FromRec: Integer = -1);
+  end;
+
+  IDataLink<T> = interface(IDataLink)
   ['{421A0AD1-48C0-4DB0-A08D-281E0121C13D}']
-    function TryRead(id: Integer; out Data: TValue): Boolean;
-    function Count: Integer; //ID
-  end;
-
-  TYpoint = record
-   Y: Double;
-   id: Integer;
-  end;
-
-  IYDataLink = interface
-  ['{CB3CD728-5FEA-4F9F-A223-2D1E4B629FB0}']
-//    function YtoID(Y: Double): Integer;
-//    function IDtoY(id: Integer): Double;
-    procedure First;
-    procedure Last;
-    function Previous: Boolean;
-    function Next: Boolean;
-    function Data: TYpoint;
+    procedure Read(YFrom, Yto: Single; DeltaX, DeltaY, ScaleX, ScaleY: Single; AddpointEvent: TAddpointEvent<T>);
   end;
 
   TCustomDataLink = class;
 
-  TCustomYDataLink = class(TInterfacedPersistent)
-  private
-    FLink: TCustomDataLink;
-    FGraph: TCustomGraph;
-  protected
-    procedure First; virtual; abstract;
-    function Next: Boolean; virtual; abstract;
-    procedure Last; virtual; abstract;
-    function Previous: Boolean; virtual; abstract;
-    function Data: TYpoint; virtual; abstract;
-  public
-    constructor Create(AOwner: TCustomDataLink); virtual;
-    property Graph: TCustomGraph read FGraph;
-  end;
-
-  TLogDataLink = class(TCustomYDataLink)
-  private
-    Findex: Integer;
-  protected
-    procedure First; override;
-    procedure Last; override;
-    function Previous: Boolean; override;
-    function Next: Boolean; override;
-    function Data: TYpoint; override;
-  end;
-
   // привязка к проекту БД, las, lines, или директории с файлами Log Ram Glu
   // или к файлу активного фильтра
   TCustomDataLinkClass = class of TCustomDataLink;
-  TCustomDataLink = class(TInterfacedPersistent, IDataLink, IYDataLink)
+  TCustomDataLink = class abstract (TInterfacedPersistent, IDataLink{, IYDataLink})
   private
     FOwner: TGraphPar;
-    FYLink: TCustomYDataLink;
-    function GetYDataLink: TCustomYDataLink; virtual;
+    FIDataSet: IDataSet;
+    FDataSetDef: TIDataSetDef;
+    FXParamPath: string;
+    FYParamPath: string;
+    procedure SetDataSetDef(const Value: TIDataSetDef);
+    procedure SetXParamPath(const Value: string);
+    procedure SetYParamPath(const Value: string);
+    function GetDataSetClass: string;
+    procedure SetDataSetClass(const Value: string);
+    function GetDataSet: TDataSet;
   protected
-    function TryRead(id: Integer; out Data: TValue): Boolean; virtual; abstract;
-    function Count: Integer; virtual; abstract;
-    property YDataLink: TCustomYDataLink read GetYDataLink implements IYDataLink;
+  // IDataLink
+    function GetRecSize: Integer; virtual; abstract;
+    procedure ReadRec(RecCnt: Integer; out Data: Pointer; FromRec: Integer = -1); virtual; abstract;
   public
     constructor Create(AOwner: TGraphPar); virtual;
     destructor Destroy; override;
+    property DataSet: TDataSet read GetDataSet;
+  published
+    property DataSetDefClass: string read GetDataSetClass write SetDataSetClass;
+   [ShowProp('База данных', True)]  property DataSetDef: TIDataSetDef read FDataSetDef write SetDataSetDef;
+   [ShowProp('X', True)]  property XParamPath: string read FXParamPath write SetXParamPath;
+   [ShowProp('Y', True)]  property YParamPath: string read FYParamPath write SetYParamPath;
+  // [ShowProp('Y')]  property YParamPath: string read FYParamPath write SetYParamPath;
   end;
 
-  TFileDataLink = class(TCustomDataLink)
+   TCustomDataLink<T> = class (TCustomDataLink, IDataLink<T>)
+   protected
+    // IDataLink<T> = interface(IDataLink)
+    procedure Read(YFrom, Yto: Single; DeltaX, DeltaY, ScaleX, ScaleY: Single; AddpointEvent: TAddpointEvent<T>);overload; virtual; abstract;
+   end;
+
+{  TFileDataLink = class(TCustomDataLink)
   private
     FFileName: string;
     FXParamPath: string;
@@ -361,7 +348,7 @@ type
    [ShowProp('Файл', True)]  property FileName: string read FFileName write FFileName;
    [ShowProp('X')]  property XParamPath: string read FXParamPath write SetXParamPath;
   // [ShowProp('Y')]  property YParamPath: string read FYParamPath write SetYParamPath;
-  end;
+  end;}
   {$ENDREGION}
 
   TGraphParamClass = class of TGraphPar;
@@ -405,6 +392,7 @@ type
     property HideInLegend: boolean read FHideInLegend write SetHideInLegend;
     [ShowProp('История изменений')] property Filters: TParamFilters read FFilters;
   published
+//    property DataSet: TDataSet read FDataSet write SetDataSet;
     property LinkClass: string read GetLinkClass write SetLinkClass;
     [ShowProp('Источник', True)] property Link: TCustomDataLink read FLink write SetLink implements IDataLink;
     [ShowProp('Имя')]            property Title: string read FTitle write SetTitle;
@@ -1243,40 +1231,6 @@ begin
   FOwner := AOwner;
 end;
 
-destructor TCustomDataLink.Destroy;
-begin
-  if Assigned(FYLink) then FYLink.Free;
-  inherited;
-end;
-
-function TCustomDataLink.GetYDataLink: TCustomYDataLink;
-begin
-  if Assigned(FYLink) then Result := FYLink
-  else
-   begin
-
-   end;
-//  Result := FOwner.Graph.YDataLink;
-end;
-
-{ TFileDataLink }
-
-constructor TFileDataLink.Create(AOwner: TGraphPar);
-begin
-  inherited;
-
-end;
-
-procedure TFileDataLink.SetXParamPath(const Value: string);
-begin
-  FXParamPath := Value;
-end;
-
-//procedure TFileDataLink.SetYParamPath(const Value: string);
-//begin
-//  FYParamPath := Value;
-//end;
-
    {$REGION 'GraphParam'}
 
 { TGraphParam }
@@ -1326,6 +1280,11 @@ begin
   FColor := Value;
   NotifyCollumn;
 end;
+
+//procedure TGraphPar.SetDataSet(const Value: TDataSet);
+//begin
+//  FDataSet := Value;
+//end;
 
 procedure TGraphPar.SetDeltaX(const Value: Double);
 begin
@@ -1380,6 +1339,46 @@ procedure TGraphPar.SetVisible(const Value: Boolean);
 begin
   FVisible := Value;
   NotifyCollumn;
+end;
+
+destructor TCustomDataLink.Destroy;
+begin
+  if Assigned(FDataSetDef) then FreeAndNil(FDataSetDef);
+  inherited;
+end;
+
+function TCustomDataLink.GetDataSet: TDataSet;
+begin
+  if not Assigned(FIDataSet) then DataSetDef.FryGet(FIDataSet);
+  Result := FIDataSet.DataSet;
+end;
+
+function TCustomDataLink.GetDataSetClass: string;
+begin
+  if Assigned(FDataSetDef) then Result := FDataSetDef.ClassName
+  else Result :=  '';
+end;
+
+procedure TCustomDataLink.SetDataSetDef(const Value: TIDataSetDef);
+begin
+  if Assigned(FDataSetDef) then FDataSetDef.Free;
+  FDataSetDef := Value;
+end;
+
+procedure TCustomDataLink.SetDataSetClass(const Value: string);
+begin
+  if Assigned(FDataSetDef) then FreeAndNil(FDataSetDef);
+  if Value <> '' then FDataSetDef := TIDataSetDef((FindClass(Value)).Create());
+end;
+
+procedure TCustomDataLink.SetXParamPath(const Value: string);
+begin
+  FXParamPath := Value;
+end;
+
+procedure TCustomDataLink.SetYParamPath(const Value: string);
+begin
+  FYParamPath := Value;
 end;
 
 { TGraphParams }
@@ -2358,46 +2357,8 @@ end;
 
 {$ENDREGION}
 
-{ TLogDataLink }
-
-function TLogDataLink.Data: TYpoint;
-begin
-  Result.id := Findex;
-  Result.Y := Findex+1;
-end;
-
-procedure TLogDataLink.First;
-begin
-  Findex := 0;
-end;
-
-procedure TLogDataLink.Last;
-begin
-  Findex := FLink.Count-1;
-end;
-
-function TLogDataLink.Next: Boolean;
-begin
-  Inc(Findex);
-  Result := Findex > Graph.YLast;
-end;
-
-function TLogDataLink.Previous: Boolean;
-begin
-  Dec(Findex);
-  Result := Findex >= 0;
-end;
-
-{ TCustomYDataLink }
-
-constructor TCustomYDataLink.Create(AOwner: TCustomDataLink);
-begin
-  FLink := AOwner;
-  FGraph := FLink.FOwner.Graph;
-end;
-
 initialization
   RegisterClasses([TCustomGraphLegend, TCustomGraphData, TCustomGraphInfo]);
   RegisterClasses([TGraph, TGraphRegion, TGraphColmn, TGraphRow]);
-  RegisterClasses([TGraphPar, TLineParam, TWaveParam, TFileDataLink, TWaveletFilter]);
+  RegisterClasses([TCustomDataLink, TCustomDataLink<Single>, TGraphPar, TLineParam, TWaveParam, TWaveletFilter]);
 end.

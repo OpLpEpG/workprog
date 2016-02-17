@@ -158,6 +158,7 @@ type
 //    procedure AddInstance(const Name: string; Inst: string); overload;
     procedure AddInstance(const Name: string; Inst: string; Prior: Integer = 1000); overload;
 //    function ContainsInstance(const Name: string):Boolean; { TODO : write }
+    procedure NillInstance(const Name: string);
     procedure RemovInstance(const Name: string);
     procedure RemovInstances;
 
@@ -210,8 +211,18 @@ type
     function GetModelType(const ClassName: string): ModelType;
     function GetModelLiveTime(Model: ModelType): TLiveTime;
 
+    class function GetIName(const InstanceText: string): string;
+    class function GetClassName(const InstanceText: string): string;
+
     procedure AddTextInstance(serv: ServiceType; const InstanceText: string; Prior: Integer = 1000);
     // удаление
+    /// <summary>
+    /// обнуление Instance интерфейса
+    /// создается и сохраняется текст объекта
+    /// </summary>
+    procedure NillInstKnownServ(serv: ServiceType; const InstanceName: string);
+    procedure NillInstance(model: ModelType;  const InstanceName: string); overload;
+
     procedure RemoveModel<T: class>; inline; //при выгрузке плугина
     procedure RemoveModels;  inline; // при выгрузке программы
 
@@ -636,6 +647,20 @@ begin
   for i in fInstInject do i.aij.Inject(fInstanceType, i.member, i.a, Name);
 end;
 
+procedure TComponentModel.NillInstance(const Name: string);
+ var
+  v: TInstance;
+begin
+//  if fLiveTime <> ltSingletonNamed then raise Exception.Create(' <> ltSingletonNamed');
+  fSingleton := nil;
+  if not Assigned(fInst) then Exit;
+  if fInst.TryGetValue(Name, v) then
+   begin
+    v.fText := GetTextInstance(v);
+    v.fValue := nil;
+   end;
+end;
+
 {$ENDREGION}
 
 {$REGION 'TContainer'}
@@ -712,11 +737,11 @@ procedure TContainer.AddTextInstance(serv: ServiceType; const InstanceText: stri
   CName, IName: string;
   md: ModelType;
 begin
-  CName := InstanceText.Substring(InstanceText.IndexOf(':')+1, InstanceText.IndexOf(#$A)-InstanceText.IndexOf(':')-1).Trim;
+  CName := GetClassName(InstanceText);
 //  CName := Trim(Copy(InstanceText, Pos(':', InstanceText)+1, Pos(#$A, InstanceText)-Pos(':', InstanceText)-1));
   md := GContainer.GetModelType(CName);
   if not Assigned(md) then raise EContainer.CreateFmt('класс %s не найден',[CName]);
-  IName := Trim(Copy(InstanceText, Pos(' ', InstanceText)+1, Pos(':', InstanceText)- Pos(' ', InstanceText)-1));
+  IName := GetIName(InstanceText);
   TRegistration.Create(md).Add(Serv).AddInstance(IName, InstanceText, Prior);
 end;
 
@@ -883,6 +908,16 @@ begin
    end;
 end;
 {$ENDIF}
+
+class function TContainer.GetClassName(const InstanceText: string): string;
+begin
+  Result := InstanceText.Substring(InstanceText.IndexOf(':')+1, InstanceText.IndexOf(#$A)-InstanceText.IndexOf(':')-1).Trim;
+end;
+
+class function TContainer.GetIName(const InstanceText: string): string;
+begin
+  Result := Trim(Copy(InstanceText, Pos(' ', InstanceText)+1, Pos(':', InstanceText)- Pos(' ', InstanceText)-1));
+end;
 
 function TContainer.GetModelLiveTime(Model: ModelType): TLiveTime;
  var
@@ -1179,6 +1214,25 @@ end;
 function TContainer.ModelsAsArray<Service>: TArray<ModelType>;
 begin
   Result := ModelsAsArray(TypeInfo(Service));
+end;
+
+procedure TContainer.NillInstance(model: ModelType; const InstanceName: string);
+ var
+  m: TComponentModel;
+begin
+  if GContainer.FModels.TryGetValue(model, m) then m.nillInstance(InstanceName);
+end;
+
+procedure TContainer.NillInstKnownServ(serv: ServiceType; const InstanceName: string);
+ var
+  m: TComponentModel;
+  ms: TModels;
+begin
+  if FServices.TryGetValue(Serv, ms) then for m in ms do if Contains(m, InstanceName) then
+   begin
+    m.NillInstance(InstanceName);
+    Exit;
+   end;
 end;
 
 function TContainer.Enum<Service>(InitializeInstatces: Boolean): TEnumService<Service>;

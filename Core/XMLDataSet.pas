@@ -26,21 +26,22 @@ type
     FScript: TXmlScript;
     FInternalCalcData: TArray<TInternalCalcData>;
     function GetXMLSection: IXMLNode;
+    function GetScript: TXmlScript;
   protected
     function InternalCalcRecBuffer(Buffer: PRecBuffer): Boolean; override;
     property XMLSection: IXMLNode read GetXMLSection;
+    property Script: TXmlScript read GetScript;
   public
-    constructor Create; override;
-    destructor Destroy; override;
     procedure CreateFieldDefs(AXMLSection: IXMLNode; AObjectFields: Boolean);
                     // WRK RAM  GLU            //TXMLDataSet
     class procedure New(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean = True); overload;
-  published
-    property Device: string read FDevice write FDevice;
-    property ModulAdress: Integer read FModul write FModul;
-    property Section: string read FSection write FSection;
-    property XMLFileName: string read FXMLFileName write FXMLFileName;
-    property CalcDataLen: Word read FInternalCalcDataLen write FInternalCalcDataLen;
+// published неподдерживаются
+  public
+    property Device: string read FDevice;// write FDevice;
+    property ModulAdress: Integer read FModul;// write FModul;
+    property Section: string read FSection;// write FSection;
+    property XMLFileName: string read FXMLFileName;// write FXMLFileName;
+    property CalcDataLen: Word read FInternalCalcDataLen;// write FInternalCalcDataLen;
   end;
 
 
@@ -60,9 +61,9 @@ end;
 
 class procedure TXMLDataSet.New(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean);
 begin
-  inherited New(RootSection.Attributes[AT_FILE_NAME], DataSet);
+  inherited New(RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
   if not (DataSet.DataSet is TXMLDataSet) then raise Exception.Create('DataSet is not TXMLDataSet');
-  with TXMLDataSet(DataSet.DataSet) do if FieldDefs.Count = 0 then CreateFieldDefs(RootSection, ObjectFields);
+  with TXMLDataSet(DataSet.DataSet) do if (FieldDefs.Count = 0) or (ObjectFields <> ObjectView) then CreateFieldDefs(RootSection, ObjectFields);
 end;
 
 procedure TXMLDataSet.CreateFieldDefs(AXMLSection: IXMLNode; AObjectFields: Boolean);
@@ -147,13 +148,15 @@ begin
   FXMLSection := nil;
   ClcOffset := 0;
 
-  Section := AXMLSection.NodeName;
+  ObjectView := AObjectFields;
+
+  FSection := AXMLSection.NodeName;
   BinFileName := AXMLSection.Attributes[AT_FILE_NAME];
   RecordLength := AXMLSection.Attributes[AT_SIZE];
-  XMLFileName := AXMLSection.OwnerDocument.FileName;
-  ModulAdress := AXMLSection.ParentNode.Attributes[AT_ADDR];
+  FXMLFileName := AXMLSection.OwnerDocument.FileName;
+  FModul := AXMLSection.ParentNode.Attributes[AT_ADDR];
   RootName := AXMLSection.ParentNode.NodeName;
-  Device := AXMLSection.ParentNode.ParentNode.NodeName;
+  FDevice := AXMLSection.ParentNode.ParentNode.NodeName;
 
   FieldDefs.Add('ID', ftInteger);
   if AObjectFields then with FieldDefs.AddFieldDef do
@@ -167,17 +170,11 @@ begin
   FInternalCalcDataLen := ClcOffset;
 end;
 
-
-constructor TXMLDataSet.Create;
+function TXMLDataSet.GetScript: TXmlScript;
 begin
-  inherited;
-  FScript := TXmlScript.Create(nil);
-end;
-
-destructor TXMLDataSet.Destroy;
-begin
-  FScript.Free;
-  inherited;
+  if Assigned(FScript) then Exit(FScript);
+  FScript := TXmlScript.Create(Self);
+  Result := FScript;
 end;
 
 function TXMLDataSet.GetXMLSection: IXMLNode;
@@ -195,7 +192,7 @@ begin
    begin
     root := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get(XMLFileName).Get, Device);
     root := root.CloneNode(True);
-    TPars.SetMetr(root, FScript, False);
+    TPars.SetMetr(root, Script, False);
     root := FindDev(root, ModulAdress);
     root := root.ChildNodes.FindNode(Section);
     FXMLSection := root;
@@ -222,7 +219,7 @@ begin
   buf := GetRecData(Buffer);
   if not Assigned(buf) or not Assigned(XMLSection) or (Length(FInternalCalcData) = 0) then Exit(False);
   TPars.SetData(FXMLSection, buf, false);
-  FScript.Execute(Section, FModul);
+  Script.Execute(Section, FModul);
   pb := Pbyte(Buffer) + SizeOf(TRecBuffer);
   clcbuf := pb + Sizeof(Boolean);
   for d in FInternalCalcData do

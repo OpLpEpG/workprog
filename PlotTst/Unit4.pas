@@ -10,10 +10,11 @@ uses CustomPlot, System.IOUtils, Plot.GR32, gr32, DataSetIntf, Plot.Controls, La
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
-  FireDAC.Phys.SQLiteVDataSet, FireDAC.VCLUI.Wait, FireDAC.Comp.UI, IDataSets, JvExDBGrids, JvDBGrid;
+  FireDAC.Phys.SQLiteVDataSet, FireDAC.VCLUI.Wait, FireDAC.Comp.UI, IDataSets, JvExDBGrids, JvDBGrid, JvComponentBase, JvAppStorage,
+  JvAppXMLStorage, JvAppRegistryStorage;
 
 type
-  TForm4 = class(TForm, IALLMetaDataFactory, IALLMetaData)
+  TForm4 = class(TForm, IALLMetaDataFactory, IALLMetaData, IRegistry)
     Button2: TButton;
     Button3: TButton;
     Button4: TButton;
@@ -35,6 +36,10 @@ type
     Button7: TButton;
     Button8: TButton;
     Button9: TButton;
+    Button10: TButton;
+    Button11: TButton;
+    xini: TJvAppXMLFileStorage;
+    rini: TJvAppRegistryStorage;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -48,9 +53,12 @@ type
     procedure Button7Click(Sender: TObject);
     procedure Button8Click(Sender: TObject);
     procedure Button9Click(Sender: TObject);
+    procedure Button10Click(Sender: TObject);
+    procedure Button11Click(Sender: TObject);
   private
     Graph: TCustomGraph;
     ids, ilds: IdataSet;
+    xds, lds: TDataSet;
     d: IXMLDocument;
   public
     function Get(const Name: string): IALLMetaData; overload;
@@ -58,6 +66,11 @@ type
     function IALLMetaData.Get = ALLMetaDataGet;
     function ALLMetaDataGet: IXMLDocument;
     procedure Save;
+    // IRegistry
+    procedure SaveString(const Name, Value: String; Registry: Boolean = False);
+    function LoadString(const Name, DefValue: String; Registry: Boolean = False): String;
+    procedure SaveArrayString(const Root: String; const Value: TArray<string>; Registry: Boolean = False);
+    procedure LoadArrayString(const Root: String; var Value: TArray<string>; Registry: Boolean = False);
   end;
 
 var
@@ -68,6 +81,78 @@ implementation
 {$R *.dfm}
 
 uses tools, Unit1, DlgEditParam, manager3.DataImport;
+
+
+// IRegistry
+procedure TForm4.SaveArrayString(const Root: String; const Value: TArray<string>; Registry: Boolean = False);
+ var
+  i: Integer;
+  s: TJvCustomAppStorage;
+begin
+  if Registry then s := rini else s := xini;
+  s.DeleteSubTree(Root);
+  s.WriteInteger(Root+ '\ItemCount', Length(Value));
+  for i := 0 to Length(Value)-1 do s.WriteString(Root+ '\Item'+i.ToString, Value[i]);
+end;
+
+procedure TForm4.LoadArrayString(const Root: String; var Value: TArray<string>; Registry: Boolean = False);
+ var
+  i: Integer;
+  s: TJvCustomAppStorage;
+begin
+  if Registry then s := rini else s := xini;
+  SetLength(Value, s.ReadInteger(Root+ '\ItemCount',0));
+  for i := 0 to Length(Value)-1 do Value[i] := s.ReadString(Root+ '\Item'+i.ToString, '');
+end;
+
+function TForm4.LoadString(const Name, DefValue: String; Registry: Boolean = False): String;
+ var
+  s: TJvCustomAppStorage;
+begin
+  if Registry then s := rini else s := xini;
+  Result := s.ReadString(Name, DefValue);
+end;
+
+procedure TForm4.SaveString(const Name, Value: String; Registry: Boolean = False);
+ var
+  s: TJvCustomAppStorage;
+begin
+  if Registry then s := rini else s := xini;
+  s.WriteString(Name, Value);
+end;
+
+
+procedure TForm4.Button10Click(Sender: TObject);
+begin
+// load
+//  ((GContainer as IDataSetEnum) as IStorable).Load;
+
+  TLasDataSet.New('c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las', ids);
+  TXMLDataSet.New(GetDevsSections(FindDevs(d.DocumentElement), T_WRK)[0], ilds);//, false);
+
+  lds := ids.DataSet;
+  xds := ilds.DataSet;
+  xds.SparseArrays := True;
+
+//  FDLocalSQL1.DataSets.Add(xds, '', 'x');
+//  FDLocalSQL1.DataSets.Add(lds, '', 'l');
+  DataSource1.DataSet := FDQuery1;
+
+//  DataSource1.DataSet := ds;
+//  DataSource1.DataSet := ms;
+  DataSource1.DataSet := xds;
+
+  DataSource1.DataSet.Active := True;
+//  TDebug.Log('RFS = %d   ', [ilds._AddRef -1]);
+//  ilds._Release;
+//  DataSource1.DataSet.Refresh;
+end;
+
+procedure TForm4.Button11Click(Sender: TObject);
+begin
+// save
+//  ((GContainer as IDataSetEnum) as IStorable).Save;
+end;
 
 procedure TForm4.Button1Click(Sender: TObject);
  var
@@ -81,9 +166,13 @@ begin
     p := c.Params.Add<TLineParam>;
     p.Title := 'p1';
     p.Color := clRed32;
-    p.link := TFileDataLink.Create(p);
-    TFileDataLink(p.Link).FileName := 'FileName_p1';
-    TFileDataLink(p.Link).XParamPath := 'X_p1';
+    p.link := TCustomDataLink<Single>.Create(p);
+    p.link.DataSetDef := TLASDataSetDef.CreateUser('c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las');
+    p.link.XParamPath := 'Caliper1.время.DEV';
+    p.link.YParamPath := 'ID';
+//    p.DataSet := ilds.DataSet;
+//    TFileDataLink(p.Link).FileName := 'FileName_p1';
+//    TFileDataLink(p.Link).XParamPath := 'X_p1';
    // TFileDataLink(p.Link).YParamPath := 'X_p1';
 
     f := P.Filters.Add<TWaveletFilter>;
@@ -255,35 +344,22 @@ end;
 
 procedure TForm4.FormShow(Sender: TObject);
  var
-  xds, lds: TDataSet;
   n: IXMLNode;
   i: Integer;
 begin
   TXMLScriptMath.Hypot3D(1,1,1);
   FormatSettings.DecimalSeparator := '.';
   TRegister.AddType<TForm4, IALLMetaDataFactory>.LiveTime(ltSingleton).AddInstance(Self);
-
-  TLasDataSet.New('c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las', ids);
-  lds := ids.DataSet;
-
   d := NewXDocument();
   d.LoadFromFile('C:\Users\Public\Documents\Горизонт\WorkProg\Projects\TEST\TEST.xml');
-
-
   Form1.Show;
   Graph := Form1.Plot;
-
-  TXMLDataSet.New(GetDevsSections(FindDevs(d.DocumentElement), T_WRK)[0], ilds, false);
 
 
 //  TDebug.Log('RFS = %d   ', [ilds._AddRef -1]);
 //  ilds._Release;
 
-  xds := ilds.DataSet;
-  xds.SparseArrays := True;
-
 //  for I := 0 to xds.FieldDefList.Count-1 do xds.FieldDefList[i].Name := 'Fild'+i.ToString;
-
 
 //  xds.Active := True;
 
@@ -297,18 +373,6 @@ begin
 //  lds.FieldDefs.Find('Gy').Free;
 //  lds.FieldDefs.Find('Gz').Free;
 
-  FDLocalSQL1.DataSets.Add(xds, '', 'x');
-  FDLocalSQL1.DataSets.Add(lds, '', 'l');
-
-  DataSource1.DataSet := FDQuery1;
-//  DataSource1.DataSet := ds;
-//  DataSource1.DataSet := ms;
-//  DataSource1.DataSet := xds;
-
-  DataSource1.DataSet.Active := True;
-  TDebug.Log('RFS = %d   ', [ilds._AddRef -1]);
-  ilds._Release;
-  DataSource1.DataSet.Refresh;
 //  DataSource1.DataSet.AppendRecord([1,'1111']);
 //  DataSource1.DataSet.AppendRecord([2,'1111']);
 //  DataSource1.DataSet.AppendRecord([3,'1111']);

@@ -143,6 +143,7 @@ type
   private
     FRefCount: Integer;
     FWeekContainerReference: Boolean;
+    FNillWeekReference: Boolean;
   protected
     FIsBindInit: Boolean;
     FPriority: Integer;
@@ -183,8 +184,15 @@ type
 /// </summary>
 /// <remarks>
 ///  Включать WeekContainerReference только после добавления В глобальный контейнер
+///  IEnumXXX.ADD IEnumXXX.REMOVE Isaver - не использовать
 /// </remarks>
     property WeekContainerReference: Boolean read FWeekContainerReference write FWeekContainerReference;
+/// <summary>
+///  если WeekContainerReference = ДА NillWeekReference = ДА,
+///  если осталась одна ссылка в контейнере удаляем ТОЛЬКО ссылку из контейнера
+///  но не Текст объекта (published могут быть загружены )
+/// </summary>
+    property NillWeekReference: Boolean read FNillWeekReference write FNillWeekReference;
   end;
   TIComponentClass = class of TIComponent;
 
@@ -704,7 +712,11 @@ end;
 function TIComponent._Release: Integer;
 begin
   Result := AtomicDecrement(FRefCount);
-  if WeekContainerReference and (Result = 1) then GContainer.RemoveInstance(Model, Name)
+  if WeekContainerReference and (Result = 1) then
+   begin
+    if NillWeekReference then GContainer.NillInstance(Model, Name)
+    else GContainer.RemoveInstance(Model, Name);
+   end
   else if Result = 0 then Destroy;
 end;
 
@@ -1307,7 +1319,7 @@ procedure TRootServiceManager<T>.Remove(model: ModelType; const Item: string);
   ir: TInstanceRec;
 begin
   if GContainer.TryGetInstRec(model, Item, ir) then
-  begin
+  begin  //  если ir.Inst не инициализирован то будет АВ
    DoBeforeRemove(ir.Inst as IManagItem, Item);
    GContainer.RemoveInstance(model, Item);
    DoAfterRemove(ir.Inst as IManagItem);

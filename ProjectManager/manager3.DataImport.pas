@@ -7,7 +7,7 @@ interface
 uses DataSetIntf, ExtendIntf, CustomPlot, Container, FileDataSet, Data.Db,
      System.SysUtils, Xml.XMLIntf;
                        // WRK RAM  GLU                  //TFileDataSet
-procedure CreateDataSet(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean = True);
+//procedure CreateDataSet(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean = True);
                                                             // TFileDataSet
 procedure CreatePlotParam(col: TGraphColmn; Node: IXMLNode; DataSet: IDataSet; out PlotParam: TGraphPar);
 
@@ -97,7 +97,7 @@ begin
 end;
 
                       // WRK RAM GLU
-procedure CreateDataSet(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean = True);
+{procedure CreateDataSet(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean = True);
  var
   ds: TFileDataSet;
   flName: string;
@@ -122,7 +122,7 @@ begin
     else if n.HasAttribute(AT_TIP) and ((n.NodeName = T_CLC) or ((n.NodeName = T_DEV) and n.HasAttribute(AT_INDEX))) then
        AddDataField(ids, n, rootrModul + '.' + GetPathXNode(n), ObjectFields, ClcOffset)
   end);
-end;
+end;}
                                                             // TFileDataSet
 procedure CreatePlotParam(col: TGraphColmn; Node: IXMLNode; DataSet: IDataSet; out PlotParam: TGraphPar);
 begin

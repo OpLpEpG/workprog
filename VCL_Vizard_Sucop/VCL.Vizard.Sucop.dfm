@@ -132,7 +132,7 @@ object FormSUCOPconverter: TFormSUCOPconverter
     Width = 121
     Height = 21
     TabOrder = 5
-    Text = '1000'
+    Text = '59500'
   end
   object edAmpMET: TEdit
     Left = 8
@@ -140,7 +140,7 @@ object FormSUCOPconverter: TFormSUCOPconverter
     Width = 121
     Height = 21
     TabOrder = 6
-    Text = '1000'
+    Text = '59500'
   end
   object edI: TEdit
     Left = 8

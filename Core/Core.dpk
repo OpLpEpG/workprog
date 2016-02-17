@@ -110,7 +110,8 @@ contains
   JDtools in 'JDtools.pas',
   LasDataSet in 'LasDataSet.pas',
   FileDataSet in 'FileDataSet.pas',
-  XMLDataSet in 'XMLDataSet.pas';
+  XMLDataSet in 'XMLDataSet.pas',
+  Plot.DataLink in 'Plot.DataLink.pas';
 
 end.
 

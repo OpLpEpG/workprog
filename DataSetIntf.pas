@@ -8,11 +8,13 @@ type
   IDataSet = interface(IManagItem)
   ['{62A17AE5-4665-4DB2-8CE8-2C56174B9642}']
     function GetDataSet: TDataSet;
+//    function GetFileName: string;
     property DataSet: TDataSet read GetDataSet;
   end;
 
   IDataSetEnum = interface(IServiceManager<IDataSet>)
   ['{5CAF18C6-B981-4456-BAEE-1691DD752D6B}']
+//    function TryFind(const FileName: string; out ds: IDataSet): Boolean;
   end;
 
 implementation

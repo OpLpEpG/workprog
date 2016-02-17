@@ -2,7 +2,7 @@ object Form4: TForm4
   Left = 0
   Top = 0
   Caption = 'Form4'
-  ClientHeight = 383
+  ClientHeight = 498
   ClientWidth = 794
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,7 +14,7 @@ object Form4: TForm4
   OnShow = FormShow
   DesignSize = (
     794
-    383)
+    498)
   PixelsPerInch = 96
   TextHeight = 13
   object Button2: TButton
@@ -106,7 +106,7 @@ object Form4: TForm4
     Left = 167
     Top = 0
     Width = 619
-    Height = 375
+    Height = 490
     Anchors = [akLeft, akTop, akRight, akBottom]
     DataSource = DataSource1
     TabOrder = 9
@@ -142,6 +142,24 @@ object Form4: TForm4
     Caption = 'DelColl'
     TabOrder = 12
     OnClick = Button9Click
+  end
+  object Button10: TButton
+    Left = 26
+    Top = 352
+    Width = 57
+    Height = 25
+    Caption = 'Load'
+    TabOrder = 13
+    OnClick = Button10Click
+  end
+  object Button11: TButton
+    Left = 26
+    Top = 383
+    Width = 57
+    Height = 25
+    Caption = 'Save'
+    TabOrder = 14
+    OnClick = Button11Click
   end
   object DataSource1: TDataSource
     Left = 120
@@ -197,7 +215,7 @@ object Form4: TForm4
   object FDQuery1: TFDQuery
     Connection = FDConnection1
     SQL.Strings = (
-      'select * from l,x where l.ID = x.ID')
+      'select * from x ;# where l.ID = x.ID')
     Left = 192
     Top = 152
   end
@@ -209,5 +227,23 @@ object Form4: TForm4
   object FDPhysSQLiteDriverLink1: TFDPhysSQLiteDriverLink
     Left = 544
     Top = 152
+  end
+  object xini: TJvAppXMLFileStorage
+    StorageOptions.BooleanStringTrueValues = 'TRUE, YES, Y'
+    StorageOptions.BooleanStringFalseValues = 'FALSE, NO, N'
+    StorageOptions.InvalidCharReplacement = '_'
+    FileName = 'xini.xml'
+    RootNodeName = 'Project3'
+    SubStorages = <>
+    Left = 312
+    Top = 280
+  end
+  object rini: TJvAppRegistryStorage
+    StorageOptions.BooleanStringTrueValues = 'TRUE, YES, Y'
+    StorageOptions.BooleanStringFalseValues = 'FALSE, NO, N'
+    Root = '%NONE%'
+    SubStorages = <>
+    Left = 272
+    Top = 280
   end
 end

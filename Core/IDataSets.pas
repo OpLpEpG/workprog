@@ -7,6 +7,13 @@ uses
      System.Bindings.Helper;
 
 type
+  TIDataSetDef = class(TInterfacedPersistent, ICaption)
+  public
+    function GetCaption: string;
+    procedure SetCaption(const Value: string);
+    function FryGet(out ids: IDataSet): Boolean; virtual; abstract;
+  end;
+
   TIDataSet = class(TDataSet, IInterface{!!!!!! иначе _AddRef _Release будут иногда старые}, IManagItem, IBind, IDataSet)
   private
     FRefCount: Integer;
@@ -30,6 +37,7 @@ type
     procedure Notify(const Prop: string);
 
     function GetDataSet: TDataSet;
+//    function GetFileName: string; virtual;
   public
     constructor Create; reintroduce; virtual;
     destructor Destroy; override;
@@ -42,10 +50,12 @@ type
 /// </summary>
 /// <remarks>
 ///  Включать WeekContainerReference только после добавления В глобальный контейнер
-/// </remarks>
-    property WeekContainerReference: Boolean read FWeekContainerReference write FWeekContainerReference;
-  published
-    property FieldDefs;
+///  IEnumXXX.ADD IEnumXXX.REMOVE Isaver - не использовать
+/// </summary>
+    property WeekContainerReference: Boolean read FWeekContainerReference write FWeekContainerReference default True;
+    // published неподдерживаются
+//  published
+//    property FieldDefs;
   end;
 
   PRecBuffer = ^TRecBuffer;
@@ -93,21 +103,55 @@ type
     procedure InternalOpen; override;
     function IsCursorOpen: Boolean; override;
     procedure InternalInitFieldDefs; override;
-
     // другое
     procedure InternalHandleException; override;
     /////
     function GetActiveRecBuf(var RecBuf: PRecBuffer): Boolean; virtual;
   end;
 
+  /// <summary>
+  /// сохранение не поддерживается
+  /// </summary>
    TDataSetEnum = class(TRootServiceManager<IDataSet>, IDataSetEnum)
    protected
      const PATH = 'IDataSetObjs';
      procedure Save(); override;
      procedure Load(); override;
+//     function TryFind(const FileName: string; out ds: IDataSet): Boolean;
    end;
 
 implementation
+
+
+{ TDataSetEnum }
+
+procedure TDataSetEnum.Load;
+begin
+  raise Exception.Create('сохранение не поддерживается !!! WeekContainerReference = yes' );
+  (TRegistryStorable<IDataSet>.Create(Self, PATH) as IStorable).Load;
+end;
+
+procedure TDataSetEnum.Save;
+begin
+  raise Exception.Create('сохранение не поддерживается !!!WeekContainerReference = yes');
+  (TRegistryStorable<IDataSet>.Create(Self, PATH) as IStorable).Save;
+end;
+
+{[function TDataSetEnum.TryFind(const FileName: string; out ds: IDataSet): Boolean;
+ var
+  ii: IInterface;
+  //i: IDataSet;
+begin
+//  Result := False;
+  //  инициализируем WeekContainerReference = True;  не используемые разрушатся
+//  for i in Enum(True) do if SameText(i.GetFileName, FileName) then
+//   begin
+//    ds := i;
+//    Exit(True);
+//  end;
+  Result := GContainer.TryGetInstKnownServ(IDataSet, FileName, ii) and (ii.QueryInterface(IDataSet, ds) = S_OK);
+end;}
+
 
 {$REGION 'TIDataSet'}
 { TIDataSet }
@@ -117,14 +161,15 @@ constructor TIDataSet.Create;
   i: Integer;
 begin
   inherited Create(nil);
-  ObjectView := True;
   i:= 1;
   while GContainer.Contains(RootName + i.ToString()) do Inc(i);
   Name := RootName + i.ToString;
+  FWeekContainerReference := True;
 end;
 
 destructor TIDataSet.Destroy;
 begin
+ // TDebug.Log('TIDataSet.Destroy %s', [name]);
   TBindHelper.RemoveExpressions(Self);
   inherited;
 end;
@@ -163,7 +208,6 @@ begin
 end;
 
 function TIDataSet._Release: Integer;
-
 begin
   Result := AtomicDecrement(FRefCount);
   if Result = 0 then
@@ -172,6 +216,7 @@ begin
    end
   else if Result = 1 then
    begin
+//    if WeekContainerReference then GContainer.NillInstance(Model, Name);
     if WeekContainerReference then GContainer.RemoveInstance(Model, Name);
    end;
 end;
@@ -202,6 +247,11 @@ begin
   Result := Self;
 end;
 
+//function TIDataSet.GetFileName: string;
+//begin
+//  Result := '';
+//end;
+
 function TIDataSet.GetItemName: String;
 begin
   Result := Name;
@@ -223,18 +273,6 @@ begin
 end;
 
 {$ENDREGION 'TIDataSet'}
-
-{ TDataSetEnum }
-
-procedure TDataSetEnum.Load;
-begin
-  (TRegistryStorable<IDataSet>.Create(Self, PATH) as IStorable).Load;
-end;
-
-procedure TDataSetEnum.Save;
-begin
-  (TRegistryStorable<IDataSet>.Create(Self, PATH) as IStorable).Save;
-end;
 
 { TRecBuffer }
 
@@ -414,6 +452,18 @@ end;
 
 {$ENDREGION 'TRLDataSet'}
 
+
+{ TIDataSetDef }
+
+function TIDataSetDef.GetCaption: string;
+begin
+  Result := 'Данные'
+end;
+
+procedure TIDataSetDef.SetCaption(const Value: string);
+begin
+
+end;
 
 initialization
   TRegister.AddType<TDataSetEnum, IDataSetEnum>.LiveTime(ltSingleton);

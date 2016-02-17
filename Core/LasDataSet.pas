@@ -2,9 +2,19 @@ unit LasDataSet;
 
 interface
 
-uses System.Classes, sysutils, Data.DB, IDataSets, LasImpl, LAS, DataSetIntf, Container;
+uses System.Classes, sysutils, Data.DB, IDataSets, LasImpl, LAS, DataSetIntf, Container, JDtools;
 
 type
+  TLASDataSetDef = class(TIDataSetDef)
+  private
+    FLasFile: string;
+  public
+    constructor CreateUser(const FileName: string);
+    function FryGet(out ids: IDataSet): Boolean; override;
+  published
+   [ShowProp('LAS פאיכ', True)] property LasFile: string read FLasFile write FLasFile;
+  end;
+
   TLasDataSet = class(TRLDataSet)
   private
     FlasDoc: ILasDoc;
@@ -14,13 +24,15 @@ type
     function GetRecordCount: Integer; override;
     procedure InternalClose; override;
     procedure InternalOpen; override;
+//    function GetFileName: string; override;
   public
     function GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean; override;
 /// <summary>
 ///  {week reference container}
 /// </summary>
-    class procedure New(const FileName: string; out Res: IDataSet); virtual;
-  published
+    class procedure New(const FileName: string; out Res: IDataSet);
+//  published
+  public
     property LasFile: string read FLasFile write SetLasFile;
   end;
 
@@ -32,12 +44,13 @@ class procedure TLasDataSet.New(const FileName: string; out Res: IDataSet);
  var
   ii: IInterface;
 begin
+//  if not (GContainer as IDataSetEnum).TryFind(FileName, Res) then
   if GContainer.TryGetInstance(ClassInfo, FileName, ii, False) then Res := ii as IDataSet
   else
    begin
     Res := Create as IDataSet;
     TLasDataSet(Res.DataSet).LasFile := FileName;
-    TRegistration.Create(ClassInfo).AddInstance(FileName, Res);
+    TRegistration.Create(ClassInfo).AddInstance(Res.IName, Res);
     TLasDataSet(Res.DataSet).WeekContainerReference := True;
    end;
 end;
@@ -59,6 +72,11 @@ begin
     PDouble(@Buffer[0])^ := Double(FlasDoc[Field.FieldName,  p.ID]);
    end;
 end;
+
+//function TLasDataSet.GetFileName: string;
+//begin
+//  Result := FLasFile;
+//end;
 
 function TLasDataSet.GetRecordCount: Integer;
 begin
@@ -106,8 +124,21 @@ begin
    end;
 end;
 
+{ TLASDataSetDef }
+
+constructor TLASDataSetDef.CreateUser(const FileName: string);
+begin
+  FLasFile := FileName;
+end;
+
+function TLASDataSetDef.FryGet(out ids: IDataSet): Boolean;
+begin
+  TLasDataSet.New(LasFile, ids);
+  Result := Assigned(ids);
+end;
+
 initialization
-  RegisterClass(TLasDataSet);
+  RegisterClasses([TLasDataSet, TLASDataSetDef]);
   TRegister.AddType<TLasDataSet, IDataSet>.LiveTime(ltSingletonNamed);
 finalization
   GContainer.RemoveModel<TLasDataSet>;
