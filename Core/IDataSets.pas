@@ -3,15 +3,16 @@ unit IDataSets;
 interface
 
 uses
-     sysutils, Classes, Controls, Data.DB, debug_except, Container, RootImpl, RootIntf, ExtendIntf, DataSetIntf,
+     sysutils, Classes, Controls, Data.DB, debug_except, Container, RootImpl, RootIntf, ExtendIntf, DataSetIntf, System.Math,
      System.Bindings.Helper;
 
 type
-  TIDataSetDef = class(TInterfacedPersistent, ICaption)
+  TIDataSetDef = class(TInterfacedPersistent, ICaption, IDataSetDef)
   public
     function GetCaption: string;
     procedure SetCaption(const Value: string);
-    function FryGet(out ids: IDataSet): Boolean; virtual; abstract;
+    function TryGet(out ids: IDataSet): Boolean; virtual; abstract;
+    function CreateNew(out ids: IDataSet; UniDirectional: Boolean = True): Boolean; virtual; abstract;
   end;
 
   TIDataSet = class(TDataSet, IInterface{!!!!!! иначе _AddRef _Release будут иногда старые}, IManagItem, IBind, IDataSet)
@@ -37,7 +38,8 @@ type
     procedure Notify(const Prop: string);
 
     function GetDataSet: TDataSet;
-//    function GetFileName: string; virtual;
+    function GetTempDir: string; virtual;
+
   public
     constructor Create; reintroduce; virtual;
     destructor Destroy; override;
@@ -67,8 +69,8 @@ type
   public
 //   Index: Integer;
    ///Bookmark, Index ??
-   ID: Integer;
    BookmarkFlag: TBookmarkFlag;
+   ID: Integer;
 //   property Ptr: TRecordBuffer read GetPtr;
 //   property Bookmark: TBookmark read GetBookmark write SetBookmark;
   end;
@@ -257,6 +259,11 @@ begin
   Result := Name;
 end;
 
+function TIDataSet.GetTempDir: string;
+begin
+  Result := Name;
+end;
+
 procedure TIDataSet.Bind(const ControlExprStr: string; Source: IInterface; const SourceExpr: array of string);
 begin
   TBindHelper.Bind(Self, ControlExprStr, Source, SourceExpr);
@@ -365,7 +372,7 @@ end;
 
 procedure TRLDataSet.InternalGotoBookmark(Bookmark: TBookmark);
 begin
-  FCurrent := PInteger(@Bookmark[0])^;
+  FCurrent := PInteger(@Bookmark[0])^-1;
 end;
 
 procedure TRLDataSet.InternalHandleException;
@@ -386,18 +393,36 @@ begin
     gmCurrent: // check if empty
       if FCurrent >= RecordCount then Result := grEOF;
   end;
-
-  if Result = grOK then // read the data
+  if Result = grOK then if IsUniDirectional then with PRecBuffer(Buffers[0])^ do
+   begin
+    // глюк или я непонимаю
+// fnction TDataSet.GetNextRecord: Boolean;
+//   ..............
+//    Result := (GetRecord(GetBuffer(FRecordCount), GetMode, True) = grOK);
+//   ..............
+//    else
+//      if FRecordCount < FBufferCount then
+//        Inc(FRecordCount) else
+//        MoveBuffer(0, FRecordCount); <= ЕСЛИ UniDirectional НЕ СДВИГАЕТ И ВСЕ ДАННЫЕ ПЕРВЫЕ
+//    FCurrentRecord := FRecordCount - 1;
+//    Result := True;
+//  /////////////////////
+    InternalInitRecord(Buffer);
+    ID := FCurrent+1;
+    BookmarkFlag := bfCurrent;
+   end else
+  // read the data
     with PRecBuffer(Buffer)^ do
     begin
-     ID := FCurrent;
+     InternalInitRecord(Buffer);
+     ID := FCurrent+1;
      BookmarkFlag := bfCurrent;
     end;
 end;
 
 procedure TRLDataSet.InternalSetToRecord(Buffer: TRecordBuffer);
 begin
-  FCurrent := PRecBuffer(Buffer).ID;
+  FCurrent := PRecBuffer(Buffer).ID-1;
 end;
 
 procedure TRLDataSet.InternalLast;
@@ -407,7 +432,7 @@ end;
 
 procedure TRLDataSet.InternalFirst;
 begin
-  FCurrent := 0;
+  FCurrent := -1;
 end;
 
 function TRLDataSet.GetRecNo: Integer;
@@ -417,10 +442,10 @@ end;
 
 procedure TRLDataSet.SetRecNo(Value: Integer);
 begin
-  if (Value > 0) and (Value <= RecordCount) then
+  if Value <> (FCurrent + 1) then
   begin
     DoBeforeScroll;
-    FCurrent := Value - 1;
+    FCurrent := Min(max(1, Value), RecordCount)-1;
     Resync([]);
     DoAfterScroll;
   end;

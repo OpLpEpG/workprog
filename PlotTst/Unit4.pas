@@ -3,7 +3,7 @@ unit Unit4;
 interface
 
 uses CustomPlot, System.IOUtils, Plot.GR32, gr32, DataSetIntf, Plot.Controls, LasDataSet, XMLDataSet, XMLScript.Math,
-  Plot.DataSet, Xml.XMLIntf,
+  Plot.DataSet, Xml.XMLIntf, Plot.DataLink,  LAS, System.TypInfo,
   RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RTTI, Container, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Data.DB, JvMemoryDataset, FireDAC.Stan.Intf,
@@ -127,12 +127,12 @@ begin
 // load
 //  ((GContainer as IDataSetEnum) as IStorable).Load;
 
-  TLasDataSet.New('c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las', ids);
-  TXMLDataSet.New(GetDevsSections(FindDevs(d.DocumentElement), T_WRK)[0], ilds);//, false);
+  TLasDataSet.New('c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las', ids, lsenDOS);
+  TXMLDataSet.Get(GetDevsSections(FindDevs(d.DocumentElement), T_WRK)[0], ilds);//, false);
 
   lds := ids.DataSet;
   xds := ilds.DataSet;
-  xds.SparseArrays := True;
+  if not xds.Active then xds.SparseArrays := True;
 
 //  FDLocalSQL1.DataSets.Add(xds, '', 'x');
 //  FDLocalSQL1.DataSets.Add(lds, '', 'l');
@@ -140,7 +140,7 @@ begin
 
 //  DataSource1.DataSet := ds;
 //  DataSource1.DataSet := ms;
-  DataSource1.DataSet := xds;
+  DataSource1.DataSet := lds;
 
   DataSource1.DataSet.Active := True;
 //  TDebug.Log('RFS = %d   ', [ilds._AddRef -1]);
@@ -166,9 +166,9 @@ begin
     p := c.Params.Add<TLineParam>;
     p.Title := 'p1';
     p.Color := clRed32;
-    p.link := TCustomDataLink<Single>.Create(p);
-    p.link.DataSetDef := TLASDataSetDef.CreateUser('c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las');
-    p.link.XParamPath := 'Caliper1.время.DEV';
+    p.link := TlineDataLink.Create(p);
+    p.link.DataSetDef := TLASDataSetDef.CreateUser('c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las', lsenDOS);
+    p.link.XParamPath := 'Hx';
     p.link.YParamPath := 'ID';
 //    p.DataSet := ilds.DataSet;
 //    TFileDataLink(p.Link).FileName := 'FileName_p1';
@@ -183,6 +183,14 @@ begin
     p := c.Params.Add<TLineParam>;
     p.Title := 'p2';
     p.Color := clBlue32;
+
+    p.link := TlineDataLink.Create(p);
+    p.link.DataSetDef := TXMLDataSetDef.CreateUser(GetDevsSections(FindDevs(d.DocumentElement), T_WRK)[0], False);
+    p.link.XParamPath := 'ID';
+    p.link.YParamPath := 'ID';
+
+
+
     p := c.Params.Add<TLineParam>;
     p.Title := 'p3';
     p.Color := clGreen32;
@@ -214,8 +222,8 @@ begin
    Graph.Align := alClient;
    Graph.SendToBack;
    Graph.Rows.Add<TGR32LegendRow>;
-   Graph.Rows.Add<TCustomGraphData>;
-   Graph.Rows.Add<TCustomGraphInfo>;
+   Graph.Rows.Add<TCustomGraphDataRow>;
+   Graph.Rows.Add<TCustomGraphInfoRow>;
   finally
    Graph.DeFrost;
   end;
@@ -283,7 +291,7 @@ procedure TForm4.Button7Click(Sender: TObject);
 begin
   Graph.Frost;
   try
-   Graph.Rows.Add<TCustomGraphInfo>;
+   Graph.Rows.Add<TCustomGraphInfoRow>;
   finally
    Graph.DeFrost;
   end;
@@ -316,7 +324,7 @@ procedure TForm4.CheckBox1Click(Sender: TObject);
 begin
   Graph.Frost;
   try
-   a := Graph.Rows.FindRows(TCustomGraphLegend);
+   a := Graph.Rows.FindRows(TCustomGraphLegendRow);
    for r in a do r.Visible := CheckBox1.Checked;
   finally
    Graph.DeFrost;
@@ -330,7 +338,7 @@ procedure TForm4.CheckBox2Click(Sender: TObject);
 begin
   Graph.Frost;
   Try
-   a := Graph.Rows.FindRows(TCustomGraphInfo);
+   a := Graph.Rows.FindRows(TCustomGraphInfoRow);
    for r in a do r.Visible := CheckBox2.Checked;
   Finally
    Graph.DeFrost;
@@ -341,6 +349,7 @@ procedure TForm4.CheckBox3Click(Sender: TObject);
 begin
   Graph.YMirror := CheckBox3.Checked;
 end;
+
 
 procedure TForm4.FormShow(Sender: TObject);
  var

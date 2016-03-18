@@ -16,7 +16,8 @@ type
 
 
 function NewLasDoc: ILasDoc;
-function GetLasDoc(const FileName: string): ILasDoc;
+function GetLasDoc(const FileName: string; Encoding: LasEncoding): ILasDoc;
+function GetLasEncoding(Encoding: LasEncoding): TEncoding;
 
 
 implementation
@@ -128,6 +129,7 @@ type
     FData: TArray<TArray<Variant>>;
     function RowToString(Index : Integer): string;
   protected
+    procedure ClearBufers(); override;
     function CheckData(const Data: array of Variant): Boolean;
     procedure AddData(const Data: array of Variant);
     procedure Clear;
@@ -140,10 +142,15 @@ type
 
   TLasDoc = class(TIObject, ILasDoc)
   private
+    FfileName: string;
+    FEncoding: LasEncoding;
     FSections: array [LasSection] of ILasSection;
     function GetItem(const Mnem: string; Index: Integer): Variant;
     procedure SetItem(const Mnem: string; Index: Integer; const Value: Variant);
     function GetDataCount: Integer;
+    function GetEncoding: LasEncoding;
+    procedure SetEncoding(const Value: LasEncoding);
+    function GetFileName: string;
   protected
     function Well: ILasFormatSection;
     function Curve: ICurveSection;
@@ -154,6 +161,10 @@ type
 
     procedure SaveToFile(const AFileName: String);
     procedure LoadFromFile(const AFileName: String);
+
+    property Encoding: LasEncoding read GetEncoding write SetEncoding;
+
+    property FileName: string read GetFileName;
 
     property DataCount: Integer read GetDataCount;
     property Item[const Mnem: string; Index: Integer]: Variant read GetItem write SetItem;
@@ -167,7 +178,14 @@ begin
   Result := TLasDoc.Create;
 end;
 
-function GetLasDoc(const FileName: string): ILasDoc;
+function GetLasEncoding(Encoding: LasEncoding): TEncoding;
+begin
+    case Encoding of
+      lsenDOS: Result := TEncoding.GetEncoding(866);
+      else Result := TEncoding.ANSI;
+    end;
+end;
+function GetLasDoc(const FileName: string; Encoding: LasEncoding): ILasDoc;
  var
   i: IInterface;
 begin
@@ -175,6 +193,7 @@ begin
   else
    begin
     Result := NewLasDoc;
+    Result.Encoding := Encoding;
     Result.LoadFromFile(FileName);
     TRegister.AddType<TLasDoc, ILasDoc>.LiveTime(ltSingletonNamed).AddInstance(FileName, Result as IInterface);
    end;
@@ -377,6 +396,12 @@ begin
   SetLength(Fdata, 0);
 end;
 
+procedure TDSection.ClearBufers;
+begin
+  inherited;
+  Clear;
+end;
+
 destructor TDSection.Destroy;
 begin
   TDebug.Log('TDSection.Destroy');
@@ -422,6 +447,8 @@ constructor TLasDoc.Create;
  var
   s: TFSection;
 begin
+  FEncoding := lsenANSI;
+
   s := TFSection.Create(Self, '~V', ['~Version Information']);
   s.Add(LAS_V_VERS);
   s.Add(LAS_V_WRAP);
@@ -487,14 +514,29 @@ begin
   Result := Length(Data.Items);
 end;
 
+function TLasDoc.GetEncoding: LasEncoding;
+begin
+  Result := FEncoding;
+end;
+
+function TLasDoc.GetFileName: string;
+begin
+ Result := FfileName;
+end;
+
 function TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant;
  var
   i: Integer;
 begin
   i := TFSection(Curve).IndexOff(Mnem);
-  if i < 0 then raise Exception.Create('Error Message TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant; i < 0');
-  if Index >= DataCount then raise Exception.Create('Error Message TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant; i < 0');
+  if i < 0 then Exit(VarNull); // raise Exception.Create('Error Message TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant; i < 0');
+  if Index >= DataCount then Exit(VarNull); //raise Exception.CreateFmt('Error Message TLasDoc.GetItem Index %d >= DataCount %d', [Index, DataCount]);
   Result := Data.Items[Index][i] ;
+end;
+
+procedure TLasDoc.SetEncoding(const Value: LasEncoding);
+begin
+  FEncoding := Value;
 end;
 
 procedure TLasDoc.SetItem(const Mnem: string; Index: Integer; const Value: Variant);
@@ -532,12 +574,13 @@ begin
   c := FormatSettings.DecimalSeparator;
   FormatSettings.DecimalSeparator := '.';
   try
-   ss.LoadFromFile(AFileName, TEncoding.ANSI);
+   ss.LoadFromFile(AFileName, GetLasEncoding(FEncoding));
    for se in FSections do TSection(se).FromStrings(ss);
   finally
    FormatSettings.DecimalSeparator := c;
    ss.Free;
   end;
+  FfileName := AFileName;
 end;
 
 procedure TLasDoc.SaveToFile(const AFileName: String);
@@ -557,11 +600,12 @@ begin
    Well.Items['STEP'].Value := ds.FData[1, 0] - ds.FData[0, 0];
    ds.FPriambula[0] := '~A ' + TCSection(Curve).MnemsToString;
    for se in FSections do TSection(se).ToStrings(ss);
-   ss.SaveToFile(AFileName, TEncoding.ANSI);
+   ss.SaveToFile(AFileName, GetLasEncoding(FEncoding));
   finally
    FormatSettings.DecimalSeparator := c;
    ss.Free;
   end;
+  FfileName := AFileName;
 end;
 
 end.

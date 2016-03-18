@@ -109,6 +109,7 @@ object Form4: TForm4
     Height = 490
     Anchors = [akLeft, akTop, akRight, akBottom]
     DataSource = DataSource1
+    ReadOnly = True
     TabOrder = 9
     TitleFont.Charset = DEFAULT_CHARSET
     TitleFont.Color = clWindowText

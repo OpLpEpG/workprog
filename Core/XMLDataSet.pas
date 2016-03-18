@@ -4,12 +4,40 @@ interface
 
 //{$DEFINE USE_VTARRAY}
 
-uses ExtendIntf, DataSetIntf, Container, debug_except, XMLScript, Parser,
-     Xml.XMLIntf,
+uses ExtendIntf, DataSetIntf, Container, debug_except, XMLScript, Parser,  JDtools,
+     Xml.XMLIntf,  System.IOUtils,
      System.Classes, sysutils, Data.DB, IDataSets, FileDataSet;
 
 type
-  TXMLDataSet = class(TFileDataSet)
+  TXMLDataSetDef = class(TIDataSetDef)
+  private
+    FObjectFields: Boolean;
+    FModul: Integer;
+    FDevice: string;
+    FSection: string;
+    FXMLFileName: string;
+    FModulName: string;
+    FExist: Boolean;
+    procedure SetObjectFields(const Value: Boolean);
+    function GetPath: string;
+    function GetBinFileName: string;
+    function TryGetSection(out n: IXMLNode): Boolean;
+  public
+    constructor CreateUser(AXMLSection: IXMLNode; AObjectFields: Boolean);
+    function TryGet(out ids: IDataSet): Boolean; override;
+    function CreateNew(out ids: IDataSet; UniDirectional: Boolean = True): Boolean; override;
+    [ShowProp('Путь', True)] property Path: string read GetPath;
+    [ShowProp('BIN файл', True)] property BINFileName: string read GetBinFileName;
+  published
+    property Device: string read FDevice write FDevice;
+    property ModulAdress: Integer read FModul write FModul;
+    property ModulName: string read FModulName write FModulName;
+    property Section: string read FSection write FSection;
+    [ShowProp('XML файл', True)] property XMLFileName: string read FXMLFileName write FXMLFileName;
+    [ShowProp('Объектные поля')] property ObjectFields: Boolean read FObjectFields write SetObjectFields;
+  end;
+
+  TXMLDataSet = class(TFileDataSet{, IXMLDataSet})
   public
    type
     TInternalCalcData = record
@@ -25,29 +53,112 @@ type
     FXMLSection: IXMLNode;
     FScript: TXmlScript;
     FInternalCalcData: TArray<TInternalCalcData>;
+//    FInternalCalcDataLen: Word; // syka abto sozdaetca
     function GetXMLSection: IXMLNode;
     function GetScript: TXmlScript;
+    function GetInternalCalcDataLen: Word; inline;
   protected
+    function GetTempDir: string; override;
     function InternalCalcRecBuffer(Buffer: PRecBuffer): Boolean; override;
-    property XMLSection: IXMLNode read GetXMLSection;
-    property Script: TXmlScript read GetScript;
   public
     procedure CreateFieldDefs(AXMLSection: IXMLNode; AObjectFields: Boolean);
                     // WRK RAM  GLU            //TXMLDataSet
-    class procedure New(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean = True); overload;
+    class procedure Get(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean = True); overload;
+    class procedure CreateNew(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean = True); overload;
+
+    function TryGetX(const FullName: string; out X: IXMLNode): Boolean;
+
+    property XMLSection: IXMLNode read GetXMLSection;
+    property Script: TXmlScript read GetScript;
 // published неподдерживаются
   public
     property Device: string read FDevice;// write FDevice;
     property ModulAdress: Integer read FModul;// write FModul;
     property Section: string read FSection;// write FSection;
     property XMLFileName: string read FXMLFileName;// write FXMLFileName;
-    property CalcDataLen: Word read FInternalCalcDataLen;// write FInternalCalcDataLen;
+    property CalcDataLen: Word read GetInternalCalcDataLen;// write FInternalCalcDataLen;
   end;
 
 
 implementation
 
 uses tools;
+
+{ TXMLDataSetDef }
+
+function TXMLDataSetDef.CreateNew(out ids: IDataSet; UniDirectional: Boolean): Boolean;
+ var
+  n: IXMLNode;
+begin
+  ids := nil;
+  if not TryGetSection(n) then Exit(False);
+  TXMLDataSet.CreateNew(n, ids, ObjectFields);
+  Result := Assigned(ids);
+  FExist := Result;
+  if Result then TXMLDataSet(ids.DataSet).SetUniDirectional(UniDirectional);
+end;
+
+constructor TXMLDataSetDef.CreateUser(AXMLSection: IXMLNode; AObjectFields: Boolean);
+begin
+  ObjectFields := AObjectFields;
+  FSection := AXMLSection.NodeName;
+  FXMLFileName := AXMLSection.OwnerDocument.FileName;
+  FModul := AXMLSection.ParentNode.Attributes[AT_ADDR];
+  FModulName := AXMLSection.ParentNode.NodeName;
+  FDevice := AXMLSection.ParentNode.ParentNode.NodeName;
+end;
+
+function TXMLDataSetDef.TryGet(out ids: IDataSet): Boolean;
+ var
+  n: IXMLNode;
+begin
+  ids := nil;
+  if not TryGetSection(n) then Exit(False);
+  TXMLDataSet.Get(n, ids, ObjectFields);
+  Result := Assigned(ids);
+  FExist := Result;
+end;
+
+function TXMLDataSetDef.TryGetSection(out n: IXMLNode): Boolean;
+begin
+  n := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get(XMLFileName).Get, Device);
+  if not Assigned(n) then Exit(False);
+  n := FindDev(n, ModulAdress);
+  if not Assigned(n) then Exit(False);
+  n := n.ChildNodes.FindNode(Section);
+  if not Assigned(n) then Exit(False);
+  Result := True;
+end;
+
+function TXMLDataSetDef.GetBinFileName: string;
+ var
+  n: IXMLNode;
+begin
+  n := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get(XMLFileName).Get, Device);
+  if not Assigned(n) then Exit('');
+  n := FindDev(n, ModulAdress);
+  if not Assigned(n) then Exit('');
+  n := n.ChildNodes.FindNode(Section);
+  if not Assigned(n) or not n.HasAttribute(AT_FILE_NAME) then Exit('')
+  else Result := n.Attributes[AT_FILE_NAME];
+end;
+
+function TXMLDataSetDef.GetPath: string;
+begin
+  Result := Format('%s.%s[%d].%s',[Device, ModulName, ModulAdress, Section])
+end;
+
+procedure TXMLDataSetDef.SetObjectFields(const Value: Boolean);
+ var
+  ids: IDataSet;
+begin
+  if FObjectFields <> Value then
+   begin
+    FObjectFields := Value;
+    if FExist then TryGet(ids);
+   end;
+end;
+
 
 { TXMLDataSet.TInternalCalcData }
 
@@ -59,11 +170,32 @@ end;
 
 { TXMLDataSet }
 
-class procedure TXMLDataSet.New(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean);
+class procedure TXMLDataSet.CreateNew(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean);
 begin
-  inherited New(RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
+  inherited CreateNew(RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
+  with TXMLDataSet(DataSet.DataSet) do CreateFieldDefs(RootSection, ObjectFields);
+end;
+
+class procedure TXMLDataSet.Get(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean);
+begin
+  inherited Get(RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
   if not (DataSet.DataSet is TXMLDataSet) then raise Exception.Create('DataSet is not TXMLDataSet');
   with TXMLDataSet(DataSet.DataSet) do if (FieldDefs.Count = 0) or (ObjectFields <> ObjectView) then CreateFieldDefs(RootSection, ObjectFields);
+end;
+
+function TXMLDataSet.GetInternalCalcDataLen: Word;
+begin
+  Result := FInternalCalcDataLen;
+end;
+
+function TXMLDataSet.TryGetX(const FullName: string; out X: IXMLNode): Boolean;
+  function RemoveRoot(const s: string): string;
+  begin
+   if s.Contains('.') then Result := s.Remove(0, s.IndexOf('.')+1)
+   else Result := s;
+  end;
+begin
+  Result := tools.TryGetX(FXMLSection, RemoveRoot(FullName), X);
 end;
 
 procedure TXMLDataSet.CreateFieldDefs(AXMLSection: IXMLNode; AObjectFields: Boolean);
@@ -110,9 +242,9 @@ procedure TXMLDataSet.CreateFieldDefs(AXMLSection: IXMLNode; AObjectFields: Bool
         DataType := ft;
         DataOffset := off + sz*i;
         Precision := aq;
-      end;
+       end;
      {$ELSE}
-      f.DataType := ftBytes;
+      f.DataType := ftBlob;
       f.Size := arsz*sz;
      {$ENDIF}
       f.ArraySize := arsz;
@@ -144,6 +276,8 @@ procedure TXMLDataSet.CreateFieldDefs(AXMLSection: IXMLNode; AObjectFields: Bool
     m: IXMLNode;
     fsc: TFieldDefs;
 begin
+  Close;
+  Fields.Clear;
   FieldDefs.Clear;
   FXMLSection := nil;
   ClcOffset := 0;
@@ -177,21 +311,22 @@ begin
   Result := FScript;
 end;
 
+function TXMLDataSet.GetTempDir: string;
+begin
+  Result := Format('%s_%s_%d_%s', [TPath.GetDirectoryName(XMLFileName), Device, ModulAdress, Section]);
+end;
+
 function TXMLDataSet.GetXMLSection: IXMLNode;
  var
   root: IXMLNode;
   f: TFileFieldDef;
   i: integer;
   n: IXMLNode;
-  function RemoveRoot(const s: string): string;
-  begin
-   Result := s.Remove(0, s.IndexOf('.')+1);
-  end;
 begin
   if not Assigned(FXMLSection) then
    begin
     root := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get(XMLFileName).Get, Device);
-    root := root.CloneNode(True);
+   // root := root.CloneNode(True);
     TPars.SetMetr(root, Script, False);
     root := FindDev(root, ModulAdress);
     root := root.ChildNodes.FindNode(Section);
@@ -203,7 +338,7 @@ begin
       f := TFileFieldDef(FieldDefList[i]);
       if f.CalcField then
        begin
-        if not TryGetX(FXMLSection, RemoveRoot(f.GetPath), n) then n := nil;
+        if not TryGetX(f.GetPath, n) then n := nil;
         CArray.Add<TInternalCalcData>(FInternalCalcData, TInternalCalcData.Create(f.DataOffset, n));
        end;
      end;
@@ -231,7 +366,7 @@ begin
 end;
 
 initialization
-  RegisterClass(TXMLDataSet);
+  RegisterClasses([TXMLDataSet, TXMLDataSetDef]);
   TRegister.AddType<TXMLDataSet, IDataSet>.LiveTime(ltSingletonNamed);
 finalization
   GContainer.RemoveModel<TXMLDataSet>;

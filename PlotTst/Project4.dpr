@@ -17,7 +17,14 @@ uses
   manager3.DataImport in '..\ProjectManager\manager3.DataImport.pas',
   XMLDataSet in '..\Core\XMLDataSet.pas',
   XMLScript.Math in '..\Core\XMLScript.Math.pas',
-  FileDataSet in '..\Core\FileDataSet.pas';
+  FileDataSet in '..\Core\FileDataSet.pas',
+  VCL.Dlg.OpenLas in '..\VCLDialogs\VCL.Dlg.OpenLas.pas' {DlgOpenLASDataSet},
+  LAS in '..\LAS.pas',
+  VCL.Dlg.OpenP3XML in '..\VCLDialogs\VCL.Dlg.OpenP3XML.pas' {DlgOpenP3DataSet},
+  VCL.Frame.SelectParam in '..\VCLDialogs\VCL.Frame.SelectParam.pas' {FrameSelectParam: TFrame},
+  VCL.Frame.SelectPath in '..\VCLDialogs\VCL.Frame.SelectPath.pas' {FrameSelectPath: TFrame},
+  Plot.DataLink in '..\Core\Plot.DataLink.pas',
+  Plot.GR32 in '..\Core\Plot.GR32.pas';
 
 {$R *.res}
 

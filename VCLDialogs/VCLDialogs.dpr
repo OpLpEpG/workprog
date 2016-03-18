@@ -21,7 +21,12 @@ uses
   VCL.Dlg.ConnectIO.WLAN in 'VCL.Dlg.ConnectIO.WLAN.pas' {FormSetupWlan},
   VCL.Dlg.Device in 'VCL.Dlg.Device.pas' {DlgSetupDev},
   VCL.Dlg.RootDevice in 'VCL.Dlg.RootDevice.pas' {FormSetupRootDevice},
-  VCL.Dlg.OptionSetup in 'VCL.Dlg.OptionSetup.pas' {FormOptionSetup};
+  VCL.Dlg.OptionSetup in 'VCL.Dlg.OptionSetup.pas' {FormOptionSetup},
+  VCL.Dlg.OpenLas in 'VCL.Dlg.OpenLas.pas' {DlgOpenLASDataSet},
+  VCL.Frame.SelectParam in 'VCL.Frame.SelectParam.pas' {FrameSelectParam: TFrame},
+  VCL.Dlg.OpenP3XML in 'VCL.Dlg.OpenP3XML.pas' {DlgOpenP3DataSet},
+  VCL.Frame.SelectPath in 'VCL.Frame.SelectPath.pas' {FrameSelectPath: TFrame},
+  VCL.Frame.TGamma in 'VCL.Frame.TGamma.pas' {Frame2: TFrame};
 
 {$R *.res}
 

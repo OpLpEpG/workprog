@@ -19,13 +19,13 @@ type
     function Execute(InputData: TGraphPar): Boolean;
   end;
 
-  TFormEditArrayParam = class(TFormEditParam, IDialog<TArray<TObject>>)
+  TFormEditArrayParam = class(TFormEditParam, IDialog<TArray<TObject>, TNotifyEvent, TNotifyEvent>)
     procedure btExitClick(Sender: TObject); override;
   private
     FEditParam: TArray<TObject>;
   public
     function GetInfo: PTypeInfo; override;
-    function Execute(InputData: TArray<TObject>): Boolean; reintroduce;
+    function Execute(InputData: TArray<TObject>; Before, Afte: TNotifyEvent): Boolean; reintroduce;
   end;
 
 implementation
@@ -60,12 +60,12 @@ begin
   RegisterDialog.UnInitialize<Dialog_EditArrayParameters>;
 end;
 
-function TFormEditArrayParam.Execute(InputData: TArray<TObject>): Boolean;
+function TFormEditArrayParam.Execute(InputData: TArray<TObject>; Before, Afte: TNotifyEvent): Boolean;
 begin
   Result := True;
   FEditParam := InputData;
   Insp.Root.SortKind := iskNone;
-  ShowPropAttribute.Apply(FEditParam, Insp);
+  ShowPropAttribute.Apply(FEditParam, Insp, Before, Afte);
   IShow;
 end;
 

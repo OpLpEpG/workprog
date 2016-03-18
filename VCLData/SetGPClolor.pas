@@ -74,7 +74,7 @@ end;
 
 procedure TInspGPColorItem.Edit;
 begin
-  TFormSetGPColor.execute(Tcontrol(Inspector.Owner).ClientToScreen(Rects[iprEditButton].TopLeft), Data.AsOrdinal,
+  TFormSetGPColor.execute(Tcontrol(Inspector.Owner).ClientToScreen(Rects[iprEditButton].TopLeft), TGPColor(Data.AsOrdinal),
   procedure (c: TGPColor)
   begin
     Data.AsOrdinal := c;
@@ -93,7 +93,7 @@ end;
 
 { TFormSetGPColor }
 
-class procedure TFormSetGPColor.Execute(ALeftTop: TPoint;c: TGPColor; func: Tproc<TGPColor>);
+class procedure TFormSetGPColor.Execute(ALeftTop: TPoint; c: TGPColor; func: Tproc<TGPColor>);
 begin
   with TFormSetGPColor.Create(nil) do
    begin

@@ -529,7 +529,7 @@ procedure TStaticActionResolver.Inject(RootModel: TRttiInstanceType; RttiMember:
  var
   sa: TStaticAction;
   s: string;
-  ap: IActionProvider;
+//  ap: IActionProvider;
 begin
   s:= Format('%s_%s',[RootModel.Name, RttiMember.Name]);
   if GContainer.Contains(TypeInfo(TStaticAction), s) then Exit;

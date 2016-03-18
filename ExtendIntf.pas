@@ -2,7 +2,8 @@ unit ExtendIntf;
 
 interface
 
-uses DeviceIntf, PluginAPI, RootIntf, System.UITypes, System.TypInfo, Xml.XMLIntf, Rtti,
+uses
+     DeviceIntf, PluginAPI, RootIntf, System.UITypes, System.TypInfo, Xml.XMLIntf, Rtti,
      winapi.Windows, Vcl.Graphics, SysUtils, VCL.Controls, VCL.Menus, System.Bindings.Expression, System.Classes, Data.DB;
 
 type
@@ -160,6 +161,8 @@ type
 
   IFileData = interface
   ['{4405AC54-233B-4E82-9065-F1852B93337E}']
+    procedure Lock;
+    procedure UnLock;
     function GetPosition: Int64;
     function GetSize: Int64;
     procedure SetPosition(const Value: Int64);

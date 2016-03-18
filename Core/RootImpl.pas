@@ -150,6 +150,7 @@ type
     function QueryInterface(const IID: TGUID; out Obj): HResult; override; stdcall;
     function _AddRef: Integer; reintroduce; stdcall;
     function _Release: Integer; reintroduce; stdcall;
+
   // IManagItem
     function Priority: Integer;
     function Model: ModelType;
@@ -337,12 +338,13 @@ type
     class constructor Create;
     class destructor Destroy;
   public
-    class procedure Add<T: class; D: IInterface>(const Description: string = ''; const Category: string = '');
+    class procedure Add<T: class; D: IInterface>(const Category: string = ''; const Description: string = '');
     class procedure Remove<T: class>;
     class function TryGet<D: IInterface>(out Dialog: IDialog): Boolean; overload;
     class function TryGet(const Category, Description: string; out Dialog: IDialog): Boolean; overload;
     class procedure UnInitialize<D: IInterface>; overload;
     class procedure UnInitialize(D: PTypeInfo); overload;
+    class procedure UnInitialize(const Category, Description: string); overload;
     class function CategoryDescriptions(const Category: string): TArray<string>;
   end;
 
@@ -1553,7 +1555,11 @@ class function RegisterDialog.CategoryDescriptions(const Category: string): TArr
  var
   p : TPair<PTypeInfo,TDialogData>;
 begin
-  for p in FItems do if SameText(Category, p.Value.Categoty) then CArray.Add<string>(Result, p.Value.Description);
+  for p in FItems do
+  if SameText(Category, p.Value.Categoty) then
+   begin
+     CArray.Add<string>(Result, p.Value.Description);
+   end;
 end;
 
 class constructor RegisterDialog.Create;
@@ -1566,7 +1572,7 @@ begin
   FItems.Free;
 end;
 
-class procedure RegisterDialog.Add<T, D>(const Description: string = ''; const Category: string = '');
+class procedure RegisterDialog.Add<T, D>(const Category: string = ''; const Description: string = '');
  var
   dd: TDialogData;
 begin
@@ -1592,6 +1598,17 @@ begin
   for p in FItems do
     if SameText(Category, p.Value.Categoty) and SameText(Description, p.Value.Description) then
      Exit(Gcontainer.TryGetInstance(p.Key, i) and Supports(i, IDialog, Dialog));
+end;
+
+class procedure RegisterDialog.UnInitialize(const Category, Description: string);
+ var
+  p : TPair<PTypeInfo,TDialogData>;
+begin
+  for p in FItems do if SameText(Category, p.Value.Categoty) and SameText(Description, p.Value.Description) then
+   begin
+    Gcontainer.RemoveInstance(p.Key);
+    Exit;
+   end;
 end;
 
 class function RegisterDialog.TryGet<D>(out Dialog: IDialog): Boolean;

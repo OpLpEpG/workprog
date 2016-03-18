@@ -2,12 +2,13 @@ unit Parser;
 
 interface
 
-uses debug_except, Xml.Win.msxmldom, Winapi.ActiveX,
+uses debug_except, Xml.Win.msxmldom, Winapi.ActiveX,  System.UITypes, System.TypInfo,
      XMLScript, System.Variants, Data.DB, System.Rtti,
      SysUtils, Xml.XMLIntf, Xml.XMLDoc, Xml.xmldom, System.Generics.Collections, System.Generics.Defaults, System.Classes, Vcl.Dialogs;
 
 type
   THackEvent = reference to procedure(InternalVarType: Byte; AdrVar: Pointer);
+  TAsTypeFunction<T> = reference to function (var Data: Pointer): T;
   TPars = class
   public
    const
@@ -64,6 +65,8 @@ type
     class procedure DeInit;
     class procedure FromVar(Data: Variant; vt: Integer; pOutData: Pointer); overload;
     class procedure FromVar(DataArr: string; vt, arr_len: Integer; pOutData: Pointer); overload;
+    class function GetAsTypeFunction(vt: Integer): TAsTypeFunction<Integer>; //overload;
+//    class function GetAsTypeFunction(vt: Integer): TAsTypeFunction<Double>; overload;
   private
     const
 //     MAIN = 'MAIN_METR';
@@ -72,6 +75,8 @@ type
      SETUP = 'SETUP_METR';
 //    class
     { TODO : Ò‰ÂÎ‡Ú¸ ToValue(Data: Pointer; vt: Integer): TValue }
+    class function RefAsTypeFunction<T, C>(Data: Pointer): T;
+    class function ToValue(Data: Pointer; vt: Integer): TValue;
     class function ToVar(Data: Pointer; vt: Integer): Variant;
     class function HorizontToWord(Data: Word; vt: Integer): Word;
     class function ArrayToString(Data: PByte; cnt, vt: Integer): string;
@@ -211,6 +216,14 @@ begin
    TypeDic.Add(var_i2_14b_z_inv , 'var_i2_14b_z_inv');
    TypeDic.Add(var_i2_14b_z     , 'var_i2_14b_z');
   end
+end;
+
+
+class function TPars.RefAsTypeFunction<T, C>(Data: Pointer): T;
+ type
+  PC =^C;
+begin
+  Result := Tvalue.From<C>(PC(Data)^).AsType<T>;
 end;
 
 class function TPars.VarTypeToTxtDBField(vt: Integer): string;
@@ -375,6 +388,163 @@ begin
      end
     else  raise Exception.Create('Õ≈¬Œ«ÃŒ∆ÕŒ œ–≈Œ¡–¿«Œ¬¿“‹ ¬¿–»¿Õ“ ¬ ¡¿…“€ !!!');
   end
+end;
+
+class function TPars.GetAsTypeFunction(vt: Integer): TAsTypeFunction<integer>;
+begin
+  case vt of
+    varSmallint: Result := function (var Data: Pointer): integer begin Result := PSmallint(Data)^; Inc(Pbyte(Data), SizeOf(Smallint)) end;
+    varInteger : Result := function (var Data: Pointer): integer begin Result := PInteger(Data)^; Inc(Pbyte(Data), SizeOf(Integer)) end;
+    varShortInt: Result := function (var Data: Pointer): integer begin Result := PShortInt(Data)^; Inc(Pbyte(Data), SizeOf(ShortInt)) end;
+    varByte    : Result := function (var Data: Pointer): integer begin Result := PByte(Data)^; Inc(Pbyte(Data), SizeOf(Byte)) end;
+    varWord    : Result := function (var Data: Pointer): integer begin Result := PWord(Data)^; Inc(Pbyte(Data), SizeOf(Word)) end;
+    varLongWord: Result := function (var Data: Pointer): integer begin Result := PLongWord(Data)^; Inc(Pbyte(Data), SizeOf(LongWord)) end;
+    varInt64   : Result := function (var Data: Pointer): integer begin Result := PInt64(Data)^; Inc(Pbyte(Data), SizeOf(Int64)) end;
+    varUInt64  : Result := function (var Data: Pointer): integer begin Result := PUInt64(Data)^; Inc(Pbyte(Data), SizeOf(UInt64)) end;
+    else  raise Exception.Create('Õ≈¬Œ«ÃŒ∆ÕŒ œ–≈Œ¡–¿«Œ¬¿“‹ ¬ AsTypeFunction<integer>');
+  end;
+end;
+
+class function TPars.ToValue(Data: Pointer; vt: Integer): TValue;
+ var
+  w: PWord;
+  l,h,m: Byte;
+  b: PByte;
+  sn: Single;
+  wr: word;
+  int: Integer;
+  lw: LongWord;
+  si: Smallint;
+begin
+  case vt of
+    varSmallint: Tvalue.Make(Data, TypeInfo(SmallInt), Result); { vt_i2           2 }
+    varInteger : Tvalue.Make(Data, TypeInfo(Integer), Result); { vt_i4           3 }
+    varSingle  : Tvalue.Make(Data, TypeInfo(Single), Result);
+    varDouble  : Tvalue.Make(Data, TypeInfo(Double), Result); { vt_r8           5 }
+    varCurrency: Tvalue.Make(Data, TypeInfo(Currency), Result); { vt_cy           6 }
+    varDate    : Tvalue.Make(Data, TypeInfo(TDate), Result); { vt_date         7 }
+    varShortInt: Tvalue.Make(Data, TypeInfo(ShortInt), Result); { vt_i1          16 }
+    varByte    : Tvalue.Make(Data, TypeInfo(Byte), Result); { vt_ui1         17 }
+    varWord    : Tvalue.Make(Data, TypeInfo(Word), Result); { vt_ui2         18 }
+    varLongWord: Tvalue.Make(Data, TypeInfo(LongWord), Result); { vt_ui4         19 }
+    varInt64   : Tvalue.Make(Data, TypeInfo(Int64), Result); { vt_i8          20 }
+    varUInt64  : Tvalue.Make(Data, TypeInfo(UInt64), Result); { vt_ui8         21 }
+
+    var_i3     :
+                begin
+                 int := Integer(PLongWord(Data)^ shl 8) div $100;
+                 Tvalue.Make(@int, TypeInfo(Integer), Result);
+                end;
+    var_ui3    :
+                begin
+                 lw := LongWord(PLongWord(Data)^ and $00FFFFFF);
+                 Tvalue.Make(@lw, TypeInfo(LongWord), Result);
+                end;
+    var_i2_15b :
+                begin
+                 if (PWord(Data)^ and $4000) = 0 then si := PSmallint(Data)^ and $3FFF
+                 else si := PSmallint(Data)^;
+                 Tvalue.Make(si, TypeInfo(SmallInt), Result)
+                end;
+    var_i2_15b_inv :
+               begin
+                if (PWord(Data)^ and $4000) = 0 then si := -(PSmallint(Data)^ and $3FFF)
+                else si := -(PSmallint(Data)^);
+                Tvalue.Make(si, TypeInfo(SmallInt), Result)
+               end;
+    var_ui2_15b: { TODO : ÌÂ‰Ó‰ÂÎ‡Î Ì‡‰ÓÂÎÓ}
+                begin
+                 wr := PWord(Data)^ and $7FFF;
+                end;
+    var_i2_10b  :
+                begin
+                 if (PWord(Data)^ and $200) = 0 then si := PSmallint(Data)^ and $1FF
+                 else si := Smallint(PWord(Data)^ or $FE00);
+                 Tvalue.Make(si, TypeInfo(SmallInt), Result)
+                end;
+    var_i2_14b  :
+                begin
+                 if (PWord(Data)^ and $2000) = 0 then si := PSmallint(Data)^ and $1FFF
+                 else si := Smallint(PWord(Data)^ or $E000);
+                 Tvalue.Make(si, TypeInfo(SmallInt), Result)
+                end;
+    var_ui2_14b :
+                 begin
+                  wr := Word(PWord(Data)^ and $3FFF);
+                 end;
+    var_inv_word:
+     begin
+      b := Data;
+      h := b^; Inc(b);
+      l := b^;
+      wr := word((word(h) shl 8) or l);
+     end;
+    var_i2_14b_GZ:
+     begin
+      w := Data;
+      wr := (w^ shr 8) and $7F;
+      Dec(w);
+      wr := wr or ((w^ and $7F00) shr 1);
+      if (wr and $2000) <> 0 then wr := Smallint(PWord(Data)^ or $E000);
+     end;
+    var_ui2_kadr_psk4:
+     begin
+      w := Data;
+      wr := word(w^ shl 8);
+      Dec(w);
+      Dec(w);
+      wr := word(wr or (w^ and $00FF));
+     end;
+    var_inv_ui3_ltr:
+     begin
+      b := Data;
+      h := b^; Inc(b);
+      m := b^; Inc(b);
+      l := b^;
+      wr := LongWord(LongWord(h)*2000 + LongWord(m)*$100 + l);
+     end;
+    var_inv_i3:
+    begin
+      b := Data;
+      h := b^; Inc(b);
+      m := b^; Inc(b);
+      l := b^;
+      if h and $80 <> 0 then int := Integer($FF000000 + LongWord(h)*$10000 + LongWord(m)*$100 + l)
+      else int := Integer(LongWord(h)*$10000 + LongWord(m)*$100 + l);
+    end;
+    var_inv_ui3:
+     begin
+      b := Data;
+      h := b^; Inc(b);
+      m := b^; Inc(b);
+      l := b^;
+      lw := LongWord(LongWord(h)*$10000 + LongWord(m)*$100 + l);
+     end;
+    var_ui2_kadr_all:
+     begin
+      w := Data;
+      wr := word(w^ shl 8);
+      Dec(w);
+      wr := Word(wr or (w^ and $00FF));
+     end;
+    var_ui2_8b:
+     begin
+      w := Data;
+      l := Byte(w^ and $00FF);
+     end;
+    var_i2_14b_z_inv:
+     begin
+      if (PWord(Data)^ and $2000) = 0 then si := -(PSmallint(Data)^ and $1FFF)
+                else si := Smallint(PWord(Data)^ and $1FFF);
+      Tvalue.Make(si, TypeInfo(SmallInt), Result)
+     end;
+    var_i2_14b_z:
+     begin
+      if (PWord(Data)^ and $2000) = 1 then si := -(PSmallint(Data)^ and $1FFF)
+                else si := Smallint(PWord(Data)^ and $1FFF);
+      Tvalue.Make(si, TypeInfo(SmallInt), Result)
+     end
+  end;
 end;
 
 class function TPars.ToVar(Data: Pointer; vt: Integer): Variant;

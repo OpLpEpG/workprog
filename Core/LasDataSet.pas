@@ -2,16 +2,19 @@ unit LasDataSet;
 
 interface
 
-uses System.Classes, sysutils, Data.DB, IDataSets, LasImpl, LAS, DataSetIntf, Container, JDtools;
+uses System.Classes, sysutils, System.Variants, Data.DB, IDataSets, LasImpl, LAS, DataSetIntf, Container, JDtools, System.IOUtils;
 
 type
   TLASDataSetDef = class(TIDataSetDef)
   private
     FLasFile: string;
+    FEncoding: LasEncoding;
   public
-    constructor CreateUser(const FileName: string);
-    function FryGet(out ids: IDataSet): Boolean; override;
+    constructor CreateUser(const FileName: string; AEncoding: LasEncoding);
+    function TryGet(out ids: IDataSet): Boolean; override;
+    function CreateNew(out ids: IDataSet; UniDirectional: Boolean = True): Boolean; override;
   published
+   [ShowProp('Кодировка')] property Encoding: LasEncoding read FEncoding write FEncoding;
    [ShowProp('LAS файл', True)] property LasFile: string read FLasFile write FLasFile;
   end;
 
@@ -19,8 +22,11 @@ type
   private
     FlasDoc: ILasDoc;
     FLasFile: string;
+    FEncoding: LasEncoding;
     procedure SetLasFile(const Value: string);
+    procedure SetEncoding(const Value: LasEncoding);
   protected
+    function GetTempDir: string; override;
     function GetRecordCount: Integer; override;
     procedure InternalClose; override;
     procedure InternalOpen; override;
@@ -30,17 +36,19 @@ type
 /// <summary>
 ///  {week reference container}
 /// </summary>
-    class procedure New(const FileName: string; out Res: IDataSet);
+    class procedure New(const FileName: string; out Res: IDataSet; Encoding: LasEncoding = lsenANSI);
 //  published
   public
     property LasFile: string read FLasFile write SetLasFile;
+    property LasDoc: ILasDoc read FlasDoc;
+    property Encoding: LasEncoding read FEncoding write SetEncoding;
   end;
 
 implementation
 
 { TLasDataSet }
 
-class procedure TLasDataSet.New(const FileName: string; out Res: IDataSet);
+class procedure TLasDataSet.New(const FileName: string; out Res: IDataSet; Encoding: LasEncoding = lsenANSI);
  var
   ii: IInterface;
 begin
@@ -49,8 +57,9 @@ begin
   else
    begin
     Res := Create as IDataSet;
+    TLasDataSet(Res.DataSet).Encoding := Encoding;
     TLasDataSet(Res.DataSet).LasFile := FileName;
-    TRegistration.Create(ClassInfo).AddInstance(Res.IName, Res);
+    TRegistration.Create(ClassInfo).AddInstance(FileName, Res);
     TLasDataSet(Res.DataSet).WeekContainerReference := True;
    end;
 end;
@@ -58,6 +67,7 @@ end;
 function TLasDataSet.GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean;
  var
   p: PRecBuffer;
+  v: Variant;
 begin
   Result := True;
   if not GetActiveRecBuf(p) then Exit(False);
@@ -69,7 +79,9 @@ begin
   else
    begin
     SetLength(Buffer, Sizeof(Double));
-    PDouble(@Buffer[0])^ := Double(FlasDoc[Field.FieldName,  p.ID]);
+    v := FlasDoc[Field.FieldName,  p.ID-1];
+    if VarIsNull(v) then PDouble(@Buffer[0])^ := Double.NaN
+    else PDouble(@Buffer[0])^ := Double(v);
    end;
 end;
 
@@ -93,15 +105,24 @@ end;
 procedure TLasDataSet.InternalOpen;
 begin
   inherited;
-  FlasDoc := NewLasDoc;
-  FlasDoc.LoadFromFile(LasFile);
+  FlasDoc := GetLasDoc(LasFile, Encoding);
+end;
+
+procedure TLasDataSet.SetEncoding(const Value: LasEncoding);
+begin
+  if FEncoding <> Value then
+   begin
+    if IsCursorOpen then Close;
+    FLasFile := '';
+    FEncoding := Value;
+    FieldDefs.Clear;
+   end;
 end;
 
 procedure TLasDataSet.SetLasFile(const Value: string);
  var
   s: string;
   d: ILasDoc;
-  c: Char;
 begin
   if FLasFile <> Value then
    begin
@@ -109,29 +130,40 @@ begin
     FLasFile := Value;
     if not (csLoading in ComponentState) then
      begin
-      c := FormatSettings.DecimalSeparator;
-      FormatSettings.DecimalSeparator := '.';
-      try
-       d := NewLasDoc;
-       d.LoadFromFile(LasFile);
-       FieldDefs.Clear;
-       FieldDefs.Add('ID', ftInteger);
-       for s in d.Curve.Mnems do FieldDefs.Add(s, ftFloat);
-      finally
-       FormatSettings.DecimalSeparator := c;
-      end;
+      d := GetLasDoc(LasFile, Encoding);
+      FieldDefs.Clear;
+      FieldDefs.Add('ID', ftInteger);
+      for s in d.Curve.Mnems do
+       begin
+        FieldDefs.Add(s, ftFloat);
+       end;
      end;
    end;
 end;
 
-{ TLASDataSetDef }
-
-constructor TLASDataSetDef.CreateUser(const FileName: string);
+function TLASDataSet.GetTempDir: string;
 begin
-  FLasFile := FileName;
+  Result := TPath.GetDirectoryName(LasFile)+'\' + TPath.GetFileNameWithoutExtension(LasFile) +'\';
 end;
 
-function TLASDataSetDef.FryGet(out ids: IDataSet): Boolean;
+{ TLASDataSetDef }
+
+function TLASDataSetDef.CreateNew(out ids: IDataSet; UniDirectional: Boolean): Boolean;
+begin
+  ids := TLASDataSet.Create as IDataSet;
+  TLasDataSet(ids.DataSet).Encoding := Encoding;
+  TLasDataSet(ids.DataSet).LasFile := LasFile;
+  TLasDataSet(ids.DataSet).SetUniDirectional(UniDirectional);
+  Result := True;
+end;
+
+constructor TLASDataSetDef.CreateUser(const FileName: string; AEncoding: LasEncoding);
+begin
+  FLasFile := FileName;
+  FEncoding := AEncoding;
+end;
+
+function TLASDataSetDef.TryGet(out ids: IDataSet): Boolean;
 begin
   TLasDataSet.New(LasFile, ids);
   Result := Assigned(ids);

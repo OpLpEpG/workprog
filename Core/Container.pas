@@ -576,6 +576,7 @@ function TComponentModel.GetInstance(Inst: TInstance; Initialize: Boolean): IInt
   o: TMyInnerComponent;
   ss: TStringStream;
   ms: TMemoryStream;
+  p : TInstancePair;
 begin
   Result := Inst.fValue;
   if Assigned(Result) or not Initialize then Exit;
@@ -592,10 +593,15 @@ begin
      ss.Position := 0;
      ObjectTextToBinary(ss, ms);
      ms.Position := 0;
-     ms.ReadComponent(o);
-     // Если компонент загружается при вызове Loaded другого компонента (было с Формой) то o.Loaded системой не вызывается
-     // проверяем это и вызываем вручную
-     if (csLoading in o.ComponentState) then o.Loaded;
+     try
+      ms.ReadComponent(o);
+      // Если компонент загружается при вызове Loaded другого компонента (было с Формой) то o.Loaded системой не вызывается
+      // проверяем это и вызываем вручную
+      if (csLoading in o.ComponentState) then o.Loaded;
+     except
+      for p in fInst do if p.Value = Inst then fInst.Remove(p.Key);
+      raise
+     end;
      Inst.fValue := Result;
     finally
      ss.Free;

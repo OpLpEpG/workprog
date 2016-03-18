@@ -2,7 +2,12 @@ unit LAS;
 
 interface
 
+uses System.SysUtils, JDtools;
+
  type
+   [EnumCaptions('ANSI, DOS')]
+   LasEncoding = (lsenANSI, lsenDOS);
+
    LasSection = (lsVersion, lsWell, lsCurve, lsPar, lsOther, lsLog);
 
    PLasFormat = ^TLasFormat;
@@ -51,6 +56,9 @@ interface
     function GetDataCount: Integer;
     function GetItem(const Mnem: string; Index: Integer): Variant;
     procedure SetItem(const Mnem: string; Index: Integer; const Value: Variant);
+    function GetEncoding: LasEncoding;
+    procedure SetEncoding(const Value: LasEncoding);
+    function GetFileName: string;
    //public
     function Version: ILasFormatSection;
     function Well: ILasFormatSection;
@@ -61,6 +69,11 @@ interface
 
     procedure SaveToFile(const AFileName: String);
     procedure LoadFromFile(const AFileName: String);
+
+
+    property Encoding: LasEncoding read GetEncoding write SetEncoding;
+
+    property FileName: string read GetFileName;
 
     property DataCount: Integer read GetDataCount;
     property Item[const Mnem: string; Index: Integer]: Variant read GetItem write SetItem; default;

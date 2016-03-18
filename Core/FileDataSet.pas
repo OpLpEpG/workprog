@@ -17,6 +17,7 @@ type
     function GetPath: string;
 // published неподдерживаются
   public
+    property FullName: string read GetPath;
     property DataOffset: Integer read FDataOffset write FDataOffset;
     property ArraySize: Integer read FArraySize write FArraySize default 0;
     property ArrayType: Integer read FArrayType write FArrayType default 0;
@@ -44,19 +45,39 @@ type
     function FindFieldData(Buffer: PRecBuffer; Field: TField): PByte;
     function GetFieldDefsClass: TFieldDefsClass; override;
     function GetRecordCount: Integer; override;
+    function CreateBlobStream(Field: TField; Mode: TBlobStreamMode): TStream; override;
 //    function GetFileName: string; override;
   public
     function GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean; override;
     property FileData: IFileData read GetFileData;
+    function FindFieldDef(const FullName: string): TFileFieldDef;
 /// <summary>
 ///  {week reference container}
 /// </summary>
-    class procedure New(const FileName: string; RecordLength: Integer; out Res: IDataSet); //virtual;
+    class procedure Get(const FileName: string; RecordLength: Integer; out Res: IDataSet); //virtual;
+    class procedure CreateNew(const FileName: string; RecordLength: Integer; out Res: IDataSet); //virtual;
 // published неподдерживаются
   public
     property BinFileName: string read FBinFileName write FBinFileName;
     property RecordLength: Integer read FRecordLength write FRecordLength;
   end;
+
+  TFileBlobStream = class(TStream)
+  private
+    FField: TBlobField;
+    FDataSet: TFileDataSet;
+    FMode: TBlobStreamMode;
+    FOpened: Boolean;
+    FModified: Boolean;
+    FPosition: Longint;
+    Fbuffer: Pointer;
+  public
+    constructor Create(Field: TBlobField; Mode: TBlobStreamMode);
+    function Read(var Buffer; Count: Longint): Longint; override;
+    function Write(const Buffer; Count: Longint): Longint; override;
+    function Seek(Offset: Longint; Origin: Word): Longint; override;
+  end;
+
 
 
 implementation
@@ -71,30 +92,37 @@ end;
 
 { TFileDataSet }
 
-class procedure TFileDataSet.New(const FileName: string; RecordLength: Integer; out Res: IDataSet);
+class procedure TFileDataSet.Get(const FileName: string; RecordLength: Integer; out Res: IDataSet);
  var
   ii: IInterface;
-//  dse: IDataSetEnum;
 begin
-//  if not Supports(GContainer, IDataSetEnum, dse) then Exit;
-//  if not dse.TryFind(FileName, Res) then
   if GContainer.TryGetInstance(ClassInfo, FileName, ii) then Res := ii as IDataSet
   else
    begin
-    Res := Create as IDataSet;
-    TFileDataSet(Res.DataSet).BinFileName := FileName;
-    TFileDataSet(Res.DataSet).RecordLength := RecordLength;
-    TRegistration.Create(ClassInfo).AddInstance(Res.IName, Res);
+    CreateNew(FileName, RecordLength, Res);
+    TRegistration.Create(ClassInfo).AddInstance(FileName, Res);
     TFileDataSet(Res.DataSet).WeekContainerReference := True;
-    TFileDataSet(Res.DataSet).FCurrDataID := -1;
-//    dse.Add(Res);
    end;
 end;
+
+function TFileDataSet.CreateBlobStream(Field: TField; Mode: TBlobStreamMode): TStream;
+begin
+  Result := TFileBlobStream.Create(TBlobField(Field), Mode);
+end;
+
+class procedure TFileDataSet.CreateNew(const FileName: string; RecordLength: Integer; out Res: IDataSet);
+begin
+  Res := Create as IDataSet;
+  TFileDataSet(Res.DataSet).BinFileName := FileName;
+  TFileDataSet(Res.DataSet).RecordLength := RecordLength;
+  TFileDataSet(Res.DataSet).FCurrDataID := -1;
+end;
+
 
 function TFileDataSet.GetRecData(Buffer: PRecBuffer): PByte;
 begin
   if FCurrDataID = Buffer.ID then Exit(FCurrDataBuffer)
-  else if FileData.Read(RecordLength, Pointer(Result), Buffer.ID*RecordLength) <> RecordLength then Result := nil
+  else if FileData.Read(RecordLength, Pointer(Result), (Buffer.ID-1)*RecordLength) <> RecordLength then Result := nil
   else
    begin
     FCurrDataBuffer := Result;
@@ -108,29 +136,37 @@ function TFileDataSet.FindFieldData(Buffer: PRecBuffer; Field: TField): PByte;
   pb: PBoolean;
   f: TFileFieldDef;
 begin
-  ////
-  //  Tdebug.log(Buffer.ID.ToString());
-  ////
   Result := nil;
   Index := Field.FieldNo - 1; // FieldDefList index (-1 and 0 become less than zero => ignored)
   if Index < 0 then Exit;
-  if Index = 0 then Exit(@(Buffer^.ID));
+  if Index = 0 then Exit(@(Buffer.ID));
   f := TFileFieldDef(FieldDefList[Index]);
   if f.CalcField and AutoCalcFields then
    begin
-    PByte(pb) := PByte(Buffer) + SizeOf(TRecBuffer);
+    pb := PBoolean(PByte(Buffer) + SizeOf(TRecBuffer));
+   ////
+   //    Tdebug.log('   ID=%d  bool=%d   ', [Buffer.ID, Integer(pb^)]);
+   ////
     if not pb^ and not InternalCalcRecBuffer(Buffer) then Exit;
     Result := PByte(pb) + SizeOf(Boolean);
    end
-   else if Field.FieldKind = fkData then Result := GetRecData(Buffer);
+  else if Field.FieldKind = fkData then Result := GetRecData(Buffer);
   if not Assigned(Result) then Exit;
   Inc(Result, f.DataOffset);
+end;
+
+function TFileDataSet.FindFieldDef(const FullName: string): TFileFieldDef;
+ var
+  i: Integer;
+begin
+  for i := 0 to FieldDefList.Count-1 do if SameText(TFileFieldDef(FieldDefList[i]).FullName, FullName) then Exit(TFileFieldDef(FieldDefList[i]));
+  Result := nil;
 end;
 
 function TFileDataSet.GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean;
  var
   RecBuf: PRecBuffer;
-  Data: PByte;
+  Data: Pointer;
   l: Integer;
 begin
   Result := False;
@@ -138,13 +174,19 @@ begin
  // TDebug.Log('  Field.FieldNo %d  %s   ', [Field.FieldNo, Field.FullName]);
   if not GetActiveRecBuf(RecBuf) then Exit;
   Data := FindFieldData(RecBuf, Field);
-  if Data <> nil then
+  if Data = nil then Exit;
+  if Field is TBlobField then
+   begin
+    SetLength(Buffer, sizeof(Pointer));
+    PPointer(@Buffer[0])^ := Data;
+   end
+  else
    begin
     l := Field.DataSize;
     SetLength(Buffer, l);
     Move(Data^, Buffer[0], l);
-    Result := True;
    end;
+  Result := True;
 end;
 
 function TFileDataSet.GetFieldDefsClass: TFieldDefsClass;
@@ -199,6 +241,19 @@ end;
 
 { TFileFieldDef }
 
+//function TFileFieldDef.GetFullName: string;
+//var
+//  ParentField: TFieldDef;
+//begin
+//  Result := Name;
+//  ParentField := ParentDef;
+//  while ParentField <> nil do
+//   begin
+//    Result := Format('%s.%s', [ParentField.Name, Result]);
+//    ParentField := ParentField.ParentDef;
+//   end;
+//end;
+
 function TFileFieldDef.GetPath: string;
  var
   f: TFieldDef;
@@ -215,6 +270,52 @@ end;
 function TFileFieldDef.IsArrray: Boolean;
 begin
   Result := FArraySize <> 0;
+end;
+
+{ TFileBlobStream }
+
+constructor TFileBlobStream.Create(Field: TBlobField; Mode: TBlobStreamMode);
+ var
+  b: TArray<Byte>;
+begin
+  inherited Create;
+  FMode := Mode;
+  FField := Field;
+  FDataSet := FField.DataSet as TFileDataSet;
+  if not FDataSet.GetFieldData(FField, b) then Exit;
+  Fbuffer := PPointer(@b[0])^;
+end;
+
+function TFileBlobStream.Read(var Buffer; Count: Integer): Longint;
+begin
+  Result := 0;
+  if Count > Size - FPosition then Result := Size - FPosition
+  else Result := Count;
+  if Result > 0 then
+  begin
+   Move(Fbuffer^, Buffer, Result);
+   Inc(FPosition, Result);
+   end;
+end;
+
+function TFileBlobStream.Seek(Offset: Integer; Origin: Word): Longint;
+begin
+  case Origin of
+    soFromBeginning:
+      FPosition := Offset;
+    soFromCurrent:
+      Inc(FPosition, Offset);
+    soFromEnd:
+      FPosition := FField.Size + Offset;
+  end;
+  Result := FPosition;
+end;
+
+function TFileBlobStream.Write(const Buffer; Count: Integer): Longint;
+begin
+  Result := FField.Size;
+  if Count < Result then Result := Count;
+  Move(Buffer, Fbuffer^, Result);
 end;
 
 initialization

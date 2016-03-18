@@ -17,10 +17,10 @@ implementation
 
 procedure TOpenDialogEx.DoOnExecute;
  var
-  pif: TPreviewHandlerFrameInfo;
+//  pif: TPreviewHandlerFrameInfo;
   c: IFileDialogCustomize;
-  ipi: IPreviewItem;
-  iph: IPreviewHandler;
+//  ipi: IPreviewItem;
+//  iph: IPreviewHandler;
 begin
   inherited;
   c :=  (Dialog as IFileDialogCustomize);

@@ -41,9 +41,12 @@ type
     FFile: TFileStream;
     FCash: TFileMappingCash;
     FS_Write: Integer;
+    FLock: TCriticalSection; // TMultiReadExclusiveWriteSynchronizer;
     procedure SetS_Write(const Value: Integer);
   protected
     // IFileData
+    procedure Lock;
+    procedure UnLock;
     function GetPosition: Int64;
     function GetSize: Int64;
     procedure SetPosition(const Value: Int64);
@@ -51,6 +54,7 @@ type
     function Read(Count: Integer; out PData: Pointer; From: Int64 = -1): Integer;
     function Write(Count: Integer; PData: Pointer; From: Int64 = -1): Integer;
   public
+    constructor Create; override;
     constructor CreateUser(const FileName: string);
     destructor Destroy; override;
     property Cash: TFileMappingCash read FCash implements ICashedData;
@@ -174,6 +178,7 @@ end;
 
 function TFileMappingCash.Read(Count: Integer; out PData: Pointer; From: Int64): Integer;
 begin
+  { TODO : в потоках если будет РЕМАП то будут проблеммы }
   if From >= 0 then FMapPosition := From;
   if Count > Cash then Count := Cash;
   if FMapPosition < FMapFrom then Remap(FMapPosition)
@@ -212,11 +217,24 @@ end;
 
 { TFileData }
 
-constructor TFileData.CreateUser(const FileName: string);
+constructor TFileData.Create;
 begin
-  inherited Create;
+  inherited;
+  FLock := TCriticalSection.Create;// TMultiReadExclusiveWriteSynchronizer.Create;
+end;
+
+constructor TFileData.CreateUser(const FileName: string);
+ var
+  path: string;
+begin
+  Create;
   if TFile.Exists(FileName) then FFile := TFileStream.Create(FileName, fmOpenReadWrite)
-  else FFile := TFileStream.Create(FileName, fmCreate);
+  else
+   begin
+    path := TPath.GetDirectoryName(FileName);
+    if not TDirectory.Exists(path) then TDirectory.CreateDirectory(path);
+    FFile := TFileStream.Create(FileName, fmCreate);
+   end;
   FFile.Position := FFile.Size;
 end;
 
@@ -225,20 +243,39 @@ begin
   TBindHelper.RemoveExpressions(Self);
   FFile.Free;
   if Assigned(FCash) then FreeAndNil(FCash);
+  FLock.Free;
   inherited;
 end;
 
+/// <summary>
+/// Тк выдается указатель на данные то Lock делает пользователь
+/// </summary>
 function TFileData.Read(Count: Integer; out PData: Pointer; From: Int64 = -1): Integer;
 begin
-  if not Assigned(FCash) then FCash := TFileMappingCash.Create(FFile);
-  Result := FCash.Read(Count, PData, From);
+//  FSinc.BeginRead;
+//  try
+   if not Assigned(FCash) then FCash := TFileMappingCash.Create(FFile);
+   Result := FCash.Read(Count, PData, From);
+//  finally
+//   FSinc.EndRead;
+//  end;
 end;
 
+/// <summary>
+/// Тк выдается указатель на данные то Lock делает пользователь
+/// </summary>
 function TFileData.Write(Count: Integer; PData: Pointer;  From: Int64 = -1): Integer;
 begin
-  if From >= 0 then FFile.Position := From;
-  Result := FFile.Write(PData^, Count);
-  S_Write := Result;
+//  if not FSinc.BeginWrite then raise Exception.Create('Error Message FSinc.BeginWrite');
+//  Lock;
+//  try
+   if From >= 0 then FFile.Position := From;
+   Result := FFile.Write(PData^, Count);
+ //  S_Write := Result;
+//  finally
+//   UnLock;
+//   FSinc.EndWrite;
+//  end;
 end;
 
 function TFileData.GetFileName: string;
@@ -257,6 +294,11 @@ begin
   TBindings.Notify(Self, 'S_Write');
 end;
 
+procedure TFileData.UnLock;
+begin
+  FLock.Leave;
+end;
+
 function TFileData.GetPosition: Int64;
 begin
   Result := FFile.Position;
@@ -266,6 +308,11 @@ function TFileData.GetSize: Int64;
 begin
   Result := FFile.Size;
 end;
+procedure TFileData.Lock;
+begin
+  FLock.Enter;
+end;
+
 {$ENDREGION}
 
 initialization

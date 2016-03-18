@@ -108,6 +108,27 @@
         <DCCReference Include="..\Core\XMLDataSet.pas"/>
         <DCCReference Include="..\Core\XMLScript.Math.pas"/>
         <DCCReference Include="..\Core\FileDataSet.pas"/>
+        <DCCReference Include="..\VCLDialogs\VCL.Dlg.OpenLas.pas">
+            <Form>DlgOpenLASDataSet</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\LAS.pas"/>
+        <DCCReference Include="..\VCLDialogs\VCL.Dlg.OpenP3XML.pas">
+            <Form>DlgOpenP3DataSet</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\VCLDialogs\VCL.Frame.SelectParam.pas">
+            <Form>FrameSelectParam</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\VCLDialogs\VCL.Frame.SelectPath.pas">
+            <Form>FrameSelectPath</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Core\Plot.DataLink.pas"/>
+        <DCCReference Include="..\Core\Plot.GR32.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

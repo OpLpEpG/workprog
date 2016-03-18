@@ -315,7 +315,7 @@ procedure TFormGraph.EditParametersClick(Sender: TObject);
 begin
   cch := TGraphColumn(TContextMenuItem(Sender).ContextObj);
   for p in cch.Params do if p.Selected then CArray.Add<TObject>(a, p);
-  if RegisterDialog.TryGet<Dialog_EditArrayParameters>(d) then (d as IDialog<TArray<TObject>>).Execute(a);
+  if RegisterDialog.TryGet<Dialog_EditArrayParameters>(d) then (d as IDialog<TArray<TObject>, TNotifyEvent, TNotifyEvent>).Execute(a, nil, nil);
 end;
 
 procedure TFormGraph.DeleteParameterClick(Sender: TObject);

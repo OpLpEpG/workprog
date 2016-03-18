@@ -66,6 +66,7 @@ type
    type
     TGetPropProc<T> = function(Instance: TObject; PropInfo: PPropInfo): T;
   private
+    FBefoSet, FAfteSet: TNotifyEvent;
     FInstances: TArray<TObject>;
     FLastGetAsDifferent: Boolean;
     FApplyin: Boolean;
@@ -83,7 +84,8 @@ type
     procedure SetAsString(const Value: string); override;
     procedure SetAsVariant(const Value: Variant); override;
   public
-    class function New(const AParent: TJvCustomInspectorItem; const AObjs: TArray<TObject>; PropInfo: PPropInfo): TJvCustomInspectorItem; reintroduce;
+    class function New(const AParent: TJvCustomInspectorItem; const AObjs: TArray<TObject>; PropInfo: PPropInfo;
+                       BefoSet, AfteSet: TNotifyEvent): TJvCustomInspectorItem; reintroduce;
     function IsAssigned: Boolean; override;
   end;
 
@@ -94,12 +96,12 @@ type
     class var RttiContext : TRttiContext;
     class function StrObj2Str(const s: string): string;
     class procedure ApplyItem(root: TJvCustomInspectorItem; o: TObject); static;
-    class procedure ApplyItemArray(root: TJvCustomInspectorItem; o: TArray<TObject>); static;
+    class procedure ApplyItemArray(root: TJvCustomInspectorItem; o: TArray<TObject>; BefoSet, AfteSet: TNotifyEvent); static;
     class procedure ApplyICollection(root: TJvCustomInspectorItem; cl: TICollection); static;
   public
    constructor Create(const ADisplayName: String; AReadOnly: Boolean = False);
    class procedure Apply(Obj: TObject; Insp: TJvInspector); overload;
-   class procedure Apply(Obj: TArray<TObject>; Insp: TJvInspector); overload;
+   class procedure Apply(Obj: TArray<TObject>; Insp: TJvInspector; BefoSet, AfteSet: TNotifyEvent); overload;
    property DisplayName: string read FDisplayName write FDisplayName;
    property ReadOnly: Boolean read FReadOnly write FReadOnly;
   end;
@@ -325,7 +327,7 @@ begin
   end;
 end;
 
-class procedure ShowPropAttribute.Apply(Obj: TArray<TObject>; Insp: TJvInspector);
+class procedure ShowPropAttribute.Apply(Obj: TArray<TObject>; Insp: TJvInspector; BefoSet, AfteSet: TNotifyEvent);
  var
   i: Integer;
 begin
@@ -337,7 +339,7 @@ begin
     Insp.Clear;
     RttiContext := TRttiContext.Create;
     try
-     ApplyItemArray(Insp.Root, Obj);
+     ApplyItemArray(Insp.Root, Obj, BefoSet, AfteSet);
     finally
      RttiContext.Free;
     end;
@@ -412,7 +414,7 @@ begin
    end;
 end;
 
-class procedure ShowPropAttribute.ApplyItemArray(root: TJvCustomInspectorItem; o: TArray<TObject>);
+class procedure ShowPropAttribute.ApplyItemArray(root: TJvCustomInspectorItem; o: TArray<TObject>; BefoSet, AfteSet: TNotifyEvent);
  type
   Tsp = record
    a: ShowPropAttribute;
@@ -458,7 +460,7 @@ begin
   // отрисовка
   for i := 0 to Length(aa)-1 do
    begin
-    ii := TJvInspectorArrayPropData.New(Root, o, TRttiInstanceProperty(aa[i].p).PropInfo);
+    ii := TJvInspectorArrayPropData.New(Root, o, TRttiInstanceProperty(aa[i].p).PropInfo, BefoSet, AfteSet);
     ii.DisplayName := aa[i].a.DisplayName;
     ii.ReadOnly := aa[i].a.ReadOnly or not aa[i].p.IsWritable;
     if ii is TJvInspectorBooleanItem then TJvInspectorBooleanItem(ii).ShowAsCheckbox := True;
@@ -471,13 +473,16 @@ end;
 
 { TJvInspectorArrayPropData }
 
-class function TJvInspectorArrayPropData.New(const AParent: TJvCustomInspectorItem; const AObjs: TArray<TObject>; PropInfo: PPropInfo): TJvCustomInspectorItem;
+class function TJvInspectorArrayPropData.New(const AParent: TJvCustomInspectorItem; const AObjs: TArray<TObject>; PropInfo: PPropInfo;
+                  BefoSet, AfteSet: TNotifyEvent): TJvCustomInspectorItem;
 var
   Data: TJvInspectorArrayPropData;
   RegItem: TJvCustomInspectorRegItem;
 begin
   if PropInfo = nil then  raise EJvInspectorData.CreateRes(@RsEJvAssertPropInfo);
   Data := CreatePrim(string(PropInfo.Name), PropInfo.PropType^);
+  Data.FBefoSet := BefoSet;
+  Data.FAfteSet := AfteSet;
   Data.Instance := AObjs[0];
   Data.FInstances := AObjs;
   Data.Prop := PropInfo;
@@ -545,44 +550,69 @@ procedure TJvInspectorArrayPropData.SetAsFloat(const Value: Extended);
  var
   o: TObject;
 begin
-  inherited;
-  for o in FInstances do SetFloatProp(o, Prop, Value)
+  if Assigned(FBefoSet) then FBefoSet(Self);
+  try
+   inherited;
+   for o in FInstances do SetFloatProp(o, Prop, Value);
+  finally
+   if Assigned(FAfteSet) then FAfteSet(Self);
+  end;
 end;
 
 procedure TJvInspectorArrayPropData.SetAsInt64(const Value: Int64);
  var
   o: TObject;
 begin
+  if Assigned(FBefoSet) then FBefoSet(Self);
+  try
   inherited;
   for o in FInstances do SetInt64Prop(o, Prop, Value)
+  finally
+   if Assigned(FAfteSet) then FAfteSet(Self);
+  end;
 end;
 
 procedure TJvInspectorArrayPropData.SetAsOrdinal(const Value: Int64);
  var
   o: TObject;
 begin
+  if Assigned(FBefoSet) then FBefoSet(Self);
+  try
   inherited SetAsOrdinal(Value);
   for o in FInstances do
    if GetTypeData(Prop.PropType^).OrdType = otULong then
       SetOrdProp(o, Prop, Cardinal(Value))
     else
       SetOrdProp(o, Prop, Value);
+  finally
+   if Assigned(FAfteSet) then FAfteSet(Self);
+  end;
 end;
 
 procedure TJvInspectorArrayPropData.SetAsString(const Value: string);
  var
   o: TObject;
 begin
+  if Assigned(FBefoSet) then FBefoSet(Self);
+  try
   inherited;
   for o in FInstances do SetStrProp(o, Prop, Value)
+  finally
+   if Assigned(FAfteSet) then FAfteSet(Self);
+  end;
 end;
 
 procedure TJvInspectorArrayPropData.SetAsVariant(const Value: Variant);
  var
   o: TObject;
 begin
+  if Assigned(FBefoSet) then FBefoSet(Self);
+  try
   inherited;
   for o in FInstances do SetVariantProp(o, Prop, Value)
+  finally
+   if Assigned(FAfteSet) then FAfteSet(Self);
+  end;
 end;
 
 {$ENDREGION TJvInspectorArrayPropData}

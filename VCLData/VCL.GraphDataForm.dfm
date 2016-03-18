@@ -18,13 +18,13 @@ object GraphDataForm: TGraphDataForm
     Top = 0
     Width = 554
     Height = 289
+    YLastAvail = 1000.000000000000000000
     YMirror = False
-    YFromType = yfmUser
     YScale = 1.000000000000000000
     Align = alClient
     Parent = Owner
-    ExplicitLeft = 184
-    ExplicitTop = 72
+    ExplicitLeft = 200
+    ExplicitTop = 56
     ExplicitWidth = 100
     ExplicitHeight = 41
     GraphRows = <>

@@ -132,7 +132,7 @@ end;
 
 function TGraphParamLAS.GetData: TArray<TArray<Variant>>;
 begin
-  Result := GetLasDoc(FFileName).Data.Items;
+  Result := GetLasDoc(FFileName, lsenANSI).Data.Items;
 end;
 
 procedure TGraphParamLAS.UpdateFields;
@@ -141,7 +141,7 @@ procedure TGraphParamLAS.UpdateFields;
   Mnm: TArray<string>;
   i: Integer;
 begin
-  ld := GetLasDoc(FileName);
+  ld := GetLasDoc(FileName, lsenANSI);
   FRecordCount := Length(ld.Data.Items);
   FMinY := ld.Data.Items[0, 0];
   FMaxY := ld.Data.Items[FRecordCount-1, 0];

@@ -85,10 +85,10 @@
         <UsePackages>true</UsePackages>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
         <DCC_DcuOutput>unit\$(Config)</DCC_DcuOutput>
-        <VerInfo_Build>90</VerInfo_Build>
+        <VerInfo_Build>91</VerInfo_Build>
         <VerInfo_Locale>1049</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.0.90;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.0.91;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
@@ -133,6 +133,29 @@
         <DCCReference Include="VCL.Dlg.OptionSetup.pas">
             <Form>FormOptionSetup</Form>
             <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="VCL.Dlg.OpenLas.pas">
+            <Form>DlgOpenLASDataSet</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="VCL.Frame.SelectParam.pas">
+            <Form>FrameSelectParam</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="VCL.Dlg.OpenP3XML.pas">
+            <Form>DlgOpenP3DataSet</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="VCL.Frame.SelectPath.pas">
+            <Form>FrameSelectPath</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="VCL.Frame.TGamma.pas">
+            <Form>Frame2</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
