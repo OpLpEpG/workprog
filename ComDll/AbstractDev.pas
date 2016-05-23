@@ -1537,7 +1537,8 @@ begin
 //  FRamXml.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'RamData.xml');
   inc(FcntKadr);
   nkadr := FFromKadr + FcntKadr;
-  if Supports(GlobalCore, IProjectDataFile, ix) then ix.SaveRamData(FAbstractDevice as IDevice, FAdr, FRamXml, pData, FRecSize)
+  if Supports(GlobalCore, IProjectDataFile, ix) then
+   ix.SaveRamData(FAbstractDevice as IDevice, FAdr, FRamXml, pData, FRecSize, FRecSize*nkadr, nkadr , FFromTime + 2.097152 * nkadr)
   else if Supports(GlobalCore, IProjectData, ip) then
     ip.SaveRamData(FAbstractDevice as IDevice, FAdr, FRamXml,  FRecSize*nkadr, nkadr , FFromTime + 2.097152 * nkadr, FModulID);
 end;
@@ -1580,9 +1581,12 @@ begin
     if not Assigned(FRamXml) or not FRamXml.HasAttribute(AT_SIZE) then raise EReadRamException.CreateFmt(RS_NoRamMeta, [FAdr]);
     FRecSize := FRamXml.Attributes[AT_SIZE];
     if FRecSize = 0 then raise EReadRamException.CreateFmt(RS_NoRamMetaRecSize, [FAdr]);
-
+    { TODO : AT_RAMSIZE = int32
+      надо сделать счет по ЅЋќ јћ SD  ј–“ (512 байт = 0х200)
+      0х42 0000 = 0x00002100 блоков 8√Ѕт = 0x0100 0000 блоков}
     if not FRamXml.HasAttribute(AT_RAMSIZE) then FRamSize := MAX_RAM
 //     else raise EReadRamException.Create(RS_NoRamSize)
+    else if FRamXml.Attributes[AT_RAMSIZE] = 5 then FRamSize := MAX_RAM
     else FRamSize := FRamXml.Attributes[AT_RAMSIZE] * 1024 * 1024;
 
 //  if not FRamXml.ParentNode.HasAttribute(AT_KOEF_TIME) then FKoefTime := 1

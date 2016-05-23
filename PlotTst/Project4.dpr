@@ -24,7 +24,10 @@ uses
   VCL.Frame.SelectParam in '..\VCLDialogs\VCL.Frame.SelectParam.pas' {FrameSelectParam: TFrame},
   VCL.Frame.SelectPath in '..\VCLDialogs\VCL.Frame.SelectPath.pas' {FrameSelectPath: TFrame},
   Plot.DataLink in '..\Core\Plot.DataLink.pas',
-  Plot.GR32 in '..\Core\Plot.GR32.pas';
+  Plot.GR32 in '..\Core\Plot.GR32.pas',
+  VCL.JDType.Form in '..\VCLDialogs\VCL.JDType.Form.pas',
+  VCL.JDType.TGamma in '..\VCLDialogs\VCL.JDType.TGamma.pas' {JDTypeFormGamma},
+  JvInspector in '..\..\..\Libs\jvcl\jvcl\run\JvInspector.pas';
 
 {$R *.res}
 

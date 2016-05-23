@@ -42,12 +42,13 @@ uses    System.IOUtils,
    EAsyncBurException = class(EAsyncDeviceException);
 
   TDeviceBur = class(TAbstractDevice, IDevice, ILowLevelDeviceIO, IDataDevice,
-                     IDelayDevice, ITurbo, ICycle, ICycleEx, IReadRamDevice, IEepromDevice)
+                     IDelayDevice, ITurbo, ICycle, ICycleEx, IReadRamDevice, IEepromDevice, IGetActions)
   private
     Ftimer: TTimer;
 
     FTmpSender: IAction;
     FCycle: TCycleEx;
+    FGetActions: TGetActionsImpl;
 
     procedure OnTimer(Sender: TObject);
 
@@ -68,6 +69,7 @@ uses    System.IOUtils,
 //    function GetReadRamClass: TReadRamClass; override;
     function CreateReadRam: TReadRam; override;
     property ReadRam: TReadRam read PropertyReadRam implements IReadRamDevice;
+    property GetActions: TGetActionsImpl read FGetActions implements IGetActions;
   public
     constructor Create(); override;
     constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); override;
@@ -362,6 +364,7 @@ end;
 constructor TDeviceBur.Create;
 begin
   inherited;
+  FGetActions := TGetActionsImpl.Create(Self);
   FCycle := TCycleEx.Create(Self);
   /////
   Ftimer := TTimer.Create(Self);
@@ -380,6 +383,7 @@ end;
 destructor TDeviceBur.Destroy;
 begin
   FCycle.Free;
+  FGetActions.Free;
   inherited;
 end;
 
@@ -489,7 +493,7 @@ end;
 
 procedure TDeviceBur.InitMetaData(ev: TInfoEvent);
  var
-  GDoc: IXMLDocument;
+//  GDoc: IXMLDocument;
   a: Byte;
   cnt: Integer;
   IsOldClose: Boolean;
@@ -514,9 +518,12 @@ begin
 
    if not Assigned(FMetaDataInfo.Info) then
     begin
-     GDoc := NewXDocument();
-     FMetaDataInfo.Info := GDoc.DocumentElement;
-     FMetaDataInfo.Info := GDoc.AddChild('DEVICE');
+//     GDoc := NewXDocument();
+//     FMetaDataInfo.Info := GDoc.DocumentElement;
+//     FMetaDataInfo.Info := GDoc.AddChild('DEVICE');
+     FMetaDataInfo.Info := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get().Get(), Name);
+
+//     TDebug.Log('Root1: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);
     end;
 
    SetLength(TmpErr, 0);
@@ -531,7 +538,9 @@ begin
        begin
         TPars.SetInfo(FMetaDataInfo.Info, Data, n); // parse all data for device
 
-        //FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'Devices\tst_telesis1.xml');
+  //      TDebug.Log('Root2: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);
+
+//        FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'DevBur_SetInfo.xml');
 
         CArray.Add<Integer>(TmpGood,  adr);
        end
@@ -549,11 +558,15 @@ begin
 
         TPars.SetMetr(FMetaDataInfo.Info, FExeMetr, True);
 
+      //  TDebug.Log('Root3: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);
+
         if Supports(GlobalCore, IProjectMetaData, ip) then
           for i in TmpGood do
             ip.SetMetaData(Self as IDevice, i, FindDev(FMetaDataInfo.Info, i));
 
-   //     FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'CalipTst.xml');
+      //  TDebug.Log('Root4: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);
+
+  //      FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'DevBur_SetMetr.xml');
 
        finally
         try

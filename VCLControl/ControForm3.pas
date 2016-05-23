@@ -19,6 +19,7 @@ type
 
   EFormControlException = class(EBaseException);
 
+
   TFormControl = class(TDockIForm)
     Tree: TVirtualStringTree;
     ppM: TPopupActionBar;
@@ -32,17 +33,24 @@ type
     NConnect: TMenuItem;
     NControl: TMenuItem;
     N2: TMenuItem;
+    N1: TMenuItem;
+    NReadRam: TMenuItem;
+    NInfo: TMenuItem;
+    NGlu: TMenuItem;
+    Neep: TMenuItem;
+    NMetrol: TMenuItem;
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure NUpdateClick(Sender: TObject);
     procedure ppMPopup(Sender: TObject);
     procedure NRemoveClick(Sender: TObject);
     procedure NSetupClick(Sender: TObject);
     procedure NAddDevClick(Sender: TObject);
-    procedure TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer);
+    procedure TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex);
     procedure TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
     procedure NSetupDevClick(Sender: TObject);
     procedure TreeCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
     procedure TreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+    procedure NReadRamClick(Sender: TObject);
   private
     FEditData: PNodeExData;
     FEditNode: PVirtualNode;
@@ -54,15 +62,17 @@ type
 
     FAddCon: string;
     FAddDev: string;
+    FC_TableUpdate: string;
 
     procedure TreeClear;
     procedure TreeUpdate;
 
-    procedure InitMenuConnectIO;
+    class procedure InitMenuConnectIO(RootControl: TMenuItem; ClickEvent, AddNewClick: TNotifyEvent); static;
     procedure SetReadOnly(pd: PNodeExData; r0: Boolean = True; r1: Boolean = True; r2: Boolean = True);
     procedure SetData(pd: PNodeExData; const d0: string = ''; const d1: string = ''; const d2: string = '');
 
-    procedure ShowDevMenus(Flag: Boolean);
+    procedure ShowModulMenus(Flag: Boolean; node: IXMLnode = nil);
+    procedure ShowDevMenus(Flag: Boolean; dev: IDevice = nil);
     procedure ShowConMenus(Flag: Boolean);
     procedure ConnectClick(Sender: TObject);
     procedure AddNewClick(Sender: TObject);
@@ -72,10 +82,13 @@ type
     procedure AddMetaData(d: IDataDevice; Rt: PVirtualNode);
     procedure AddDevice(d: IDevice; Rt: PVirtualNode);
     function AddControl(c: IConnectIO; PVDev: PVirtualNode): PVirtualNode;
-    function CetControl(c: IConnectIO): PVirtualNode;
+    function GetControl(c: IConnectIO): PVirtualNode;
     procedure DeleteUnUsed;
     procedure SetAddCon(const Value: string);
     procedure SetAddDev(const Value: string);
+    class procedure ViewRamData(Sender: TFormControl; Root: PVirtualNode; node: IXMLNode); static;
+    class procedure ViewWrkData(Sender: TFormControl; Root: PVirtualNode; node: IXMLNode); static;
+    procedure SetC_TableUpdate(const Value: string);
   protected
    const
     NICON = 269;
@@ -92,7 +105,10 @@ type
     property C_Project: string read FProject write SetProjectChange;
     property C_AddDev: string read FAddDev write SetAddDev;
     property C_AddCon: string read FAddCon write SetAddCon;
+    property C_TableUpdate: string read FC_TableUpdate write SetC_TableUpdate;
   end;
+
+  TRunMetrFunc = procedure (Sender: TFormControl; Root: PVirtualNode; node: IXMLNode);
 
 implementation
 
@@ -103,6 +119,9 @@ uses AbstractPlugin, tools, FormDlgDev;
 const
   AVAIL_ATTR: array[0..3] of string = (AT_ADDR, AT_INFO, AT_SERIAL, AT_CHIP);
   AVAIL_ATTR_Caption: array[0..3] of string = ('Адрес', 'Инфо', 'Серийный номер', 'Чип');
+  AVAIL_T: array[0..4] of string = (T_WRK, T_RAM, T_EEPROM, T_GLU, T_MTR);
+  AVAIL_T_Caption: array[0..4] of string = ('Режим информации', 'Чтение памяти', 'EEPROM', 'Данные по глубине', 'Метрология');
+  AVAIL_T_Func: array[0..4] of TRunMetrFunc = (TFormControl.ViewWrkData, TFormControl.ViewRamData, nil, nil, nil);
   IMG_ATTR = 306;
   CLR_ATTR = TColors.Brown;
 
@@ -314,7 +333,7 @@ end;
 
 
 {$REGION 'TFormControl'}
-function TFormControl.CetControl(c: IConnectIO): PVirtualNode;
+function TFormControl.GetControl(c: IConnectIO): PVirtualNode;
  var
   pv: PVirtualNode;
   c1: IConnectIO;
@@ -358,18 +377,41 @@ begin
     ppM.Images := ip.GetImagList;
    end;
   TreeUpdate();
+  Bind('C_TableUpdate', GlobalCore as IManager, ['S_TableUpdate']);
   Bind('C_Project', GlobalCore as IManager, ['S_ProjectChange']);
   Bind('C_AddDev', GlobalCore as IDeviceEnum, ['S_AfterAdd']);
   Bind('C_AddCon', GlobalCore as IConnectIOEnum, ['S_AfterAdd']);
 end;
 
+procedure TFormControl.NReadRamClick(Sender: TObject);
+ var
+  d: Idialog;
+  dr: IDialog<IXMLNode, TDialogResult>;
+begin
+  if RegisterDialog.TryGet<Dialog_RamRead>(d) then IDialog<IXMLNode, TDialogResult>(d).Execute(FEditData.Item as IXMLNode,
+  procedure(Sender: IDialog; Res: TModalResult)
+  begin
+
+  end);
+end;
+
 procedure TFormControl.NAddDevClick(Sender: TObject);
  var
   d: IDevice;
+  pvc: PVirtualNode;
 begin
   FNotUpdate := True;
   try
-   if TFormCreateDev.Execute(d) = mrOk then AddDevice(d, nil);
+   if TFormCreateDev.Execute(d) = mrOk then
+    begin
+     if Assigned(d.IConnect) then
+      begin
+       pvc := GetControl(d.IConnect);
+       if not Assigned(pvc) then pvc := AddControl(d.IConnect, nil);
+       AddDevice(d, pvc);
+       end
+     else AddDevice(d, nil);
+    end;
   finally
    FNotUpdate := False;
   end;
@@ -416,11 +458,11 @@ begin
   TreeUpdate;
 end;
 
-procedure TFormControl.InitMenuConnectIO;
+class procedure TFormControl.InitMenuConnectIO(RootControl: TMenuItem; ClickEvent, AddNewClick: TNotifyEvent);
  var
   gc: IGetConnectIO;
 begin
-  NConnect.Clear;
+  RootControl.Clear;
   if Supports(GlobalCore, IGetConnectIO, gc) then gc.Enum(procedure(ConnectID: Integer; const ConnectName, ConnectInfo: string)
     function AddMenu(root: TMenuItem; const Capt: string; ev: TNotifyEvent): TMenuItem;
     begin
@@ -434,7 +476,7 @@ begin
      var
       s: string;
     begin
-      for s in gc.GetConnectInfo(ConnectID) do AddMenu(root, s, ConnectClick);
+      for s in gc.GetConnectInfo(ConnectID) do AddMenu(root, s, ClickEvent);
     end;
     procedure AddCreateNew(root: TMenuItem);
     begin
@@ -444,7 +486,7 @@ begin
    var
     Item: TMenuItem;
   begin
-    Item := AddMenu(NConnect, ConnectInfo, nil);
+    Item := AddMenu(RootControl, ConnectInfo, nil);
     if gc.IsManualCreate(ConnectID) then AddCreateNew(Item);
     AddAvail(Item);
   end);
@@ -486,7 +528,7 @@ begin
   if Supports(GlobalCore, IConnectIOEnum, ce) then for c in ce do if SameText(c.ConnectInfo, TMenuItem(Sender).Caption) then
    begin
     dv.IConnect := c;
-    Tree.MoveTo(FEditNode, CetControl(c), amAddChildLast, False);
+    Tree.MoveTo(FEditNode, GetControl(c), amAddChildLast, False);
     DeleteUnUsed;
     Tree.Repaint;
     Exit;
@@ -508,24 +550,30 @@ procedure TFormControl.ppMPopup(Sender: TObject);
  var
   d: IDevice;
   c: IConnectIO;
+  x: IXMLNode;
 //  am: IAddMenus;
 begin
   FEditData := nil;
   FEditNode := nil;
   ShowConMenus(False);
   ShowDevMenus(False);
+  ShowModulMenus(False);
   if not Assigned(Tree.HotNode) then Exit;
   FEditNode := Tree.HotNode;
   FEditData := Tree.GetNodeData(FEditNode);
   if Supports(FEditData.Item, IDevice, d) then
    begin
-    ShowDevMenus(True);
-    InitMenuConnectIO;
+    ShowDevMenus(True, d);
+    InitMenuConnectIO(NConnect, ConnectClick, AddNewClick);
 //    if Supports(FEditData.Item, IAddMenus, am) then am.AddMenus(NControl);
    end
   else if Supports(FEditData.Item, IConnectIO, c) then
    begin
     ShowConMenus(True);
+   end
+  else if Supports(FEditData.Item, IXMLNode, x) then
+   begin
+    ShowModulMenus(True, x);
    end;
 end;
 
@@ -550,6 +598,12 @@ end;
 procedure TFormControl.SetAddDev(const Value: string);
 begin
   FAddDev := Value;
+  TreeUpdate;
+end;
+
+procedure TFormControl.SetC_TableUpdate(const Value: string);
+begin
+  FC_TableUpdate := Value;
   TreeUpdate;
 end;
 
@@ -588,13 +642,37 @@ begin
   NSepConn.Visible := Flag;
 end;
 
-procedure TFormControl.ShowDevMenus(Flag: Boolean);
+procedure TFormControl.ShowDevMenus(Flag: Boolean; dev: IDevice);
+ var
+  ga: IGetActions;
+  a: IAction;
+  m: TMenuItem;
 begin
   NRemove.Visible := Flag;
   NConnect.Visible := Flag;
+  NControl.Clear;
   NControl.Visible := Flag;
   NSetupDev.Visible := Flag;
   NSepDEv.Visible := Flag;
+  if flag and Supports(dev, IGetActions, ga) then for a in ga.GetActions do
+   begin
+    m := TMenuItem.Create(NControl);
+    m.Action := TBasicAction(a.GetComponent);
+    NControl.Add(m);
+   end;
+end;
+
+procedure TFormControl.ShowModulMenus(Flag: Boolean; node: IXMLnode);
+  function Chld(const Attr: string): Boolean;
+  begin
+    Result := Assigned(node) and Assigned(node.ChildNodes.FindNode(Attr))
+  end;
+begin
+  NReadRam.Visible := Flag and Chld(T_RAM);
+  NInfo.Visible := Flag and Chld(T_WRK);
+  Neep.Visible := Flag and Chld(T_EEPROM);
+  NGlu.Visible := Flag and Chld(T_GLU);
+  NMetrol.Visible := Flag and Chld(T_MTR);
 end;
 
 procedure TFormControl.TreeClear;
@@ -631,6 +709,7 @@ procedure TFormControl.AddDevice(d: IDevice; Rt: PVirtualNode);
   pv: PVirtualNode;
 begin
   pv := Tree.AddChild(rt);
+  Include(pv.States, vsExpanded);
   PNodeExData(Tree.GetNodeData(pv)).Item := d;
   SetReadOnly(PNodeExData(Tree.GetNodeData(pv)), False, True, not Supports(d, ICycle));
   if Supports(d, IDataDevice, dd) then AddMetaData(dd, pv);
@@ -640,17 +719,18 @@ end;
 procedure TFormControl.AddMetaData(d: IDataDevice; Rt: PVirtualNode);
  var
   m: TDeviceMetaData;
-  v: PVirtualNode;
+  v, sv, ssv: PVirtualNode;
   e: PNodeExData;
   i: Integer;
-  n, a: Ixmlnode;
+  n, a, s: Ixmlnode;
 begin
   m := d.GetMetaData;
   ///  Ошибки инициализации
   if Length(m.ErrAdr) > 0 then
    begin
-//      Include(pv.States, vsExpanded);
-    e := PNodeExData(Tree.GetNodeData(Tree.AddChild(Rt)));
+    v := Tree.AddChild(Rt);
+    Include(v.States, vsExpanded);
+    e := PNodeExData(Tree.GetNodeData(v));
     e.Item := nil;
     SetData(e,'Не инициализированны', TAddressRec(m.ErrAdr).ToNames);
     SetReadOnly(e);
@@ -665,26 +745,47 @@ begin
     SetData(e);
     SetReadOnly(e);
     e.Color := TColors.Blueviolet;
-    e.ImagIndex := 315;
+    e.ImagIndex := 322;
     ///  модуль атрибуты метаданных
     for i := 0 to High(AVAIL_ATTR) do
      begin
       a := n.AttributeNodes.FindNode(AVAIL_ATTR[i]);
       if Assigned(a) then
        begin
-        e := PNodeExData(Tree.GetNodeData(Tree.AddChild(v)));
+        sv := Tree.AddChild(v);
+        Include(sv.States, vsExpanded);
+        e := PNodeExData(Tree.GetNodeData(sv));
         e.Item := a;
         SetData(e,AVAIL_ATTR_Caption[i]);
         SetReadOnly(e);
        end;
      end;
-    ///  модуль режим информации лог
-
-    ///  модуль чтение памяти
-
-    ///  модуль чтение EEPROM
-
-    ///  модуль метрология
+    ///  модуль режим информации лог памяти EEPROM  glu  метрология
+    for i := 0 to High(AVAIL_T) do
+     begin
+      a := n.ChildNodes.FindNode(AVAIL_T[i]);
+      if Assigned(a) then
+       begin
+        sv := Tree.AddChild(v);
+        Include(sv.States, vsExpanded);
+        e := PNodeExData(Tree.GetNodeData(sv));
+        e.Item := a;
+        SetData(e, AVAIL_T_Caption[i]);
+        SetReadOnly(e);
+        e.Color := TColors.Blueviolet;
+        e.ImagIndex := 315;
+        if a.HasAttribute(AT_FILE_NAME) then
+         begin
+          ssv := Tree.AddChild(sv);
+          Include(ssv.States, vsExpanded);
+          e := PNodeExData(Tree.GetNodeData(ssv));
+          e.Item := a.AttributeNodes.FindNode(AT_FILE_NAME);
+          SetData(e,'Файл', a.Attributes[AT_FILE_NAME]);
+          SetReadOnly(e);
+         end;
+        if Assigned(AVAIL_T_Func[i]) then AVAIL_T_Func[i](Self, sv, a);
+       end;
+     end;
    end;
 end;
 
@@ -722,7 +823,37 @@ begin
   end;
 end;
 
-procedure TFormControl.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer);
+class procedure TFormControl.ViewRamData(Sender: TFormControl; Root: PVirtualNode; node: IXMLNode);
+  procedure SetData(const Caption, AttrName: string);
+   var
+    v: PVirtualNode;
+    e: PNodeExData;
+  begin
+    if node.HasAttribute(AttrName) then
+     begin
+      v := Sender.Tree.AddChild(Root);
+      Include(v.States, vsExpanded);
+      e := PNodeExData(Sender.Tree.GetNodeData(v));
+      e.Item := node.AttributeNodes.FindNode(AttrName);
+      Sender.SetData(e,'Caption', node.Attributes[AttrName]);
+      Sender.SetReadOnly(e);
+     end;
+  end;
+begin
+  SetData('с кадра', AT_FROM_KADR);
+  SetData('с адреса', AT_FROM_ADR);
+  SetData('со времени', AT_FROM_TIME);
+  SetData('по кадр', AT_TO_KADR);
+  SetData('до адрес', AT_TO_ADR);
+  SetData('до времени', AT_TO_TIME);
+end;
+
+class procedure TFormControl.ViewWrkData(Sender: TFormControl; Root: PVirtualNode; node: IXMLNode);
+begin
+
+end;
+
+procedure TFormControl.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex);
  var
   xd: PNodeExData;
   d: IDevice;

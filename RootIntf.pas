@@ -99,6 +99,7 @@ type
     ///	</summary>
     ///	<remarks>
     ///	  инициализируется менегером TEnumer<T>.Add при создании или загрузки
+    ///   под этим именем хранится в контейнере
     ///	</remarks>
     property IName: String read GetItemName write SetItemName;
   end;

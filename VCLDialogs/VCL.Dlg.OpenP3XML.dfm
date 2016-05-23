@@ -159,7 +159,7 @@ object DlgOpenP3DataSet: TDlgOpenP3DataSet
             end
             item
               Position = 2
-              Width = 277
+              Width = 271
               WideText = #1048#1084#1103
             end>
         end
@@ -168,10 +168,6 @@ object DlgOpenP3DataSet: TDlgOpenP3DataSet
     object tshData: TTabSheet
       Caption = #1057#1084#1086#1090#1088#1077#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object DBGrid1: TDBGrid
         Left = 0
         Top = 0

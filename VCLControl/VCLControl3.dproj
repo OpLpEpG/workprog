@@ -69,17 +69,18 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <AppEnableHighDPI>true</AppEnableHighDPI>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <UsePackages>true</UsePackages>
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
         <DCC_RangeChecking>true</DCC_RangeChecking>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.0.206;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <VerInfo_MajorVer>2</VerInfo_MajorVer>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.0.215;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>206</VerInfo_Build>
+        <VerInfo_Build>215</VerInfo_Build>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <DCC_MapFile>3</DCC_MapFile>
         <VerInfo_DLL>true</VerInfo_DLL>
-        <VerInfo_Locale>1049</VerInfo_Locale>
         <DCC_DcuOutput>..\_unit\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -110,6 +111,11 @@
             <Form>DialogDelay</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="VCL.Dlg.Ram.pas">
+            <Form>FormDlgRam</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="ConnectDeviceHelper.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -156,8 +162,8 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k210.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp210.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k230.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp230.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
                 <Source>
                     <Source Name="MainSource">VCLControl3.dpr</Source>

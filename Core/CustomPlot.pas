@@ -8,7 +8,7 @@ uses RootImpl, RootIntf, tools, debug_except, ExtendIntf, FileCachImpl, JDtools,
      SysUtils, Controls, Messages, Winapi.Windows, Classes, System.Rtti, types,
      Vcl.Graphics, Vcl.Forms, Vcl.ExtCtrls, Vcl.Menus, Vcl.Themes, Vcl.GraphUtil;
 
-   const
+   const     // X
       SCALE_PRESET_MOUSE: array[-12..14] of Double = (0.0001, 0.0002, 0.0005, 0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1, 0.25, 0.5,
                                        1,
                                        2, 5, 10, 20, 25, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000);
@@ -95,6 +95,7 @@ type
     function Add<C: T>: C; reintroduce; overload;
     function GetEnumerator: TEnumerator; reintroduce;
     constructor Create(AOwner: TObject); virtual;
+    destructor Destroy; override;
     property Items[Index: Integer]: T read GetItem write SetItem; default;
   end;
 {$ENDREGION}
@@ -132,7 +133,7 @@ type
   end;
 
   // строки;
-  TGraphRow = class(TColRowCollectionItem)
+  TGraphRow = class(TColRowCollectionItem, ICaption)
   private
     procedure SetHeight(const Value: Integer);
 //  protected
@@ -145,12 +146,16 @@ type
     procedure DoInitialize; override;
     function GetItem(Index: Integer): TGraphRegion; override;
     function GetRegionsCount: Integer; override;
+    // ICaption;
+    function GetCaption: string; virtual;
+    procedure SetCaption(const Value: string);
   published
     [ShowProp('Высота строки')] property Height: Integer read FLen write SetHeight;
   end;
   TGraphRowClass = class of TGraphRow;
   TGraphRows = class(TCollectionColRows<TGraphRow>)
   protected
+    function GetCaption: string; override;
     function GetAllLen: Integer; override;
   public
     function FindRows(rc: TGraphRowClass):TArray<TGraphRow>;
@@ -161,16 +166,21 @@ type
     function AutoSize: Boolean; override;
   end;
   TCustomGraphLegendRow = class(TNoSizebleGraphRow)
+  protected
+    function GetCaption: string; override;
   published
     [ShowProp('Показать легенду')] property Visible;
   end;
   TCustomGraphInfoRow = class(TNoSizebleGraphRow)
+  protected
+    function GetCaption: string; override;
+  published
     [ShowProp('Показать информацию')] property Visible;
   end;
 
   TCustomGraphDataRow = class(TGraphRow)
-//  public
-//    constructor Create(Collection: TCollection); override;
+  protected
+    function GetCaption: string; override;
   end;
 
   /// колонки
@@ -219,6 +229,7 @@ type
   end;
   TGraphColumns = class(TCollectionColRows<TGraphColmn>)
   protected
+    function GetCaption: string; override;
     function GetAllLen: Integer; override;
   end;
   TGraphColumnsClass = class of TGraphColumns;
@@ -277,7 +288,7 @@ type
     // поиск нкжного класса региона по колонке и ряду
     class procedure RegClsRegister(apc: TGraphRegionClass; arc: TGraphRowClass; acc: TGraphColumnClass);
     class function RegClsFind(arc: TGraphRowClass; acc: TGraphColumnClass): TGraphRegionClass;
-    function TryHitParametr(pos: TPoint; out Par: TGraphPar): Boolean; virtual;
+    function TryHitParametr(pos: TPoint; out Par: TGraphPar; Button: TMouseButton = mbLeft; Shift: TShiftState = []): Boolean; virtual;
     function MouseToClient(pos: TPoint): TPoint;
     property Row: TGraphRow read FGraphRow write FGraphRow;
     property ClientRect: TRect read FClientRect write SetClientRect;
@@ -289,14 +300,17 @@ type
     property PropRow: Integer read GetRow write SetRow;
     property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
   end;
-  TGraphRegions = class(TColumnCollection<TGraphRegion>);
+  TGraphRegions = class(TColumnCollection<TGraphRegion>)
+  protected
+    function GetCaption: string; override;
+  end;
   {$ENDREGION}
 
   {$REGION 'Параметры колонки'}
 
   {$REGION 'DataLink'}
 
-  TFindIndexType = (fitPrior, fitNext);
+  TFindIndexType = (fndLower, fndHiger, fndNear);
 
   IDataLink = interface
   ['{1D667235-A468-4DEA-B1AD-4EEF12F4BA25}']
@@ -304,7 +318,7 @@ type
     procedure SetDrowMemoryBuffer(const Value: IInterface);
     function GetDrowMemoryBuffer: IInterface;
   //public
-    function IndexOfY(Y: Double; IndexOfType: TFindIndexType): Integer;
+    function IndexOfY(Y: Double; IndexOfType: TFindIndexType; out Yfind: Double): Integer;
   /// <summary>
   /// некое хранилище готовых для рендеринга данных массив точек single, fixed для линии или битмап GR32, DGI+ для ФКД
   /// </summary>
@@ -316,7 +330,7 @@ type
   /// или к файлу активного фильтра
   /// </summary>
   TCustomDataLinkClass = class of TCustomDataLink;
-  TCustomDataLink = class abstract (TInterfacedPersistent, IDataLink)
+  TCustomDataLink = class abstract (TInterfacedPersistent, IDataLink, ICaption)
   private
     FOwner: TGraphPar;
     FIDataSet: IDataSet;
@@ -325,8 +339,7 @@ type
     FYParamPath: string;
     FDrowMemoryBuffer: IInterface;
     FXFieldDef: TFieldDef;
-    FFieldX: TField;
-    FFieldY: TField;
+    FBindWrite: Integer;
     procedure SetDataSetDef(const Value: TIDataSetDef);
     function GetDataSetClass: string;
     procedure SetDataSetClass(const Value: string);
@@ -336,15 +349,21 @@ type
     function GetXFieldDef: TFieldDef;
     function GetYField: TField;
     function FiendField(const Fullname: string): TField;
+    procedure SetBindWriteFile(const Value: Integer);
   protected
+    FFieldX: TField;
+    FFieldY: TField;
   // IDataLink
     procedure SetDrowMemoryBuffer(const Value: IInterface);
     function GetDrowMemoryBuffer: IInterface;
-    function IndexOfY(Y: Double; FindIndexType: TFindIndexType): Integer; virtual;
+    function IndexOfY(Y: Double; FindIndexType: TFindIndexType; out YFind: Double): Integer; virtual;
 
     function GenerateBufferFileName: string; virtual;
     procedure NillDataSet;
     property DrowMemoryBuffer: IInterface read GetDrowMemoryBuffer write SetDrowMemoryBuffer;
+
+    function GetCaption: string; virtual;
+    procedure SetCaption(const Value: string);
   public
     constructor Create(AOwner: TGraphPar); virtual;
     destructor Destroy; override;
@@ -354,6 +373,10 @@ type
     property FieldX: TField read GetXField write FFieldX;
     property FieldY: TField read GetYField write FFieldY;
     property XFieldDef: TFieldDef read GetXFieldDef write FXFieldDef;
+    /// <summary>
+    /// Live Bind last write Size ib Bytes
+    /// </summary>
+    property C_Write: Integer read FBindWrite write SetBindWriteFile;
   published
     property DataSetDefClass: string read GetDataSetClass write SetDataSetClass;
    [ShowProp('База данных', True)]  property DataSetDef: TIDataSetDef read FDataSetDef write SetDataSetDef;
@@ -364,7 +387,7 @@ type
   {$ENDREGION}
 
   TGraphParamClass = class of TGraphPar;
-  TGraphPar = class(TColumnCollectionItem, IInterface)
+  TGraphPar = class(TColumnCollectionItem, IInterface, ICaption)
   private
     FFilters: TParamFilters;
     FLink: TCustomDataLink;
@@ -393,6 +416,9 @@ type
     procedure SetHideInLegend(const Value: boolean);
     procedure SetSelected(const Value: Boolean);
   protected
+    function GetCaption: string; virtual;
+    procedure SetCaption(const Value: string);
+
     function QueryInterface(const IID: TGUID; out Obj): HResult; reintroduce; stdcall;
     procedure DefineProperties(Filer: TFiler); override;
   public
@@ -419,6 +445,7 @@ type
 
   TGraphParams = class(TColumnCollection<TGraphPar>)
   protected
+    function GetCaption: string; override;
     procedure Notify(Item: TCollectionItem; Action: TCollectionNotification); override;
   end;
 
@@ -451,7 +478,8 @@ type
     [ShowProp('Точность(цифр после запятой)')]  property Presizion;
   end;
 
-  TGamma = array [Byte] of TColor;
+  TGamma = array [ShortInt] of TColor;
+  TGammaProp = type string;
 
   [EnumCaptions('интенсивность, амплитуда, ВАК')]
   TWaveStyle = (wsGamma, wsColor, wsBAK);
@@ -461,24 +489,21 @@ type
     FGamma: TGamma;
     FWaveStyle: TWaveStyle;
     FZeroGamma: Double;
-    FMaxGamma: Double;
-    FMinGamma: Double;
+    FKoefGamma: Double;
     procedure SetGamma(const Value: TGamma);
-    procedure SetGammaStr(const Value: string);
-    function GetGammaStr: string;
+    procedure SetGammaStr(const Value: TGammaProp);
+    function GetGammaStr: TGammaProp;
     procedure SetWaveStyle(const Value: TWaveStyle);
-    procedure SetMaxGamma(const Value: Double);
-    procedure SetMinGamma(const Value: Double);
+    procedure SetKoefGamma(const Value: Double);
     procedure SetZeroGamma(const Value: Double);
   public
     constructor Create(Collection: TCollection); override;
-    [ShowProp('Гамма')] property Gamma: TGamma read FGamma write SetGamma;
+    property Gamma: TGamma read FGamma write SetGamma;
   published
-    property GammaStr: string read GetGammaStr write SetGammaStr;
-    [ShowProp('WaveStyle')] property WaveStyle: TWaveStyle read FWaveStyle write SetWaveStyle;
-    property MaxGamma: Double read FMaxGamma write SetMaxGamma;
-    property MinGamma: Double read FMinGamma write SetMinGamma;
-    property ZeroGamma: Double read FZeroGamma write SetZeroGamma;
+    [ShowProp('Палитра')]          property GammaStr: TGammaProp read GetGammaStr write SetGammaStr;
+    [ShowProp('Тип отриствки')]  property WaveStyle: TWaveStyle read FWaveStyle write SetWaveStyle default wsGamma;
+    [ShowProp('Амплитудный Кф')] property KoeffGamma: Double read FKoefGamma write SetKoefGamma;
+    [ShowProp('Смещение Нуля')]  property ZeroGamma: Double read FZeroGamma write SetZeroGamma;
   end;
 
   TStringParam = class(TGraphPar)
@@ -713,8 +738,8 @@ type
     [ShowProp('BOT Y', true)] property YButtomScreen: Double read FYButtomScreen;
 
 
-    [ShowProp('Rows')]    property Rows: TGraphRows read FRows;
-    [ShowProp('Columns')] property Columns: TGraphColumns read FColumns;
+    [ShowProp('Ряды')]    property Rows: TGraphRows read FRows;
+    [ShowProp('Колонки')] property Columns: TGraphColumns read FColumns;
     /// ID , кадр, глубина
     [ShowProp('Ось Y по умолчанию', True)] property DefaultYAxis: TAxisY read GetDefaultYAxis;
 
@@ -803,6 +828,12 @@ constructor TGraphCollection<T>.Create(AOwner: TObject);
 begin
   FGraph := TCustomGraph(AOwner);
   inherited Create(T);
+end;
+
+destructor TGraphCollection<T>.Destroy;
+begin
+  TDebug.Log('TGraphCollection<T>.Destroy  === %s', [ClassName]);
+  inherited;
 end;
 
 function TGraphCollection<T>.GetEnumerator: TEnumerator;
@@ -948,8 +979,8 @@ begin
      end;
     Inc(lf, r.FLen);
    end;
-  Tdebug.log('ALL: %d ',[GetAllLen]);
-  for i := 0 to Count-1 do with TColRowCollectionItem(Items[i]) do Tdebug.log('FROM: %d TO %d',[FFrom, FFrom+Flen]);
+//  Tdebug.log('ALL: %d ',[GetAllLen]);
+//  for i := 0 to Count-1 do with TColRowCollectionItem(Items[i]) do Tdebug.log('FROM: %d TO %d',[FFrom, FFrom+Flen]);
 end;
   {$ENDREGION}
 
@@ -969,6 +1000,11 @@ begin
   Result := FGraph.ClientHeight;
 end;
 
+function TGraphRows.GetCaption: string;
+begin
+  Result := 'Ряды'
+end;
+
 { TGraphRow }
 
 procedure TGraphRow.DoInitialize;
@@ -977,6 +1013,11 @@ procedure TGraphRow.DoInitialize;
 begin
   inherited;
   for c in FGraph.Columns do c.CreateRegion(Self);
+end;
+
+function TGraphRow.GetCaption: string;
+begin
+  Result := 'Ряд'
 end;
 
 function TGraphRow.GetItem(Index: Integer): TGraphRegion;
@@ -991,6 +1032,11 @@ end;
 function TGraphRow.GetRegionsCount: Integer;
 begin
   Result := FGraph.Columns.Count;
+end;
+
+procedure TGraphRow.SetCaption(const Value: string);
+begin
+
 end;
 
 procedure TGraphRow.SetHeight(const Value: Integer);
@@ -1108,9 +1154,9 @@ end;}
 
 destructor TGraphColmn.Destroy;
 begin
-  FRegions.Free;
   FParams.Free;
-  inherited;
+  inherited Destroy; // Перед удалением коллелции регионов в inherited Destroy вызывается удаление регионов
+  FRegions.Free;
 end;
 
 procedure TGraphColmn.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
@@ -1148,6 +1194,11 @@ end;
 
   /// коллекция колонки общее
 
+function TGraphColumns.GetCaption: string;
+begin
+  Result := 'Колонки'
+end;
+
 { TColumnCollection<T> }
 
 constructor TColumnCollection<T>.Create(AOwner: TObject);
@@ -1168,7 +1219,7 @@ end;
 
 procedure TColumnCollectionItem.Release;
 begin
-  inherited;
+  inherited Release;
   NotifyCollumn;
 end;
 
@@ -1180,7 +1231,7 @@ procedure TGraphRegion.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
 begin
   Graph.ContextPopupEvent(Self, ppeRegion, MousePos);
   if Assigned(FOnContextPopup) then FOnContextPopup(Self, MousePos, Handled);
-  if not Handled and TryHitParametr(MousePos, p) then p.DoContextPopup(MousePos, Handled);
+  if not Handled and TryHitParametr(MousePos, p, Tmousebutton.mbRight) then p.DoContextPopup(MousePos, Handled);
 end;
 
 //function TGraphRegion.GetRow: string;
@@ -1272,7 +1323,7 @@ begin
   raise EGraphException.CreateFmt('Ненайден класс ряда %s', [Value]);
 end;}
 
-function TGraphRegion.TryHitParametr(pos: TPoint; out Par: TGraphPar): Boolean;
+function TGraphRegion.TryHitParametr(pos: TPoint; out Par: TGraphPar; Button: TMouseButton = mbLeft; Shift: TShiftState = []): Boolean;
 begin
   Result := False;
 end;
@@ -1301,6 +1352,7 @@ end;
 
 destructor TGraphPar.Destroy;
 begin
+  TDebug.Log('TGraphPar.Destroy == %s', [Title]);
   if Assigned(FLink) then FreeAndNil(Flink);
   FFilters.Free;
   inherited Destroy;
@@ -1310,6 +1362,11 @@ procedure TGraphPar.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
 begin
   Graph.ContextPopupEvent(Self, ppeParam, MousePos);
   if Assigned(FOnContextPopup) then FOnContextPopup(Self, MousePos, Handled);
+end;
+
+function TGraphPar.GetCaption: string;
+begin
+  Result := 'Параметр '+ ClassName
 end;
 
 function TGraphPar.GetLinkClass: string;
@@ -1326,7 +1383,13 @@ end;
 
 procedure TColumnCollectionItem.NotifyCollumn;
 begin
+  if csDestroying in Graph.ComponentState then Exit;
   Column.ColumnCollectionItemChanged(Self);
+end;
+
+procedure TGraphPar.SetCaption(const Value: string);
+begin
+
 end;
 
 procedure TGraphPar.SetColor(const Value: TColor);
@@ -1348,8 +1411,12 @@ end;
 
 procedure TGraphPar.SetDeltaY(const Value: Double);
 begin
-  FDeltaY := Value;
-  NotifyCollumn;
+  if FDeltaY <> Value then
+   begin
+    FDeltaY := Value;
+    Graph.UpdateData;
+    NotifyCollumn;
+   end;
 end;
 
 procedure TGraphPar.SetEUnit(const Value: string);
@@ -1400,10 +1467,12 @@ end;
 constructor TCustomDataLink.Create(AOwner: TGraphPar);
 begin
   FOwner := AOwner;
+  Tdebug.log(' ===  TCustomDataLink.Create === ');
 end;
 
 destructor TCustomDataLink.Destroy;
 begin
+  Tdebug.log(' ===  TCustomDataLink.Create === ' + XParamPath +'      ');
   if Assigned(FDataSetDef) then FreeAndNil(FDataSetDef);
   inherited;
 end;
@@ -1411,6 +1480,11 @@ end;
 function TCustomDataLink.GenerateBufferFileName: string;
 begin
   Result := DataSetIntf.GetTempDir + FYParamPath.Replace('.','')+FXParamPath.Replace('.','')+'.bin'
+end;
+
+function TCustomDataLink.GetCaption: string;
+begin
+  Result := 'Источник данных параметра'
 end;
 
 function TCustomDataLink.GetDataSet: TDataSet;
@@ -1454,20 +1528,25 @@ begin
   Result := FFieldY;
 end;
 
-function TCustomDataLink.IndexOfY(Y: Double; FindIndexType: TFindIndexType): Integer;
+function TCustomDataLink.IndexOfY(Y: Double; FindIndexType: TFindIndexType; out YFind: Double): Integer;
  var
   d: TDataSet;
-  y0, dy: Double;
+  dy: Double;
   function FindNext: Integer;
   begin
     Result := -1;
     while not d.Eof do
      begin
-      y0 := FieldY.AsFloat;
-      if Y0 = Y then Exit(d.RecNo-1)
-      else if Y0 > Y then
+      Yfind := FieldY.AsFloat;
+      if Yfind = Y then Exit(d.RecNo-1)
+      else if Yfind > Y then
        begin
-        if FindIndexType = fitPrior then d.Prior;
+        //  возвращаем меньшее значение
+        if FindIndexType = fndLower then
+         begin
+          d.Prior;
+          Yfind := FieldY.AsFloat;
+         end;
         Exit(d.RecNo-1);
        end;
       d.Next;
@@ -1478,11 +1557,15 @@ function TCustomDataLink.IndexOfY(Y: Double; FindIndexType: TFindIndexType): Int
     Result := -1;
     while not d.Bof do
      begin
-      y0 := FieldY.AsFloat;
-      if Y0 = Y then Exit(d.RecNo-1)
-      else if Y0 < Y then
+      Yfind := FieldY.AsFloat;
+      if Yfind = Y then Exit(d.RecNo-1)
+      else if Yfind < Y then
        begin
-        if FindIndexType = fitNext then d.Next;
+        if FindIndexType = fndHiger then
+         begin
+          d.Next;
+          Yfind := FieldY.AsFloat;
+         end;
         Exit(d.RecNo-1);
        end;
       d.Prior;
@@ -1492,21 +1575,27 @@ begin
   Result := -1;
   d := DataSet;
   d.Active := True;
+  if not Assigned(FieldY) then Exit;
+  // проверка на зашкаливание
   d.Last;
-  y0 := FieldY.AsFloat;
-  if y0 <= Y then Exit(d.RecNo-1);
+  Yfind := FieldY.AsFloat;
+  if Yfind <= Y then Exit(d.RecNo-1);
   d.First;
-  y0 := FieldY.AsFloat;
-  if y0 >= Y then Exit(0);
+  Yfind := FieldY.AsFloat;
+  if Yfind >= Y then Exit(0);
   d.Next;
-  dy := FieldY.AsFloat - y0;
+  dy := FieldY.AsFloat - Yfind;
+  // поиск по всем Y вверх
   if dy = 0 then Exit(FindNext)
   else
    begin
-    d.RecNo := Round((Y-y0)/dy);
-    y0 := FieldY.AsFloat;
-    if Y0 < Y then Exit(FindNext)
-    else if y0 > y then Exit(FindPrior)
+    d.RecNo := Round((Y-Yfind)/dy);
+    Yfind := FieldY.AsFloat;
+   // поиск Y вверх
+    if Yfind < Y then Exit(FindNext)
+   // поиск Y вниз
+    else if Yfind > y then Exit(FindPrior)
+   // нашли сразу Y
     else Exit(d.RecNo-1);
    end;
 end;
@@ -1541,6 +1630,16 @@ begin
   FDataSetDef := Value;
 end;
 
+procedure TCustomDataLink.SetBindWriteFile(const Value: Integer);
+begin
+  FBindWrite := Value;
+  owner.Graph.UpdateData;
+end;
+
+procedure TCustomDataLink.SetCaption(const Value: string);
+begin
+end;
+
 procedure TCustomDataLink.SetDataSetClass(const Value: string);
 begin
   if Assigned(FDataSetDef) then FreeAndNil(FDataSetDef);
@@ -1548,6 +1647,11 @@ begin
 end;
 
 { TGraphParams }
+
+function TGraphParams.GetCaption: string;
+begin
+  Result := 'Параметры'
+end;
 
 procedure TGraphParams.Notify(Item: TCollectionItem; Action: TCollectionNotification);
 begin
@@ -1598,16 +1702,19 @@ constructor TWaveParam.Create(Collection: TCollection);
   i: Integer;
 begin
   inherited;
-  for i := 0   to 127 do FGamma[i] := $7FFF0000 + (i div 2) * $100 + i div 2;
-  for i := 128 to 255 do FGamma[i] := $7F0000FF + ((255 - i) div 2) * $10000 + ((255 -i) div 2) * $100;
+  FWaveStyle := wsGamma;
+  FKoefGamma := 0.01;
+  for i := -128 to -1 do FGamma[i] := $7FFF0000 + (i div 2) * $100 + i div 2;
+  for i := 0 to 127 do FGamma[i] := $7F0000FF + ((255 - i) div 2) * $10000 + ((255 -i) div 2) * $100;
 end;
 
-function TWaveParam.GetGammaStr: string;
+function TWaveParam.GetGammaStr: TGammaProp;
  var
   c: TColor;
 begin
   Result := '';
-  for c in FGamma do Result := Result + ','+ IntToStr(c);
+  for c in FGamma do Result := Result + ','+ IntToHex(c, 4);
+ // Tdebug.log('GetGammaStr : '+Result);
 end;
 
 procedure TWaveParam.SetGamma(const Value: TGamma);
@@ -1616,24 +1723,22 @@ begin
   NotifyCollumn;
 end;
 
-procedure TWaveParam.SetGammaStr(const Value: string);
+procedure TWaveParam.SetGammaStr(const Value: TGammaProp);
  var
   i: Integer;
   a: TArray<string>;
 begin
-  a := Value.Split([','], ExcludeEmpty);
-  if Length(a) <> 256 then
-  for i := 0 to Min(255, High(a)) do FGamma[i] := a[i].ToInteger();
+//  Tdebug.log('SetGammaStr(const Value) : '+ Value);
+  a := string(Value).Split([','], ExcludeEmpty);
+  if Length(a) <> 256 then raise Exception.Create('Error Message');
+  for i := 0 to 255 {Min(255, High(a))} do FGamma[i-128] := ('$'+a[i]).ToInteger();
+  NotifyCollumn;
 end;
 
-procedure TWaveParam.SetMaxGamma(const Value: Double);
+procedure TWaveParam.SetKoefGamma(const Value: Double);
 begin
-  FMaxGamma := Value;
-end;
-
-procedure TWaveParam.SetMinGamma(const Value: Double);
-begin
-  FMinGamma := Value;
+  FKoefGamma := Value;
+  NotifyCollumn;
 end;
 
 procedure TWaveParam.SetWaveStyle(const Value: TWaveStyle);
@@ -1645,6 +1750,7 @@ end;
 procedure TWaveParam.SetZeroGamma(const Value: Double);
 begin
   FZeroGamma := Value;
+  NotifyCollumn;
 end;
 
 {$ENDREGION}
@@ -1705,7 +1811,7 @@ end;
 
 function TParamFilters.GetCaption: string;
 begin
-  Result := 'Фильтр'
+  Result := 'Фильтры'
 end;
 procedure TParamFilters.SetCaption(const Value: string);
 begin
@@ -2061,11 +2167,17 @@ end;
 
 
 procedure TCustomGraph.DoContextPopup(MousePos: TPoint; var Handled: Boolean);
+ var
+  r: TGraphColmn;
 begin
   inherited;
   ContextPopupEvent(Self, ppeGraph, MousePos);
 //  if Assigned(PopupMenu) then
-  if not Handled then  HitColumn(MousePos).DoContextPopup(MousePos, Handled);
+  if not Handled then
+   begin
+    r := HitColumn(MousePos);
+    if Assigned(r) then r.DoContextPopup(MousePos, Handled);
+   end;
 end;
 
 procedure TCustomGraph.ContextPopupEvent(AObject: TObject; Event: TCustomContextPlotPopup.TPopupEvent; MousePos: TPoint);
@@ -2144,25 +2256,28 @@ procedure TCustomGraph.UpdateData;
  var
   c: TGraphColmn;
   p: TGraphPar;
-  y: TField;
   b: TBookmark;
+  SaveActive: Boolean;
 begin
-  FYFirstAvail := 0;
+  FYFirstAvail := Single.MaxValue;
   FYLastAvail := 0;
   for c in Columns do
    for p in c.Params do with p.Link.DataSet do
     begin
+     SaveActive := p.Link.DataSet.active;
+     p.Link.DataSet.active := True;
      b := Bookmark;
      try
-      Y := FieldByName(p.Link.YParamPath);
       First;
-      FYFirstAvail := min(FYFirstAvail, Y.AsFloat);
+      FYFirstAvail := min(FYFirstAvail, p.Link.FieldY.AsFloat + p.DeltaY);
       Last;
-      FYLastAvail := max(FYLastAvail, Y.AsFloat);
+      FYLastAvail := max(FYLastAvail, p.Link.FieldY.AsFloat + p.DeltaY);
      finally
       Bookmark := b;
+      p.Link.DataSet.active := SaveActive;
      end;
     end;
+  if FYLastAvail < FYFirstAvail then FYFirstAvail := 0;
   UpdateAvalableRangeY;
   ChekYPosition;
   FYScrollBar.Update;
@@ -2614,6 +2729,34 @@ begin
 end;
 
 {$ENDREGION}
+
+{ TCustomGraphLegendRow }
+
+function TCustomGraphLegendRow.GetCaption: string;
+begin
+  Result := 'Легенда'
+end;
+
+{ TCustomGraphInfoRow }
+
+function TCustomGraphInfoRow.GetCaption: string;
+begin
+  Result := 'Информация'
+end;
+
+{ TCustomGraphDataRow }
+
+function TCustomGraphDataRow.GetCaption: string;
+begin
+  Result := 'Графики'
+end;
+
+{ TGraphRegions }
+
+function TGraphRegions.GetCaption: string;
+begin
+  Result := 'Области Колонки'
+end;
 
 initialization
   RegisterClasses([TCustomGraphLegendRow, TCustomGraphDataRow, TCustomGraphInfoRow]);

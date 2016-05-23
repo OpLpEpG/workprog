@@ -66,7 +66,11 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
     // IProjectDataFile,
     procedure SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
     procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
-    procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
+    procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen, CurAdr, CurKadr: Integer; CurTime: TDateTime);
+    function DataFileExists(Root: IXMLNode; const SubDir: string = ''; const SubName: string = ''): Boolean;
+    procedure DataSectionDelete(Root: IXMLNode);
+    function ConstructDataDir(Root: IXMLNode; NeedCreate: Boolean = True; const SubDir: string = ''): string;
+    function ConstructDataFileName(Root: IXMLNode; const SubName: string = ''): string;
 
     procedure IMetrology.Setup = SetMetrol;
     procedure SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
@@ -156,7 +160,7 @@ begin
   else
    begin
     Result := TALLMetaData.Create(Name);
-    TRegister.AddType<TALLMetaData>.AddInstance(Name, Result as IInterface).LiveTime(ltSingletonNamed);
+    TRegister.AddType<TALLMetaData>.LiveTime(ltSingletonNamed).AddInstance(Name, Result as IInterface);
    end
 end;
 
@@ -278,7 +282,8 @@ procedure TManager.SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
    dv: IXMLNode;
 begin
   dv := FDevices.ChildNodes.FindNode(Dev.IName);
-  dv.ChildNodes.Add(MetaData);
+  if dv <> MetaData.ParentNode then dv.ChildNodes.Add(MetaData);
+//  MetaData.OwnerDocument.FileName := FDevices.OwnerDocument.FileName;
   Save;
   S_TableUpdate := 'Modul';
 end;
@@ -377,16 +382,28 @@ begin
   f.Write(RowLen, Row, f.Size);
 end;
 
-procedure TManager.SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
+procedure TManager.SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen, CurAdr, CurKadr: Integer; CurTime: TDateTime);
+const
+  {$J+} tick: Cardinal = 0;{$J-}
  var
   f: IFileData;
+  t: Cardinal;
 begin
+  t := GetTickCount;
   if not XSupport(Data, IFileData, f) then
    begin
     f := GFileDataFactory.Factory(TFileData, Data);
     (Data as IOwnIntfXMLNode).Intf := f;
    end;
   f.Write(RowLen, Row);
+  Data.Attributes[AT_TO_ADR] := CurAdr;
+  Data.Attributes[AT_TO_KADR] := CurKadr;
+  Data.Attributes[AT_TO_TIME] := CurTime;
+  if (t - tick) > 1000 then
+   begin
+    S_TableUpdate := 'Ram';
+    tick := t;
+   end;
 end;
 
 procedure TManager.ClearItems(ClearItems: EClearItems);
@@ -394,6 +411,49 @@ begin
   if ecIO in ClearItems then (GlobalCore as IConnectIOEnum).Clear;
   if ecDevice in ClearItems then (GlobalCore as IDeviceEnum).Clear;
   if ecForm in ClearItems then (GlobalCore as IFormEnum).Clear;//  FFormEnum.Clear;
+end;
+
+    /// <summary>
+    ///  Root - <c>WRK RAM GLU</c>
+    ///  структура проекта и директорий
+    ///      <c>
+    ///   <para> DeviceBur1
+    ///   <para> -   Modul1
+    ///   <para> --    WRK
+    ///   <para> ---     ParamBuffer
+    ///   <para> --    RAM
+    ///   <para> ---     ParamBuffer </para></para></para></para></para></para>
+    ///  </c>
+    /// </summary>
+function TManager.ConstructDataDir(Root: IXMLNode; NeedCreate: Boolean; const SubDir: string): string;
+begin
+  Result := TPath.GetDirectoryName(Root.OwnerDocument.FileName)
+         + '\' + Root.ParentNode.ParentNode.NodeName + '\' + Root.ParentNode.NodeName + '\' + Root.NodeName+ '\' ;
+  if SubDir <> '' then Result := Result +'\' +SubDir +'\';
+  if NeedCreate then if not TDirectory.Exists(Result) then TDirectory.CreateDirectory(Result);
+end;
+
+function TManager.ConstructDataFileName(Root: IXMLNode; const SubName: string): string;
+begin
+  Result := Root.ParentNode.NodeName + Root.NodeName + SubName + '.bin'
+end;
+
+function TManager.DataFileExists(Root: IXMLNode; const SubDir, SubName: string): Boolean;
+ var
+  fl: string;
+begin
+  if Root.HasAttribute(AT_FILE_NAME) and (SubDir ='') then fl := Root.Attributes[AT_FILE_NAME]
+  else fl := ConstructDataFileName(Root, SubName);
+  Result := Tfile.Exists(ConstructDataDir(Root, False, SubDir) + fl);
+end;
+
+procedure TManager.DataSectionDelete(Root: IXMLNode);
+ var
+  dir: string;
+begin
+  dir := ConstructDataDir(Root, False);
+  if TDirectory.Exists(dir) then TDirectory.Delete(dir, True);
+  RemoveXMLAttr(Root, AT_FILE_NAME);
 end;
 
 class function TManager.ProjectDir: string;
@@ -478,7 +538,7 @@ begin
   flName := TPath.GetFileNameWithoutExtension(FileName);
   last := dir.Split([Tpath.DirectorySeparatorChar], ExcludeEmpty);
   ladtDir := last[High(last)];
-  if (not SameText(flName, ladtDir)) and (MessageDlg('Cоздать директорию ..\'+flName +'\ ?', mtInformation, [mbYes, mbNo], 0) = mrYes) then
+  if (not SameText(flName, ladtDir)) {and (MessageDlg('Cоздать директорию ..\'+flName +'\ ?', mtInformation, [mbYes, mbNo], 0) = mrYes)} then
    begin
     dir := dir + Tpath.DirectorySeparatorChar + flName;
     TDirectory.CreateDirectory(dir);
@@ -491,17 +551,19 @@ begin
   Froot := FProjecDoc.AddChild('PROJECT');
   FConnect := Froot.AddChild(T_CON);
   FDevices := Froot.AddChild(T_DEV);
-//  Foptions := Froot.AddChild(T_OPT);
   LDoc := NewXDocument();
   LDoc.LoadFromFile(ExtractFilePath(ParamStr(0))+'Devices\Options.xml');
   Froot.ChildNodes.Add(Ldoc.DocumentElement);
+  Foptions := Froot.ChildNodes.FindNode(T_OPT);
 
   if Assigned(AfterCreateProject) then AfterCreateProject();
 
   ((GlobalCore as IConnectIOEnum) as IStorable).New;
   ((GlobalCore as IDeviceEnum) as IStorable).New;
 
+  FProjecDoc.FileName := FProjectFile;
   FProjecDoc.SaveToFile(FProjectFile);
+
   Notify('S_ProjectChange');
 end;
 

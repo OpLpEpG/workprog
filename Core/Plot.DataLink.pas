@@ -38,7 +38,6 @@ type
      FfileTmpBuffer: TArray<Byte>;
      FFileData: IFileData;
      FbuffReady: Boolean;
-     FFIieldX, FFIieldY: TField;
      FYFrom, FYto: Single;
      Fbuff: TArray<TBufferPoint>;
      FInitBufThread: TThread;
@@ -73,12 +72,13 @@ type
    ['{D9EA754D-F43C-4029-A05F-F6008EFB3052}']
      function GetArrayCount: Integer;
      function GetRecordCount: Integer;
-     procedure Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<Byte>>);
+     procedure Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); overload;
+     procedure Read(YFrom, Yto: Single; Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);overload;
      property ArrayCount: Integer read GetArrayCount;
      property RecordCount: Integer read GetRecordCount;
   end;
 
-   TWaveDataLink = class(TDataLink<TArray<Byte>>, IWaveDataLink)
+   TWaveDataLink = class(TDataLink<TArray<ShortInt>>, IWaveDataLink)
    private
      FFileRecLen: Integer;
      FDelta, FScale: Single;
@@ -86,18 +86,20 @@ type
      FArraySize: Integer;
      FArrayCount: Integer;
      FArrayType: Integer;
-    FRecordCount: Integer;
+     FRecordCount: Integer;
      function GetArrayCount: Integer;
      function GetArraySize: Integer;
      function GetArrayType: Integer;
-    function GetEnumFunc: TAsTypeFunction<integer>;
-    function GetRecordCount: Integer;
+     function GetEnumFunc: TAsTypeFunction<integer>;
+     function GetRecordCount: Integer;
    public
-     procedure Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<Byte>>); overload;
+     procedure Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); overload;
+     procedure Read(YFrom, Yto: Single; Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);overload;
      function FileRecLen: Integer; override;
      procedure InitBuffFromFile; override;
      procedure IniTmpFileBuffer(Y: Single; X: TField); override;
-     function GetXValue(Fx: TField): TArray<Byte>; override;
+     function GetXValue(Fx: TField): TArray<ShortInt>; override;
+     function GetShortIntData(var P: Pointer): ShortInt; inline;
      property EnumFunc: TAsTypeFunction<integer> read GetEnumFunc;
      property ArraySize: Integer read GetArraySize;
    published
@@ -167,13 +169,13 @@ end;
 
 function TDataLink<T>.GetFieldY: Single;
 begin
-  if not Assigned(FFIieldY) then
-   begin
-    FFIieldY := FiendField(YParamPath);
-    FFIieldX := FiendField(XParamPath);
-    SetLength(FfileTmpBuffer, FileRecLen);
-   end;
-  Result := FFIieldY.AsSingle
+//  if not Assigned(FFieldY) then
+//   begin
+//    FFieldY := FiendField(YParamPath);
+//    FFieldX := FiendField(XParamPath);
+//    SetLength(FfileTmpBuffer, FileRecLen);
+//   end;
+  Result := FieldY.AsSingle
 end;
 
 function TDataLink<T>.GetXFieldDef: TFileFieldDef;
@@ -269,8 +271,8 @@ procedure TDataLink<T>.ReadFromDB;
   b: TBookmark;
   y, Yfirst, dy: Single;
 begin
-  FFIieldX := nil;
-  FFIieldY := nil;
+  FFieldX := nil;
+  FFieldY := nil;
   d := DataSet;
   b := d.Bookmark;
   d.Active := True;
@@ -290,7 +292,7 @@ begin
    while (not d.Eof) and (y < FYto) do
     begin
      y := YValue;
-     Fevent(y, GetXValue(FFIieldX));
+     Fevent(y, GetXValue(FieldX));
      d.Next;
     end;
   finally
@@ -303,6 +305,8 @@ procedure TDataLink<T>.Read(YFrom, Yto: Single; AddpointEvent: TAddpointEvent<T>
  var
   th: TThread;
 begin
+  if Length(FfileTmpBuffer) <> FileRecLen then SetLength(FfileTmpBuffer, FileRecLen);
+
   Fevent := AddpointEvent;
   FYFrom := YFrom;
   FYto := Yto;
@@ -342,7 +346,7 @@ begin
     begin
       FInitBufThread.FreeOnTerminate := True;
       try
-       if DataSetDef.CreateNew(ids, True) then Exit;
+       if not DataSetDef.CreateNew(ids, True) then Exit;
        InitMemBuffer(ids.DataSet);
       finally
        FInitBufThread := nil;
@@ -370,8 +374,9 @@ function TWaveDataLink.FileRecLen: Integer;
 begin
   if FFileRecLen = 0 then
    begin
-    FFileRecLen :=  SizeOf(Single) + ArraySize;
+    FFileRecLen := SizeOf(Single) + ArraySize;
    end;
+  Result := FFileRecLen;
 end;
 
 function TWaveDataLink.GetArrayCount: Integer;
@@ -404,32 +409,42 @@ begin
   Result := FRecordCount;
 end;
 
-function TWaveDataLink.GetXValue(Fx: TField): TArray<Byte>;
+function TWaveDataLink.GetShortIntData(var P: Pointer): ShortInt;
  var
-  i, len: Integer;
-  b: TArray<Byte>;
+  r: Integer;
+begin
+  r := Round((EnumFunc(p) + FDelta) * Fscale);
+  if r < ShortInt.MinValue then Result := ShortInt.MinValue
+  else if r > ShortInt.MaxValue then Result := ShortInt.MaxValue
+  else Result := r;
+end;
+
+function TWaveDataLink.GetXValue(Fx: TField): TArray<ShortInt>;
+ var
+  i: Integer;
+  b: TArray<byte>;
   p: Pointer;
 begin
-  DataSet.GetFieldData(Fx, b);
+  Fx.DataSet.GetFieldData(Fx, b);
   p := PPointer(@b[0])^;
   SetLength(Result , ArrayCount);
-  for i := 0 to ArrayCount-1 do Result[i] := Round(EnumFunc(p) * Fscale + FDelta);
+  for i := 0 to ArrayCount-1 do Result[i] := Round((EnumFunc(p) + FDelta) * Fscale);
 end;
 
 procedure TWaveDataLink.InitBuffFromFile;
  var
   p: PFilePoint;
   px: Pointer;
-  i,j, l: Integer;
+  i,j: Integer;
 begin
   FFileData.Read(FFileData.Size, Pointer(p), 0);
-  l := TPars.VarTypeToLength(ArrayType);
+//  l := TPars.VarTypeToLength(ArrayType);
   for i := 0 to Length(Fbuff)-1 do
    begin
     Fbuff[i].Y := p.Y;
     SetLength(Fbuff[i].X, ArrayCount);
     px := @p.X[0];
-    for j := 0 to ArrayCount-1 do Fbuff[i].X[j] := Round(EnumFunc(px) * Fscale + FDelta);
+    for j := 0 to ArrayCount-1 do Fbuff[i].X[j] := Round((EnumFunc(px)+ FDelta) * Fscale);
     inc(PByte(p), FileRecLen);
    end;
 end;
@@ -438,26 +453,42 @@ procedure TWaveDataLink.IniTmpFileBuffer(Y: Single; X: TField);
  var
   dst, src: PByte;
   b: TArray<Byte>;
+
+//  tst: TArray<ShortInt>;
+//  px: Pointer;
+//  i: Integer;
 begin
-  DataSet.GetFieldData(X, b);
+  X.DataSet.GetFieldData(X, b);
   src := PPointer(@b[0])^;
+
+//  px := src;
+//  SetLength(tst , ArrayCount);
+//  for i := 0 to ArrayCount-1 do tst[i] := Round((EnumFunc(px)+ FDelta) * Fscale);
+
   PFilePoint(@FfileTmpBuffer[0]).Y := Y;
-  dst := @PFilePoint(@FfileTmpBuffer[0]).X[0];
+  dst := @(PFilePoint(@FfileTmpBuffer[0])^.X[0]);
   Move(src^, dst^,  ArraySize);
 end;
 
-procedure TWaveDataLink.Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<Byte>>);
+procedure TWaveDataLink.Read(YFrom, Yto, Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);
+begin
+  if (FDelta <> Delta) or (FScale <> Scale) then FbuffReady := False;
+  FDelta := Delta;
+  FScale := Scale;
+
+  inherited read(YFrom, Yto, AddWaveEvent);
+end;
+
+procedure TWaveDataLink.Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);
   var
    YFrom, Yto: Single;
 begin
-  FDelta := Delta;
-  FScale := Scale;
   DataSet.Active := True;
   DataSet.First;
   YFrom := YValue;
   DataSet.Last;
   Yto := YValue;
-  inherited read(YFrom, Yto, AddWaveEvent);
+  read(YFrom, Yto, Delta, Scale, AddWaveEvent);
 end;
 {$ENDREGION}
 

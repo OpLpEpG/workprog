@@ -62,12 +62,12 @@ end;
 procedure TFormSUCOPconverter.btToSUCOPClick(Sender: TObject);
  var
   data: TArray<Variant>;
-  kH: Double;
+ // kH: Double;
   i, Nfile: Integer;
 begin
   FHbur := StrToFloat(edAmpBUR.Text);
   FHmetr := StrToFloat(edAmpMET.Text);
-  kH := FHbur/FHmetr;
+ // kH := FHbur/FHmetr;
   FDip := StrToFloat(edI.Text);
 
   Flasdoc := NewLasDoc;
@@ -75,7 +75,7 @@ begin
 
   CheckInputLAS;
 
-  Fsur := Tsur.Create(1000*kH, FDip, 1/1000, 1/100);
+  Fsur := Tsur.Create(FHbur, FDip, 1/1000, FHmetr/1000);
 
   Nfile := 0;
   i := 0;
@@ -147,13 +147,13 @@ begin
    if not FileExists(s) then Break;
    Fsur.ImportCorrData(s, procedure(Data: TArray<Variant>)
    begin
-     Data[1] := Double(Data[1])*1000;
-     Data[2] := Double(Data[2])*1000;
-     Data[3] := Double(Data[3])*1000;
+     Data[1] := Double(Data[1]);//*1000;
+     Data[2] := Double(Data[2]);//*1000;
+     Data[3] := Double(Data[3]);//*1000;
 
-     Data[4] := Double(Data[4])*100;
-     Data[5] := Double(Data[5])*100;
-     Data[6] := Double(Data[6])*100;
+     Data[4] := Double(Data[4]);//*100;
+     Data[5] := Double(Data[5]);//*100;
+     Data[6] := Double(Data[6]);//*100;
 
      TMetrInclinMath.FindZenViz(Data[1], Data[2], Data[3], o, z);
      TMetrInclinMath.FindAzim(Data[4], Data[5], Data[6], o, z, a, i, h);

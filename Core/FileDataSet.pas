@@ -47,6 +47,8 @@ type
     function GetRecordCount: Integer; override;
     function CreateBlobStream(Field: TField; Mode: TBlobStreamMode): TStream; override;
 //    function GetFileName: string; override;
+    function GetItemName: String; override;
+    procedure SetItemName(const Value: String); override;
   public
     function GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean; override;
     property FileData: IFileData read GetFileData;
@@ -201,6 +203,11 @@ begin
   Result := FFileData;
 end;
 
+function TFileDataSet.GetItemName: String;
+begin
+  Result := FBinFileName;
+end;
+
 //function TFileDataSet.GetFileName: string;
 //begin
 //  Result := FBinFileName;
@@ -230,6 +237,11 @@ begin
   inherited;
   if (Field is TNumericField) and (FieldDef.Precision > 0) then
      TNumericField(Field).DisplayFormat := ToDBDisplayFormat(FieldDef.Precision);
+end;
+
+procedure TFileDataSet.SetItemName(const Value: String);
+begin
+  FBinFileName := Value;
 end;
 
 { TFileFieldDefs }

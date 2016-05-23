@@ -314,7 +314,7 @@ begin
     varSingle  :Result := SizeOf(Single); { vt_r4           4 }
     varDouble  :Result := SizeOf(Double); { vt_r8           5 }
     varCurrency:Result := SizeOf(Currency); { vt_cy           6 }
-  //  varDate    :Result := SizeOf(TDateTime); { vt_date         7 }
+    varDate    :Result := SizeOf(TDateTime); { vt_date         7 }
     varShortInt:Result := SizeOf(ShortInt); { vt_i1          16 }
     varByte    :Result := SizeOf(Byte); { vt_ui1         17 }
     varWord    :Result := SizeOf(Word); { vt_ui2         18 }

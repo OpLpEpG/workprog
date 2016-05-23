@@ -129,6 +129,12 @@
         </DCCReference>
         <DCCReference Include="..\Core\Plot.DataLink.pas"/>
         <DCCReference Include="..\Core\Plot.GR32.pas"/>
+        <DCCReference Include="..\VCLDialogs\VCL.JDType.Form.pas"/>
+        <DCCReference Include="..\VCLDialogs\VCL.JDType.TGamma.pas">
+            <Form>JDTypeFormGamma</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\..\..\Libs\jvcl\jvcl\run\JvInspector.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

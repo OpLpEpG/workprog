@@ -11,7 +11,7 @@ uses CustomPlot, System.IOUtils, Plot.GR32, gr32, DataSetIntf, Plot.Controls, La
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.SQLite, FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs,
   FireDAC.Phys.SQLiteVDataSet, FireDAC.VCLUI.Wait, FireDAC.Comp.UI, IDataSets, JvExDBGrids, JvDBGrid, JvComponentBase, JvAppStorage,
-  JvAppXMLStorage, JvAppRegistryStorage;
+  JvAppXMLStorage, JvAppRegistryStorage,  JvExControls, JvColorBox, JvColorButton;
 
 type
   TForm4 = class(TForm, IALLMetaDataFactory, IALLMetaData, IRegistry)

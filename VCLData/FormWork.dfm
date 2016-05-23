@@ -31,7 +31,6 @@ object FormWrok: TFormWrok
     TreeOptions.SelectionOptions = [toDisableDrawSelection, toExtendedFocus, toSimpleDrawSelection]
     TreeOptions.StringOptions = [toSaveCaptions, toShowStaticText, toAutoAcceptEditChange]
     OnGetText = TreeGetText
-    OnGetImageIndex = TreeGetImageIndex
     Columns = <
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]

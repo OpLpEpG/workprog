@@ -3,8 +3,8 @@ object FormCreateDev: TFormCreateDev
   Top = 0
   BorderStyle = bsSizeToolWin
   Caption = #1053#1086#1074#1086#1077' '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1086
-  ClientHeight = 399
-  ClientWidth = 297
+  ClientHeight = 420
+  ClientWidth = 392
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,37 +15,29 @@ object FormCreateDev: TFormCreateDev
   Position = poMainFormCenter
   OnShow = FormShow
   DesignSize = (
-    297
-    399)
+    392
+    420)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 8
     Top = 8
-    Width = 116
+    Width = 118
     Height = 13
     Caption = #1044#1086#1089#1090#1091#1087#1085#1099#1077' '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072
   end
-  object Label2: TLabel
-    Left = 144
-    Top = 315
-    Width = 125
-    Height = 13
-    Anchors = [akLeft, akBottom]
-    Caption = #1042#1074#1077#1076#1080#1090#1077' '#1072#1076#1088#1077#1089#1072' '#1095#1077#1088#1077#1079' '#39';'#39
-    ExplicitTop = 337
-  end
   object Label3: TLabel
     Left = 8
-    Top = 315
+    Top = 328
     Width = 93
     Height = 13
     Anchors = [akLeft, akBottom]
     Caption = #1042#1074#1077#1076#1080#1090#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+    ExplicitTop = 307
   end
   object ButtonOK: TButton
     Left = 8
-    Top = 366
+    Top = 387
     Width = 75
     Height = 25
     Anchors = [akLeft, akBottom]
@@ -53,22 +45,24 @@ object FormCreateDev: TFormCreateDev
     ModalResult = 1
     TabOrder = 0
     OnClick = ButtonOKClick
+    ExplicitTop = 377
   end
   object Button1: TButton
     Left = 104
-    Top = 366
+    Top = 387
     Width = 75
     Height = 25
     Anchors = [akLeft, akBottom]
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
     TabOrder = 1
+    ExplicitTop = 377
   end
   object Tree: TVirtualStringTree
     Left = 8
     Top = 24
-    Width = 279
-    Height = 276
+    Width = 374
+    Height = 297
     Anchors = [akLeft, akTop, akRight, akBottom]
     BorderWidth = 1
     Color = clBtnHighlight
@@ -79,13 +73,17 @@ object FormCreateDev: TFormCreateDev
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring, hoHeaderClickAutoSort]
     Header.ParentFont = True
     ParentCtl3D = False
-    PopupMenu = ppM
     RootNodeCount = 10
     TabOrder = 2
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
+    TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
     TreeOptions.PaintOptions = [toShowButtons, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]
     TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
+    OnChecked = TreeChecked
+    OnChecking = TreeChecking
     OnGetText = TreeGetText
+    ExplicitWidth = 376
+    ExplicitHeight = 287
     Columns = <
       item
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
@@ -96,7 +94,7 @@ object FormCreateDev: TFormCreateDev
       item
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coDisableAnimatedResize]
         Position = 1
-        Width = 112
+        Width = 207
         WideText = #1054#1087#1080#1089#1072#1085#1080#1077
       end
       item
@@ -105,28 +103,41 @@ object FormCreateDev: TFormCreateDev
         WideText = #1040#1076#1088#1077#1089
       end>
   end
-  object edAdr: TEdit
-    Left = 144
-    Top = 334
-    Width = 145
-    Height = 21
-    Anchors = [akLeft, akRight, akBottom]
-    TabOrder = 3
-  end
   object edCaption: TEdit
     Left = 8
-    Top = 334
+    Top = 347
     Width = 130
     Height = 21
     Anchors = [akLeft, akBottom]
-    TabOrder = 4
+    TabOrder = 3
+    ExplicitTop = 337
   end
-  object ppM: TPopupActionBar
-    Left = 104
-    Top = 88
-    object NAdd: TMenuItem
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      OnClick = NAddClick
-    end
+  object cbTree: TCheckBox
+    Left = 191
+    Top = 391
+    Width = 89
+    Height = 17
+    Anchors = [akLeft, akBottom]
+    Caption = #1086#1082#1085#1086' '#1076#1072#1085#1085#1099#1093
+    Checked = True
+    State = cbChecked
+    TabOrder = 4
+    ExplicitTop = 381
+  end
+  object btConnection: TButton
+    Left = 144
+    Top = 345
+    Width = 238
+    Height = 25
+    Anchors = [akLeft, akRight, akBottom]
+    Caption = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100
+    TabOrder = 5
+    OnClick = btConnectionClick
+    ExplicitTop = 335
+    ExplicitWidth = 240
+  end
+  object ppConnection: TPopupMenu
+    Left = 144
+    Top = 208
   end
 end

@@ -174,6 +174,12 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
     property ActionComponentClass;
   end;
 
+  TGetActionsImpl = class(TAggObject, IGetActions)
+  protected
+    type TInnerCont = class(TContainer);
+    function GetActions: TArray<IAction>;
+  end;
+
  TActionEnum = class(TRootServiceManager<IAction>, IActionEnum)
  protected
    const PATH = 'IActionsObjs';
@@ -581,6 +587,21 @@ begin
 end;
 
 {$ENDREGION}
+
+{ TGetActionsImpl }
+
+function TGetActionsImpl.GetActions: TArray<IAction>;
+ var
+  ast: TArray<string>;
+  s: string;
+  ii: IInterface;
+begin
+  ast := TInnerCont(GContainer).GetDynamicActionsNames(Controller);
+  for s in ast do if GContainer.TryGetInstance(TypeInfo(TDynamicAction), s, ii) then
+   begin
+    CArray.Add<IAction>(Result, ii as IAction);
+   end;
+end;
 
 initialization
   RegisterClass(TIDynamicAction);

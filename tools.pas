@@ -113,13 +113,15 @@ const
   AT_FLOWINTERVAL = 'FLOW_TIMER_INTERVAL';
 
 // Атрибуты считанной памяти
-//  AT_START_TIME = 'START_TIME';
-//  AT_DELAY_TIME = 'DELAY_TIME';
-//  AT_KOEF_TIME = 'KOEF_TIME';
-//  AT_FROM_TIME = 'FROM_TIME';
-//  AT_TO_TIME = 'TO_TIME';
-//  AT_FROM_ADR = 'FROM_ADR';
-//  AT_TO_ADR = 'TO_ADR';
+  AT_START_TIME = 'START_TIME';
+  AT_DELAY_TIME = 'DELAY_TIME';
+  AT_KOEF_TIME = 'KOEF_TIME';
+  AT_FROM_TIME = 'FROM_TIME';
+  AT_TO_TIME = 'TO_TIME';
+  AT_FROM_ADR = 'FROM_ADR';
+  AT_TO_ADR = 'TO_ADR';
+  AT_FROM_KADR = 'FROM_KADR';
+  AT_TO_KADR = 'TO_KADR';
 //  AT_RAM_FILE = 'RAM_FILE';
 
 type
@@ -171,6 +173,7 @@ function ToAdrCmd(a, cmd: Byte): Byte;
 function XToVar(ANode: IXMLNode): Variant;
 function QToVar(DataSet: TDataSet; AutoClearDataSet: Boolean = True): Variant;
 function RenameXMLNode(Src: IXMLNode; const NewName: string): IXMLNode;
+procedure RemoveXMLAttr(Node: IXMLNode; const AttrName: string);
 function NewXDocument(Version: DOMString = '1.0'): IXMLDocument;
 function XSupport(const Instance: IXMLNode; const IID: TGUID; out Intf): Boolean;
 
@@ -720,6 +723,14 @@ begin
   FOwnIntf := Value;
 end;
 
+procedure RemoveXMLAttr(Node: IXMLNode; const AttrName: string);
+ var
+  atr: IXMLNode;
+begin
+  atr := Node.AttributeNodes.FindNode(AttrName);
+  if Assigned(atr) then Node.AttributeNodes.Remove(atr);
+end;
+
 function RenameXMLNode(Src: IXMLNode; const NewName: string): IXMLNode;
 var
   NewNode, MoveNode, Parent: IXMLNode;
@@ -1080,8 +1091,11 @@ procedure FindAllWorks(root: IXMLNode; func: TWorkDataRef);
  var
   u, w: IXMLNode;
 begin
+//  Root.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'FindAllWorks.xml');
+//  TDebug.Log('Root: %s %d', [Root.NodeName, Root.ChildNodes.Count]);
   for u in XEnum(root) do if u.HasAttribute(AT_ADDR) then
    begin
+//    TDebug.Log('Root__:'+u.NodeName);
     W := u.ChildNodes.FindNode(T_WRK);
     if Assigned(w) then func(w, u.Attributes[AT_ADDR], u.NodeName);
    end;
@@ -1823,10 +1837,10 @@ class function THelperXMLtoDB.FieldTypesToTxtTypes(FieldType: TFieldType): strin
 begin
   case FieldType of
    ftString: Result := 'TEXT';
-   ftInteger: Result := 'INT';
-   ftFloat: Result := 'REAL';
+   ftFloat, ftDate, ftTime, ftDateTime: Result := 'REAL';
    ftBlob: Result := 'BLOB';
-  end;
+   else Result := 'INT';
+  end
 end;
 
 //class function THelperXMLtoDB.XArrayToVar(Data: IXMLNode): Variant;

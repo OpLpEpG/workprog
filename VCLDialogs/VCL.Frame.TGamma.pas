@@ -4,12 +4,15 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls;
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls;
 
 type
-  TFrame2 = class(TFrame)
-    PaintBox1: TPaintBox;
-    ColorBox1: TColorBox;
+  TFrameGamma = class(TFrame)
+    PaintBox: TPaintBox;
+    clTop: TColorBox;
+    clBot: TColorBox;
+    tbPlus: TTrackBar;
+    tbMinus: TTrackBar;
   private
     { Private declarations }
   public

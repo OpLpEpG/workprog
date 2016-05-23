@@ -61,6 +61,17 @@ type
 //    property EventHandler: TIActionEvent read GetEventHandler write SetEventHandler;
   end;
 
+  ///	<summary>
+  ///  Объект возвращает все свои действия
+  ///	</summary>
+  ///	<remarks>
+  ///	  Ядро
+  ///	</remarks>
+  IGetActions = interface
+  ['{5960E40F-9F23-4D7B-AAD7-E2D4AB27DC24}']
+    function GetActions: TArray<IAction>;
+  end;
+
   IForm = interface(IManagItem)
   ['{0AC2EF7D-DACE-49FC-82D1-7607F8EE47AB}']
     procedure Show;
@@ -155,8 +166,30 @@ type
   // Внутренний  интерфейс IManager3
   IProjectDataFile = interface
   ['{BFD4B4E0-2F3D-4D46-91A6-C5EE6AA97703}']
+    /// <summary>
+    ///  Root - <c>WRK RAM GLU</c>
+    ///  структура проекта и директорий
+    ///      <c>
+    ///   <para> DeviceBur1
+    ///   <para> -   Modul1
+    ///   <para> --    WRK
+    ///   <para> ---     ParamBuffer
+    ///   <para> --    RAM
+    ///   <para> ---     ParamBuffer </para></para></para></para></para></para>
+    ///  </c>
+    /// </summary>
+    function ConstructDataDir(Root: IXMLNode; NeedCreate: Boolean = True; const SubDir: string = ''): string;
+    /// <summary>
+    ///  Root - <c>WRK RAM GLU</c>
+    ///
+    ///  <para>имя файла: <c> Modul1+WRK+.bin</c></para>
+    ///
+    /// </summary>
+    function ConstructDataFileName(Root: IXMLNode; const  SubName: string = ''): string;
+    function DataFileExists(Root: IXMLNode; const SubDir: string = ''; const SubName: string = ''): Boolean;
+    procedure DataSectionDelete(Root: IXMLNode);
     procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
-    procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
+    procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen, CurAdr, CurKadr: Integer; CurTime: TDateTime);
   end;
 
   IFileData = interface

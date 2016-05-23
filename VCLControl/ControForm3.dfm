@@ -90,6 +90,25 @@ object FormControl: TFormControl
       Caption = #1057#1074#1086#1081#1089#1090#1074#1072'...'
       OnClick = NSetupDevClick
     end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object NReadRam: TMenuItem
+      Caption = #1063#1090#1077#1085#1080#1077' '#1087#1072#1084#1103#1090#1080' '#1084#1086#1076#1091#1083#1103'...'
+      OnClick = NReadRamClick
+    end
+    object NInfo: TMenuItem
+      Caption = #1056#1077#1078#1080#1084' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1080
+    end
+    object NGlu: TMenuItem
+      Caption = #1044#1072#1085#1085#1099#1077' '#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1087#1086' '#1075#1083#1091#1073#1080#1085#1077
+    end
+    object Neep: TMenuItem
+      Caption = 'EEPROM'
+    end
+    object NMetrol: TMenuItem
+      Caption = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1103
+    end
     object NSepDEv: TMenuItem
       Caption = '-'
     end

@@ -4,7 +4,7 @@ interface
 
 //{$D1}
 
-uses DeviceIntf, DockIForm, debug_except, ExtendIntf, RootImpl, PluginAPI, RootIntf, DBIntf, DBImpl, Data.DB,
+uses DeviceIntf, DockIForm, debug_except, ExtendIntf, RootImpl, PluginAPI, RootIntf,
      System.Variants, Container, System.TypInfo, System.SysUtils, System.Classes, System.DateUtils,
      Winapi.Windows, Winapi.Messages, Vcl.Graphics, Vcl.Menus, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
      Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.Mask;
@@ -145,7 +145,7 @@ begin
   if TimeStart < Now then
     raise EDialogDelayException.CreateFmt('Время постановки на задержку, включения прибора, прошло:%s сейчас:%s',
           [DateTimeToStr(TimeStart), DateTimeToStr(Now)]);
-  if TimeStart - Now > 2 then
+  if TimeStart - Now > 20 then
     raise EDialogDelayException.CreateFmt('Время включения прибора %1.1f суток', [TimeStart - Now]);
 end;
 
@@ -254,7 +254,7 @@ end;
 
 procedure TDialogDelay.ResetDelayMenuClick(Sender: TObject);
 begin
-  if MessageDlg('Сбросить время включения, интервал работы для проекта?',TMsgDlgType.mtError,[mbOK, mbCancel],1) = mrOk then
+  if MessageDlg('Сбросить время включения, интервал работы для проекта?', TMsgDlgType.mtError,[mbOK, mbCancel],1) = mrOk then
    begin
     WriteToBD(0, 0);
     UpdateDelayed;
@@ -330,12 +330,12 @@ begin
       UpdateDelayed;
      end;
 /// закоментировал для версии 3
-    ConnectionsPool.Query.Acquire;
+ {   ConnectionsPool.Query.Acquire;
     try
      ConnectionsPool.Query.ExecSQL('UPDATE Device SET TimeSetupDelay = :P1 WHERE (IName = :P2)', [Res.SetTime, (DelayDevice as IManagItem).IName], [ftDateTime, ftString]);
     finally
      ConnectionsPool.Query.Release;
-    end;
+    end;}
     DateTimeToString(tst, 'dd.mm.yyyy hh:nn:ss:zzz', Res.SetTime);
     DateTimeToString(td,  'hh:nn:ss:zzz', Res.Delay);
     DateTimeToString(ton, 'dd.mm.yyyy hh:nn:ss:zzz', Res.SetTime + Res.Delay);

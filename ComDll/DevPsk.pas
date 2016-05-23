@@ -112,7 +112,9 @@ type
   EPskExceptionClass = class of EAbstractPskException;
 
   TCmdByteRef = reference to procedure(Res: boolean; Data: PByte; DataSize: integer);
-  TAbstractPsk = class(TAbstractDevice, INotifyAfterAdd)
+  TAbstractPsk = class(TAbstractDevice, INotifyAfterAdd, IGetActions)
+  private
+    FGetActions: TGetActionsImpl;
   protected
     FOldStatus: TDeviceStatus;
 //    function GetActionsDevClass: TAbstractActionsDevClass; override;
@@ -120,8 +122,11 @@ type
     procedure BeforeAdd(); override;}
     procedure AfterAdd();
     procedure DoDelayEventHelper(rez, oldclose: Boolean; Delay, WorkTime: TTime; ResultEvent: TSetDelayEvent);
+    property GetActions: TGetActionsImpl read FGetActions implements IGetActions;
   public
     Scenna: TArray<TRunCmd>;
+    constructor Create(); override;
+    destructor Destroy; override;
     procedure StopFlowRef(ResultEvent: TCmdByteRef);
     procedure InitMetaData(ev: TInfoEvent);
 //    procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false); override; safecall;
@@ -536,6 +541,18 @@ begin
    end;
 end;
 
+constructor TAbstractPsk.Create;
+begin
+  inherited;
+  FGetActions := TGetActionsImpl.Create(Self);
+end;
+
+destructor TAbstractPsk.Destroy;
+begin
+  FGetActions.Free;
+  inherited;
+end;
+
 procedure TAbstractPsk.DoDelayEventHelper(rez, oldclose: Boolean; Delay, WorkTime: TTime; ResultEvent: TSetDelayEvent);
 begin
   try
@@ -693,6 +710,7 @@ begin
          begin
           ip.SetMetaData(Self as IDevice, FAddressArray[0], FindDev(Info, FAddressArray[0]));
          end;
+        Info := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get().Get(), Name);
         S_Status := dsReady;
         FOldStatus := S_Status;
         if Assigned(ev) then ev(FMetaDataInfo);

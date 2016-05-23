@@ -97,20 +97,24 @@ end;
 
 
 class function GFileDataFactory.ConstructFileName(const Root: IXMLNode): string;
-  var
-   s: string;
-   i: Integer;
+ var
+  fn, dir: string;
+  i: Integer;
+  pdf: IProjectDataFile;
 begin
-  if Root.HasAttribute(AT_FILE_NAME) then Exit(Root.Attributes[AT_FILE_NAME]);
-  s := TPath.GetDirectoryName(Root.OwnerDocument.FileName) + '\' + Root.ParentNode.NodeName + Root.NodeName;
-  Result := s + '.bin';
+  if not Supports(GContainer, IProjectDataFile, pdf) then raise Exception.Create('Error IProjectDataFile не поддерживается');
+  dir := pdf.ConstructDataDir(Root);
+  if Root.HasAttribute(AT_FILE_NAME) then Exit(dir + Root.Attributes[AT_FILE_NAME]);
+  fn := pdf.ConstructDataFileName(Root);
+  Result := dir  + fn;
   i := 0;
   while TFile.Exists(Result) do
    begin
     inc(i);
-    Result := s + i.ToString() + '.bin';
+    fn := pdf.ConstructDataFileName(Root, i.ToString);
+    Result := dir  + fn;
    end;
-  Root.Attributes[AT_FILE_NAME] := Result;
+  Root.Attributes[AT_FILE_NAME] := fn;
   (GContainer as IALLMetaDataFactory).Get.Save;
 end;
 
@@ -271,7 +275,7 @@ begin
 //  try
    if From >= 0 then FFile.Position := From;
    Result := FFile.Write(PData^, Count);
- //  S_Write := Result;
+   S_Write := Result;
 //  finally
 //   UnLock;
 //   FSinc.EndWrite;

@@ -28,8 +28,8 @@ type
     function Priority: Integer;
     function Model: ModelType;
     function RootName: String;
-    function GetItemName: String;
-    procedure SetItemName(const Value: String);
+    function GetItemName: String; virtual;
+    procedure SetItemName(const Value: String); virtual;
     // IBind
     procedure _EnableNotify;
     procedure Bind(const ControlExprStr: string; Source: IInterface; const SourceExpr: array of string); overload;
@@ -39,13 +39,13 @@ type
 
     function GetDataSet: TDataSet;
     function GetTempDir: string; virtual;
-
   public
     constructor Create; reintroduce; virtual;
     destructor Destroy; override;
     class function NewInstance: TObject; override;
     procedure AfterConstruction; override;
     function SafeCallException(ExceptObject: TObject; ExceptAddr: Pointer): HResult; override;
+    property IName: String read GetItemName write SetItemName;
 /// <summary>
 ///   После добавления экземпляра в общее хранилище ltSingletonNamed
 ///  если WeekContainerReference = ДА, то если осталась тольо ссылка в контейнере то удаляем из контейнера
@@ -167,11 +167,12 @@ begin
   while GContainer.Contains(RootName + i.ToString()) do Inc(i);
   Name := RootName + i.ToString;
   FWeekContainerReference := True;
+  TDebug.Log('======== TIDataSet.Create ----- %s', [Iname]);
 end;
 
 destructor TIDataSet.Destroy;
 begin
- // TDebug.Log('TIDataSet.Destroy %s', [name]);
+  TDebug.Log('TIDataSet.Destroy %s', [Iname]);
   TBindHelper.RemoveExpressions(Self);
   inherited;
 end;
@@ -218,8 +219,7 @@ begin
    end
   else if Result = 1 then
    begin
-//    if WeekContainerReference then GContainer.NillInstance(Model, Name);
-    if WeekContainerReference then GContainer.RemoveInstance(Model, Name);
+    if WeekContainerReference then GContainer.RemoveInstance(Model, IName);
    end;
 end;
 

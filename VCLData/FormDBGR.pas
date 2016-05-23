@@ -213,7 +213,7 @@ begin
    if (c.Params.Items[i] is TGraphParamDB) and
       not InArray(TGraphParamDB(c.Params.Items[i]).XFiedName) then c.Params.Items[i].Destroy;
   // добавить новые
-  if NeedAddNew then for s in pr do if not InParams(s) then NewDBParam(c, FDataSet.Fields.FieldByName(s));
+  if NeedAddNew then for s in pr do if not InParams(s) then NewDBParam(c, FDataSet.FieldList.FieldByName(s));
 end;
 
 procedure TFormGraph.DoAfterOpen;

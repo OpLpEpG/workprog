@@ -243,7 +243,7 @@ begin
      while i < ss.Count do // parse data
       begin
        if ss[i].StartsWith('~') then Break
-       else if not ss[i].StartsWith('#') then AddLine(ss[i]);
+       else if (ss[i].Length > 0) and not ss[i].StartsWith('#') then AddLine(ss[i]);
        inc(i);
       end;
       Exit(True);

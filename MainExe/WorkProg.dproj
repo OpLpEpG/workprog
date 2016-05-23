@@ -77,8 +77,8 @@
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_DLL>true</VerInfo_DLL>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
-        <VerInfo_Build>3</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.3;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>4</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.4;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <UsePackages>true</UsePackages>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>

@@ -95,7 +95,7 @@ end;
 
 class procedure TFormSetGPColor.Execute(ALeftTop: TPoint; c: TGPColor; func: Tproc<TGPColor>);
 begin
-  with TFormSetGPColor.Create(nil) do
+  with Create(nil) do
    begin
     Left := ALeftTop.X;
     Top := ALeftTop.Y;

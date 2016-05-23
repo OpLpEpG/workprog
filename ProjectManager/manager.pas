@@ -1,6 +1,12 @@
 unit manager;
 
 interface
+{ TODO : ERRORS не буду устранять }
+///
+///  Ошибки:
+/// 1. если Device удалить и снова добавить то IAll_meta_Data не удаляет старые XML метаданные и создаются два устройства
+///    после удаления приборов перегрузить лучше проект
+///
 
 uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, DBIntf, DBImpl, System.DateUtils, Actns, System.UITypes,
      RootImpl, AbstractPlugin, PluginAPI, DockIForm, DButil, System.SyncObjs, DBEnumers,

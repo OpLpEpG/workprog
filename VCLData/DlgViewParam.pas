@@ -56,15 +56,17 @@ procedure TFormViewParams.DoApply;
  var
   s: TArray<string>;
 begin
-//
-//  Doc.SaveToFile(ExtractFilePath(ParamStr(0))+'VIEW.xml');
-//
+ //
+ // Doc.SaveToFile(ExtractFilePath(ParamStr(0))+'VIEW.xml');
+ //
   ExecXtree(Doc.DocumentElement, procedure(n: IXMLNode)
   begin
     if n.HasAttribute(CheckName) and Boolean(n.Attributes[CheckName]) then
      if n.HasAttribute(USER_PARAM) then Carray.Add<string>(s, n.ParentNode.NodeName)
-     else if CNode.IsData(n) then Carray.Add<string>(s, CNode.DBName(n))
-
+     else
+      begin
+        if CNode.IsData(n) then Carray.Add<string>(s, CNode.DBName(n))
+      end;
 //     else if n.NodeName = T_DEV then Carray.Add<string>(s, THelperXMLtoDB.CreateName(n.ParentNode, 'R'))
 //     else if n.NodeName = T_CLC then Carray.Add<string>(s, THelperXMLtoDB.CreateName(n.ParentNode, 'T'));
   end);

@@ -94,7 +94,7 @@ type
     FDisplayName: string;
     FReadOnly: Boolean;
     class var RttiContext : TRttiContext;
-    class function StrObj2Str(const s: string): string;
+    class function StrObj2Str(inst: TObject; const s: string): string;
     class procedure ApplyItem(root: TJvCustomInspectorItem; o: TObject); static;
     class procedure ApplyItemArray(root: TJvCustomInspectorItem; o: TArray<TObject>; BefoSet, AfteSet: TNotifyEvent); static;
     class procedure ApplyICollection(root: TJvCustomInspectorItem; cl: TICollection); static;
@@ -129,6 +129,7 @@ type
   end;
   IDialogOptions = IDialog<IXMLNode, IXMLNode, TJvInspectorOptionDataEvent, TDialogResult>;
 
+procedure SetInspectorItemFont(Item: TJvCustomInspectorItem; const ACanvas: TCanvas);
 
 implementation
 
@@ -346,9 +347,10 @@ begin
    end;
 end;
 
-class function ShowPropAttribute.StrObj2Str(const s: string): string;
+class function ShowPropAttribute.StrObj2Str(inst: TObject; const s: string): string;
 begin
-  Result := '('+s+')';
+  if Supports(inst, ICaption) then Result := ''
+  else Result := '('+s+')';
 end;
 
 class procedure ShowPropAttribute.ApplyItem(root: TJvCustomInspectorItem; o: TObject);
@@ -359,6 +361,7 @@ class procedure ShowPropAttribute.ApplyItem(root: TJvCustomInspectorItem; o: TOb
   ii: TJvCustomInspectorItem;
   oo: TObject;
   s: string;
+  ic: ICaption;
 begin
   if not Assigned(o) then Exit;
   t := RttiContext.GetType(o.ClassType);
@@ -370,8 +373,16 @@ begin
        oo := p.GetValue(o).AsObject;
        if not Assigned(oo) then s := string(p.PropertyType.Handle.Name)
        else s := oo.ClassName;
-       ii := TCustomInspectorDataClassName.New(Root, StrObj2Str(s), TypeInfo(string));
-       ii.DisplayName := ShowPropAttribute(a).DisplayName;
+       if Supports(oo, ICaption, ic) then
+        begin
+         ii := TCustomInspectorDataClassName.New(Root, '', TypeInfo(string));
+         ii.DisplayName := ic.Text;
+        end
+       else
+        begin
+         ii := TCustomInspectorDataClassName.New(Root, StrObj2Str(oo, s), TypeInfo(string));
+         ii.DisplayName := ShowPropAttribute(a).DisplayName;
+        end;
        ii.SortKind := iskNone;
        ii.Expanded := True;
        ii.ReadOnly := True;
@@ -394,18 +405,18 @@ class procedure ShowPropAttribute.ApplyICollection(root: TJvCustomInspectorItem;
   s: string;
   ca: ICaption;
 begin
-  if Supports(cl, ICaption, ca) then s := ca.Text
-  else s := 'Items';
-  Root := TCustomInspectorDataClassName.New(Root, '', TypeInfo(string));
-  Root.DisplayName := s;
-  Root.SortKind := iskNone;
-  Root.Expanded := True;
-  Root.ReadOnly := True;
+//  if Supports(cl, ICaption, ca) then s := ca.Text
+//  else s := 'Items';
+//  Root := TCustomInspectorDataClassName.New(Root, '', TypeInfo(string));
+//  Root.DisplayName := s;
+//  Root.SortKind := iskNone;
+//  Root.Expanded := True;
+//  Root.ReadOnly := True;
   for ci in cl do
    begin
     if Supports(ci, ICaption, ca) then s := ca.Text
     else s := 'Item';
-    ii := TCustomInspectorDataClassName.New(Root, StrObj2Str(ci.ClassName), TypeInfo(string));
+    ii := TCustomInspectorDataClassName.New(Root, StrObj2Str(ci, ci.ClassName), TypeInfo(string));
     ii.DisplayName := s;
     ii.SortKind := iskNone;
     ii.Expanded := True;
@@ -736,6 +747,7 @@ initialization
     Delete(TJvInspectorFloatItem);
     Delete(TJvInspectorIntegerItem);
     Delete(TJvInspectorStringItem);
+
     Add(TJvInspectorTypeKindRegItem.Create(TJvInspectorEnumCaptionsItem, tkEnumeration));
     Add(TJvInspectorTypeKindRegItem.Create(TJvInspectorFloatItemEx, tkFloat));
 
@@ -746,6 +758,7 @@ initialization
     Add(TJvInspectorTypeKindRegItem.Create(TJvInspectorStringItemEx, tkLString));
     Add(TJvInspectorTypeKindRegItem.Create(TJvInspectorStringItemEx, tkWString));
     Add(TJvInspectorTypeKindRegItem.Create(TJvInspectorStringItemEx, tkString));
+//    Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorStringItemEx, System.TypeInfo(string)));
 
     Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(Boolean)));
     Add(TJvInspectorTypeInfoRegItem.Create(TJvInspectorBooleanItem, System.TypeInfo(ByteBool)));

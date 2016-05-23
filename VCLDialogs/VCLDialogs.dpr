@@ -26,7 +26,9 @@ uses
   VCL.Frame.SelectParam in 'VCL.Frame.SelectParam.pas' {FrameSelectParam: TFrame},
   VCL.Dlg.OpenP3XML in 'VCL.Dlg.OpenP3XML.pas' {DlgOpenP3DataSet},
   VCL.Frame.SelectPath in 'VCL.Frame.SelectPath.pas' {FrameSelectPath: TFrame},
-  VCL.Frame.TGamma in 'VCL.Frame.TGamma.pas' {Frame2: TFrame};
+  VCL.Frame.TGamma in 'VCL.Frame.TGamma.pas' {FrameGamma: TFrame},
+  VCL.JDType.Form in 'VCL.JDType.Form.pas',
+  VCL.JDType.TGamma in 'VCL.JDType.TGamma.pas' {JDTypeFormGamma};
 
 {$R *.res}
 

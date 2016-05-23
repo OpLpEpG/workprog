@@ -22,7 +22,9 @@ uses
   Container,
   ControForm3 in 'ControForm3.pas' {FormControl},
   FormDlgDev in 'FormDlgDev.pas' {FormCreateDev},
-  FormDelay2 in 'FormDelay2.pas' {DialogDelay};
+  FormDelay2 in 'FormDelay2.pas' {DialogDelay},
+  VCL.Dlg.Ram in 'VCL.Dlg.Ram.pas' {FormDlgRam},
+  ConnectDeviceHelper in 'ConnectDeviceHelper.pas';
 
 {$R *.res}
 

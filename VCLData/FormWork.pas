@@ -35,9 +35,13 @@ type
     procedure NConnectClick(Sender: TObject);
     procedure SetRemoveDevice(const Value: string);
     procedure SetMetaDataInfo(const Value: TInfoEventRes);
+    //Автоматический выбор
+    procedure ConnectToAllDevices;
+    function TryConnectFromForkData(const wd: TWorkEventRes): Boolean;
   protected
    const
     NICON = 113;
+   // AUTO_DEV = 'Автоматический выбор';
     procedure DoSetFont(const AFont: TFont); override;
     procedure NCPopup(Sender: TObject); override;
     class function ClassIcon: Integer; override;
@@ -84,7 +88,8 @@ begin
    begin
     Bind('C_RemoveDevice', de, ['S_BeforeRemove']);// (de as IBind).CreateManagedBinding(Self, 'LRemoveDevice', ['S_BeforeRemove']);
     d := de.Get(FDataDevice);
-    if Assigned(d) and Supports(d, IDataDevice) then C_MetaDataInfo := (d as IDataDevice).GetMetaData();
+    if Assigned(d) and Supports(d, IDataDevice) then C_MetaDataInfo := (d as IDataDevice).GetMetaData()
+    else if FDataDevice = '' then ConnectToAllDevices
    end;
 end;
 
@@ -96,18 +101,35 @@ begin
   Tree.Clear;
 end;
 
+function TFormWrok.TryConnectFromForkData(const wd: TWorkEventRes): Boolean;
+begin
+  DataDevice := wd.Work.ParentNode.ParentNode.NodeName;
+  Result := DataDevice <> '';
+end;
+
+procedure TFormWrok.ConnectToAllDevices;
+ var
+  d: IDevice;
+  de: IDeviceEnum;
+begin
+  FDataDevice := '';
+  if Supports(GlobalCore, IDeviceEnum, de) then
+    for d in de.Enum do
+      if Supports(d, IDataDevice) then Bind('C_BindWorkRes',d, ['S_WorkEventInfo']);
+end;
+
 procedure TFormWrok.SetDataDevice(const Value: string);
  var
   d: IDevice;
   de: IDeviceEnum;
 begin
   if FDataDevice = Value then Exit;
-  TBindHelper.RemoveControlExpressions(Self, ['MetaDataInfo', 'BindWorkRes']);//  Bind.RemoveManagedBinding(['MetaDataInfo', 'BindWorkRes']);
+  TBindHelper.RemoveControlExpressions(Self, ['C_MetaDataInfo', 'C_BindWorkRes']);//  Bind.RemoveManagedBinding(['MetaDataInfo', 'BindWorkRes']);
   FDataDevice := Value;
   if FDataDevice <> '' then
    begin
     if Supports(GlobalCore, IDeviceEnum, de) then d := de.Get(FDataDevice);
-    if Assigned(d) and Supports(d, IDataDevice) then
+    if Supports(d, IDataDevice) then
      begin
       Caption := (d as ICaption).Text;
       Bind('C_MetaDataInfo', d, ['S_MetaDataInfo']);// (d as IBind).CreateManagedBinding(Self, 'MetaDataInfo', ['MetaDataInfo']);
@@ -116,7 +138,8 @@ begin
       Exit;
      end
     else FDataDevice := '';
-   end;
+   end
+  else ConnectToAllDevices;
   Caption := 'Устройство не подключено';
 end;
 
@@ -236,8 +259,9 @@ procedure TFormWrok.SetBindWorkRes(const Value: TWorkEventRes);
 //  Enum: TVTVirtualNodeEnumerator;
 begin
   FBindWorkRes := Value;
-  if not Assigned(FMetaDataInfo.Info) then Exit;
   if not Assigned(FBindWorkRes.Work) then Exit;
+  if not Assigned(FMetaDataInfo.Info) then
+    if not TryConnectFromForkData(FBindWorkRes) then Exit;
   Tree.Repaint; //ЧТО БЫСТРЕЕ ???
 //  Enum := Tree.Nodes.GetEnumerator;// .VisibleNodes().GetEnumerator;
 //  ExecXTree(FBindWorkRes.Work, function(n: IXMLNode): boolean

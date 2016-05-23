@@ -1,22 +1,45 @@
-object Frame2: TFrame2
+object FrameGamma: TFrameGamma
   Left = 0
   Top = 0
-  Width = 320
-  Height = 240
+  Width = 210
+  Height = 138
   TabOrder = 0
-  object PaintBox1: TPaintBox
+  object PaintBox: TPaintBox
     Left = 0
     Top = 0
     Width = 54
-    Height = 240
+    Height = 138
     Align = alLeft
     ExplicitHeight = 234
   end
-  object ColorBox1: TColorBox
-    Left = 76
-    Top = 11
+  object clTop: TColorBox
+    Left = 60
+    Top = 3
     Width = 145
     Height = 22
+    Selected = clRed
     TabOrder = 0
+  end
+  object clBot: TColorBox
+    Left = 60
+    Top = 111
+    Width = 145
+    Height = 22
+    Selected = clBlue
+    TabOrder = 1
+  end
+  object tbPlus: TTrackBar
+    Left = 60
+    Top = 31
+    Width = 145
+    Height = 34
+    TabOrder = 2
+  end
+  object tbMinus: TTrackBar
+    Left = 60
+    Top = 71
+    Width = 145
+    Height = 34
+    TabOrder = 3
   end
 end

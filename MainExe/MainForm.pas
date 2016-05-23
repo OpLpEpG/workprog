@@ -751,35 +751,36 @@ begin
     for s in sa do s.Load;
   end;
 
-  BeginDockLoading;
-  try
     //xini.Reload; // !!!
     try
       if Supports(Plugins, IManager, m) then
        if isNew then m.NewProject(PrjName, AfterCreateProject)
        else m.LoadProject(PrjName, AfterCreateProject);
     finally
-      // create actions
-      ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
+      BeginDockLoading;
+      try
+        // create actions
+        ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
 
-      // create forms
-      GContainer.InstancesAsArray<IForm>(True);
+        // create forms
+        GContainer.InstancesAsArray<IForm>(True);
 
-      LoadDockTreeFromAppStorage(xini, 'DockTree');
-      LoadTabForms();
+        LoadDockTreeFromAppStorage(xini, 'DockTree');
+        LoadTabForms();
 
-      FormStorage.RestoreFormPlacement;
+        FormStorage.RestoreFormPlacement;
 
-      //FormPlacement.RestoreFormPlacement;
+        //FormPlacement.RestoreFormPlacement;
+      finally
+        EndDockLoading;
+      end;
     end;
-  finally
-    EndDockLoading;
-  end;
 end;
 
 function TFormMain.IProjectNew(out ProjectName: string): Boolean;
  var
   me: IManagerEx;
+  s: string;
 begin
   Result := True;
   with TOpenDialog.Create(nil) do
@@ -799,9 +800,10 @@ begin
    Options := [ofOverwritePrompt,ofHideReadOnly,ofEnableSizing];
    if not Execute() then Exit(False);
    IProjectInnerLoad(FileName, True);
-   rini.WriteString('CurrentProject', FileName);
-   ProjectName := FileName;
-   StatusBar[1] := FileName;
+   s := (me as IManager).ProjectName;
+   rini.WriteString('CurrentProject', s);
+   ProjectName := s;
+   StatusBar[1] := s;
   finally
    Free;
   end;
@@ -829,6 +831,7 @@ end;
 function TFormMain.IProjectLoad(out ProjectName: string): Boolean;
  var
   me: IManagerEx;
+  s: string;
 begin
   Result := True;
   with TOpenDialog.Create(nil) do
@@ -848,9 +851,10 @@ begin
    Options := [ofReadOnly,ofHideReadOnly,ofPathMustExist,ofFileMustExist,ofEnableSizing];
    if not Execute() then Exit(False);
    IProjectInnerLoad(FileName, False);
-   rini.WriteString('CurrentProject', FileName);
-   ProjectName := FileName;
-   StatusBar[1] := FileName;
+   s := (GContainer as IManager).ProjectName;
+   rini.WriteString('CurrentProject', s);
+   ProjectName := s;
+   StatusBar[1] := s;
   finally
    Free;
   end;

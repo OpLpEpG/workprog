@@ -186,6 +186,8 @@ type
     function _AddRef: Integer; stdcall;
     function _Release: Integer; stdcall;
     function Contains(cm: TComponentModel; InstanceName: string): Boolean; overload;
+    function TryFindComponentModel(Inst: IInterface; out cm: TComponentModel; out ip: TInstancePair): Boolean;
+    function GetDynamicActionsNames(Inst: IInterface): TArray<string>;
  public
     constructor Create;
     destructor Destroy; override;
@@ -238,6 +240,8 @@ type
 //             зависимости
     procedure RegisterAttrInjection(aid: IAttributeInjection);
     function TryGetAttrInjection(Attr: TCustomAttribute; out aid: IAttributeInjection): Boolean;
+
+
     /// итерации
     /// основная итерация используется энумератором
     /// сортировка по приоритету:
@@ -764,6 +768,38 @@ function TContainer.Contains(InstanceName: string): Boolean;
 begin
   Result := False;
   for m in FModels.Values do if m.Contains(InstanceName) then Exit(True)
+end;
+
+function TContainer.TryFindComponentModel(Inst: IInterface; out cm: TComponentModel; out ip: TInstancePair): Boolean;
+ var
+  m: TComponentModel;
+  i: TInstancePair;
+begin
+  Result := False;
+  ip.Key := '';
+  for m in FModels.Values do if m.fSingleton = Inst then 
+    begin
+     cm := m; 
+     Exit(True)
+    end
+   else if Assigned(m.fInst) then for i in m.fInst do if i.Value.fValue = Inst then 
+    begin
+     cm := m; 
+     ip := i;
+     Exit(True)
+    end    
+end;
+
+function TContainer.GetDynamicActionsNames(Inst: IInterface): TArray<string>;
+ var
+  cm: TComponentModel;
+  ip: TInstancePair;
+  ai: TAttrInjection;
+begin
+  if TryFindComponentModel(Inst, cm, ip) then 
+   if ip.Key <> '' then 
+    for ai in cm.fInstInject do                                                
+     CArray.Add<string>(Result, Format('%s_%s', [ip.Key, ai.member.Name]))   
 end;
 
 function TContainer.TryGetAttrInjection(Attr: TCustomAttribute; out aid: IAttributeInjection): Boolean;

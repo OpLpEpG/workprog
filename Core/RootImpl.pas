@@ -38,7 +38,7 @@ type
 
   TICollectionItemClass = class of TICollectionItem;
 
-  TICollection = class(TCollection, IInterface)
+  TICollection = class(TCollection, IInterface, ICaption)
   protected
     procedure ReadItems(Reader: TReader); virtual;
     procedure WriteItems(Writer: TWriter); virtual;
@@ -46,6 +46,9 @@ type
     function QueryInterface(const IID: TGUID; out Obj): HResult; stdcall;
     function _AddRef: Integer; stdcall;
     function _Release: Integer; stdcall;
+  // ICaption
+    function GetCaption: string; virtual;
+    procedure SetCaption(const Value: string);
   public
 //    constructor Create; virtual;
 //    function Add<T: TICollectionItem, constructor>: T; reintroduce; overload;
@@ -958,6 +961,11 @@ end;
 //  inherited Create(TICollectionItem);
 //end;
 
+function TICollection.GetCaption: string;
+begin
+  Result := 'Коллекция';
+end;
+
 function TICollection.QueryInterface(const IID: TGUID; out Obj): HResult;
 begin
   if GetInterface(IID, Obj) then Result := 0
@@ -1031,6 +1039,10 @@ end;
 function TICollection.SafeCallException(ExceptObject: TObject; ExceptAddr: Pointer): HResult;
 begin
   Result := TDebug.HandleSafeCallException(Self, ExceptObject, ExceptAddr);
+end;
+
+procedure TICollection.SetCaption(const Value: string);
+begin
 end;
 
 function TICollection._AddRef: Integer;
