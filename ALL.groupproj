@@ -57,6 +57,9 @@
         <Projects Include="GeneratePSK\CreateDev.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="CreateMetaData\h2meta.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="CreateMetaData\CreateMeta.dproj">
             <Dependencies/>
         </Projects>
@@ -266,6 +269,15 @@
     <Target Name="CreateDev:Make">
         <MSBuild Projects="GeneratePSK\CreateDev.dproj" Targets="Make"/>
     </Target>
+    <Target Name="h2meta">
+        <MSBuild Projects="CreateMetaData\h2meta.dproj"/>
+    </Target>
+    <Target Name="h2meta:Clean">
+        <MSBuild Projects="CreateMetaData\h2meta.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="h2meta:Make">
+        <MSBuild Projects="CreateMetaData\h2meta.dproj" Targets="Make"/>
+    </Target>
     <Target Name="CreateMeta">
         <MSBuild Projects="CreateMetaData\CreateMeta.dproj"/>
     </Target>
@@ -384,13 +396,13 @@
         <MSBuild Projects="..\DirectPixel\Project3.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;VCLControl;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;D3H;VCL_RP45;VCLNNKDAC;ProjectManager3;VCLControl3;CreateDev;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;LSQLMega;Easy64Inc;AT3AVR38Z;LasToSucop;dirdemo;Project3"/>
+        <CallTarget Targets="Core;ProjectManager;VCLControl;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;D3H;VCL_RP45;VCLNNKDAC;ProjectManager3;VCLControl3;CreateDev;h2meta;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;LSQLMega;Easy64Inc;AT3AVR38Z;LasToSucop;dirdemo;Project3"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;VCLControl:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;D3H:Clean;VCL_RP45:Clean;VCLNNKDAC:Clean;ProjectManager3:Clean;VCLControl3:Clean;CreateDev:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;LSQLMega:Clean;Easy64Inc:Clean;AT3AVR38Z:Clean;LasToSucop:Clean;dirdemo:Clean;Project3:Clean"/>
+        <CallTarget Targets="Core:Clean;ProjectManager:Clean;VCLControl:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;D3H:Clean;VCL_RP45:Clean;VCLNNKDAC:Clean;ProjectManager3:Clean;VCLControl3:Clean;CreateDev:Clean;h2meta:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;LSQLMega:Clean;Easy64Inc:Clean;AT3AVR38Z:Clean;LasToSucop:Clean;dirdemo:Clean;Project3:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;VCLControl:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;D3H:Make;VCL_RP45:Make;VCLNNKDAC:Make;ProjectManager3:Make;VCLControl3:Make;CreateDev:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;LSQLMega:Make;Easy64Inc:Make;AT3AVR38Z:Make;LasToSucop:Make;dirdemo:Make;Project3:Make"/>
+        <CallTarget Targets="Core:Make;ProjectManager:Make;VCLControl:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;D3H:Make;VCL_RP45:Make;VCLNNKDAC:Make;ProjectManager3:Make;VCLControl3:Make;CreateDev:Make;h2meta:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;LSQLMega:Make;Easy64Inc:Make;AT3AVR38Z:Make;LasToSucop:Make;dirdemo:Make;Project3:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
@@ -552,6 +564,12 @@
         </BuildGroupProject>
         <BuildGroupProject Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
             <ProjectGuid>{3F5B4110-95F0-4BF2-BBD2-7380C565B4FD}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreateMetaData\h2meta.dproj">
+            <ProjectGuid>{995F12A9-5950-4DAF-A341-B67BAA503DE5}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -744,6 +762,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="CreateMetaData\h2meta.dproj">
+            <ProjectGuid>{995F12A9-5950-4DAF-A341-B67BAA503DE5}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Tst_Fibonachi\tstD2D1.dproj">
             <ProjectGuid>{4B446256-8CA3-4628-BE3F-97E9CAF3C1B0}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -928,6 +952,12 @@
         </BuildGroupProject>
         <BuildGroupProject Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
             <ProjectGuid>{3F5B4110-95F0-4BF2-BBD2-7380C565B4FD}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreateMetaData\h2meta.dproj">
+            <ProjectGuid>{995F12A9-5950-4DAF-A341-B67BAA503DE5}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>

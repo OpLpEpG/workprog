@@ -27,6 +27,19 @@ type
     constructor Create(addr: Byte; Apg: Word);
   end;
 
+  TSetWritePageEx = packed record
+    CmdAdr: Byte;
+    Page: Word;
+    Chip: Byte;
+    constructor Create(addr: Byte; Apg: Word; AChip: Byte);
+  end;
+
+  TSetWritePageEx2 = packed record
+    CmdAdr: Byte;
+    Page: DWord;
+    constructor Create(addr: Byte; Apg: DWord);
+  end;
+
   TGetBadPage = packed record
     CmdAdr: Byte;
     Length: Word;
@@ -98,6 +111,9 @@ type
     btLenRead: TEdit;
     Label6: TLabel;
     btReadBads: TButton;
+    AdrHex: TLabel;
+    edChip: TEdit;
+    SetMX: TButton;
     procedure btSetBaseClick(Sender: TObject);
     procedure btWriteClick(Sender: TObject);
     procedure btReadClick(Sender: TObject);
@@ -105,6 +121,7 @@ type
     procedure btWriteRamClick(Sender: TObject);
     procedure btReadRamClick(Sender: TObject);
     procedure btReadBadsClick(Sender: TObject);
+    procedure SetMXClick(Sender: TObject);
   private
     function GetDevice(adr: Integer): ILowLevelDeviceIO;
     { Private declarations }
@@ -147,6 +164,27 @@ begin
   raise EFormRamTestError.Create(Format('Ќет устройств с адресом %d',[adr]));
 end;
 
+procedure TFormRamTest.SetMXClick(Sender: TObject);
+ var
+  lld: ILowLevelDeviceIO;
+  d: TSetWritePageEx2;
+  adr: Integer;
+  addr: DWORD;
+begin
+  adr := StrToInt(edADR.Text);
+  addr := StrToInt('$'+edArdesWrite.Text);
+  AdrHex.Caption := edArdesWrite.Text;
+  lld := GetDevice(adr);
+  d := TSetWritePageEx2.Create(Adr, addr);
+    lld.SendROW(@d, SizeOf(d), procedure(p: Pointer; n: integer)
+    begin
+      lbBaseW.Caption := '0';
+      if (1 = n) and (d.CmdAdr = PByteArray(p)[0]) then
+           sb.Panels[0].Text := 'OK адрес базовый в пам€ти'
+      else sb.Panels[0].Text := 'BAD адрес базовый в пам€ти'
+    end, 1000);
+end;
+
 procedure TFormRamTest.btClearClick(Sender: TObject);
 begin
   Memo.Clear;
@@ -185,7 +223,7 @@ begin
        memo.Lines.EndUpdate;
        Inc(adres, RLEN);
        edBaseR.Text := IntToHex(adres mod $210, 3);
-       edPageR.Text := IntToHex(adres div $210, 4);
+       edPageR.Text := IntToHex((adres div $210) mod $2000, 4);
      end;
   end);
 end;
@@ -194,42 +232,63 @@ procedure TFormRamTest.btSetBaseClick(Sender: TObject);
  var
   lld: ILowLevelDeviceIO;
   d: TSetWritePage;
+  dex: TSetWritePageEx;
   adr: Integer;
+  chip: Byte;
+  page: Word;
 begin
   adr := StrToInt(edADR.Text);
-  d := TSetWritePage.Create(Adr, StrToInt('$'+edPagew.Text));
+  chip := StrToInt(edChip.Text);
+  page := StrToInt('$'+edPagew.Text);
   lld := GetDevice(adr);
-  lld.SendROW(@d, SizeOf(d), procedure(p: Pointer; n: integer)
-  begin
-    lbBaseW.Caption := '0';
-    if (1 = n) and (d.CmdAdr = PByteArray(p)[0]) then
-         sb.Panels[0].Text := 'OK адрес базовый в пам€ти'
-    else sb.Panels[0].Text := 'BAD адрес базовый в пам€ти'
-  end, 1000);
+  if chip = 0 then
+   begin
+    d := TSetWritePage.Create(Adr, page);
+    lld.SendROW(@d, SizeOf(d), procedure(p: Pointer; n: integer)
+    begin
+      lbBaseW.Caption := '0';
+      if (1 = n) and (d.CmdAdr = PByteArray(p)[0]) then
+           sb.Panels[0].Text := 'OK адрес базовый в пам€ти'
+      else sb.Panels[0].Text := 'BAD адрес базовый в пам€ти'
+    end, 1000);
+   end
+  else
+   begin
+    dex := TSetWritePageEx.Create(Adr, page, chip);
+    lld.SendROW(@dex, SizeOf(dex), procedure(p: Pointer; n: integer)
+    begin
+      lbBaseW.Caption := '0';
+      if (1 = n) and (dex.CmdAdr = PByteArray(p)[0]) then
+           sb.Panels[0].Text := 'OK адрес базовый в пам€ти'
+      else sb.Panels[0].Text := 'BAD адрес базовый в пам€ти'
+    end, 1000);
+   end;
 end;
 
 procedure TFormRamTest.btWriteClick(Sender: TObject);
  var
   lld: ILowLevelDeviceIO;
   d: TRamWrite;
-  adr: Integer;
+  adr, chip: Integer;
   base, page: word;
   adres: DWORD;
 begin
   adr := StrToInt(edADR.Text);
   base := StrToInt('$' + lbBaseW.Caption);
   page := StrToInt('$' + edPageW.Text);
-  adres := (page*$210+base) div 4;
+  chip := StrToInt(edChip.Text);
+  adres := chip*$420000 + (page*$210 + base); //div 4;
+  AdrHex.Caption := Format('0x%x ', [adres]);
   d := TRamWrite.Create(Adr, adres);
   lld := GetDevice(adr);
   lld.SendROW(@d, SizeOf(d), procedure(p: Pointer; n: integer)
   begin
-    adres := adres*4;
     if (n = 2) and (PByteArray(p)[0] = d.CmdAdr) and (PByteArray(p)[1] = 1) then
       begin
-       sb.Panels[0].Text := Format('«аписано %d ', [adres]);
+       sb.Panels[0].Text := Format('«аписано %x ', [adres]);
        lbBaseW.Caption := IntToHex(adres mod $210, 3);
-       edPageW.Text :=    IntToHex(adres div $210, 4);
+       edPageW.Text  :=    IntToHex((adres div $210) mod $2000, 4);
+       edChip.Text := IntToStr( adres div $420000);
       end
     else sb.Panels[0].Text := Format('ќшибка записи %d ', [adres]);
   end, 2000);
@@ -339,7 +398,7 @@ begin
   for i := 0 to 61 do
     begin
      Data[i] := addr;// xor $A55A;
-     Inc(addr);
+     Inc(addr,4);
     end;
 end;
 
@@ -358,7 +417,7 @@ constructor TRamRead.Create(DevAdr: Byte; RmAdr: DWord; len: word);
   page, base: Word;
 begin
   CmdAdr := ToAdrCmd(DevAdr, CMD_ERAM);
-  page := RmAdr div 528;
+  page := (RmAdr div 528) mod $2000;
   base := RmAdr mod 528;
   PH := page shr 6;
   BL := base and $FF;
@@ -410,6 +469,23 @@ end;
 function TRamWriteNew.Size: Integer;
 begin
   Result := Length(data);
+end;
+
+{ TSetWritePageEx }
+
+constructor TSetWritePageEx.Create(addr: Byte; Apg: Word; AChip: Byte);
+begin
+  CmdAdr := ToAdrCmd(addr, CMD_ERAM_SET_BASE);
+  Page := Apg;
+  Chip := AChip;
+end;
+
+{ TSetWritePageEx2 }
+
+constructor TSetWritePageEx2.Create(addr: Byte; Apg: DWord);
+begin
+  CmdAdr := ToAdrCmd(addr, CMD_ERAM_SET_BASE);
+  Page := Apg;
 end;
 
 initialization

@@ -24,7 +24,8 @@ uses
   FormDlgDev in 'FormDlgDev.pas' {FormCreateDev},
   FormDelay2 in 'FormDelay2.pas' {DialogDelay},
   VCL.Dlg.Ram in 'VCL.Dlg.Ram.pas' {FormDlgRam},
-  ConnectDeviceHelper in 'ConnectDeviceHelper.pas';
+  ConnectDeviceHelper in 'ConnectDeviceHelper.pas',
+  DlgSetupDate in 'DlgSetupDate.pas' {FormCalendar};
 
 {$R *.res}
 

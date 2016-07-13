@@ -130,6 +130,7 @@ type
   THasXtreeRef = reference to procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode);
 //  TRamDataRef = TWorkDataRef;
 
+function TryValX(Root: IXMLNode; const Path: string; var v: Variant): Boolean;
 function TryGetX(Root: IXMLNode; const Path: string; out X: IXMLNode; const AttrName: string = ''): Boolean;
 function GetPathXNode(Node: IXMLNode): string;
 function GetXNode(Root: IXMLNode; const Path: string; CreatePathNotExists: Boolean = False): IXMLNode;
@@ -906,6 +907,17 @@ begin
   until not Assigned(Node);
 end;
 
+function TryValX(Root: IXMLNode; const Path: string; var v: Variant): Boolean;
+ var
+  attr, pth: string;
+  X: IXMLNode;
+begin
+  pth := Path.Remove(Path.LastIndexOf('.'));
+  attr := Path.Remove(0, Path.LastIndexOf('.')+1);
+  Result := TryGetX(Root, Pth, X, Attr);
+  if Result then v := x.NodeValue;
+end;
+
 function TryGetX(Root: IXMLNode; const Path: string; out X: IXMLNode; const AttrName: string = ''): Boolean;
  var
   s: string;
@@ -914,7 +926,8 @@ begin
   if not Assigned(Root) then Exit(False);
   for s in path.Split(['.'], ExcludeEmpty) do
    begin
-    Root := Root.ChildNodes.FindNode(s);
+    if s = '/' then Root := Root.ParentNode
+    else Root := Root.ChildNodes.FindNode(s);
     if not Assigned(Root) then Exit(False);
    end;
   if AttrName <> '' then

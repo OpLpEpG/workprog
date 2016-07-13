@@ -36,12 +36,11 @@ object FormInclin: TFormInclin
     object lbInfo: TLabel
       Left = 0
       Top = 276
-      Width = 646
+      Width = 3
       Height = 13
       Align = alBottom
       Alignment = taCenter
       WordWrap = True
-      ExplicitWidth = 3
     end
     object Tree: TVirtualStringTree
       Left = 0
@@ -192,7 +191,7 @@ object FormInclin: TFormInclin
         end
         item
           Position = 4
-          Width = 66
+          Width = 72
           WideText = 'D'
         end>
     end
@@ -235,7 +234,7 @@ object FormInclin: TFormInclin
         end
         item
           Position = 4
-          Width = 67
+          Width = 73
           WideText = 'D'
         end>
     end

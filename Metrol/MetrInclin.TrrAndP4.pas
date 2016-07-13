@@ -16,7 +16,7 @@ type
     function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; override;
     class function ClassIcon: Integer; override;
   public
-    [StaticAction('Поверка и тарировка 480', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
+    [StaticAction('Поверка и калибровка 480', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolType: string; override;
   end;

@@ -55,24 +55,23 @@ object FormRamTest: TFormRamTest
       WordWrap = True
     end
     object Label2: TLabel
-      Left = 40
-      Top = 43
-      Width = 49
-      Height = 27
-      AutoSize = False
+      Left = 10
+      Top = 36
+      Width = 84
+      Height = 13
       Caption = #1089#1090#1088#1072#1085#1080#1094#1072' '#1079#1072#1087#1080#1089#1080
       WordWrap = True
     end
     object lbBaseW: TLabel
-      Left = 87
+      Left = 90
       Top = 72
       Width = 6
       Height = 13
       Caption = '0'
     end
     object Label3: TLabel
-      Left = 6
-      Top = 247
+      Left = 8
+      Top = 230
       Width = 52
       Height = 13
       Caption = #1072#1076#1088#1077#1089' HEX'
@@ -100,16 +99,23 @@ object FormRamTest: TFormRamTest
       Caption = #1076#1083#1080#1085#1072' DWORD'
       WordWrap = True
     end
+    object AdrHex: TLabel
+      Left = 10
+      Top = 52
+      Width = 6
+      Height = 13
+      Caption = '0'
+    end
     object edADR: TEdit
       Left = 87
       Top = 2
       Width = 29
       Height = 21
       TabOrder = 0
-      Text = '4'
+      Text = '6'
     end
     object edPageW: TEdit
-      Left = 40
+      Left = 48
       Top = 69
       Width = 41
       Height = 21
@@ -119,19 +125,20 @@ object FormRamTest: TFormRamTest
     object btSetBase: TButton
       Left = 6
       Top = 67
-      Width = 28
+      Width = 23
       Height = 25
       Caption = 'Set'
       TabOrder = 2
       OnClick = btSetBaseClick
     end
     object btRead: TButton
-      Left = 6
-      Top = 154
+      Left = 5
+      Top = 138
       Width = 110
       Height = 25
       Caption = #1095#1080#1090#1072#1090#1100' '#1087#1072#1084#1103#1090#1100
       TabOrder = 3
+      Visible = False
       OnClick = btReadClick
     end
     object btWrite: TButton
@@ -161,7 +168,7 @@ object FormRamTest: TFormRamTest
     end
     object btClear: TButton
       Left = 6
-      Top = 193
+      Top = 169
       Width = 109
       Height = 25
       Caption = #1054#1095#1080#1089#1090#1080#1090#1100' memo'
@@ -218,6 +225,24 @@ object FormRamTest: TFormRamTest
       Caption = #1095#1080#1090#1072#1090#1100' BAD'
       TabOrder = 13
       OnClick = btReadBadsClick
+    end
+    object edChip: TEdit
+      Left = 31
+      Top = 69
+      Width = 19
+      Height = 21
+      TabOrder = 14
+      Text = '0'
+      Visible = False
+    end
+    object SetMX: TButton
+      Left = 5
+      Top = 244
+      Width = 36
+      Height = 17
+      Caption = 'SetMX'
+      TabOrder = 15
+      OnClick = SetMXClick
     end
   end
   object elLenWrite: TEdit

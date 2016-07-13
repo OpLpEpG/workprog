@@ -88,4 +88,6 @@ end;
 
 initialization
   TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspDateItem,TypeInfo(TDate)));
+  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspDateItem,TypeInfo(TDateTime)));
+  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspDateItem,TypeInfo(TTime)));
 end.

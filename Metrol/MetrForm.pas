@@ -87,6 +87,7 @@ type
     procedure StatusBarDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel; const Rect: TRect);
     function GetAttCount: Integer;
     function GetIsMedian: Boolean;
+    function GetOptions: IXMLNode;
   protected
 //    NIsMedian: TMenuItem;
     FlagNoUpdateFromEtalon: boolean;
@@ -118,6 +119,7 @@ type
     procedure TreeSetFont(T: TVirtualStringTree);
     procedure SetupStepTree(Tree: TVirtualStringTree);
     function GetFileOrDevData: IXMLNode;
+    procedure AddDefaultOptions(RootTrr, RootOption: IXMLNode);
 //    procedure UpdateRunXmlDir;
   public
     destructor Destroy; override;
@@ -403,8 +405,11 @@ begin
   FEtalonData := Doc.AddChild(MetrolMame);
   ScriptExec(FEtalonData, FEtalonData, MetrolMame,'','SETUP_METR');
   DoUpdateEtalonData(FEtalonData);
+
   Doc := NewXDocument();
   FEtalonAlg := Doc.AddChild(MetrolType);
+
+  AddDefaultOptions(FEtalonAlg, GetOptions);
 
   if not UserSetupAlg(FEtalonAlg) then ScriptExec(FEtalonAlg, FEtalonAlg, MetrolMame, MetrolType,'SETUP_METR');
 
@@ -453,6 +458,27 @@ procedure TFormMetrolog.SetTrrFile(const Value: string);
  var
   GDoc: IXMLDocument;
   m, t: IXMLNode;
+  procedure LoadFile;
+  begin
+    if HasXTree(FEtalonData, m) then
+     begin
+      if not Assigned(t) then
+       begin
+        m.ChildNodes.Add(FEtalonAlg.CloneNode(True));
+        GDoc.SaveToFile(Value);
+       end;
+      FTrrFile := Value;
+      FStatusBar.Panels[1].Text := FTrrFile;
+      FFileData := GDoc.DocumentElement;
+      Include(FState, mstInitFile);
+      NTrrApply.Click;
+      NFileSaveAs.Enabled := True;
+//        UpdateRunXmlDir;
+      if not (csLoading in ComponentState) then DoUpdateData(True);
+      (GlobalCore as IUpdateDeviceMetrol).Update(FMetaDataInfo);
+     end
+    else MessageDlg('Открыть файл не удается - неверная структура', TMsgDlgType.mtError, [mbOK], 0);
+  end;
 begin
   if FTrrFile = Value then Exit;
   if FileExists(Value) then
@@ -464,27 +490,12 @@ begin
      begin
       t := m.ChildNodes.FindNode(MetrolType);
       if Assigned(t) and not HasXTree(FEtalonAlg, t) then
-        MessageDlg('Открыть файл не удается - неверная структура алгоритма метрологии', TMsgDlgType.mtError, [mbOK], 0)
-      else if HasXTree(FEtalonData, m) then
-       begin
-        if not Assigned(t) then
-         begin
-          m.ChildNodes.Add(FEtalonAlg.CloneNode(True));
-          GDoc.SaveToFile(Value);
-         end;
-        FTrrFile := Value;
-        FStatusBar.Panels[1].Text := FTrrFile;
-        FFileData := GDoc.DocumentElement;
-        Include(FState, mstInitFile);
-        NTrrApply.Click;
-        NFileSaveAs.Enabled := True;
-//        UpdateRunXmlDir;
-        if not (csLoading in ComponentState) then DoUpdateData(True);
-        (GlobalCore as IUpdateDeviceMetrol).Update(FMetaDataInfo);
-       end
-      else MessageDlg('Открыть файл не удается - неверная структура', TMsgDlgType.mtError, [mbOK], 0);
+       if mrYes = MessageDlg('Открыть файл не удается - неверная структура алгоритма метрологии,'
+                            +'Открыть в любом случае?', TMsgDlgType.mtError, [mbYes, mbNo], 0) then LoadFile
+       else Exit
+      else LoadFile
      end
-     else MessageDlg('Открыть файл не удается - не найдена метрология', TMsgDlgType.mtError, [mbOK], 0);
+    else MessageDlg('Открыть файл не удается - не найдена метрология', TMsgDlgType.mtError, [mbOK], 0);
    end
   else MessageDlg('Открыть файл не удается - нет файла', TMsgDlgType.mtError, [mbOK], 0);
 end;
@@ -798,6 +809,19 @@ begin
    end;
 end;
 
+function TFormMetrolog.GetOptions: IXMLNode;
+ var
+  Ldoc: IXMLdocument;
+  optFile: string;
+begin
+  optFile := Format('%sDevices\Метрология.%s.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame, MetrolType]);
+  if not FileExists(optFile) then optFile := Format('%sDevices\Метрология.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame]);
+  if not FileExists(optFile) then optFile := Format('%sDevices\Метрология.xml', [ExtractFilePath(ParamStr(0))]);
+  LDoc := NewXDocument();
+  LDoc.LoadFromFile(optFile);
+  Result := Ldoc.DocumentElement;
+end;
+
 function TFormMetrolog.GetAttCount: Integer;
  var
   rm: IXMLNode;
@@ -992,22 +1016,22 @@ procedure TFormMetrolog.NStandartSetupClick(Sender: TObject);
  var
   d: IDialog;
   rm, ro: IXMLNode;
-  Ldoc: IXMLdocument;
-  optFile: string;
+//  Ldoc: IXMLdocument;
+//  optFile: string;
 begin
   rm := GetMetr([MetrolType], FileData);
 
   Assert(Assigned(rm));
 
-  optFile := Format('%sDevices\Метрология.%s.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame, MetrolType]);
+ { optFile := Format('%sDevices\Метрология.%s.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame, MetrolType]);
   if not FileExists(optFile) then optFile := Format('%sDevices\Метрология.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame]);
   if not FileExists(optFile) then optFile := Format('%sDevices\Метрология.xml', [ExtractFilePath(ParamStr(0))]);
   LDoc := NewXDocument();
-  LDoc.LoadFromFile(optFile);
+  LDoc.LoadFromFile(optFile);}
 
   rm.Attributes['DevName'] := rm.ParentNode.ParentNode.ParentNode.NodeName +'.'+rm.ParentNode.NodeName;
 
-  if RegisterDialog.TryGet<Dialog_SetupOptions>(d) then (d as IDialogOptions).Execute(LDoc.DocumentElement, rm, DoStandartSetup,
+  if RegisterDialog.TryGet<Dialog_SetupOptions>(d) then (d as IDialogOptions).Execute(GetOptions{LDoc.DocumentElement}, rm, DoStandartSetup,
   procedure(d: IDialog; Res: TModalResult)
   begin
     if (Res = mrOk) and (FTrrFile <> '') then FFileData.OwnerDocument.SaveToFile(FTrrFile)
@@ -1263,6 +1287,15 @@ begin
   BAutoStop.Enabled := False;
   BAttStart.Enabled := True;
   Exclude(FState, mstAutomat);
+end;
+
+procedure TFormMetrolog.AddDefaultOptions(RootTrr, RootOption: IXMLNode);
+ var
+  c,o: IXMLNode;
+begin
+  for c in XEnum(RootOption) do
+    for o in XEnum(c) do
+      if (o.NodeName <> AT_SERIAL) and o.HasAttribute('Значение') then RootTrr.Attributes[o.NodeName] := o.Attributes['Значение']
 end;
 
 procedure TFormMetrolog.AutoReport(Status: TStatusAutomatMetrology; const info: string);

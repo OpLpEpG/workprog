@@ -2,12 +2,12 @@ unit MainForm;
 
 interface
 
-uses DeviceIntf, ExtendIntf, RootIntf,  Winapi.Messages, System.Variants, Vcl.HtmlHelpViewer,  XMLScript.Math, XMLScript.IKN,
+uses DeviceIntf, ExtendIntf, RootIntf,  Winapi.Messages, System.Variants, Vcl.HtmlHelpViewer,  XMLScript.Math, XMLScript.IKN, XMLScript.Report,
   System.SysUtils, PluginAPI, Vcl.Dialogs, Vcl.ImgList, Vcl.Controls, Vcl.StdActns, Vcl.BandActn, System.Classes, Vcl.ActnList, Vcl.ActnMan,
   Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ComCtrls, Vcl.Forms, Vcl.Graphics, Winapi.Windows, JvAppStorage, JvAppRegistryStorage, JvDockControlForm,
   Vcl.AppEvnts, Vcl.ExtCtrls, JvFormPlacement, JvDockVIDStyle, JvComponentBase, System.Actions,
   System.Generics.Collections,
-  System.Generics.Defaults,
+  System.Generics.Defaults,  JvDockSupportControl,
   JvDockVSNetStyle, JvDockTree, Vcl.ToolWin, Vcl.PlatformDefaultStyleActnCtrls, System.ImageList, JvAppXMLStorage;
 
 const
@@ -85,6 +85,7 @@ type
     procedure Tab(const Form: IForm);
     procedure UnTab(const Form: IForm);
     procedure SetActiveTab(const Form: IForm);
+    procedure Dock(const Form: IForm; Corner: Integer);
     //IMainScreen
     procedure IMainScreen.Changed = MainScreenChanged;
     procedure MainScreenChanged;
@@ -105,8 +106,10 @@ type
     procedure IProject.Close = IProjectClose;
     procedure IProjectClose;
     procedure IProjectInnerLoad(const PrjName: string; isNew: Boolean);
+    function GetDecimalSeparator: Char;
 
   private
+    FDecimalSeparator: Char;
     FMainScreenChange: Boolean;
     procedure SaveScreeDialog;
     function ChildFormsBusy: boolean;
@@ -145,6 +148,7 @@ begin
   Application.HelpFile := ExtractFilePath(ParamStr(0)) + 'help.chm';
 //  GDIPlus.Start;
 
+  FDecimalSeparator := FormatSettings.DecimalSeparator;
   FormatSettings.DecimalSeparator := '.';
 
   SetErrorMode(SetErrorMode(0) or SEM_NOOPENFILEERRORBOX or SEM_FAILCRITICALERRORS);
@@ -665,6 +669,11 @@ begin
 end;
 
 // IImagProvider
+function TFormMain.GetDecimalSeparator: Char;
+begin
+  Result := FDecimalSeparator;
+end;
+
 procedure TFormMain.GetIcon(Index: integer; Image: TIcon);
 begin
   ImageList.GetIcon(Index, Image);
@@ -780,6 +789,7 @@ end;
 function TFormMain.IProjectNew(out ProjectName: string): Boolean;
  var
   me: IManagerEx;
+  m: IManager;
   s: string;
 begin
   Result := True;
@@ -800,10 +810,13 @@ begin
    Options := [ofOverwritePrompt,ofHideReadOnly,ofEnableSizing];
    if not Execute() then Exit(False);
    IProjectInnerLoad(FileName, True);
-   s := (me as IManager).ProjectName;
-   rini.WriteString('CurrentProject', s);
-   ProjectName := s;
-   StatusBar[1] := s;
+   if Supports(GContainer, IManager, m) then
+    begin
+     s := m.ProjectName;
+     rini.WriteString('CurrentProject', s);
+     ProjectName := s;
+     StatusBar[1] := s;
+    end;
   finally
    Free;
   end;
@@ -927,6 +940,17 @@ begin
                mtWarning, [mbOk], 0);
     Exit(True);
    end;
+end;
+
+procedure TFormMain.Dock(const Form: IForm; Corner: Integer);
+ var
+  Source: TJvDockDragDockObject;
+  f: TForm;
+begin
+  f := TForm(Form.GetComponent);
+  JvDockServer.LeftDockPanel.Width := f.Width;
+  F.ManualDock(JvDockServer.LeftDockPanel , nil, JvDockServer.LeftDockPanel.Align);
+  JvDockServer.LeftDockPanel.ShowDockPanel(True, F);
 end;
 
 //procedure TFormMain.SowPrg(sho: Boolean);

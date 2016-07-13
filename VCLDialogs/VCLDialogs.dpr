@@ -28,7 +28,8 @@ uses
   VCL.Frame.SelectPath in 'VCL.Frame.SelectPath.pas' {FrameSelectPath: TFrame},
   VCL.Frame.TGamma in 'VCL.Frame.TGamma.pas' {FrameGamma: TFrame},
   VCL.JDType.Form in 'VCL.JDType.Form.pas',
-  VCL.JDType.TGamma in 'VCL.JDType.TGamma.pas' {JDTypeFormGamma};
+  VCL.JDType.TGamma in 'VCL.JDType.TGamma.pas' {JDTypeFormGamma},
+  VCL.Dlg.Error in 'VCL.Dlg.Error.pas' {FormError};
 
 {$R *.res}
 

@@ -67,10 +67,10 @@ uses
 //
 //procedure TPlugin.LoadNotify;
 //begin
-//  FormTreeIncl := TStaticMenu.InitMenu('Новая тарировка Т21', 'Инклинометры', TFormInclin);
-//  FormGk := TStaticMenu.InitMenu('Новая тарировка ГК', 'ГК', TFormGK);
-//  FormNGk := TStaticMenu.InitMenu('Новая тарировка НГК', 'ННК', TFormNGK);
-//  FormNNk := TStaticMenu.InitMenu('Новая тарировка ННК', 'ННК', TFormNNK);
+//  FormTreeIncl := TStaticMenu.InitMenu('Новая калибровка Т21', 'Инклинометры', TFormInclin);
+//  FormGk := TStaticMenu.InitMenu('Новая калибровка ГК', 'ГК', TFormGK);
+//  FormNGk := TStaticMenu.InitMenu('Новая калибровка НГК', 'ННК', TFormNGK);
+//  FormNNk := TStaticMenu.InitMenu('Новая калибровка ННК', 'ННК', TFormNNK);
 //end;
 //
 //procedure TPlugin.AfteActionManagerLoad;

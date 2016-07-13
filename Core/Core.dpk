@@ -111,7 +111,8 @@ contains
   LasDataSet in 'LasDataSet.pas',
   FileDataSet in 'FileDataSet.pas',
   XMLDataSet in 'XMLDataSet.pas',
-  Plot.DataLink in 'Plot.DataLink.pas';
+  Plot.DataLink in 'Plot.DataLink.pas',
+  XMLScript.Report in 'XMLScript.Report.pas';
 
 end.
 

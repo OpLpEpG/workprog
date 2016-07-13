@@ -192,6 +192,9 @@ type
   Dialog_OpenLAS = interface
   ['{79669877-1863-41A7-837C-CAAF41FC00D2}']
   end;
+  Dialog_Error = interface
+  ['{679FB10F-DD4B-44CB-BAF7-8AC674BE9B04}']
+  end;
 
 
 //  DIALOG_SETUP_ComPortConnectIO: TGUID = '{96F45FBD-735E-4350-823A-77DA84785BF0}';

@@ -282,6 +282,7 @@ type
     procedure Tab(const Form: IForm);
     procedure UnTab(const Form: IForm);
     procedure SetActiveTab(const Form: IForm);
+    procedure Dock(const Form: IForm; Corner: Integer);
   end;
 
   IImagProvider = interface
@@ -341,10 +342,12 @@ type
   ///	</summary>
   IProject = interface
   ['{B3F9B7C5-D224-49B0-A7B4-5EB4541BEF5A}']
+    function GetDecimalSeparator: Char;
     function New(out ProjectName: string): Boolean;
     function Load(out ProjectName: string): Boolean;
     function Setup: Boolean;
     procedure Close;
+    property DecimalSeparator: Char read GetDecimalSeparator;
   end;
 
 //  IExportToPSK = interface

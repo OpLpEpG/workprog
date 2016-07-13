@@ -133,14 +133,16 @@ end;
 function TXMLDataSetDef.GetBinFileName: string;
  var
   n: IXMLNode;
+  pdf: IProjectDataFile;
 begin
+  if not Supports(GContainer, IProjectDataFile, pdf) then raise Exception.Create('Error IProjectDataFile не поддерживается');
   n := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get(XMLFileName).Get, Device);
   if not Assigned(n) then Exit('');
   n := FindDev(n, ModulAdress);
   if not Assigned(n) then Exit('');
   n := n.ChildNodes.FindNode(Section);
   if not Assigned(n) or not n.HasAttribute(AT_FILE_NAME) then Exit('')
-  else Result := n.Attributes[AT_FILE_NAME];
+  else Result := pdf.ConstructDataDir(n) + n.Attributes[AT_FILE_NAME];
 end;
 
 function TXMLDataSetDef.GetPath: string;
@@ -171,14 +173,20 @@ end;
 { TXMLDataSet }
 
 class procedure TXMLDataSet.CreateNew(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean);
+ var
+  pdf: IProjectDataFile;
 begin
-  inherited CreateNew(RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
+  if not Supports(GContainer, IProjectDataFile, pdf) then raise Exception.Create('Error IProjectDataFile не поддерживается');
+  inherited CreateNew(pdf.ConstructDataDir(RootSection) + RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
   with TXMLDataSet(DataSet.DataSet) do CreateFieldDefs(RootSection, ObjectFields);
 end;
 
 class procedure TXMLDataSet.Get(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean);
+ var
+  pdf: IProjectDataFile;
 begin
-  inherited Get(RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
+  if not Supports(GContainer, IProjectDataFile, pdf) then raise Exception.Create('Error IProjectDataFile не поддерживается');
+  inherited Get(pdf.ConstructDataDir(RootSection) + RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
   if not (DataSet.DataSet is TXMLDataSet) then raise Exception.Create('DataSet is not TXMLDataSet');
   with TXMLDataSet(DataSet.DataSet) do if (FieldDefs.Count = 0) or (ObjectFields <> ObjectView) then CreateFieldDefs(RootSection, ObjectFields);
 end;
@@ -285,8 +293,8 @@ begin
   ObjectView := AObjectFields;
 
   FSection := AXMLSection.NodeName;
-  BinFileName := AXMLSection.Attributes[AT_FILE_NAME];
-  RecordLength := AXMLSection.Attributes[AT_SIZE];
+//  BinFileName := AXMLSection.Attributes[AT_FILE_NAME];
+//  RecordLength := AXMLSection.Attributes[AT_SIZE];
   FXMLFileName := AXMLSection.OwnerDocument.FileName;
   FModul := AXMLSection.ParentNode.Attributes[AT_ADDR];
   RootName := AXMLSection.ParentNode.NodeName;

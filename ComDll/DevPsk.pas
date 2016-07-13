@@ -286,7 +286,7 @@ type
     procedure SetDelay(StartTime: TDateTime; WorkTime: TTime; ResultEvent: TSetDelayEvent);
     [DynamicAction('<I> Задержка...', '<I>', 142, '0:Управление|3.<I>;0:Глубиномер.<I>', 'Окно постановки на задержку')]
     procedure DoDelay(Sender: IAction);
-    [DynamicAction('<I> Метрология', '<I>', 52, '0:Управление|3.<I>;0:Глубиномер.<I>', 'Тарировка глубиномера')]
+    [DynamicAction('<I> Метрология', '<I>', 52, '0:Управление|3.<I>;0:Глубиномер.<I>', 'Калибровка глубиномера')]
     procedure DoMetr(Sender: IAction);
     [DynamicAction('<I> Коррекция часов...', '<I>', Dialog_SyncDelay_ICON, '0:Управление.<I>;0:Глубиномер.<I>', 'Окно коррекции часов модулей. Вызывается перед чтением памяти,в режиме информации.')]
     procedure DoSync(Sender: IAction);

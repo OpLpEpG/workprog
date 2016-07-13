@@ -2,7 +2,9 @@ program CreateMeta;
 
 uses
   Vcl.Forms,
-  MainMeta in 'MainMeta.pas' {FormMeta};
+  MainMeta in 'MainMeta.pas' {FormMeta},
+  Parser in '..\Core\Parser.pas',
+  MetaData in 'MetaData.pas';
 
 {$R *.res}
 

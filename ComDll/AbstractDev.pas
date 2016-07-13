@@ -93,7 +93,7 @@ type
     property S_Status: TSetConnectIOStatus read FStatus write SetS_Status;
   published
     property S_ConnectInfo: string read GetConnectInfo write SetConnectInfo;
-    property S_Wait: Integer read GetWait write SetWait default 1000;
+    property S_Wait: Integer read GetWait write SetWait default 2000;
   end;
 {$ENDREGION}
 
@@ -541,6 +541,7 @@ begin
   FTimerRxTimeOut := TTimer.Create(nil);
   FTimerRxTimeOut.Enabled := False;
   FTimerRxTimeOut.OnTimer := OnTimerRxTimeOut;
+  FTimerRxTimeOut.Interval := 2000;
   FComWait := FTimerRxTimeOut.Interval;
   OutputDebugString(PWideChar('TAbstractConnectIO.Create()'));
 end;

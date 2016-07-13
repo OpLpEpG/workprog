@@ -28,7 +28,7 @@ type
   private
     Series: TFastLineSeries;
     procedure DoUpdateChart();safecall;
-    procedure NSetupInclClick(Sender: TObject);
+//    procedure NSetupInclClick(Sender: TObject);
   protected
     procedure Loaded; override;
     procedure DoStopAtt(AttNode: IXMLNode); override;
@@ -42,7 +42,7 @@ type
     procedure BeforeSave();
     procedure AfteSave();
   public
-    [StaticAction('Новая тарировка ННК', 'Метрология', NICON, '0:Метрология.ННК:-1')]
+    [StaticAction('Новая калибровка ННК', 'Метрология', NICON, '0:Метрология.ННК:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
     class function MetrolType: string; override;
@@ -72,7 +72,7 @@ begin
   Result := 'TNNK'
 end;
 
-procedure TFormNNK.NSetupInclClick(Sender: TObject);
+{procedure TFormNNK.NSetupInclClick(Sender: TObject);
  var
   ist: string;
   m: IXMLNode;
@@ -83,7 +83,7 @@ begin
   if not m.HasAttribute('ISTOCHNIK') then ist := 'Pu-Be №9'
   else ist := m.Attributes['ISTOCHNIK'];
   m.Attributes['ISTOCHNIK'] := InputBox('Источник', 'Источник', ist);
-end;
+end;}
 
 procedure TFormNNK.NShowLegendClick(Sender: TObject);
 begin
@@ -95,8 +95,8 @@ begin
   SetupStepTree(Tree);
   inherited;
   AttestatPanel.Align := alBottom;
-  AddToNCMenu('-');
-  AddToNCMenu('Источник...', NSetupInclClick);
+//  AddToNCMenu('-');
+//  AddToNCMenu('Источник...', NSetupInclClick);
 end;
 
 class procedure TFormNNK.DoCreateForm(Sender: IAction);

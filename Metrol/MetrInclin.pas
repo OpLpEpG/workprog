@@ -43,7 +43,7 @@ type
     class function ClassIcon: Integer; override;
   public
     destructor Destroy; override;
-    [StaticAction('Новая тарировка Т21', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
+    [StaticAction('Новая калибровка Т21', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
     class function MetrolType: string; override;

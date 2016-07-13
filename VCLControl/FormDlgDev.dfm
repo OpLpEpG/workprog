@@ -45,7 +45,6 @@ object FormCreateDev: TFormCreateDev
     ModalResult = 1
     TabOrder = 0
     OnClick = ButtonOKClick
-    ExplicitTop = 377
   end
   object Button1: TButton
     Left = 104
@@ -56,7 +55,6 @@ object FormCreateDev: TFormCreateDev
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 2
     TabOrder = 1
-    ExplicitTop = 377
   end
   object Tree: TVirtualStringTree
     Left = 8
@@ -82,8 +80,6 @@ object FormCreateDev: TFormCreateDev
     OnChecked = TreeChecked
     OnChecking = TreeChecking
     OnGetText = TreeGetText
-    ExplicitWidth = 376
-    ExplicitHeight = 287
     Columns = <
       item
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
@@ -110,7 +106,6 @@ object FormCreateDev: TFormCreateDev
     Height = 21
     Anchors = [akLeft, akBottom]
     TabOrder = 3
-    ExplicitTop = 337
   end
   object cbTree: TCheckBox
     Left = 191
@@ -122,7 +117,6 @@ object FormCreateDev: TFormCreateDev
     Checked = True
     State = cbChecked
     TabOrder = 4
-    ExplicitTop = 381
   end
   object btConnection: TButton
     Left = 144
@@ -133,8 +127,6 @@ object FormCreateDev: TFormCreateDev
     Caption = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100
     TabOrder = 5
     OnClick = btConnectionClick
-    ExplicitTop = 335
-    ExplicitWidth = 240
   end
   object ppConnection: TPopupMenu
     Left = 144

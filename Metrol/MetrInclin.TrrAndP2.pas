@@ -41,7 +41,7 @@ type
    const
     NICON = 345;
   public
-    [StaticAction('Новая тарировка 64 точки', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
+    [StaticAction('Новая калибровка 64 точки', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolType: string; override;
   end;

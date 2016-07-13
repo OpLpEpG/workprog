@@ -41,7 +41,7 @@ type
     property AutomatMetrology: TGKAuto read FAutomatMetrology implements IAutomatMetrology;
   public
     destructor Destroy; override;
-    [StaticAction('Новая тарировка ГК', 'Метрология', NICON, '0:Метрология.ГК')]
+    [StaticAction('Новая калибровка ГК', 'Метрология', NICON, '0:Метрология.ГК')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
     class function MetrolType: string; override;
@@ -52,7 +52,7 @@ type
    const
     NICON = 94;
   public
-    [StaticAction('Новая тарировка ГК (нмк)', 'Метрология', NICON, '0:Метрология.ГК:-1')]
+    [StaticAction('Новая калибровка ГК (нмк)', 'Метрология', NICON, '0:Метрология.ГК:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolType: string; override;
   end;
@@ -66,7 +66,7 @@ type
    const
     NICON = 93;
   public
-    [StaticAction('Новая тарировка НГК', 'Метрология', NICON, '0:Метрология.ННК:-1')]
+    [StaticAction('Новая калибровка НГК', 'Метрология', NICON, '0:Метрология.ННК:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
     class function MetrolType: string; override;
@@ -77,7 +77,7 @@ type
    const
     NICON = 94;
   public
-    [StaticAction('Новая тарировка НГК (нмк)', 'Метрология', NICON, '0:Метрология.ННК:-1')]
+    [StaticAction('Новая калибровка НГК (нмк)', 'Метрология', NICON, '0:Метрология.ННК:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolType: string; override;
   end;

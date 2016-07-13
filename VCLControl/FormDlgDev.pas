@@ -104,7 +104,8 @@ begin
       wf := GContainer.CreateValuedInstance<string>('TFormWrok', 'CreateUser', '') as IForm;
       (GContainer as IFormEnum).Add(wf);
       (wf as ISetDevice).SetDataDevice(FDevice.IName);
-      (wf as ITabFormProvider).
+      wf.Show;
+      (GContainer as ITabFormProvider).Dock(wf, 0);
      end;
 
     (GlobalCore as IActionProvider).SaveActionManager;

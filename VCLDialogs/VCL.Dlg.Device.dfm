@@ -18,7 +18,7 @@ object DlgSetupDev: TDlgSetupDev
   object Label1: TLabel
     Left = 8
     Top = 8
-    Width = 79
+    Width = 80
     Height = 13
     Caption = #1048#1084#1103' '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072
   end
