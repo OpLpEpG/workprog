@@ -112,7 +112,8 @@ contains
   FileDataSet in 'FileDataSet.pas',
   XMLDataSet in 'XMLDataSet.pas',
   Plot.DataLink in 'Plot.DataLink.pas',
-  XMLScript.Report in 'XMLScript.Report.pas';
+  XMLScript.Report in 'XMLScript.Report.pas',
+  Plot.GR32.Buffer in 'Plot.GR32.Buffer.pas';
 
 end.
 

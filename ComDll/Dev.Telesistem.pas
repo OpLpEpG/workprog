@@ -63,7 +63,7 @@ public
     procedure DoSetup(Sender: IAction); override;
   end;
 
-   TTestUsoData = (tudNone, tudFibonach, tudRMCod, tudFSK, tudFibonachCorr,  tudFSK2);
+   TTestUsoData = (tudNone, tudFibonach, tudRMCod, tudFSK, tudFibonachCorr,  tudFSK2, tudRetrTST);
    TTelesisFrequency = (afq40, afq20, afq10, afq5, afq2p5, afq1p25);
     TRecRun = record
        LSync, HSync: Boolean;
@@ -301,7 +301,17 @@ type
     procedure DoSetup(Sender: IAction); override;
   end;
 
-//   TCorrelate = class(TSubDevWithForm<TUsoData>, ITelesistem)
+  TDecoder7 = class(TCustomDecoder, ITelesistem)
+  protected
+    function GetCaption: string; override;
+    function GetDecoderClass: TDecoderClass; override;
+  public
+    constructor Create; override;
+    [DynamicAction('Показать окно Декорера', '<I>', 55, '0:Телесистема.<I>', 'Показать окно Декорера')]
+    procedure DoSetup(Sender: IAction); override;
+  end;
+
+  //   TCorrelate = class(TSubDevWithForm<TUsoData>, ITelesistem)
 //   protected
 //     procedure InputData(Data: Pointer; DataSize: integer); override;
 //     function GetCategory: TSubDeviceInfo; override;
@@ -638,7 +648,7 @@ procedure TUso1.InputData(Data: Pointer; DataSize: integer);
    p: PByte;
 begin
 
-{ while True do
+ {while True do
   begin
     if FTestUsoData <> tudNone then
      begin
@@ -731,10 +741,24 @@ begin
 end;
 
 procedure TUso1.SetTestUsoData(const Value: TTestUsoData);
+{$J+} const kadr: integer = 0; {$J-}
  var
   cb: Boolean;
   d, i: Integer;
   a: TArray<Word>;
+  procedure encodeMan(d: Byte);
+   var
+    i: Integer;
+  begin
+    for I := 0 to 7 do
+     begin
+      if (d and $80) = 0 then Tst_Data := Tst_Data + [False,False,False,False,False,False,False,False,
+                                                      True, True, True, True, True, True, True, True]
+                         else Tst_Data := Tst_Data + [True, True, True, True, True, True, True, True,
+                                                      False,False,False,False,False,False,False,False];
+      d := d shl 1;
+     end;
+  end;
 begin
   if FTestUsoData <> Value then
    begin
@@ -777,6 +801,15 @@ begin
        Encode(a, 8, Tst_Data);
       // Encode([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 8, Tst_Data);
       end;
+     tudRetrTST:
+     begin
+      SetLength(a, 6);
+      a[0] := kadr mod 4;
+      PInteger(@a[1])^ := kadr;
+      a[5] := a[0]+a[1]+a[2]+a[3]+a[4];
+      for I := 0 to 5 do encodeMan(a[i]);
+      Inc(kadr);
+     end;
     end;
     Owner.PubChange;
    end;
@@ -1494,6 +1527,31 @@ end;
 function TDecoder6.GetDecoderClass: TDecoderClass;
 begin
   Result := TFSK2Decoder
+end;
+
+{ TDecoder7 }
+
+constructor TDecoder7.Create;
+begin
+  inherited;
+  InitConst('TDecoderECHOForm', 'DecoderECHO_');
+  DataCnt := 6;
+  DataCodLen := 16;
+end;
+
+procedure TDecoder7.DoSetup(Sender: IAction);
+begin
+  inherited;
+end;
+
+function TDecoder7.GetCaption: string;
+begin
+  Result := 'manchster';
+end;
+
+function TDecoder7.GetDecoderClass: TDecoderClass;
+begin
+  Result := TManchsterDecoder
 end;
 
 initialization

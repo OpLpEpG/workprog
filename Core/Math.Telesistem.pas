@@ -316,6 +316,12 @@ type
     property SimbLen: Integer read FSimbLen write SetSimbLen;
   end;
 
+  TManchsterDecoder = class(TTelesistemDecoder)
+
+  end;
+
+
+
   TRMCodes = array [0..31, 0..31] of Integer;
 
   procedure EncodeRM(const Data: array of Byte; Bits: Integer; var bin: TArray<Boolean>);

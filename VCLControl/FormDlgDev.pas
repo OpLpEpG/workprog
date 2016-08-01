@@ -2,7 +2,7 @@ unit FormDlgDev;
 
 interface
 
-uses  RootIntf, debug_except,ExtendIntf, DeviceIntf, Container,
+uses  RootIntf, debug_except,ExtendIntf, DeviceIntf, Container, RootImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, math,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, VirtualTrees, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, CPortCtl;
 
@@ -98,6 +98,7 @@ begin
     FDevice := g.Device(Selected, edCaption.Text);
     FDevice.IConnect := FSelectIO;
     de.Add(FDevice);
+    MainScreenChanged;
     for pv in Tree.LevelNodes(0) do pv.CheckState := csUnCheckedNormal;
     if cbTree.Checked then
      begin
