@@ -47,6 +47,8 @@ type
      IdName: string;
      Data: TArray<TFldRec>;
     end;
+  protected
+    function Priority: Integer; override;
   private
     Fterminate: Boolean;
     procedure UpdateControls(FlagEna: Boolean);
@@ -298,7 +300,8 @@ begin
          end;
          TThread.Synchronize(nil, procedure
          begin
-           Progress.Position := Round((frm - umin)/(umax - umin)*100);
+          if (umax - umin) > 0 then Progress.Position := Round((frm - umin)/(umax - umin)*100)
+          else Progress.Position := 0;
          end);
         until not (Fterminate or ((umax - frm) > 0));
        finally
@@ -325,6 +328,11 @@ end;
 procedure TFormExportToPSK6.FormCreate(Sender: TObject);
 begin
   GetDockClient.EnableDock := False;
+end;
+
+function TFormExportToPSK6.Priority: Integer;
+begin
+  Result := PRIORITY_NoStore;
 end;
 
 procedure TFormExportToPSK6.UpdateControls(FlagEna: Boolean);

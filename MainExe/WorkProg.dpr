@@ -28,8 +28,8 @@ begin
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TFormMain, FormMain);
   //  {$IFDEF DEBUG}
-  Application.CreateForm(TFormSplash, FormSplash);
-  FormSplash.Show;
+//  Application.CreateForm(TFormSplash, FormSplash);
+//  FormSplash.Show;
 //{$ENDIF}
   Application.Run;
 end.

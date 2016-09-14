@@ -20,6 +20,10 @@ type
   end;
 
  TAutomatMetrology = class;
+ TGetTextNode = reference to function (XMNode: IXMLNode; Column: Integer): string;
+ TSetTextNode = reference to procedure (XMNode: IXMLNode; Column: Integer; const text: string);
+ TAllowEditNode = reference to procedure (XMNode: IXMLNode; Column: Integer; var allow: Boolean);
+
  TFormMetrolog = class(TCustomFontIForm, ISetDevice)
   private
     FImportExport: IImportExport;
@@ -57,6 +61,10 @@ type
     BAutoStop: TButton;
 
     FStepTreePopupMenu : TPopupActionBar;
+
+    FGetText: TGetTextNode;
+    FSetText: TSetTextNode;
+    FAllowEditNode: TAllowEditNode;
 //    FIsMedian: Boolean;
 
     procedure BAttStartClick(Sender: TObject);
@@ -88,6 +96,9 @@ type
     function GetAttCount: Integer;
     function GetIsMedian: Boolean;
     function GetOptions: IXMLNode;
+    procedure TreeCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
+    procedure TreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+    function GetOption(const index: string): variant;
   protected
 //    NIsMedian: TMenuItem;
     FlagNoUpdateFromEtalon: boolean;
@@ -126,6 +137,10 @@ type
 
     function GetMetr(nm: array of string; Root: IXMLNode): IXMLNode;
 
+    procedure SetupEditor(Allow: TAllowEditNode; GetText: TGetTextNode; SetText: TSetTextNode);
+
+
+
     class function MetrolMame: string; virtual;
     class function MetrolType: string; virtual;
 
@@ -146,6 +161,8 @@ type
 
     property AttCount: Integer read GetAttCount;// write FAttCount default 5;
     property IsMedian: Boolean read GetIsMedian;// write FIsMedian default False;
+
+    property Option[const index: string]: variant read GetOption;
   published
     property DataDevice: string read FDataDevice write SetDataDevice;
     property TrrFile: string read FTrrFile write SetTrrFile;
@@ -191,6 +208,149 @@ end;
 implementation
 
 uses MetrFormSetup, MetrInclin.Math;
+
+{$REGION 'TEditor'}
+
+type
+  TEditor = class(TIObject, IVTEditLink)
+  private
+    FForm: TFormMetrolog;
+    FEdit: TWinControl;        // One of the property editor classes.
+    FTree: TVirtualStringTree; // A back reference to the tree calling.
+    FNode: PVirtualNode;       // The node being edited.
+    FData: PNodeExData;
+    FColumn: Integer;          // The column of the node being edited.
+    procedure EditKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure EditKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+  protected
+    function BeginEdit: Boolean; stdcall;
+    function CancelEdit: Boolean; stdcall;
+    function EndEdit: Boolean; stdcall;
+    function GetBounds: TRect; stdcall;
+    function PrepareEdit(Tree: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex): Boolean; stdcall;
+    procedure ProcessMessage(var Message: TMessage); stdcall;
+    procedure SetBounds(R: TRect); stdcall;
+  public
+    destructor Destroy; override;
+  end;
+
+destructor TEditor.Destroy;
+begin
+  //FEdit.Free; casues issue #357. Fix:
+  if FEdit.HandleAllocated then PostMessage(FEdit.Handle, CM_RELEASE, 0, 0);
+  inherited;
+end;
+
+procedure TEditor.EditKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+  CanAdvance: Boolean;
+begin
+  CanAdvance := true;
+  case Key of
+    VK_ESCAPE:
+      begin
+        Key := 0;//ESC will be handled in EditKeyUp()
+      end;
+    VK_RETURN:
+      if CanAdvance then
+      begin
+        FTree.EndEditNode;
+        Key := 0;
+      end;
+    VK_UP,
+    VK_DOWN:
+      begin
+        // Consider special cases before finishing edit mode.
+        CanAdvance := Shift = [];
+{        if FEdit is TComboBox then
+          CanAdvance := CanAdvance and not TComboBox(FEdit).DroppedDown;
+        if FEdit is TDateTimePicker then
+          CanAdvance :=  CanAdvance and not TDateTimePicker(FEdit).DroppedDown;
+}
+        if CanAdvance then
+        begin
+          // Forward the keypress to the tree. It will asynchronously change the focused node.
+          PostMessage(FTree.Handle, WM_KEYDOWN, Key, 0);
+          Key := 0;
+        end;
+      end;
+  end;
+end;
+
+procedure TEditor.EditKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  case Key of
+    VK_ESCAPE:
+      begin
+        FTree.CancelEditNode;
+        Key := 0;
+      end;//VK_ESCAPE
+  end;//case
+end;
+
+function TEditor.BeginEdit: Boolean;
+begin
+  Result := True;
+  FEdit.Show;
+  FEdit.SetFocus;
+end;
+
+function TEditor.CancelEdit: Boolean;
+begin
+  Result := True;
+  FEdit.Hide;
+end;
+
+function TEditor.EndEdit: Boolean;
+begin
+  Result := True;
+  if Assigned(FForm.FSetText) then FForm.FSetText(FData.XMNode, FColumn, TEdit(FEdit).Text);
+  FEdit.Hide;
+  FTree.SetFocus;
+end;
+
+function TEditor.GetBounds: TRect;
+begin
+  Result := FEdit.BoundsRect;
+end;
+
+function TEditor.PrepareEdit(Tree: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex): Boolean;
+begin
+  Result := True;
+  FTree := Tree as TVirtualStringTree;
+  FForm := FTree.Owner as TFormMetrolog;
+  FNode := Node;
+  FColumn := Column;
+  FData := FTree.GetNodeData(FNode);
+  // determine what edit type actually is needed
+  FEdit.Free;
+  FEdit := nil;
+  FEdit := TEdit.Create(nil);
+  with FEdit as TEdit do
+  begin
+    Visible := False;
+    Parent := Tree;
+    if Assigned(FForm.FGetText) then Text := FForm.FGetText(FData.XMNode, FColumn);
+    OnKeyDown := EditKeyDown;
+    OnKeyUp := EditKeyUp;
+  end;
+end;
+
+procedure TEditor.ProcessMessage(var Message: TMessage);
+begin
+  FEdit.WindowProc(Message);
+end;
+
+procedure TEditor.SetBounds(R: TRect);
+var
+  Dummy: Integer;
+begin
+  // Since we don't want to activate grid extensions in the tree (this would influence how the selection is drawn)
+  // we have to set the edit's width explicitly to the width of the column.
+  FTree.Header.Columns.GetColumnBounds(FColumn, Dummy, R.Right);
+  FEdit.BoundsRect := R;
+end;
+{$ENDREGION}
 
 type
  IUpdateDeviceMetrol = interface
@@ -521,6 +681,25 @@ begin
   else if Res = 1 then FStatusBar.Panels[0].Text := 'œÓÔ‡‚ÍË ƒ–”√»≈!!!:RB';
 end;
 
+procedure TFormMetrolog.TreeCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
+begin
+  EditLink := TEditor.Create;
+end;
+
+procedure TFormMetrolog.TreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+begin
+  if Assigned(FAllowEditNode) then FAllowEditNode(PNodeExData(FStepTree.GetNodeData(Node)).XMNode, Column, Allowed)
+end;
+
+procedure TFormMetrolog.SetupEditor(Allow: TAllowEditNode; GetText: TGetTextNode; SetText: TSetTextNode);
+begin
+  FAllowEditNode := Allow;
+  FGetText := GetText;
+  FSetText := SetText;
+  FStepTree.OnCreateEditor := TreeCreateEditor;
+  FStepTree.OnEditing := TreeEditing;
+end;
+
 procedure TFormMetrolog.SetupStepTree(Tree: TVirtualStringTree);
  var
   ip: IImagProvider;
@@ -807,6 +986,11 @@ begin
      end;
     Break;
    end;
+end;
+
+function TFormMetrolog.GetOption(const index: string): variant;
+begin
+   Result := GetMetr([MetrolType], FileData).Attributes[index];
 end;
 
 function TFormMetrolog.GetOptions: IXMLNode;

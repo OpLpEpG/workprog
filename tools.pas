@@ -436,6 +436,7 @@ type
     class operator Subtract(a: TAngle; b: TAngle): TAngle;
     function ToRad: Double;
     function ToString: string;
+    function ToStringUAKI: string;
   end;
 
   // только для одной таблицы
@@ -2003,6 +2004,11 @@ end;
 function TAngle.ToString: string;
 begin
   Result := FloatToStr(Angle)
+end;
+
+function TAngle.ToStringUAKI: string;
+begin
+  Result := Format('%1.1f',[Angle])
 end;
 
 function StrIn(const Item: string; const InArr: array of string): Boolean;

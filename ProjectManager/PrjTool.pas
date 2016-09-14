@@ -725,7 +725,7 @@ begin
     inc(Alias, 1);
    end;
   UpdateRam();
-  frd := Round(FromData);
+  frd := Round(Double(FromData));
 //  tod := GetMaxID;
   if Length(Fields) = 0 then Result := Format(STR_SQL, ['', '', frd, LastMaxID-frd])
   else Result := Format(STR_SQL, [string.Join('', Fields), string.Join(' ', LeftOuterJoins), frd, LastMaxID-frd]);

@@ -112,7 +112,7 @@ begin
         begin
          if n.HasAttribute(AT_WIDTH) then TLineParam(p).Width := n.Attributes[AT_WIDTH];
          if n.HasAttribute(AT_DASH) then TLineParam(p).DashStyle := TLineDashStyle(n.Attributes[AT_DASH]);
-         if n.HasAttribute(AT_COLOR) then p.Color := Cardinal(n.Attributes[AT_COLOR]);
+         if n.HasAttribute(AT_COLOR) then p.Color := TColor(n.Attributes[AT_COLOR]);
          { TODO : gamma TWaveParam}
          if n.HasAttribute(AT_TITLE) then p.Title := n.Attributes[AT_TITLE];
          if n.HasAttribute(AT_AQURICY) then p.Presizion := n.Attributes[AT_AQURICY];

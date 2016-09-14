@@ -95,10 +95,11 @@ end;
 
 procedure TDevUaki2.DoCycle;
  const
-   TST_STR = 'post name=lir sens0=0 val0=0.999 sens1=1 val1=1.999 sens2=2 val2=2.999'+
-   ' sens3=3 val3=3.333 sens4=4 val4=4.333 sens5=5 val5=5.333'+
-   ' sens6=85 val6=6.777 sens7=0 val7=7.777 sens8=85 val8=8.777'+
-   ' sens9=9 sens10=10 sens11=11 sens12=12 sens13=13 sens14=14 sens15=15';
+   TST_STR = 'post name=lir sens0=3 val0=0.026 sens1=241 val1=2.118 sens2=-12 val2=-0.013 sens3=0 val3=0 sens4=0 val4=0 sens5=0 val5=0 sens6=0 val6=0 sens7=0 val7=0 sens8=0 val8=0 sens9=1 sens10=1 sens11=1 sens12=1 sens13=1 sens14=1 sens15=117';
+//   'post name=lir sens0=0 val0=0.999 sens1=1 val1=1.999 sens2=2 val2=2.999'+
+//   ' sens3=3 val3=3.333 sens4=4 val4=4.333 sens5=5 val5=5.333'+
+//   ' sens6=85 val6=6.777 sens7=0 val7=7.777 sens8=85 val8=8.777'+
+//   ' sens9=9 sens10=10 sens11=11 sens12=12 sens13=13 sens14=14 sens15=15';
    POS_A = 6;
    POS_Z = 10;
    POS_V = 14;
@@ -126,9 +127,12 @@ begin
    var
     a: TArray<string>;
   begin
-    if n >= $F7 then
+
+     n := TST_STR.Length;
+
+    if n >= $80 then
      begin
-      a := string({TST_STR}LastAns).Split([' ', '=', #$D], ExcludeEmpty);
+      a := string(TST_STR{LastAns}).Split([' ', '=', #$D], ExcludeEmpty);
       Azi.FCurrentAngle := a[POS_A].ToDouble();
       Zen.FCurrentAngle := a[POS_Z].ToDouble();
       Viz.FCurrentAngle := a[POS_V].ToDouble();
@@ -250,7 +254,15 @@ end;
 
 procedure TAxis2.FindMarker;
 begin
-  raise EDevUakiException.Create('Не поддерживается');
+  TDevUaki2(Controller).Cycle.SetCycle(False);
+  while TDevUaki2(Controller).Cycle.GetCycle do Application.ProcessMessages;
+  FReper := 'f';
+  TDevUaki2(Controller).ConnectOpen();
+  TDevUaki2(Controller).Send(AnsiString('s'+AxisName+'f'), procedure (n: Integer; const LastAns: AnsiString)
+  begin
+    TDevUaki2(Controller).ConnectClose();
+    TDevUaki2(Controller).Cycle.SetCycle(True);
+  end);
 end;
 
 function TAxis2.GetTOlerance: Double;
@@ -264,7 +276,7 @@ begin
   while TDevUaki2(Controller).Cycle.GetCycle do Application.ProcessMessages;
   FMotor := 'G';
   TDevUaki2(Controller).ConnectOpen();
-  TDevUaki2(Controller).Send(AnsiString('s'+AxisName+'G'+ Angle.ToString), procedure (n: Integer; const LastAns: AnsiString)
+  TDevUaki2(Controller).Send(AnsiString('s'+AxisName+'G'+ Angle.ToStringUAKI+ ' '), procedure (n: Integer; const LastAns: AnsiString)
   begin
     TDevUaki2(Controller).ConnectClose();
     TDevUaki2(Controller).Cycle.SetCycle(True);

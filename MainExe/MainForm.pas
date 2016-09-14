@@ -825,7 +825,11 @@ end;
 procedure TFormMain.IProjectClose;
  var
   m: IManager;
+  CanClose: Boolean;
 begin
+  SaveScreeDialog;
+  CanClose := not (ChildFormsBusy or DeviceBusy);
+  if not CanClose then Exit;
   BeginDockLoading;
   try
     (GlobalCore as IFormEnum).Clear;
@@ -845,7 +849,11 @@ function TFormMain.IProjectLoad(out ProjectName: string): Boolean;
  var
   me: IManagerEx;
   s: string;
+  CanClose: Boolean;
 begin
+  SaveScreeDialog;
+  CanClose := not (ChildFormsBusy or DeviceBusy);
+  if not CanClose then Exit;
   Result := True;
   with TOpenDialog.Create(nil) do
   try

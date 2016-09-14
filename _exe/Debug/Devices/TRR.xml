@@ -104,7 +104,15 @@
 			</RP45>
 		</MODEL>
 	</Глубиномер>
-	<ННК SETUP_METR="begin&#xA;&#xA;  t.kNGK := 1;&#xA;  t.KW1 := 700;&#xA;  t.KW2 := 70;&#xA;  t.KWG := 100;&#xA;&#xA;  AddXmlPath(t, 'Rbf.A');&#xA;  AddXmlPath(t, 'Rbf.K1');&#xA;  AddXmlPath(t, 'Rbf.K2');&#xA;  AddXmlPath(t, 'Rbf.G');&#xA;  t.Rbf.A.XY := '';&#xA;  t.Rbf.K1.XY := '';&#xA;  t.Rbf.K2.XY := '';&#xA;  t.Rbf.G.XY := '';&#xA;end;&#xA;&#xA;">
+	<electro SETUP_METR="begin&#xA;//коэффициенты КС&#xA;// tochno  //mV&#xA;  t.kGZ1 := 1;&#xA;  t.kGZ2 := 1;&#xA;  t.kGZ3 := 1;&#xA;  t.kGZ4 := 1;&#xA;  t.kGZ5 := 1;&#xA;  t.kGZ6 := 1;&#xA;  // grubo //mV&#xA;//  t.kgz1 := 1;&#xA;//  t.kgz2 := 1;&#xA;//  t.kgz3 := 1;&#xA;//  t.kgz4 := 1;&#xA;//  t.kgz5 := 1;&#xA;//  t.kgz6 := 1;&#xA;&#xA;  t.kI := 1;  //mA&#xA;&#xA;  t.kPS1 := 1; //mV&#xA;  t.kPS2 := 1; //mV&#xA;  t.kPS3 := 1; //mV&#xA;//  коэффициенты БК&#xA;  t.kI11_16 := 1;  //mA&#xA;  t.kI21_26 := 1;  //mA&#xA;  t.kU0 := 1;      //mV&#xA;end;&#xA;&#xA;"><IMPORT/>
+		<EXPORT/>
+		<MODEL>
+			<EL1 EXEC_METR="{ procedure (v: variant);&#xA;  v - корневой элемент метрологии модуля или данных модуля (режим информации)&#xA;  например Inclin, Dtr - корневой элемент редактируемого модуля }&#xA;begin&#xA;  Exec_EL1(v, t);&#xA;end;&#xA;" SETUP_METR="{ procedure (v: variant);&#xA;  v - корневой элемент метрологии модуля или данных модуля (режим информации)&#xA;  например Inclin, Dtr - корневой элемент редактируемого модуля }&#xA;begin&#xA;  Setup_EL1(v);&#xA;end;&#xA;"><IMPORT/>
+				<EXPORT/>
+			</EL1><TBK><IMPORT/>
+				<EXPORT EXPORT0="{ procedure (v: variant);&#xA;  v - корневой элемент метрологии модуля или данных модуля (режим информации)&#xA;  например Inclin, Dtr - корневой элемент редактируемого модуля }&#xA;function GetFilterName: string;&#xA;begin&#xA;  Result := 'Экспортирование в LibireOffice Calc(*.ods)|*.ods';&#xA;end;&#xA;&#xA;procedure OnExecuteFilter(const TrrFile: string; NewTrr: variant);&#xA;begin&#xA; //  унифицированная процепура осздания отчета&#xA; //       TrrFile -- файл тарировки&#xA; //       NewTrr -- источник данных&#xA; //       'Report****.ods' -- шаблон в Devices&#xA; //       'Report****.xml' -- инструкция по заполнению полей шаблона в Devices&#xA;  ExportToCalc('ReportBK.ods', 'ReportBK.xml', TrrFile, NewTrr);&#xA;end;&#xA;&#xA;begin&#xA;end.&#xA;" EXPORT1="function GetFilterName: string;&#xA;begin&#xA;  Result := 'Экспортирование в печать диаграмм(*.mbk)|*.mbk';&#xA;end;&#xA;&#xA;procedure OnExecuteFilter(const TrrFile: string; NewTrr: variant);&#xA;begin&#xA;  ExportToMbk( TrrFile, NewTrr);&#xA;end;&#xA;&#xA;begin&#xA;end.&#xA;"/>
+			</TBK></MODEL>
+	</electro><ННК SETUP_METR="begin&#xA;&#xA;  t.kNGK := 1;&#xA;  t.KW1 := 700;&#xA;  t.KW2 := 70;&#xA;  t.KWG := 100;&#xA;&#xA;  AddXmlPath(t, 'Rbf.A');&#xA;  AddXmlPath(t, 'Rbf.K1');&#xA;  AddXmlPath(t, 'Rbf.K2');&#xA;  AddXmlPath(t, 'Rbf.G');&#xA;  t.Rbf.A.XY := '';&#xA;  t.Rbf.K1.XY := '';&#xA;  t.Rbf.K2.XY := '';&#xA;  t.Rbf.G.XY := '';&#xA;end;&#xA;&#xA;">
 		<IMPORT/>
 		<EXPORT/>
 		<MODEL>

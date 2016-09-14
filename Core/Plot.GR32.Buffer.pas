@@ -2,7 +2,7 @@ unit Plot.GR32.Buffer;
 
 interface
 
-uses System.SysUtils, GR32, GR32_Backends_VCL, CustomPlot, Vcl.Forms;
+uses System.SysUtils, GR32, GR32_Backends_VCL, CustomPlot, Vcl.Forms, GR32_ExtImage;
 
 type
   TRenderReadyEvent = TProc;
@@ -97,7 +97,7 @@ begin
   ys0 := FRegion.Graph.YTopScreen;
   ys1 := FRegion.Graph.YButtomScreen;
   h := Height;
-  hy := Abs(y1-y0)*s;
+  hy := Round(Abs(y1-y0)*s);
   if hy <= h then
    begin
    // буфер больше
