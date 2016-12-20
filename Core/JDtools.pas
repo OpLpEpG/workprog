@@ -98,6 +98,7 @@ type
     class procedure ApplyItem(root: TJvCustomInspectorItem; o: TObject); static;
     class procedure ApplyItemArray(root: TJvCustomInspectorItem; o: TArray<TObject>; BefoSet, AfteSet: TNotifyEvent); static;
     class procedure ApplyICollection(root: TJvCustomInspectorItem; cl: TICollection); static;
+    class procedure ApplyList(root: TJvCustomInspectorItem; cl: TObject; ItemType: TRttiType); static;
   public
    constructor Create(const ADisplayName: String; AReadOnly: Boolean = False);
    class procedure Apply(Obj: TObject; Insp: TJvInspector); overload;
@@ -362,6 +363,8 @@ class procedure ShowPropAttribute.ApplyItem(root: TJvCustomInspectorItem; o: TOb
   oo: TObject;
   s: string;
   ic: ICaption;
+  c: TClass;
+  ast: TArray<string>;
 begin
   if not Assigned(o) then Exit;
   t := RttiContext.GetType(o.ClassType);
@@ -386,7 +389,22 @@ begin
        ii.SortKind := iskNone;
        ii.Expanded := True;
        ii.ReadOnly := True;
-       if Assigned(oo) and (oo is TICollection) then ApplyICollection(ii,  TICollection(oo));
+       if Assigned(oo) then
+       if oo is TICollection then ApplyICollection(ii,  TICollection(oo))
+       else
+        begin
+         c := oo.ClassType;
+         while c <> nil do
+          begin
+           if c.ClassName.Contains('TEnumerable<') then
+            begin
+             ast := c.ClassName.Split(['<','>']);
+             if Length(ast) = 2 then ApplyList(ii,  oo, RttiContext.FindType(ast[1]));
+             Break;
+            end;
+           c := c.ClassParent;
+          end;
+        end;
        ApplyItem(ii, oo);
       end
      else
@@ -396,6 +414,27 @@ begin
        ii.ReadOnly := ShowPropAttribute(a).ReadOnly or not p.IsWritable;
        if ii is TJvInspectorBooleanItem then TJvInspectorBooleanItem(ii).ShowAsCheckbox := True;
       end;
+end;
+
+class procedure ShowPropAttribute.ApplyList(root: TJvCustomInspectorItem; cl: TObject; ItemType: TRttiType);
+ var
+  o: TObject;
+  ii: TJvCustomInspectorItem;
+  s: string;
+  ca: ICaption;
+begin
+  if ItemType.TypeKind = tkClass then  
+  for o in TEnumerable<TObject>(cl) do
+   begin
+    if Supports(o, ICaption, ca) then s := ca.Text
+    else s := 'Item';
+    ii := TCustomInspectorDataClassName.New(Root, StrObj2Str(o, o.ClassName), TypeInfo(string));
+    ii.DisplayName := s;
+    ii.SortKind := iskNone;
+    ii.Expanded := True;
+    ii.ReadOnly := True;
+    ApplyItem(ii, o);
+   end;
 end;
 
 class procedure ShowPropAttribute.ApplyICollection(root: TJvCustomInspectorItem; cl: TICollection);
@@ -478,6 +517,7 @@ begin
    end;
   SetLength(aa, 0);
 end;
+
 {$ENDREGION}
 
 {$REGION 'TJvInspectorArrayPropData'}

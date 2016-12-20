@@ -103,6 +103,16 @@ type
   INetConnectIO = interface(IConnectIO)
   ['{F7222E26-D257-4288-802C-EDAC8ED0EE9E}']
   end;
+  ///	<summary>
+  ///	  реализация IConnectIO для чтения памяти с microSD Диска
+  ///	</summary>
+  ImicroSDConnectIO = interface(IConnectIO)
+  ['{CF7E43AF-87A0-4F9C-8739-87FFBCB1F5E8}']
+  end;
+//  IFileConnectIO = interface(IConnectIO)
+//  ['{B7BCD1DB-8068-426E-BCE2-80E88D943B25}']
+//  end;
+
   TReceiveUDPRef = reference to procedure(const Data: string; status: integer);
 
   IUDPConnectIO = interface(IConnectIO)
@@ -218,6 +228,7 @@ type
     procedure Remove(Index: Integer);
     function AddOrReplase(SubDeviceType: ModelType): ISubDevice;
     function TryMove(SubDevice: ISubDevice; UpTrueDownFalse: Boolean): Boolean;
+  //private
     function GetService: PTypeInfo;
     function GetStructure: TArray<TSubDeviceInfo>;
   ///	<summary>
@@ -228,6 +239,7 @@ type
   ///	 например наследник ISubDevice или IRootDevice
   ///	</summary>
     property Structure: TArray<TSubDeviceInfo> read GetStructure;
+    property SubDevices: TArray<ISubDevice> read GetSubDevices;
   end;
 
   ///	<summary>

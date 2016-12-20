@@ -16,13 +16,18 @@ uses
   System.Classes,
   VCL.ControlRootForm in 'VCL.ControlRootForm.pas',
   VCL.Telesis.Otk in 'VCL.Telesis.Otk.pas' {OtkForm},
-  VCL.Telesis.FFT in 'VCL.Telesis.FFT.pas' {FFTForm},
+  VCL.TelesisRetr.FFT in 'VCL.TelesisRetr.FFT.pas' {fftRETRForm},
   VCL.Telesis.Decoder in 'VCL.Telesis.Decoder.pas' {DecoderECHOForm},
   VCL.Telesis.Decoder.RunCode in 'VCL.Telesis.Decoder.RunCode.pas' {FormRunCodes: TFrame},
   VCL.Telesis.Decoder.FindSP in 'VCL.Telesis.Decoder.FindSP.pas' {FrameFindSP},
   VCL.Telesis.DecoderFFT_FSK in 'VCL.Telesis.DecoderFFT_FSK.pas' {FormDEcoderFFT_FSK},
   VCL.Telesis.FrameFFT_FSK in 'VCL.Telesis.FrameFFT_FSK.pas' {FrameFFT_FSK: TFrame},
-  VCL.Telesis.uso in 'VCL.Telesis.uso.pas' {UsoOscForm};
+  VCL.Telesis.uso in 'VCL.Telesis.uso.pas' {UsoOscForm},
+  VCL.Telesis.Osc in 'VCL.Telesis.Osc.pas' {OscForm},
+  VCL.Telesis.FFT in 'VCL.Telesis.FFT.pas' {FFTForm},
+  VCL.TelesisRetr.Decoder in 'VCL.TelesisRetr.Decoder.pas' {DecoderRETRForm},
+  VCL.Decoder.Frame in 'VCL.Decoder.Frame.pas' {FrameDecoderStandart: TFrame},
+  VCL.TelesisRetr.Player in 'VCL.TelesisRetr.Player.pas' {PLeerRETRForm};
 
 {$R *.res}
 

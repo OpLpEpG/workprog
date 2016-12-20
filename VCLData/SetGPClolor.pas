@@ -2,8 +2,8 @@ unit SetGPClolor;
 
 interface
 
-uses GR32, JDtools,
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Winapi.GDIPAPI, WinAPI.GDIPObj,
+uses JDtools, System.UITypes,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, //Winapi.GDIPAPI, WinAPI.GDIPObj,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, JvExControls, JvInspector, JvComponentBase;
 
 type
@@ -23,19 +23,11 @@ type
     procedure Timer1Timer(Sender: TObject);
     procedure FormMouseEnter(Sender: TObject);
   private
-   FRes: Tproc<TGPColor>;
+   FRes: Tproc<TAlphaColor>;
   public
-   class procedure Execute(ALeftTop: TPoint; c: TGPColor; func: Tproc<TGPColor>);
+   class procedure Execute(ALeftTop: TPoint; c: TAlphaColor; func: Tproc<TAlphaColor>);
   end;
 
-
-implementation
-
-{$R *.dfm}
-
-{ TInspGPColorItem }
-
-type
   TInspGPColorItem = class(TJvCustomInspectorItem)
   protected
   public
@@ -47,6 +39,11 @@ type
   end;
 
 
+implementation
+
+{$R *.dfm}
+
+
 constructor TInspGPColorItem.Create(const AParent: TJvCustomInspectorItem; const AData: TJvCustomInspectorData);
 begin
   inherited;
@@ -55,27 +52,19 @@ end;
 
 procedure TInspGPColorItem.DrawValue(const ACanvas: TCanvas);
  var
-  g: TGPGraphics;
-  c: TGPColor;
-  sb: TGPSolidBrush;
+  c: TAlphaColorRec;
 begin
   if not Data.HasValue then Exit;
-  c := Cardinal(Data.AsOrdinal);
-  G := TGPGraphics.Create(ACanvas.Handle);
-  sb := TGPSolidBrush.Create(c);
-  try
-   G.FillRectangle(sb, MakeRect(Rects[iprValueArea]));
-   if  Editing then DrawEditor(ACanvas);
-  finally
-   sb.Free;
-   g.Free;
-  end;
+  c.Color := Cardinal(Data.AsOrdinal);
+  ACanvas.Brush.Color :=  RGB(c.R, c.G, c.B);
+  ACanvas.FillRect(Rects[iprValueArea]);
+  if Editing then DrawEditor(ACanvas);
 end;
 
 procedure TInspGPColorItem.Edit;
 begin
-  TFormSetGPColor.execute(Tcontrol(Inspector.Owner).ClientToScreen(Rects[iprEditButton].TopLeft), TGPColor(Data.AsOrdinal),
-  procedure (c: TGPColor)
+  TFormSetGPColor.execute(Tcontrol(Inspector.Owner).ClientToScreen(Rects[iprEditButton].TopLeft), TAlphaColor(Data.AsOrdinal),
+  procedure (c: TAlphaColor)
   begin
     Data.AsOrdinal := c;
   end);
@@ -93,16 +82,16 @@ end;
 
 { TFormSetGPColor }
 
-class procedure TFormSetGPColor.Execute(ALeftTop: TPoint; c: TGPColor; func: Tproc<TGPColor>);
+class procedure TFormSetGPColor.Execute(ALeftTop: TPoint; c: TAlphaColor; func: Tproc<TAlphaColor>);
 begin
   with Create(nil) do
    begin
     Left := ALeftTop.X;
     Top := ALeftTop.Y;
-    R.Position := GetRed(c);
-    G.Position := GetGreen(c);
-    B.Position := GetBlue(c);
-    A.Position := GetAlpha(c);
+    R.Position := TAlphaColorRec(c).R;
+    G.Position := TAlphaColorRec(c).G;
+    B.Position := TAlphaColorRec(c).B;
+    A.Position := TAlphaColorRec(c).A;
     FRes := func;
     Show;
     SetFocus;
@@ -120,8 +109,17 @@ begin
 end;
 
 procedure TFormSetGPColor.RChange(Sender: TObject);
+ var
+  c: TAlphaColorRec;
 begin
-  if Assigned(FRes) then FRes(MakeColor(a.Position, R.Position, G.Position, B.Position));
+  if Assigned(FRes) then
+   begin
+    c.A := a.Position;
+    c.R := r.Position;
+    c.G := g.Position;
+    c.B := b.Position;
+    FRes(TAlphaColor(c));
+   end;
 end;
 
 procedure TFormSetGPColor.Timer1Timer(Sender: TObject);
@@ -132,8 +130,8 @@ end;
 initialization
   with TJvCustomInspectorData.ItemRegister do
    begin
-    Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TGPColor)));
-    Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TColor)));
-    Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TColor32)));
+//    Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TGPColor)));
+    Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TAlphaColor)));
+//    Add(TJvInspectorTypeInfoRegItem.Create(TInspGPColorItem, TypeInfo(TColor32)));
    end;
 end.

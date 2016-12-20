@@ -14,14 +14,23 @@ type
    end;
 
    TRootDevice = class;
-   TSubDev = class(TICollectionItem, ISubDevice, ISetCollection, ICaption)
+   TSubDev = class(TICollectionItem, ISubDevice, ISetCollection, ICaption, IManagItem, IInterfaceComponentReference)
    private
      FIName: string;
    protected
-     FSubDevice: TSubDev;
+     FChildSubDevice: TSubDev;
+     FParentSubDevice: TSubDev;
+     IsLoaded: Boolean;
 //     procedure SetChild(SubDevice: ISubDevice); virtual;
 
+     function GetComponent: TComponent;
+  // IManagItem
+     function Priority: Integer;
+     function Model: ModelType;
+     function RootName: String;
+     procedure SetItemName(const Value: String);
      function GetItemName: string;
+
      function GetCategory: TSubDeviceInfo; virtual; abstract;
      function GetCaption: string; virtual; abstract;
 
@@ -32,37 +41,48 @@ type
 
      procedure BeforeRemove(); virtual;
 
+     procedure Extract(); virtual;
+     procedure Insert(Index: Integer); virtual;
+
      procedure OnUserRemove; virtual;
+
+     procedure SetChildSubDevice(const Value: TSubDev); virtual;
+     procedure SetParentSubDevice(const Value: TSubDev); virtual;
+
+     function GetUniqueCaption(const Capt: string): string;
+
+     procedure Loaded; virtual;
+
    public
      procedure InputData(Data: Pointer; DataSize: integer); virtual; abstract;
      procedure DeleteData(DataSize: integer); virtual;
      constructor Create; reintroduce; overload; virtual;
      constructor Create(Collection: TCollection); overload; override; final;
      destructor Destroy; override;
-     function GetOwner: TRootDevice; inline;
+     function GetOwner1: TRootDevice; inline;
      property Category: TSubDeviceInfo read GetCategory;
      property Caption: string read GetCaption;
-     property Owner: TRootDevice read GetOwner;
+     property Owner: TRootDevice read GetOwner1;
+     property ChildSubDevice: TSubDev read FChildSubDevice write SetChildSubDevice;
+     property ParentSubDevice: TSubDev read FParentSubDevice write SetParentSubDevice;
    published
-     property IName: String read GetItemName write FIName;
+     property IName: String read GetItemName write SetItemName;
    end;
 
    TSubDev<T> = class(TSubDev, ISubDevice<T>)
    protected
      FS_Data: T;
      function GetData: T;
-//     procedure BeforeRemove(); override;
-//     procedure OnUserRemove; override;
      procedure NotifyData;
    public
-     property S_Data: T read FS_Data;// write FS_Data;
+     property S_Data: T read GetData write FS_Data;
    end;
 
-   TSubDevWithForm<T> = class(TSubDev<T>)
-   private
-     FFormClass, FPrefixFormName{, FPropertyName}: string;
+
+   TSubDevWithForm<T> = class(TSubDev<T>, ISubDevice<T>)
    protected
-//     FormData: IForm;
+     FFormClassName: string;
+     FPrefixFormName: string;
      function TryGetSubDevForm(const model, prefix: string; out F: IForm; NeedCreate: Boolean = False): Boolean;
      procedure InitConst(const aFormClass, aPrefixFormName{, aPropertyName}: string);
      procedure RemoveUserForm; virtual;
@@ -82,8 +102,11 @@ type
 
   TRootDevice = class(TAbstractDevice, IRootDevice, INotifyBeforeRemove)
   private
+    FS_Add: ISubDevice;
     function TryFindAvailIndex(const Category: string; out idx: Integer; needFreeUniqe: boolean): Boolean;
-    procedure UpdateParents;
+    procedure UpdateParents(check: Boolean = false);
+    procedure SetS_Add(const Value: ISubDevice);
+    procedure SetS_Remove(const Value: ISubDevice);
   protected
     FSubDevs: TSubDevCollection;
     procedure DefineProperties(Filer: TFiler); override;
@@ -100,6 +123,9 @@ type
     constructor Create(); override;
     destructor Destroy; override;
     procedure DoSetup(Sender: IAction); virtual;
+    property SubDevices: TArray<ISubDevice> read GetSubDevices;
+    property S_Add: ISubDevice read FS_Add write SetS_Add;
+    property S_Remove: ISubDevice read FS_Add write SetS_Remove;
   end;
 
 implementation
@@ -125,16 +151,46 @@ begin
   FSubDevs.RegisterProperty(Filer, 'SubDevs');
 end;
 
-procedure TRootDevice.UpdateParents;
+procedure TRootDevice.UpdateParents(check: Boolean = false);
  var
   i: Integer;
 begin
   if FSubDevs.Count = 0 then Exit;
-  TSubDev(FSubDevs.Items[FSubDevs.Count-1]).FSubDevice := nil;
+  if check then
+   begin
+    if TSubDev(FSubDevs.Items[0]).FParentSubDevice <> nil then
+     begin
+      Tdebug.Log('TSubDev(FSubDevs.Items[0]).FParentSubDevice <> nil');
+     end;
+    if TSubDev(FSubDevs.Items[FSubDevs.Count-1]).FChildSubDevice <> nil then
+     begin
+      Tdebug.Log('TSubDev(FSubDevs.Items[FSubDevs.Count-1]).FChildSubDevice <> nil');
+     end;
+    for i := 1 to FSubDevs.Count-1 do
+     begin
+      if TSubDev(FSubDevs.Items[i-1]).FChildSubDevice <> TSubDev(FSubDevs.Items[i]) then
+       begin
+        TDebug.Log('%s C %s  <> %s', [
+          TSubDev(FSubDevs.Items[i-1]).caption,
+          TSubDev(FSubDevs.Items[i-1]).FChildSubDevice.caption,
+          TSubDev(FSubDevs.Items[i]).Caption]);
+       end;
+      if TSubDev(FSubDevs.Items[i]).FParentSubDevice <> TSubDev(FSubDevs.Items[i-1]) then
+       begin
+        TDebug.Log('%s P %s <> %s', [
+          TSubDev(FSubDevs.Items[i]).caption,
+          TSubDev(FSubDevs.Items[i]).FParentSubDevice.caption,
+          TSubDev(FSubDevs.Items[i-1]).Caption]);
+       end;
+     end;
+    Exit;
+   end;
+  TSubDev(FSubDevs.Items[0]).ParentSubDevice := nil;
+  TSubDev(FSubDevs.Items[FSubDevs.Count-1]).ChildSubDevice := nil;
   for i := 1 to FSubDevs.Count-1 do
    begin
-    TDebug.Log('%d ', [i]);
-    TSubDev(FSubDevs.Items[i-1]).FSubDevice := TSubDev(FSubDevs.Items[i]);
+    TSubDev(FSubDevs.Items[i-1]).ChildSubDevice := TSubDev(FSubDevs.Items[i]);
+    TSubDev(FSubDevs.Items[i]).ParentSubDevice := TSubDev(FSubDevs.Items[i-1]);
    end;
 end;
 
@@ -170,10 +226,13 @@ begin
     if TryFindAvailIndex(Result.Category.Category, i, True) then
      begin
       (Result as ISetCollection).SetCollection(FSubDevs);
+      Result.Caption;
       (Result as ISetCollection).SetIndex(i);
+      TSubDev(Result).Insert(i);
       TRegistration.Create(SubDeviceType).LiveTime(ltTransientNamed).Add(GetService).AddInstance(Result.IName, Result as IInterface);
-      UpdateParents;
+     // Update Parents;
       MainScreenChanged;
+      S_Add := Result;
      end
     else
      begin
@@ -204,8 +263,12 @@ procedure TRootDevice.Loaded;
   c: TCollectionItem;
 begin
   inherited;
-  for c in FSubDevs do TRegistration.Create(c.ClassInfo).Add(GetService).AddInstance(TSubDev(c).IName, TSubDev(c) as IInterface);
+  for c in FSubDevs do
+   begin
+    TRegistration.Create(c.ClassInfo).Add(GetService).AddInstance(TSubDev(c).IName, TSubDev(c) as IInterface);
+   end;
   UpdateParents;
+  for c in FSubDevs do TSubDev(c).Loaded;
 end;
 
 function TRootDevice.Index(SubDevice: ISubDevice): Integer;
@@ -220,14 +283,36 @@ procedure TRootDevice.Remove(Index: Integer);
 begin
   GContainer.RemoveInstKnownServ(GetService(), TSubDev(FSubDevs.Items[Index]).IName);
   TSubDev(FSubDevs.Items[Index]).OnUserRemove;
+  S_Remove := TSubDev(FSubDevs.Items[Index]) as ISubDevice;
   FSubDevs.Delete(Index);
-  UpdateParents;
+//  Update Parents;
   MainScreenChanged;
+end;
+
+procedure TRootDevice.SetS_Add(const Value: ISubDevice);
+begin
+  FS_Add := Value;
+  try
+   TBindings.Notify(Self, 'S_Add');
+  finally
+   FS_Add := nil;
+  end;
+end;
+
+procedure TRootDevice.SetS_Remove(const Value: ISubDevice);
+begin
+  FS_Add := Value;
+  try
+   TBindings.Notify(Self, 'S_Remove');
+  finally
+   FS_Add := nil;
+  end;
 end;
 
 function TRootDevice.TryFindAvailIndex(const Category: string; out idx: Integer; needFreeUniqe: boolean): Boolean;
  var
   si: TSubDeviceInfo;
+  sd: TSubDev;
 begin
   idx := 0;
   for si in GetStructure do if si.Category = Category then
@@ -236,8 +321,10 @@ begin
       and (TSubDev(FSubDevs.Items[idx]).GetCategory.Category = Category)
       and (sdtUniqe in TSubDev(FSubDevs.Items[idx]).GetCategory.Typ) then
        begin
-        TSubDev(FSubDevs.Items[idx]).BeforeRemove;
-        GContainer.RemoveInstKnownServ(GetService(), TSubDev(FSubDevs.Items[idx]).IName);
+        sd := TSubDev(FSubDevs.Items[idx]);
+        sd.BeforeRemove;
+        S_Remove := sd as ISubDevice;
+        GContainer.RemoveInstKnownServ(GetService(), sd.IName);
         FSubDevs.Delete(idx);
        end;
     Exit(True);
@@ -249,22 +336,23 @@ end;
 function TRootDevice.TryMove(SubDevice: ISubDevice; UpTrueDownFalse: Boolean): Boolean;
  var
   i: Integer;
+  function ChIndex(old, new: Integer): Boolean;
+   var
+    sd: TSubDev;
+  begin
+    sd := TSubDev(FSubDevs.Items[old]);
+    sd.Extract;
+    sd.Index := new;
+    sd.Insert(new);
+    //UpdateParents(True);
+    Result := True;
+  end;
 begin
   Result := False;
   for i := 0 to FSubDevs.Count-1 do if TSubDev(FSubDevs.Items[i]) as ISubDevice = SubDevice then
    begin
-    if UpTrueDownFalse and (i-1 > 0) and (TSubDev(FSubDevs.Items[i-1]).GetCategory.Category = SubDevice.Category.Category) then
-     begin
-      FSubDevs.Items[i].Index := i-1;
-      UpdateParents;
-      Exit(True);
-     end;
-    if not UpTrueDownFalse and (i+1 < FSubDevs.Count) and (TSubDev(FSubDevs.Items[i+1]).GetCategory.Category = SubDevice.Category.Category) then
-     begin
-      FSubDevs.Items[i].Index := i+1;
-      UpdateParents;
-      Exit(True);
-     end;
+    if UpTrueDownFalse and (i-1 > 0) and (TSubDev(FSubDevs.Items[i-1]).GetCategory.Category = SubDevice.Category.Category) then Exit(ChIndex(i, i-1));
+    if not UpTrueDownFalse and (i+1 < FSubDevs.Count) and (TSubDev(FSubDevs.Items[i+1]).GetCategory.Category = SubDevice.Category.Category) then Exit(ChIndex(i, i+1));
    end;
 end;
 
@@ -272,17 +360,20 @@ end;
 
 constructor TSubDev.Create;
 begin
+ // TDebug.Log('TSubDev.Create  %s  %s  %s', [IName, Category.Category, Caption]);
 end;
 
 constructor TSubDev.Create(Collection: TCollection);
 begin
   inherited;
+  IsLoaded := True;
   Create;
+  IsLoaded := False;
 end;
 
 destructor TSubDev.Destroy;
 begin
-  TDebug.Log('TSubDev.Destroy  %s  %s  %s', [IName, Category.Category, Caption]);
+ // TDebug.Log('TSubDev.Destroy  %s  %s  %s', [IName, Category.Category, Caption]);
   TBindHelper.RemoveExpressions(Self);
   inherited;
 end;
@@ -291,12 +382,56 @@ procedure TSubDev.DeleteData(DataSize: integer);
 begin
 end;
 
+procedure TSubDev.Insert(Index: Integer);
+begin
+  if Index > 0 then ParentSubDevice := TSubDev(Collection.Items[Index-1])
+  else ParentSubDevice := nil;
+
+  if Index < Collection.Count-1 then ChildSubDevice := TSubDev(Collection.Items[Index+1])
+  else ChildSubDevice := nil;
+end;
+
+procedure TSubDev.Loaded;
+begin
+
+end;
+
+function TSubDev.Model: ModelType;
+begin
+  Result := ClassInfo;
+end;
+
+procedure TSubDev.Extract;
+begin
+  if Assigned(FParentSubDevice) then FParentSubDevice.ChildSubDevice := FChildSubDevice;
+  if Assigned(FChildSubDevice) then  FChildSubDevice.ParentSubDevice := FParentSubDevice;
+  FParentSubDevice := nil;
+  FChildSubDevice := nil;
+end;
+
 procedure TSubDev.BeforeRemove;
 begin
+  Extract()
 end;
 
 procedure TSubDev.OnUserRemove;
 begin
+  Extract()
+end;
+
+function TSubDev.Priority: Integer;
+begin
+  Result := 300;
+end;
+
+function TSubDev.RootName: String;
+begin
+ Result := ClassName.Substring(1)
+end;
+
+function TSubDev.GetComponent: TComponent;
+begin
+  Result := Owner;
 end;
 
 function TSubDev.GetDeviceName: string;
@@ -306,24 +441,59 @@ end;
 
 function TSubDev.GetItemName: string;
 begin
-  if FIName = '' then FIName := ClassName.Substring(1) + FormatDateTime('yymdhnsz', now);
+  if FIName = '' then FIName := RootName + FormatDateTime('yymdhnsz', now);
   Result := FIName;
 end;
 
-function TSubDev.GetOwner: TRootDevice;
+function TSubDev.GetOwner1: TRootDevice;
 begin
   if Assigned(Collection) then Result := TRootDevice(TSubDevCollection(Collection).OwnerDevice)
   else Result := nil;
 end;
 
-//procedure TSubDev.SetChild(SubDevice: ISubDevice);
-//begin
-//  FSubDevice := TSubDev(SubDevice);
-//end;
+function TSubDev.GetUniqueCaption(const Capt: string): string;
+ var
+   slf: ISubDevice;
+   n: Integer;
+  function Chcpt(const C: string): Boolean;
+   var
+    s: ISubDevice;
+  begin
+    if not Assigned(Owner) then Exit(False);
+    Result := False;
+    for s in Owner.SubDevices do if (s <> slf) and SameText(c, s.Caption) then Exit(True);
+  end;
+begin
+  slf := Self as ISubDevice;
+  Result := Capt;
+  n := 0;
+  while Chcpt(Result) do
+   begin
+    Inc(n);
+    Result := Capt + ' ' + n.ToString();
+   end;
+end;
+
+procedure TSubDev.SetChildSubDevice(const Value: TSubDev);
+begin
+  FChildSubDevice := Value;
+  if Assigned(Value) and (Value.ParentSubDevice <> Self) then Value.ParentSubDevice := Self;
+end;
+
+procedure TSubDev.SetParentSubDevice(const Value: TSubDev);
+begin
+  FParentSubDevice := Value;
+  if Assigned(Value) and (Value.ChildSubDevice <> Self) then Value.ChildSubDevice := Self;
+end;
 
 procedure TSubDev.SetDeviceName(const Value: string);
 begin
   raise Exception.Create('Error Writing programm call procedure TSubDev.SetDeviceName(const Value: string);');
+end;
+
+procedure TSubDev.SetItemName(const Value: String);
+begin
+  FIName := Value;
 end;
 
 { TSubDevCollection }
@@ -338,11 +508,13 @@ end;
 
 procedure TSubDevWithForm<T>.BeforeRemove;
 begin
+  inherited;
   RemoveUserForm;
 end;
 
 procedure TSubDevWithForm<T>.OnUserRemove;
 begin
+  inherited;
   RemoveUserForm;
 end;
 
@@ -369,7 +541,7 @@ procedure TSubDevWithForm<T>.RemoveUserForm;
   FormData: IForm;
 begin
 //  TBindHelper.RemoveSourceExpressions(Self, ['S_Data']);
-  if TryGetSubDevForm(FFormClass, FPrefixFormName, FormData) then
+  if TryGetSubDevForm(FFormClassName, FPrefixFormName, FormData) then
    begin
     (Gcontainer as IformEnum).Remove(FormData);
     ((Gcontainer as IformEnum) as IStorable).Save;
@@ -380,7 +552,7 @@ procedure TSubDevWithForm<T>.DoSetup(Sender: IAction);
  var
   FormData: IForm;
 begin
-  if TryGetSubDevForm(FFormClass, FPrefixFormName, FormData, True) then
+  if TryGetSubDevForm(FFormClassName, FPrefixFormName, FormData, True) then
    begin
     (FormData as IControlForm).ControlName := Owner.Name;
     (FormData as IRootControlForm).SubControlName := IName;
@@ -392,7 +564,7 @@ end;
 
 procedure TSubDevWithForm<T>.InitConst(const aFormClass, aPrefixFormName{, aPropertyName}: string);
 begin
-  FFormClass := aFormClass;
+  FFormClassName := aFormClass;
   FPrefixFormName := aPrefixFormName;
 //  FPropertyName := aPropertyName;
 end;
@@ -406,8 +578,6 @@ end;
 //    TBindHelper.Bind(TObject(FormData),'C_Data', Self as IInterface, ['S_Data']);
 //   end;
 //end;
-
-{ TSubDev<T> }
 
 procedure TSubDev<T>.NotifyData;
 begin

@@ -435,9 +435,47 @@ type
   ['{BE13ED50-EC96-4BFD-B77D-61A32828143A}']
   end;
 
+  ITelesistem_retr = interface
+  ['{FE31A3CD-BD86-4C4F-A527-D44E5C04DAE6}']
+  end;
+
   ITelesisCMD = interface
   ['{5CCFAD9E-3063-4350-8908-804D2E45E0B4}']
     procedure SendCmd(Cmd: Byte);
+  end;
+
+  IUSOData =  interface
+  ['{02DBEE66-7FEE-40F6-8E9E-47B43FCCB2A5}']
+    function RealTimeLastIndex: Integer;
+    function FufferDataPeriod: Double; // ms
+  end;
+
+
+  IPleer =  interface
+  ['{857C599C-9A9E-493D-A0E8-654C08016D39}']
+  //private
+//    function GetPouse: Boolean;
+//    procedure SetPouse(const Value: Boolean);
+    procedure SetPosition(const Value: Int64);
+//    procedure SetSpeed(const Value: Double);
+    function GetMaximum: Int64;
+    function GetPosition: Int64;
+//    function GetSpeed: Double;
+  //public
+    property Maximum: Int64 read GetMaximum;
+    property Position: Int64 read GetPosition write SetPosition;
+//    property Speed: Double read GetSpeed write SetSpeed;
+//    property Pouse: Boolean read GetPouse write SetPouse;
+    function Step(count: Cardinal): Cardinal;
+
+    function Stream: TFileStream;
+  end;
+
+  IOscDataSubDevice = interface(ISubDevice)
+  ['{540B6AE5-AB4A-46C6-B8FC-7D92966AE020}']
+//    function GetPainter: TObject;
+//    procedure SetPainter(const Value: TObject);
+//    property Painter: TObject read GetPainter write SetPainter;
   end;
 
   ISetBookMark = interface

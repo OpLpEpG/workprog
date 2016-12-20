@@ -70,7 +70,7 @@ begin
   for i := 0 to DataSize-1 do d[i] := d[i] + Fshum[i];
 
   NotifyData;
-  if Assigned(FSubDevice) then FSubDevice.InputData(d, DataSize);
+  if Assigned(FChildSubDevice) then FChildSubDevice.InputData(d, DataSize);
 //  inherited DoOutputData(d, DataSize);
 
   Delete(Fshum, 0, DataSize);

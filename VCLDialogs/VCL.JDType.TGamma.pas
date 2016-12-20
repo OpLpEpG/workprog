@@ -19,7 +19,6 @@ type
     procedure AllCloseUp(Sender: TObject);
     procedure pbPaintBuffer(Sender: TObject);
   private
-    FUpdatedControls: boolean;
     procedure SetGamma(const Value: TGamma);
     function GetGamma: TGamma;
     procedure UpdateGamma;
@@ -38,19 +37,17 @@ implementation
 
 procedure TJDTypeFormGamma.AfteSetData;
 begin
-  FUpdatedControls := True;
   inherited;
   clTop.SelectedColor := Tcolor32(Gamma[ShortInt.MaxValue]);
   tbPlus.Position := 255 - Gamma[0] shr 24;
   tbMinus.Position := Gamma[-1] shr 24;
   clBot.SelectedColor := Tcolor32(Gamma[ShortInt.MinValue]);
-  FUpdatedControls := False;
   PaintBuffer;
 end;
 
 procedure TJDTypeFormGamma.DoDataChanged;
 begin
-  if FUpdatedControls then Exit;
+  if SetData then Exit;
   UpdateGamma;
   inherited;
   PaintBuffer;

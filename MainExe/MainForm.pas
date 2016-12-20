@@ -2,7 +2,8 @@ unit MainForm;
 
 interface
 
-uses DeviceIntf, ExtendIntf, RootIntf,  Winapi.Messages, System.Variants, Vcl.HtmlHelpViewer,  XMLScript.Math, XMLScript.IKN, XMLScript.Report,
+uses DeviceIntf, ExtendIntf, RootIntf, IndexBuffer,
+  Winapi.Messages, System.Variants, Vcl.HtmlHelpViewer,  XMLScript.Math, XMLScript.IKN, XMLScript.Report,
   System.SysUtils, PluginAPI, Vcl.Dialogs, Vcl.ImgList, Vcl.Controls, Vcl.StdActns, Vcl.BandActn, System.Classes, Vcl.ActnList, Vcl.ActnMan,
   Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ComCtrls, Vcl.Forms, Vcl.Graphics, Winapi.Windows, JvAppStorage, JvAppRegistryStorage, JvDockControlForm,
   Vcl.AppEvnts, Vcl.ExtCtrls, JvFormPlacement, JvDockVIDStyle, JvComponentBase, System.Actions,
@@ -338,7 +339,11 @@ begin
   FormStorage.StoredValue['ErrorInfo'] := TFormExceptions.This.NShowDebug.Checked;
   FormStorage.StoredValue['ErrorDialog'] := TFormExceptions.This.NDialog.Checked;
   if Supports(Plugins, IManager, m) then m.SaveScreen();                // формы  обьекты
-  SaveDockTreeToAppStorage(xini, 'DockTree'); // Dock manager (зависит от версии компилятора т.к. использ TForm, TJvDockClient)
+  try
+   SaveDockTreeToAppStorage(xini, 'DockTree'); // Dock manager (зависит от версии компилятора т.к. использ TForm, TJvDockClient)
+  except
+   on E: Exception do TDebug.DoException(E, False);
+  end;
   SaveTabForms();                         // Tab forms (зависит от версии компилятора т.к. использ TForm, TJvDockClient)
   SaveActionManager;                 // Action manager основной формы
   FormStorage.SaveFormPlacement;      // сохранение cool bar основной формы

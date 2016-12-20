@@ -226,6 +226,7 @@ type
     FSpHi: Byte;
     FWorkEvent: TWorkEvent;
     FWorkInput: array [0..$8000] of Byte;
+    FcheckSP: Boolean;
     procedure FlowDataEvent(Res: boolean; DataB: PByte; DataSize: integer);
     procedure ReStartFlow();
     // IStop
@@ -1283,7 +1284,11 @@ procedure TPskStd.FlowDataEvent(Res: boolean; DataB: PByte; DataSize: integer);
     ww := FWorkLen div 2;
     if FSpHi = 0 then
      begin
-      if (Data[0] = 0) and (FWorkLen+2 <= cnt) and (Data[ww] = 0) then Result := True;
+      if (Data[0] = 0) and (FcheckSP or ((FWorkLen+2 <= cnt) and (Data[ww] = 0))) then
+       begin
+        Result := True;
+        FcheckSP := True;
+       end;
       //if (Data[0] = 0) and (FWorkLen <= cnt) then Result := True;
      end
     else if {(FWorkLen+2+2+2 <= cnt)
@@ -1298,42 +1303,49 @@ procedure TPskStd.FlowDataEvent(Res: boolean; DataB: PByte; DataSize: integer);
   i: Integer;
   ip: IProjectData;
   ix: IProjectDataFile;
+  cio: TAbstractConnectIO;
 begin
+  cio := ConnectIO;
   if not FFlagFlow then Exit;
   if DataSize < 0 then
    begin
     ReStartFlow; // перезапуск потокового режима
-    with ConnectIO do
+    with cio do
      begin
-      FICount := 0;
+      if FICount > FWorkLen*8 then
+       begin
+        FICount := 0;
+        FcheckSP := False;
+       end;
      end;
    end
   else
    try
-    i := 0;
-    for i := 0 to DataSize-2 do if TestSP(@DataB[i], DataSize-i) then
-   // if (DataSize >= FWorkLen) and TestSP(@DataB[0], DataSize) then  // пашин вакиант
-     begin
-      with ConnectIO do
+      i := 0;
+      while (i < cio.FICount-1) and (cio.FICount >= FWorkLen) do if TestSP(@cio.FInput[i], cio.FICount-i) then
+     // if (DataSize >= FWorkLen) and TestSP(@DataB[0], DataSize) then  // пашин вакиант
        begin
-        Move(FInput[i], FWorkInput[0], FWorkLen);
-        Move(FInput[FWorkLen+i], FInput[0], FWorkLen+i);
-        Dec(FICount, FWorkLen+i);
-       end;
-      TPars.SetPsk(FWorkEventInfo.Work, @FWorkInput[0]);
-      FWorkEventInfo.DevAdr := FAddressArray[0];
-      try
-       FExeMetr.Execute(T_WRK);
-       if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, FWorkEventInfo.DevAdr, FWorkEventInfo.Work, False)
-       else if Supports(GlobalCore, IProjectDataFile, ix) then
-                  ix.SaveLogData(Self as IDevice, FWorkEventInfo.DevAdr, FWorkEventInfo.Work, @FWorkInput[0], FWorkLen);
-        //
-      finally
-       if Assigned(FWorkEvent) then FWorkEvent(FWorkEventInfo);
-       Notify('S_WorkEventInfo');
-      end;
-     // Break;
-     end;
+        with cio do
+         begin
+          Move(FInput[i], FWorkInput[0], FWorkLen);
+          Move(FInput[FWorkLen+i], FInput[0], FWorkLen+i);
+          Dec(FICount, FWorkLen+i);
+          i := 0;
+         end;
+        TPars.SetPsk(FWorkEventInfo.Work, @FWorkInput[0]);
+        FWorkEventInfo.DevAdr := FAddressArray[0];
+        try
+         FExeMetr.Execute(T_WRK);
+         if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, FWorkEventInfo.DevAdr, FWorkEventInfo.Work, False)
+         else if Supports(GlobalCore, IProjectDataFile, ix) then
+                    ix.SaveLogData(Self as IDevice, FWorkEventInfo.DevAdr, FWorkEventInfo.Work, @FWorkInput[0], FWorkLen);
+          //
+        finally
+         if Assigned(FWorkEvent) then FWorkEvent(FWorkEventInfo);
+         Notify('S_WorkEventInfo');
+        end;
+       end
+       else Inc(i);
    finally
     WaitRxData(FlowDataEvent);
    end;

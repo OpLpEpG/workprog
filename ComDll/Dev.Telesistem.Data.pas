@@ -11,7 +11,6 @@ type
 
   TCustomTeleData = class(TSubDevWithForm<TPriborData>)
   private
-    FFileName: string;
     FPorogXY: Integer;
     FPorogZ: Integer;
     FDMetka: Double;
@@ -22,6 +21,7 @@ type
     procedure SetDMetka(const Value: Double);
     procedure SetPrbData(tip: TDataType; const Value, Probability: Double);
   protected
+    FFileName: string;
     procedure SetCollection(Value: TCollection); override;
     function GetCategory: TSubDeviceInfo; override;
     function GetCaption: string; override;
@@ -54,6 +54,7 @@ begin
   FPorogZ := 10;
   inherited;
   InitConst('TOtkForm', 'OtkForm_');
+  TDebug.Log('TCustomTeleData.Create;');
 end;
 
 procedure TCustomTeleData.DoSetup(Sender: IAction);
@@ -76,7 +77,7 @@ function TCustomTeleData.GetMetaData: IXMLInfo;
  var
   GDoc: IXMLDocument;
 begin
-  FFileName := ExtractFilePath(ParamStr(0)) + 'Devices\tst_telesis1.xml';
+  FFileName := ExtractFilePath(ParamStr(0)) + 'Devices\tst_telesis1.hxml';
   GDoc := NewXDocument();
   GDoc.LoadFromFile(FileName);
   Result := GDoc.DocumentElement;

@@ -120,7 +120,6 @@ type
     procedure DoStartAtt(AttNode: IXMLNode); virtual;
     procedure DoCancelAtt(AttNode: IXMLNode); virtual;
     procedure NCPopup(Sender: TObject); override;
-    procedure ReCalc(NeedSave: Boolean = True);
     function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; virtual;
     function UserSetupAlg(alg: IXMLNode): Boolean; virtual;
     procedure TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex); virtual;
@@ -134,12 +133,9 @@ type
 //    procedure UpdateRunXmlDir;
   public
     destructor Destroy; override;
-
+    procedure ReCalc(NeedSave: Boolean = True);
     function GetMetr(nm: array of string; Root: IXMLNode): IXMLNode;
-
     procedure SetupEditor(Allow: TAllowEditNode; GetText: TGetTextNode; SetText: TSetTextNode);
-
-
 
     class function MetrolMame: string; virtual;
     class function MetrolType: string; virtual;
@@ -207,7 +203,7 @@ end;
 
 implementation
 
-uses MetrFormSetup, MetrInclin.Math;
+uses  MetrInclin.Math;
 
 {$REGION 'TEditor'}
 
@@ -430,6 +426,10 @@ end;
 procedure TAutomatMetrology.StartStep(Step: IXMLNode);
 begin
   FDelayKadr := 0;
+
+  FStep := Step.ChildNodes.FindNode('TASK');
+  if not Assigned(FStep) then raise EFormMetrolog.Create('Ветвь TASK ненайдена');
+
   if Boolean(step.Attributes['EXECUTED']) then
    if (MessageDlg(Format('Выполнить шаг %s заново?'#$D#$A'%s', [step.Attributes['STEP'], step.Attributes['INFO']]), TMsgDlgType.mtWarning, [mbYes, mbCancel], 0) = mrCancel) then
    begin
@@ -441,8 +441,6 @@ begin
      step.Attributes['EXECUTED'] := False;
      Owner.ReCalc();
     end;
-  FStep := Step.ChildNodes.FindNode('TASK');
-  if not Assigned(FStep) then raise EFormMetrolog.Create('Ветвь TASK ненайдена');
 end;
 
 procedure TAutomatMetrology.Stop;

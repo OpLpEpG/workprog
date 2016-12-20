@@ -182,16 +182,16 @@ type
   end;
 {$ENDREGION 'Отрисовка данных'}
 
-function RandomColor: TColor;
+function RandomColor: TAlphaColor;
 
 implementation
 
 {$REGION 't o o l s'}
 
-function RandomColor: TColor;
+function RandomColor: TAlphaColor;
 begin
 //  Result := TColor(HSVtoRGB(Random(360), 1, 0.5));
-   Result := TColor(Color32(Random(256),Random(256),Random(256),$E0));
+   Result := TAlphaColor(Color32(Random(256),Random(256),Random(256),$E0));
 end;
 
 function ScaleFloatPoint(L: TFloat; R: TFloatPoint): TFloatPoint;

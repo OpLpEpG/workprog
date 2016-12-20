@@ -29,7 +29,9 @@ uses
   VCL.Frame.TGamma in 'VCL.Frame.TGamma.pas' {FrameGamma: TFrame},
   VCL.JDType.Form in 'VCL.JDType.Form.pas',
   VCL.JDType.TGamma in 'VCL.JDType.TGamma.pas' {JDTypeFormGamma},
-  VCL.Dlg.Error in 'VCL.Dlg.Error.pas' {FormError};
+  VCL.Dlg.Error in 'VCL.Dlg.Error.pas' {FormError},
+  VCL.JDtype.Clolor in 'VCL.JDtype.Clolor.pas' {FormSetColor},
+  VCL.JDtype.AlphaClolor in 'VCL.JDtype.AlphaClolor.pas' {FormSetAlphaColor};
 
 {$R *.res}
 

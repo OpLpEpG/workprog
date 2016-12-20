@@ -8,6 +8,8 @@ type
   TJDTypeForm<T> = class(TForm)
   private
     FTimer: TTimer;
+    FSetData: Boolean;
+    procedure SetEditData(const Value: T);
   type
    TInnerControl = class(TControl);
     procedure FormMouseLeave(Sender: TObject);
@@ -21,8 +23,10 @@ type
     procedure DoDataChanged; virtual;
     procedure loaded; override;
     property Timer: TTimer read FTimer;
+    property SetData: Boolean read FSetData;
+    property EditData: T read FEditData write SetEditData;
   public
-    class procedure Execute(ALeftTop: TPoint; EditData: T; FuncResult: Tproc<T>);
+    class procedure Execute(ALeftTop: TPoint; AEditData: T; FuncResult: Tproc<T>);
   end;
 
 
@@ -36,18 +40,20 @@ end;
 
 procedure TJDTypeForm<T>.DoDataChanged;
 begin
-  if Assigned(FResult) then FResult(FEditData);
+  if Assigned(FResult) and not SetData then FResult(FEditData);
 end;
 
-class procedure TJDTypeForm<T>.Execute(ALeftTop: TPoint; EditData: T; FuncResult: Tproc<T>);
+class procedure TJDTypeForm<T>.Execute(ALeftTop: TPoint; AEditData: T; FuncResult: Tproc<T>);
 begin
   with Create(nil) do
    begin
     Left := ALeftTop.X;
     Top := ALeftTop.Y;
-    FEditData := EditData;
+    FEditData := AEditData;
     FResult := FuncResult;
+    FSetData := True;
     AfteSetData;
+    FSetData := False;
     FCanClose := True;
     Show;
     SetFocus;
@@ -80,6 +86,13 @@ begin
     TInnerControl(Controls[i]).OnMouseEnter := FormMouseEnter;
     TInnerControl(Controls[i]).OnMouseLeave := FormMouseLeave;
    end;
+end;
+
+procedure TJDTypeForm<T>.SetEditData(const Value: T);
+begin
+  if SetData then Exit;
+  FEditData := Value;
+  DoDataChanged;
 end;
 
 procedure TJDTypeForm<T>.TimerTimer(Sender: TObject);

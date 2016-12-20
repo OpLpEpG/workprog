@@ -282,6 +282,7 @@ procedure TManager.SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
    dv: IXMLNode;
 begin
   dv := FDevices.ChildNodes.FindNode(Dev.IName);
+//  if not Assigned(dv) {еще не добавлен в enum} then
   if dv <> MetaData.ParentNode then dv.ChildNodes.Add(MetaData);
 //  MetaData.OwnerDocument.FileName := FDevices.OwnerDocument.FileName;
   Save;

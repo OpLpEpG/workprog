@@ -15,9 +15,9 @@ type
     csInData: TFastLineSeries;
     scOut: TFastLineSeries;
     csBit: TFastLineSeries;
+    csOI: TFastLineSeries;
     scFFT: TAreaSeries;
     scFlt: TAreaSeries;
-    csOI: TFastLineSeries;
     procedure ChartAfterDraw(Sender: TObject);
   private
     All, Signal: Double;

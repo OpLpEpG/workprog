@@ -30,7 +30,6 @@ uses
   FormDBCursor in 'FormDBCursor.pas' {FormCursor},
   FormDBGR in 'FormDBGR.pas' {FormGraph},
   DlgEditParam in 'DlgEditParam.pas' {FormEditParam},
-  SetGPClolor in 'SetGPClolor.pas' {FormSetGPColor},
   DlgFltParam in 'DlgFltParam.pas',
   DlgViewParam in 'DlgViewParam.pas',
   DlgFromToGlu in 'DlgFromToGlu.pas' {FormDlgGluFilter},

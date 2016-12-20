@@ -1,7 +1,7 @@
 object FormSetupRootDevice: TFormSetupRootDevice
   Left = 0
   Top = 0
-  ClientHeight = 435
+  ClientHeight = 444
   ClientWidth = 614
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,7 +17,7 @@ object FormSetupRootDevice: TFormSetupRootDevice
   object Splitter: TSplitter
     Left = 169
     Top = 0
-    Height = 435
+    Height = 444
     ExplicitLeft = 152
     ExplicitTop = 136
     ExplicitHeight = 100
@@ -26,20 +26,22 @@ object FormSetupRootDevice: TFormSetupRootDevice
     Left = 172
     Top = 0
     Width = 442
-    Height = 435
+    Height = 444
     Align = alClient
     BevelOuter = bvNone
     ShowCaption = False
     TabOrder = 0
+    ExplicitHeight = 435
     object PanelBoot: TPanel
       Left = 0
-      Top = 394
+      Top = 403
       Width = 442
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
       ShowCaption = False
       TabOrder = 0
+      ExplicitTop = 394
       object btClose: TButton
         Left = 9
         Top = 6
@@ -51,12 +53,23 @@ object FormSetupRootDevice: TFormSetupRootDevice
         TabOrder = 0
         OnClick = btCloseClick
       end
+      object btUpdate: TButton
+        Left = 104
+        Top = 6
+        Width = 89
+        Height = 27
+        HelpContext = 20
+        Cancel = True
+        Caption = #1054#1073#1085#1086#1074#1083#1103#1090#1100
+        TabOrder = 1
+        OnClick = btUpdateClick
+      end
     end
     object insp: TJvInspector
       Left = 0
       Top = 0
       Width = 442
-      Height = 394
+      Height = 403
       Style = isItemPainter
       Align = alClient
       Divider = 200
@@ -65,13 +78,15 @@ object FormSetupRootDevice: TFormSetupRootDevice
       TabStop = True
       TabOrder = 1
       OnDataValueChanged = inspDataValueChanged
+      OnEditorKeyDown = inspEditorKeyDown
+      ExplicitHeight = 394
     end
   end
   object Tree: TVirtualStringTree
     Left = 0
     Top = 0
     Width = 169
-    Height = 435
+    Height = 444
     Align = alLeft
     Header.AutoSizeIndex = 0
     Header.Font.Charset = DEFAULT_CHARSET
@@ -85,6 +100,7 @@ object FormSetupRootDevice: TFormSetupRootDevice
     TreeOptions.MiscOptions = [toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
     OnAddToSelection = TreeAddToSelection
     OnGetText = TreeGetText
+    ExplicitHeight = 435
     Columns = <
       item
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
@@ -95,8 +111,8 @@ object FormSetupRootDevice: TFormSetupRootDevice
   end
   object ppM: TPopupActionBar
     OnPopup = ppMPopup
-    Left = 224
-    Top = 80
+    Left = 88
+    Top = 40
     object NConnect: TMenuItem
       Caption = #1055#1086#1076#1082#1083#1102#1095#1080#1090#1100' ('#1044#1086#1073#1072#1074#1080#1090#1100') '
     end
@@ -136,7 +152,12 @@ object FormSetupRootDevice: TFormSetupRootDevice
     ValueFont.Name = 'Tahoma'
     ValueFont.Style = [fsBold]
     DrawNameEndEllipsis = True
-    Left = 272
+    Left = 120
+    Top = 40
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    Left = 48
     Top = 32
   end
 end

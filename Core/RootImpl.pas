@@ -3,11 +3,11 @@ unit RootImpl;
 interface
 
 uses
-     debug_except, RootIntf, PluginAPI, ExtendIntf, Container,
+     debug_except, RootIntf, PluginAPI, ExtendIntf, Container, Vcl.Buttons,
 
      Vcl.Controls, Vcl.Graphics, Vcl.ComCtrls, Winapi.Messages, Vcl.Forms, Winapi.Windows, JvInspector, System.SyncObjs,
 
-     System.Classes, System.SysUtils, System.TypInfo,
+     System.Classes, System.SysUtils, System.TypInfo, System.Threading,
      System.Generics.Defaults,
      System.Generics.Collections,
      System.Bindings.Expression,
@@ -24,6 +24,47 @@ const
 type
 
 {$REGION 'Вспомогательные классы'}
+
+ TCNavigator = class(TBaseNavigator)
+ public
+    constructor Create(AOwner: TComponent); override;
+  published
+//    property DataSource;
+//    property VisibleButtons;
+    property Align;
+    property Anchors;
+    property Constraints;
+    property DragCursor;
+    property DragKind;
+    property DragMode;
+    property Enabled;
+    property Flat;
+    property Ctl3D;
+//    property Hints;
+    property Orientation;
+    property ParentCtl3D;
+    property ParentShowHint;
+    property PopupMenu;
+    property ConfirmDelete;
+    property ShowHint;
+    property TabOrder;
+    property TabStop;
+    property Visible;
+//    property BeforeAction;
+    property OnClick;
+    property OnContextPopup;
+    property OnDblClick;
+    property OnDragDrop;
+    property OnDragOver;
+    property OnEndDock;
+    property OnEndDrag;
+    property OnEnter;
+    property OnExit;
+    property OnResize;
+    property OnStartDock;
+    property OnStartDrag;
+ end;
+
   // корневые объекты плугинов
   TICollectionItem = class(TCollectionItem, IInterface)
   protected
@@ -72,6 +113,14 @@ type
     function SafeCallException(ExceptObject: TObject; ExceptAddr: Pointer): HResult; override;
   end;
 
+/// <summary>
+/// не всегда идет связывание объектов
+/// </summary>
+  TBindObjWrap = record
+    obj: TPersistent;
+    class operator Implicit(d: TPersistent): TBindObjWrap;
+    class operator Implicit(d: TBindObjWrap): TPersistent;
+  end;
 //  новый стиль
   TBindHelper = class
   private
@@ -89,6 +138,10 @@ type
   end;
 
   TCPageControl = class(TPageControl)
+  public
+    procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
+  end;
+  TCTabSheet = class(TTabSheet)
   public
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
   end;
@@ -351,14 +404,31 @@ type
     class function CategoryDescriptions(const Category: string): TArray<string>;
   end;
 
+  GTask = class
+  private
+    class var FTasks: TArray<ITask>;
+    class var FLock: TObject;
+    class var FRemovin: Boolean;
+    class constructor Create;
+    class destructor Destroy;
+   public
+    class procedure WaitForAll; static;
+    class procedure Remove(task: ITask); static;
+    class function Get(const Func: TProc): ITask; static;
+    class function Run(const Func: TProc): ITask; static;
+    class procedure SetRemove; static;
+    class property IsRemove: Boolean read FRemovin;
+  end;
+
+
   GDIPlus = class
   private
     class var Flock: TCriticalSection;
     class constructor Create;
     class destructor Destrroy;
   public
-    class procedure Lock;
-    class procedure UnLock;
+    class procedure Lock; static;
+    class procedure UnLock; static;
   end;
 
 procedure MainScreenChanged; inline;
@@ -899,15 +969,55 @@ end;
 
 {$REGION 'ALL'}
 
+{ TCTabSheet }
+
+procedure TCTabSheet.GetChildren(Proc: TGetChildProc; Root: TComponent);
+var
+  I, j: Integer;
+  Control, SubConttol: TControl;
+begin
+//  for I := 0 to ControlCount - 1 do
+//  begin
+//    Control := Controls[I];
+//    if Control.Owner = Root then
+//     begin
+//      Proc(Control);
+//      if Control is TForm then for j := 0 to TForm(Control).ControlCount - 1 do
+//       begin
+//        SubConttol := TForm(Control).Controls[j];
+//        if SubConttol.Owner = Control then Proc(SubConttol);
+//       end;
+//     end;
+//  end;
+/// всё уже умеет
+  inherited GetChildren(Proc, Root);
+end;
 { TCPageControl }
 
 procedure TCPageControl.GetChildren(Proc: TGetChildProc; Root: TComponent);
 var
-  I: Integer;
+  I, j: Integer;
+  Control: TControl;
+  OwnedComponent: TComponent;
 begin
-  for I := 0 to PageCount - 1 do
-    if Pages[I].Tag <> $12345678 then
-     Proc(TComponent(Pages[I]));
+  for I := 0 to PageCount - 1 do if Pages[I].Tag <> $12345678 then
+   begin
+    Proc(TComponent(Pages[I]));  // сам tabsheet
+    /// у коренного элемента страницы TForm.Owner = Root- родительская форма !!!
+    /// ничего ненадо !!!
+{    for j := 0 to Pages[I].ControlCount - 1 do
+     begin
+      Control := Pages[I].Controls[j];
+      if ((Control.Owner = Pages[I]) or  (Control.Owner = self))  and (Control.Tag <> $12345678) then
+         Proc(Control);
+     end;
+    if Root = Self then
+      for j := 0 to ComponentCount - 1 do
+      begin
+        OwnedComponent := Pages[I].Components[j];
+        if not OwnedComponent.HasParent and (OwnedComponent.Tag <> $12345678) then Proc(OwnedComponent);
+      end;}
+   end;
 end;
 
 { TICollectionItem }
@@ -1746,7 +1856,125 @@ begin
    end;
 end;       }
 
+{ GTask }
+
+class constructor GTask.Create;
+begin
+  FLock := TObject.Create;
+  SetLength(FTasks, 8);
+end;
+
+class destructor GTask.Destroy;
+begin
+  WaitForAll;
+  FLock.Free;
+end;
+
+class function GTask.Get(const Func: TProc): ITask;
+var
+  I: Integer;
+  LArray, NewArray: TArray<ITask>;
+begin
+  while True do
+  begin
+    Result := TTask.Create(Func);
+    LArray := FTasks;
+    System.TMonitor.Enter(FLock);
+    try
+      for I := 0 to Length(LArray) - 1 do
+      begin
+        if not Assigned(LArray[I]) or (LArray[I].Status > TTaskStatus.Running) then
+         begin
+          FTasks[I] := Result;
+          Exit;
+         end
+        else if I = Length(LArray) - 1 then
+         begin
+          if LArray <> FTasks then Continue;
+          SetLength(NewArray, Length(LArray) * 2);
+          TArray.Copy<ITask>(LArray, NewArray, I + 1);
+          NewArray[I + 1] := Result;
+          FTasks := NewArray;
+          Exit;
+         end;
+      end;
+    finally
+      System.TMonitor.Exit(FLock);
+    end;
+  end;
+end;
+
+class procedure GTask.Remove(task: ITask);
+var
+  I: Integer;
+begin
+  System.TMonitor.Enter(FLock);
+  try
+    for I := 0 to Length(FTasks) - 1 do
+      if FTasks[I] = task then
+       begin
+        FTasks[I] := nil;
+        Exit;
+       end;
+  finally
+    System.TMonitor.Exit(FLock);
+  end;
+end;
+
+class function GTask.Run(const Func: TProc): ITask;
+begin
+  Result := Get(Func).Start;
+end;
+
+class procedure GTask.SetRemove;
+begin
+  System.TMonitor.Enter(FLock);
+  try
+   FRemovin := True;
+  finally
+   System.TMonitor.Exit(FLock);
+  end;
+end;
+
+class procedure GTask.WaitForAll;
+ var
+  i: Integer;
+begin
+  System.TMonitor.Enter(FLock);
+  try
+   for i := Length(FTasks)-1 downto 0 do
+    if not Assigned(FTasks[i]) then Delete(FTasks, i, 1);// else FTasks[i].Cancel;
+   TTask.WaitForAll(FTasks);
+   SetLength(FTasks, 0);
+  finally
+   System.TMonitor.Exit(FLock);
+  end;
+end;
+
+
+{ TBindObjWrap<T> }
+
+class operator TBindObjWrap.Implicit(d: TPersistent): TBindObjWrap;
+begin
+  Result.obj := d;
+end;
+
+class operator TBindObjWrap.Implicit(d: TBindObjWrap): TPersistent;
+begin
+  Result := d.obj;
+end;
+
+{ TCNavigator }
+
+constructor TCNavigator.Create(AOwner: TComponent);
+ var
+  play, step, pouse: TButtonDescription;
+begin
+  inherited;
+end;
+
 initialization
+//  RegisterClass();
   TRegister.AddType<TFormEnum, IFormEnum, IStorable>.LiveTime(ltSingleton);
 
 {  TValueRefConverterFactory.RegisterConversion(TypeInfo(TSetConnectIOStatus), TypeInfo(string),

@@ -158,22 +158,38 @@ begin
 end;
 
 procedure TBKAuto.StartStep(Step: IXMLNode);
+ var
+  saveExec: Boolean;
 begin
+  saveExec := Boolean(step.Attributes['EXECUTED']);
   inherited;
   Report(samUserStop, 'Отправка команды пульту метрологии ВК');
-  DevBK.Command(FStep.Attributes['PULT_CMD'], procedure (Res: Boolean)
-  begin
-    if Res then
-     begin
-      if Integer(FStep.Attributes['STEP']) in [7..11] then FStep.Attributes['INP_U'] := InputBox('Измерение напряжения', 'U0', '450');
-      DoStop;
-     end
-    else
-     begin
-      Report(samError, 'Ошибка ответа пульта метрологии ВК');
-      Error('Ошибка ответа пульта метрологии ВК');
-     end;
-  end);
+  try
+    DevBK.Command(FStep.Attributes['PULT_CMD'], procedure (Res: Boolean)
+    begin
+      if Res then
+       begin
+        if Integer(FStep.Attributes['STEP']) in [7..11] then FStep.Attributes['INP_U'] := InputBox('Измерение напряжения', 'U0', '450');
+        DoStop;
+       end
+      else
+       begin
+        Report(samError, 'Ошибка ответа пульта метрологии ВК');
+        Error('Ошибка ответа пульта метрологии ВК');
+       end;
+    end);
+  except
+   on E: Exception do
+    begin
+     Report(samError, 'Ошибка пульта метрологии ВК: '+ E.Message);
+     if Boolean(step.Attributes['EXECUTED']) <> saveExec then
+      begin
+       step.Attributes['EXECUTED'] := saveExec;
+       Owner.ReCalc();
+      end;
+     raise;
+    end;
+  end;
 end;
 
 procedure TBKAuto.Stop;
@@ -427,8 +443,11 @@ end;
 procedure TFormBK.DoUpdateTrr;
  var
   r: Variant;
+  n: IXMLNode;
 begin
-  r := XToVar(GetMetr([], GetFileOrDevData));
+  n := GetMetr([], GetFileOrDevData);
+  if not (Assigned(n) and n.HasAttribute('kGZ1')) then Exit;
+  r := XToVar(n);
   FkGZ1 := r.kGZ1;
   FkGZ2 := r.kGZ2;
   FkGZ3 := r.kGZ3;

@@ -20,9 +20,9 @@ object FormRunCodes: TFormRunCodes
     Top = 0
     Height = 310
     Align = alRight
-    ExplicitLeft = 288
-    ExplicitTop = 40
-    ExplicitHeight = 100
+    Color = clYellow
+    ParentColor = False
+    ExplicitLeft = 373
   end
   object Panel: TPanel
     Left = 0
@@ -40,8 +40,9 @@ object FormRunCodes: TFormRunCodes
       Height = 3
       Cursor = crVSplit
       Align = alTop
-      ExplicitTop = 105
-      ExplicitWidth = 281
+      Color = clYellow
+      ParentColor = False
+      ExplicitWidth = 373
     end
     object Chart: TChart
       Left = 0

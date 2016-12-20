@@ -3,7 +3,7 @@ unit Plot.DataLink;
 interface
 
 uses System.SysUtils, ExtendIntf, System.Rtti, System.TypInfo, Data.DB, System.Classes,  debug_except, DataSetIntf, FileDataSet,
-     CustomPlot, LasDataSet, XMLDataSet, FileCachImpl, Parser;
+     CustomPlot, LasDataSet, XMLDataSet, FileCachImpl, Parser, Winapi.ActiveX;
 
 type
    TReadDataThread = class(TThread)
@@ -124,7 +124,12 @@ end;
 
 procedure TReadDataThread.Execute;
 begin
-  FProc();
+  CoInitialize(nil);
+  try
+   FProc();
+  finally
+   CoUninitialize;
+  end
 end;
 
 {$REGION 'TDataLink<T>'}

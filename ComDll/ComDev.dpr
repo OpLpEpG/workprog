@@ -37,7 +37,9 @@ uses
   Dev.Telesistem.Data in 'Dev.Telesistem.Data.pas',
   DevUaki2 in 'DevUaki2.pas',
   Dev.GLUSonic in 'Dev.GLUSonic.pas',
-  Dev.BK in 'Dev.BK.pas';
+  Dev.BK in 'Dev.BK.pas',
+  Dev.TelesisRetr2 in 'Dev.TelesisRetr2.pas',
+  MicroSDConn in 'MicroSDConn.pas';
 
 {$R *.res}
 
@@ -68,6 +70,7 @@ begin
   GetConnectIOCB(2, 'NetPort', 'Соединение по Ethernet');
   GetConnectIOCB(3, 'WlanPort', 'Соединение по WiFi');
   GetConnectIOCB(4, 'UDP', 'Соединение по UDP');
+  GetConnectIOCB(5, 'MicroSD', 'Чтение памяти с SD карты');
 end;
 
 function TComDevPlugin.ConnectIO(ConnectID: Integer): IConnectIO;
@@ -76,6 +79,7 @@ begin
    2:  Result := TNetConnectIO.Create();
    3:  Result := TWlanConnectIO.Create();
    4:  Result := TUDPConnectIO.Create();
+   5:  Result := TMicroSDConnectIO.Create();
   else Result := TComConnectIO.Create();
   end;
 end;
@@ -91,6 +95,7 @@ begin
    2:  Result := TNetConnectIO.Enum();
    3:  Result := TWlanConnectIO.Enum();
    4:  Result := TUDPConnectIO.Enum();
+   5:  Result := TMicroSDConnectIO.Enum();
   else Result := TComConnectIO.Enum();
   end;
 end;
@@ -136,6 +141,7 @@ begin
     else if Adr[0] = 111 then Result := TGluSonic.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (Adr[0] > 101) and (adr[0] < 200) then  Result := TPskStd.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (adr[0] = 1000) then Result := TTelesistem.CreateWithAddr(Adr, DeviceName) as IDevice
+    else if (adr[0] = 1001) then Result := TTelesisRetr.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (adr[0] > 15) then raise EDeviceException.Create('Устройство с неверным адресом')
 
     else Result := TDeviceBur.CreateWithAddr(Adr, DeviceName) as IDevice

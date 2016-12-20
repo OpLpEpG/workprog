@@ -42,6 +42,7 @@ type
     procedure BindPortStstus(isLost: Boolean);
   protected
     FlagLostPort: Boolean;
+    function IsFileUso: Boolean; virtual;
     procedure SendCmd(Cmd: Byte);
     procedure SetConnect(AIConnectIO: IConnectIO); override;
     function GetService: PTypeInfo; override;
@@ -51,7 +52,7 @@ type
     procedure BeforeRemove(); override;
 
     procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false);
-public
+  public
     procedure InitMetaData(ev: TInfoEvent);
     procedure RemoveMetaData;
     procedure ExecMetrology;
@@ -63,7 +64,10 @@ public
     procedure DoSetup(Sender: IAction); override;
   end;
 
+   [EnumCaptions('данные усо, Фибоначи, рид мюллер, FSK, FibonachCorr,  FSK2, Retr TST')]
    TTestUsoData = (tudNone, tudFibonach, tudRMCod, tudFSK, tudFibonachCorr,  tudFSK2, tudRetrTST);
+
+   [EnumCaptions('40 Гц, 20 Гц, 10 Гц, 5 Гц, 2.5 Гц, 1.25 Гц')]
    TTelesisFrequency = (afq40, afq20, afq10, afq5, afq2p5, afq1p25);
     TRecRun = record
        LSync, HSync: Boolean;
@@ -127,18 +131,18 @@ type
   TusoFile = class(TUsoRoot)
   public
    type
-    TUsoFileName = string;
-    TPosition = Int64;
+//    TUsoFileName = string;
+    TPosition = type Int64;
   private
     FTimer: TTimer;
     FSpeed: Integer;
     FPosition: TPosition;
-    FUsoFileName: TUsoFileName;
+    FUsoFileName: TFileName;
     FC_Pause: Boolean;
     procedure SetSpeed(const Value: Integer);
     procedure OnTimer(Sender: TObject);
     procedure SetPosition(const Value: TPosition);
-    procedure SetUsoFileName(const Value: TUsoFileName);
+    procedure SetUsoFileName(const Value: TFileName);
     procedure SetC_Pause(const Value: Boolean);
   protected
     function GetCaption: string; override;
@@ -152,7 +156,7 @@ type
   published
     [ShowProp('Скорость воспроизведения')] property Speed: Integer read FSpeed write SetSpeed default 100;
     [ShowProp('Позиция')] property Position: TPosition read FPosition write SetPosition default 0;
-    [ShowProp('Файл')] property UsoFileName: TUsoFileName read FUsoFileName write SetUsoFileName;
+    [ShowProp('Файл')] property UsoFileName: TFileName read FUsoFileName write SetUsoFileName;
   end;
 
    TFltBPF = class(TSubDevWithForm<TFFTData>, ITelesistem)
@@ -160,19 +164,19 @@ type
      FDataIn, FDataOut, FFData, FFDataFlt, FltCoeff: TArray<Double>;
      FFourier: IFourier;
      FDataCnt: Integer;
-    FFVch2: Integer;
-    FFVch1: Integer;
-    FFNch2: Integer;
-    FFNch1: Integer;
-    FFchw: Integer;
-    FFch: Integer;
-    procedure SetFNch1(const Value: Integer);
-    procedure SetFNch2(const Value: Integer);
-    procedure SetFVch1(const Value: Integer);
-    procedure SetFVch2(const Value: Integer);
-    procedure SetupFilter;
-    procedure SetFch(const Value: Integer);
-    procedure SetFchw(const Value: Integer);
+     FFVch2: Integer;
+     FFVch1: Integer;
+     FFNch2: Integer;
+     FFNch1: Integer;
+     FFchw: Integer;
+     FFch: Integer;
+     procedure SetFNch1(const Value: Integer);
+     procedure SetFNch2(const Value: Integer);
+     procedure SetFVch1(const Value: Integer);
+     procedure SetFVch2(const Value: Integer);
+     procedure SetupFilter;
+     procedure SetFch(const Value: Integer);
+     procedure SetFchw(const Value: Integer);
    protected
      procedure FPCH(fq, width: Integer);
      procedure FBCH(from, too: Integer);
@@ -192,7 +196,7 @@ type
     [ShowProp('ФНЧ 2')] property FNch2: Integer read FFNch2 write SetFNch2;
     [ShowProp('ФВЧ 1')] property FVch1: Integer read FFVch1 write SetFVch1;
     [ShowProp('ФВЧ 2')] property FVch2: Integer read FFVch2 write SetFVch2;
-    [ShowProp('ФЧ')] property Fch: Integer read FFch write SetFch;
+    [ShowProp('ФЧ')]    property Fch: Integer read FFch write SetFch;
     [ShowProp('ФЧ ширина')] property FVchw: Integer read FFchw write SetFchw;
    end;
 
@@ -226,7 +230,7 @@ type
      function GetCaption: string; override;
    end;
 
-   TDecoder1 = class(TCustomDecoder, ITelesistem)
+   TDecoder1 = class(TCustomDecoderDev, ITelesistem)
    protected
      function GetCaption: string; override;
      function GetDecoderClass: TDecoderClass; override;
@@ -236,7 +240,7 @@ type
      procedure DoSetup(Sender: IAction); override;
    end;
 
-  TDecoder2 = class(TCustomDecoder, ITelesistem)
+  TDecoder2 = class(TCustomDecoderDev, ITelesistem)
   private
     FIsMul: Boolean;
     FFltZerro: Boolean;
@@ -255,7 +259,7 @@ type
     [ShowProp('Фильтр нулей')] property FltZerro: Boolean read FFltZerro write SetFltZerro default True;
   end;
 
-  TDecoder3 = class(TCustomDecoder, ITelesistem)
+  TDecoder3 = class(TCustomDecoderDev, ITelesistem)
   protected
     function GetCaption: string; override;
     function GetDecoderClass: TDecoderClass; override;
@@ -265,7 +269,7 @@ type
     procedure DoSetup(Sender: IAction); override;
   end;
 
-  TDecoder4 = class(TCustomDecoder, ITelesistem)
+  TDecoder4 = class(TCustomDecoderDev, ITelesistem)
   private
     FCorLen: Integer;
     procedure SetCorLen(const Value: Integer);
@@ -281,7 +285,7 @@ type
     [ShowProp('длина керреляции')] property CorLen: Integer read FCorLen write SetCorLen;
   end;
 
-  TDecoder5 = class(TCustomDecoder, ITelesistem)
+  TDecoder5 = class(TCustomDecoderDev, ITelesistem)
   protected
     function GetCaption: string; override;
     function GetDecoderClass: TDecoderClass; override;
@@ -291,7 +295,7 @@ type
     procedure DoSetup(Sender: IAction); override;
   end;
 
-  TDecoder6 = class(TCustomDecoder, ITelesistem)
+  TDecoder6 = class(TCustomDecoderDev, ITelesistem)
   protected
     function GetCaption: string; override;
     function GetDecoderClass: TDecoderClass; override;
@@ -301,7 +305,7 @@ type
     procedure DoSetup(Sender: IAction); override;
   end;
 
-  TDecoder7 = class(TCustomDecoder, ITelesistem)
+  TDecoder7 = class(TCustomDecoderDev, ITelesistem)
   protected
     function GetCaption: string; override;
     function GetDecoderClass: TDecoderClass; override;
@@ -412,7 +416,7 @@ end;
 
 procedure TTelesistem.ExecMetrology;
 begin
-  FExeMetr.Execute(T_WRK, 1000);
+  FExeMetr.Execute(T_WRK, FAddressArray[0]);
 end;
 
 function TTelesistem.GetService: PTypeInfo;
@@ -472,6 +476,11 @@ begin
    end;
 end;
 
+function TTelesistem.IsFileUso: Boolean;
+begin
+  Result := False;
+end;
+
 procedure TTelesistem.Loaded;
 begin
   inherited;
@@ -500,7 +509,7 @@ begin
   CheckWorkData;
 //  if Supports(GlobalCore, IProjectDataFile, ix) then ix.SaveLogData(Self as IDevice, 1000, Work, Data, n)
   //else
-  if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, 1000, FWorkEventInfo.Work, false);
+  if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, FAddressArray[0], FWorkEventInfo.Work, false);
 end;
 
 procedure TTelesistem.SendCmd(Cmd: Byte);
@@ -534,7 +543,7 @@ end;
 procedure TTelesistem.Start(AIConnectIO: IConnectIO);
 begin
 //  TDebug.Log('start %s %s',[GetDeviceName, AIConnectIO.ConnectInfo]);
-  if Assigned(AIConnectIO) then
+  if Assigned(AIConnectIO) and not IsFileUso then
    try
     CheckLocked();
     CheckConnect;
@@ -691,6 +700,7 @@ begin
            end;
           SumDat := 0;
           inc(i);
+          // синхронизация команы в низ во время паузы
           if (FS_Data.BookMark = FS_Data.Fifo.Last + i) and FS_Data.IsBookMark then
            begin
             FS_Data.IsBookMark := False;
@@ -702,7 +712,7 @@ begin
             FS_Data.Fifo.Add(@FData[0], Length(FData));
 //            TDebug.Log('ADD USO.Count  %d                 ', [FS_Data.Fifo.Count]);
             NotifyData;
-            if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], Length(FData));
+            if Assigned(FChildSubDevice) then FChildSubDevice.InputData(@FData[0], Length(FData));
            end;
          end;
         Ncanal := 0;
@@ -967,7 +977,7 @@ begin
   Ftimer.Interval := FSpeed;
 end;
 
-procedure TusoFile.SetUsoFileName(const Value: TUsoFileName);
+procedure TusoFile.SetUsoFileName(const Value: TFileName);
 begin
   FUsoFileName := Value;
   if Assigned(FFileStream) then FreeAndNil(FFileStream);
@@ -1003,7 +1013,7 @@ begin
         i := 0;
         FS_Data.Fifo.Add(@FData[0], Length(FData));
         NotifyData;
-        if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], Length(FData));
+        if Assigned(FChildSubDevice) then FChildSubDevice.InputData(@FData[0], Length(FData));
        end;
      end;
    end;
@@ -1055,8 +1065,8 @@ begin
      Ffifo[j] := a^[i];
      j := (j+1) mod Length(Ffifo);
     end;
-    NotifyData;
-    if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], DataSize);
+   NotifyData;
+   if Assigned(FChildSubDevice) then FChildSubDevice.InputData(@FData[0], DataSize);
 end;
 
 { TPalseFlt }
@@ -1104,7 +1114,7 @@ begin
      FData[i] := sum / Length(Ffifo);
     end;
     NotifyData;
-    if Assigned(FSubDevice) then FSubDevice.InputData(@FData[0], DataSize);
+    if Assigned(FChildSubDevice) then FChildSubDevice.InputData(@FData[0], DataSize);
 end;
 
 { TPalseFlt2 }
@@ -1286,13 +1296,13 @@ procedure TFltBPF.DoOutputData(Data: Pointer; DataSize: integer);
 begin
   FS_Data.FifoData.Add(Data, FFT_SAMPLES);
   NotifyData;
-  if Assigned(FSubDevice) then FSubDevice.InputData(Data, DataSize);
+  if Assigned(FChildSubDevice) then FChildSubDevice.InputData(Data, DataSize);
 end;
 
 procedure TFltBPF.OnUserRemove;
 begin
   inherited;
-  if Assigned(FSubDevice) and (FDataCnt > FFT_OVERSAMP) then FSubDevice.InputData(@FDataIn[FFT_OVERSAMP], FDataCnt - FFT_OVERSAMP);
+  if Assigned(FChildSubDevice) and (FDataCnt > FFT_OVERSAMP) then FChildSubDevice.InputData(@FDataIn[FFT_OVERSAMP], FDataCnt - FFT_OVERSAMP);
 end;
 
 procedure TFltBPF.SetFch(const Value: Integer);
@@ -1555,7 +1565,7 @@ begin
 end;
 
 initialization
-  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspUcoFile, TypeInfo(TusoFile.TUsoFileName)));
+  TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspUcoFile, TypeInfo(TFileName)));
   TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspPosition, TypeInfo(TusoFile.TPosition)));
   RegisterClasses([TTelesistem, TUso1, TusoFile, TDecoder1, TDecoder2, TDecoder3, TDecoder4, TDecoder5, TDecoder6, TbitFlt, TFltBPF, TPalseFlt, TPalseFlt2]);
   TRegister.AddType<TTelesistem, IDevice>.LiveTime(ltSingletonNamed);

@@ -6,7 +6,7 @@ uses JDtools,
      System.SysUtils,  System.Classes, System.TypInfo, System.Rtti, Fibonach, MathIntf, System.Math, Math.Telesistem,
      Actns, DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl, RootIntf, SubDevImpl, tools;
 type
-  TCustomDecoder = class(TSubDevWithForm<TTelesistemDecoder>)
+  TCustomDecoderDev = class(TSubDevWithForm<TTelesistemDecoder>)
   private
     FPorogCode: Real;
     FNumBadCode: Integer;
@@ -53,7 +53,7 @@ implementation
 
 { TCustomDecoder }
 
-constructor TCustomDecoder.Create;
+constructor TCustomDecoderDev.Create;
 begin
   PorogSP := 50;
   PorogCode := 51;
@@ -65,13 +65,13 @@ begin
   inherited;
 end;
 
-destructor TCustomDecoder.Destroy;
+destructor TCustomDecoderDev.Destroy;
 begin
   if Assigned(FDecoder) then FDecoder.Free;
   inherited;
 end;
 
-procedure TCustomDecoder.SetBitFilter(const Value: Boolean);
+procedure TCustomDecoderDev.SetBitFilter(const Value: Boolean);
 begin
   if FBitFilter <> Value then
    begin
@@ -80,7 +80,7 @@ begin
    end;
 end;
 
-procedure TCustomDecoder.SetBits(const Value: Integer);
+procedure TCustomDecoderDev.SetBits(const Value: Integer);
 begin
   if FBits <> Value then
    begin
@@ -89,7 +89,7 @@ begin
    end;
 end;
 
-procedure TCustomDecoder.SetDataCnt(const Value: Integer);
+procedure TCustomDecoderDev.SetDataCnt(const Value: Integer);
 begin
   if FDataCnt <> Value then
    begin
@@ -98,7 +98,7 @@ begin
    end;
 end;
 
-procedure TCustomDecoder.SetDataCodLen(const Value: Integer);
+procedure TCustomDecoderDev.SetDataCodLen(const Value: Integer);
 begin
   if FDataCodLen <> Value then
    begin
@@ -107,7 +107,7 @@ begin
    end;
 end;
 
-procedure TCustomDecoder.SetDataNoiseCnt(const Value: Integer);
+procedure TCustomDecoderDev.SetDataNoiseCnt(const Value: Integer);
 begin
   if FDataNoiseCnt <> Value then
    begin
@@ -116,7 +116,7 @@ begin
    end;
 end;
 
-procedure TCustomDecoder.SetSPCodLen(const Value: Integer);
+procedure TCustomDecoderDev.SetSPCodLen(const Value: Integer);
 begin
   if FSPCodLen <> Value then
    begin
@@ -125,31 +125,31 @@ begin
    end;
 end;
 
-procedure TCustomDecoder.SetNumBadCode(const Value: Integer);
+procedure TCustomDecoderDev.SetNumBadCode(const Value: Integer);
 begin
   FNumBadCode := Value;
   if Assigned(FDecoder) then FDecoder.PorogBadCodes := Value;
 end;
 
-procedure TCustomDecoder.SetPorogCode(const Value: Real);
+procedure TCustomDecoderDev.SetPorogCode(const Value: Real);
 begin
   FPorogCode := Value;
   if Assigned(FDecoder) then FDecoder.PorogCod := Value;
 end;
 
-procedure TCustomDecoder.SetPorogSP(const Value: Real);
+procedure TCustomDecoderDev.SetPorogSP(const Value: Real);
 begin
   FPorogSP := Value;
   if Assigned(FDecoder) then FDecoder.PorogSP := Value;
 end;
 
-function TCustomDecoder.GetCategory: TSubDeviceInfo;
+function TCustomDecoderDev.GetCategory: TSubDeviceInfo;
 begin
   Result.Category := 'Декодер';
   Result.Typ := [sdtUniqe, sdtMastExist];
 end;
 
-procedure TCustomDecoder.SetupNewDecoder;
+procedure TCustomDecoderDev.SetupNewDecoder;
 begin
   FDecoder.PorogSP := PorogSP;
   FDecoder.PorogCod := PorogCode;
@@ -157,7 +157,7 @@ begin
   FDecoder.BitFilterOn := BitFilter;
 end;
 
-procedure TCustomDecoder.InputData(Data: Pointer; DataSize: integer);
+procedure TCustomDecoderDev.InputData(Data: Pointer; DataSize: integer);
 begin
   if not Assigned(FDecoder) then
    begin
@@ -173,13 +173,13 @@ begin
   end);
 end;
 
-procedure TCustomDecoder.OnDecoder(Sender: TObject);
+procedure TCustomDecoderDev.OnDecoder(Sender: TObject);
 begin
   NotifyData;
-  if Assigned(FSubDevice) then FSubDevice.InputData(FDecoder, $12345678);
+  if Assigned(FChildSubDevice) then FChildSubDevice.InputData(FDecoder, $12345678);
 end;
 
-procedure TCustomDecoder.OnSPTakt(Sender: TTelesistemDecoder; Takt: LongWord);
+procedure TCustomDecoderDev.OnSPTakt(Sender: TTelesistemDecoder; Takt: LongWord);
  var
   sd: ISubDevice;
   bm: ISetBookMark;

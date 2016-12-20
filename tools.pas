@@ -272,7 +272,7 @@ type
   ///	  потокобезопасный циклический ФИФО выходные (Peek) порции данных
   ///	  значительно меньше длинны буфера
   ///	</summary>
-  TFifoBuffer<T> = class
+ { TFifoBuffer<T> = class
     type TArrayT = TArray<T>;
          PArrayT = ^TArrayT;
   private
@@ -301,15 +301,15 @@ type
     ///	<summary>
     ///	  Место в буфере освобождается.
     ///	</summary>
-    function Next(n: Integer): Boolean;
+    function Next(n: Integer): Boolean;  }
     { TODO : write if need }
 //    function Pop(var Data: Pointer; Size: Integer): Boolean;
 //    procedure RewriteCurrent(Data: Pointer; Size: Integer); if Data <> @FData[Cur] copy else exit
-    procedure Reset;
+  {  procedure Reset;
     property Item[Index: Integer]: T read GetItem write SetItem; default;
     property Count: Integer read FCount;
     property Size: Integer read FSize write SetSize;
-  end;
+  end;}
 
   ///	<summary>
   ///	  потокобезопасный QEUE выходные (pop) все порции данных
@@ -1489,7 +1489,7 @@ end;
 
 { TFifoBuffer }
 
-constructor TFifoBuffer<T>.Create();
+{constructor TFifoBuffer<T>.Create();
 begin
   FLock := TCriticalSection.Create;
   FSize := 256;
@@ -1596,7 +1596,7 @@ begin
   finally
    FLock.Release;
   end;
-end;
+end;      }
 
 
 { TQeueBuffer<T> }

@@ -10,7 +10,7 @@ implementation
 
 procedure Register;
 begin
-  RegisterComponents('Горизонт', [TCPageControl, TPlot, TPlotDB, TDataExchangeEdit, TOtklonitelPaint, TGraph]);
+  RegisterComponents('Горизонт', [TCPageControl, TPlot, TPlotDB, TDataExchangeEdit, TOtklonitelPaint, TGraph, TCNavigator]);
 end;
 
 end.

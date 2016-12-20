@@ -108,6 +108,7 @@ object FFTForm: TFFTForm
     Zoom.Allow = False
     Align = alBottom
     TabOrder = 1
+    ExplicitTop = 307
     DefaultCanvas = 'TTeeCanvas3D'
     ColorPaletteIndex = 13
     object csInData: TFastLineSeries

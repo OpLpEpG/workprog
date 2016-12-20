@@ -67,7 +67,6 @@ object FrmDlgRam: TFrmDlgRam
     Height = 17
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 3
-    ExplicitWidth = 298
   end
   object btTerminate: TButton
     Left = 98
@@ -87,7 +86,6 @@ object FrmDlgRam: TFrmDlgRam
       item
         Width = 50
       end>
-    ExplicitWidth = 333
   end
   object rg: TRadioGroup
     Left = 168
@@ -122,13 +120,12 @@ object FrmDlgRam: TFrmDlgRam
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 7
     Text = ''
-    ExplicitWidth = 297
   end
   object edLen: TEdit
     Left = 106
     Top = 103
     Width = 57
-    Height = 19
+    Height = 21
     TabOrder = 8
     Text = '3FFF'
   end

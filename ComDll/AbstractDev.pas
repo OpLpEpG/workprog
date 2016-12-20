@@ -1341,6 +1341,7 @@ begin
    begin
     FTimerRxTimeOut.Enabled := False;
     DoEvent(@FInput[0], FICount);
+   // TDebug.Log('FICount === %d ====', [FICount]);
    end;
 end;
 

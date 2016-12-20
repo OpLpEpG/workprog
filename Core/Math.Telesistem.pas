@@ -163,7 +163,7 @@ type
      FCHIndex: TCheckSPIndex;
      FBitFilterOn: Boolean;
      FBitFilter: Tarray<Double>;
-    FFirst: LongWord;
+     FFirst: LongWord;
      procedure SetState(const Value: TCorrelatorState);
      function GetFindSPData: TFindSPData;
      procedure RunAutomat;
@@ -191,7 +191,7 @@ type
 
      function CorrCode(var cd: TCodData):Integer; virtual;
 
-     procedure ForceState(const Value: TCorrelatorState);
+     procedure ForceState(const Value: TCorrelatorState); // StartState
 
      function BitFilter(n: Integer): Double; inline;
 
@@ -485,7 +485,7 @@ begin
    end;
 end;
 
-procedure TTelesistemDecoder.ForceState(const Value: TCorrelatorState);
+procedure TTelesistemDecoder.ForceState(const Value: TCorrelatorState);  // StartState
 begin
   FState := Value;
   case Value of
@@ -717,7 +717,7 @@ begin
               Exit;
              end;
            end;
-          ForceState(csFindSP);
+          ForceState(csFindSP); // StartState
           inc(Index, KadrLen);
          end
         else

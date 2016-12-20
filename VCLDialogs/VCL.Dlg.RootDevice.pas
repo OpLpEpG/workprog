@@ -37,6 +37,8 @@ type
     NDown: TMenuItem;
     insp: TJvInspector;
     InspectorBorlandPainter: TJvInspectorBorlandPainter;
+    Timer1: TTimer;
+    btUpdate: TButton;
     procedure btCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
@@ -46,6 +48,9 @@ type
     procedure NDownClick(Sender: TObject);
     procedure TreeAddToSelection(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure inspDataValueChanged(Sender: TObject; Data: TJvCustomInspectorData);
+    procedure Timer1Timer(Sender: TObject);
+    procedure inspEditorKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btUpdateClick(Sender: TObject);
   protected
 //    procedure CanClose(var CanClose: Boolean);
     function GetInfo: PTypeInfo; override;
@@ -77,6 +82,11 @@ uses tools;
 //  ClearTree;
 //end;
 
+procedure TFormSetupRootDevice.btUpdateClick(Sender: TObject);
+begin
+  Timer1.Enabled := True;
+end;
+
 class function TFormSetupRootDevice.ClassIcon: Integer;
 begin
   Result := 114;
@@ -98,6 +108,11 @@ end;
 procedure TFormSetupRootDevice.inspDataValueChanged(Sender: TObject; Data: TJvCustomInspectorData);
 begin
   (FDev as IBind).Notify('S_PublishedChanged');
+end;
+
+procedure TFormSetupRootDevice.inspEditorKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  Timer1.Enabled := False;
 end;
 
 procedure TFormSetupRootDevice.ConnectClick(Sender: TObject);
@@ -162,6 +177,11 @@ begin
     NConnect.Add(m);
    end;
   if {not (sdtMastExist in FEditData.DevInfo.Typ) and} not FEditData.IsRoot then NRemove.Enabled := True;
+end;
+
+procedure TFormSetupRootDevice.Timer1Timer(Sender: TObject);
+begin
+  insp.RefreshValues;
 end;
 
 procedure TFormSetupRootDevice.TreeAddToSelection(Sender: TBaseVirtualTree; Node: PVirtualNode);

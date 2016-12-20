@@ -473,7 +473,8 @@ end;
 
 function TDeviceBur.CreateReadRam: TReadRam;
 begin
-  Result := TBurReadRam.Create(Self);
+  if Supports(IConnect, ImicroSDConnectIO) then Result := TBurReadRam.Create(Self)
+  else Result := TBurReadRam.Create(Self);
 end;
 
 //function TDeviceBur.GetRamReadInfo: IRamReadInfo;
@@ -877,17 +878,27 @@ begin
      d: TTimeSync;
      LNow, CNow: TDateTime;
      Delay, RDelay : TTime;
+     kadrDelay: Integer;
    begin
      d.CmdAdr := $F5;
      if StartTime <> 0 then
       begin
-       LNow := Now();
-       Delay := StartTime - LNow;
-       d.time := -Ctime.ToKadr(Delay);
-       RDelay := -Ctime.FromKadr(d.time);
-       CNow := LNow + Delay - RDelay;
+       //LNow := Now();
+       Delay := StartTime - Now();
+       /// kadrDelay <Delay
+       kadrDelay := Trunc(Delay * CTime.TIME_TO_KADR);
+       d.time := -kadrDelay;//  -Ctime.ToKadr(Delay);
+       /// задержка  кадров по времени
+       RDelay := Ctime.FromKadr(kadrDelay); //-Ctime.FromKadr(d.time);
+       //Tdebug.Log('%1.5f',[(Delay-RDelay)*24*3600*1000]);
+       /// время постановки на задержку синхронно кадрам ожидание до 2ух секунд
+       CNow := StartTime - RDelay;// LNow + Delay - RDelay;
        //     Tdebug.Log('Delay Delta %1.2f %% ', [(CNow - Now)*TIME_TO_KADR*100]);
-       while CNow > Now do Tthread.Yield;
+       while CNow > Now do
+        begin
+         Tthread.Yield;
+       //  Tdebug.Log('%1.5f',[(CNow- Now)*24*3600*1000]);
+        end;
       end
      else d.time := 0;
      Send(@D, Sizeof(D), procedure(p: Pointer; n: integer)

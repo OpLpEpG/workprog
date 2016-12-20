@@ -3,7 +3,7 @@
 interface
 
 uses RootImpl, RootIntf, tools, debug_except, ExtendIntf, FileCachImpl, JDtools,  Data.DB, DataSetIntf, IDataSets,
-     System.Bindings.Helper, System.IOUtils, System.TypInfo,
+     System.Bindings.Helper, System.IOUtils, System.TypInfo, System.UITypes,
      Vcl.Grids,
      SysUtils, Controls, Messages, Winapi.Windows, Classes, System.Rtti, types,
      Vcl.Graphics, Vcl.Forms, Vcl.ExtCtrls, Vcl.Menus, Vcl.Themes, Vcl.GraphUtil;
@@ -394,7 +394,7 @@ type
     FOnContextPopup: TContextPopupEvent;
     FTitle: string;
     FVisible: Boolean;
-    FColor: TColor;
+    FColor: TAlphaColor;
     FDeltaX: Double;
     FDeltaY: Double;
     FHideInLegend: boolean;
@@ -409,7 +409,7 @@ type
     procedure SetLinkClass(const Value: string);
     procedure SetLink(const Value: TCustomDataLink);
     procedure SetVisible(const Value: Boolean);
-    procedure SetColor(const Value: TColor);
+    procedure SetColor(const Value: TAlphaColor);
     procedure SetDeltaX(const Value: Double);
     procedure SetDeltaY(const Value: Double);
     procedure SetEUnit(const Value: string);
@@ -424,7 +424,7 @@ type
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
-    property Color: TColor read FColor write SetColor default $7FFF0000;
+    property Color: TAlphaColor read FColor write SetColor default $7FFF0000;
     property EUnit: string read FEUnit write SetEUnit;
     property Presizion: Integer read FPresizion write FPresizion default 2;
     property FixedParam: boolean read FFixedParam write FFixedParam;
@@ -1392,7 +1392,7 @@ begin
 
 end;
 
-procedure TGraphPar.SetColor(const Value: TColor);
+procedure TGraphPar.SetColor(const Value: TAlphaColor);
 begin
   FColor := Value;
   NotifyCollumn;

@@ -124,6 +124,7 @@ begin
   CArray.Add<TChip>(Chips, Tchip.Create(1,  64, $34, 128, 'ATMega88'));
   CArray.Add<TChip>(Chips, Tchip.Create(2, 128, $7C, 128, 'ATMega164'));
   CArray.Add<TChip>(Chips, Tchip.Create(3, 128, $A9, 128, 'STM32'));
+  CArray.Add<TChip>(Chips, Tchip.Create(4, 128, $7C, 256, 'ATMega664'));
   SetAdr(-1);
   SetChip(-1);
   SetSerial(-1);
@@ -430,13 +431,20 @@ begin
      end;
     PgRd := TPageRead.Create(adr, CurPg); // enxt
     try
-     GetDevice.SendROW(@PgRd, SizeOf(TPageRead), RecFunc);
+     sleep(10);
+     GetDevice.SendROW(@PgRd, SizeOf(TPageRead), RecFunc, 1000);
     except
      UpdateControl(True);
      raise;
     end;
   end;
-  RecFunc(nil, -1);
+  PgRd := TPageRead.Create(adr, CurPg); // enxt
+  try
+   GetDevice.SendROW(@PgRd, SizeOf(TPageRead), RecFunc, 1000);
+  except
+   UpdateControl(True);
+   raise;
+  end;
 end;
 procedure TFormBoot.btReadClick(Sender: TObject);
 begin
@@ -474,12 +482,14 @@ begin
   begin
     if FFlagStop then Exit; // terminate
     d := p;
-    if Assigned(d) and (n = SizeOf(TPageWriteRes)) and (d.CmdAdr = PgWr.CmdAdr) and (d.PageAdr = PgWr.PageAdr) and (d.Res = $FFFF) then
+    if Assigned(d) and (n = SizeOf(TPageWriteRes)) and (d.CmdAdr = PgWr.CmdAdr) and (d.PageAdr = PgWr.PageAdr)
+      and ((d.Res = $FFFF) or (d.Res = $FFFE)) then
      begin
-      memo.Lines[0] := memo.Lines[0] + '.';
+      if d.Res = $FFFE then memo.Lines[0] := memo.Lines[0] + '.'
+      else memo.Lines[0] := memo.Lines[0] + ':';
       Inc(CurPg);
       err := 0;
-      if CurPg >= Npg then
+      if (CurPg >= Npg) and (d.Res = $FFFF) then
        begin
         memo.Lines.Add('Запись окончена');
         UpdateControl(True);
@@ -489,7 +499,8 @@ begin
     else
      begin
       Inc(err);
-      memo.Lines.Insert(0, Format('Ошибка записи %d ', [err]));
+      if Assigned(d) then memo.Lines.Insert(0, Format('Ошибка записи %d page: %4x  err: %4x', [err, d.PageAdr, d.Res]))
+      else  memo.Lines.Insert(0, Format('Ошибка записи err: %d', [err]));
       if err >= ER_N then
        begin // bad end
         memo.Lines.Insert(0, 'Невозможно записать');
@@ -499,13 +510,20 @@ begin
      end;
     PgWr := TPageWrite.Create(adr, CurPg, @Buf[Recs*CurPg]); // enxt
     try
-     GetDevice.SendROW(@PgWr, TPageWrite.Size, RecFunc);
+     sleep(10);
+     GetDevice.SendROW(@PgWr, TPageWrite.Size, RecFunc, 1000);
     except
      UpdateControl(True);
      raise;
     end;
   end;
-  RecFunc(nil, -1);
+  PgWr := TPageWrite.Create(adr, CurPg, @Buf[Recs*CurPg]); // enxt
+  try
+   GetDevice.SendROW(@PgWr, TPageWrite.Size, RecFunc, 1000);
+  except
+   UpdateControl(True);
+   raise;
+  end;
 end;
 
 procedure TFormBoot.btLoadClick(Sender: TObject);
