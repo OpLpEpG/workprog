@@ -94,6 +94,8 @@ begin
   Reg('varChip', TPars.varChip, TMetaUserByte);
   Reg('varSerial', TPars.varSerial, TMetaUserWord);
   Reg('varRamSize', TPars.varRamSize, TMetaUserWord);
+  Reg('varSSDSize', TPars.varSSDSize, TMetaUserDWord);
+  Reg('varSupportUartSpeed', TPars.varSupportUartSpeed, TMetaUserWord);
 end;
 
 class procedure TMetaType.Reg(const typ: string; vart: Integer; cls: TMetaTypeClass);

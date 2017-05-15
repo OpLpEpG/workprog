@@ -117,8 +117,8 @@ implementation
 uses AbstractPlugin, tools, FormDlgDev;
 
 const
-  AVAIL_ATTR: array[0..3] of string = (AT_ADDR, AT_INFO, AT_SERIAL, AT_CHIP);
-  AVAIL_ATTR_Caption: array[0..3] of string = ('Адрес', 'Инфо', 'Серийный номер', 'Чип');
+  AVAIL_ATTR: array[0..4] of string = (AT_ADDR, AT_INFO, AT_SERIAL, AT_CHIP, AT_SPEED);
+  AVAIL_ATTR_Caption: array[0..4] of string = ('Адрес', 'Инфо', 'Серийный номер', 'Чип', 'Маска скорости порта');
   AVAIL_T: array[0..4] of string = (T_WRK, T_RAM, T_EEPROM, T_GLU, T_MTR);
   AVAIL_T_Caption: array[0..4] of string = ('Режим информации', 'Чтение памяти', 'EEPROM', 'Данные по глубине', 'Метрология');
   AVAIL_T_Func: array[0..4] of TRunMetrFunc = (TFormControl.ViewWrkData, TFormControl.ViewRamData, nil, nil, nil);

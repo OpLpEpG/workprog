@@ -231,7 +231,7 @@ begin
   Result := null;
   if Assigned(Foptions) then for c in XEnum(Foptions) do
   begin
-   TDebug.Log(c.NodeName);
+  // TDebug.Log(c.NodeName);
    v := c.ChildNodes.FindNode(Name);
    if Assigned(v) then
     begin

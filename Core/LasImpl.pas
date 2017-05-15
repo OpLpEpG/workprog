@@ -182,6 +182,7 @@ function GetLasEncoding(Encoding: LasEncoding): TEncoding;
 begin
     case Encoding of
       lsenDOS: Result := TEncoding.GetEncoding(866);
+      lsenUTF8: Result := TEncoding.UTF8;
       else Result := TEncoding.ANSI;
     end;
 end;

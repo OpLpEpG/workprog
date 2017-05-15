@@ -5,8 +5,8 @@ interface
 uses System.SysUtils, JDtools;
 
  type
-   [EnumCaptions('ANSI, DOS')]
-   LasEncoding = (lsenANSI, lsenDOS);
+   [EnumCaptions('ANSI, DOS, UTF8')]
+   LasEncoding = (lsenANSI, lsenDOS, lsenUTF8);
 
    LasSection = (lsVersion, lsWell, lsCurve, lsPar, lsOther, lsLog);
 

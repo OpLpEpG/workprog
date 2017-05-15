@@ -39,6 +39,7 @@ type
     JvDockServer: TJvDockServer;
     JvDockVSNetStyle: TJvDockVSNetStyle;
     xini: TJvAppXMLFileStorage;
+    TimerDelay: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure ActionExitExecute(Sender: TObject);
@@ -54,6 +55,7 @@ type
     procedure pc1ContextPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
     procedure ApplicationEventsException(Sender: TObject; E: Exception);
     procedure CustomizeActionBarsCustomizeDlgClose(Sender: TObject);
+    procedure TimerDelayTimer(Sender: TObject);
 //    procedure PrjNewAccept(Sender: TObject);
 //    procedure PrjOpenAccept(Sender: TObject);
 //    procedure PrjCloseExecute(Sender: TObject);
@@ -660,6 +662,32 @@ begin
   finally
    EndDockLoading;
   end;
+end;
+
+procedure TFormMain.TimerDelayTimer(Sender: TObject);
+ var
+  opt: IProjectOptions;
+  FDBTimeStart, FDBIntervalWork: TDateTime;
+  iDelay: TTime;
+begin
+  if Supports(GContainer, IProjectOptions, opt) then
+   begin
+    try
+     FDBTimeStart := StrToDateTime(opt.Option['TIME_START']);
+    except
+     FDBTimeStart := Double(opt.Option['TIME_START']);
+    end;
+    FDBIntervalWork := StrToDateTimeDef(opt.Option['WORK_INTERVAL'], 0);
+    if FDBTimeStart > 0 then
+     begin
+      iDelay := Ctime.Round(FDBTimeStart - Now);
+      if iDelay > 0 then
+         sb.Panels[0].Text := Format('Интервал задержки: %s', [Ctime.AsString(iDelay)])
+      else
+         sb.Panels[0].Text := Format('Работает: %s, кадр %d', [Ctime.AsString(-iDelay), Ctime.RoundToKadr(-iDelay)]);
+     end
+    else sb.Panels[0].Text := 'Не поставлен на задержку'
+   end;
 end;
 
 procedure TFormMain.SetActiveTab(const Form: IForm);

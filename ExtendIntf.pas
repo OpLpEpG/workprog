@@ -448,6 +448,8 @@ type
   ['{02DBEE66-7FEE-40F6-8E9E-47B43FCCB2A5}']
     function RealTimeLastIndex: Integer;
     function FufferDataPeriod: Double; // ms
+    procedure RegEvent(index: Integer; RealTimeEvent: TNotifyEvent);
+    procedure Send(cmd: Byte);
   end;
 
 

@@ -901,8 +901,10 @@ begin
         end;
       end
      else d.time := 0;
+
      Send(@D, Sizeof(D), procedure(p: Pointer; n: integer)
      begin
+       Tdebug.Log('%1.5f',[(Now - CNow)*24*3600*1000]);
        DoDelayEvent(True, CNow, RDelay, 0, ResultEvent);
        if IsOldClose then ConnectClose();
      end, 100);

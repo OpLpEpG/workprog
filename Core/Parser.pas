@@ -33,10 +33,12 @@ type
     var_inv_word  = varRecord+18;
     var_inv_i3  = varRecord+19;
     varChip =   varRecord+20;
-    varSerial = varRecord+21;
+    varSerial = varRecord+21; // серийный номер
     var_i2_15b_inv  = varRecord+22;
     var_array  = varRecord+23;
     var_i2_14b_GZ  = varRecord+24;
+    varSSDSize  = varRecord+25; // Cardinal
+    varSupportUartSpeed  = varRecord+26; // BitMask Word
 
    type
     TTypeDic = TDictionary<Integer, string>;
@@ -725,6 +727,12 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
           u.Attributes[AT_RAMSIZE] := PWord(@sp[1])^; // parse ram_size
           Inc(sp, 3); Dec(sn, 3);   // parse tip, ram_size
         end;
+        varSSDSize:
+        begin
+          if Assigned(hev) then hev(sp^, sp + 1);
+          u.Attributes[AT_SSD] := PCardinal(@sp[1])^; // parse ram_size
+          Inc(sp, 5); Dec(sn, 5);   // parse tip, ram_size
+        end;
         varChip:
         begin
           if Assigned(hev) then hev(sp^, sp + 1);
@@ -735,6 +743,12 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
         begin
           if Assigned(hev) then hev(sp^, sp + 1);
           u.Attributes[AT_SERIAL] := PWord(@sp[1])^; // parse serial
+          Inc(sp, 3); Dec(sn, 3);   // parse tip, serial
+        end;
+        varSupportUartSpeed:
+        begin
+          if Assigned(hev) then hev(sp^, sp + 1);
+          u.Attributes[AT_SPEED] := PWord(@sp[1])^;
           Inc(sp, 3); Dec(sn, 3);   // parse tip, serial
         end;
         var_array:

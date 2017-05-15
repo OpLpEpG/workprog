@@ -66,13 +66,19 @@ type
     RecRun: TRecRun;
     FData: array[0..63] of Double;
     FbufCount: Integer;
+    FRealTimeEvent: TNotifyEvent;
+    FeventIndex: Integer;
+    Fcmd: Byte;
   protected
+    procedure Send(cmd: Byte);
     procedure RemoveUserForm; override;
     function GetCaption: string; override;
     function RealTimeLastIndex: Integer;
     function FufferDataPeriod: Double; // ms
+    procedure RegEvent(index: Integer; RealTimeEvent: TNotifyEvent);
   public
     procedure InputData(Data: Pointer; DataSize: integer); override;
+    [ShowProp('Послать команду')] property SendCmd: Byte read Fcmd write Send;
   published
     [ShowProp('Файл записи данных')] property FileName;
   end;
@@ -451,10 +457,9 @@ begin
     begin
      TCustomDecoder(Decoders.Items[i]).Buf := FifoDecoder;// as TIndexBufDouble;
      TCustomDecoder(Decoders.Items[i]).OnState := OnDecoder;
+     TCustomDecoder(Decoders.Items[i]).GetUSOData := GetUSOData;
     end;
 
-  (Decoders.Items[1] as TWindowDecoder).GetUSOData := GetUSOData;
-  (Decoders.Items[2] as TWindowDecoder).GetUSOData := GetUSOData;
   (Decoders.Items[2] as TWindowDecoder).SPBeginBit := 128+16*6; //'синхронный декодер(ретранслятор)';
 
 //  Capacity := TCustomDecoder(Decoders.Items[0]).KadrLen*8;
@@ -606,6 +611,7 @@ procedure TUsoRetrans.InputData(Data: Pointer; DataSize: integer);
   var
    p: PByte;
    sw: SmallInt;
+   e: TNotifyEvent;
 begin
  p := Data;
   with RecRun do while DataSize > 0 do
@@ -624,31 +630,26 @@ begin
          begin
           Nfq := 0;
           FData[FbufCount] := SumDat / FKSum * 0.0625;
-         { if FTestUsoData <> tudNone then
-           begin
-            if c >= Length(Tst_Data) then c := 0;
-            if Tst_Data[c] then FData[i] := 1 else FData[i] := - 1;
-            Inc(c);
-           end;}
           SumDat := 0;
           inc(FbufCount);
-          // синхронизация команы в низ во время паузы
-         { if (FS_Data.BookMark = FS_Data.Fifo.Last + i) and FS_Data.IsBookMark then
+          // синхронизация команы
+          if Assigned(FRealTimeEvent) and (RealTimeLastIndex = FeventIndex) then
            begin
-            FS_Data.IsBookMark := False;
-            Cmd := FCmd;
-           end;}
+            e := FRealTimeEvent;
+            FRealTimeEvent := nil;
+            e(self);
+           end;
           if FbufCount = Length(FData) then
            begin
             FbufCount := 0;
             FS_Data.Write(@FData[0], Length(FData));
 //            TDebug.Log('ADD USO.Count  %d                 ', [FS_Data.Fifo.Count]);
-            TDebug.Log('Item: %s  First: %d, Last: %d count: %d',[Iname,FS_Data.FirstIndex, FS_Data.LastIndex, FS_Data.Count]);
+           // TDebug.Log('Item: %s  First: %d, Last: %d count: %d',[Iname,FS_Data.FirstIndex, FS_Data.LastIndex, FS_Data.Count]);
             try
              if Assigned(FChildSubDevice) then FChildSubDevice.InputData(@FData[0], Length(FData));
             finally
              NotifyData;
-           end;
+            end;
            end;
          end;
         Ncanal := 0;
@@ -689,10 +690,22 @@ begin
   Result := FS_Data.LastIndex + FbufCount;
 end;
 
+procedure TUsoRetrans.RegEvent(index: Integer; RealTimeEvent: TNotifyEvent);
+begin
+  FRealTimeEvent := RealTimeEvent;
+  FeventIndex := index;
+end;
+
 procedure TUsoRetrans.RemoveUserForm;
 begin
 end;
 
+
+procedure TUsoRetrans.Send(cmd: Byte);
+begin
+  (TTelesistem(Owner) as ITelesisCMD).SendCmd(cmd);
+  Fcmd := cmd mod 12;
+end;
 
 procedure TUsoRetransCustom.SetFileName(const Value: TOpenUsoFile);
 begin
@@ -810,7 +823,7 @@ function TUsoPleer.Step(count: Cardinal): Cardinal;
   a: TArray<SmallInt>;
 begin
   if not Assigned(FFileStream) then Exit(0);
-  needread := count * 2 * FKsum;
+  needread := count * 2 * Cardinal(FKsum);
   SetLength(a, needread);
   Result := FFileStream.Read(a[0], needread);
   n := Result div 2;
@@ -887,7 +900,7 @@ begin
      sum := sum / Length(Ffifo);
      FS_Data.Write(@sum, 1);
     end;
-   TDebug.Log('Item: %s  First: %d, Last: %d count: %d',[Iname,FS_Data.FirstIndex, FS_Data.LastIndex, FS_Data.Count]);
+   //TDebug.Log('Item: %s  First: %d, Last: %d count: %d',[Iname,FS_Data.FirstIndex, FS_Data.LastIndex, FS_Data.Count]);
    try
     if Assigned(FChildSubDevice) then
      begin
@@ -973,12 +986,12 @@ end;
 procedure TFFTRetrans.InputData(Data: Pointer; DataSize: integer);
 begin
   FFT.Write(Data, DataSize);
-  TDebug.Log('Item: %s  First: %d, Last: %d count: %d',[Iname, FFT.FirstIndex, FFT.LastIndex, FFT.Count]);
+  //TDebug.Log('Item: %s  First: %d, Last: %d count: %d',[Iname, FFT.FirstIndex, FFT.LastIndex, FFT.Count]);
   FFT.ExecFFT(procedure(d: PDouble; cnt: Integer)
   begin
     try
-     TDebug.Log('Item: %s  First: %d, Last: %d count: %d   FFTFirst: %d, FFTLast: %d',
-     [Iname, FFT.FirstIndex, FFT.LastIndex, FFT.Count, FFT.FirstFFTIndex, FFT.LastFFTIndex]);
+    // TDebug.Log('Item: %s  First: %d, Last: %d count: %d   FFTFirst: %d, FFTLast: %d',
+     //[Iname, FFT.FirstIndex, FFT.LastIndex, FFT.Count, FFT.FirstFFTIndex, FFT.LastFFTIndex]);
      if Assigned(FChildSubDevice) then FChildSubDevice.InputData(d, cnt);
     finally
      NotifyData;

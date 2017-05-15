@@ -121,9 +121,10 @@ end;
 
 class procedure TActionBarHelper.Show(ActionBar: TActionClient; path: string; Action: IAction; Index: Integer = -1);
  var
-  a, root: TActionClientItem;
-  s: string;
+  a, root, rootA: TActionClientItem;
+  s, sA: string;
 begin
+  rootA := nil;
   TActionClient(root) := ActionBar;
   for s in path.Split(['.'], ExcludeEmpty) do
    begin
@@ -131,7 +132,13 @@ begin
     if Assigned(a) then root := a
     else
      begin
-      root := root.Items.Add;
+      if root = ActionBar then
+       begin
+        root := root.Items.Add;
+        sA := s;
+        rootA := root;
+       end
+      else root := root.Items.Add;
       root.Caption := s;
       root.Visible := True;
      end;
@@ -141,6 +148,12 @@ begin
   if FAction.Caption = '-' then root.Caption := '-'
   else root.Action := FAction;
   if (Index >= 0) and (Index < root.OwningCollection.Count) then root.Index := Index;
+  if Assigned(rootA) then
+  begin
+   rootA.Action := FAction;
+   rootA.ImageIndex := -1;
+   rootA.Caption := sA;
+  end;
 end;
 
 {class procedure TActionBarHelper.Show2(ActionBar: TActionClient; path: string; Action: TContainedAction; Index: Integer);
@@ -167,9 +180,10 @@ end; }
 
 class procedure TActionBarHelper.ShowArr(ActionBar: TActionClient; const path: TArray<TMenuPath>; Action: IAction;  ActionIndex: Integer);
  var
-  a, root: TActionClientItem;
-  pf: TMenuPath;
+  a, root, rootA: TActionClientItem;
+  pf, pfA: TMenuPath;
 begin
+  rootA := nil;
   TActionClient(root) := ActionBar;
   for pf in path do
    begin
@@ -177,10 +191,16 @@ begin
     if Assigned(a) then root := a
     else
      begin
-      root := root.Items.Add;
-      root.Caption := pf.Caption;
-      root.Visible := True;
-      if (pf.Index >= 0) and (pf.Index < root.OwningCollection.Count) then root.Index := pf.Index;
+      a := root.Items.Add;
+      a.Caption := pf.Caption;
+      a.Visible := True;
+      if (pf.Index >= 0) and (pf.Index < a.OwningCollection.Count) then a.Index := pf.Index;
+      if root = ActionBar then
+       begin
+        rootA := a;
+        pfA := pf;
+       end;
+      root := a;
      end;
    end;
   if not Assigned(FindByAction(root, Action)) then
@@ -194,6 +214,12 @@ begin
       root := root.Items.Add;
       root.Caption := '-';
       root.Index := a.Index;
+     end;
+    if Assigned(rootA) then
+     begin
+      rootA.Action := FAction;
+      rootA.ImageIndex := -1;
+      rootA.Caption := pfA.Caption;
      end;
    end;
 end;

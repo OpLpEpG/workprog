@@ -183,10 +183,24 @@ object DlgOpenLASDataSet: TDlgOpenLASDataSet
   object PopupMenu: TPopupMenu
     Left = 466
     Top = 140
+    object ANSY1: TMenuItem
+      Caption = #1050#1086#1076#1080#1088#1086#1074#1082#1072' ANSY'
+      Checked = True
+      GroupIndex = 1
+      RadioItem = True
+      OnClick = EncodeClick
+    end
     object NDOS: TMenuItem
-      AutoCheck = True
       Caption = #1050#1086#1076#1080#1088#1086#1074#1082#1072' DOS'
-      OnClick = NDOSClick
+      GroupIndex = 1
+      RadioItem = True
+      OnClick = EncodeClick
+    end
+    object UTF81: TMenuItem
+      Caption = #1050#1086#1076#1080#1088#1086#1074#1082#1072' UTF8'
+      GroupIndex = 1
+      RadioItem = True
+      OnClick = EncodeClick
     end
   end
 end

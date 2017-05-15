@@ -29,16 +29,19 @@ type
     cbY: TComboBox;
     PopupMenu: TPopupMenu;
     NDOS: TMenuItem;
+    ANSY1: TMenuItem;
+    UTF81: TMenuItem;
     procedure FileListChange(Sender: TObject);
     procedure btCancelClick(Sender: TObject);
     procedure btOKClick(Sender: TObject);
-    procedure NDOSClick(Sender: TObject);
+    procedure EncodeClick(Sender: TObject);
   private
     ids: IDataSet;
     Selected: TArray<Boolean>;
     Fcol: TGraphColmn;
+    CurrEncode: Integer;
    const
-    CEN: array [Boolean] of LasEncoding = (lsenANSI, lsenDOS);
+    CEN: array [0..2] of LasEncoding = (lsenANSI, lsenDOS, lsenUTF8);
   protected
     function GetInfo: PTypeInfo; override;
     function Execute(col: TGraphColmn): Boolean;
@@ -172,11 +175,12 @@ begin
   Result := TypeInfo(Dialog_OpenLAS);
 end;
 
-procedure TDlgOpenLASDataSet.NDOSClick(Sender: TObject);
+procedure TDlgOpenLASDataSet.EncodeClick(Sender: TObject);
 begin
   if Assigned(ids) and Assigned(TLasDataSet(ids).LasDoc) then with TLasDataSet(ids) do
    begin
-    LasDoc.Encoding := CEN[NDOS.Checked];
+    CurrEncode := TMenuItem(Sender).MenuIndex;
+    LasDoc.Encoding := CEN[CurrEncode];
     LasDoc.LoadFromFile(FileList.FileName);
     Encoding := LasDoc.Encoding;
     LasFile := FileList.FileName;
@@ -216,7 +220,7 @@ begin
    begin
     Caption := FileList.FileName;
 
-    TLasDataSet.New(FileList.FileName, ids, CEN[NDOS.Checked]);
+    TLasDataSet.New(FileList.FileName, ids, CEN[CurrEncode]);
     ds.DataSet := ids.DataSet;
     ids.DataSet.Open;
 

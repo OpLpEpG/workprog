@@ -14,6 +14,7 @@ uses
 const
  PREAMB1 = '#pragma once';
  EMPTY = '';
+ PREAMB3 = 'extern uint8_t ReadMetaData(uint8_t* p, uint8_t n, uint16_t from);';
 
  PREAMB2 = 'const unsigned char __attribute__ ((section(".meta_data"), used)) cmetaAll[] = {';
  var
@@ -32,7 +33,7 @@ begin
 //     if TFile.Exists(BinFile) then TFile.Delete(BinFile);
 //     TFile.WriteAllBytes(BinFile, TMetaData.Generate(ss));
      a := TMetaData.Generate(ss);
-     outStr := outStr + [PREAMB1, EMPTY, EMPTY, EMPTY, PREAMB2];
+     outStr := outStr + [PREAMB1, EMPTY, EMPTY, PREAMB3, EMPTY, EMPTY, PREAMB2];
      n := 0;
      while n < Length(a) do
       begin

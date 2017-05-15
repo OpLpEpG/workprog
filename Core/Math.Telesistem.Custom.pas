@@ -113,6 +113,8 @@ type
   TCustomDecoder = class;
   TCorrCodeFunc = function (Owner: TCustomDecoder; idx: GlobIdx): TCodeData;
   TSpCreateFunc = function : TArray<Integer>;
+  TGetUSOData = function(out USOData: IUSOData): Boolean of object;
+
 
 {$REGION 'TCustomDecoder'}
   ///
@@ -140,6 +142,7 @@ type
     FCodes: TCodes;
     FBitFilterOn: Boolean;
     FOnState: TNotifyEvent;
+    TryUsoData: TGetUSOData;
     function GetKadrLen: Integer; inline;
     function GetSPLen: Integer; inline;
     function GetKadrBits: Integer; inline;
@@ -275,7 +278,8 @@ type
 
   public
     property Text: string read FCaption write SetCaption;
-    property OnState: TNotifyEvent read FOnState write FOnState; // ??? почему-то не сохран€етс€
+    property OnState: TNotifyEvent read FOnState write FOnState;
+    property GetUSOData: TGetUSOData read TryUsoData write TryUsoData;
     ///	<summary>
     ///	  —осто€ние автомата
     ///	</summary>
@@ -316,8 +320,6 @@ type
     procedure DoSetConst; override;
   end;
 
- TGetUSOData = function(out USOData: IUSOData): Boolean of object;
-
  TWindowDecoder = class(TCustomDecoderFourier)
  private
     FSPDelta: Integer;
@@ -325,16 +327,14 @@ type
     FSPBeginBit: GlobIdx;
     function GetStartTime: TDateTime;
  protected
-    TryUsoData: TGetUSOData;
     procedure DoRun_csFindSP; override;
     procedure DoStart_csFindSP(idx: GlobIdx); override;
     procedure DoSetConst; override;
     procedure UpdateSPWindow(idx: GlobIdx);
-    function TestKadrSP(out Res: TSPData): Boolean; override;
+//    function TestKadrSP(out Res: TSPData): Boolean; override;
     procedure DoRun_csUserToSP; override;
  public
     property SPStartTime: TDateTime read GetStartTime;
-    property GetUSOData: TGetUSOData read TryUsoData write TryUsoData;
     property SPWindow: GlobIdx read FSPIndex write FSPIndex;
     // 0 - telesis N-renranslator
     property SPBeginBit: GlobIdx read FSPBeginBit write FSPBeginBit;
@@ -343,8 +343,20 @@ type
  end;
 
   TDecoderFMRetr = class(TCustomDecoderFourier)
+  private
+    FCmdSendFlag: Boolean;
+    FusoIdx: Integer;
+    FCmd: Byte;
+    procedure SetCmdSendFlag(const Value: Boolean);
+    procedure UsoEvent(Uso: TObject);
+    procedure InitUsoEvent;
+    function GetStartTime: TDateTime;
   protected
+    property SPStartTime: TDateTime read GetStartTime;
     procedure DoSetConst; override;
+    procedure DoRun_csFindSP; override;
+ published
+    [ShowProp('ѕосылать команды управени€')] property CmdSendFlag: Boolean read FCmdSendFlag write SetCmdSendFlag default False;
   end;
 
   TWindowDecoderFM = class(TWindowDecoder)
@@ -1232,7 +1244,7 @@ begin
   else Result := 0;
 end;
 
-function TWindowDecoder.TestKadrSP(out Res: TSPData): Boolean;
+{function TWindowDecoder.TestKadrSP(out Res: TSPData): Boolean;
  var
   pr: Double;
   gidx: Globidx;
@@ -1278,7 +1290,7 @@ begin
      end;
    // if (pr >= FPorogSP) or UniqeCaseSP(Min1, Min2) then Exit(True);
    end;
-end;
+end;     }
 
 procedure TWindowDecoder.UpdateSPWindow(idx: GlobIdx);
  var
@@ -1313,11 +1325,65 @@ end;
 
 { TDecoderFMRetr }
 
+procedure TDecoderFMRetr.DoRun_csFindSP;
+begin
+  if FCmdSendFlag and (FusoIdx = 0) then  InitUsoEvent;
+  inherited;
+end;
+
+procedure TDecoderFMRetr.UsoEvent(Uso: TObject);
+ var
+  iuso: IUsodata;
+begin
+  if Supports(Uso, IUsodata, iuso) then
+   begin
+    Inc(FusoIdx, KadrLen);
+    iuso.RegEvent(FusoIdx, UsoEvent);
+    iuso.Send(FCmd);
+    Tdebug.log(' CMD = %d',[Fcmd]);
+    FCmd := (FCmd+1) mod 12;
+   end;
+end;
+
 procedure TDecoderFMRetr.DoSetConst;
 begin
   inherited;
-  SetConst(8, 16*2, 6, 0{(128+16*6)*2}, FmCorrCode, FmSpCreate);
+  SetConst(8, 16*2, 6, 32{(128+16*6)*2}, FmCorrCode, FmSpCreate);
   PorogSP := 40;
+end;
+
+function TDecoderFMRetr.GetStartTime: TDateTime;
+ var
+  opt: IProjectOptions;
+begin
+  if Supports(GContainer, IProjectOptions, opt) then Result := StrToDateTime(opt.Option['TIME_START'])
+  else Result := 0;
+end;
+
+procedure TDecoderFMRetr.InitUsoEvent;
+ var
+  uso: IUsodata;
+  st: TDateTime;
+  dt: Integer;
+begin
+  st := SPStartTime;
+  if (st > 0) and Assigned(TryUsoData) and TryUsoData(uso) then
+   begin
+    dt := Round((Now-st)*24*3600*1000/uso.FufferDataPeriod) mod KadrLen;
+    // ” ретрансл€тора в начале кадра идут шумы
+    FusoIdx := uso.RealTimeLastIndex + KadrLen - dt;// - CodeLen*3;
+    uso.RegEvent(FusoIdx, UsoEvent);
+   end;
+end;
+
+procedure TDecoderFMRetr.SetCmdSendFlag(const Value: Boolean);
+begin
+  FCmdSendFlag := Value;
+  if FCmdSendFlag then
+   begin
+    FusoIdx := 0;
+    InitUsoEvent;
+   end;
 end;
 
 { TWindowDecoderFM }

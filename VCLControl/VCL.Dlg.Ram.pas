@@ -57,6 +57,13 @@ begin
   Result := True;
   TBindHelper.RemoveExpressions(Self);
   FModul := Modul;
+   { TODO : неписать проверку скорости и типа связи }
+   if FModul.HasAttribute(AT_SPEED) and (FModul.Attributes[AT_SPEED] = 192) then
+    begin
+     rg.Items.Clear;
+     rg.Items.Add('125K');
+     rg.Items.Add('0.5M');
+    end;
   FRes := Res;
   FS_TableModulUpdate := 'Ram';
   Caption := '[' + Modul.nodeName +'] Чтение памяти';
