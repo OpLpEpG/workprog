@@ -5,7 +5,7 @@ interface
 uses  System.SysUtils,  System.Classes, System.TypInfo, Xml.XMLIntf, Math.Telesistem, RootIntf, SubDevImpl, RootImpl, IndexBuffer,
       Container, DeviceIntf, Dev.Telesistem, ExtendIntf, Actns, Dev.Telesistem.Data, Dev.Telesistem.Decoder, JDtools, Vcl.ExtCtrls,
       CFifo, MathIntf, debug_except, Fifo.FFT, Fifo.Decoder, Math.Telesistem.Custom, Vcl.Dialogs, Vcl.Forms,
-      JvExControls, JvInspector, JvComponentBase,  JvResources,
+      JvExControls, JvInspector, JvComponentBase,  JvResources, System.Math, AVRtypes,
       System.Bindings.Helper, System.IOUtils;
 
 const
@@ -175,6 +175,22 @@ type
     function GetMetaData: IXMLInfo; override;
   end;
 
+  TOneWareData = class(TCustomTeleData)
+  private
+    loCod :Integer;
+    loQua :Double;
+
+    type
+     CodeDat = (cdGKLo, cdGK, cdOtkLo, cdOtkl, cdZenLo, cdZen, adAziLo, adAzi);
+  protected
+    procedure InputData(Data: Pointer; DataSize: integer); override;
+  public
+    [DynamicAction('Показать окно Отклонителя', '<I>', 55, '0:Телесистема.<I>', 'Показать окно Отклонителя')]
+    procedure DoSetup(Sender: IAction); override;
+    function GetCaption: string; override;
+    function GetMetaData: IXMLInfo; override;
+  end;
+
 //  TDecoderManchRetr = class(TCustomDecoderFourier)
 //  protected
 //    procedure DoSetConst; override;
@@ -207,6 +223,17 @@ type
     property S_Decoder: TCustomDecoderWrap read FS_Decoder write SetS_Decoder;
   end;
 
+  TDevDecoderRM = class(TDevDecoderRetr)
+  protected
+    function GetCaption: string; override;
+    procedure Loaded; override;
+    procedure CreateDecoders; override;
+  public
+    [DynamicAction('Показать окно Декорера', '<I>', 55, '0:Телесистема.<I>', 'Показать окно Декорера')]
+    procedure DoSetup(Sender: IAction); override;
+   end;
+
+
   TDevDecoderRetrFM = class(TDevDecoderRetr)
   protected
     function GetCaption: string; override;
@@ -222,8 +249,18 @@ type
     function IsFileUso: Boolean; override;
     function GetService: PTypeInfo; override;
     function GetStructure: TArray<TSubDeviceInfo>; override;
-    procedure AfterAdd();
+    procedure AfterAdd(); virtual;
     procedure BeforeRemove(); override;
+  public
+    [DynamicAction('Установки телесистемы', '<I>', 52, '0:Телесистема.<I>', 'Установки телесистемы')]
+    procedure DoSetup(Sender: IAction); override;
+    [DynamicAction('Показать окно осцилограмм', '<I>', 152, '0:Телесистема.<I>', 'Показать окно осцилограмм')]
+    procedure DoShowOscForm(Sender: IAction); virtual;
+  end;
+  TTelesis1Ware = class(TTelesisRetr)
+  protected
+    procedure AfterAdd(); override;
+    function GetService: PTypeInfo; override;
   public
     [DynamicAction('Установки телесистемы', '<I>', 52, '0:Телесистема.<I>', 'Установки телесистемы')]
     procedure DoSetup(Sender: IAction); override;
@@ -508,8 +545,16 @@ begin
 end;
 
 procedure TDevDecoderRetr.OnDecoder(Sender: TObject);
+ function GetIndex:Integer;
+  var
+   i: Integer;
+ begin
+   Result := -1;
+   for i := 0 to Decoders.Count-1 do if Sender = Decoders.Items[i] then Exit(i);
+ end;
 begin
   S_Decoder := Sender as TCustomDecoder;
+  if Assigned(FChildSubDevice) then FChildSubDevice.InputData(Sender, GetIndex);
 end;
 
 procedure TDevDecoderRetr.SetS_Decoder(const Value: TCustomDecoderWrap);
@@ -1044,24 +1089,178 @@ begin
 end;
 {$ENDREGION 'FFT'}
 
+{ TDevDecoderRM }
+
+procedure TDevDecoderRM.Loaded;
+begin
+  TCustomDecoder(Decoders.Items[0]).Text := 'RM декодер';
+  TCustomDecoder(Decoders.Items[0]).Buf := FifoDecoder;// as TIndexBufDouble;
+  TCustomDecoder(Decoders.Items[0]).OnState := OnDecoder;
+  TCustomDecoder(Decoders.Items[0]).GetUSOData := GetUSOData;
+end;
+
+procedure TDevDecoderRM.CreateDecoders;
+begin
+  TCustomDecoder.Create(Decoders);
+end;
+
+procedure TDevDecoderRM.DoSetup(Sender: IAction);
+begin
+  inherited;
+end;
+
+function TDevDecoderRM.GetCaption: string;
+begin
+  Result := 'RM'
+end;
+
+
+{ T1wareData }
+
+procedure TOneWareData.DoSetup(Sender: IAction);
+begin
+  inherited;
+end;
+
+function TOneWareData.GetCaption: string;
+begin
+ Result := '1 ware test tele';
+end;
+
+function TOneWareData.GetMetaData: IXMLInfo;
+ var
+  GDoc: IXMLDocument;
+begin
+  FFileName := ExtractFilePath(ParamStr(0)) + 'Devices\tst_telesis3.hxml';
+  GDoc := NewXDocument();
+  GDoc.LoadFromFile(FileName);
+  Result := GDoc.DocumentElement;
+end;
+
+procedure TOneWareData.InputData(Data: Pointer; DataSize: integer);
+ var
+  v: Variant;
+  deltaOtk: Double;
+  function cor360(a: Double): double;
+  begin
+    if a < 0 then Result := a + 360
+    else if a >=360 then Result := a - 360
+    else Result := a
+  end;
+begin
+  // test for decoder
+  if (DataSize <> 0) or not TryGetRoot(v,1002) then Exit;
+  with TCustomDecoder(Data) do
+   begin
+  case State of
+    csFindSP: ;
+    csSP: with SPData  do
+     begin
+      v.СП.Уход_тактов.DEV.VALUE := 0;
+      v.СП.Амплитуда.DEV.VALUE := SimpleRoundTo(sp.dat, -1);
+      v.СП.Фаза.DEV.VALUE := Faza;
+      v.СП.Q_СП.DEV.VALUE := Round(Quality);
+     end;
+    csCheckSP: with SPData do
+     begin
+      v.СП.Уход_тактов.DEV.VALUE := DTakt;
+      v.СП.Амплитуда.DEV.VALUE := SimpleRoundTo(sp.dat, -1);
+      v.СП.Фаза.DEV.VALUE := FazaCheck;
+      v.СП.Q_СП.DEV.VALUE := Round(Quality);
+     end;
+    csCode: with Codes do
+     begin
+      case CodeDat(Codes.Count-1) of
+        cdGK:
+         begin
+          v.ГК.гк.DEV.VALUE :=  Curr.Code shl 5 or loCod;
+          v.ГК.Q_гк.DEV.VALUE := min(Curr.Quality, loQua);
+          v.ГК.гк.CLC.VALUE := v.ГК.гк.DEV.VALUE;
+          SetPrbData(dtGK, v.ГК.гк.CLC.VALUE, v.ГК.Q_гк.DEV.VALUE);
+         end;
+        cdOtkl:
+         begin
+           v.Inclin.отклонитель.DEV.VALUE := Curr.Code shl 5 or loCod;
+           v.Inclin.Q_отклонитель.DEV.VALUE := min(Curr.Quality, loQua);
+           v.Inclin.отклонитель.CLC.VALUE := (v.Inclin.отклонитель.DEV.VALUE+0.0025)/2.844444444444;
+           SetPrbData(dtOtklonitel, v.Inclin.отклонитель.CLC.VALUE, v.Inclin.Q_отклонитель.DEV.VALUE);
+         end;
+        cdZen:
+         begin
+           v.Inclin.зенит.DEV.VALUE := Curr.Code shl 5 or loCod;
+           v.Inclin.Q_зенит.DEV.VALUE := min(Curr.Quality, loQua);
+           v.Inclin.зенит.CLC.VALUE := (v.Inclin.зенит.DEV.VALUE+0.0025)/3.55555555556;
+           SetPrbData(dtZenit, v.Inclin.зенит.CLC.VALUE, v.Inclin.Q_зенит.DEV.VALUE);
+         end;
+        adAzi:
+         begin
+           v.Inclin.азимут.DEV.VALUE := Curr.Code shl 5 or loCod;
+           v.Inclin.Q_азимут.DEV.VALUE := min(Curr.Quality, loQua);
+           v.Inclin.азимут.CLC.VALUE := (v.Inclin.азимут.DEV.VALUE+0.0025)/2.844444444444;
+           SetPrbData(dtAzimut, v.Inclin.азимут.CLC.VALUE, v.Inclin.Q_азимут.DEV.VALUE);
+         end;
+        else
+         loCod := Curr.Code;
+         loQua := Curr.Quality;
+      end;
+      TTelesistem(owner).CheckWorkData;
+      TTelesistem(owner).Notify('S_WorkEventInfo');
+     end;
+  end;
+   end;
+end;
+
+{ TTelesis1Ware }
+
+procedure TTelesis1Ware.AfterAdd;
+begin
+  AddOrReplase(typeInfo(TUsoRetrans));
+//  AddOrReplase(typeInfo(TFltBPF));
+  AddOrReplase(typeInfo(TDevDecoderRM));
+  AddOrReplase(typeInfo(TOneWareData));
+  (Self as IBind).Notify('S_PublishedChanged');
+end;
+
+procedure TTelesis1Ware.DoSetup(Sender: IAction);
+begin
+  inherited;
+end;
+
+procedure TTelesis1Ware.DoShowOscForm(Sender: IAction);
+begin
+  inherited;
+end;
+
+function TTelesis1Ware.GetService: PTypeInfo;
+begin
+  Result := TypeInfo(ITelesistem_1ware);
+end;
+
 initialization
   TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspUcoFileRetr, TypeInfo(TOpenUsoFile)));
-  RegisterClasses([TTelesisRetr, TretrData, TDevDecoderRetr,TDevDecoderRetrFM, TUsoRetrans, TUsoPleer, TOiRetrans, TFFTRetrans]);
+  RegisterClasses([TTelesisRetr, TretrData, TOneWareData, TDevDecoderRetr,TDevDecoderRetrFM, TDevDecoderRM,
+  TTelesis1Ware, TUsoRetrans, TUsoPleer, TOiRetrans, TFFTRetrans]);
   TRegister.AddType<TTelesisRetr, IDevice>.LiveTime(ltSingletonNamed);
+  TRegister.AddType<TTelesis1Ware, IDevice>.LiveTime(ltSingletonNamed);
   TRegister.AddType<TretrData, ITelesistem_retr>.LiveTime(ltTransientNamed);
-  TRegister.AddType<TUsoRetrans, ITelesistem_retr>.LiveTime(ltTransientNamed);
-  TRegister.AddType<TUsoPleer, ITelesistem_retr>.LiveTime(ltTransientNamed);
-  TRegister.AddType<TOiRetrans, ITelesistem_retr>.LiveTime(ltTransientNamed);
-  TRegister.AddType<TFFTRetrans, ITelesistem_retr>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TOneWareData, ITelesistem_1ware>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TUsoRetrans, ITelesistem_retr, ITelesistem_1ware>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TUsoPleer, ITelesistem_retr, ITelesistem_1ware>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TOiRetrans, ITelesistem_retr, ITelesistem_1ware>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TFFTRetrans, ITelesistem_retr, ITelesistem_1ware>.LiveTime(ltTransientNamed);
   TRegister.AddType<TDevDecoderRetr, ITelesistem_retr>.LiveTime(ltTransientNamed);
   TRegister.AddType<TDevDecoderRetrFM, ITelesistem_retr>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TDevDecoderRM, ITelesistem_retr, ITelesistem_1ware>.LiveTime(ltTransientNamed);
 finalization
+  GContainer.RemoveModel<TTelesis1Ware>;
   GContainer.RemoveModel<TOiRetrans>;
   GContainer.RemoveModel<TFFTRetrans>;
   GContainer.RemoveModel<TUsoRetrans>;
   GContainer.RemoveModel<TUsoPleer>;
+  GContainer.RemoveModel<TDevDecoderRM>;
   GContainer.RemoveModel<TDevDecoderRetrFM>;
   GContainer.RemoveModel<TDevDecoderRetr>;
   GContainer.RemoveModel<TretrData>;
+  GContainer.RemoveModel<TOneWareData>;
   GContainer.RemoveModel<TTelesisRetr>;
 end.

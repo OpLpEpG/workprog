@@ -46,11 +46,12 @@ type
     procedure ppMPopup(Sender: TObject);
   private
     RootHot: PNodeExData;
-    FdataSet: TDataSet;
+    procedure InnerInitTree(BD: TDataSet);
     procedure DrawCheckBox(const Canvas: TCanvas; const Rect: TRect; const Checked: Boolean);
   public
     function GetSelected: TArray<TField>;
-    procedure InitTree(BD: TDataSet);
+    procedure InitTree(BD: TDataSet); overload;
+    procedure InitTree(datas: TArray<TDataSet>); overload;
   end;
 
 implementation
@@ -104,6 +105,20 @@ begin
 end;
 
 procedure TFrameSelectParam.InitTree(BD: TDataSet);
+begin
+  Tree.Clear;
+  InnerInitTree(BD);
+end;
+
+procedure TFrameSelectParam.InitTree(datas: TArray<TDataSet>);
+ var
+  ds: TDataSet;
+begin
+  Tree.Clear;
+  for ds in datas do InnerInitTree(ds);
+end;
+
+procedure TFrameSelectParam.InnerInitTree(BD: TDataSet);
   procedure RecurObjectView(r: TFields; p: PVirtualNode);
    var
     i: Integer;
@@ -159,11 +174,9 @@ procedure TFrameSelectParam.InitTree(BD: TDataSet);
      with PNodeExData(Tree.GetNodeData(root))^ do if c then CLCField := f  else DEVField := f
    end;
 begin
-  Tree.Clear;
-  FdataSet := BD;
-  FdataSet.Open;
-  if FdataSet.ObjectView then RecurObjectView(FdataSet.Fields, nil)
-  else for i := 0 to FdataSet.FieldList.Count-1 do AddField(FdataSet.FieldList[i], FdataSet.FieldList[i].FullName.Split(['.']));
+  BD.Open;
+  if BD.ObjectView then RecurObjectView(BD.Fields, nil)
+  else for i := 0 to BD.FieldList.Count-1 do AddField(BD.FieldList[i], BD.FieldList[i].FullName.Split(['.']));
 end;
 
 procedure TFrameSelectParam.ppMPopup(Sender: TObject);

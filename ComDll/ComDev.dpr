@@ -142,6 +142,7 @@ begin
     else if (Adr[0] > 101) and (adr[0] < 200) then  Result := TPskStd.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (adr[0] = 1000) then Result := TTelesistem.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (adr[0] = 1001) then Result := TTelesisRetr.CreateWithAddr(Adr, DeviceName) as IDevice
+    else if (adr[0] = 1002) then Result := TTelesis1ware.CreateWithAddr(Adr, DeviceName) as IDevice
     else if (adr[0] > 15) then raise EDeviceException.Create('Устройство с неверным адресом')
 
     else Result := TDeviceBur.CreateWithAddr(Adr, DeviceName) as IDevice

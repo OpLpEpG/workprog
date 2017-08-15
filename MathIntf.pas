@@ -314,6 +314,16 @@ __interface Iwavelet : public ILastMathError
  end;
 
 
+// __interface IResample : public ILastMathError
+{
+	SAFECALL Resample(const double* x, const double* y, const ae_int_t n,  const double* newX, const ae_int_t newN, const double** newY);
+}
+
+ IResample = interface(ILastMathError)
+    function  Resample(const x, y: PDouble; n: Integer; const newX: PDouble; newN: Integer; out newY: PDoubleArray): HRESULT; stdcall;
+ end;
+
+
 {$WARN SYMBOL_PLATFORM OFF}
 procedure RbfFactory(out Rbf: IRbf); cdecl; external 'matlab.dll' delayed;
 procedure BaryCentricFactory(out BaryCentric: IBaryCentric); cdecl; external 'matlab.dll' delayed;
@@ -326,6 +336,7 @@ procedure EquationsFactory(out Equations: IEquations); cdecl; external 'matlab.d
 procedure WaveletFactory(out wavelet: Iwavelet); cdecl; external 'matlab.dll' delayed;
 procedure EigFactory(out eig: Ieig); cdecl; external 'matlab.dll' delayed;
 procedure NoiseFactory(out Noise: INoise); cdecl; external 'matlab.dll' delayed;
+procedure ResampleFactory(out Resample: IResample); cdecl; external 'matlab.dll' delayed;
 {$WARN SYMBOL_PLATFORM ON}
 
 procedure CheckMath(lme: ILastMathError; res: HRESULT);

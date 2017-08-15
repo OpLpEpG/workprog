@@ -197,7 +197,7 @@ begin
   d.Active := True;
   fx := d.FieldByName(XParamPath);
   fy := d.FieldByName(YParamPath);
-  Size := d.RecordCount * FileRecLen;
+  Size := (d.RecordCount+1) * FileRecLen;  //  (d.RecordCount+1) ?????  надо разобраться!!!
   FFileData.Lock;
   try
     if FbuffReady then Exit;

@@ -48,7 +48,7 @@ object FrameSelectParam: TFrameSelectParam
       end
       item
         Position = 2
-        Width = 403
+        Width = 397
         WideText = #1048#1084#1103
       end>
   end

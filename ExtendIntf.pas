@@ -439,6 +439,10 @@ type
   ['{FE31A3CD-BD86-4C4F-A527-D44E5C04DAE6}']
   end;
 
+  ITelesistem_1ware = interface
+  ['{10E28059-E567-4574-A083-D5EC0630FB93}']
+  end;
+
   ITelesisCMD = interface
   ['{5CCFAD9E-3063-4350-8908-804D2E45E0B4}']
     procedure SendCmd(Cmd: Byte);

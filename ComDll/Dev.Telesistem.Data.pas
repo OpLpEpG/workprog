@@ -17,18 +17,18 @@ type
     prbo, prbz, prbao, prba, prbvib: Double;
     procedure SetPorogXY(const Value: Integer);
     procedure SetPorogZ(const Value: Integer);
-    function TryGetRoot(var v: Variant): Boolean;
     procedure SetDMetka(const Value: Double);
-    procedure SetPrbData(tip: TDataType; const Value, Probability: Double);
+    type
+     CodeData = (cdMOtk1, cdAX, cdAy, adAz, cdMx, cdMOtk2, cdMy, cdMz,cdDxy, cdDz, cdMOtk3, cdCMD);
   protected
     FFileName: string;
+    procedure SetPrbData(tip: TDataType; const Value, Probability: Double);
+    function TryGetRoot(var v: Variant; adr: integer): Boolean;
     procedure SetCollection(Value: TCollection); override;
     function GetCategory: TSubDeviceInfo; override;
     function GetCaption: string; override;
      procedure OnUserRemove; override;
   public
-    type
-     CodeData = (cdMOtk1, cdAX, cdAy, adAz, cdMx, cdMOtk2, cdMy, cdMz,cdDxy, cdDz, cdMOtk3, cdCMD);
     constructor Create; override;
     procedure InputData(Data: Pointer; DataSize: integer); override;
     function GetMetaData: IXMLInfo; virtual;
@@ -95,7 +95,7 @@ procedure TCustomTeleData.InputData(Data: Pointer; DataSize: integer);
   end;
 begin
   // test for decoder
-  if (DataSize <> $12345678) or not TryGetRoot(v) then Exit;
+  if (DataSize <> $12345678) or not TryGetRoot(v,1000) then Exit;
   with TTelesistemDecoder(Data) do
    begin
   case State of
@@ -268,14 +268,14 @@ begin
   NotifyData;
 end;
 
-function TCustomTeleData.TryGetRoot(var v: Variant): Boolean;
+function TCustomTeleData.TryGetRoot(var v: Variant; adr: integer): Boolean;
  var
   w: IXMLNode;
 begin
   Result := False;
   if Assigned(owner) and Assigned(TTelesistem(owner).S_MetaDataInfo.Info) then
    begin
-    w := FindWork(TTelesistem(owner).S_MetaDataInfo.Info, 1000);
+    w := FindWork(TTelesistem(owner).S_MetaDataInfo.Info, adr);
     if Assigned(w) then
      begin
       v := XToVar(w);

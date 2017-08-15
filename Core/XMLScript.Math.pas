@@ -58,6 +58,8 @@ begin
   else if MethodName = 'SGK_FINDGK'     then           SGK_FindGK(    Params[0])
   else if MethodName = 'RADTODEG_0_180' then Result := RadToDeg180(   Params[0])
   else if MethodName = 'RADTODEG_0_360' then Result := RadToDeg360(   Params[0])
+  else if MethodName = 'RADTODEG'       then Result := RadToDeg(      Params[0])
+  else if MethodName = 'ARCCOS'         then Result := Arccos(        Params[0])
   else if MethodName = 'VARASTYPE'      then Result := VarAsType(     Params[0], Params[1])
 //  else if MethodName = 'IDWINTERP'      then Result := IDWInterp(   Params[0], Params[1])
   else if MethodName = 'RBFINTERP'      then Result := RbfInterp(     Params[0], Params[1], Params[2])
@@ -89,6 +91,8 @@ begin
   'procedure SGK_FindGK(root: variant)',
   'function RadToDeg_0_180(Rad: Double): Double',
   'function RadToDeg_0_360(Rad: Double): Double',
+  'function RadToDeg(Rad: Double): Double',
+  'function ArcCos(Rad: Double): Double',
   'function VarAsType(const V: Variant; AVarType: Integer): Variant',
 // function IDWInterp(data, point: Variant): Double;', CallMeth);
   'function RbfInterp(xy: Variant; x1, x2: Double): Double',

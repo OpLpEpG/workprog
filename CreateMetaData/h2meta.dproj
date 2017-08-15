@@ -67,7 +67,7 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <Debugger_RunParams>c:\XE\Projects\Device2\CreateMetaData\StructOfData.h c:\XE\Projects\Device2\CreateMetaData\MetaData.c</Debugger_RunParams>
+        <Debugger_RunParams>c:\AVR\VIK108\_I\VIK108Data.h  c:\AVR\VIK108\_I\MetaData.h </Debugger_RunParams>
         <Manifest_File>None</Manifest_File>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_UnitSearchPath>..\;..\core;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>

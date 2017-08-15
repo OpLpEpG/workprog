@@ -436,11 +436,11 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
-            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
-            <Enabled>False</Enabled>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -598,6 +598,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
             <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
@@ -609,12 +615,6 @@
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
-            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='RELEA'">
@@ -636,11 +636,11 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
-            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -798,6 +798,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
             <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -809,12 +815,6 @@
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
-            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='D1'">
@@ -836,11 +836,11 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -998,6 +998,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Release</Configurations>
@@ -1008,12 +1014,6 @@
             <ProjectGuid>{46EBA10B-03EE-4AC5-9168-CC39EED14C1F}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
-            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
     </ItemGroup>

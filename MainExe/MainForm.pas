@@ -670,7 +670,7 @@ procedure TFormMain.TimerDelayTimer(Sender: TObject);
   FDBTimeStart, FDBIntervalWork: TDateTime;
   iDelay: TTime;
 begin
-  if Supports(GContainer, IProjectOptions, opt) then
+  if Supports(GContainer, IProjectOptions, opt) and (opt.Option['TIME_START'] <> null) then
    begin
     try
      FDBTimeStart := StrToDateTime(opt.Option['TIME_START']);
@@ -687,7 +687,8 @@ begin
          sb.Panels[0].Text := Format('Работает: %s, кадр %d', [Ctime.AsString(-iDelay), Ctime.RoundToKadr(-iDelay)]);
      end
     else sb.Panels[0].Text := 'Не поставлен на задержку'
-   end;
+   end
+   else  sb.Panels[0].Text := 'Не поставлен на задержку'
 end;
 
 procedure TFormMain.SetActiveTab(const Form: IForm);

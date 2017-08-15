@@ -36,6 +36,9 @@ type
     property MaxCash: Int64 read GetMaxCashSize;
   end;
 
+  { TODO :
+Нужно создать наследник в projectmanager3
+из GFileDataFactory неренести ConstructFileName в наследник }
   TFileData = class(TIComponent, IFileData, ICashedData)
   private
     FFile: TFileStream;

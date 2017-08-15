@@ -164,7 +164,7 @@ class function TMetaType.ParseSimpleString(const line: string): TMetaValue;
   i, j: Integer;
   v: TMetaType;
 begin
-  s := line;
+  s := line.Trim;
   userData := ExtractUserData(s);
   // ползовательские атрибуты
   if s.Chars[0] = '#' then
@@ -184,7 +184,7 @@ begin
    begin
   // стандартные типы
     i := s.IndexOf(';');
-    if i <= 0 then raise Exception.Create('Error none - ;');
+    if i <= 0 then raise Exception.Create('Error none ";" line ['+ line +']');
     s := s.Replace(';','').Trim;
     // array
     Result.ArrayLength := 0;

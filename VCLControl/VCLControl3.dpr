@@ -25,7 +25,8 @@ uses
   FormDelay2 in 'FormDelay2.pas' {DialogDelay},
   VCL.Dlg.Ram in 'VCL.Dlg.Ram.pas' {FormDlgRam},
   ConnectDeviceHelper in 'ConnectDeviceHelper.pas',
-  DlgSetupDate in 'DlgSetupDate.pas' {FormCalendar};
+  DlgSetupDate in 'DlgSetupDate.pas' {FormCalendar},
+  ExportToPSK6_V3 in 'ExportToPSK6_V3.pas' {FormExportToPSK6_V3};
 
 {$R *.res}
 

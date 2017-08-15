@@ -75,8 +75,8 @@
     <Import Project="..\_prg_set.optset" Condition="'$(Cfg_1_Win32)'!='' And Exists('..\_prg_set.optset')"/>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
-        <VerInfo_Build>31</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.31;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=2.1.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>33</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.33;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=2.1.0.0;Comments=</VerInfo_Keys>
         <Manifest_File>None</Manifest_File>
         <UsePackages>true</UsePackages>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
