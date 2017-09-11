@@ -372,17 +372,25 @@ end;
 procedure TDSection.AddLine(const line: String);
  var
   sd: TArray<string>;
+  s: string;
   v: TArray<Variant>;
   i: Integer;
-  sNul: Double;
+  sNul, d: Double;
 begin
   sNul := Double(FOwner.Well.Items['NULL'].Value);
   sd := line.Split([' '], ExcludeEmpty);
   SetLength(v, Length(sd));
   for  i := 0 to Length(v)-1 do
    begin
-    v[i] := Trim(sd[i]).ToDouble;
-    if v[i] = sNul then v[i] := Null;
+    s := Trim(sd[i]);
+    if TryStrToFloat(s, d) then
+     begin
+      if d = sNul then v[i] := Null
+      else v[i] := d
+     end
+    else v[i] := s;
+    //v[i] := Trim(sd[i]).ToDouble;
+    //if v[i] = sNul then v[i] := Null;
    end;
   AddData(v);
 end;

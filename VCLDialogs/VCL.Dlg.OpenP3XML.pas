@@ -73,6 +73,7 @@ begin
   Result := TypeInfo(Dialog_OpenLAS);
 end;
 
+type TmyGrap = class(TGraph);
 procedure TDlgOpenP3DataSet.btOKClick(Sender: TObject);
  var
   p: TXScalableParam;
@@ -83,6 +84,7 @@ begin
   try
    if Assigned(ids) then
     with TXMLDataSet(ids) do
+     begin
      for f in FrameSelectParam1.GetSelected do
       begin
        if f is TBlobField then
@@ -120,6 +122,8 @@ begin
          if n.HasAttribute(AT_RLO) then p.SetRange(n.Attributes[AT_RLO], n.Attributes[AT_RHI]);
         end;
       end;
+     end;
+   TmyGrap(Fcol.Graph).DoParamsAdded(ids.DataSet);
    Fcol.Graph.UpdateData;
   finally
    Fcol.Graph.DeFrost;

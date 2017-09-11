@@ -34,6 +34,7 @@ type
        X: array [0..0] of Byte;
      end;
    protected
+     Fids: IDataSet;
      Fevent: TAddpointEvent<T>;
      FfileTmpBuffer: TArray<Byte>;
      FFileData: IFileData;
@@ -43,7 +44,7 @@ type
      FInitBufThread: TThread;
      procedure ReadFromDB;
      procedure ReadFromMemBuffer;
-     procedure InitMemBuffer(d: TDataSet);
+     procedure InitMemBuffer(d: TDataSet; NeedInitFromFile: boolean = True);
      function FiendField(const Fullname: string): TField;
      procedure Read(YFrom, Yto: Single; AddpointEvent: TAddpointEvent<T>);
 
@@ -51,6 +52,7 @@ type
      procedure InitBuffFromFile; virtual;
      procedure IniTmpFileBuffer(Y: Single; X: TField); virtual;
      function GetXValue(Fx: TField): T; virtual; abstract;
+     procedure ResetBuffer; override;
    public
      property YValue: Single read GetFieldY;
      property XFieldDef: TFileFieldDef read GetXFieldDef;
@@ -92,6 +94,8 @@ type
      function GetArrayType: Integer;
      function GetEnumFunc: TAsTypeFunction<integer>;
      function GetRecordCount: Integer;
+   protected
+     procedure ResetBuffer; override;
    public
      procedure Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>); overload;
      procedure Read(YFrom, Yto: Single; Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);overload;
@@ -102,10 +106,10 @@ type
      function GetShortIntData(var P: Pointer): ShortInt; inline;
      property EnumFunc: TAsTypeFunction<integer> read GetEnumFunc;
      property ArraySize: Integer read GetArraySize;
+     property RecordCount: Integer read GetRecordCount write FRecordCount;
    published
      property ArrayType: Integer read GetArrayType write FArrayType;
      property ArrayCount: Integer read GetArrayCount write FArrayCount;
-     property RecordCount: Integer read GetRecordCount write FRecordCount;
    end;
 
    TStringDataLink = class(TDataLink<string>)
@@ -189,7 +193,7 @@ begin
   Result := FXFieldDef;
 end;
 
-procedure TDataLink<T>.InitMemBuffer(d: TDataSet);
+procedure TDataLink<T>.InitMemBuffer(d: TDataSet; NeedInitFromFile: boolean = True);
  var
   i, Size: Integer;
   fx,fy: TField;
@@ -197,7 +201,7 @@ begin
   d.Active := True;
   fx := d.FieldByName(XParamPath);
   fy := d.FieldByName(YParamPath);
-  Size := (d.RecordCount+1) * FileRecLen;  //  (d.RecordCount+1) ?????  надо разобраться!!!
+  Size := (d.RecordCount{+1}) * FileRecLen;  //  (d.RecordCount+1) ?????  надо разобраться!!!
   FFileData.Lock;
   try
     if FbuffReady then Exit;
@@ -206,31 +210,18 @@ begin
     if FFileData.Size = 0 then
      begin
       d.First;
-      /// глюк или я непонимаю
-      /// fnction TDataSet.GetNextRecord: Boolean;
-      ///   ..............
-      ///    Result := (GetRecord(GetBuffer(FRecordCount), GetMode, True) = grOK);
-      ///   ..............
-      ///    else
-      ///      if FRecordCount < FBufferCount then
-      ///        Inc(FRecordCount) else
-      ///        MoveBuffer(0, FRecordCount); <= ЕСЛИ UniDirectional НЕ СДВИГАЕТ И ВСЕ ДАННЫЕ ПЕРВЫЕ
-      ///    FCurrentRecord := FRecordCount - 1;
-      ///    Result := True;
-      ///  /////////////////////
-      if d.IsUniDirectional then d.Next;
       i := 0;
      end
     else
      begin
-      InitBuffFromFile;
+      if NeedInitFromFile then InitBuffFromFile;
       if FFileData.Size = Size then
        begin
         FbuffReady := True;
         Exit;
        end;
       i := FFileData.Size div FileRecLen;
-      d.RecNo := i;
+      d.RecNo := i+1;
      end;
      while (not d.Eof) do
       begin
@@ -257,6 +248,7 @@ procedure TDataLink<T>.ReadFromMemBuffer;
 begin
   Yfirst := Fbuff[0].Y;
   dy := Fbuff[1].y - Fbuff[0].Y;
+  if dy = 0 then dy := 1;
   RecNo := Round((FYFrom-Yfirst)/dy)-2;
   if RecNo < 0 then RecNo := 0;
   while (RecNo < Length(Fbuff)) and (Fbuff[RecNo].Y < FYFrom) do Inc(RecNo);
@@ -268,6 +260,11 @@ begin
     Fevent(y, Fbuff[RecNo].X);
     Inc(RecNo);
    end;
+end;
+
+procedure TDataLink<T>.ResetBuffer;
+begin
+  FbuffReady := False;
 end;
 
 procedure TDataLink<T>.ReadFromDB;
@@ -309,6 +306,7 @@ end;
 procedure TDataLink<T>.Read(YFrom, Yto: Single; AddpointEvent: TAddpointEvent<T>);
  var
   th: TThread;
+  ids: IDataSet;
 begin
   if Length(FfileTmpBuffer) <> FileRecLen then SetLength(FfileTmpBuffer, FileRecLen);
 
@@ -317,9 +315,9 @@ begin
   FYto := Yto;
 
 //  ReadFromDB;
-//
-//  Exit;
 
+//  Exit;
+ //неработает если выбираешь несколько данных LAS проблемма с синхронизацией потоков появляются нулевые У в файле
   if not FbuffReady then
    begin
     if not Assigned(FFileData) then FFileData := GFileDataFactory.Factory(TFileData, BufferFileName);
@@ -327,6 +325,7 @@ begin
     begin
       FFileData.Lock;
       try
+       Tdebug.Log('TmpBuff: %d, Rec*Len: %d', [FFileData.Size, DataSet.RecordCount*FileRecLen]);
        if FFileData.Size = DataSet.RecordCount*FileRecLen then
         begin
          SetLength(Fbuff, FFileData.Size div FileRecLen);
@@ -342,7 +341,7 @@ begin
     th.Free;
    end;
   if FbuffReady then ReadFromMemBuffer
-  else
+  else if Length(Fbuff) = 0 then
    begin
     ReadFromDB;
     if not Assigned(FInitBufThread) then FInitBufThread := TReadDataThread.Create(procedure
@@ -351,13 +350,29 @@ begin
     begin
       FInitBufThread.FreeOnTerminate := True;
       try
-       if not DataSetDef.CreateNew(ids, True) then Exit;
+       if not DataSetDef.CreateNew(ids{, False}) then Exit;
        InitMemBuffer(ids.DataSet);
       finally
        FInitBufThread := nil;
       end;
     end);
    end
+  else
+   begin
+//    th := TReadDataThread.Create(procedure
+//    begin
+      FFileData.Lock;
+      try
+        if not Assigned(Fids) and not DataSetDef.CreateNew(Fids{, False}) then Exit;
+        InitMemBuffer(Fids.DataSet, false);
+      finally
+       FFileData.UnLock;
+      end;
+//    end);
+//    th.WaitFor;
+//    th.Free;
+    if FbuffReady then ReadFromMemBuffer;
+   end;
 end;
 
 {$ENDREGION TDataLink<T>}
@@ -477,11 +492,17 @@ end;
 
 procedure TWaveDataLink.Read(YFrom, Yto, Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);
 begin
-  if (FDelta <> Delta) or (FScale <> Scale) then FbuffReady := False;
+  if (FDelta <> Delta) or (FScale <> Scale) then ResetBuffer;
   FDelta := Delta;
   FScale := Scale;
 
   inherited read(YFrom, Yto, AddWaveEvent);
+end;
+
+procedure TWaveDataLink.ResetBuffer;
+begin
+  inherited;
+  FRecordCount := 0;
 end;
 
 procedure TWaveDataLink.Read(Delta, Scale: Single; AddWaveEvent: TAddpointEvent<TArray<ShortInt>>);

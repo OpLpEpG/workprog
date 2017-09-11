@@ -2,14 +2,19 @@ unit VCL.GraphDataForm;
 
 interface
 
-uses  VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls,
+uses  VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls, Data.DB, XMLDataSet, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl, CustomPlot;
 
 type
   TGraphDataForm = class(TCustomFormData)
     Graph: TGraph;
+    procedure GraphParamsAdded(d: TDataSet);
   private
+    FActiveDataSetBinds: Tarray<string>;
+    FC_Write: Integer;
+    function IsBinded(ds: TXMLDataSet): boolean;
+    procedure SetC_Write(const Value: Integer);
    const
     NICON = 135;
   protected
@@ -18,6 +23,7 @@ type
   public
     [StaticAction('Новый график', 'Окна визуализации', NICON, '0:Показать.Окна визуализации')]
     class procedure DoCreateForm(Sender: IAction); override;
+    property C_Write: Integer read FC_Write write SetC_Write;
   end;
 
 implementation
@@ -49,10 +55,38 @@ begin
   f.Show;
 end;
 
+procedure TGraphDataForm.GraphParamsAdded(d: TDataSet);
+begin
+  if (d is TXMLDataSet) and TXMLDataSet(d).IsActive and not IsBinded(TXMLDataSet(d)) then
+   begin
+    Bind('C_Write', TXMLDataSet(d).FileData, ['S_Write']);
+    FActiveDataSetBinds := FActiveDataSetBinds +[TXMLDataSet(d).BinFileName];
+   end;
+end;
+
+function TGraphDataForm.IsBinded(ds: TXMLDataSet): boolean;
+ var
+  s: string;
+begin
+  for s in FActiveDataSetBinds do if SameText(s, ds.BinFileName) then Exit(True);
+  Result := False;
+end;
+
 procedure TGraphDataForm.Loaded;
+var
+  c: TGraphColmn;
+  p: TGraphPar;
 begin
   inherited;
   Graph.PopupMenu := CreateUnLoad<TPlotMenu>;
+  for c in Graph.Columns do
+    for p in c.Params do GraphParamsAdded(p.Link.DataSet);
+end;
+
+procedure TGraphDataForm.SetC_Write(const Value: Integer);
+begin
+  FC_Write := Value;
+  Graph.UpdateData;
 end;
 
 initialization

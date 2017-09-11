@@ -276,6 +276,7 @@ begin
 //  if not FSinc.BeginWrite then raise Exception.Create('Error Message FSinc.BeginWrite');
 //  Lock;
 //  try
+   if Assigned(FCash) then FreeAndNil(FCash);
    if From >= 0 then FFile.Position := From;
    Result := FFile.Write(PData^, Count);
    S_Write := Result;

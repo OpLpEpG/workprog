@@ -192,6 +192,9 @@ type
   Dialog_OpenLAS = interface
   ['{79669877-1863-41A7-837C-CAAF41FC00D2}']
   end;
+  Dialog_Export = interface
+  ['{419B512F-A0EA-4D08-ABFA-43A032539F3C}']
+  end;
   Dialog_Error = interface
   ['{679FB10F-DD4B-44CB-BAF7-8AC674BE9B04}']
   end;

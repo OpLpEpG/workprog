@@ -66,11 +66,14 @@ type
 //    function GetPtr: TRecordBuffer;
 //    function GetBookmark: TBookmark;
 //    procedure SetBookmark(const Value: TBookmark);
+    FID: Integer;
+    procedure SetID(const Value: Integer);
   public
 //   Index: Integer;
    ///Bookmark, Index ??
+   AutoCalculated: Boolean;
    BookmarkFlag: TBookmarkFlag;
-   ID: Integer;
+   property ID: Integer read FID write SetID;
 //   property Ptr: TRecordBuffer read GetPtr;
 //   property Bookmark: TBookmark read GetBookmark write SetBookmark;
   end;
@@ -94,6 +97,7 @@ type
     procedure SetBookmarkFlag(Buffer: TRecordBuffer; Value: TBookmarkFlag); override;
     procedure InternalGotoBookmark(Bookmark: TBookmark); override;
     // маршрутизация
+    procedure Resync(Mode: TResyncMode); override;
     function GetRecord(Buffer: TRecordBuffer; GetMode: TGetMode; DoCheck: Boolean): TGetResult; override;
     procedure InternalSetToRecord(Buffer: TRecordBuffer); override;
     procedure InternalFirst; override;
@@ -393,7 +397,8 @@ begin
     gmCurrent: // check if empty
       if FCurrent >= RecordCount then Result := grEOF;
   end;
-  if Result = grOK then if IsUniDirectional then with PRecBuffer(Buffers[0])^ do
+  if Result = grOK then
+  if IsUniDirectional then with PRecBuffer(Buffers[0])^ do
    begin
     // глюк или я непонимаю
 // fnction TDataSet.GetNextRecord: Boolean;
@@ -409,6 +414,7 @@ begin
 //  /////////////////////
     InternalInitRecord(Buffer);
     ID := FCurrent+1;
+    AutoCalculated := False;
     BookmarkFlag := bfCurrent;
    end else
   // read the data
@@ -416,6 +422,7 @@ begin
     begin
      InternalInitRecord(Buffer);
      ID := FCurrent+1;
+     AutoCalculated := False;
      BookmarkFlag := bfCurrent;
     end;
 end;
@@ -427,12 +434,22 @@ end;
 
 procedure TRLDataSet.InternalLast;
 begin
-  FCurrent := RecordCount - 1;
+  FCurrent := RecordCount;
+//  if IsUniDirectional and FIsTableOpen then
+//  begin
+//   GetPriorRecord;
+//   GetPriorRecords;
+//  end;
 end;
 
 procedure TRLDataSet.InternalFirst;
 begin
   FCurrent := -1;
+  if IsUniDirectional and FIsTableOpen then
+  begin
+   GetNextRecord;
+   GetNextRecords;
+  end;
 end;
 
 function TRLDataSet.GetRecNo: Integer;
@@ -456,6 +473,17 @@ begin
   Result := FIsTableOpen;
 end;
 
+procedure TRLDataSet.Resync(Mode: TResyncMode);
+begin
+  if IsUniDirectional then
+   begin
+//    ActivateBuffers;
+    GetRecord(ActiveBuffer, gmCurrent, False);
+    DataEvent(deDataSetChange, 0);
+   end
+  else inherited Resync(Mode);
+end;
+
 procedure TRLDataSet.InternalClose;
 begin
   BindFields(False);
@@ -472,6 +500,11 @@ begin
   if DefaultFields then CreateFields;
   BindFields(True);
   InternalFirst;
+//  if IsUniDirectional then
+//   begin
+//    ActivateBuffers;
+//    GetRecord(ActiveBuffer, gmCurrent, False);
+//   end;
   FIsTableOpen := True;
 end;
 
@@ -488,6 +521,13 @@ end;
 procedure TIDataSetDef.SetCaption(const Value: string);
 begin
 
+end;
+
+{ TRecBuffer }
+
+procedure TRecBuffer.SetID(const Value: Integer);
+begin
+  FID := Value;
 end;
 
 initialization

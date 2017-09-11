@@ -57,6 +57,7 @@ type
     function GetXMLSection: IXMLNode;
     function GetScript: TXmlScript;
     function GetInternalCalcDataLen: Word; inline;
+    function GetIsActive: Boolean;
   protected
     function GetTempDir: string; override;
     function InternalCalcRecBuffer(Buffer: PRecBuffer): Boolean; override;
@@ -68,6 +69,7 @@ type
 
     function TryGetX(const FullName: string; out X: IXMLNode): Boolean;
 
+    property IsActive: Boolean read GetIsActive;
     property XMLSection: IXMLNode read GetXMLSection;
     property Script: TXmlScript read GetScript;
 // published неподдерживаются
@@ -194,6 +196,11 @@ end;
 function TXMLDataSet.GetInternalCalcDataLen: Word;
 begin
   Result := FInternalCalcDataLen;
+end;
+
+function TXMLDataSet.GetIsActive: Boolean;
+begin
+  Result := (Section = T_WRK) and (XMLFileName = (GContainer as IALLMetaDataFactory).Get.Get.FileName)
 end;
 
 function TXMLDataSet.TryGetX(const FullName: string; out X: IXMLNode): Boolean;
@@ -356,22 +363,23 @@ end;
 
 function TXMLDataSet.InternalCalcRecBuffer(Buffer: PRecBuffer): Boolean;
  var
-  buf, pb, clcbuf: PByte;
+  buf, clcbuf: PByte;
   d: TInternalCalcData;
 begin
   buf := GetRecData(Buffer);
   if not Assigned(buf) or not Assigned(XMLSection) or (Length(FInternalCalcData) = 0) then Exit(False);
   TPars.SetData(FXMLSection, buf, false);
   Script.Execute(Section, FModul);
-  pb := Pbyte(Buffer) + SizeOf(TRecBuffer);
-  clcbuf := pb + Sizeof(Boolean);
+//  pb := Pbyte(Buffer) + SizeOf(TRecBuffer);
+  clcbuf := Pbyte(Buffer) + SizeOf(TRecBuffer); //pb + Sizeof(Boolean);
   for d in FInternalCalcData do
    begin
     if Assigned(d.Data) then TPars.FromVar(d.Data.Attributes[AT_VALUE], Integer(d.Data.Attributes[AT_TIP]), clcbuf + d.Offset);
    end;
-  PBoolean(pb)^ := True;
+  Buffer.AutoCalculated := True;
   Result := True;
 end;
+
 
 initialization
   RegisterClasses([TXMLDataSet, TXMLDataSetDef]);

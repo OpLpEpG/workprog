@@ -68,6 +68,7 @@ function TLasDataSet.GetFieldData(Field: TField; var Buffer: TValueBuffer): Bool
  var
   p: PRecBuffer;
   v: Variant;
+  s: string;
 begin
   Result := True;
   if not GetActiveRecBuf(p) then Exit(False);
@@ -81,7 +82,16 @@ begin
     SetLength(Buffer, Sizeof(Double));
     v := FlasDoc[Field.FieldName,  p.ID-1];
     if VarIsNull(v) then PDouble(@Buffer[0])^ := Double.NaN
-    else PDouble(@Buffer[0])^ := Double(v);
+    else
+     begin
+      if VarIsNumeric(V) then PDouble(@Buffer[0])^ := Double(v)
+      else
+       begin
+        s := v;
+        SetLength(Buffer, s.Length);
+        Move(s[1], Buffer[0], Length(Buffer));
+       end;
+     end;
    end;
 end;
 
@@ -92,8 +102,8 @@ end;
 
 function TLasDataSet.GetRecordCount: Integer;
 begin
-  if Assigned(FlasDoc) then Result := FlasDoc.DataCount
-  else Result := -1;
+  if not Assigned(FlasDoc) then  FlasDoc := GetLasDoc(LasFile, Encoding);
+  Result := FlasDoc.DataCount;
 end;
 
 procedure TLasDataSet.InternalClose;

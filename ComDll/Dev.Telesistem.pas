@@ -71,12 +71,13 @@ type
    TTelesisFrequency = (afq40, afq20, afq10, afq5, afq2p5, afq1p25);
     TRecRun = record
        LSync, HSync: Boolean;
-       SumDat: Integer;
+       SumDat: Double;
        NCanal: Integer;
        Nfq: Integer;
        case integer of
-        0: (Buff: array[0..2] of Byte);
+        0: (Buff: array[0..3] of Byte);
         1: (Wrd: Word);
+        2: (int: Integer);
      end;
 
   const

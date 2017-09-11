@@ -42,6 +42,7 @@ type
 
  const
   IMPORT_DB_DIALOG_CATEGORY = '»мпорт данных';
+  EXPORT_DIALOG_CATEGORY = 'Ёкспорт данных';
 
 implementation
 

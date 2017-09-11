@@ -3,11 +3,11 @@ unit Plot.GR32;
 interface
 
 uses
-  System.SysUtils, System.Classes, System.Types, System.UITypes, ExtendIntf, Vcl.Forms, Plot.DataLink,
-  Vcl.Graphics, Vcl.Themes, Winapi.Windows, Winapi.Messages, System.Math,
-  GR32_Math, GR32, GR32_Image, GR32_RangeBars, GR32_Blend, GR32_Polygons, GR32_Resamplers,
-  GR32_VectorUtils, GR32_Geometry, RootImpl, RootIntf, tools, JDtools,
-  debug_except, CustomPlot;
+  System.SysUtils, System.Classes, System.Types, System.UITypes, ExtendIntf, Vcl.Forms,
+  Plot.DataLink, Vcl.Graphics, Vcl.Themes, Winapi.Windows, Winapi.Messages,
+  System.Math, GR32_Math, GR32, GR32_Image, GR32_RangeBars, GR32_Blend,
+  GR32_Polygons, GR32_Resamplers, GR32_VectorUtils, GR32_Geometry, RootImpl,
+  RootIntf, tools, JDtools, debug_except, CustomPlot;
 
 type
   TGR32GraphicCollumn = class(TGraphColmn, ICaption)
@@ -52,7 +52,6 @@ type
   protected
     function GetCaption: string;
     procedure SetCaption(const Value: string);
-
     procedure SetVisible(Visible: Boolean); override;
     procedure ParamCollectionChanged; override;
     procedure ParamPropChanged; override;
@@ -96,6 +95,10 @@ type
 
   TLineParamBuffer = class(TIObject)
     Points: TArrayOfFloatPoint;
+    LastPoint: TFloatPoint;
+    DashOffset: TFloat;
+    LastOffset: TFloat;
+    procedure UpdateDashOffset;
   end;
 
   /// скроллинг мышкой
@@ -109,6 +112,7 @@ type
     procedure DoMouseUp(X, Y: Integer);
   end;
   /// корневой класс для ркдактирования линий
+
   TLineParamMouseEdit = class(TIObject, IParamMouseEdit)
     Owner: TGR32GraphicData;
     Param: TLineParam;
@@ -121,12 +125,14 @@ type
     procedure DoMouseUp(X, Y: Integer); virtual; abstract;
   end;
   /// сдвигание линии
+
   TLineParamMouseMove = class(TLineParamMouseEdit)
     KSumm: Integer;
     procedure DoMouseMove(X, Y: Integer); override;
     procedure DoMouseUp(X, Y: Integer); override;
   end;
   /// масштабирование линии по Х
+
   TLineParamMouseScale = class(TLineParamMouseEdit)
     XMiddle: Double;
     KDeltaOLD: Integer;
@@ -160,7 +166,6 @@ type
   protected
     function GetCaption: string;
     procedure SetCaption(const Value: string);
-
     function GetCursor: Integer; override;
     procedure DrowAxis();
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -178,7 +183,8 @@ type
     property Bitmap: TBitmap32 read FBitmap;
     property C_PropertyChanged: string read FPropertyChanged write SetPropertyChanged;
   published
-    [ShowProp('Метки оси Y')] property ShowYlegend: boolean read FShowYlegend write SetShowYlegend default True;
+    [ShowProp('Метки оси Y')]
+    property ShowYlegend: boolean read FShowYlegend write SetShowYlegend default True;
   end;
 {$ENDREGION 'Отрисовка данных'}
 
@@ -191,7 +197,7 @@ implementation
 function RandomColor: TAlphaColor;
 begin
 //  Result := TColor(HSVtoRGB(Random(360), 1, 0.5));
-   Result := TAlphaColor(Color32(Random(256),Random(256),Random(256),$E0));
+  Result := TAlphaColor(Color32(Random(256), Random(256), Random(256), $E0));
 end;
 
 function ScaleFloatPoint(L: TFloat; R: TFloatPoint): TFloatPoint;
@@ -228,7 +234,8 @@ var
   t, l2: Single;
 begin
   /// i.e. |w-v|^2 -  avoid a sqrt
-  if v.X.IsNaN or w.X.IsNaN then Exit(Single.MaxValue);
+  if v.X.IsNaN or w.X.IsNaN then
+    Exit(Single.MaxValue);
   l2 := SqrDistance(v, w);
   /// v == w case
   if (l2 = 0.0) then
@@ -258,7 +265,7 @@ begin
   while (n < L) and (p.Y > Curve[n].Y) do
     Inc(n);
   //  в районе n находим расстояние до кривой
-  for I := Max(0, n - 3) to Min(L - 2, n + 3) do
+  for i := Max(0, n - 3) to Min(L - 2, n + 3) do
     Result := Min(Result, DistanceFromPointToSegment(Curve[i], Curve[i + 1], p));
 end;
 
@@ -287,14 +294,15 @@ begin
         NonThemedCheckBoxState := NonThemedCheckBoxState or DFCS_CHECKED;
       DrawFrameControl(B.Canvas.Handle, R, DFC_BUTTON, NonThemedCheckBoxState);
     end;
-    Bitmap.Draw(TRect.Create(TPoint.Create(nX * (CHECKBOX_SIZE + 1) + CHECKBOX_SIZE div 2, y - CHECKBOX_SIZE div 2), CHECKBOX_SIZE, CHECKBOX_SIZE), R, b.Canvas.Handle);
+    Bitmap.Draw(TRect.Create(TPoint.Create(nX * (CHECKBOX_SIZE + 1) + CHECKBOX_SIZE div 2, Y - CHECKBOX_SIZE div 2), CHECKBOX_SIZE, CHECKBOX_SIZE), R, B.Canvas.Handle);
   finally
     B.Free;
   end;
 end;
 
+procedure DrawLineParametr(Bitmap: TBitmap32; Color: TColor; const points: TArrayOfFloatPoint;
+          Width: Integer = 1; DashStyle: TLineDashStyle = ldsSolid; offset: TFloat = 0); overload;
 
-procedure DrawLineParametr(Bitmap: TBitmap32; Color: TColor; const points: TArrayOfFloatPoint; Width: Integer =1; DashStyle: TLineDashStyle = ldsSolid); overload;
   function GetDashes: TArrayOfFloat;
   var
     i: Integer;
@@ -310,41 +318,49 @@ procedure DrawLineParametr(Bitmap: TBitmap32; Color: TColor; const points: TArra
         Result := [8, 2, 1, 2, 1, 2];
     end;
     for i := 0 to High(Result) do
-      Result[i] := Result[i] {* FixedOne}  * Width;
+      Result[i] := Result[i] {* FixedOne}   * Width;
   end;
 
+var
+  MultiPoly: TArrayOfArrayOfFloatPoint;
+  offs: TFloat;
 begin
   if DashStyle = ldsSolid then
     PolylineFS(Bitmap, points, Color, False, Width{ * FixedOne})
   else
-    DashLineFS(Bitmap, points, GetDashes, Color, False, Width{ * FixedOne});
+   begin
+    MultiPoly := GR32_VectorUtils.BuildDashedLine(Points, GetDashes, offset, False);
+    PolyPolylineFS(Bitmap, MultiPoly, Color, False, Width);
+    //DashLineFS(Bitmap, points, GetDashes, Color, False, Width{ * FixedOne});
+   end;
 end;
 
-procedure DrawLineParametr(Bitmap: TBitmap32; P: TXScalableParam; const points: TArrayOfFloatPoint); overload;
+procedure DrawLineParametr(Bitmap: TBitmap32; P: TXScalableParam; const points: TArrayOfFloatPoint; offset: TFloat = 0); overload;
 
-  function GetDashes: TArrayOfFloat;
-  var
-    i: Integer;
-  begin
-    case p.DashStyle of
-      ldsDot:
-        Result := [1, 2];
-      ldsDash:
-        Result := [8, 2];
-      ldsDashDot:
-        Result := [8, 2, 1, 2];
-      ldsDashDotDot:
-        Result := [8, 2, 1, 2, 1, 2];
-    end;
-    for i := 0 to High(Result) do
-      Result[i] := Result[i] {* FixedOne}  * p.Width;
-  end;
+//  function GetDashes: TArrayOfFloat;
+//  var
+//    i: Integer;
+//  begin
+//    case P.DashStyle of
+//      ldsDot:
+//        Result := [1, 2];
+//      ldsDash:
+//        Result := [8, 2];
+//      ldsDashDot:
+//        Result := [8, 2, 1, 2];
+//      ldsDashDotDot:
+//        Result := [8, 2, 1, 2, 1, 2];
+//    end;
+//    for i := 0 to High(Result) do
+//      Result[i] := Result[i] {* FixedOne}   * P.Width;
+//  end;
 
 begin
-  if p.DashStyle = ldsSolid then
-    PolylineFS(Bitmap, points, p.Color, False, p.Width{ * FixedOne})
-  else
-    DashLineFS(Bitmap, points, GetDashes, p.Color, False, p.Width{ * FixedOne});
+  DrawLineParametr(Bitmap, p.Color, points, p.Width, p.DashStyle, offset);
+//  if P.DashStyle = ldsSolid then
+//    PolylineFS(Bitmap, points, P.Color, False, P.Width{ * FixedOne})
+//  else
+//    DashLineFS(Bitmap, points, GetDashes, P.Color, False, P.Width{ * FixedOne});
 end;
 
 {$ENDREGION}
@@ -443,9 +459,9 @@ begin
   y := -Round(FRangeBar.Position);
   for p in Column.Params do
     if p = Par then
-      Exit(TRect.Create(TPoint.Create(nX * (CHECKBOX_SIZE + 1) + CHECKBOX_SIZE div 2, y + FBitmap.TextHeight(']') + 1 + par.Width div 2 - CHECKBOX_SIZE div 2), CHECKBOX_SIZE, CHECKBOX_SIZE))
+      Exit(TRect.Create(TPoint.Create(nX * (CHECKBOX_SIZE + 1) + CHECKBOX_SIZE div 2, y + FBitmap.TextHeight(']') + 1 + Par.Width div 2 - CHECKBOX_SIZE div 2), CHECKBOX_SIZE, CHECKBOX_SIZE))
     else
-      Inc(Y, GetPatamHeight(p));
+      Inc(y, GetPatamHeight(p));
 end;
 
 function TGR32GraphicLegend.GetPatamHeight(p: TGraphPar): Integer;
@@ -522,21 +538,22 @@ begin
   Fpp2mm := Screen.PixelsPerInch / 2.54 * 2;
   s := FBitmap.TextExtent(p.Title);
   CaptionX := (FBitmap.Width - s.cx) div 2;
-  if CaptionX < 0 then CaptionX := 0;
+  if CaptionX < 0 then
+    CaptionX := 0;
   // заголовок
   if p.EUnit <> '' then
-    FBitmap.RenderText(CaptionX, y, p.Title + '[' + p.EUnit + ']', 1, Color32(FBitmap.Font.Color))// p.Color)
+    FBitmap.RenderText(CaptionX, Y, p.Title + '[' + p.EUnit + ']', 1, Color32(FBitmap.Font.Color))// p.Color)
   else
-    FBitmap.RenderText(CaptionX, y, p.Title, 1, Color32(FBitmap.Font.Color));//p.Color);
+    FBitmap.RenderText(CaptionX, Y, p.Title, 1, Color32(FBitmap.Font.Color)); //p.Color);
   // линия
-  LineY := y + s.cy + 1 + p.Width div 2;
+  LineY := Y + s.cy + 1 + p.Width div 2;
   DrawLineParametr(FBitmap, p, [TFloatPoint.Create(0, LineY), TFloatPoint.Create(FBitmap.Width, LineY)]);
   // гамма если волна
   if (p is TWaveParam) and Assigned(FBitmap.bits) then
-   begin
-    for i := 0 to Min(255 div 4, FBitmap.Width - CHECKBOX_SIZE*3) do
-      FBitmap.VertLineTS(i + CHECKBOX_SIZE*3, Y+s.cy-6, Y+s.cy-4, TWaveParam(p).Gamma[i*4-128]);
-   end;
+  begin
+    for i := 0 to Min(255 div 4, FBitmap.Width - CHECKBOX_SIZE * 3) do
+      FBitmap.VertLineTS(i + CHECKBOX_SIZE * 3, Y + s.cy - 6, Y + s.cy - 4, TWaveParam(p).Gamma[i * 4 - 128]);
+  end;
   // риски и шкала
   posX := 0;
   AxisLabel := p.DeltaX;
@@ -545,7 +562,7 @@ begin
   while posX < FBitmap.Width do
   begin
     FBitmap.VertLineTS(Round(posX), ym, ym + 8, p.Color);
-    FBitmap.RenderText(Round(posX), ym, Format('%-10.5g', [AxisLabel]), 1, Color32(FBitmap.Font.Color));//p.Color);
+    FBitmap.RenderText(Round(posX), ym, Format('%-10.5g', [AxisLabel]), 1, Color32(FBitmap.Font.Color)); //p.Color);
     posX := posX + Fpp2mm;
     AxisLabel := AxisLabel + 1.0 / p.ScaleX;
     if Abs(AxisLabel) < 0.0000001 then
@@ -586,7 +603,7 @@ end;
 
 procedure TGR32GraphicLegend.SetVisible(Visible: Boolean);
 begin
-  FRangeBar.Visible := Column.Visible and Row.Visible  and (FRange > FBitmapShowRect.Height);
+  FRangeBar.Visible := Column.Visible and Row.Visible and (FRange > FBitmapShowRect.Height);
 end;
 
 procedure TGR32GraphicLegend.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -677,11 +694,12 @@ procedure TScrollMouseData.DoMouseMove(X, Y: Integer);
 var
   k: Double;
 begin
-  if Y <> YBegin then with Owner.Graph do
+  if Y <> YBegin then
+    with Owner.Graph do
     begin
-     k := YScale * (Screen.PixelsPerInch / 2.54 * 2)*MRTOINT[YMirror];
-     YPosition := YPosition + (Y - YBegin) / k;
-     YBegin := Y;
+      k := YScale * (Screen.PixelsPerInch / 2.54 * 2) * MRTOINT[YMirror];
+      YPosition := YPosition + (Y - YBegin) / k;
+      YBegin := Y;
     end;
 end;
 
@@ -694,7 +712,7 @@ begin
   Owner := AOwner;
   Param := TLineParam(Par);
   XBegin := X;
-  Points := TLineParamBuffer((Param as ILineDataLink).DrowMemoryBuffer).Points;
+  points := TLineParamBuffer((Param as ILineDataLink).DrowMemoryBuffer).points;
 end;
 
 constructor TLineParamMouseScale.Create(AOwner: TGR32GraphicData; Par: TGraphPar; X: Integer);
@@ -703,13 +721,13 @@ var
 begin
   inherited;
   XMiddle := 0;
-  SetLength(Origin, Length(Points));
-  for i := 0 to High(Points) do
+  SetLength(origin, Length(points));
+  for I := 0 to High(points) do
   begin
-    XMiddle := XMiddle + Points[i].X;
-    Origin[i] := Points[i].X;
+    XMiddle := XMiddle + points[I].X;
+    origin[I] := points[I].X;
   end;
-  XMiddle := XMiddle / Length(Points);
+  XMiddle := XMiddle / Length(points);
   KScale := 1;
 end;
 
@@ -721,11 +739,11 @@ var
 begin
   ppmm := Screen.PixelsPerInch / 2.54 * 2 * PPMMDELTA;
   k := Trunc((X - XBegin) / ppmm);
-  if Abs(K) > 0 then
+  if Abs(k) > 0 then
   begin
     Delta := k * ppmm;
-    for i := 0 to Length(Points) - 1 do
-      Points[i].X := Points[i].X + Delta;
+    for i := 0 to Length(points) - 1 do
+      points[i].X := points[i].X + Delta;
     XBegin := X;
     inc(KSumm, k);
     Owner.Render(False);
@@ -740,14 +758,14 @@ var
 begin
   ppmm := Screen.PixelsPerInch / 2.54 * 2 * PPMMDELTA;
   k := Min(Max(Low(SCALE_PRESET_MOUSE), Trunc((X - XBegin) / ppmm)), High(SCALE_PRESET_MOUSE));
-  if Abs(KDeltaOLD - K) > 0 then
+  if Abs(KDeltaOLD - k) > 0 then
   begin
-    KDeltaOLD := K;
+    KDeltaOLD := k;
     KScale := SCALE_PRESET_MOUSE[k];
    /// Формулы в блонноте (Экран проект 3)
     Delta := XMiddle / KScale - XMiddle;
-    for i := 0 to Length(Points) - 1 do
-      Points[i].X := (Origin[i] + Delta) * KScale;
+    for i := 0 to Length(points) - 1 do
+      points[i].X := (origin[i] + Delta) * KScale;
     Owner.Render(False);
     Owner.Paint;
   end;
@@ -792,7 +810,7 @@ begin
 end;
 
 procedure TWaveShowGraph.DoMouseMove(X, Y: Integer);
- var
+var
   p: TWaveParam;
   pntrs: TArrayOfFloatPoint;
   pss: IWaveDataLink;
@@ -805,36 +823,39 @@ begin
   Y := Owner.MouseToClient(Tpoint.Create(X, Y)).Y;
 
   Owner.FBitmap.Assign(Bitmap);
-  for p in Owner.FLastHitWaveParametrs do if Supports(p, IWaveDataLink, pss) then
-   begin
-    YFrom := Owner.Graph.YTopScreen - p.DeltaY + Y/(pp2mm* Owner.Graph.YScale);
-    Yold := Single.MaxValue;
-    SetLength(pntrs, 0);
-    pss.Read(YFrom, YFrom, TWaveParam(p).ZeroGamma, TWaveParam(p).KoeffGamma, procedure(Y: Single; const X: TArray<ShortInt>)
-     var
-      i: Integer;
-     begin
-       if abs(YFrom - Y) < Yold then
+  for p in Owner.FLastHitWaveParametrs do
+    if Supports(p, IWaveDataLink, pss) then
+    begin
+      YFrom := Owner.Graph.YTopScreen - p.DeltaY + Y / (pp2mm * Owner.Graph.YScale);
+      Yold := Single.MaxValue;
+      SetLength(pntrs, 0);
+      pss.Read(YFrom, YFrom, TWaveParam(p).ZeroGamma, TWaveParam(p).KoeffGamma,
+        procedure(Y: Single; const X: TArray<ShortInt>)
+        var
+          i: Integer;
         begin
-         Yold := Y;
-         Ye := Round(pp2mm * Owner.Graph.YScale * (-Owner.Graph.YTopScreen + p.DeltaY + Yold));
-         SetLength(pntrs, Length(X));
-         for i := 0 to Length(pntrs)-1 do
+          if abs(YFrom - Y) < Yold then
           begin
-           pntrs[i].X := (i - p.DeltaX)*pp2mm* p.ScaleX;
-           pntrs[i].Y := Ye + X[i];
+            Yold := Y;
+            Ye := Round(pp2mm * Owner.Graph.YScale * (-Owner.Graph.YTopScreen + p.DeltaY + Yold));
+            SetLength(pntrs, Length(X));
+            for i := 0 to Length(pntrs) - 1 do
+            begin
+              pntrs[i].X := (i - p.DeltaX) * pp2mm * p.ScaleX;
+              pntrs[i].Y := Ye + X[i];
+            end;
           end;
-        end;
-     end);
-    if Length(pntrs) > 0 then
-     begin
-      pntrs := VertexReduction(pntrs);
-      DrawLineParametr(Owner.FBitmap, p, pntrs);
-      DrawLineParametr(Owner.FBitmap, clBlack32, [TfloatPoint.Create(0, Ye),  TfloatPoint.Create(owner.ClientRect.Width, Ye)]);
-     end;
-   end;
+        end);
+      if Length(pntrs) > 0 then
+      begin
+        pntrs := VertexReduction(pntrs);
+        DrawLineParametr(Owner.FBitmap, p, pntrs);
+        DrawLineParametr(Owner.FBitmap, clBlack32, [TfloatPoint.Create(0, Ye), TfloatPoint.Create(owner.ClientRect.Width, Ye)]);
+      end;
+    end;
   Owner.Paint;
 end;
+
 procedure TWaveShowGraph.DoMouseUp(X, Y: Integer);
 begin
   Owner.FBitmap.Assign(Bitmap);
@@ -874,10 +895,11 @@ var
   var
     pos: Double;
   begin
-    Pos := Ypos - Graph.YTopScreen;
-    Pos := Pos * pp2mm * Graph.YScale;
+    pos := Ypos - Graph.YTopScreen;
+    pos := pos * pp2mm * Graph.YScale;
     Result := Round(pos);
   end;
+
 begin
   pp2mm := Screen.PixelsPerInch / 2.54 * 2;
   if Graph.YMirror then
@@ -893,9 +915,9 @@ begin
   begin
     FBitmap.HorzLineTS(0, Round(y), FBitmap.Width, ACL_AXIS);
     if FShowYlegend then
-      FBitmap.RenderText(0, Round(y), FloatToStr(SimpleRoundTo(Ylb, -4)), 1, ACL_AXIS_LABEL);
+      FBitmap.RenderText(0, Round(y), FloatToStr(SimpleRoundTo(ylb, -4)), 1, ACL_AXIS_LABEL);
     ylb := ylb + m / Graph.YScale;
-    Y := Y + pp2mm;
+    y := y + pp2mm;
   end;
 end;
 
@@ -914,14 +936,15 @@ var
   p: TGraphPar;
 begin
   if TryHitParametr(TPoint.Create(X, Y), p, Button, Shift) then
-   if p is TLineParam then
-    if ssShift in Shift then
-      FParamMouseEdit := TLineParamMouseScale.Create(Self, p, X)
+    if p is TLineParam then
+      if ssShift in Shift then
+        FParamMouseEdit := TLineParamMouseScale.Create(Self, p, X)
+      else
+        FParamMouseEdit := TLineParamMouseMove.Create(Self, p, X)
     else
-      FParamMouseEdit := TLineParamMouseMove.Create(Self, p, X)
-   else
     begin
-     if p is TWaveParam then FParamMouseEdit := TWaveShowGraph.Create(Self, Y)
+      if p is TWaveParam then
+        FParamMouseEdit := TWaveShowGraph.Create(Self, Y)
     end
   else
     FParamMouseEdit := TScrollMouseData.Create(Self, Y)
@@ -967,20 +990,21 @@ begin
 end;
 
 procedure TGR32GraphicData.Render(UpdateBuffers: Boolean = True);
- var
+var
   pp2mm: Single;
+
   procedure RenderWaveparams;
-   var
+  var
     p: TGraphPar;
     pss: IWaveDataLink;
  // экран:
  // экран       отображение БД  пересечение
  //
-    {ScreenRect,} DstRect{,        ClipDstRect}: TRect;
+    {ScreenRect,}     DstRect{,        ClipDstRect}: TRect;
  // БД:
  // отображение экранa   Реальные данные    пересечение
  //
-    {BDScreenRect,}        BDSrcRect        {, ClipSrcRect}: TRect;
+    {BDScreenRect,}            BDSrcRect        {, ClipSrcRect}: TRect;
  /// 1. находим ScreenRect - clientRect регионa данных это есть FBitmap.BoundsRect
  /// 2. находим BDSrcRect - Реальные данные Х-[0..ArraySize] Y-ближайшие реальные  данные от BDScreenRect
  /// 3. находим BDScreenRect - отобрадение в буффере ScreenRect => BDScreenRect
@@ -994,111 +1018,134 @@ procedure TGR32GraphicData.Render(UpdateBuffers: Boolean = True);
  /// 3. находим обратное оотображение в экран DstRect  BDSrcRect => DstRect это будет приемник
     Src: TBitmap32;
     ky, kx: Single;
-    X0,X1,Y0,Y1, indx: Integer;
+    X0, X1, Y0, Y1, indx: Integer;
     Ytop, Ybot: Double;
   begin
-    for p in Column.Params do if p.Visible and (p is TWaveParam) and Supports(p, IWaveDataLink, pss) then
-     begin
-      if not Assigned(pss.DrowMemoryBuffer) then
-       begin
-        pss.DrowMemoryBuffer := TWaveParamBuffer.Create;
-        TWaveParamBuffer(pss.DrowMemoryBuffer).Bitmap.SetSize(pss.ArrayCount, pss.RecordCount);
-       end;
-      Src := TWaveParamBuffer(pss.DrowMemoryBuffer).Bitmap;
+    for p in Column.Params do
+      if p.Visible and (p is TWaveParam) and Supports(p, IWaveDataLink, pss) then
+      begin
+        if not Assigned(pss.DrowMemoryBuffer) then
+        begin
+          pss.DrowMemoryBuffer := TWaveParamBuffer.Create;
+          TWaveParamBuffer(pss.DrowMemoryBuffer).Bitmap.SetSize(pss.ArrayCount, pss.RecordCount);
+        end;
+        Src := TWaveParamBuffer(pss.DrowMemoryBuffer).Bitmap;
+        Src.SetSize(pss.ArrayCount, pss.RecordCount);
 
       /// 2. находим BDSrcRect - Реальные данные Х-[0..ArraySize] Y-ближайшие реальные (вне экрана) данные от BDScreenRect
-      Y0 := pss.IndexOfY(p.Graph.YTopScreen - p.DeltaY, fndLower, Ytop);
-      Y1 := pss.IndexOfY(p.Graph.YButtomScreen - p.DeltaY, fndHiger, Ybot);
-      BDSrcRect := TRect.Create(0, Y0, pss.ArrayCount, Y1);
+        Y0 := pss.IndexOfY(p.Graph.YTopScreen - p.DeltaY, fndLower, Ytop);
+        Y1 := pss.IndexOfY(p.Graph.YButtomScreen - p.DeltaY, fndHiger, Ybot);
+        BDSrcRect := TRect.Create(0, Y0, pss.ArrayCount, Y1);
       /// 3. находим обратное оотображение BDSrcRect в экран
-      ky := p.Graph.YScale * pp2mm;
-      kx := TWaveParam(p).ScaleX * pp2mm;
-      X0 := Round((0              - p.DeltaX) * kx);
-      X1 := Round((pss.ArrayCount - p.DeltaX) * kx);
-      Y0 := Round((Ytop-p.Graph.YTopScreen + p.DeltaY) * ky);
-      Y1 := Round((Ybot-p.Graph.YTopScreen + p.DeltaY) * ky);
-      DstRect := TRect.Create(X0,Y0, X1, Y1);
+        ky := p.Graph.YScale * pp2mm;
+        kx := TWaveParam(p).ScaleX * pp2mm;
+        X0 := Round((0 - p.DeltaX) * kx);
+        X1 := Round((pss.ArrayCount - p.DeltaX) * kx);
+        Y0 := Round((Ytop - p.Graph.YTopScreen + p.DeltaY) * ky);
+        Y1 := Round((Ybot - p.Graph.YTopScreen + p.DeltaY) * ky);
+        DstRect := TRect.Create(X0, Y0, X1, Y1);
 
-      if UpdateBuffers { TODO : AND paramApdateGamma changed: ZeroGamma, KoeffGamma, Gamma} then
-       begin
-        indx := 0;
-        pss.Read(TWaveParam(p).ZeroGamma, TWaveParam(p).KoeffGamma, procedure(Y: Single; const X: TArray<ShortInt>)
-         var
-          i: Integer;
+        if DstRect.IsEmpty or BDSrcRect.IsEmpty then Exit;
+
+        if UpdateBuffers { TODO : AND paramApdateGamma changed: ZeroGamma, KoeffGamma, Gamma} then
         begin
-          for i := 0 to Length(X)-1 do Src.Pixel[i, indx] := TColor32(TWaveParam(p).Gamma[X[i]]);
-          inc(indx);
-        end);
-       end;
+          indx := 0;
+          pss.Read(TWaveParam(p).ZeroGamma, TWaveParam(p).KoeffGamma,
+            procedure(Y: Single; const X: TArray<ShortInt>)
+            var
+              i: Integer;
+            begin
+              for i := 0 to Length(X) - 1 do
+                Src.Pixel[i, indx] := TColor32(TWaveParam(p).Gamma[X[i]]);
+              inc(indx);
+            end);
+        end;
    //    TDebug.Log('  %d    %d    ',[SrcRect.Width, SrcRect.Height]);
                                              // Destination Data     clip
-       if not BDSrcRect.IsEmpty then StretchTransfer(FBitmap, DstRect, FBitmap.BoundsRect,
+        if not BDSrcRect.IsEmpty then
+          StretchTransfer(FBitmap, DstRect, FBitmap.BoundsRect,
                                                    // Src
-                                                   src, BDSrcRect,
+            Src, BDSrcRect,
                                                    // resamplers
-                                                   src.Resampler,
+            Src.Resampler,
                                                    // drow mode
-                                                   dmBlend, src.OnPixelCombine);
-     end;
+            dmBlend, Src.OnPixelCombine);
+      end;
   end;
+
   procedure RenderLineparams;
-   var
+  var
     p: TGraphPar;
     pss: ILineDataLink;
     dx, dy, ky, kx: Single;
     i, cnt: Integer;
     fp: TFloatPoint;
   begin
-    for p in Column.Params do if p.Visible and (p is TLineParam) and Supports(p, ILineDataLink, pss) then
+    for p in Column.Params do
+      if p.Visible and (p is TLineParam) and Supports(p, ILineDataLink, pss) then
       begin
      // создание буфера
-        if not Assigned(pss.DrowMemoryBuffer) then pss.DrowMemoryBuffer := TLineParamBuffer.Create;
+        if not Assigned(pss.DrowMemoryBuffer) then
+          pss.DrowMemoryBuffer := TLineParamBuffer.Create;
         with TLineParamBuffer(pss.DrowMemoryBuffer) do
-         begin
+        begin
           if UpdateBuffers then
-           begin
+          begin
           // подготовка буфера чтение из БД буфера фильтра
             SetLength(points, 0);
             ky := p.Graph.YScale * pp2mm;
             kx := TLineParam(p).ScaleX * pp2mm;
             // чтение из БД
             pss.Read(Min(p.Graph.YTopScreen, p.Graph.YButtomScreen) - p.DeltaY, Max(p.Graph.YTopScreen, p.Graph.YButtomScreen) - p.DeltaY,
-            procedure(Y: Single;const X: Single)
-            begin
-              if not X.IsNan then points := points + [TFloatPoint.Create(X*kx, Y*ky)];
-            end);
+              procedure(Y: Single; const X: Single)
+              begin
+                if not X.IsNan and not Y.IsNan and (Abs(X) < 10000000) and (Abs(Y) < 10000000) then
+                  points := points + [TFloatPoint.Create(X * kx, Y * ky)];
+              end);
            // удаление лишних точек
-            if Length(points) > 100 then points := VertexReduction(points);
+            if Length(points) > 100 then
+              points := VertexReduction(points);
+            if TXScalableParam(p).DashStyle <> ldsSolid then UpdateDashOffset();
             dx := p.DeltaX * kx;
             dy := (-p.Graph.YTopScreen + p.DeltaY) * ky;
             cnt := Length(points);
             if p.Graph.YMirror then
-             begin
+            begin
               if odd(cnt) then
-               begin
+              begin
                 points[cnt div 2].X := points[cnt div 2].X - dx;
                 points[cnt div 2].Y := -(points[cnt div 2].Y + dy);
-               end;
-              for i := 0 to cnt div 2-1 do
-               begin
+              end;
+              for i := 0 to cnt div 2 - 1 do
+              begin
                 fp := points[i];
-                points[i].X := points[cnt-1-i].X - dx;
-                points[i].Y := -(points[cnt-1-i].Y + dy);
-                points[cnt-1-i].X := fp.X - dx;
-                points[cnt-1-i].Y := -(fp.Y + dy);
-               end
-             end
-            else for i := 0 to cnt-1 do
-             begin
-              points[i].X := points[i].X - dx;
-              points[i].Y := points[i].Y + dy;
-             end;
-           end;
+                points[i].X := points[cnt - 1 - i].X - dx;
+                points[i].Y := -(points[cnt - 1 - i].Y + dy);
+                points[cnt - 1 - i].X := fp.X - dx;
+                points[cnt - 1 - i].Y := -(fp.Y + dy);
+              end
+            end
+            else
+              for i := 0 to cnt - 1 do
+              begin
+                points[i].X := points[i].X - dx;
+                points[i].Y := points[i].Y + dy;
+              end;
+            for i := 0 to cnt - 1 do
+            begin
+              if points[i].X > p.Column.Width + 10 then
+                points[i].X := p.Column.Width + 10
+              else if points[i].X < -10 then
+                points[i].X := -10;
+            end;
+          end;
        // рендеринг
-          if Length(points) > 1 then DrawLineParametr(FBitmap, TLineParam(p), points);
-         end;
+          if Length(points) > 1 then
+            DrawLineParametr(FBitmap, TLineParam(p), points, DashOffset);
+        end;
       end;
   end;
+
 begin
   if Graph.Frosted then
   begin
@@ -1121,7 +1168,7 @@ end;
 procedure TGR32GraphicData.SetClientRect(const Value: TRect);
 begin
   inherited;
-  FBitmap.SetSize(Value.Width, value.Height);
+  FBitmap.SetSize(Value.Width, Value.Height);
   FShowRect := FBitmap.BoundsRect;
   Render;
   Paint;
@@ -1160,7 +1207,7 @@ begin
         with TLineParamBuffer((p as ILineDataLink).DrowMemoryBuffer) do
         begin
           delta := TLineParam(p).Width + 2;
-          Dist := DistanceFromPointToCurve(clPoint, Points);
+          Dist := DistanceFromPointToCurve(clPoint, points);
           if Dist < delta then
           begin
             Par := p;
@@ -1168,11 +1215,11 @@ begin
           end;
         end
       else if (ssCtrl in Shift) and (p is TWaveParam) and p.Selected then
-       begin
+      begin
         CArray.Add<TWaveParam>(FLastHitWaveParametrs, TWaveParam(p));
         Par := p;
         Result := True;
-       end;
+      end;
     end;
 end;
 
@@ -1191,6 +1238,28 @@ begin
   inherited;
 end;
 
+{ TLineParamBuffer }
+
+procedure TLineParamBuffer.UpdateDashOffset;
+ var
+  lp: TFloatPoint;
+begin
+  if (Length(Points) > 1) then
+   begin
+    if (LastPoint = Points[0]) then
+     begin
+      DashOffset := DashOffset + LastOffset;
+      lp := Points[0] - Points[1];
+      LastOffset := System.Math.Hypot(lp.X, lp.Y);
+     end
+    else
+     begin
+      DashOffset := 0;
+      LastOffset := 0;
+     end;
+    LastPoint := Points[1];
+   end;
+end;
 
 initialization
   TGR32GraphicCollumn.ColClsRegister(TGR32GraphicCollumn, 'Графическая колонка');

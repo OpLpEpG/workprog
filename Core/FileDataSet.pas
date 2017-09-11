@@ -135,7 +135,7 @@ end;
 function TFileDataSet.FindFieldData(Buffer: PRecBuffer; Field: TField): PByte;
  var
   Index: Integer;
-  pb: PBoolean;
+ // pb: PBoolean;
   f: TFileFieldDef;
 begin
   Result := nil;
@@ -145,12 +145,8 @@ begin
   f := TFileFieldDef(FieldDefList[Index]);
   if f.CalcField and AutoCalcFields then
    begin
-    pb := PBoolean(PByte(Buffer) + SizeOf(TRecBuffer));
-   ////
-   //    Tdebug.log('   ID=%d  bool=%d   ', [Buffer.ID, Integer(pb^)]);
-   ////
-    if not pb^ and not InternalCalcRecBuffer(Buffer) then Exit;
-    Result := PByte(pb) + SizeOf(Boolean);
+    if not Buffer.AutoCalculated and not InternalCalcRecBuffer(Buffer) then Exit;
+    Result := PByte(Buffer) + SizeOf(TRecBuffer);
    end
   else if Field.FieldKind = fkData then Result := GetRecData(Buffer);
   if not Assigned(Result) then Exit;

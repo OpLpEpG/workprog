@@ -12,7 +12,7 @@ uses
 type
   TPlotMenu = class(TCustomContextPlotPopup)
   private
-    FNRootAddColumn, FNRootEditGraph: TContextMenuItem;
+    FNRootAddColumn, FNRootEditGraph, FNUpdateDataGraph: TContextMenuItem;
     FFirstMenuIndex: Integer;
     FGraph: TCustomGraph;
     FColumn: TGraphColmn;
@@ -27,6 +27,7 @@ type
     procedure InfoRowVisblChahgeClick(Sender: TObject);
     procedure EditColumnClick(Sender: TObject);
     procedure EditGraphClick(Sender: TObject);
+    procedure UpdateGraphClick(Sender: TObject);
     procedure DeleteParamClick(Sender: TObject);
     procedure EditParamClick(Sender: TObject);
     procedure SelectAllParamsClick(Sender: TObject);
@@ -88,11 +89,15 @@ begin
     ppeGraph:
       begin
         for i := Items.Count - 1 downto 0 do
-          if (Items[i] <> FNRootAddColumn) and (Items[i] <> FNRootEditGraph) and (Items[i] is TInnerContextMenuItem) then
+          if (Items[i] <> FNRootAddColumn) and
+             (Items[i] <> FNRootEditGraph) and
+             (Items[i] <> FNUpdateDataGraph) and
+             (Items[i] is TInnerContextMenuItem) then
             Items[i].Free;
         FGraph := TCustomGraph(AObject);
         if not Assigned(FNRootAddColumn) then
         begin
+          FNUpdateDataGraph := AddToMenu('Обновить экран', UpdateGraphClick, FGraph, MousePos);
           FNRootEditGraph := AddToMenu('Редактировать график...', EditGraphClick, FGraph, MousePos);
           FNRootAddColumn := AddToMenu('Добавить колонку', nil, FGraph, MousePos);
           for ccd in TGraphColmn.ColClassItems do
@@ -275,6 +280,16 @@ begin
   Result := 0;
   for r in FGraph.Rows.FindRows(tip) do
     Exit(CB[r.Visible])
+end;
+
+procedure TPlotMenu.UpdateGraphClick(Sender: TObject);
+begin
+  FGraph.Frost;
+  try
+    FGraph.UpdateData;
+  finally
+    FGraph.DeFrost;
+  end;
 end;
 
 procedure TPlotMenu.AddParamsClick(Sender: TObject);

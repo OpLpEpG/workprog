@@ -21,12 +21,9 @@ object GraphDataForm: TGraphDataForm
     YLastAvail = 1000.000000000000000000
     YMirror = False
     YScale = 1.000000000000000000
+    OnParamsAdded = GraphParamsAdded
     Align = alClient
     Parent = Owner
-    ExplicitLeft = 200
-    ExplicitTop = 56
-    ExplicitWidth = 100
-    ExplicitHeight = 41
     GraphRows = <>
     GraphColumns = <>
   end

@@ -823,6 +823,8 @@ begin
           sz := Sizeof(TStdReadLong);
          end;
         Send(@D, sz, procedure(p: Pointer; n: integer)
+         var
+          pb: PByte;
         begin
           if (n > 0) and (n-1 = siz) and (PByte(p)^ = d.CmdAdr) then
            begin
@@ -831,8 +833,16 @@ begin
             else TPars.SetData(root, p);
 
 //            FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'GK.xml');
-
-            if Assigned(ev) then ev(adr, root, p, siz);
+            if Assigned(ev) then
+             begin
+              if StdOnly then
+               begin
+                pb := p;
+                inc(pb,siz);
+                fillchar(pb^, Integer(root.Attributes[AT_SIZE])-siz, 0);
+               end;
+              ev(adr, root, p, root.Attributes[AT_SIZE]);
+             end;
            end
            else if n<=0 then raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, d.CmdAdr])
            else  raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, PByte(p)^]);

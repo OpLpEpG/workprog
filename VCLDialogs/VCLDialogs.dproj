@@ -85,10 +85,10 @@
         <UsePackages>true</UsePackages>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
         <DCC_DcuOutput>unit\$(Config)</DCC_DcuOutput>
-        <VerInfo_Build>95</VerInfo_Build>
+        <VerInfo_Build>96</VerInfo_Build>
         <VerInfo_Locale>1049</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.0.95;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.0.96;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
@@ -172,6 +172,10 @@
         </DCCReference>
         <DCCReference Include="VCL.JDtype.AlphaClolor.pas">
             <Form>FormSetAlphaColor</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="VCL.Dlg.ExportLAS.pas">
+            <Form>FormExportLASP3</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

@@ -75,7 +75,6 @@ object DlgOpenP3DataSet: TDlgOpenP3DataSet
         inherited Tree: TVirtualStringTree
           Width = 325
           Height = 338
-          ExplicitTop = 0
           ExplicitWidth = 325
           ExplicitHeight = 338
           Columns = <

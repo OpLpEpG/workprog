@@ -835,17 +835,17 @@ class procedure TFormControl.ViewRamData(Sender: TFormControl; Root: PVirtualNod
       Include(v.States, vsExpanded);
       e := PNodeExData(Sender.Tree.GetNodeData(v));
       e.Item := node.AttributeNodes.FindNode(AttrName);
-      Sender.SetData(e,'Caption', node.Attributes[AttrName]);
+      Sender.SetData(e, Caption, node.Attributes[AttrName]);
       Sender.SetReadOnly(e);
      end;
   end;
 begin
   SetData('с кадра', AT_FROM_KADR);
-  SetData('с адреса', AT_FROM_ADR);
-  SetData('со времени', AT_FROM_TIME);
   SetData('по кадр', AT_TO_KADR);
-  SetData('до адрес', AT_TO_ADR);
+  SetData('со времени', AT_FROM_TIME);
   SetData('до времени', AT_TO_TIME);
+  SetData('с адреса', AT_FROM_ADR);
+  SetData('по адрес', AT_TO_ADR);
 end;
 
 class procedure TFormControl.ViewWrkData(Sender: TFormControl; Root: PVirtualNode; node: IXMLNode);

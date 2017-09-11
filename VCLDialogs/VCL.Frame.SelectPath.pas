@@ -61,7 +61,10 @@ procedure TFrameSelectPath.Execute(const FileName: string; CheckEvent: TCheckEve
   pvDev, pvModul, pvSect: PVirtualNode;
 begin
   FCheckEvent := CheckEvent;
-  r := (GContainer as IALLMetaDataFactory).Get(FileName).Get.DocumentElement;
+  if FileName = '' then
+       r := (GContainer as IALLMetaDataFactory).Get.Get.DocumentElement
+  else
+       r := (GContainer as IALLMetaDataFactory).Get(FileName).Get.DocumentElement;
   if r.NodeName = 'PROJECT' then r := r.ChildNodes.FindNode('DEVICES');
   Tree.BeginUpdate;
   try

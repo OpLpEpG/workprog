@@ -76,11 +76,21 @@ type
     function RealTimeLastIndex: Integer;
     function FufferDataPeriod: Double; // ms
     procedure RegEvent(index: Integer; RealTimeEvent: TNotifyEvent);
+    function RunData: single; virtual;
+    function KData: Double; virtual;
+    function MaxCanal: Integer; virtual;
   public
     procedure InputData(Data: Pointer; DataSize: integer); override;
     [ShowProp('Послать команду')] property SendCmd: Byte read Fcmd write Send;
   published
     [ShowProp('Файл записи данных')] property FileName;
+  end;
+
+  Tuso32 =  class(TUsoRetrans)
+  protected
+    function GetCaption: string; override;
+    function RunData: single; override;
+    function MaxCanal: Integer; override;
   end;
 
   TUsoPleer = class(TUsoRetransCustom, IOscDataSubDevice, IPleer)
@@ -89,7 +99,7 @@ type
     FMaximum: Int64;
     FData: array[0..63]of double;
     FDataCnt: Integer;
-    FDsum: Integer;
+    FDsum: Double;
     FDsumCnt: Integer;
     FTimer: TTimer;
     procedure OnTime(Sender: TObject);
@@ -655,7 +665,7 @@ procedure TUsoRetrans.InputData(Data: Pointer; DataSize: integer);
    {$J-}
   var
    p: PByte;
-   sw: SmallInt;
+   sw: Single;
    e: TNotifyEvent;
 begin
  p := Data;
@@ -665,16 +675,16 @@ begin
      begin
       Buff[Ncanal] := p^;
       Inc(Ncanal);
-      if Ncanal >= 3 then
+      if Ncanal >= MaxCanal then
        begin
-        sw := SmallInt(Swap(wrd));
+        sw := RunData;//SmallInt(Swap(wrd));
         if Assigned(FFileStream) and IsWork then FFileStream.WriteData(sw);
         SumDat := SumDat + sw;
         Inc(Nfq);
         if Nfq >= FKSum then
          begin
           Nfq := 0;
-          FData[FbufCount] := SumDat / FKSum * 0.0625;
+          FData[FbufCount] := SumDat / FKSum * KData;
           SumDat := 0;
           inc(FbufCount);
           // синхронизация команы
@@ -716,6 +726,16 @@ begin
    end;
 end;
 
+function TUsoRetrans.KData: Double;
+begin
+  Result := 0.0625
+end;
+
+function TUsoRetrans.MaxCanal: Integer;
+begin
+  Result := 3;
+end;
+
 function TUsoRetransCustom.IsWork: Boolean;
  var
   opt: IProjectOptions;
@@ -745,6 +765,14 @@ procedure TUsoRetrans.RemoveUserForm;
 begin
 end;
 
+
+function TUsoRetrans.RunData: single;
+ var
+  sw: SmallInt;
+begin
+  sw := SmallInt(Swap(RecRun.wrd));
+  Result := sw;
+end;
 
 procedure TUsoRetrans.Send(cmd: Byte);
 begin
@@ -865,16 +893,16 @@ end;
 function TUsoPleer.Step(count: Cardinal): Cardinal;
  var
   i, n, needread: Cardinal;
-  a: TArray<SmallInt>;
+  a: TArray<Single>;
 begin
   if not Assigned(FFileStream) then Exit(0);
-  needread := count * 2 * Cardinal(FKsum);
+  needread := count * SizeOf(Single) * Cardinal(FKsum);
   SetLength(a, needread);
   Result := FFileStream.Read(a[0], needread);
-  n := Result div 2;
+  n := Result div SizeOf(Single);
   for i := 0 to n-1 do
    begin
-    inc(FDsum, a[i]);
+    FDsum := FDsum + a[i];
     inc(FDsumCnt);
     if FDsumCnt >= FKsum then
      begin
@@ -1236,15 +1264,33 @@ begin
   Result := TypeInfo(ITelesistem_1ware);
 end;
 
+{ Tuso32 }
+
+function Tuso32.GetCaption: string;
+begin
+  Result := TELESIS_STRUCURE[0].Category + ' USO32' ;
+end;
+
+function Tuso32.MaxCanal: Integer;
+begin
+  Result := 4;
+end;
+
+function Tuso32.RunData: single;
+begin
+  Result := RecRun.int;
+end;
+
 initialization
   TJvCustomInspectorData.ItemRegister.Add(TJvInspectorTypeInfoRegItem.Create(TInspUcoFileRetr, TypeInfo(TOpenUsoFile)));
   RegisterClasses([TTelesisRetr, TretrData, TOneWareData, TDevDecoderRetr,TDevDecoderRetrFM, TDevDecoderRM,
-  TTelesis1Ware, TUsoRetrans, TUsoPleer, TOiRetrans, TFFTRetrans]);
+  TTelesis1Ware, TUsoRetrans, Tuso32, TUsoPleer, TOiRetrans, TFFTRetrans]);
   TRegister.AddType<TTelesisRetr, IDevice>.LiveTime(ltSingletonNamed);
   TRegister.AddType<TTelesis1Ware, IDevice>.LiveTime(ltSingletonNamed);
   TRegister.AddType<TretrData, ITelesistem_retr>.LiveTime(ltTransientNamed);
   TRegister.AddType<TOneWareData, ITelesistem_1ware>.LiveTime(ltTransientNamed);
   TRegister.AddType<TUsoRetrans, ITelesistem_retr, ITelesistem_1ware>.LiveTime(ltTransientNamed);
+  TRegister.AddType<TUso32, ITelesistem_retr, ITelesistem_1ware>.LiveTime(ltTransientNamed);
   TRegister.AddType<TUsoPleer, ITelesistem_retr, ITelesistem_1ware>.LiveTime(ltTransientNamed);
   TRegister.AddType<TOiRetrans, ITelesistem_retr, ITelesistem_1ware>.LiveTime(ltTransientNamed);
   TRegister.AddType<TFFTRetrans, ITelesistem_retr, ITelesistem_1ware>.LiveTime(ltTransientNamed);
@@ -1256,6 +1302,7 @@ finalization
   GContainer.RemoveModel<TOiRetrans>;
   GContainer.RemoveModel<TFFTRetrans>;
   GContainer.RemoveModel<TUsoRetrans>;
+  GContainer.RemoveModel<TUso32>;
   GContainer.RemoveModel<TUsoPleer>;
   GContainer.RemoveModel<TDevDecoderRM>;
   GContainer.RemoveModel<TDevDecoderRetrFM>;
