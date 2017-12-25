@@ -33,19 +33,21 @@ object FormGK: TFormGK
     object lbInfo: TLabel
       Left = 0
       Top = 298
-      Width = 3
+      Width = 670
       Height = 13
       Align = alBottom
       Alignment = taCenter
       WordWrap = True
+      ExplicitWidth = 3
     end
     object lbAlpha: TLabel
       Left = 0
       Top = 285
-      Width = 3
+      Width = 670
       Height = 13
       Align = alBottom
       WordWrap = True
+      ExplicitWidth = 3
     end
     object Tree: TVirtualStringTree
       Left = 0
@@ -88,7 +90,7 @@ object FormGK: TFormGK
         end
         item
           Position = 5
-          Width = 79
+          Width = 73
           WideText = #948'('#1056'),%'
         end>
     end

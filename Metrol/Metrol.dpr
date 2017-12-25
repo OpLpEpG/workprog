@@ -27,7 +27,7 @@ uses
   AutoMetr.Inclin in 'AutoMetr.Inclin.pas',
   MetrInclinGraph in 'MetrInclinGraph.pas',
   FrameInclinGraph in 'FrameInclinGraph.pas' {FrmInclinGraph: TFrame},
-  MetrInclin.Math in 'MetrInclin.Math.pas',
+  LuaInclin.Math in 'LuaInclin.Math.pas',
   MetrUAKI.ToleranceForm in 'MetrUAKI.ToleranceForm.pas' {FormUAKItolerance},
   MetrInclin.CheckForm in 'MetrInclin.CheckForm.pas' {FormInclinCheck},
   MetrInclin.TrrAndP2 in 'MetrInclin.TrrAndP2.pas',
@@ -38,7 +38,8 @@ uses
   MetrInclin.T12 in 'MetrInclin.T12.pas',
   MetrInclin.Math2 in 'MetrInclin.Math2.pas',
   MetrInclin.TrrAndP3 in 'MetrInclin.TrrAndP3.pas',
-  MetrGK in 'MetrGK.pas' {FormGK};
+  MetrGK in 'MetrGK.pas' {FormGK},
+  MetrInclin.Temp.Form in 'MetrInclin.Temp.Form.pas' {FormMetrInclinT};
 
 {$R *.res}
 

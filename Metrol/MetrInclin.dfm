@@ -1,6 +1,7 @@
 object FormInclin: TFormInclin
   Left = 0
   Top = 0
+  ActiveControl = Tree
   Caption = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1103' '#1080#1085#1082#1083#1080#1085#1086#1084#1077#1090#1088#1072
   ClientHeight = 376
   ClientWidth = 646
@@ -36,11 +37,12 @@ object FormInclin: TFormInclin
     object lbInfo: TLabel
       Left = 0
       Top = 276
-      Width = 3
+      Width = 646
       Height = 13
       Align = alBottom
       Alignment = taCenter
       WordWrap = True
+      ExplicitWidth = 3
     end
     object Tree: TVirtualStringTree
       Left = 0
@@ -191,7 +193,7 @@ object FormInclin: TFormInclin
         end
         item
           Position = 4
-          Width = 72
+          Width = 66
           WideText = 'D'
         end>
     end
@@ -234,7 +236,7 @@ object FormInclin: TFormInclin
         end
         item
           Position = 4
-          Width = 73
+          Width = 67
           WideText = 'D'
         end>
     end

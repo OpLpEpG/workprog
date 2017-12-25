@@ -2,11 +2,12 @@ unit VCL.Dlg.Ram;
 
 interface
 
-uses  DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, SDcardTools,  System.Threading, FileCachImpl,
+uses RootIntf,
+  DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, SDcardTools,  System.Threading, FileCachImpl,
   System.TypInfo, Vcl.Menus,  System.IOUtils,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Container,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Xml.XMLIntf,
-  System.Bindings.Helper, Vcl.ExtCtrls, Vcl.Mask, JvExMask, JvToolEdit;
+  System.Bindings.Helper, Vcl.ExtCtrls, Vcl.Mask, JvExMask, JvToolEdit, RangeSelector, VCL.Frame.RangeSelect;
 
 type
   EFrmDlgRam = class(EBaseException);
@@ -22,12 +23,10 @@ type
     od: TJvFilenameEdit;
     edLen: TEdit;
     lbLen: TLabel;
-    edBegin: TEdit;
-    edCnt: TEdit;
-    lbEnd: TLabel;
-    lbBegin: TLabel;
     cbSD: TComboBox;
     lbSD: TLabel;
+    cbClcCreate: TCheckBox;
+    RangeSelect: TFrameRangeSelect;
     procedure btExitClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
     procedure btStartClick(Sender: TObject);
@@ -52,13 +51,14 @@ type
     procedure CheckRAMFile(ram: IXMLNode);
     procedure inerExecute(IsImport: boolean);
     procedure inerReadSSD;
-    procedure ReadEvent(car: EnumCopyAsyncRun; Stat: TStatistic; var Erminate: Boolean);
     procedure NImportClick(Sender: TObject);
     procedure NExportClick(Sender: TObject);
     function GetDevice: IDevice;
     procedure UpdateControls(FlagEna: Boolean);
     procedure UpdateControlsSD(SDEna: Boolean);
-    procedure ReadRamEvent(EnumRR: EnumReadRam; DevAdr: Integer; ProcToEnd: Double);
+    procedure UpdateStat(car: EnumCopyAsyncRun; Stat: TStatistic);
+    procedure ReadSSDEvent(car: EnumCopyAsyncRun; Stat: TStatistic; var Trminate: Boolean);
+    procedure ReadRamEvent(EnumRR: EnumCopyAsyncRun; DevAdr: Integer; Stat: TStatistic);
   protected
     procedure Loaded; override;
     function GetInfo: PTypeInfo; override;
@@ -95,12 +95,26 @@ function TFormDlgRam.Execute(Modul: IXMLNode; Res: TDialogResult): Boolean;
     lbSD.Enabled := ena;
     cbSD.Enabled := ena;
   end;
+   const
+    MAX_RAM = $420000;
  var
   i: Integer;
+  RamSize:Int64;
+  ram: IXMLNode;
+  DelayStart: TDateTime;
 begin
   Result := True;
   TBindHelper.RemoveExpressions(Self);
   FModul := Modul;
+
+  ram := FModul.ChildNodes.FindNode(T_RAM);
+  if not Assigned(Ram) then raise EFrmDlgRam.CreateFmt('Метаданные RAM %s не найдены', [Fmodul.NodeName]);
+
+  if not ram.HasAttribute(AT_RAMSIZE) then RamSize := MAX_RAM
+  else if ram.Attributes[AT_RAMSIZE] = 5 then RamSize := MAX_RAM
+  else RamSize := Ram.Attributes[AT_RAMSIZE] * 1024 * 1024;
+  DelayStart := (GContainer as IProjectOptions).DelayStart;
+  RangeSelect.Init(ram.Attributes[AT_SIZE], RamSize, DelayStart);
    // BIT15:USB  BIT14:SSD BIT7:125Kbt BIT6:500Kbt  5-1M 4-2M
   if FModul.HasAttribute(AT_SPEED) then
    begin
@@ -121,16 +135,35 @@ end;
 
 procedure TFormDlgRam.UpdateControlsSD(SDEna: Boolean);
 begin
-  edBegin.Enabled := SDEna;
-  edCnt.Enabled := SDEna;
-  lbEnd.Enabled := SDEna;
-  lbBegin.Enabled := SDEna;
+  RangeSelect.RunEnable(SDEna);
+//  edBegin.Enabled := SDEna;
+//  edCnt.Enabled := SDEna;
+//  lbEnd.Enabled := SDEna;
+//  lbBegin.Enabled := SDEna;
   lbFile.Enabled := not SDEna;
   od.Enabled := not SDEna;
   lbLen.Enabled := not SDEna;
   edLen.Enabled := not SDEna;
+  cbClcCreate.Checked := not SDEna;
+  cbClcCreate.Enabled := not SDEna;
 end;
 
+
+procedure TFormDlgRam.UpdateStat(car: EnumCopyAsyncRun; Stat: TStatistic);
+ const
+  CARSTR: array[EnumCopyAsyncRun] of string =('Чтение', 'Пустая память', 'Конец', 'Прервано', 'Ошибка', 'Пакет.Ош.');
+begin
+  sb.Panels[4].Text := CARSTR[car];
+  if car = carError then Exit;
+  sb.Panels[0].Text := Stat.ProcRun.ToString(ffFixed, 7, 1)+'%';
+  if Stat.Speed > 0.1 then
+    sb.Panels[1].Text := Stat.Speed.ToString(ffFixed, 7, 0)+'Mb/s'
+  else
+    sb.Panels[1].Text := (Stat.Speed*1024).ToString(ffFixed, 7, 0)+'Kb/s';
+  sb.Panels[2].Text := TimeToStr(Stat.TimeFromBegin);
+  sb.Panels[3].Text := TimeToStr(Stat.TimeToEnd);
+  Progress.Position := Round(Stat.ProcRun);
+end;
 
 function TFormDlgRam.GetDevice: IDevice;
 begin
@@ -189,6 +222,9 @@ begin
   btStart.Enabled := FlagEna;
   btExit.Enabled := FlagEna;
   NCanClose := FlagEna;
+  cbClcCreate.Enabled := FlagEna;
+  cbToFF.Enabled := FlagEna;
+  RangeSelect.Enabled := FlagEna;
 end;
 
 procedure TFormDlgRam.btExitClick(Sender: TObject);
@@ -230,8 +266,12 @@ begin
    UpdateControls(False);
    try
     if not IsImport then
-     (FDev as IReadRamDevice).Execute(od.FileName, 0, 0, cbToFF.Checked, rg.ItemIndex, addr, ReadRamEvent, addr, StrToInt('$'+edLen.Text))
-    else ri.Import(flName, flIndex,0,0, cbToFF.Checked, addr, ReadRamEvent, addr);
+     with (FDev as IReadRamDevice) do
+      begin
+       CreateClcFile := cbClcCreate.Checked;
+       Execute(od.FileName, RangeSelect.kadr.first, RangeSelect.kadr.last, cbToFF.Checked, rg.ItemIndex, addr, ReadRamEvent, addr, StrToInt('$'+edLen.Text))
+      end
+    else ri.Import(flName, flIndex, RangeSelect.kadr.first, RangeSelect.kadr.last, cbToFF.Checked, addr, ReadRamEvent, addr);
    except
     UpdateControls(True);
     raise;
@@ -279,26 +319,26 @@ begin
   Progress.Position := 0;
   
   FRecSize := Ram.Attributes[AT_SIZE];
-  FFrom := (StrToInt64(edBegin.Text)*MB div FRecSize) * FRecSize;
-  FCnt :=  (StrToInt64(edCnt.Text)*MB div FRecSize) * FRecSize;
-  
+//  FFrom := (StrToInt64(edBegin.Text)*MB div FRecSize) * FRecSize;
+//  FCnt :=  (StrToInt64(edCnt.Text)*MB div FRecSize) * FRecSize;
+  FFrom := RangeSelect.adr.first;
+  FCnt := RangeSelect.adr.cnt;
+
   ram.Attributes[AT_FROM_ADR] := Format('0x%x',[FFrom]);
   ram.Attributes[AT_FROM_KADR] := FFrom div FRecSize;
   ram.Attributes[AT_FROM_TIME] := CTime.AsString(2.097152/24/3600 * (FFrom div FRecSize));
-  
+
   for I := 0 to sb.Panels.Count-1 do sb.Panels[i].Text := '';
   UpdateControls(False);
   try
-   FSDStream.AsyncCopyTo(GFileDataFactory.ConstructFileName(ram), FFrom, FCnt, cbToFF.Checked, ReadEvent);
+   FSDStream.AsyncCopyTo(GFileDataFactory.ConstructFileName(ram), FFrom, FCnt, cbToFF.Checked, ReadSSDEvent);
   except
    UpdateControls(True);
    raise;
   end;
 end;
 
-procedure TFormDlgRam.ReadEvent(car: EnumCopyAsyncRun; Stat: TStatistic; var Erminate: Boolean);
- const
-  CARSTR: array[EnumCopyAsyncRun] of string =('Чтение', 'Пустая память', 'Конец', 'Прервано', 'Ошибка');
+procedure TFormDlgRam.ReadSSDEvent(car: EnumCopyAsyncRun; Stat: TStatistic; var Trminate: Boolean);
  var
   ram: IXMLNode; 
 begin
@@ -307,7 +347,7 @@ begin
   ram.Attributes[AT_TO_KADR] := (FFrom + Stat.NRead) div FRecSize;
   ram.Attributes[AT_TO_TIME] := CTime.AsString(2.097152/24/3600 * ((FFrom + Stat.NRead) div FRecSize));
 
-  Erminate := FTerminate;
+  Trminate := FTerminate;
   if not FTerminated and (TTask.CurrentTask.Status <> TTaskStatus.Canceled) then
    TThread.Queue(TThread.CurrentThread, procedure
    begin
@@ -317,33 +357,19 @@ begin
        FTerminated := True;
        UpdateControls(True);
       end;
-     sb.Panels[4].Text := CARSTR[car];
-     if car = carError then Exit;
-     sb.Panels[0].Text := Stat.ProcRun.ToString(ffFixed, 7, 1)+'%';
-     sb.Panels[1].Text := Stat.Speed.ToString(ffFixed, 7, 0)+'Mb/s';
-     sb.Panels[2].Text := TimeToStr(Stat.TimeFromBegin);
-     sb.Panels[3].Text := TimeToStr(Stat.TimeToEnd);
-     Progress.Position := Round(Stat.ProcRun);
+     UpdateStat(car, Stat);
    end);
 end;
 
-procedure TFormDlgRam.ReadRamEvent(EnumRR: EnumReadRam; DevAdr: Integer; ProcToEnd: Double);
-  procedure Stop(const reason: string);
-  begin
-    sb.Panels[4].Text := reason;
+procedure TFormDlgRam.ReadRamEvent(EnumRR: EnumCopyAsyncRun; DevAdr: Integer; Stat: TStatistic);
+begin
+  UpdateStat(EnumRR, Stat);
+  if EnumRR in COPY_STOP_EVENT then
+   begin
     (GContainer as IALLMetaDataFactory).Get.Save;
     FRes(Self, mrOk);
     UpdateControls(True);
-  end;
-begin
-  Progress.Position := 100 - Round(ProcToEnd);
-  case EnumRR of
-   eirReadOk:        sb.Panels[4].Text := Format('Чтение памяти Адрес: %d осталось %1.3f',[DevAdr, ProcToEnd]);
-   eirReadErrSector: sb.Panels[4].Text := Format('Ошибка чтения памяти Адрес: %d осталось %1.3f', [DevAdr, ProcToEnd]);
-   eirCantRead:  Stop(Format('Невозможно считать память Адрес: %d', [DevAdr]));
-   eirEnd:       Stop('чтение памяти ОКОНЧЕНО');
-   eirTerminate: Stop('чтение памяти прервано');
-  end;
+   end;
 end;
 
 procedure TFormDlgRam.odBeforeDialog(Sender: TObject; var AName: string; var AAction: Boolean);
@@ -353,6 +379,7 @@ end;
 
 procedure TFormDlgRam.btStartClick(Sender: TObject);
 begin
+  (GlobalCore as IMainScreen).Changed;
   if rg.ItemIndex <> -1 then inerExecute(False)
   else inerReadSSD();
 end;

@@ -45,7 +45,6 @@ object FormShowArray: TFormShowArray
     Shadow.Visible = False
     TopAxis.Visible = False
     View3D = False
-    View3DOptions.Orthogonal = False
     View3DWalls = False
     Zoom.Allow = False
     Zoom.Pen.Visible = False
@@ -59,25 +58,5 @@ object FormShowArray: TFormShowArray
       15
       23)
     ColorPaletteIndex = 19
-    object srDev: TFastLineSeries
-      Title = #1089#1099#1088#1099#1077
-      LinePen.Color = 15054131
-      LinePen.Width = 0
-      TreatNulls = tnDontPaint
-      XValues.Name = 'X'
-      XValues.Order = loAscending
-      YValues.Name = 'Y'
-      YValues.Order = loNone
-    end
-    object srCLC: TFastLineSeries
-      Title = #1089' '#1084#1077#1090#1088#1086#1083#1086#1075#1080#1077#1081
-      LinePen.Color = 13395626
-      LinePen.Width = 3
-      TreatNulls = tnDontPaint
-      XValues.Name = 'X'
-      XValues.Order = loAscending
-      YValues.Name = 'Y'
-      YValues.Order = loNone
-    end
   end
 end

@@ -10,6 +10,7 @@ type
   TGraphDataForm = class(TCustomFormData)
     Graph: TGraph;
     procedure GraphParamsAdded(d: TDataSet);
+    procedure FormShow(Sender: TObject);
   private
     FActiveDataSetBinds: Tarray<string>;
     FC_Write: Integer;
@@ -53,6 +54,11 @@ begin
   if Supports(GlobalCore, IFormEnum, fe) then fe.Add(f);
   (GContainer as ITabFormProvider).Tab(f);
   f.Show;
+end;
+
+procedure TGraphDataForm.FormShow(Sender: TObject);
+begin
+  Graph.DeFrost;
 end;
 
 procedure TGraphDataForm.GraphParamsAdded(d: TDataSet);

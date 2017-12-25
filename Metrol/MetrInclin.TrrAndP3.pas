@@ -4,7 +4,7 @@ interface
 
 uses System.SysUtils, Xml.XMLIntf, System.Classes,
      PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, math, MetrForm, AutoMetr.Inclin, RootImpl,
-     MetrInclin.Math, XMLScript.Math, UakiIntf, MetrInclin.CheckForm, MetrInclin.TrrAndP2;
+     LuaInclin.Math, XMLLua.Math, UakiIntf, MetrInclin.CheckForm, MetrInclin.TrrAndP2;
 
 type
   TFormInclinTrrAndP3 = class(TFormInclinTrrAndP2)

@@ -5,7 +5,7 @@ interface
 uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, Actns, Container, DBImpl, tools,
   Xml.XMLIntf, DataSetIntf, XMLDataSet,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Data.DB, System.IOUtils,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Mask, JvExMask, JvToolEdit;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Mask, JvExMask, JvToolEdit, VCL.Frame.RangeSelect;
 
 type
     TFileFormatPSK6 = Record
@@ -19,16 +19,13 @@ type
     end;
 
   TFormExportToPSK6_V3 = class(TDockIForm)
-    Label1: TLabel;
-    Label2: TLabel;
-    edFrom: TEdit;
-    edTo: TEdit;
     od: TJvFilenameEdit;
     sb: TStatusBar;
     btStart: TButton;
     btTerminate: TButton;
     btExit: TButton;
     Progress: TProgressBar;
+    RangeSelect: TFrameRangeSelect;
     procedure FormCreate(Sender: TObject);
     procedure btExitClick(Sender: TObject);
     procedure btStartClick(Sender: TObject);
@@ -46,15 +43,23 @@ type
      ModulName: string;
      Table: TXMLDataSet;
      IdName: string;
+     FirstKadr, LastKadr: Integer;
      Data: TArray<TFldRec>;
     end;
   protected
     function Priority: Integer; override;
   private
+    rams: TArray<IDataSet>;
+    acr: TArray<TCheckRec>;
     Fterminate: Boolean;
+    procedure StRec(ix: IdataSet; const drm: array of TRecMap; var d: TcheckRec);
     procedure UpdateControls(FlagEna: Boolean);
     function GetProjectRams: TArray<IDataSet>;
-    function GetMaxID(const rams: TArray<IDataSet>): Integer;
+//    function GetMaxID(const rams: TArray<IDataSet>): Integer;
+    procedure Close;
+//    procedure Next;
+    procedure Open;
+    procedure RecNo(Kadr: Integer);
   public
    [StaticAction('-Сохранить как ПСК6...', 'Экспорт', 226, '0:Файл.Экспорт|1:2')]
    class procedure DoExportPSK6(Sender: IAction);
@@ -79,12 +84,12 @@ const
 //{13}  FS_Import.CLList.Add('Hz,мВ');
 
   RM_INCL: array[0..5]of TRecMap =(
-    (ix:8;  name:'Inclin.accel.X.DEV'; k:100),
-    (ix:9;  name:'Inclin.accel.Y.DEV'; k:100),
-    (ix:10; name:'Inclin.accel.Z.DEV'; k:100),
-    (ix:11; name:'Inclin.magnit.X.DEV'; k:100),
-    (ix:12; name:'Inclin.magnit.Y.DEV'; k:100),
-    (ix:13; name:'Inclin.magnit.Z.DEV'; k:100));
+    (ix:8;  name:'Inclin.accel.X.CLC'; k:1),
+    (ix:9;  name:'Inclin.accel.Y.CLC'; k:1),
+    (ix:10; name:'Inclin.accel.Z.CLC'; k:1),
+    (ix:11; name:'Inclin.magnit.X.CLC'; k:1),
+    (ix:12; name:'Inclin.magnit.Y.CLC'; k:1),
+    (ix:13; name:'Inclin.magnit.Z.CLC'; k:1));
 
 //{14}  FS_Import.CLList.Add('ГК,имп/2c');
 //{15}  FS_Import.CLList.Add('ННКт-25,имп/2c');
@@ -157,18 +162,18 @@ const
     (ix:51;  name:'electro.ПС.Z2.DEV'; k:1),
     (ix:53;  name:'electro.ПС.DPS.DEV'; k:1));
 
-function TFormExportToPSK6_V3.GetMaxID(const rams: TArray<IDataSet>): Integer;
- var
-  d: IDataSet;
-begin
-  Result := 0;
-  for d in rams do if Assigned(d) then
-   begin
-    d.DataSet.Open;
-    Result := Max(Result, d.DataSet.RecordCount);
-    d.DataSet.Close;
-   end;
-end;
+//function TFormExportToPSK6_V3.GetMaxID(const rams: TArray<IDataSet>): Integer;
+// var
+//  d: IDataSet;
+//begin
+//  Result := 0;
+//  for d in rams do if Assigned(d) then
+//   begin
+//    d.DataSet.Open;
+//    Result := Max(Result, d.DataSet.RecordCount);
+//    d.DataSet.Close;
+//   end;
+//end;
 
 function TFormExportToPSK6_V3.GetProjectRams(): TArray<IDataSet>;
  var
@@ -221,30 +226,38 @@ begin
   Close_ItemClick(Self);
 end;
 
+procedure TFormExportToPSK6_V3.Open();
+var
+  d: IDataSet;
+begin
+  for d in rams do if Assigned(d) then d.DataSet.Open;
+end;
+
+procedure TFormExportToPSK6_V3.RecNo(Kadr: Integer);
+ var
+  i: Integer;
+begin
+  for i := 0 to High(rams) do if Assigned(rams[i]) and (Kadr >= acr[i].FirstKadr) and (Kadr <= acr[i].LastKadr) then
+    rams[i].DataSet.RecNo := Kadr - acr[i].FirstKadr + 1;;
+end;
+
+procedure TFormExportToPSK6_V3.Close;
+ var
+  d: IDataSet;
+begin
+  for d in rams do if Assigned(d) then d.DataSet.Close;
+end;
+
+//procedure TFormExportToPSK6_V3.Next;
+// var
+//  d: IDataSet;
+//begin
+//  for d in rams do if Assigned(d) then d.DataSet.Next;
+//end;
+
 procedure TFormExportToPSK6_V3.btStartClick(Sender: TObject);
-  procedure StRec(ix: IdataSet; const drm: array of TRecMap; var d: TcheckRec);
-   var
-    i: Integer;
-    ds: TXMLDataSet;
-  begin
-    d.Checked := False;
-    if not Assigned(ix) then Exit;
-    ds := TXMLDataSet(ix.DataSet);
-    SetLength(d.Data, Length(drm));
-    d.Table := ds;
-    d.ModulName := ds.XMLSection.ParentNode.NodeName;
-    d.IdName := d.ModulName +'.время.DEV';
-    for I := 0 to High(drm) do
-     begin
-      d.Data[i].FieldName := d.ModulName+'.' + drm[i].name;
-      d.Data[i].k := drm[i].k;
-      d.Data[i].Index := drm[i].ix;
-     end;
-    d.Checked := True;
-  end;
  var
   v: Variant;
-  acr: TArray<TCheckRec>;
   i: integer;
   sql, s: string;
   r: TCheckRec;
@@ -255,32 +268,12 @@ procedure TFormExportToPSK6_V3.btStartClick(Sender: TObject);
   rmax, rmin: Integer;
   emax, emin: Integer;
   umax, umin: Integer;
-  rams: TArray<IDataSet>;
  const
   N_REC_READ = 10000;
 begin
   /// начало и конец
-  emax := StrToInt(edTo.Text);
-  emin := StrToInt(edFrom.Text);
-
-  rams := GetProjectRams;
-
-
-  rmax := GetMaxID(rams); // ConnectionsPool.Query.Connection.ExecSQLScalar('SELECT ifnull(max(id),0) FROM Ram');
-  rmin := 0;              // ConnectionsPool.Query.Connection.ExecSQLScalar('SELECT ifnull(min(id),0) FROM Ram');
-  if emax > 0 then umax := Min(rmax, emax) else umax := rmax;
-  if emin > 0 then umin := Max(rmin, emin) else umin := rmin;
-  /// инициализация имен
-  SetLength(acr, 4);
-  acr[0].adr := 3;
-  acr[1].adr := 4;
-  acr[2].adr := 5;
-  acr[3].adr := 6;
-  StRec(rams[0], RM_INCL, acr[0]);
-  StRec(rams[1], RM_GK,   acr[1]);
-  StRec(rams[2], RM_NNK,  acr[2]);
-  StRec(rams[3], RM_BK,   acr[3]);
-   /// поток чтения из БД и записи в Файл
+  umax := RangeSelect.kadr.last;// StrToInt(.Text);
+  umin := RangeSelect.kadr.first;// StrToInt(edFrom.Text);
    Fterminate := False;
    UpdateControls(False);
    TThread.CreateAnonymousThread(procedure
@@ -293,27 +286,10 @@ begin
      fld: TField;
      dfloat: Double;
      newPos: Integer;
-     procedure Open;
-      var
-       d: IDataSet;
+     function InKadrRange(curKadr: Integer; cr: TCheckRec): Boolean;
      begin
-       for d in rams do if Assigned(d) then
-        begin
-         d.DataSet.Open;
-         d.DataSet.RecNo := umin;
-        end;
-     end;
-     procedure Close;
-      var
-       d: IDataSet;
-     begin
-       for d in rams do if Assigned(d) then d.DataSet.Close;
-     end;
-     procedure Next;
-      var
-       d: IDataSet;
-     begin
-       for d in rams do if Assigned(d) then d.DataSet.Next;
+      Result := (curKadr <= cr.LastKadr) and (curKadr <= cr.LastKadr)
+
      end;
    begin
      try
@@ -322,25 +298,31 @@ begin
         if TFile.Exists(od.FileName) then TFile.Delete(od.FileName);
         f := TFileStream.Create(od.FileName, fmCreate);
        end
-      else Exit;
+      else 
+       begin
+        UpdateControls(True);
+        Exit;
+       end;
        try
           Open;
           try
            for frm := umin to umax do
             begin
+               RecNo(frm);
                d.Dep := frm+1;
                for cr in acr do if cr.Checked then for fr in cr.Data do
                 begin
                  fld := cr.Table.FieldByName(fr.FieldName);
                  try
-                  if Assigned(fld) and not fld.isNull then
+                  if Assigned(fld) and not fld.isNull and (frm <= cr.LastKadr) and (frm >= cr.FirstKadr) then
                    if fld is TFloatField then
                     begin
-                     dfloat := cr.Table.FieldByName(fr.FieldName).AsFloat * fr.k;
+                    // dfloat := cr.Table.FieldByName(fr.FieldName).AsFloat * fr.k;
+                    dfloat := fld.AsFloat * fr.k;
                      if (dfloat < LongInt.MaxValue) and (dfloat > LongInt.MinValue)  then d.Par[fr.Index] := Round(dfloat)
                      else d.Par[fr.Index] := 0;
                     end
-                   else d.Par[fr.Index] := cr.Table.FieldByName(fr.FieldName).AsInteger
+                   else d.Par[fr.Index] := fld.AsInteger //d.Par[fr.Index] := cr.Table.FieldByName(fr.FieldName).AsInteger
                   else  d.Par[fr.Index] := 0;
                  except
                   d.Par[fr.Index] := 0;
@@ -348,7 +330,6 @@ begin
                 end;
 
                f.Write(d, SizeOf(d));
-               Next;
 
                if Fterminate then Exit;
 
@@ -383,8 +364,40 @@ begin
 end;
 
 procedure TFormExportToPSK6_V3.FormCreate(Sender: TObject);
+ var
+  i, lc, fc: Integer;
 begin
   GetDockClient.EnableDock := False;
+  rams := GetProjectRams;
+  /// инициализация имен
+  SetLength(acr, 4);
+  acr[0].adr := 3;
+  acr[1].adr := 4;
+  acr[2].adr := 5;
+  acr[3].adr := 6;
+  StRec(rams[0], RM_INCL, acr[0]);
+  StRec(rams[1], RM_GK,   acr[1]);
+  StRec(rams[2], RM_NNK,  acr[2]);
+  StRec(rams[3], RM_BK,   acr[3]);
+  /// инициализация имен Ranger
+  Open;
+  lc := 1; 
+  fc := Integer.MaxValue;
+  for I := 0 to High(rams) do if Assigned(rams[i]) then
+   begin
+    rams[i].DataSet.First;
+    acr[i].FirstKadr := rams[i].DataSet.FieldByName(acr[i].IdName).AsInteger;
+    fc := Min(fc, acr[i].FirstKadr);
+    rams[i].DataSet.Last;
+    acr[i].LastKadr := rams[i].DataSet.FieldByName(acr[i].IdName).AsInteger;
+    lc := max(lc, acr[i].LastKadr);
+   end;
+  if fc > lc then 
+   begin 
+    RangeSelect.Init(1, 0, 1, (GContainer as IProjectOptions).DelayStart);
+    raise Exception.Create('Какие-либо данные для экспорта в ПСК6 отсутствуют !!!');
+   end;
+  RangeSelect.Init(1, fc, lc, (GContainer as IProjectOptions).DelayStart);
 end;
 
 function TFormExportToPSK6_V3.Priority: Integer;
@@ -392,8 +405,30 @@ begin
   Result := PRIORITY_NoStore;
 end;
 
+procedure TFormExportToPSK6_V3.StRec(ix: IdataSet; const drm: array of TRecMap; var d: TcheckRec);
+ var
+  i: Integer;
+  ds: TXMLDataSet;
+begin
+  d.Checked := False;
+  if not Assigned(ix) then Exit;
+  ds := TXMLDataSet(ix.DataSet);
+  SetLength(d.Data, Length(drm));
+  d.Table := ds;
+  d.ModulName := ds.XMLSection.ParentNode.NodeName;
+  d.IdName := d.ModulName +'.время.DEV';
+  for I := 0 to High(drm) do
+   begin
+    d.Data[i].FieldName := d.ModulName+'.' + drm[i].name;
+    d.Data[i].k := drm[i].k;
+    d.Data[i].Index := drm[i].ix;
+   end;
+  d.Checked := True;
+end;
+
 procedure TFormExportToPSK6_V3.UpdateControls(FlagEna: Boolean);
 begin
+  RangeSelect.Enabled := FlagEna;
   btStart.Enabled := FlagEna;
   btExit.Enabled := FlagEna;
   NCanClose := FlagEna;

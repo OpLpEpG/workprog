@@ -54,7 +54,7 @@ object FormControl: TFormControl
       item
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coEditable]
         Position = 2
-        Width = 170
+        Width = 176
         WideText = #1042#1088#1077#1084#1103
       end>
   end
@@ -96,6 +96,10 @@ object FormControl: TFormControl
     object NReadRam: TMenuItem
       Caption = #1063#1090#1077#1085#1080#1077' '#1087#1072#1084#1103#1090#1080' '#1084#1086#1076#1091#1083#1103'...'
       OnClick = NReadRamClick
+    end
+    object NClc: TMenuItem
+      Caption = #1055#1077#1088#1077#1089#1095#1077#1090' '#1084#1077#1090#1088#1086#1083#1086#1075#1080#1080'  '#1084#1086#1076#1091#1083#1103'...'
+      OnClick = NClcClick
     end
     object NInfo: TMenuItem
       Caption = #1056#1077#1078#1080#1084' '#1080#1085#1092#1086#1088#1084#1072#1094#1080#1080

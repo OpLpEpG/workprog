@@ -77,10 +77,10 @@
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_RangeChecking>true</DCC_RangeChecking>
         <UsePackages>true</UsePackages>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.197;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.201;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>197</VerInfo_Build>
+        <VerInfo_Build>201</VerInfo_Build>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <DCC_MapFile>3</DCC_MapFile>
         <VerInfo_DLL>true</VerInfo_DLL>
@@ -137,7 +137,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="MetrInclin.Math.pas"/>
+        <DCCReference Include="LuaInclin.Math.pas"/>
         <DCCReference Include="MetrUAKI.ToleranceForm.pas">
             <Form>FormUAKItolerance</Form>
             <FormType>dfm</FormType>
@@ -163,6 +163,10 @@
         <DCCReference Include="MetrInclin.TrrAndP3.pas"/>
         <DCCReference Include="MetrGK.pas">
             <Form>FormGK</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="MetrInclin.Temp.Form.pas">
+            <Form>FormMetrInclinT</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

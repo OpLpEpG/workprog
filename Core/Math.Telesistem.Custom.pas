@@ -1273,7 +1273,7 @@ function TWindowDecoder.GetStartTime: TDateTime;
  var
   opt: IProjectOptions;
 begin
-  if Supports(GContainer, IProjectOptions, opt) then Result := StrToDateTime(opt.Option['TIME_START'])
+  if Supports(GContainer, IProjectOptions, opt) then Result := opt.DelayStart
   else Result := 0;
 end;
 
@@ -1389,7 +1389,7 @@ function TDecoderFMRetr.GetStartTime: TDateTime;
  var
   opt: IProjectOptions;
 begin
-  if Supports(GContainer, IProjectOptions, opt) then Result := StrToDateTime(opt.Option['TIME_START'])
+  if Supports(GContainer, IProjectOptions, opt) then Result :=opt.DelayStart
   else Result := 0;
 end;
 

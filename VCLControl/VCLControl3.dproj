@@ -42,6 +42,10 @@
     </PropertyGroup>
     <Import Project="..\_prg_set.optset" Condition="'$(Base)'!='' And Exists('..\_prg_set.optset')"/>
     <PropertyGroup Condition="'$(Base)'!=''">
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.0.225;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <VerInfo_Build>225</VerInfo_Build>
+        <DCC_UnitSearchPath>..\VCLDialogs;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <UsePackages>true</UsePackages>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
         <OutputExt>dlp</OutputExt>
@@ -69,15 +73,17 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_UnitSearchPath>..\VCLDialogs;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <UsePackages>true</UsePackages>
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
         <DCC_RangeChecking>true</DCC_RangeChecking>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.0.222;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>222</VerInfo_Build>
+        <VerInfo_Build>225</VerInfo_Build>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <DCC_MapFile>3</DCC_MapFile>
         <VerInfo_DLL>true</VerInfo_DLL>
@@ -122,6 +128,23 @@
         </DCCReference>
         <DCCReference Include="ExportToPSK6_V3.pas">
             <Form>FormExportToPSK6_V3</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="VCL.Dlg.Export.Caliper.pas">
+            <Form>FormDlgExportCaliper</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="VCL.Dlg.Clc.pas">
+            <Form>FormDlgClc</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="VCL.Frame.RangeSelect.pas">
+            <Form>FrameRangeSelect</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="VCL.Dlg.ExportLAS.pas">
+            <Form>FormExportLASP3</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

@@ -2,8 +2,8 @@ object FormDlgRam: TFormDlgRam
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1095#1090#1077#1085#1080#1103' '#1087#1072#1084#1103#1090#1080
-  ClientHeight = 279
-  ClientWidth = 385
+  ClientHeight = 333
+  ClientWidth = 384
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,8 +13,8 @@ object FormDlgRam: TFormDlgRam
   OldCreateOrder = False
   Position = poMainFormCenter
   DesignSize = (
-    385
-    279)
+    384
+    333)
   PixelsPerInch = 96
   TextHeight = 13
   object lbFile: TLabel
@@ -25,31 +25,15 @@ object FormDlgRam: TFormDlgRam
     Caption = #1057#1086#1079#1076#1072#1090#1100' '#1073#1080#1085#1072#1088#1085#1099#1081' '#1092#1072#1081#1083
   end
   object lbLen: TLabel
-    Left = 225
-    Top = 66
-    Width = 85
+    Left = 224
+    Top = 88
+    Width = 86
     Height = 13
-    Caption = #1076#1083#1080#1085#1072' '#1087#1072#1082#1077#1090#1072' 0x'
-  end
-  object lbEnd: TLabel
-    Left = 250
-    Top = 112
-    Width = 115
-    Height = 13
-    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1052#1073' (0-'#1074#1089#1077')'
-    Enabled = False
-  end
-  object lbBegin: TLabel
-    Left = 121
-    Top = 112
-    Width = 54
-    Height = 13
-    Caption = #1053#1072#1095#1072#1083#1086' '#1052#1073
-    Enabled = False
+    Caption = #1044#1083#1080#1085#1072' '#1087#1072#1082#1077#1090#1072' 0x'
   end
   object lbSD: TLabel
-    Left = 18
-    Top = 112
+    Left = 224
+    Top = 58
     Width = 44
     Height = 13
     Caption = #1044#1080#1089#1082'  SD'
@@ -57,7 +41,7 @@ object FormDlgRam: TFormDlgRam
   end
   object btStart: TButton
     Left = 17
-    Top = 223
+    Top = 282
     Width = 75
     Height = 25
     Caption = #1057#1090#1072#1088#1090
@@ -65,8 +49,8 @@ object FormDlgRam: TFormDlgRam
     OnClick = btStartClick
   end
   object btExit: TButton
-    Left = 294
-    Top = 223
+    Left = 292
+    Top = 282
     Width = 75
     Height = 25
     Caption = #1042#1099#1093#1086#1076
@@ -76,7 +60,7 @@ object FormDlgRam: TFormDlgRam
   end
   object cbToFF: TCheckBox
     Left = 18
-    Top = 165
+    Top = 114
     Width = 151
     Height = 17
     Caption = #1063#1080#1090#1072#1090#1100' '#1076#1086' '#1087#1091#1089#1090#1086#1081' '#1087#1072#1084#1103#1090#1080
@@ -86,15 +70,15 @@ object FormDlgRam: TFormDlgRam
   end
   object Progress: TProgressBar
     Left = 18
-    Top = 196
-    Width = 350
+    Top = 259
+    Width = 348
     Height = 17
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 3
   end
   object btTerminate: TButton
     Left = 98
-    Top = 223
+    Top = 282
     Width = 75
     Height = 25
     Caption = #1055#1088#1077#1088#1074#1072#1090#1100
@@ -103,8 +87,8 @@ object FormDlgRam: TFormDlgRam
   end
   object sb: TStatusBar
     Left = 0
-    Top = 260
-    Width = 385
+    Top = 314
+    Width = 384
     Height = 19
     Panels = <
       item
@@ -146,7 +130,7 @@ object FormDlgRam: TFormDlgRam
   object od: TJvFilenameEdit
     Left = 18
     Top = 21
-    Width = 349
+    Width = 348
     Height = 21
     OnBeforeDialog = odBeforeDialog
     DialogKind = dkSave
@@ -159,40 +143,49 @@ object FormDlgRam: TFormDlgRam
     Text = ''
   end
   object edLen: TEdit
-    Left = 309
-    Top = 63
+    Left = 310
+    Top = 85
     Width = 57
     Height = 21
     TabOrder = 8
     Text = '3FFF'
   end
-  object edBegin: TEdit
-    Left = 121
-    Top = 131
-    Width = 121
-    Height = 21
-    Enabled = False
-    TabOrder = 9
-    Text = '0'
-  end
-  object edCnt: TEdit
-    Left = 248
-    Top = 131
-    Width = 121
-    Height = 21
-    Enabled = False
-    TabOrder = 10
-    Text = '0'
-  end
   object cbSD: TComboBox
-    Left = 18
-    Top = 131
+    Left = 270
+    Top = 55
     Width = 97
     Height = 21
     Style = csDropDownList
     Enabled = False
-    TabOrder = 11
+    TabOrder = 9
     OnChange = cbSDChange
     OnDropDown = cbSDDropDown
+  end
+  object cbClcCreate: TCheckBox
+    Left = 171
+    Top = 114
+    Width = 196
+    Height = 17
+    Caption = #1057#1086#1079#1076#1072#1090#1100' '#1092#1072#1081#1083' '#1088#1072#1089#1089#1095#1077#1090#1085#1099#1093' '#1076#1072#1085#1085#1099#1093
+    Checked = True
+    State = cbChecked
+    TabOrder = 10
+  end
+  inline RangeSelect: TFrameRangeSelect
+    Left = 18
+    Top = 144
+    Width = 348
+    Height = 112
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 11
+    ExplicitLeft = 18
+    ExplicitTop = 144
+    ExplicitWidth = 348
+    inherited Range: TRangeSelector
+      Width = 348
+      SelStart = 20.000000000000000000
+      SelEnd = 80.000000000000000000
+      ExplicitWidth = 348
+    end
   end
 end

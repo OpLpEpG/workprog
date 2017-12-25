@@ -2,8 +2,10 @@ unit MainForm;
 
 interface
 
-uses DeviceIntf, ExtendIntf, RootIntf, IndexBuffer,
-  Winapi.Messages, System.Variants, Vcl.HtmlHelpViewer,  XMLScript.Math, XMLScript.IKN, XMLScript.Report,
+{$I Script.inc}
+
+uses DeviceIntf, ExtendIntf, RootIntf, IndexBuffer, Container,
+  Winapi.Messages, System.Variants, Vcl.HtmlHelpViewer,
   System.SysUtils, PluginAPI, Vcl.Dialogs, Vcl.ImgList, Vcl.Controls, Vcl.StdActns, Vcl.BandActn, System.Classes, Vcl.ActnList, Vcl.ActnMan,
   Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ComCtrls, Vcl.Forms, Vcl.Graphics, Winapi.Windows, JvAppStorage, JvAppRegistryStorage, JvDockControlForm,
   Vcl.AppEvnts, Vcl.ExtCtrls, JvFormPlacement, JvDockVIDStyle, JvComponentBase, System.Actions,
@@ -141,8 +143,13 @@ implementation
 {$R *.dfm}
 
 
-uses GR32, WinAPI.GDIPObj, WinAPI.GDIPApi, RootImpl, VCLTee.TeEngine, DataImportImpl,
-    PluginManager, PluginSetupForm, ExceptionForm, tools, DockIForm, debug_except, ActionBarHelper, FirstForm, Container;//, Hock_Exept;
+uses GR32, {WinAPI.GDIPObj, WinAPI.GDIPApi,} RootImpl, VCLTee.TeEngine, DataImportImpl,
+  {$IFDEF USE_LUA_SCRIPT}
+    XMLLua, XMLLua.Math, XMLLua.IKN, XMLLua.Report,
+  {$ELSE}
+    XMLScript, XMLScript.Math, XMLScript.IKN, XMLScript.Report,
+  {$ENDIF}
+    PluginManager, PluginSetupForm, ExceptionForm, tools, DockIForm, debug_except, ActionBarHelper, FirstForm;//, Hock_Exept;
 
 {$REGION  '*********** Create Destroy ****************'}
 procedure TFormMain.FormCreate(Sender: TObject);
@@ -672,12 +679,8 @@ procedure TFormMain.TimerDelayTimer(Sender: TObject);
 begin
   if Supports(GContainer, IProjectOptions, opt) and (opt.Option['TIME_START'] <> null) then
    begin
-    try
-     FDBTimeStart := StrToDateTime(opt.Option['TIME_START']);
-    except
-     FDBTimeStart := Double(opt.Option['TIME_START']);
-    end;
-    FDBIntervalWork := StrToDateTimeDef(opt.Option['WORK_INTERVAL'], 0);
+    FDBTimeStart := opt.DelayStart;
+    FDBIntervalWork := opt.IntervalWork;
     if FDBTimeStart > 0 then
      begin
       iDelay := Ctime.Round(FDBTimeStart - Now);

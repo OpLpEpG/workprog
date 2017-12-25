@@ -3,7 +3,7 @@ unit RootImpl;
 interface
 
 uses
-     debug_except, RootIntf, PluginAPI, ExtendIntf, Container, Vcl.Buttons,
+     debug_except, Container, RootIntf, PluginAPI, ExtendIntf, Vcl.Buttons,
 
      Vcl.Controls, Vcl.Graphics, Vcl.ComCtrls, Winapi.Messages, Vcl.Forms, Winapi.Windows, JvInspector, System.SyncObjs,
 
@@ -210,13 +210,14 @@ type
   // IManagItem
     function Priority: Integer;
     function Model: ModelType;
-    function GetItemName: String;
+    function GetItemName: String; virtual;
     function RootName: String;
-    procedure SetItemName(const Value: String);
+    procedure SetItemName(const Value: String); virtual;
     // IBind
     procedure _EnableNotify;
     procedure Bind(const ControlExprStr: string; Source: IInterface; const SourceExpr: array of string); overload;
     procedure Bind(Control: IInterface; const ControlExprStr: string; const SourceExpr: array of string); overload;
+    property IName: String read GetItemName write SetItemName;
    public
     procedure PubChange; inline;
     ///	<summary>
@@ -296,6 +297,26 @@ type
   end;
   TIFormClass = class of TIForm;
 {$ENDREGION}
+
+  ///
+  /// сериализация наследников пример в IdataSets
+  ///
+  TFactoryPersistent<ROOT: TInterfacedPersistent> = class(TInterfacedPersistent)
+  private
+    function GetClass: string;
+    procedure SetClass(const Value: string);
+  protected
+    FStored: ROOT;
+    procedure SetROOT(const Value: ROOT);
+  public
+    constructor CreateUser(AStored: ROOT);
+    destructor Destroy; override;
+  published
+  // при загрузке создаем в SetClass StoredItem наследника ROOT по имени класса
+    property StoredClass: string read GetClass write SetClass;
+  // затем загружаем published значения StoredItem
+//    property [StoredItem]<в наследнике создаем удобное для себя имя>: ROOT read FStored write SetROOT;
+  end;
 
 {$REGION 'абстрактное хранилище однообразных основных элементов'}
 
@@ -421,7 +442,7 @@ type
   end;
 
 
-  GDIPlus = class
+{  GDIPlus = class
   private
     class var Flock: TCriticalSection;
     class constructor Create;
@@ -429,10 +450,9 @@ type
   public
     class procedure Lock; static;
     class procedure UnLock; static;
-  end;
+  end;}
 
 procedure MainScreenChanged; inline;
-
 
 implementation
 
@@ -789,8 +809,8 @@ begin
   Result := AtomicDecrement(FRefCount);
   if WeekContainerReference and (Result = 1) then
    begin
-    if NillWeekReference then GContainer.NillInstance(Model, Name)
-    else GContainer.RemoveInstance(Model, Name);
+    if NillWeekReference then GContainer.NillInstance(Model, IName)
+    else GContainer.RemoveInstance(Model, IName);
    end
   else if Result = 0 then Destroy;
 end;
@@ -1759,7 +1779,7 @@ end;
 {$ENDREGION}
 
 
-class constructor GDIPlus.Create;
+{class constructor GDIPlus.Create;
 begin
   Flock := TCriticalSection.Create;
 end;
@@ -1777,7 +1797,7 @@ class procedure GDIPlus.UnLock;
 begin
   Flock.Release;
 //  TDebug.Log('GDI After RELEASE');
-end;
+end;}
 
 { EnumCaptionsAttribute }
 
@@ -1973,9 +1993,44 @@ begin
   inherited;
 end;
 
+{ TFactoryPersistent<ROOT> }
+
+constructor TFactoryPersistent<ROOT>.CreateUser(AStored: ROOT);
+begin
+  if not Assigned(AStored) then raise Exception.Create('TFactoryPersistent<ROOT>.CreateUser(AStored: ROOT) AStored = nil !!!');
+  FStored := AStored;
+end;
+
+destructor TFactoryPersistent<ROOT>.Destroy;
+begin
+  if Assigned(FStored) then FreeAndNil(FStored);
+  TDebug.Log('TFactoryPersistent.Destroy ' + StoredClass);
+  inherited;
+end;
+
+function TFactoryPersistent<ROOT>.GetClass: string;
+begin
+  if Assigned(FStored) then Result := FStored.ClassName
+  else Result := '';
+end;
+
+procedure TFactoryPersistent<ROOT>.SetClass(const Value: string);
+begin
+  if Assigned(FStored) then
+    FreeAndNil(FStored);
+  if Value <> '' then
+    FStored := ROOT((FindClass(Value)).Create());
+end;
+
+procedure TFactoryPersistent<ROOT>.SetROOT(const Value: ROOT);
+begin
+  if Assigned(FStored) then FStored.Free;
+  FStored := Value;
+end;
+
 initialization
 //  RegisterClass();
-  TRegister.AddType<TFormEnum, IFormEnum, IStorable>.LiveTime(ltSingleton);
+ TRegister.AddType<TFormEnum, IFormEnum, IStorable>.LiveTime(ltSingleton);
 
 {  TValueRefConverterFactory.RegisterConversion(TypeInfo(TSetConnectIOStatus), TypeInfo(string),
   TConverterDescription.Create(procedure(const I: TValue; var O: TValue)

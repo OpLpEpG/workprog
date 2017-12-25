@@ -7,9 +7,64 @@ interface
 uses System.Classes, System.SysUtils, System.TypInfo, RTTI,
      System.Generics.Defaults,
      System.Generics.Collections,
-     debug_except, RootIntf;
+     debug_except;
 
 type
+  ModelType = PTypeInfo;
+  ServiceType = PTypeInfo;
+
+  TInstanceRec = record
+//    IName: string;
+    Inst: IInterface;
+    Priority: Integer;
+    Text: string;
+  end;
+
+  ///	<summary>
+  ///	  Внутренний интерфейс для загрузки и сохранения объекта
+  ///	</summary>
+  IManagItem = interface(IInterfaceComponentReference)
+  ['{1EC89F48-842C-4415-AA10-9161570B0549}']
+    ///	<summary>
+    ///	  приоритет загрузки
+    ///	</summary>
+    ///	<remarks>
+    ///	  фактически константа инициализируемая при создании
+    ///	</remarks>
+    function Priority: Integer;
+    ///	<summary>
+    ///	  имя для формирования имен объектов TDevice =&gt;  Device
+    ///	</summary>
+    function RootName: String;
+    function GetItemName: String;
+    ///	<summary>
+    ///	  Вызывается менегером TEnumer<T>.Add при создании или загрузки
+    ///	</summary>
+    procedure SetItemName(const Value: String);
+    function Model: ModelType;
+    ///	<summary>
+    ///	  имя компонента или формы
+    ///	</summary>
+    ///	<remarks>
+    ///	  инициализируется менегером TEnumer<T>.Add при создании или загрузки
+    ///   под этим именем хранится в контейнере
+    ///	</remarks>
+    property IName: String read GetItemName write SetItemName;
+  end;
+
+  TInstanceRec<T: IManagItem> = record
+    Inst: T;
+    Priority: Integer;
+    Text: string;
+  end;
+
+  ICaption = interface
+  ['{DBBF1D44-F436-435C-BF09-1A58290A4B11}']
+    function GetCaption: string;
+    procedure SetCaption(const Value: string);
+    property Text: string read GetCaption write SetCaption;
+  end;
+
   // основные классы
   TComponentModel = class;
   TInstance = class;
@@ -111,7 +166,7 @@ type
 
   TInstanceRecH = record helper for TInstanceRec
   private
-    constructor Create(AInst: TInstance);
+    constructor Create({const n: string;} AInst: TInstance);
   end;
   // свойства сервисов
              //             хранит       не хранит    хранит по имент   хранит модель по имени
@@ -229,6 +284,7 @@ type
     procedure RemoveModels;  inline; // при выгрузке программы
 
     procedure RemoveInstances;
+//    procedure RemoveInstance(Instance: TObject); overload;
     procedure RemoveInstance(model: ModelType;  const InstanceName: string); overload;
     procedure RemoveInstance<T: class>(const InstanceName: string); overload;
     procedure RemoveInstance(model: ModelType); overload; // singleton
@@ -336,9 +392,8 @@ type
   end;
 {$ENDREGION}
 
-var
+ var
   GlobalCore: IInterface;
-
   function GContainer: TContainer; inline;
 
 implementation
@@ -433,8 +488,9 @@ end;
 
 { TInstanceRec }
 
-constructor TInstanceRecH.Create(AInst: TInstance);
+constructor TInstanceRecH.Create({const n: string;} AInst: TInstance);
 begin
+//  IName := n;
   Inst := AInst.fValue;
   Priority := AInst.Priority;
   Text := TComponentModel.GetTextInstance(AInst);
@@ -679,6 +735,7 @@ end;
 
 class constructor TContainer.Create;
 begin
+//  if Assigned(This) then Exit;
   RttiContext := TRttiContext.Create;
   This := TContainer.Create;
   GlobalCore := This;
@@ -878,7 +935,7 @@ begin
   Result := False;
   if FServices.TryGetValue(Serv, ms) and ms.TryGetTInstance(InstanceName, i) then
    begin
-    Rec := TInstanceRec.Create(i);
+    Rec := TInstanceRec.Create( i);
     Exit(True);
    end;
 end;

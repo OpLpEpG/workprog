@@ -2,13 +2,26 @@ unit Parser;
 
 interface
 
-uses debug_except, Xml.Win.msxmldom, Winapi.ActiveX,  System.UITypes, System.TypInfo,
-     XMLScript, System.Variants, Data.DB, System.Rtti,
-     SysUtils, Xml.XMLIntf, Xml.XMLDoc, Xml.xmldom, System.Generics.Collections, System.Generics.Defaults, System.Classes, Vcl.Dialogs;
+uses debug_except,
+     SysUtils, System.Variants, Data.DB, System.Rtti, Xml.XMLIntf, Xml.XMLDoc, System.Classes,
+     System.Generics.Collections;
 
 type
   THackEvent = reference to procedure(InternalVarType: Byte; AdrVar: Pointer);
   TAsTypeFunction<T> = reference to function (var Data: Pointer): T;
+
+  TConvert = procedure(pData: PByte; arSize: Integer; var Value: IXMLNode);
+  TParserData = record
+   Value: IXMLNode;
+   tip: Integer;
+   Index: Integer;
+   ArraySize: Integer;
+   Convert: TConvert;
+   procedure SetData(pData: PByte; parsArray: Boolean = false); inline;
+   constructor Create(n: IXMLNode; IsWord: Boolean = false);
+  end;
+
+
   TPars = class
   public
    const
@@ -43,43 +56,46 @@ type
    type
     TTypeDic = TDictionary<Integer, string>;
     TOutArray = array of Byte;
-    class var XMLScript: IXMLNode;
     class var TypeDic: TTypeDic;
     // создает из бинарных метаданных XML
     class procedure SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev: THackEvent = nil);
     // добавляет метрологию и рассчетные рараметры в XML
-    class procedure SetMetr(node: IXMLNode; ExeSc: TXmlScript; ExecSetup: Boolean);
+//    class procedure SetMetr(node: IXMLNode; ExeSc: IXmlScript; ExecSetup: Boolean);
     // заполняет поля root текущими бинарными данными
-    class procedure SetData(root: IXMLNode; const Data: PByte; ParsArray: Boolean = True);
+    class procedure SetData(root: IXMLNode; const Data: PByte; ParsArray: Boolean = True); overload; static;
+    class procedure SetData(const value: TArray<TParserData>; const Data: PByte; ParsArray: Boolean = True); overload; static; inline;
+    class function FindParserData(root: IXMLNode; ParsArray: Boolean = True): TArray<TParserData>; static;
     class procedure GetData(root: IXMLNode; var Data: TOutArray);
     class procedure SetStd(root: IXMLNode; const Data: PByte);
     class procedure SetPsk(root: IXMLNode; const Data: PWord);
+    class procedure SetPskToStd(root: IXMLNode; const Data: PWord);
 
     class procedure GetTypeStrings(var Types: TStrings; node: IXMLNode = nil);
-    class procedure GetMetrStrings(var Values: TStrings; node: IXMLNode = nil);
     class function VarTypeToTxtDBField(vt: Integer): string;
     class function VarTypeToDBField(vt: Integer): TFieldType;
     class function VarTypeToLength(vt: Integer): Integer;
+    class function VarTypeToType(vt: Integer): Integer;
     class function VarTypeToStr(vt: Integer): string;
     class function ArrayValToVar(PData: Pointer; Len: integer): Variant; static;
     class function ArrayStrToArray(const Data: string): TArray<Double>; static;
     class procedure Init;
     class procedure DeInit;
-    class procedure FromVar(Data: Variant; vt: Integer; pOutData: Pointer); overload;
-    class procedure FromVar(DataArr: string; vt, arr_len: Integer; pOutData: Pointer); overload;
+    class procedure FromVar(const Data: Variant; vt: Integer; pOutData: Pointer); overload;
+    class procedure FromVar(const DataArr: string; vt, arr_len: Integer; pOutData: Pointer); overload;
     class function GetAsTypeFunction(vt: Integer): TAsTypeFunction<Integer>; //overload;
 //    class function GetAsTypeFunction(vt: Integer): TAsTypeFunction<Double>; overload;
   private
-    const
+  //  const
 //     MAIN = 'MAIN_METR';
 //     SIMP = 'SIMPLE_METR';
-     EXEC = 'EXEC_METR';
-     SETUP = 'SETUP_METR';
+     //EXEC = 'EXEC_METR';
+//     SETUP = 'SETUP_METR';
 //    class
     { TODO : сделать ToValue(Data: Pointer; vt: Integer): TValue }
     class function RefAsTypeFunction<T, C>(Data: Pointer): T;
     class function ToValue(Data: Pointer; vt: Integer): TValue;
     class function ToVar(Data: Pointer; vt: Integer): Variant;
+    class procedure ToPointer(Data, Res: Pointer; vt: Integer);
     class function HorizontToWord(Data: Word; vt: Integer): Word;
     class function ArrayToString(Data: PByte; cnt, vt: Integer): string;
   end;
@@ -87,6 +103,11 @@ type
 implementation
 
 uses tools;
+
+procedure ConvertByte(pData: PByte; arSize: Integer; var Value: IXMLNode);
+begin
+  Value.NodeValue := Pbyte(pData)^;
+end;
 
 {$REGION 'TParser'}
 
@@ -97,12 +118,28 @@ begin
   if Assigned(TypeDic) then
   begin
    FreeAndNil(TypeDic);
-   XMLScript := nil;
   end;
 end;
 
 
-class procedure TPars.FromVar(DataArr: string; vt, arr_len: Integer; pOutData: Pointer);
+class function TPars.FindParserData(root: IXMLNode; ParsArray: Boolean = True): TArray<TParserData>;
+ var
+  Res: Tarray<TParserData>;
+  IsWord: Boolean;
+begin
+   IsWord := root.HasAttribute(AT_WRKP);
+   ExecXTree(root, procedure(n: IXMLNode)
+   begin
+     if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX)  then
+      begin
+       if not ParsArray and n.ParentNode.HasAttribute(AT_ARRAY) then Exit;
+       Res := Res +[TParserData.Create(n, IsWord)];
+      end;
+   end);
+  Result := Res;
+end;
+
+class procedure TPars.FromVar(const DataArr: string; vt, arr_len: Integer; pOutData: Pointer);
  var
   a: TArray<string>;
   s: string;
@@ -133,19 +170,6 @@ begin
   for p in TypeDic do Types.AddObject(p.Value, TObject(p.Key));
 end;
 
-class procedure TPars.GetMetrStrings(var Values: TStrings; node: IXMLNode = nil);
- const
-  SF = 'SIMPLE_FORMAT';
-  MD = 'MODEL';
- var
-  n, t: IXMLNode;
-begin
-  Values.Clear;
-  n := XMLScript.ChildNodes.FindNode(node.NodeName);
-  if Assigned(n) then         for t in XEnum(n.ChildNodes[MD]) do Values.Add(t.NodeName)
-  else for t in XEnum(XMLScript.ChildNodes[SF].ChildNodes[MD]) do Values.Add(t.NodeName)
-end;
-
 class function TPars.ArrayToString(Data: PByte; cnt, vt: Integer): string;
  var
   i, n: Integer;
@@ -174,18 +198,7 @@ begin
 end;
 
 class procedure TPars.Init;
- var
-  LDoc: IXMLDocument;
-  FFileMet: string;
 begin
-  LDoc := NewXDocument();
-  FFileMet := ExtractFilePath(ParamStr(0))+'Devices\Trr.xml';
-  if FileExists(FFileMet) then
-   begin
-    LDoc.LoadFromFile(FFileMet);
-    XMLScript := LDoc.DocumentElement;
-   end
-   else XMLScript := LDoc.AddChild('TRR');
   if not Assigned(TypeDic) then
   begin
    TypeDic := TTypeDic.Create;
@@ -268,6 +281,47 @@ begin
   end;
 end;
 
+class function TPars.VarTypeToType(vt: Integer): Integer;
+begin
+  Result := vt;
+  case vt of
+    varOleStr  :Result := varOleStr;
+    varString  :Result := varString;
+    varUString :Result := varUString;
+    varSmallint:Result := varSmallint; { vt_i2           2 }
+    varInteger :Result := varInteger; { vt_i4           3 }
+    varSingle  :Result := varSingle; { vt_r4           4 }
+    varDouble  :Result := varDouble; { vt_r8           5 }
+    varCurrency:Result := varCurrency; { vt_cy           6 }
+    varDate    :Result := varDate; { vt_date         7  timestamp}
+    varShortInt:Result := varShortInt; { vt_i1          16 }
+    varByte    :Result := varByte; { vt_ui1         17 }
+    varWord    :Result := varWord; { vt_ui2         18 }
+    varLongWord:Result := varLongWord; { vt_ui4         19 }
+    varInt64   :Result := varInt64; { vt_i8          20 }
+    varUInt64  :Result := varUInt64; { vt_ui8         21 }
+    var_i3     :Result := varSmallint;//ftInteger;
+    var_ui3    :Result := varWord;//ftInteger;
+    var_i2_15b :Result := varSmallint;
+    var_i2_15b_inv :Result := varSmallint;
+    var_i2_14b_GZ :Result := varSmallint;
+    var_ui2_15b:Result := varWord;
+    var_i2_10b :Result := varSmallint;
+    var_i2_14b :Result := varSmallint;
+    var_ui2_14b:Result := varWord;
+    var_inv_ui3:Result := varWord;//ftInteger;
+    var_inv_i3 :Result := varSmallint;//ftInteger;
+    var_inv_word:Result := varWord;
+    var_inv_ui3_ltr:Result := varWord;//ftInteger;
+    var_ui2_kadr_psk4 :Result := varWord;
+    var_ui2_kadr_all  :Result := varWord;
+    var_ui2_8b:Result := varWord;
+    var_i2_14b_z_inv:Result := varSmallint;
+    var_i2_14b_z:Result := varSmallint;
+  else raise Exception.Create('НЕВОЗМОЖНО ОПРЕДЕЛИТЬ ТИП DB ДАННЫХ ПО ТИПУ!!!');
+  end;
+end;
+
 class function TPars.VarTypeToDBField(vt: Integer): TFieldType;
 begin
   case vt of
@@ -279,31 +333,31 @@ begin
     varSingle  :Result := ftSingle; { vt_r4           4 }
     varDouble  :Result := ftFloat; { vt_r8           5 }
     varCurrency:Result := ftCurrency; { vt_cy           6 }
-    varDate    :Result := ftString; { vt_date         7  timestamp}
-    varShortInt:Result := ftInteger; { vt_i1          16 }
+    varDate    :Result := ftFloat; { vt_date         7  timestamp}
+    varShortInt:Result := ftShortint; { vt_i1          16 }
     varByte    :Result := ftByte; { vt_ui1         17 }
     varWord    :Result := ftWord; { vt_ui2         18 }
     varLongWord:Result := ftLongWord; { vt_ui4         19 }
     varInt64   :Result := ftInteger; { vt_i8          20 }
     varUInt64  :Result := ftLongWord; { vt_ui8         21 }
-    var_i3     :Result := ftInteger;
-    var_ui3    :Result := ftInteger;
-    var_i2_15b :Result := ftInteger;
-    var_i2_15b_inv :Result := ftInteger;
-    var_i2_14b_GZ :Result := ftInteger;
-    var_ui2_15b:Result := ftInteger;
-    var_i2_10b :Result := ftInteger;
-    var_i2_14b :Result := ftInteger;
-    var_ui2_14b:Result := ftInteger;
-    var_inv_ui3:Result := ftInteger;
-    var_inv_i3 :Result := ftInteger;
-    var_inv_word:Result := ftInteger;
-    var_inv_ui3_ltr:Result := ftInteger;
-    var_ui2_kadr_psk4 :Result := ftInteger;
-    var_ui2_kadr_all  :Result := ftInteger;
-    var_ui2_8b:Result := ftInteger;
-    var_i2_14b_z_inv:Result := ftInteger;
-    var_i2_14b_z:Result := ftInteger;
+    var_i3     :Result := ftSmallint;//ftInteger;
+    var_ui3    :Result := ftWord;//ftInteger;
+    var_i2_15b :Result := ftSmallint;
+    var_i2_15b_inv :Result := ftSmallint;
+    var_i2_14b_GZ :Result := ftSmallint;
+    var_ui2_15b:Result := ftWord;
+    var_i2_10b :Result := ftSmallint;
+    var_i2_14b :Result := ftSmallint;
+    var_ui2_14b:Result := ftWord;
+    var_inv_ui3:Result := ftWord;//ftInteger;
+    var_inv_i3 :Result := ftSmallint;//ftInteger;
+    var_inv_word:Result := ftWord;
+    var_inv_ui3_ltr:Result := ftWord;//ftInteger;
+    var_ui2_kadr_psk4 :Result := ftWord;
+    var_ui2_kadr_all  :Result := ftWord;
+    var_ui2_8b:Result := ftWord;
+    var_i2_14b_z_inv:Result := ftSmallint;
+    var_i2_14b_z:Result := ftSmallint;
   else raise Exception.Create('НЕВОЗМОЖНО ОПРЕДЕЛИТЬ ТИП DB ДАННЫХ ПО ТИПУ!!!');
   end;
 end;
@@ -323,7 +377,7 @@ begin
     varLongWord:Result := SizeOf(LongWord); { vt_ui4         19 }
     varInt64   :Result := SizeOf(Int64); { vt_i8          20 }
     varUInt64  :Result := SizeOf(UInt64); { vt_ui8         21 }
-    varString: Result := 255;
+    varString: Result := 32;
     var_i3     :Result := 3;
     var_ui3    :Result := 3;
     var_i2_15b :Result := 2;
@@ -372,17 +426,22 @@ begin
 end;
 
 
-class procedure TPars.FromVar(Data: Variant; vt: Integer; pOutData: Pointer);
+class procedure TPars.FromVar(const Data: Variant; vt: Integer; pOutData: Pointer);
  var
   b: TBytes;
-begin
+  d: Double;
+begin                                   // Data - Ole string XML only string;
   case vt of
     varWord        : PWord(pOutData)^ := Word(Data);
     varSmallint    : PSmallint(pOutData)^ := Smallint(Data);
     varDouble      : PDouble(pOutData)^ := Double(Data);
     varSingle      : PSingle(pOutData)^ := Single(Data);
     varInteger     : Pinteger(pOutData)^ := integer(Data);
-    varDate        : PDouble(pOutData)^ := StrToDateTime(Data);
+    varDate        :
+     begin
+      if TryStrToFloat(Data, d) then PDouble(pOutData)^ := d
+      else PDouble(pOutData)^ := StrToDateTime(Data);
+     end;
     varString      :
      begin
       b := TEncoding.Default.GetBytes(Data);
@@ -404,6 +463,123 @@ begin
     varInt64   : Result := function (var Data: Pointer): integer begin Result := PInt64(Data)^; Inc(Pbyte(Data), SizeOf(Int64)) end;
     varUInt64  : Result := function (var Data: Pointer): integer begin Result := PUInt64(Data)^; Inc(Pbyte(Data), SizeOf(UInt64)) end;
     else  raise Exception.Create('НЕВОЗМОЖНО ПРЕОБРАЗОВАТЬ В AsTypeFunction<integer>');
+  end;
+end;
+
+class procedure TPars.ToPointer(Data, Res: Pointer; vt: Integer);
+ var
+  w: PWord;
+  l,h,m: Byte;
+  b: PByte;
+  sn: Single;
+  procedure Move3(d3: Integer);
+  begin
+    PByte(Res)^ := d3;
+    (PByte(Res)+1)^ := d3 shr 8;
+    (PByte(Res)+2)^ := d3 shr 16;
+  end;
+begin
+  case vt of
+    varSmallint:PSmallint(Res)^ := PSmallint(Data)^; { vt_i2           2 }
+    varInteger :PInteger(Res)^ := PInteger(Data)^; { vt_i4           3 }
+    varSingle  :
+     begin
+      sn := PSingle(Data)^;//^/0; { vt_r4           4 }
+      if sn.SpecialType in [fsInf, fsNInf, fsNaN] then PSingle(Res)^ := 0
+      else PSingle(Res)^ := sn;
+     end;
+    varDouble  :PDouble(Res)^ := PDouble(Data)^; { vt_r8           5 }
+    varCurrency:PCurrency(Res)^ := PCurrency(Data)^; { vt_cy           6 }
+   // varDate    :Result := SizeOf(TDateTime); { vt_date         7 }
+    varShortInt:PShortInt(Res)^ := PShortInt(Data)^; { vt_i1          16 }
+    varByte    :PByte(Res)^ := PByte(Data)^; { vt_ui1         17 }
+    varWord    :PWord(Res)^ := PWord(Data)^; { vt_ui2         18 }
+    varLongWord:PLongWord(Res)^ := PLongWord(Data)^; { vt_ui4         19 }
+    varInt64   :PInt64(Res)^ := PInt64(Data)^; { vt_i8          20 }
+    varUInt64  :PUInt64(Res)^ := PUInt64(Data)^; { vt_ui8         21 }
+    var_i3     :Move3(Integer(PLongWord(Data)^ shl 8) div $100);
+    var_ui3    :Move3(LongWord(PLongWord(Data)^ and $00FFFFFF));
+    var_i2_15b :if (PWord(Data)^ and $4000) = 0 then PSmallint(Res)^ := PSmallint(Data)^ and $3FFF
+                else PSmallint(Res)^ := PSmallint(Data)^;
+    var_i2_15b_inv :if (PWord(Data)^ and $4000) = 0 then PSmallint(Res)^ := -(PSmallint(Data)^ and $3FFF)
+                else PSmallint(Res)^ := -(PSmallint(Data)^);
+    var_ui2_15b:PWord(Res)^ := PWord(Data)^ and $7FFF;
+    var_i2_10b  :if (PWord(Data)^ and $200) = 0 then PSmallint(Res)^ := PSmallint(Data)^ and $1FF
+                else PSmallint(Res)^ := Smallint(PWord(Data)^ or $FE00);
+    var_i2_14b  :if (PWord(Data)^ and $2000) = 0 then PSmallint(Res)^ := PSmallint(Data)^ and $1FFF
+                else PSmallint(Res)^ := Smallint(PWord(Data)^ or $E000);
+    var_ui2_14b :PWord(Res)^ := Word(PWord(Data)^ and $3FFF);
+    var_inv_word:
+     begin
+      b := Data;
+      h := b^; Inc(b);
+      l := b^;
+      PWord(Res)^ := word((word(h) shl 8) or l);
+     end;
+    var_i2_14b_GZ:
+     begin
+      w := Data;
+      PWord(Res)^ := (w^ shr 8) and $7F;
+      Dec(w);
+      PWord(Res)^ := PWord(Res)^ or ((w^ and $7F00) shr 1);
+      if (PWord(Res)^ and $2000) <> 0 then PSmallint(Res)^ := Smallint(PWord(Data)^ or $E000);
+     end;
+    var_ui2_kadr_psk4:
+     begin
+      w := Data;
+      PWord(Res)^ := (w^ shl 8);
+      Dec(w);
+      Dec(w);
+      PWord(Res)^ := (PWord(Res)^ or (w^ and $00FF));
+     end;
+    var_inv_ui3_ltr:
+     begin
+      b := Data;
+      h := b^; Inc(b);
+      m := b^; Inc(b);
+      l := b^;
+      Move3(LongWord(LongWord(h)*2000 + LongWord(m)*$100 + l));
+     end;
+    var_inv_i3:
+    begin
+      b := Data;
+      h := b^; Inc(b);
+      m := b^; Inc(b);
+      l := b^;
+      if h and $80 <> 0 then Move3(Integer($FF000000 + LongWord(h)*$10000 + LongWord(m)*$100 + l))
+      else Move3(Integer(LongWord(h)*$10000 + LongWord(m)*$100 + l));
+    end;
+    var_inv_ui3:
+     begin
+      b := Data;
+      h := b^; Inc(b);
+      m := b^; Inc(b);
+      l := b^;
+      Move3(LongWord(LongWord(h)*$10000 + LongWord(m)*$100 + l));
+     end;
+    var_ui2_kadr_all:
+     begin
+      w := Data;
+      PWord(Res)^ := (w^ shl 8);
+      Dec(w);
+      PWord(Res)^ := (PWord(Res)^ or (w^ and $00FF));
+     end;
+    var_ui2_8b:
+     begin
+      w := Data;
+      PWord(Res)^ := Byte(w^ and $00FF);
+     end;
+    var_i2_14b_z_inv:
+     begin
+      if (PWord(Data)^ and $2000) = 0 then PSmallint(Res)^ := -(PSmallint(Data)^ and $1FFF)
+                else PSmallint(Res)^ := Smallint(PWord(Data)^ and $1FFF);
+     end;
+    var_i2_14b_z:
+     begin
+      if (PWord(Data)^ and $2000) = 1 then PSmallint(Res)^ := -(PSmallint(Data)^ and $1FFF)
+                else PSmallint(Res)^ := Smallint(PWord(Data)^ and $1FFF);
+     end
+  else  raise Exception.Create('НЕВОЗМОЖНО ПРЕОБРАЗОВАТЬ УКАЗАТЕЛЬ В ВАРИАНТ!!!');
   end;
 end;
 
@@ -660,6 +836,13 @@ begin
   end;
 end;
 
+class procedure TPars.SetData(const value: TArray<TParserData>; const Data: PByte; ParsArray: Boolean);
+ var
+  v: TParserData;
+begin
+  for v in value do v.SetData(Data);
+end;
+
 class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev: THackEvent = nil);
  var
   CurIndex: Integer;
@@ -785,12 +968,12 @@ begin
   Add(node, Info, InfoLen); // указывает на тип - структуру
 end;
                       //   указывает на device
-class procedure TPars.SetMetr(node: IXMLNode; ExeSc: TXmlScript; ExecSetup: Boolean);
+{class procedure TPars.SetMetr(node: IXMLNode; ExeSc: IXmlScript; ExecSetup: Boolean);
  const
   SF = 'SIMPLE_FORMAT';
   MD = 'MODEL';
  var
-  sd: TXmlScript;
+  sd: IXmlScript;
   adr: Integer;
   mtr: IXMLNode;
 //  ExecSetup: Boolean;
@@ -831,10 +1014,10 @@ class procedure TPars.SetMetr(node: IXMLNode; ExeSc: TXmlScript; ExecSetup: Bool
 begin
 //  ExecSetup := True;
   ExeSc.ClearLines;
-  if ExecSetup then sd := TXmlScript.Create(nil);
+  if ExecSetup then sd := (GContainer as IXMLScriptFactory).Get(nil);
   try
    { TODO : Впроекте V3 работать не будет !!!! будет при правильном node}
-   for d in XEnum(node) do if d.HasAttribute(AT_ADDR) then
+{   for d in XEnum(node) do if d.HasAttribute(AT_ADDR) then
     begin
      adr := d.Attributes[AT_ADDR];
      mtr := d.ChildNodes.FindNode(T_MTR);
@@ -851,7 +1034,7 @@ begin
      sd.Execute; { TODO 5 -cОШИВКА!!! : ОШИБКА заполняется метрология (если есть) значениями по умолчанию!!! }
 
      //sd.Lines.SaveToFile(ExtractFilePath(ParamStr(0))+'GKScriptSetup.txt');
-    end;
+{    end;
 //    node.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'RP45.xml');
 
     ExeSc.Lines.Add('begin');
@@ -864,9 +1047,9 @@ begin
    // node.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'PSKafter.xml');
 
   finally
-   if ExecSetup then sd.Free;
+   if ExecSetup then sd := nil;
   end;
-end;
+end;}
 
 class procedure TPars.GetData(root: IXMLNode; var Data: TOutArray);
  var
@@ -929,7 +1112,44 @@ begin
    end);
 end;
 
+class procedure TPars.SetPskToStd(root: IXMLNode; const Data: PWord);
+begin
+  ExecXTree(root, procedure(n: IXMLNode)
+    var
+     di: PWord;
+   begin
+     if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) then
+      begin
+       di := Data;
+       Inc(di, Integer(n.Attributes[AT_INDEX]));
+       if n.ParentNode.HasAttribute(AT_ARRAY) then
+        begin
+         // n.Attributes[AT_VALUE] := ArrayToString(PByte(di), n.ParentNode.Attributes[AT_ARRAY], n.Attributes[AT_TIP])
+        end
+       else  ToPointer(di, di, n.Attributes[AT_TIP]);
+      end;
+   end);
+end;
+
 {$ENDREGION}
+
+{ TPrserData }
+
+constructor TParserData.Create(n: IXMLNode; IsWord: Boolean = false);
+begin
+  tip := TPars.VarTypeToType(n.Attributes[AT_TIP]);
+  index := n.Attributes[AT_INDEX];
+  if IsWord then index := index *2;
+  if n.ParentNode.HasAttribute(AT_ARRAY) then ArraySize := n.ParentNode.Attributes[AT_ARRAY];
+  Value := n.AttributeNodes[AT_VALUE];
+end;
+
+procedure TParserData.SetData(pData: PByte; parsArray: Boolean = false);
+begin
+//  Convert(pData + Index, ArraySize, Value);
+  if parsArray and (ArraySize > 0) then Value.NodeValue := TPars.ArrayToString(pData + Index, ArraySize, tip)
+  else Value.NodeValue := TPars.ToVar(pData + Index, tip);
+end;
 
 initialization
 //  CoInitialize(nil); { TODO : Easy interface требует CoInitialize}

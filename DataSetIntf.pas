@@ -2,7 +2,7 @@ unit DataSetIntf;
 
 interface
 
-uses RootIntf, Data.DB, Xml.XMLIntf;
+uses Container, RootIntf, Data.DB, Xml.XMLIntf;
 
 type
   IDataSet = interface(IManagItem)

@@ -2,7 +2,7 @@ object FormExportLASP3: TFormExportLASP3
   Left = 0
   Top = 0
   ClientHeight = 431
-  ClientWidth = 422
+  ClientWidth = 340
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,14 +11,14 @@ object FormExportLASP3: TFormExportLASP3
   Font.Style = []
   OldCreateOrder = False
   DesignSize = (
-    422
+    340
     431)
   PixelsPerInch = 96
   TextHeight = 13
   object pc: TPageControl
     Left = 8
     Top = 8
-    Width = 406
+    Width = 324
     Height = 390
     ActivePage = tshSelDir
     Anchors = [akLeft, akTop, akRight, akBottom]
@@ -30,22 +30,22 @@ object FormExportLASP3: TFormExportLASP3
       inline FrameSelectPath: TFrameSelectPath
         Left = 0
         Top = 0
-        Width = 398
+        Width = 316
         Height = 364
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 398
+        ExplicitWidth = 316
         ExplicitHeight = 364
         inherited Tree: TVirtualStringTree
-          Width = 398
+          Width = 316
           Height = 364
-          ExplicitWidth = 398
+          ExplicitWidth = 316
           ExplicitHeight = 364
           Columns = <
             item
               Position = 0
               Style = vsOwnerDraw
-              Width = 392
+              Width = 310
               WideText = #1055#1091#1090#1100
             end>
         end
@@ -56,16 +56,16 @@ object FormExportLASP3: TFormExportLASP3
       inline FrameSelectParam1: TFrameSelectParam
         Left = 0
         Top = 0
-        Width = 398
+        Width = 316
         Height = 364
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 398
+        ExplicitWidth = 316
         ExplicitHeight = 364
         inherited Tree: TVirtualStringTree
-          Width = 398
+          Width = 316
           Height = 364
-          ExplicitWidth = 398
+          ExplicitWidth = 316
           ExplicitHeight = 364
           Columns = <
             item
@@ -86,7 +86,7 @@ object FormExportLASP3: TFormExportLASP3
             end
             item
               Position = 2
-              Width = 344
+              Width = 262
               WideText = #1048#1084#1103
             end>
         end
@@ -98,7 +98,7 @@ object FormExportLASP3: TFormExportLASP3
       object DBGrid1: TDBGrid
         Left = 0
         Top = 0
-        Width = 398
+        Width = 316
         Height = 364
         Align = alClient
         DataSource = ds
@@ -115,22 +115,8 @@ object FormExportLASP3: TFormExportLASP3
       ImageIndex = 3
       OnShow = tshLasShow
       DesignSize = (
-        398
+        316
         364)
-      object Label2: TLabel
-        Left = 261
-        Top = 56
-        Width = 41
-        Height = 13
-        Caption = #1055#1086' '#1082#1072#1076#1088
-      end
-      object Label3: TLabel
-        Left = 134
-        Top = 56
-        Width = 41
-        Height = 13
-        Caption = #1057' '#1082#1072#1076#1088#1072
-      end
       object Label4: TLabel
         Left = 7
         Top = 56
@@ -145,22 +131,6 @@ object FormExportLASP3: TFormExportLASP3
         Height = 13
         Caption = #1060#1072#1081#1083
       end
-      object edTo: TEdit
-        Left = 261
-        Top = 75
-        Width = 121
-        Height = 21
-        TabOrder = 0
-        Text = '0'
-      end
-      object edFrom: TEdit
-        Left = 134
-        Top = 75
-        Width = 121
-        Height = 21
-        TabOrder = 1
-        Text = '0'
-      end
       object cb: TComboBox
         Left = 7
         Top = 75
@@ -168,7 +138,7 @@ object FormExportLASP3: TFormExportLASP3
         Height = 22
         Style = csOwnerDrawFixed
         ItemIndex = 0
-        TabOrder = 2
+        TabOrder = 0
         Text = 'ANSI'
         Items.Strings = (
           'ANSI'
@@ -178,7 +148,7 @@ object FormExportLASP3: TFormExportLASP3
       object od: TJvFilenameEdit
         Left = 3
         Top = 26
-        Width = 378
+        Width = 296
         Height = 21
         OnBeforeDialog = odBeforeDialog
         DialogKind = dkSave
@@ -187,21 +157,36 @@ object FormExportLASP3: TFormExportLASP3
         DialogOptions = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist]
         DirectInput = False
         Anchors = [akLeft, akTop, akRight]
-        TabOrder = 3
+        TabOrder = 1
         Text = ''
       end
       object Memo: TMemo
         Left = 7
-        Top = 112
-        Width = 375
-        Height = 241
+        Top = 221
+        Width = 293
+        Height = 132
         Anchors = [akLeft, akTop, akRight, akBottom]
-        TabOrder = 4
+        TabOrder = 2
+      end
+      inline RangeSelect: TFrameRangeSelect
+        Left = 7
+        Top = 103
+        Width = 292
+        Height = 112
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 3
+        ExplicitLeft = 7
+        ExplicitTop = 103
+        ExplicitWidth = 292
+        inherited Range: TRangeSelector
+          Width = 292
+          ExplicitWidth = 292
+        end
       end
     end
   end
   object btCancel: TButton
-    Left = 339
+    Left = 257
     Top = 404
     Width = 75
     Height = 25
@@ -211,7 +196,7 @@ object FormExportLASP3: TFormExportLASP3
     OnClick = btCancelClick
   end
   object btOK: TButton
-    Left = 234
+    Left = 152
     Top = 404
     Width = 75
     Height = 25

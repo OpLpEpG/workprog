@@ -2,18 +2,10 @@
 
 interface
 
-uses System.Classes, System.Bindings.Expression, System.Generics.Collections, RTTI, System.TypInfo;
+uses Container,
+     System.Classes, System.Bindings.Expression, System.Generics.Collections, RTTI, System.TypInfo;
 
 type
-  ModelType = PTypeInfo;
-  ServiceType = PTypeInfo;
-
-  TInstanceRec = record
-    Inst: IInterface;
-    Priority: Integer;
-    Text: string;
-  end;
-
   ///	<summary>
   ///	    Внутренний  интерфейс связывания
   ///	</summary>
@@ -72,50 +64,6 @@ type
     procedure Notify(const PropName: string);
   end;  }
 
-  ///	<summary>
-  ///	  Внутренний интерфейс для загрузки и сохранения объекта
-  ///	</summary>
-  IManagItem = interface(IInterfaceComponentReference)
-  ['{1EC89F48-842C-4415-AA10-9161570B0549}']
-    ///	<summary>
-    ///	  приоритет загрузки
-    ///	</summary>
-    ///	<remarks>
-    ///	  фактически константа инициализируемая при создании
-    ///	</remarks>
-    function Priority: Integer;
-    ///	<summary>
-    ///	  имя для формирования имен объектов TDevice =&gt;  Device
-    ///	</summary>
-    function RootName: String;
-    function GetItemName: String;
-    ///	<summary>
-    ///	  Вызывается менегером TEnumer<T>.Add при создании или загрузки
-    ///	</summary>
-    procedure SetItemName(const Value: String);
-    function Model: ModelType;
-    ///	<summary>
-    ///	  имя компонента или формы
-    ///	</summary>
-    ///	<remarks>
-    ///	  инициализируется менегером TEnumer<T>.Add при создании или загрузки
-    ///   под этим именем хранится в контейнере
-    ///	</remarks>
-    property IName: String read GetItemName write SetItemName;
-  end;
-
-  TInstanceRec<T: IManagItem> = record
-    Inst: T;
-    Priority: Integer;
-    Text: string;
-  end;
-
-  ICaption = interface
-  ['{DBBF1D44-F436-435C-BF09-1A58290A4B11}']
-    function GetCaption: string;
-    procedure SetCaption(const Value: string);
-    property Text: string read GetCaption write SetCaption;
-  end;
 
 // Шаблоны пользовательских интерфейсов создан или загрузки наборов объектов
 
@@ -213,6 +161,19 @@ type
     procedure Load;
 //    property Path: string read GetPath write SetPath;
   end;
+
+  TStatistic = record
+    NRead: int64;
+    ProcRun: Double;
+    Speed: Double; // MB/sec
+    TimeToEnd: TTime;
+    TimeFromBegin: TTime;
+  end;
+
+ EnumCopyAsyncRun = (carOk, carZerroes, carEnd,  carTerminate, carError, carErrorSector);
+
+ const
+   COPY_STOP_EVENT = [carZerroes, carEnd,  carTerminate, carError];
 
 
 implementation

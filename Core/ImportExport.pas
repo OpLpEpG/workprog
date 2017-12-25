@@ -2,7 +2,7 @@ unit ImportExport;
 
 interface
 
-uses ExtendIntf,
+uses ExtendIntf, Container,
      System.SysUtils, Vcl.Dialogs, System.Variants, Xml.XMLIntf, RootImpl, debug_except, System.TypInfo,
      System.Generics.Defaults,
      System.Generics.Collections;
@@ -48,7 +48,7 @@ type
 
 implementation
 
-uses tools, XMLScript;
+uses tools;
 
 { TImportExport }
 
@@ -60,18 +60,18 @@ end;
 function TImportExport.GetFilters(const Section: string): string;
  var
   a: IXMLNode;
-  s: TXmlScript;
+  s: IXmlScript;
 begin
   Result := '';
   for a in XEnumAttr(FRoot.ChildNodes[Section]) do
    begin
-    s := TXmlScript.Create(nil);
+    s := (GContainer as IXMLScriptFactory).Get(nil);
     try
      s.Lines.Text := a.NodeValue;
      if not s.Compile then MessageDlg('Ошибка компиляции '+FRoot.NodeName+' '+a.NodeName+':'+s.ErrorPos, TMsgDlgType.mtError, [mbOK], 0)
-     else Result := Result + '|'+ s.CallFunction('GetFilterName', 0);
+     else Result := Result + '|'+ s.CallFunction('GetFilterName', [0], 1)[0];
     finally
-     s.Free;
+     //s.Free;
     end;
   end;
 end;
@@ -79,16 +79,16 @@ end;
 procedure TImportExport.Exec(const Section: string; FilrerNo: Integer; const TrrFile: string; Etalon: IXMLNode);
  var
   a: IXMLNode;
-  s: TXmlScript;
+  s: IXmlScript;
 begin
   a := FRoot.ChildNodes[Section].AttributeNodes[Section+(FilrerNo-1).ToString];
-  s := TXmlScript.Create(nil);
+  s := (GContainer as IXMLScriptFactory).Get(nil);
   try
    s.Lines.Text := a.NodeValue;
    if not s.Compile then MessageDlg('Ошибка компиляции '+FRoot.NodeName+' '+a.NodeName+':'+s.ErrorPos, TMsgDlgType.mtError, [mbOK], 0)
-   else s.CallFunction('OnExecuteFilter', VarArrayOf([TrrFile, XToVar(Etalon)]));
+   else s.CallFunction('OnExecuteFilter', [TrrFile, XToVar(Etalon)]);
   finally
-   s.Free;
+   //s.Free;
   end;
 end;
 

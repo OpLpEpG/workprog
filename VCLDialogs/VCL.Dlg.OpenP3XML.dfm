@@ -158,7 +158,7 @@ object DlgOpenP3DataSet: TDlgOpenP3DataSet
             end
             item
               Position = 2
-              Width = 277
+              Width = 271
               WideText = #1048#1084#1103
             end>
         end

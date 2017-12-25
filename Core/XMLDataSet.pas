@@ -4,7 +4,7 @@ interface
 
 //{$DEFINE USE_VTARRAY}
 
-uses ExtendIntf, DataSetIntf, Container, debug_except, XMLScript, Parser,  JDtools,
+uses ExtendIntf, DataSetIntf, Container, debug_except, Parser,  JDtools, FileCachImpl,
      Xml.XMLIntf,  System.IOUtils,
      System.Classes, sysutils, Data.DB, IDataSets, FileDataSet;
 
@@ -24,6 +24,7 @@ type
     function TryGetSection(out n: IXMLNode): Boolean;
   public
     constructor CreateUser(AXMLSection: IXMLNode; AObjectFields: Boolean);
+    destructor Destroy; override;
     function TryGet(out ids: IDataSet): Boolean; override;
     function CreateNew(out ids: IDataSet; UniDirectional: Boolean = True): Boolean; override;
     [ShowProp('Путь', True)] property Path: string read GetPath;
@@ -42,23 +43,32 @@ type
    type
     TInternalCalcData = record
      Data: IXMLNode;
+     tip: Integer;
      Offset: Integer;
      constructor Create(AOffset: Integer; AData: IXMLNode);
     end;
   private
+    FClcData: IFileData;
+    FCurrClcBuffer: PByte;
+    FCurrClcID: Integer;
+
     FDevice: string;
     FSection: string;
     FModul: Integer;
     FXMLFileName: string;
     FXMLSection: IXMLNode;
-    FScript: TXmlScript;
+    FScript: IXmlScript;
     FInternalCalcData: TArray<TInternalCalcData>;
+    ParserData: TArray<TParserData>;
+    FCLCFileName: string;
 //    FInternalCalcDataLen: Word; // syka abto sozdaetca
     function GetXMLSection: IXMLNode;
-    function GetScript: TXmlScript;
+    function GetScript: IXmlScript;
     function GetInternalCalcDataLen: Word; inline;
     function GetIsActive: Boolean;
+    function GetClcData: IFileData;
   protected
+    function GetCalcData(Buffer: PRecBuffer): PByte; override;
     function GetTempDir: string; override;
     function InternalCalcRecBuffer(Buffer: PRecBuffer): Boolean; override;
   public
@@ -69,15 +79,19 @@ type
 
     function TryGetX(const FullName: string; out X: IXMLNode): Boolean;
 
-    property IsActive: Boolean read GetIsActive;
+    procedure CalcData(InBuffer, OurBuffer: Pointer);
+    property ClcData: IFileData read GetClcData;
+
+    property IsActive{Project}: Boolean read GetIsActive;
     property XMLSection: IXMLNode read GetXMLSection;
-    property Script: TXmlScript read GetScript;
+    property Script: IXmlScript read GetScript;
 // published неподдерживаются
   public
     property Device: string read FDevice;// write FDevice;
     property ModulAdress: Integer read FModul;// write FModul;
     property Section: string read FSection;// write FSection;
     property XMLFileName: string read FXMLFileName;// write FXMLFileName;
+    property CLCFileName: string read FCLCFileName;// write FXMLFileName;
     property CalcDataLen: Word read GetInternalCalcDataLen;// write FInternalCalcDataLen;
   end;
 
@@ -108,6 +122,12 @@ begin
   FModul := AXMLSection.ParentNode.Attributes[AT_ADDR];
   FModulName := AXMLSection.ParentNode.NodeName;
   FDevice := AXMLSection.ParentNode.ParentNode.NodeName;
+end;
+
+destructor TXMLDataSetDef.Destroy;
+begin
+  TDebug.Log('TXMLDataSetDef.Destroy ' + FModulName);
+  inherited;
 end;
 
 function TXMLDataSetDef.TryGet(out ids: IDataSet): Boolean;
@@ -168,7 +188,8 @@ end;
 
 constructor TXMLDataSet.TInternalCalcData.Create(AOffset: Integer; AData: IXMLNode);
 begin
-  Data := AData;
+  Data := AData.AttributeNodes[AT_VALUE];
+  tip := AData.Attributes[AT_TIP];
   Offset := AOffset;
 end;
 
@@ -180,17 +201,52 @@ class procedure TXMLDataSet.CreateNew(RootSection: IXMLNode; out DataSet: IDataS
 begin
   if not Supports(GContainer, IProjectDataFile, pdf) then raise Exception.Create('Error IProjectDataFile не поддерживается');
   inherited CreateNew(pdf.ConstructDataDir(RootSection) + RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
-  with TXMLDataSet(DataSet.DataSet) do CreateFieldDefs(RootSection, ObjectFields);
+  with TXMLDataSet(DataSet.DataSet) do
+   begin
+    CreateFieldDefs(RootSection, ObjectFields);
+    FCLCFileName := TPath.ChangeExtension(BinFileName,'CLC');
+    FCurrClcID := -1;
+   end;
 end;
 
 class procedure TXMLDataSet.Get(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean);
  var
   pdf: IProjectDataFile;
 begin
+  if not RootSection.HasAttribute(AT_FILE_NAME) then raise Exception.Create('Нет файла данных');
+
   if not Supports(GContainer, IProjectDataFile, pdf) then raise Exception.Create('Error IProjectDataFile не поддерживается');
   inherited Get(pdf.ConstructDataDir(RootSection) + RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
   if not (DataSet.DataSet is TXMLDataSet) then raise Exception.Create('DataSet is not TXMLDataSet');
-  with TXMLDataSet(DataSet.DataSet) do if (FieldDefs.Count = 0) or (ObjectFields <> ObjectView) then CreateFieldDefs(RootSection, ObjectFields);
+  with TXMLDataSet(DataSet.DataSet) do
+   begin
+    if (FieldDefs.Count = 0) or (ObjectFields <> ObjectView) then CreateFieldDefs(RootSection, ObjectFields);
+    FCLCFileName := TPath.ChangeExtension(BinFileName,'CLC');
+    FCurrClcID := -1;
+   end;
+end;
+
+function TXMLDataSet.GetCalcData(Buffer: PRecBuffer): PByte;
+begin
+  if FCurrClcID = Buffer.ID then Exit(FCurrClcBuffer)
+  else
+  try
+   if ClcData.Read(CalcDataLen, Pointer(Result), (Buffer.ID-1)*CalcDataLen) <> CalcDataLen then Result := nil
+   else
+    begin
+     FCurrClcBuffer := Result;
+     FCurrClcID := Buffer.ID;
+    end;
+  except
+    Result := nil;
+  end;
+end;
+
+function TXMLDataSet.GetClcData: IFileData;
+begin
+  if Assigned(FClcData) then Exit(FClcData);
+  FClcData := GFileDataFactory.Factory(TFileData, ClcFileName);
+  Result := FClcData;
 end;
 
 function TXMLDataSet.GetInternalCalcDataLen: Word;
@@ -217,6 +273,7 @@ procedure TXMLDataSet.CreateFieldDefs(AXMLSection: IXMLNode; AObjectFields: Bool
  var
   RootName: string;
   ClcOffset: Word;
+  MulIndex: Integer;
   procedure AddFieldDef(n: IXMLNode; fs: TFieldDefs);
    var
     f: TFileFieldDef;
@@ -230,7 +287,7 @@ procedure TXMLDataSet.CreateFieldDefs(AXMLSection: IXMLNode; AObjectFields: Bool
     if n.HasAttribute(AT_AQURICY) then aq := n.Attributes[AT_AQURICY] else aq := 0;
 
     // смещение в файловом буфере
-    if n.HasAttribute(AT_INDEX) then off := n.Attributes[AT_INDEX]
+    if n.HasAttribute(AT_INDEX) then off := n.Attributes[AT_INDEX]*MulIndex
     else if n.NodeName = T_CLC then
       begin
      // смещение в буфере DataSet
@@ -304,6 +361,7 @@ begin
 //  RecordLength := AXMLSection.Attributes[AT_SIZE];
   FXMLFileName := AXMLSection.OwnerDocument.FileName;
   FModul := AXMLSection.ParentNode.Attributes[AT_ADDR];
+  if AXMLSection.HasAttribute(AT_WRKP) then MulIndex := 2 else MulIndex := 1;
   RootName := AXMLSection.ParentNode.NodeName;
   FDevice := AXMLSection.ParentNode.ParentNode.NodeName;
 
@@ -319,10 +377,10 @@ begin
   FInternalCalcDataLen := ClcOffset;
 end;
 
-function TXMLDataSet.GetScript: TXmlScript;
+function TXMLDataSet.GetScript: IXmlScript;
 begin
   if Assigned(FScript) then Exit(FScript);
-  FScript := TXmlScript.Create(Self);
+  FScript := (GContainer as IXMLScriptFactory).Get(Self);
   Result := FScript;
 end;
 
@@ -342,10 +400,11 @@ begin
    begin
     root := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get(XMLFileName).Get, Device);
    // root := root.CloneNode(True);
-    TPars.SetMetr(root, Script, False);
+    Script.SetMetr(root, Script, False);
     root := FindDev(root, ModulAdress);
     root := root.ChildNodes.FindNode(Section);
     FXMLSection := root;
+    ParserData := TPars.FindParserData(FXMLSection, false);
     // bind to meta data
     SetLength(FInternalCalcData, 0);
     for i := 0 to FieldDefList.Count-1 do
@@ -361,21 +420,42 @@ begin
    Result := FXMLSection;
 end;
 
+//var
+// dddddfirst: Boolean;
+procedure TXMLDataSet.CalcData(InBuffer, OurBuffer: Pointer);
+ var
+  d: TInternalCalcData;
+begin
+   TPars.SetData(ParserData, InBuffer, false);
+//  if not dddddfirst then
+   begin
+    Script.Execute(Section, FModul);
+//    dddddfirst := True;
+   end;
+ // Script.Execute(Section, FModul);
+  for d in FInternalCalcData do
+   begin
+    if Assigned(d.Data) then
+      TPars.FromVar(d.Data.NodeValue, d.tip, Pbyte(OurBuffer) + d.Offset);
+   end;
+end;
+
 function TXMLDataSet.InternalCalcRecBuffer(Buffer: PRecBuffer): Boolean;
  var
   buf, clcbuf: PByte;
-  d: TInternalCalcData;
+//  d: TInternalCalcData;
 begin
   buf := GetRecData(Buffer);
-  if not Assigned(buf) or not Assigned(XMLSection) or (Length(FInternalCalcData) = 0) then Exit(False);
-  TPars.SetData(FXMLSection, buf, false);
-  Script.Execute(Section, FModul);
 //  pb := Pbyte(Buffer) + SizeOf(TRecBuffer);
   clcbuf := Pbyte(Buffer) + SizeOf(TRecBuffer); //pb + Sizeof(Boolean);
-  for d in FInternalCalcData do
-   begin
-    if Assigned(d.Data) then TPars.FromVar(d.Data.Attributes[AT_VALUE], Integer(d.Data.Attributes[AT_TIP]), clcbuf + d.Offset);
-   end;
+  if not Assigned(buf) or not Assigned(XMLSection) or (Length(FInternalCalcData) = 0) then Exit(False);
+  CalcData(buf, clcbuf);
+//  TPars.SetData(FXMLSection, buf, false);
+//  Script.Execute(Section, FModul);
+//  for d in FInternalCalcData do
+//   begin
+//    if Assigned(d.Data) then TPars.FromVar(d.Data.Attributes[AT_VALUE], Integer(d.Data.Attributes[AT_TIP]), clcbuf + d.Offset);
+//   end;
   Buffer.AutoCalculated := True;
   Result := True;
 end;

@@ -2,7 +2,7 @@ unit AbstractDev;
 
 interface
 
-uses RootImpl, DeviceIntf, debug_except, RootIntf, ExtendIntf, tools, XMLScript, Parser, Container,
+uses RootImpl, DeviceIntf, debug_except, RootIntf, ExtendIntf, tools, Parser, Container, DataSetIntf, XMLDataSet, FileCachImpl,
      Menus, Generics.Collections, System.SyncObjs, Math, Winapi.ActiveX, Vcl.Forms,
      Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc,
      System.Bindings.Outputs, RTTI;
@@ -131,19 +131,20 @@ type
     EAsyncReadRamException = class(EReadRamException);
   TReadRam = class(TAggObject)
   private
-   type
-    TReadRamThtead = class(TThread)
-    protected
-      ptr: Pointer;
-      Owner: TReadRam;
-      procedure DoSync;
-      procedure Execute; override;
-    end;
+//   type
+//    TReadRamThtead = class(TThread)
+//    protected
+//      ptr: Pointer;
+//      Owner: TReadRam;
+//      procedure DoSync;
+//      procedure Execute; override;
+//    end;
    const
     MAX_RAM = $420000;
     BUFF_LEN = $16000;
    var
     //FReadRamThtead: TReadRamThtead;
+    FCreateClcFile: Boolean;
   protected
     //FEvent: TEvent;
     //FLock: TCriticalSection;
@@ -155,7 +156,7 @@ type
     FFlagReadToFF: Boolean;
     FFastSpeed: Integer;
 
-    FFromTime, FToTime: TDateTime;
+    FFromTime{, FToTime}: TDateTime;
     Fadr: Integer;
     FReadRamEvent: TReadRamEvent;
 
@@ -178,7 +179,7 @@ type
 
     FFlagTerminate: Boolean;
     FFlagEndRead: Boolean;
-    FEndReason: EnumReadRam;
+    FEndReason: EnumCopyAsyncRun;
 
     FModulID: integer;
 
@@ -193,13 +194,22 @@ type
 
     IsOldClose: Boolean;
 
+    FBeginTime: TDateTime;
+
+    IclcDaraSet: IDataSet;
+
+   // ParserData: TArray<TParserData>;
+
 //    FAcquire: Boolean;
 //    procedure Acquire;
 //    procedure Release;
 
+    function GetCreateClcFile: Boolean; virtual;
+    procedure SetCreateClcFile(const Value: Boolean); virtual;
+
     procedure WriteToBD;
 
-    function ProcToEnd: Double;
+    function ProcToEnd: TStatistic;
     function TestFF(P: PByte; n: Integer): Boolean;
   // IReadDeviceRAM
 //    procedure SetReadTime(FromTime, ToTime: TDateTime); virtual; safecall;
@@ -209,11 +219,13 @@ type
 //    function GetReadToFF: Boolean; virtual; safecall;
 //    procedure SetFastSpeed(Flag: Boolean); virtual; safecall;
 //    function GetFastSpeed: Boolean; virtual; safecall;
-    procedure DoSetData(pData: Pointer); virtual;
-    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);virtual;
+    procedure DoSetData(pData: Pointer; nk: Integer); virtual;
+    procedure Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);virtual;
     procedure Terminate(Res: TResultEvent = nil); virtual;
 //    procedure CheckAndInitByAdr(Adr: Integer; MaxRam: Integer = 0; DefK: Double = 0; FromToAval: Boolean = True); virtual;
     procedure EndExecute(); virtual;
+    property CreateClcFile: Boolean read GetCreateClcFile write SetCreateClcFile;
+
   public
     constructor Create(AAbstractDevice: TAbstractDevice); reintroduce; virtual;
     destructor Destroy; override;
@@ -307,7 +319,7 @@ type
 
 //  TAbstractActionsDev = class;
 //  TAbstractActionsDevClass = class of TAbstractActionsDev;
-  TAbstractDevice = class(TDevice)//,
+  TAbstractDevice = class(TDevice, INotifyBeforeRemove)//,
 //                          IAddMenus,
 //                          I N ot ifyAfteActionManagerLoad,
 //                          INotifyLoadBeroreAdd,
@@ -321,16 +333,18 @@ type
     procedure SetEepromkEventInfo(const Value: TEepromEventRes);
   protected
     FReadRam: TReadRam;
-    FExeMetr: TXmlScript;
-    FMetaDataInfo: TDeviceMetaData;
+    FExeMetr: IXmlScript;
     FDelayInfo: TSetDelayRes;
+    FMetaDataInfo: TDeviceMetaData;
     FWorkEventInfo: TWorkEventRes;
     FEepromEventInfo: TEepromEventRes;
 //    function QueryInterface(const IID: TGUID; out Obj): HResult; override; stdcall;
 //    procedure ResetMetaData();
 //    function GetActionsDevClass: TAbstractActionsDevClass; virtual; abstract;
 //    procedure AfteActionManagerLoad(); virtual;
+
     procedure LoadBeroreAdd();
+    procedure BeforeRemove(); virtual;
     function PropertyReadRam: TReadRam;
     function CreateReadRam: TReadRam; virtual;
 //    procedure BeforeAdd(); virtual;
@@ -339,6 +353,8 @@ type
 
     procedure Loaded; override;
 
+    procedure EndInfo;
+
 //    property ReadRam: TReadRam read GetReadRam;
   public
 //    FRamDir: string;
@@ -346,6 +362,7 @@ type
     // IDataDevice
 //    procedure InitMetaData(ev: TInfoEvent); virtual; safecall; abstract;
     function GetMetaData: TDeviceMetaData;
+
 //    procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false); virtual; safecall; abstract;
     // IDelayDevice
 //    procedure SetDelay(Delay, WorkTime: TTime; ResultEvent: TSetDelayEvent); virtual; safecall; abstract;
@@ -916,7 +933,7 @@ begin
 //  FActionsDev.CreateAddManager;
   if S_Status <> dsNoInit then
    try
-    TPars.SetMetr(FMetaDataInfo.Info, FExeMetr, False);
+    FExeMetr.SetMetr(FMetaDataInfo.Info, FExeMetr, False);
    finally
     Notify('S_MetaDataInfo');
    end;
@@ -939,11 +956,32 @@ end;
 //  else Result := inherited QueryInterface(IID, Obj)
 //end;
 
+procedure TAbstractDevice.BeforeRemove;
+ var
+  f: TWorkDataRef;
+begin
+  f := procedure(n: IXMLNode; adr: Byte; const name: string)
+   var
+    i: IOwnIntfXMLNode;
+  begin
+    if Supports(n, IOwnIntfXMLNode, i) then i.Intf := nil;
+  end;
+  if Assigned(FMetaDataInfo.Info) then
+   begin
+    FindAllWorks(FMetaDataInfo.Info, f);
+    FindAllRam(FMetaDataInfo.Info, f);
+   end;
+//  FMetaDataInfo.Info := nil;
+//  FWorkEventInfo.Work := nil;
+//  FEepromEventInfo.eep := nil;
+end;
+
+
 constructor TAbstractDevice.Create();
 begin
   inherited;
 //  FActionsDev := GetActionsDevClass.Create(Self);
-  FExeMetr := TXmlScript.Create(nil);
+  FExeMetr := (GContainer as IXMLScriptFactory).Get(nil);
 end;
 
 function TAbstractDevice.CreateReadRam: TReadRam;
@@ -960,7 +998,7 @@ end;
 
 destructor TAbstractDevice.Destroy;
 begin
-  FExeMetr.Free;
+//  FExeMetr.Free;
   if Assigned(FReadRam) then FReadRam.Free;  
 //  FActionsDev.Free;
   inherited;
@@ -980,6 +1018,17 @@ begin
   end;
 end;
 
+
+procedure TAbstractDevice.EndInfo;
+ var
+  ix: IProjectDataFile;
+begin
+  if Supports(GlobalCore, IProjectDataFile, ix) and Assigned(FMetaDataInfo.Info) then
+   FindAllWorks(FMetaDataInfo.Info, procedure(wrk: IXMLNode; Adr: Byte; const name: string)
+   begin
+     ix.SaveEnd(wrk);
+   end);
+end;
 
 function TAbstractDevice.GetMetaData: TDeviceMetaData;
 begin
@@ -1416,12 +1465,12 @@ end;      }
 
 { TReadRam.TReadRamThtead }
 
-procedure TReadRam.TReadRamThtead.DoSync;
-begin
-  Owner.DoSetData(ptr);
-end;
+//procedure TReadRam.TReadRamThtead.DoSync;
+//begin
+//  Owner.DoSetData(ptr,1);
+//end;
 
-procedure TReadRam.TReadRamThtead.Execute;
+{procedure TReadRam.TReadRamThtead.Execute;
  var
   t: Cardinal;
   procedure ResetT;
@@ -1434,7 +1483,7 @@ procedure TReadRam.TReadRamThtead.Execute;
 //     pdb.CommitTrans;
 //     pdb.BeginTrans;
 //    end;
-   with Owner do if FFlagEndRead and Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
+   with Owner do if FFlagEndRead and Assigned(FReadRamEvent) then FReadRamEvent(carOk, FAdr, ProcToEnd);
   end;
 
 begin
@@ -1448,14 +1497,14 @@ begin
       //Fevent.ResetEvent;
       try
        if Terminated then Exit;
-       while Length(Fifo) >= FRecSize {Fifo.pop(ptr, FRecSize)} do
-        try
+//       while Length(Fifo) >= FRecSize {Fifo.pop(ptr, FRecSize)} //do
+//        try
   //        Synchronize(DoSync);
-         if Terminated or FFlagTerminate then Break;
+//         if Terminated or FFlagTerminate then Break;
 //         Acquire;
-         try
-          DoSetData(@Fifo[0]);
-          Delete(Fifo, 0 , FRecSize);
+//         try
+//          DoSetData(@Fifo[0],1);
+{          Delete(Fifo, 0 , FRecSize);
          finally
   //        Release;
          end;
@@ -1463,8 +1512,8 @@ begin
          Synchronize(procedure
          begin
            t := GetTickCount;
-           if {FFlagEndRead and }Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
-         end);
+//           if {FFlagEndRead and }//Assigned(FReadRamEvent) then FReadRamEvent(carOk, FAdr, ProcToEnd);
+{         end);
         except
          on E: Exception do TDebug.DoException(E, False);
         end;
@@ -1484,7 +1533,7 @@ begin
    finally
     CoUninitialize;
    end;
-end;
+end;  }
 
 { TReadRam }
 
@@ -1506,8 +1555,8 @@ begin
   FAbstractDevice := AAbstractDevice;
   FFlagReadToFF := True;
   FFastSpeed := 0;
-  FFromTime := 0;
-  FToTime:= 0;
+//  FFromTime := 0;
+//  FToTime:= 0;
   FFlagTerminate := True;
   //FEvent := TEvent.Create;
   //FLock := TCriticalSection.Create;
@@ -1527,29 +1576,52 @@ begin
   inherited;
 end;
 
-procedure TReadRam.DoSetData(pData: Pointer);
+procedure TReadRam.DoSetData(pData: Pointer; nk: Integer);
  var
   ip: IProjectData;
   ix: IProjectDataFile;
   nkadr: Integer;
+  clcarr: TArray<Byte>;
+  pin, pout: PByte;
+  I: Integer;
 begin
-  TPars.SetData(FRamXml, pData);
-  FAbstractDevice.FExeMetr.Execute(T_RAM, FAdr);
-
 //  FRamXml.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'RamData.xml');
-  inc(FcntKadr);
+  inc(FcntKadr, nk);
   nkadr := FFromKadr + FcntKadr;
   if Supports(GlobalCore, IProjectDataFile, ix) then
-   ix.SaveRamData(FAbstractDevice as IDevice, FAdr, FRamXml, pData, FRecSize, FRecSize*nkadr, nkadr , FFromTime + 2.097152 * nkadr)
+   begin
+    ix.SaveRamData(FAbstractDevice as IDevice, FAdr, FRamXml, pData, FRecSize*nk, FRecSize*nkadr, nkadr , FFromTime + 2.097152 * nkadr);
+    if CreateClcFile then with TXMLDataSet(IclcDaraSet.DataSet) do
+     begin
+      SetLength(clcarr, CalcDataLen*nk);
+      pin := pData;
+      pout := @clcarr[0];
+      for I := 0 to nk-1 do
+       begin
+        CalcData(pin, pout);
+        inc(pin, FRecSize);
+        inc(pout, CalcDataLen);
+       end;
+       ClcData.Write(CalcDataLen*nk, clcarr, -1, False);
+     end;
+   end
   else if Supports(GlobalCore, IProjectData, ip) then
+   begin
+    TPars.SetData(FRamXml, pData);
+    FAbstractDevice.FExeMetr.Execute(T_RAM, FAdr);
     ip.SaveRamData(FAbstractDevice as IDevice, FAdr, FRamXml,  FRecSize*nkadr, nkadr , FFromTime + 2.097152 * nkadr, FModulID);
+   end;
 end;
 
 procedure TReadRam.EndExecute;
 // var
 //  pdb: IProjectDBData;
+ var
+  ix: IProjectDataFile;
 begin
 //  if Supports(GlobalCore, IProjectDBData, pdb) then pdb.CommitTrans;
+  if Supports(GlobalCore, IProjectDataFile, ix) then ix.SaveEnd(FRamXml);
+  IclcDaraSet := nil;
   with FAbstractDevice do
    try
     S_Status := FOldStatus;
@@ -1560,10 +1632,11 @@ begin
    end;
 end;
 
-procedure TReadRam.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+procedure TReadRam.Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
 // var
 //  pdb: IProjectDBData;
 begin
+   FBeginTime := Now;
 //  if not Supports(GlobalCore, IProjectDBData, pdb) then raise EReadRamException.Create('Error IProjectDBData not supports');
   with FAbstractDevice do
    begin
@@ -1577,6 +1650,13 @@ begin
     FBinFile:= BinFile;
 
     FRamXml := FindRam(FMetaDataInfo.Info, Adr);
+    //ParserData := TPars.FindParserData(FRamXml);
+    if CreateClcFile then
+     begin
+      GFileDataFactory.ConstructFileName(FRamXml);
+      TXMLDataSet.CreateNew(FRamXml, IclcDaraSet);
+      TXMLDataSet(IclcDaraSet.DataSet).XMLSection;
+     end;
 
    // FRamXml.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'CalipTst1.xml');
 
@@ -1610,14 +1690,17 @@ begin
     FFlagTerminate := False;
     FReadRamEvent := evInfoRead;
     FAdr := Adr;
-    FFromTime := FromTime;
-    FToTime := ToTime;
+    FFromTime := (GContainer as IProjectOptions).DelayStart;
+//    FFromTime := FromTime;
+//    FToTime := ToTime;
+//    FFromKadr := FFromAdr div FRecSize;//, FcntKadr: Integer;
     FFlagReadToFF := ReadToFF;
     FFastSpeed := FastSpeed;
-    FFromAdr := 0;
-    FToAdr := FRamSize;
-
-    FFromKadr := FFromAdr div FRecSize;//, FcntKadr: Integer;
+    FFromAdr := FFromKadr*FRecSize;
+    if ToKadr = 0 then
+      FToAdr := FRamSize
+    else
+      FToAdr := ToKadr * FRecSize;
     FcntKadr  := 0;
 
 
@@ -1647,6 +1730,11 @@ begin
     end;
    end;
 //  pdb.BeginTrans;
+end;
+
+function TReadRam.GetCreateClcFile: Boolean;
+begin
+  Result := FCreateClcFile;
 end;
 
 {procedure TReadRam.CheckAndInitByAdr(Adr: Integer; MaxRam: Integer = 0; DefK: Double = 0; FromToAval: Boolean = True);
@@ -1698,11 +1786,25 @@ begin
 end;  }
 
 
-function TReadRam.ProcToEnd: Double;
+function TReadRam.ProcToEnd: TStatistic;
+ var
+  Spd: double;
+  cnt: Integer;
 begin
-//  Result := max((FToAdr - FCurAdr)/(FToAdr - FFromAdr)*100, Length(Fifo)/10);
-  Result := (FToAdr - FCurAdr)/(FToAdr - FFromAdr)*100;
-  if Result > 100 then Result := 100;
+  cnt := FToAdr-FFromAdr;
+  Result.NRead := FCurAdr - FFromAdr;
+  Result.TimeFromBegin := Now - FBeginTime;
+  Result.ProcRun := Result.NRead/cnt*100;
+  // speed
+  Spd := Result.NRead / Result.TimeFromBegin;
+  Result.Speed := Spd/1024/1024 /24/3600; // MB/sec
+  if Spd > 0 then Result.TimeToEnd := (cnt - Result.NRead)/spd
+  else Result.TimeToEnd := 0;
+end;
+
+procedure TReadRam.SetCreateClcFile(const Value: Boolean);
+begin
+  FCreateClcFile := Value;
 end;
 
 //procedure TReadRam.Release;
@@ -1724,15 +1826,18 @@ procedure TReadRam.WriteToBD;
   const
     t: Integer = 0;
   {$J-}
+ var
+  cnt: Integer;// Length(Fifo) mod FRecSize * FRecSize
 begin
   while Length(Fifo) >= FRecSize {Fifo.pop(ptr, FRecSize)} do
     try
-     DoSetData(@Fifo[0]); /// восстановить
-     Delete(Fifo, 0 , FRecSize);
+     cnt := Length(Fifo) div FRecSize;
+     DoSetData(@Fifo[0], cnt); /// восстановить
+     Delete(Fifo, 0 ,  cnt * FRecSize);
      if ((GetTickCount - t) > 1000) then
      begin
        t := GetTickCount;
-       if Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
+       if Assigned(FReadRamEvent) then FReadRamEvent(carOk, FAdr, ProcToEnd);
      end;
     except
      on E: Exception do TDebug.DoException(E, False);
@@ -1748,7 +1853,7 @@ procedure TReadRam.Terminate(Res: TResultEvent);
 begin
   FFlagTerminate := True;
   FFlagEndRead := True;
-  FEndReason := eirTerminate;
+  FEndReason := carTerminate;
   //Fevent.SetEvent;
   WriteToBD;
   if Assigned(Res) then Res(True);
@@ -1855,6 +1960,7 @@ end;
 procedure TCycle.SetCycle(const Value: Boolean);
  var
   IsOldClose: Boolean;
+  ix: IProjectDataFile;
 begin
   IsOldClose := False;
   if Value = FTimer.Enabled then Exit;
@@ -1883,6 +1989,15 @@ begin
     end
    else
     begin
+     if (Controller is TAbstractDevice) then (Controller as TAbstractDevice).EndInfo;
+//
+//     if Supports(GlobalCore, IProjectDataFile, ix)
+//        and (Controller is TAbstractDevice)
+//        and Assigned((Controller as TAbstractDevice).FMetaDataInfo.Info) then
+//      FindAllWorks(TAbstractDevice(Controller).FMetaDataInfo.Info, procedure(wrk: IXMLNode; Adr: Byte; const name: string)
+//      begin
+//        ix.SaveEnd(wrk);
+//      end);
      FlagNeedStop := True;
      S_Status := FOldStatus;
      ConnectUnlock;

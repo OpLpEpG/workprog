@@ -13,6 +13,9 @@ type
     constructor Create(const Msg: string);
     constructor CreateFmt(const Msg: string; const Args: array of const);
   end;
+  ENeedDialogException = class(EBaseException);
+  ENoDialogException = class(EBaseException);
+  EHiddenException = class(EBaseException);
 
   TAsyncException = procedure (const ClassName, msg, StackTrace: WideString) of object;
 

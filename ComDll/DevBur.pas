@@ -2,7 +2,7 @@ unit DevBur;
 
 interface
 
-uses    System.IOUtils,
+uses  tools, System.IOUtils, RootIntf,
   Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc,
   Generics.Collections,  Vcl.Forms, Vcl.Dialogs,Vcl.Controls, Actns,
   DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl;
@@ -24,7 +24,7 @@ uses    System.IOUtils,
     type TResRef = reference to procedure;
     procedure Read(RamPtr: Integer; len: DWord;  ev: TReceiveDataRef; WaitTime: Integer = -1);
   protected
-    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
+    procedure Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
   end;
 
 //  ERamReadInfoBurException = class(ERamReadInfoException);
@@ -105,7 +105,7 @@ uses    System.IOUtils,
 
 implementation
 
-uses tools, Parser;
+uses  Parser;
 
 resourcestring
   RS_ErrReadData = 'Ошибка чтения данных устройства с адресом: %d SZ=%d[%d] CA=0x%x';
@@ -249,7 +249,7 @@ begin
    end;
 end;
 
-procedure TBurReadRam.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+procedure TBurReadRam.Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
    var
     FuncRead: TReceiveDataRef;
     ErrCnt: Integer;
@@ -304,15 +304,15 @@ begin
       Inc(FCurAdr, DataSize);
 
       //FEvent.SetEvent;
-       WriteToBD;
+      WriteToBD;
     end;
-    procedure NextRead(Status: EnumReadRam);
+    procedure NextRead(Status: EnumCopyAsyncRun);
     begin
       WriteStream;
      // if Assigned(FReadRamEvent) then FReadRamEvent(Status, FAdr, ProcToEnd);
       Read(DWord(FCurAdr), FPacketLen, FuncRead, wait); //рекурсия
     end;
-    procedure EndWrite(Reason: EnumReadRam);
+    procedure EndWrite(Reason: EnumCopyAsyncRun);
     begin
       FEndReason := Reason;
       FFlagEndRead := True;
@@ -331,8 +331,8 @@ begin
     if DataSize < 0 then
      begin
       Inc(ErrCnt);
-      if ErrCnt > MAX_BAD then EndWrite(eirCantRead)
-      else NextRead(eirReadErrSector);
+      if ErrCnt > MAX_BAD then EndWrite(carError)
+      else NextRead(carErrorSector);
      end
     else
      begin
@@ -340,10 +340,10 @@ begin
       if TestFF(@PbyteArray(Data)[DataSize-256], 256) then
        begin
         while (DataSize > 0) and (PbyteArray(Data)[DataSize-1] = $FF) do Dec(DataSize);
-        EndWrite(eirEnd);
+        EndWrite(carZerroes);
        end
-      else if (FCurAdr >= FToAdr) then EndWrite(eirEnd)
-      else NextRead(eirReadOk);
+      else if (FCurAdr >= FToAdr) then EndWrite(carEnd)
+      else NextRead(carOk);
      end;
   end;
   Read(DWord(FCurAdr), RLEN, FuncRead, wait); //начало рекурсии
@@ -557,7 +557,7 @@ begin
 
         if IsOldClose then connectClose;
 
-        TPars.SetMetr(FMetaDataInfo.Info, FExeMetr, True);
+        FExeMetr.SetMetr(FMetaDataInfo.Info, FExeMetr, True);
 
       //  TDebug.Log('Root3: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);
 

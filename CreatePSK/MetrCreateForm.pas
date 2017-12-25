@@ -2,10 +2,17 @@ unit MetrCreateForm;
 
 interface
 
+{$I Script.inc}
+
 uses RootIntf, PluginAPI, ExtendIntf, DockIForm, DeviceIntf, debug_except, Container, Actns,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls,
   VirtualTrees, Vcl.StdCtrls, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, Vcl.ComCtrls, Xml.XMLDoc, Xml.XMLIntf,
-  JvExControls, JvEditorCommon, JvEditor, JvHLEditor, RootImpl;
+  {$IFDEF USE_LUA_SCRIPT}
+    ScinLua, XMLLua,
+  {$ELSE}
+    JvExControls, JvEditorCommon, JvEditor, JvHLEditor,
+  {$ENDIF}
+   RootImpl;
 
 type
   PNodeExData = ^TNodeExData;
@@ -39,6 +46,8 @@ type
     Tree: TVirtualStringTree;
     pc: TCPageControl;
     NRename: TMenuItem;
+    N1: TMenuItem;
+    NCompile: TMenuItem;
     procedure NOpenClick(Sender: TObject);
     procedure NSaveClick(Sender: TObject);
     procedure NCopyClick(Sender: TObject);
@@ -58,16 +67,19 @@ type
     procedure pcContextPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
     procedure ppTabPopup(Sender: TObject);
     procedure ppMPopup(Sender: TObject);
+    procedure NCompileClick(Sender: TObject);
   private
     FFileMet: string;
     Ftrr, Edited: IXMLNode;
     FPvEdited: PVirtualNode;
+
     procedure smChange(Sender: TObject);
     procedure ClearTree;
     procedure ClearEdit;
     procedure Changed(Flag: Boolean);
     function AddPage(const PName, PCapt, SmInfo: string): TTabSheet;
-    function Memo(Tab: TTabSheet): TJvHLEditor;
+    function Memo(Tab: TTabSheet): TStrings;
+    function StatusBar(Tab: TTabSheet): TMemo;
     procedure LoadMet(const FileName: string);
     procedure UpdateTree;
     procedure Apply();
@@ -93,11 +105,43 @@ uses tools;
 
 const
  NL = #$D#$A;
- SMI_SETUP = '{ procedure (v: variant);' + NL +
+
+   {$IFDEF USE_LUA_SCRIPT}
+   CFILEMET = 'Devices\TRRLua.xml';
+   SMI_SETUP =
+              '--alg, t - псевдо таблицы' + NL +
+              'function TrrSetup (alg, t)' + NL +
+              '' + NL +
+              '   print("^access to TrrSetup ");' + NL +
+              '' + NL +
+              '  local m = AddMetrology(alg.a.b.c["Олег"], alg, "AY", "G");' + NL +
+              '' + NL +
+              '  print(m.TITLE, m.EU, m.TYPE);' + NL +
+              '' + NL +
+              ' -- ANSI !!!!!' + NL +
+              '  alg.a.b.c["Олег"].AT_VALUE = 12.1;' + NL +
+              ' -- alg.a.b.c["Вася"].AT_VALUE = 12.1;' + NL +
+              '' + NL +
+              '  local st = alg.a.b.c["Олег"];' + NL +
+              '' + NL +
+              '' + NL +
+              '  print(st.AT_VALUE);' + NL +
+              '' + NL +
+              '  t.a.b.c["Метрология"].AT_VALUE = "ывапрролпрлгьегнэ"' + NL +
+              '' + NL +
+              '    st = t.a.b.c["Метрология"];' + NL +
+              '' + NL +
+              '  print(st.AT_VALUE);' + NL +
+              'end';
+  {$ELSE}
+  CFILEMET = 'Devices\Trr.xml';
+  SMI_SETUP = '{ procedure (v: variant);' + NL +
              '  v - корневой элемент метрологии модуля или данных модуля (режим информации)' + NL +
              '  например Inclin, Dtr - корневой элемент редактируемого модуля }' + NL +
              'begin' + NL +
              'end;';
+  {$ENDIF}
+
  SMI_INFO =  '%s';
 
  MT_EXE = 'EXEC_METR';
@@ -158,14 +202,16 @@ procedure TFormMetr.Loaded;
 begin
   inherited;
   Tree.NodeDataSize := SizeOf(TNodeExData);
-  FFileMet := ExtractFilePath(ParamStr(0))+'Devices\Trr.xml';
+  FFileMet := ExtractFilePath(ParamStr(0))+CFILEMET;
   LoadMet(FFileMet);
+//  AddToNCMenu('Откомпилировать экран', NCompileClick, 0);
+//  AddToNCMenu('-', nil, 1);
 end;
 
 procedure TFormMetr.UpdateTree;
  var
   n,t: IXMLNode;
-  rt: PVirtualNode;
+  rt,md,trr: PVirtualNode;
   edr, ed: PNodeExData;
 begin
   Tree.BeginUpdate;
@@ -179,11 +225,34 @@ begin
      edr.XMNode := n;
      edr.IsRoot := True;
      edr.IsSimple := n.NodeName = SMPF;
+
+     md := Tree.AddChild(rt);
+     Include(md.States, vsExpanded);
+     edr := Tree.GetNodeData(md);
+     edr.XMNode := n.ChildNodes['MODEL'];
+     edr.IsRoot := True;
+     edr.IsSimple := True;
+
      for t in XEnum(n.ChildNodes['MODEL']) do
       begin
-       ed := Tree.GetNodeData(Tree.AddChild(rt));
+       ed := Tree.GetNodeData(Tree.AddChild(md));
        ed.XMNode := t;
-       ed.IsSimple := edr.IsSimple;
+       ed.IsSimple := False;
+       ed.IsRoot := False;
+      end;
+
+     trr := Tree.AddChild(rt);
+     Include(trr.States, vsExpanded);
+     edr := Tree.GetNodeData(trr);
+     edr.XMNode := n.ChildNodes['TRR_MODEL'];
+     edr.IsRoot := True;
+     edr.IsSimple := True;
+
+     for t in XEnum(n.ChildNodes['TRR_MODEL']) do
+      begin
+       ed := Tree.GetNodeData(Tree.AddChild(trr));
+       ed.XMNode := t;
+       ed.IsSimple := False;
        ed.IsRoot := False;
       end;
     end;
@@ -205,9 +274,13 @@ begin
   UpdateTree;
 end;
 
-function TFormMetr.Memo(Tab: TTabSheet): TJvHLEditor;
+function TFormMetr.Memo(Tab: TTabSheet): TStrings;
 begin
-  Result := TJvHLEditor(Tab.FindChildControl('SyntaxMemo'))
+  {$IFDEF USE_LUA_SCRIPT}
+  Result := TScinLua(Tab.FindChildControl('SyntaxMemo')).Lines;
+  {$ELSE}
+  Result := TJvHLEditor(Tab.FindChildControl('SyntaxMemo')).Lines;
+  {$ENDIF}
 end;
 
 procedure TFormMetr.Apply;
@@ -228,10 +301,10 @@ begin
    begin
     t := pc.Pages[i];
     if Pos(IMPT, t.Name) > 0 then
-      Edited.ChildNodes[IMPT].Attributes[IMPT + Edited.ChildNodes[IMPT].AttributeNodes.Count.ToString] := Memo(t).Lines.Text
+      Edited.ChildNodes[IMPT].Attributes[IMPT + Edited.ChildNodes[IMPT].AttributeNodes.Count.ToString] := Memo(t).Text
     else if Pos(EXPT, t.Name) > 0 then
-      Edited.ChildNodes[EXPT].Attributes[EXPT + Edited.ChildNodes[EXPT].AttributeNodes.Count.ToString] := Memo(t).Lines.Text
-    else Edited.Attributes[t.Name] := Memo(t).Lines.Text;
+      Edited.ChildNodes[EXPT].Attributes[EXPT + Edited.ChildNodes[EXPT].AttributeNodes.Count.ToString] := Memo(t).Text
+    else Edited.Attributes[t.Name] := Memo(t).Text;
    end;
 end;
 
@@ -303,6 +376,25 @@ begin
    end;
 end;
 
+
+procedure TFormMetr.NCompileClick(Sender: TObject);
+ var
+  s: IXMLScript;
+begin
+  {$IFDEF USE_LUA_SCRIPT}
+   TScinLua(pc.ActivePage.FindChildControl('SyntaxMemo')).IndicatorClear;
+   {$ENDIF}
+  s := (GlobalCore as IXMLScriptFactory).Get(nil);
+  s.Lines.Text := 'function _CompileTmp(v,t)'+  #$D#$A+ Memo(pc.ActivePage).Text + #$D#$A + 'end' + #$D#$A + #$D#$A;
+  if s.Compile then StatusBar(pc.ActivePage).Lines.Text := 'Compile OK'
+  else
+    begin
+     StatusBar(pc.ActivePage).Lines.Text := s.ErrorMsg;
+     {$IFDEF USE_LUA_SCRIPT}
+      TScinLua(pc.ActivePage.FindChildControl('SyntaxMemo')).ErrorShow(s.ErrorPos);
+     {$ENDIF}
+    end;
+end;
 
 procedure TFormMetr.NCopyClick(Sender: TObject);
  var
@@ -394,21 +486,44 @@ end;
 
 function TFormMetr.AddPage(const PName, PCapt, SmInfo: string): TTabSheet;
  var
-  sm: TJvHLEditor;
+  {$IFDEF USE_LUA_SCRIPT}
+    sm: TScinLua;
+  {$ELSE}
+    sm: TJvHLEditor;
+  {$ENDIF}
 begin
   Result := TTabSheet.Create(pc);
   Result.Tag := $12345678;
   Result.PageControl := pc;
   Result.Name := PName;
   Result.Caption := PCapt;
-  sm := TJvHLEditor.Create(Result);
+  with TMemo.Create(Result) do
+   begin
+    Name := 'StatusBar';
+    Parent := Result;
+    Align := alBottom;
+    ReadOnly := True;
+    Text := '';
+   end;
+  with TSplitter.Create(Result) do
+  begin
+    Parent := Result;
+    Align := alBottom;
+  end;
+  {$IFDEF USE_LUA_SCRIPT}
+    sm := TScinLua.Create(Result);
+    sm.Parent := Result;
+    sm.SetKeyWords(1, TXMLLua.GetRegisteredLuaMethodsNames);
+  {$ELSE}
+    sm := TJvHLEditor.Create(Result);
+    sm.Parent := Result;
+  {$ENDIF}
   sm.Name := 'SyntaxMemo';
-  sm.OnChange := smChange;
-  sm.Parent := Result;
   sm.Align := alClient;
 //  sm.CommentAttr.Color := clRed;
 //  sm.KeywordAttr.Color := clNavy;
-  sm.Lines.Text := SmInfo;
+   sm.OnChange := smChange;
+   sm.Lines.Text:= SmInfo;
   Changed(True);
 end;
 
@@ -425,6 +540,7 @@ begin
        begin
         ActivePage := Pages[i];
         NDel.Enabled := i > 0;
+        NCompile.Enabled := i > 0;
        end;
       PopupMenu := ppTab;
      end
@@ -443,7 +559,7 @@ procedure TFormMetr.ppMPopup(Sender: TObject);
     NCopy.Enabled := F;
   end;
 begin
-  for pv in Tree.SelectedNodes do seten(PNodeExData(Tree.GetNodeData(pv)).XMNode.NodeName <> 'SIMPLE_FORMAT')
+  for pv in Tree.SelectedNodes do seten(not PNodeExData(Tree.GetNodeData(pv)).IsSimple)
 end;
 
 procedure TFormMetr.ppTabPopup(Sender: TObject);
@@ -458,6 +574,11 @@ end;
 procedure TFormMetr.smChange(Sender: TObject);
 begin
   Changed(True);
+end;
+
+function TFormMetr.StatusBar(Tab: TTabSheet): TMemo;
+begin
+  Result := TMemo(Tab.FindChildControl('StatusBar'));
 end;
 
 procedure TFormMetr.TreeCompareNodes(Sender: TBaseVirtualTree; Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);

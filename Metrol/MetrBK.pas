@@ -2,11 +2,13 @@
 
 interface
 
+ {$M+}
+
 uses
-  DeviceIntf, PluginAPI, ExtendIntf, RootIntf, debug_except, DockIForm, MetrForm, Container, Actns, ExcelImpl,XMLScript,
+  DeviceIntf, PluginAPI, ExtendIntf, RootIntf, debug_except, DockIForm, MetrForm, Container, Actns, ExcelImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.StdCtrls, Vcl.ExtCtrls, Winapi.ActiveX,
-  Vcl.Menus,  RootImpl, StolBKIntf,  System.UITypes,  JDtools,
+  Vcl.Menus,  RootImpl, StolBKIntf,  System.UITypes,  JDtools, VerySimple.Lua.Lib,
   Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, JvExControls, JvInspector;
 
 type
@@ -52,10 +54,10 @@ type
     procedure NParamClick(Sender: TObject);
     class constructor Create;
     class destructor Destroy;
-    class function CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
-    class procedure Exec_EL1(v,t: Variant); static;
-    class procedure Setup_EL1(v: Variant); static;
-    class procedure ExportToMbk(const TrrFile: string; NewTrr: Variant); static;
+//    class function CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
+    class procedure Exec_EL1(v,t: IXMLNode); overload; static;
+    class procedure Setup_EL1(v: IXMLNode); overload; static;
+    class procedure ExportToMbk(const TrrFile: string; NewTrr: IXMLNode); overload; static;
   protected
     procedure Loaded; override;
     procedure DoStopAtt(AttNode: IXMLNode); override;
@@ -97,13 +99,17 @@ type
     [ShowProp('kI11', true)] property kI11: string read FkI11;
     [ShowProp('kI22', true)] property kI22: string read FkI22;
     [ShowProp('kU0', true)] property kU0: string read FU0;
+  published
+    class function Exec_EL1(L: lua_State): Integer; overload; cdecl; static;
+    class function Setup_EL1(L: lua_State): Integer; overload; cdecl; static;
+    class function ExportToMbk(L: lua_State): Integer; overload; cdecl; static;
   end;
 
 implementation
 
 {$R *.dfm}
 
-uses  tools, XMLScript.Math;
+uses  tools, XMLLua, XMLLua.Math;
 
 { TBKAuto }
 
@@ -206,16 +212,17 @@ end;
 {$REGION 'TFormБK'}
 class constructor TFormBK.Create;
 begin
-  TXmlScript.RegisterMethods([
-  'procedure ExportToMbk(const TrrFile: string; NewTrr: Variant)',
-  'procedure Exec_EL1(v, t: variant)',
-  'procedure Setup_EL1(v: variant)'
-  ], CallMeth);
+  TXMLLua.RegisterLuaMethods(TFormBK);
+//  TXmlScriptInner.RegisterMethods([
+//  'procedure ExportToMbk(const TrrFile: string; NewTrr: Variant)',
+//  'procedure Exec_EL1(v, t: variant)',
+//  'procedure Setup_EL1(v: variant)'
+//  ], CallMeth);
 end;
 
 class destructor TFormBK.Destroy;
 begin
-  TXmlScript.UnRegisterMethods(CallMeth);
+//  TXmlScriptInner.UnRegisterMethods(CallMeth);
 end;
 
 class function TFormBK.MetrolMame: string;
@@ -235,21 +242,27 @@ begin
   else DevBK;
 end;
 
-class function TFormBK.CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
+class function TFormBK.Setup_EL1(L: lua_State): Integer;
 begin
-  if MethodName = 'EXEC_EL1' then  Exec_EL1(Params[0], Params[1])
-  else if MethodName = 'SETUP_EL1' then  Setup_EL1(Params[0])
-  else if MethodName = 'EXPORTTOMBK' then  ExportToMbk(Params[0], Params[1])
+  Setup_EL1(TXMLLua.XNode(L, 1));
+  Result := 0;
 end;
+
+//class function TFormBK.CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
+//begin
+//  if MethodName = 'EXEC_EL1' then  Exec_EL1(Params[0], Params[1])
+//  else if MethodName = 'SETUP_EL1' then  Setup_EL1(Params[0])
+//  else if MethodName = 'EXPORTTOMBK' then  ExportToMbk(Params[0], Params[1])
+//end;
 
 class function TFormBK.ClassIcon: Integer;
 begin
   Result := NICON
 end;
 
-class procedure TFormBK.Setup_EL1(v: Variant);
+class procedure TFormBK.Setup_EL1(v: IXMLNode);
  var
-  l, p, f, m: Variant;
+  l, p, f, m: IXMLNode;
   i, j: Integer;
  const
   CLL: array[0..6] of TAlphaColor = ($FF240000,$FF480000,$FF6C0000,$FF900000,$FFB40000,$FFD80000,$FFFF0000);
@@ -295,7 +308,7 @@ begin
    TXMLScriptMath.AddMetrologyRG(m, 0, 1000);
 end;
 
-class procedure TFormBK.Exec_EL1(v, t: Variant);
+class procedure TFormBK.Exec_EL1(v, t: IXMLNode);
  var
   root, trr: IXMLNode;
   i: Integer;
@@ -308,8 +321,8 @@ class procedure TFormBK.Exec_EL1(v, t: Variant);
     c.Attributes[AT_VALUE] := k * Double(d.Attributes[AT_VALUE]);
   end;  
 begin
-  root := TVxmlData(v).Node;
-  trr := TVxmlData(t).Node;
+  root := v;
+  trr := t;
   for i := 1 to 6 do
    begin
     setclc(trr.Attributes['kGZ'+i.ToString], PATH_KS, i);  
@@ -322,44 +335,44 @@ begin
   setclc(trr.Attributes['kPS3'], PATH_DPS); 
 end;
 
-class procedure TFormBK.ExportToMbk(const TrrFile: string; NewTrr: Variant);
+class procedure TFormBK.ExportToMbk(const TrrFile: string; NewTrr: IXMLNode);
  var
   ser, dat: string;
 begin
-   ser := TVxmlData(NewTrr).Node.ParentNode.ParentNode.Attributes[AT_SERIAL];
-   dat := TVxmlData(NewTrr).Node.ChildNodes.FindNode(MetrolType).Attributes[AT_TIMEATT];
+   ser := NewTrr.ParentNode.ParentNode.Attributes[AT_SERIAL];
+   dat := NewTrr.ChildNodes.FindNode(MetrolType).Attributes[AT_TIMEATT];
    with TStringList.Create do
     try
-     Add(Format('%13.10f    {GZ1/мВ.ед.} {МБК-%s Дата метрологии %s}',[Double(NewTrr.kGZ1), ser, dat]));
-     Add(Format('%13.10f    {GZ2/мВ.ед.}',[Double(NewTrr.kGZ2)]));
-     Add(Format('%13.10f    {GZ3/мВ.ед.}',[Double(NewTrr.kGZ3)]));
-     Add(Format('%13.10f    {GZ4/мВ.ед.}',[Double(NewTrr.kGZ4)]));
-     Add(Format('%13.10f    {GZ5/мВ.ед.}',[Double(NewTrr.kGZ5)]));
-     Add(Format('%13.10f    {GZ6/мВ.ед.}',[Double(NewTrr.kGZ6)]));
-     Add(Format('%13.10f    {gz1/мВ.ед.}',[Double(NewTrr.kGZ1)]));
-     Add(Format('%13.10f    {gz2/мВ.ед.}',[Double(NewTrr.kGZ2)]));
-     Add(Format('%13.10f    {gz3/мВ.ед.}',[Double(NewTrr.kGZ3)]));
-     Add(Format('%13.10f    {gz4/мВ.ед.}',[Double(NewTrr.kGZ4)]));
-     Add(Format('%13.10f    {gz5/мВ.ед.}',[Double(NewTrr.kGZ5)]));
-     Add(Format('%13.10f    {gz6/мВ.ед.}',[Double(NewTrr.kGZ6)]));
-     Add(Format('%13.10f    {I/мА.ед.}',[Double(NewTrr.kI)]));
-     Add(Format('%13.10f    {PS1/мВ.ед.}',[Double(NewTrr.kPS1)]));
-     Add(Format('%13.10f    {PS2/мВ.ед.}',[Double(NewTrr.kPS2)]));
-     Add(Format('%13.10f    {PS3/мВ.ед.}',[Double(NewTrr.kPS3)]));
-     Add(Format('%13.10f    {gradPS/мВ.ед.}',[Double(NewTrr.kPS3)]));
-     Add(Format('%13.10f    {U0/мВ.ед.}',[Double(NewTrr.kU0)]));
-     Add(Format('%13.10f    {I11/мА.ед.}',[Double(NewTrr.kI11_16)]));
-     Add(Format('%13.10f    {I13/мА.ед.}',[Double(NewTrr.kI11_16)]));
-     Add(Format('%13.10f    {I13/мА.ед.}',[Double(NewTrr.kI11_16)]));
-     Add(Format('%13.10f    {I14/мА.ед.}',[Double(NewTrr.kI11_16)]));
-     Add(Format('%13.10f    {I15/мА.ед.}',[Double(NewTrr.kI11_16)]));
-     Add(Format('%13.10f    {I16/мА.ед.}',[Double(NewTrr.kI11_16)]));
-     Add(Format('%13.10f    {I21/мА.ед.}',[Double(NewTrr.kI21_26)]));
-     Add(Format('%13.10f    {I22/мА.ед.}',[Double(NewTrr.kI21_26)]));
-     Add(Format('%13.10f    {I23/мА.ед.}',[Double(NewTrr.kI21_26)]));
-     Add(Format('%13.10f    {I24/мА.ед.}',[Double(NewTrr.kI21_26)]));
-     Add(Format('%13.10f    {I25/мА.ед.}',[Double(NewTrr.kI21_26)]));
-     Add(Format('%13.10f    {I26/мА.ед.}',[Double(NewTrr.kI21_26)]));
+     Add(Format('%13.10f    {GZ1/мВ.ед.} {МБК-%s Дата метрологии %s}',[Double(NewTrr.Attributes['kGZ1']), ser, dat]));
+     Add(Format('%13.10f    {GZ2/мВ.ед.}',[Double(NewTrr.Attributes['kGZ2'])]));
+     Add(Format('%13.10f    {GZ3/мВ.ед.}',[Double(NewTrr.Attributes['kGZ3'])]));
+     Add(Format('%13.10f    {GZ4/мВ.ед.}',[Double(NewTrr.Attributes['kGZ4'])]));
+     Add(Format('%13.10f    {GZ5/мВ.ед.}',[Double(NewTrr.Attributes['kGZ5'])]));
+     Add(Format('%13.10f    {GZ6/мВ.ед.}',[Double(NewTrr.Attributes['kGZ6'])]));
+     Add(Format('%13.10f    {gz1/мВ.ед.}',[Double(NewTrr.Attributes['kGZ1'])]));
+     Add(Format('%13.10f    {gz2/мВ.ед.}',[Double(NewTrr.Attributes['kGZ2'])]));
+     Add(Format('%13.10f    {gz3/мВ.ед.}',[Double(NewTrr.Attributes['kGZ3'])]));
+     Add(Format('%13.10f    {gz4/мВ.ед.}',[Double(NewTrr.Attributes['kGZ4'])]));
+     Add(Format('%13.10f    {gz5/мВ.ед.}',[Double(NewTrr.Attributes['kGZ5'])]));
+     Add(Format('%13.10f    {gz6/мВ.ед.}',[Double(NewTrr.Attributes['kGZ6'])]));
+     Add(Format('%13.10f    {I/мА.ед.}',[Double(NewTrr.Attributes['kI'])]));
+     Add(Format('%13.10f    {PS1/мВ.ед.}',[Double(NewTrr.Attributes['kPS1'])]));
+     Add(Format('%13.10f    {PS2/мВ.ед.}',[Double(NewTrr.Attributes['kPS2'])]));
+     Add(Format('%13.10f    {PS3/мВ.ед.}',[Double(NewTrr.Attributes['kPS3'])]));
+     Add(Format('%13.10f    {gradPS/мВ.ед.}',[Double(NewTrr.Attributes['kPS3'])]));
+     Add(Format('%13.10f    {U0/мВ.ед.}',[Double(NewTrr.Attributes['kU0'])]));
+     Add(Format('%13.10f    {I11/мА.ед.}',[Double(NewTrr.Attributes['kI11_16'])]));
+     Add(Format('%13.10f    {I13/мА.ед.}',[Double(NewTrr.Attributes['kI11_16'])]));
+     Add(Format('%13.10f    {I13/мА.ед.}',[Double(NewTrr.Attributes['kI11_16'])]));
+     Add(Format('%13.10f    {I14/мА.ед.}',[Double(NewTrr.Attributes['kI11_16'])]));
+     Add(Format('%13.10f    {I15/мА.ед.}',[Double(NewTrr.Attributes['kI11_16'])]));
+     Add(Format('%13.10f    {I16/мА.ед.}',[Double(NewTrr.Attributes['kI11_16'])]));
+     Add(Format('%13.10f    {I21/мА.ед.}',[Double(NewTrr.Attributes['kI21_26'])]));
+     Add(Format('%13.10f    {I22/мА.ед.}',[Double(NewTrr.Attributes['kI21_26'])]));
+     Add(Format('%13.10f    {I23/мА.ед.}',[Double(NewTrr.Attributes['kI21_26'])]));
+     Add(Format('%13.10f    {I24/мА.ед.}',[Double(NewTrr.Attributes['kI21_26'])]));
+     Add(Format('%13.10f    {I25/мА.ед.}',[Double(NewTrr.Attributes['kI21_26'])]));
+     Add(Format('%13.10f    {I26/мА.ед.}',[Double(NewTrr.Attributes['kI21_26'])]));
      SaveToFile(TrrFile);
    finally
     Free;
@@ -558,6 +571,18 @@ begin
    end;
 end;
 {$ENDREGION}
+
+class function TFormBK.Exec_EL1(L: lua_State): Integer;
+begin
+  Exec_EL1(TXMLLua.XNode(L, 1), TXMLLua.XNode(L, 2));
+  Result := 0;
+end;
+
+class function TFormBK.ExportToMbk(L: lua_State): Integer;
+begin
+  ExportToMbk(string(lua_tostring(L, 1)), TXMLLua.XNode(L, 2));
+  Result := 0;
+end;
 
 initialization
   RegisterClass(TFormBK);

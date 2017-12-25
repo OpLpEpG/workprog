@@ -2,21 +2,11 @@ unit SDcardTools;
 
 interface
 
-uses
+uses RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.Threading,
   System.IOUtils, JclFileUtils;
 
 type
-  EnumCopyAsyncRun = (carOk, carZerroes, carEnd,  carTerminate, carError);
-
-  TStatistic = record
-    NRead: int64;
-    ProcRun: Double;
-    Speed: Double; // MB/sec
-    TimeToEnd: TTime;
-    TimeFromBegin: TTime;
-  end;
-
   TCopyAsyncEvent = procedure(car: EnumCopyAsyncRun; Stat: TStatistic; var Erminate: Boolean) of object;
 
   TSDStream = class(THandleStream)

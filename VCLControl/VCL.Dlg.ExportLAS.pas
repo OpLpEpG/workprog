@@ -6,7 +6,7 @@ uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, Actns
   Xml.XMLIntf, DataSetIntf, XMLDataSet, System.TypInfo, LAS, LasImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids, VCL.Frame.SelectParam, Vcl.StdCtrls, Vcl.ExtCtrls,
-  VCL.Frame.SelectPath, Vcl.ComCtrls, Vcl.Menus, Vcl.DBCtrls, Vcl.Mask, JvExMask, JvToolEdit;
+  VCL.Frame.SelectPath, Vcl.ComCtrls, Vcl.Menus, Vcl.DBCtrls, Vcl.Mask, JvExMask, JvToolEdit, VCL.Frame.RangeSelect;
 
 type
   TFormExportLASP3 = class(TDialogIForm, IDialog, IDialog<Integer>)
@@ -20,22 +20,21 @@ type
     btCancel: TButton;
     btOK: TButton;
     tshLas: TTabSheet;
-    edTo: TEdit;
-    Label2: TLabel;
-    edFrom: TEdit;
-    Label3: TLabel;
     cb: TComboBox;
     Label4: TLabel;
     ds: TDataSource;
     od: TJvFilenameEdit;
     Label1: TLabel;
     Memo: TMemo;
+    RangeSelect: TFrameRangeSelect;
     procedure btCancelClick(Sender: TObject);
     procedure btOKClick(Sender: TObject);
     procedure odBeforeDialog(Sender: TObject; var AName: string; var AAction: Boolean);
     procedure tshLasShow(Sender: TObject);
   private
     ids: IDataSet;
+    fldKadr: TField;
+    FirstKadr, LastKadr: Integer;
     flds: TArray<TField>;
   public
    function Execute(dummy: Integer): Boolean;
@@ -100,6 +99,7 @@ begin
 end;
 
 function TFormExportLASP3.Execute(dummy: Integer): Boolean;
+
 begin
   Result := True;
   IShow;
@@ -107,6 +107,12 @@ begin
     begin
       TXMLDataSet.Get(XMLSection,  ids,  True);
       ids.DataSet.Open;
+      fldKadr := ids.DataSet.FieldByName(TXMLDataSet(ids.DataSet).XMLSection.ParentNode.NodeName +'.время.DEV');
+      ids.DataSet.Last;
+      LastKadr := fldKadr.AsInteger;
+      ids.DataSet.First;
+      FirstKadr := fldKadr.AsInteger;
+      RangeSelect.Init(TXMLDataSet(ids.DataSet).RecordLength, FirstKadr, LastKadr, (GContainer as IProjectOptions).DelayStart);
       FrameSelectParam1.InitTree(ids.DataSet);
       ds.DataSet := ids.DataSet;
     end);
@@ -124,8 +130,8 @@ begin
   if Length(flds) = 0 then raise Exception.Create('Не выбраны параметры');
   if od.FileName = '' then raise Exception.Create('Не выбран файл');
   if not Assigned(ids) then raise Exception.Create('Не выбран файл');
-  from := StrToInt(edFrom.Text);
-  last := StrToInt(edTo.Text);
+  from := RangeSelect.kadr.first;
+  last := RangeSelect.kadr.last;
   il := NewLasDoc();
   // инициализируем поля
   for f in flds do
@@ -149,14 +155,17 @@ begin
     il.Curve.DisplayFormat[mnem] := aq;
    end;
   
-  if from = 0 then ids.DataSet.First
-  else ids.DataSet.RecNo := from;
-  if last = 0 then last := ids.DataSet.RecordCount;
+//  if from = 0 then
+//    ids.DataSet.First
+//  else
+    ids.DataSet.RecNo := from - FirstKadr;
+//  if last = 0 then last := ids.DataSet.RecordCount;
+
   SetLength(v, Length(flds)+1);
   // пишем данные
-  while (not ids.DataSet.Eof) and (last >= ids.DataSet.FieldByName('ID').AsInteger) do
+  while (not ids.DataSet.Eof) and (last >= fldKadr.AsInteger {ids.DataSet.FieldByName('ID').AsInteger}) do
    begin
-    v[0] := ids.DataSet.FieldByName('ID').AsInteger;
+    v[0] := fldKadr.AsInteger;// ids.DataSet.FieldByName('ID').AsInteger;
     for i := 1 to Length(flds) do
      if flds[i-1] is TNumericField then  v[i] := flds[i-1].AsFloat
      else v[i] := flds[i-1].AsString;

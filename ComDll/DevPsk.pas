@@ -2,7 +2,7 @@ unit DevPsk;
 
 interface
 
-uses
+uses  RootIntf,
   Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc, Container,
   Generics.Collections, Actns, ExtendIntf, PluginAPI,
   DeviceIntf, AbstractDev, debug_except, RootImpl;
@@ -158,7 +158,7 @@ type
   EReadRamPskException = class(EReadRamException);
   TAbstractReadRamPsk = class(TReadRam)
   protected
-    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
+    procedure Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
   public
     FFlagSwap: Boolean;
     FProtokol: Integer;
@@ -179,7 +179,7 @@ type
     procedure ReStartRam(); virtual;
     procedure Execute; virtual;
     procedure Terminate(Res: TResultEvent);
-    procedure DoEndRead(Reason: EnumReadRam = eirEnd; ResEv: TResultEvent = nil; Res: Boolean = False); virtual;
+    procedure DoEndRead(Reason: EnumCopyAsyncRun = carEnd; ResEv: TResultEvent = nil; Res: Boolean = False); virtual;
   public
     constructor Create(AStdReadRam: TStdReadRam); reintroduce;
   end;
@@ -196,13 +196,13 @@ type
   protected
     procedure Execute; override;
     procedure ReStartRam(); override;
-    procedure DoEndRead(Reason: EnumReadRam = eirEnd; ResEv: TResultEvent = nil; Res: Boolean = False); override;
+    procedure DoEndRead(Reason: EnumCopyAsyncRun = carEnd; ResEv: TResultEvent = nil; Res: Boolean = False); override;
   end;
 
   TProtocolReadRamApw = class(TProtocolReadRam_H_2)
   protected
     procedure Execute; override;
-    procedure DoEndRead(Reason: EnumReadRam = eirEnd; ResEv: TResultEvent = nil; Res: Boolean = False); override;
+    procedure DoEndRead(Reason: EnumCopyAsyncRun = carEnd; ResEv: TResultEvent = nil; Res: Boolean = False); override;
   end;
 
   EReadRamStdException = class(EReadRamPskException);
@@ -210,13 +210,14 @@ type
   private
     FExecReadRam: IProtocolReadRam;
   protected
-    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
+    procedure Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
     procedure Terminate(Res: TResultEvent = nil); override;
   end;
 
   EPskStdException = class(EAbstractPskException);
 
   TPskStd = class(TAbstractPsk, IDelayDevice, IStop, IDataDevice, IReadRamDevice)
+  private
   protected
     FActData: IAction;
     FFlagFlow: Boolean;
@@ -233,6 +234,7 @@ type
     procedure StopFlow(ResultEvent: TResultEvent = nil); virtual;
     function IsFlow: Boolean;
     function CreateReadRam: TReadRam; override;
+    procedure BeforeRemove(); override;
     property ReadRam: TReadRam read PropertyReadRam  implements IReadRamDevice;
   public
     procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false);
@@ -256,13 +258,13 @@ type
   // IImport
     function GetFilters: string;
     procedure Import(const FileName: string; FilterIndex: Integer;
-                      FromTime, ToTime: TDateTime; ReadToFF: Boolean;
+                      FromKadr, ToKadr: Integer; ReadToFF: Boolean;
                       Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
 //    FStreamGlm: TStream;
     procedure StartReadPage(ev: TCmdByteRef);
 //    procedure CheckCreateStream; override;
 //    procedure FreeStream; override;
-    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean;FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
+    procedure Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean;FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0); override;
   end;
 
   TPskCycle = class(TAbstractPsk, ICycle)
@@ -345,7 +347,7 @@ end;
 {$REGION  'TAbstractPsk - все процедуры и функции'}
 { TAbstractReadRamPsk }
 
-procedure TAbstractReadRamPsk.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+procedure TAbstractReadRamPsk.Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
 begin
   inherited ;//Execute(evInfoRead, Addrs);
 
@@ -704,17 +706,21 @@ begin
     if not Assigned(Info) then CArray.Add<Integer>(ErrAdr, FAddressArray[0])
     else
      try
-      TPars.SetMetr(Info, FExeMetr, True);
+      if Supports(GlobalCore, IProjectMetaData, ip) then
+       begin
+        ip.SetMetaData(Self as IDevice, FAddressArray[0], FindDev(Info, FAddressArray[0]));
+       end;
+      Info := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get().Get(), Name);
       finally
        try
-        if Supports(GlobalCore, IProjectMetaData, ip) then
-         begin
-          ip.SetMetaData(Self as IDevice, FAddressArray[0], FindDev(Info, FAddressArray[0]));
-         end;
-        Info := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get().Get(), Name);
-        S_Status := dsReady;
-        FOldStatus := S_Status;
-        if Assigned(ev) then ev(FMetaDataInfo);
+        try
+         FExeMetr.SetMetr(Info, FExeMetr, True);
+         (GContainer as IALLMetaDataFactory).Get().Save;
+        finally
+         S_Status := dsReady;
+         FOldStatus := S_Status;
+         if Assigned(ev) then ev(FMetaDataInfo);
+        end;
        finally
         Notify('S_MetaDataInfo');
        end;
@@ -819,7 +825,7 @@ end;
 {$REGION  'PSK - все процедуры и функции'}
 { TStdReadRam }
 
-procedure TStdReadRam.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+procedure TStdReadRam.Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
 begin
   inherited ;//Execute(evInfoRead, Addrs);
   case FProtokol of
@@ -845,7 +851,7 @@ begin
   FStdReadRam := AStdReadRam;
 end;
 
-procedure TProtocolReadRam_H_1.DoEndRead(Reason: EnumReadRam; ResEv: TResultEvent; Res: Boolean);
+procedure TProtocolReadRam_H_1.DoEndRead(Reason: EnumCopyAsyncRun; ResEv: TResultEvent; Res: Boolean);
 begin
   with FStdReadRam do
    begin
@@ -904,7 +910,7 @@ begin
 //       if (FRamSize <= FStream.Position) or TestFF(@FInput[DataSize-256], 256) then DoEndRead()
 //       else
         begin
-         if Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
+         if Assigned(FReadRamEvent) then FReadRamEvent(carOk, FAdr, ProcToEnd);
          WaitRxData(RamDataEvent);
         end;
       end
@@ -914,12 +920,12 @@ end;
 
 procedure TProtocolReadRam_H_1.ReStartRam;
 begin
-  DoEndRead(eirCantRead);
+  DoEndRead(carError);
 end;
 
 procedure TProtocolReadRam_H_1.Terminate(Res: TResultEvent);
 begin
-  DoEndRead(eirTerminate, Res);
+  DoEndRead(carTerminate, Res);
 end;
 
 { TReadRam_H_2 }
@@ -966,7 +972,7 @@ begin
    end;
 end;
 
-procedure TProtocolReadRamApw.DoEndRead(Reason: EnumReadRam; ResEv: TResultEvent; Res: Boolean);
+procedure TProtocolReadRamApw.DoEndRead(Reason: EnumCopyAsyncRun; ResEv: TResultEvent; Res: Boolean);
 begin
  with (FStdReadRam.FAbstractDevice as TAbstractPsk) do
   begin
@@ -984,7 +990,7 @@ end;
 
 { TProtocolReadRamStd }
 
-procedure TProtocolReadRamStd.DoEndRead(Reason: EnumReadRam = eirEnd; ResEv: TResultEvent = nil; Res: Boolean = False);
+procedure TProtocolReadRamStd.DoEndRead(Reason: EnumCopyAsyncRun = carEnd; ResEv: TResultEvent = nil; Res: Boolean = False);
 begin
   with (FStdReadRam.FAbstractDevice as TAbstractPsk) do
   begin
@@ -1015,7 +1021,7 @@ end;
 procedure TProtocolReadRamStd.ReStartRam;
 begin
   inc(FErrCnt);
-  with FStdReadRam, (FStdReadRam.FAbstractDevice as TAbstractPsk) do if FErrCnt > MAX_ERR then DoEndRead(eirCantRead)
+  with FStdReadRam, (FStdReadRam.FAbstractDevice as TAbstractPsk) do if FErrCnt > MAX_ERR then DoEndRead(carError)
   else
    begin
    // FReadRamEvent(eirReadErrSector, Fadr, ProcToEnd);
@@ -1146,6 +1152,7 @@ begin
 //  ChLockLockOpen(FFlagFlow, EPskStdException);
 
   FWorkEventInfo.Work := FindWork(FMetaDataInfo.Info, FAddressArray[0]);
+//  TDebug.Log(FWorkEventInfo.Work.OwnerDocument.FileName);
 
 //  FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'IND.xml');
 
@@ -1172,7 +1179,7 @@ begin
      end
     else
      begin
-      FActData.Checked := False;
+      if Assigned(FActData) then FActData.Checked := False;
       S_Status := FOldStatus;
       ConnectUnlock;
       ConnectClose;
@@ -1191,23 +1198,33 @@ begin
   AsyncByte(DEV_START_INFO.Cmd, FlowDataEvent, FFlowDataWait, False);
 end;
 
+procedure TPskStd.BeforeRemove;
+begin
+  FActData := nil;
+  inherited;
+end;
+
 function TPskStd.CreateReadRam: TReadRam;
 begin
   Result := TStdReadRam.Create(Self);
 end;
 
 procedure TPskStd.DoData(Sender: IAction);
+// var
+//  ix: IProjectDataFile;
 begin
+//  if Supports(GlobalCore, IProjectDBData, pdb) then pdb.CommitTrans;
   FActData := Sender;
   if FFlagFlow then
    begin
     StopFlowRef(procedure(Res: boolean; p: PByte; n: integer)
     begin
-      Sender.Checked := False;
+      FActData.Checked := False;
       FFlagFlow := False;
       S_Status := FOldStatus;
       ConnectUnlock;
       ConnectClose;
+      EndInfo;
     end);
    end
   else
@@ -1221,9 +1238,9 @@ begin
      ConnectLock;
      ConnectOpen();
      ReadWork(nil);
-     Sender.Checked := True;
+     FActData.Checked := True;
     except
-     Sender.Checked := False;
+     FActData.Checked := False;
      S_Status := FOldStatus;
      ConnectUnlock;
      ConnectClose;
@@ -1333,9 +1350,12 @@ begin
           i := 0;
          end;
         TPars.SetPsk(FWorkEventInfo.Work, @FWorkInput[0]);
+       // TDebug.Log(FWorkEventInfo.Work.OwnerDocument.FileName);
+
         FWorkEventInfo.DevAdr := FAddressArray[0];
         try
          FExeMetr.Execute(T_WRK);
+         TPars.SetPskToStd(FWorkEventInfo.Work, @FWorkInput[0]);
          if Supports(GlobalCore, IProjectData, ip) then ip.SaveLogData(Self as IDevice, FWorkEventInfo.DevAdr, FWorkEventInfo.Work, False)
          else if Supports(GlobalCore, IProjectDataFile, ix) then
                     ix.SaveLogData(Self as IDevice, FWorkEventInfo.DevAdr, FWorkEventInfo.Work, @FWorkInput[0], FWorkLen);
@@ -1379,7 +1399,7 @@ begin
   end);
 end;
 
-procedure TGluReadRam.Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean;FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+procedure TGluReadRam.Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean;FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
  var
   en, pg, FFSize: Integer;
   run: TCmdByteRef;
@@ -1392,7 +1412,7 @@ begin
   run := procedure(Res: boolean; p: PByte; n: integer)
     procedure SetPage;
     begin
-      if en > 0 then if Assigned(FReadRamEvent) then FReadRamEvent(eirReadErrSector, Fadr, ProcToEnd);
+      if en > 0 then if Assigned(FReadRamEvent) then FReadRamEvent(carErrorSector, Fadr, ProcToEnd);
       with FAbstractDevice as TAbstractPsk do
        begin
         ScennaBegin;
@@ -1407,7 +1427,7 @@ begin
         end, True);
        end;
     end;
-    procedure DoEndRead(Reason: EnumReadRam);
+    procedure DoEndRead(Reason: EnumCopyAsyncRun);
     begin
       FFlagEndRead := True;
       FEndReason := Reason;
@@ -1442,13 +1462,13 @@ begin
      begin
 //      FreeStream;
       EndExecute();
-      if Assigned(FReadRamEvent) then FReadRamEvent(eirTerminate, Fadr, ProcToEnd);
+      if Assigned(FReadRamEvent) then FReadRamEvent(carTerminate, Fadr, ProcToEnd);
       Exit;
      end;
     if n<0 then
      begin
       Inc(en);
-      if en >= 5 then DoEndRead(eirCantRead)
+      if en >= 5 then DoEndRead(carError)
       else SetPage();
      end
     else with FAbstractDevice.ConnectIO do
@@ -1463,20 +1483,20 @@ begin
          if (FCurAdr >= FToAdr) then
           begin
            ToFifo(518);
-           DoEndRead(eirEnd)
+           DoEndRead(carEnd)
           end
          else if TestFF(@FInput[1], 518) then
           begin
            FFSize := 518;
            while (FFSize > 1) and (FInput[FFSize] = $FF) do Dec(FFSize);
            ToFifo(FFSize);
-           DoEndRead(eirEnd);
+           DoEndRead(carEnd);
           end
          else
           begin
            ToFifo(518);
            en := 0;
-           if Assigned(FReadRamEvent) then FReadRamEvent(eirReadOk, FAdr, ProcToEnd);
+           if Assigned(FReadRamEvent) then FReadRamEvent(carOk, FAdr, ProcToEnd);
            Inc(pg);
            StartReadPage(run);
           end;
@@ -1495,7 +1515,7 @@ end;
 
 
 procedure TGluReadRam.Import(const FileName: string; FilterIndex: Integer;
-                      FromTime, ToTime: TDateTime; ReadToFF: Boolean;
+                      FromKadr, ToKadr: Integer; ReadToFF: Boolean;
                       Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
  var
   s: TFileStream;
@@ -1513,7 +1533,7 @@ procedure TGluReadRam.Import(const FileName: string; FilterIndex: Integer;
     //FEvent.SetEvent;
   end;
 begin
-  inherited Execute('', FromTime, ToTime,ReadToFF,0, Adr, evInfoRead, ModulID);
+  inherited Execute('', FromKadr, ToKadr, ReadToFF,0, Adr, evInfoRead, ModulID);
   s := TFileStream.Create(FileName, fmOpenRead);
   try
    FToAdr := s.Size;
@@ -1527,7 +1547,7 @@ begin
    s.Free;
   end;
   FCurAdr := FToAdr;
-  FEndReason := eirEnd;
+  FEndReason := carEnd;
   FFlagEndRead := True;
   //FEvent.SetEvent;
 end;

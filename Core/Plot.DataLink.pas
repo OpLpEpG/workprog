@@ -229,7 +229,7 @@ begin
        Fbuff[i].X := GetXValue(FX);
        Fbuff[i].Y := FY.AsSingle;
        IniTmpFileBuffer(Fbuff[i].Y, fx);
-       FFileData.Write(FileRecLen, @FfileTmpBuffer[0]);
+       FFileData.Write(FileRecLen, @FfileTmpBuffer[0], -1, False);
        inc(i);
        d.Next;
       end;
@@ -284,6 +284,10 @@ begin
    Yfirst := YValue;
    d.Next;
    dy := YValue - Yfirst;
+//  if d.RecordCount = 0 then Exit;
+//   if dy = 0 then
+//     raise EBaseException.CreateFmt('Error Message dy = 0 %f %s %s', [Yfirst, FieldY.FullName, FieldX.FullName]);
+
    d.RecNo := Round((FYFrom-Yfirst)/dy)-2;
    // доходим до начала экрана
    while (not d.Eof) and (YValue < FYFrom) do d.Next;
@@ -303,7 +307,10 @@ begin
   end;
 end;
 
+
 procedure TDataLink<T>.Read(YFrom, Yto: Single; AddpointEvent: TAddpointEvent<T>);
+const
+  {$J+} tick: Cardinal = 0;{$J-}
  var
   th: TThread;
   ids: IDataSet;
@@ -313,10 +320,10 @@ begin
   Fevent := AddpointEvent;
   FYFrom := YFrom;
   FYto := Yto;
-
-//  ReadFromDB;
-
-//  Exit;
+  tick := TThread.GetTickCount;
+  ReadFromDB;
+  TDebug.Log('ReadFromDB %s %f, %f время счит %1.2f',[XFieldDef.FullName, YFrom, Yto, (TThread.GetTickCount- tick)/1000]);
+  Exit;
  //неработает если выбираешь несколько данных LAS проблемма с синхронизацией потоков появляются нулевые У в файле
   if not FbuffReady then
    begin
@@ -325,7 +332,7 @@ begin
     begin
       FFileData.Lock;
       try
-       Tdebug.Log('TmpBuff: %d, Rec*Len: %d', [FFileData.Size, DataSet.RecordCount*FileRecLen]);
+       //Tdebug.Log('TmpBuff: %d, Rec*Len: %d', [FFileData.Size, DataSet.RecordCount*FileRecLen]);
        if FFileData.Size = DataSet.RecordCount*FileRecLen then
         begin
          SetLength(Fbuff, FFileData.Size div FileRecLen);
@@ -359,8 +366,8 @@ begin
    end
   else
    begin
-//    th := TReadDataThread.Create(procedure
-//    begin
+    th := TReadDataThread.Create(procedure
+    begin
       FFileData.Lock;
       try
         if not Assigned(Fids) and not DataSetDef.CreateNew(Fids{, False}) then Exit;
@@ -368,7 +375,7 @@ begin
       finally
        FFileData.UnLock;
       end;
-//    end);
+    end);
 //    th.WaitFor;
 //    th.Free;
     if FbuffReady then ReadFromMemBuffer;

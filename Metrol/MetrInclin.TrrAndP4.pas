@@ -4,7 +4,7 @@ interface
 
 uses System.SysUtils, Xml.XMLIntf, System.Classes,
      PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, math, MetrForm, AutoMetr.Inclin, RootImpl,
-     MetrInclin.Math, XMLScript.Math, UakiIntf, MetrInclin.CheckForm, MetrInclin.TrrAndP2;
+     LuaInclin.Math, XMLLua.Math, UakiIntf, MetrInclin.CheckForm, MetrInclin.TrrAndP2;
 
 type
   TFormInclinTrrAndP4 = class(TFormInclinTrrAndP2)
@@ -79,7 +79,7 @@ end;
 function TFormInclinTrrAndP4.UserSetupAlg(alg: IXMLNode): Boolean;
 begin
   Result := True;
-  FStep.root := XToVar(alg);
+  FStep.root := alg;
   FStep.stp := 1;
 
   FCurAzim := 0; FCurViz := 0;

@@ -229,7 +229,7 @@ end;
 
 class constructor TXMLScriptIKN.Create;
 begin
-  TXmlScript.RegisterMethods([
+  TXmlScriptInner.RegisterMethods([
   'procedure Setup_IKN(t: Variant)',
   'procedure Import_IKN_A2(const TrrFile: string; NewTrr: Variant)',
   'procedure Exec_IKN_A2(v, t: Variant)',
@@ -238,7 +238,7 @@ end;
 
 class destructor TXMLScriptIKN.Destroy;
 begin
-  TXmlScript.UnRegisterMethods(CallMeth);
+  TXmlScriptInner.UnRegisterMethods(CallMeth);
 end;
 
 class procedure TXMLScriptIKN.Setup_IKN(t: Variant);
@@ -278,7 +278,7 @@ begin
      m.VALUE := 0;
      TXMLScriptMath.AddMetrologyFM(m, 5, 4);
      TXMLScriptMath.AddMetrologyRG(m, 0, 100);
-     TXMLScriptMath.AddMetrologyCL(m, CLL[i] or CLF[j], 1, DashStyleSolid);
+     TXMLScriptMath.AddMetrologyCL(m, CLL[i] or CLF[j], 1, 0);
     end;
    end;
 // TVxmlData(v).Node.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'IND.xml');

@@ -7,12 +7,32 @@ uses
      System.Bindings.Helper;
 
 type
+  // для сериализации  TIDataSet
   TIDataSetDef = class(TInterfacedPersistent, ICaption, IDataSetDef)
   public
     function GetCaption: string;
     procedure SetCaption(const Value: string);
     function TryGet(out ids: IDataSet): Boolean; virtual; abstract;
     function CreateNew(out ids: IDataSet; UniDirectional: Boolean = True): Boolean; virtual; abstract;
+  end;
+  { TODO : Почемуто не работает как свойство но наследуется (CustomPlot) Invalid property path
+    но VCL.TableDataForm работает как published свойство создаю в
+    constructor Create; override;
+    удаляю в
+    destructor Destroy; override;}
+
+  // адаптер для сериализации наследников TIDataSetDef
+  TDataSetFactory = class(TFactoryPersistent<TIDataSetDef>)
+  private
+    FIDataSet: IDataSet;
+    function GetDataSet: TDataSet;
+    function GetIDataSet: IDataSet;
+  public
+    property DataSet: TDataSet read GetDataSet;
+    property DataSetIntf: IDataSet read GetIDataSet;
+  published
+  // затем загружаем published значения DataSetDef
+    property DataSetDef: TIDataSetDef read FStored write SetROOT;
   end;
 
   TIDataSet = class(TDataSet, IInterface{!!!!!! иначе _AddRef _Release будут иногда старые}, IManagItem, IBind, IDataSet)
@@ -97,7 +117,6 @@ type
     procedure SetBookmarkFlag(Buffer: TRecordBuffer; Value: TBookmarkFlag); override;
     procedure InternalGotoBookmark(Bookmark: TBookmark); override;
     // маршрутизация
-    procedure Resync(Mode: TResyncMode); override;
     function GetRecord(Buffer: TRecordBuffer; GetMode: TGetMode; DoCheck: Boolean): TGetResult; override;
     procedure InternalSetToRecord(Buffer: TRecordBuffer); override;
     procedure InternalFirst; override;
@@ -113,6 +132,9 @@ type
     procedure InternalHandleException; override;
     /////
     function GetActiveRecBuf(var RecBuf: PRecBuffer): Boolean; virtual;
+    public
+    // маршрутизация
+    procedure Resync(Mode: TResyncMode); override;
   end;
 
   /// <summary>
@@ -134,13 +156,13 @@ implementation
 procedure TDataSetEnum.Load;
 begin
   raise Exception.Create('сохранение не поддерживается !!! WeekContainerReference = yes' );
-  (TRegistryStorable<IDataSet>.Create(Self, PATH) as IStorable).Load;
+  //(TRegistryStorable<IDataSet>.Create(Self, PATH) as IStorable).Load;
 end;
 
 procedure TDataSetEnum.Save;
 begin
   raise Exception.Create('сохранение не поддерживается !!!WeekContainerReference = yes');
-  (TRegistryStorable<IDataSet>.Create(Self, PATH) as IStorable).Save;
+  //(TRegistryStorable<IDataSet>.Create(Self, PATH) as IStorable).Save;
 end;
 
 {[function TDataSetEnum.TryFind(const FileName: string; out ds: IDataSet): Boolean;
@@ -528,6 +550,20 @@ end;
 procedure TRecBuffer.SetID(const Value: Integer);
 begin
   FID := Value;
+end;
+
+{ TDataSetFactory }
+
+function TDataSetFactory.GetDataSet: TDataSet;
+begin
+  if not Assigned(FIDataSet) then DataSetDef.TryGet(FIDataSet);
+  Result := FIDataSet.DataSet;
+end;
+
+function TDataSetFactory.GetIDataSet: IDataSet;
+begin
+  if not Assigned(FIDataSet) then DataSetDef.TryGet(FIDataSet);
+  Result := FIDataSet;
 end;
 
 initialization

@@ -363,7 +363,7 @@ type
   /// </summary>
   TCustomDataLinkClass = class of TCustomDataLink;
 
-  TCustomDataLink = class abstract(TInterfacedPersistent, IDataLink, ICaption)
+  TCustomDataLink = class abstract(TDataSetFactory, IDataLink, ICaption)
   private
     FOwner: TGraphPar;
     FIDataSet: IDataSet;
@@ -373,11 +373,11 @@ type
     FDrowMemoryBuffer: IInterface;
     FXFieldDef: TFieldDef;
     FBindWrite: Integer;
-    procedure SetDataSetDef(const Value: TIDataSetDef);
-    function GetDataSetClass: string;
-    procedure SetDataSetClass(const Value: string);
-    function GetDataSet: TDataSet;
-    function GetIDataSet: IDataSet;
+//    procedure SetDataSetDef(const Value: TIDataSetDef);
+//    function GetDataSetClass: string;
+//    procedure SetDataSetClass(const Value: string);
+//    function GetDataSet: TDataSet;
+//    function GetIDataSet: IDataSet;
     function GetXField: TField;
     function GetXFieldDef: TFieldDef;
     function GetYField: TField;
@@ -400,8 +400,8 @@ type
     constructor Create(AOwner: TGraphPar); virtual;
     destructor Destroy; override;
     property Owner: TGraphPar read FOwner;
-    property DataSet: TDataSet read GetDataSet;
-    property DataSetIntf: IDataSet read GetIDataSet;
+//    property DataSet: TDataSet read GetDataSet;
+//    property DataSetIntf: IDataSet read GetIDataSet;
     property FieldX: TField read GetXField write FFieldX;
     property FieldY: TField read GetYField write FFieldY;
     property XFieldDef: TFieldDef read GetXFieldDef write FXFieldDef;
@@ -410,9 +410,9 @@ type
     /// </summary>
     property C_Write: Integer read FBindWrite write SetBindWriteFile;
   published
-    property DataSetDefClass: string read GetDataSetClass write SetDataSetClass;
+   // property DataSetDefClass: string read GetDataSetClass write SetDataSetClass;
     [ShowProp('База данных', True)]
-    property DataSetDef: TIDataSetDef read FDataSetDef write SetDataSetDef;
+    property DataSetDef;//: TIDataSetDef;// read FDataSetDef write SetDataSetDef;
     [ShowProp('X', True)]
     property XParamPath: string read FXParamPath write FXParamPath;
     [ShowProp('Y', True)]
@@ -511,7 +511,7 @@ type
     [ShowProp('Цвет')]
     property Color;
     [ShowProp('Ширина линии')]
-    property Width: Integer read FWidth write SetWidth default 2;
+    property Width: Integer read FWidth write SetWidth default 1;
     [ShowProp('Стиль штрихов')]
     property DashStyle: TLineDashStyle read FDashStyle write SetDashStyle default ldsSolid;
     [ShowProp('Масштаб')]
@@ -1613,7 +1613,7 @@ begin
   Result := 'Источник данных параметра'
 end;
 
-function TCustomDataLink.GetDataSet: TDataSet;
+{function TCustomDataLink.GetDataSet: TDataSet;
 begin
   if not Assigned(FIDataSet) then
     DataSetDef.TryGet(FIDataSet);
@@ -1625,7 +1625,7 @@ begin
   if not Assigned(FIDataSet) then
     DataSetDef.TryGet(FIDataSet);
   Result := FIDataSet;
-end;
+end;}
 
 function TCustomDataLink.FiendField(const Fullname: string): TField;
 var
@@ -1757,13 +1757,13 @@ begin
 
 end;
 
-function TCustomDataLink.GetDataSetClass: string;
+{function TCustomDataLink.GetDataSetClass: string;
 begin
   if Assigned(FDataSetDef) then
     Result := FDataSetDef.ClassName
   else
     Result := '';
-end;
+end;}
 
 function TCustomDataLink.GetDrowMemoryBuffer: IInterface;
 begin
@@ -1775,12 +1775,12 @@ begin
   FDrowMemoryBuffer := Value;
 end;
 
-procedure TCustomDataLink.SetDataSetDef(const Value: TIDataSetDef);
-begin
-  if Assigned(FDataSetDef) then
-    FDataSetDef.Free;
-  FDataSetDef := Value;
-end;
+//procedure TCustomDataLink.SetDataSetDef(const Value: TIDataSetDef);
+//begin
+//  if Assigned(FDataSetDef) then
+//    FDataSetDef.Free;
+//  FDataSetDef := Value;
+//end;
 
 procedure TCustomDataLink.SetBindWriteFile(const Value: Integer);
 begin
@@ -1792,13 +1792,13 @@ procedure TCustomDataLink.SetCaption(const Value: string);
 begin
 end;
 
-procedure TCustomDataLink.SetDataSetClass(const Value: string);
-begin
-  if Assigned(FDataSetDef) then
-    FreeAndNil(FDataSetDef);
-  if Value <> '' then
-    FDataSetDef := TIDataSetDef((FindClass(Value)).Create());
-end;
+//procedure TCustomDataLink.SetDataSetClass(const Value: string);
+//begin
+//  if Assigned(FDataSetDef) then
+//    FreeAndNil(FDataSetDef);
+//  if Value <> '' then
+//    FDataSetDef := TIDataSetDef((FindClass(Value)).Create());
+//end;
 
 { TGraphParams }
 
@@ -1818,8 +1818,8 @@ end;
 
 constructor TXScalableParam.Create(Collection: TCollection);
 begin
-  FScaleX := 1;
-  FWidth := 2;
+  FScaleX := 0.001;
+  FWidth := 1;
   inherited;
 end;
 
@@ -2353,6 +2353,7 @@ end;
 constructor TCustomGraph.Create(AOwner: TComponent);
 begin
   inherited;
+  FFrostCount := 1;
   FYFirstAvail := 0;
   FYLastAvail := 1000;
   FYFromType := yfmALL;
@@ -3077,7 +3078,7 @@ end;
 initialization
   RegisterClasses([TCustomGraphLegendRow, TCustomGraphDataRow, TCustomGraphInfoRow]);
   RegisterClasses([TGraph, TGraphRegion, TGraphColmn, TGraphRow]);
-  RegisterClasses([TCustomDataLink, TGraphPar, TLineParam, TWaveParam, TWaveletFilter]);
+  RegisterClasses([TDataSetFactory, TCustomDataLink, TGraphPar, TLineParam, TWaveParam, TWaveletFilter]);
 
 end.
 

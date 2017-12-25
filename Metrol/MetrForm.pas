@@ -2,33 +2,48 @@ unit MetrForm;
 
 interface
 
-uses system.UITypes,  JDtools,   JvInspector,
-  DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, tools,XMLScript, Parser, RootImpl, System.IOUtils,
-  Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls, Xml.XMLDoc,   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, System.Bindings.Expression,
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf, VirtualTrees,
-  Vcl.ActnPopup, ImportExport, Winapi.mmSystem;
+uses
+  system.UITypes, JDtools, JvInspector, DeviceIntf, PluginAPI, ExtendIntf,
+  RootIntf, Container, Actns, debug_except, DockIForm, tools, RootImpl, System.IOUtils,
+  Vcl.ComCtrls, Vcl.ExtCtrls, Vcl.StdCtrls, Xml.XMLDoc, Vcl.Controls, Vcl.Forms,
+  Vcl.Dialogs, Vcl.Menus, System.Bindings.Expression, Winapi.Windows, Winapi.Messages,
+  System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf,
+  VirtualTrees, Vcl.ActnPopup, ImportExport, Winapi.mmSystem;
 
 type
- EFormMetrolog = class(EBaseException);
+  EFormMetrolog = class(EBaseException);
 
- MetrologState = (mstInitDev, mstInitFile, mstAttr, mstLockUpdate, mstAutomat);
- MetrologStates = set of MetrologState;
+  MetrologState = (mstInitDev, mstInitFile, mstAttr, mstLockUpdate, mstAutomat);
+
+  MetrologStates = set of MetrologState;
 
   PNodeExData = ^TNodeExData;
+
   TNodeExData = record
     XMNode: IXMLNode;
   end;
 
- TAutomatMetrology = class;
- TGetTextNode = reference to function (XMNode: IXMLNode; Column: Integer): string;
- TSetTextNode = reference to procedure (XMNode: IXMLNode; Column: Integer; const text: string);
- TAllowEditNode = reference to procedure (XMNode: IXMLNode; Column: Integer; var allow: Boolean);
+  TAutomatMetrology = class;
 
- TFormMetrolog = class(TCustomFontIForm, ISetDevice)
+  TGetTextNode = reference to function(XMNode: IXMLNode; Column: Integer): string;
+
+  TSetTextNode = reference to procedure(XMNode: IXMLNode; Column: Integer; const text: string);
+
+  TAllowEditNode = reference to procedure(XMNode: IXMLNode; Column: Integer; var allow: Boolean);
+
+  IFindAnyData = interface
+    ['{A70ED078-D8F3-4276-B8A0-F87D7903EF94}']
+    procedure Add(Data: Double);
+    procedure Reset;
+    function Get: Double;
+    property Data: Double read Get;
+  end;
+
+  TFormMetrolog = class(TCustomFontIForm, ISetDevice)
   private
     FImportExport: IImportExport;
     FStepTree: TVirtualStringTree;
-    FexeScript: TXmlScript;
+    FexeScript: IXmlScript;
     FStatusBar: TStatusBar;
     FDataDevice: string;
     FTrrFile: string;
@@ -37,11 +52,11 @@ type
     FBindWorkRes: TWorkEventRes;
     NTrrApply: TMenuItem;
     NConnect: TMenuItem;
+    NFile: TMenuItem;
     NFileNew: TMenuItem;
     NFileOpen: TMenuItem;
     NFileSaveAs: TMenuItem;
     FPanel: TPanel;
-
     FLabel: TLabel;
     FLabelAuto: TLabel;
     FEtalonData: IXMLNode;
@@ -56,12 +71,9 @@ type
     BAttStart: TButton;
     BAttStop: TButton;
     BAttCancel: TButton;
-
     BAutoStart: TButton;
     BAutoStop: TButton;
-
-    FStepTreePopupMenu : TPopupActionBar;
-
+    FStepTreePopupMenu: TPopupActionBar;
     FGetText: TGetTextNode;
     FSetText: TSetTextNode;
     FAllowEditNode: TAllowEditNode;
@@ -70,7 +82,6 @@ type
     procedure BAttStartClick(Sender: TObject);
     procedure BAttCancelClick(Sender: TObject);
     procedure BAttStopClick(Sender: TObject);
-
     procedure BAutoStartClick(Sender: TObject);
     procedure BAutoStopClick(Sender: TObject);
 
@@ -87,6 +98,7 @@ type
     procedure NSetExecutedClick(Sender: TObject);
     procedure SetBindWorkRes(const Value: TWorkEventRes);
     procedure SetDataDevice(const Value: string);
+    function GetDataDevice: string;
     procedure SetMetaDataInfo(const Value: TInfoEventRes);
     procedure SetRemoveDevice(const Value: string);
     procedure SetUpdateDeviceMetrology(const Value: TInfoEventRes);
@@ -103,18 +115,15 @@ type
 //    NIsMedian: TMenuItem;
     FlagNoUpdateFromEtalon: boolean;
     procedure AutoReport(Status: TStatusAutomatMetrology; const info: string);
-
     procedure DoStandartSetup(Item: TJvCustomInspectorItem; Option: IXMLNode; var Data: IXMLNode); virtual;
-
     procedure InitializeNewForm; override;
     procedure Loaded; override;
     procedure DoSetFont(const AFont: TFont); override;
     function GetCurrentNode: IXMLNode; virtual;
     procedure DoUpdateData(NewFileData: Boolean = False); virtual;
     procedure DoUpdateEtalonData(EtlNode: IXMLNode); virtual;
-
     procedure DoStopAuto(); virtual;
-
+    procedure OptionChanged(); virtual;
     procedure DoStopAtt(AttNode: IXMLNode); virtual;
     procedure DoRunAtt(AttNode: IXMLNode); virtual;
     procedure DoStartAtt(AttNode: IXMLNode); virtual;
@@ -130,47 +139,42 @@ type
     procedure SetupStepTree(Tree: TVirtualStringTree);
     function GetFileOrDevData: IXMLNode;
     procedure AddDefaultOptions(RootTrr, RootOption: IXMLNode);
+    class procedure AddSum<C: TIObject, constructor>(Root: IXMLNode; Data: Double); static;
 //    procedure UpdateRunXmlDir;
   public
+    constructor CreateUser(const aName: string = ''); override;
     destructor Destroy; override;
     procedure ReCalc(NeedSave: Boolean = True);
     function GetMetr(nm: array of string; Root: IXMLNode): IXMLNode;
     procedure SetupEditor(Allow: TAllowEditNode; GetText: TGetTextNode; SetText: TSetTextNode);
-
     class function MetrolMame: string; virtual;
     class function MetrolType: string; virtual;
-
     property StatusBar: TStatusBar read FStatusBar;
     property AttestatPanel: TPanel read FPanel;
     property AttestatLabel: TLabel read FLabel;
     property AutoLabel: TLabel read FLabelAuto;
-
     property FileData: IXMLNode read FFileData;
     property DevData: IXMLNode read FDevData;
-
     property State: MetrologStates read FState;
-
     property C_BindWorkRes: TWorkEventRes read FBindWorkRes write SetBindWorkRes;
     property C_MetaDataInfo: TInfoEventRes read FMetaDataInfo write SetMetaDataInfo; //live binding
     property C_RemoveDevice: string read FDataDevice write SetRemoveDevice;
     property C_UpdateDeviceMetrology: TInfoEventRes read FMetaDataInfo write SetUpdateDeviceMetrology;
-
-    property AttCount: Integer read GetAttCount;// write FAttCount default 5;
-    property IsMedian: Boolean read GetIsMedian;// write FIsMedian default False;
+    property AttCount: Integer read GetAttCount; // write FAttCount default 5;
+    property IsMedian: Boolean read GetIsMedian; // write FIsMedian default False;
 
     property Option[const index: string]: variant read GetOption;
   published
     property DataDevice: string read FDataDevice write SetDataDevice;
     property TrrFile: string read FTrrFile write SetTrrFile;
-end;
+  end;
 
   TAutomatMetrology = class(TAggObject, IAutomatMetrology)
   private
     FRep: TStepMetrologyEvent;
-    FDelayCadrData:
-    record
-     n: Integer;
-     ev: TProc;
+    FDelayCadrData: record
+      n: Integer;
+      ev: TProc;
     end;
   protected
     FKadrEvent: Boolean;
@@ -190,20 +194,19 @@ end;
   ///	  На начало аттестасии
   ///   окончание работы автомата
   ///	</summary>
-    procedure DoStop();  virtual;
-
+    procedure DoStop(); virtual;
     procedure DelayKadr(NCadr: Integer; Res: TProc);
     procedure Error(const TextErr: string);
-
     function Owner: TFormMetrolog;
   public
     property Report: TStepMetrologyEvent read FRep write FRep;
 //    property DelayKadr: Integer read GetDelayKadr write SetDelayKadr;
-end;
+  end;
 
 implementation
 
-uses  MetrInclin.Math;
+uses
+  System.Generics.Collections, System.Math;
 
 {$REGION 'TEditor'}
 
@@ -233,7 +236,8 @@ type
 destructor TEditor.Destroy;
 begin
   //FEdit.Free; casues issue #357. Fix:
-  if FEdit.HandleAllocated then PostMessage(FEdit.Handle, CM_RELEASE, 0, 0);
+  if FEdit.HandleAllocated then
+    PostMessage(FEdit.Handle, CM_RELEASE, 0, 0);
   inherited;
 end;
 
@@ -245,7 +249,7 @@ begin
   case Key of
     VK_ESCAPE:
       begin
-        Key := 0;//ESC will be handled in EditKeyUp()
+        Key := 0; //ESC will be handled in EditKeyUp()
       end;
     VK_RETURN:
       if CanAdvance then
@@ -253,8 +257,7 @@ begin
         FTree.EndEditNode;
         Key := 0;
       end;
-    VK_UP,
-    VK_DOWN:
+    VK_UP, VK_DOWN:
       begin
         // Consider special cases before finishing edit mode.
         CanAdvance := Shift = [];
@@ -280,8 +283,8 @@ begin
       begin
         FTree.CancelEditNode;
         Key := 0;
-      end;//VK_ESCAPE
-  end;//case
+      end; //VK_ESCAPE
+  end; //case
 end;
 
 function TEditor.BeginEdit: Boolean;
@@ -300,7 +303,8 @@ end;
 function TEditor.EndEdit: Boolean;
 begin
   Result := True;
-  if Assigned(FForm.FSetText) then FForm.FSetText(FData.XMNode, FColumn, TEdit(FEdit).Text);
+  if Assigned(FForm.FSetText) then
+    FForm.FSetText(FData.XMNode, FColumn, TEdit(FEdit).Text);
   FEdit.Hide;
   FTree.SetFocus;
 end;
@@ -326,7 +330,8 @@ begin
   begin
     Visible := False;
     Parent := Tree;
-    if Assigned(FForm.FGetText) then Text := FForm.FGetText(FData.XMNode, FColumn);
+    if Assigned(FForm.FGetText) then
+      Text := FForm.FGetText(FData.XMNode, FColumn);
     OnKeyDown := EditKeyDown;
     OnKeyUp := EditKeyUp;
   end;
@@ -349,19 +354,50 @@ end;
 {$ENDREGION}
 
 type
- IUpdateDeviceMetrol = interface
- ['{573AEDB0-8DA1-4698-A12E-9ECEB1BB5176}']
-   procedure Update(Data: TInfoEventRes);
- end;
+  IUpdateDeviceMetrol = interface
+    ['{573AEDB0-8DA1-4698-A12E-9ECEB1BB5176}']
+    procedure Update(Data: TInfoEventRes);
+  end;
 
- TUpdateDeviceMetrol = class(TIComponent, IUpdateDeviceMetrol)
+  TUpdateDeviceMetrol = class(TIComponent, IUpdateDeviceMetrol)
   private
     FS_UpdateDeviceMetrology: TInfoEventRes;
- protected
-   procedure Update(Data: TInfoEventRes);
- public
-   property S_UpdateDeviceMetrology: TInfoEventRes read FS_UpdateDeviceMetrology write FS_UpdateDeviceMetrology;
- end;
+  protected
+    procedure Update(Data: TInfoEventRes);
+  public
+    property S_UpdateDeviceMetrology: TInfoEventRes read FS_UpdateDeviceMetrology write FS_UpdateDeviceMetrology;
+  end;
+
+  ESumDataException = class(EBaseException);
+
+  TAngleSum = class(TIObject, IFindAnyData)
+  private
+    FCount: Integer;
+    FSum: Double;
+    FOld: Double;
+  protected
+    procedure Add(Data: Double);
+    procedure Reset;
+    function Get: Double;
+  end;
+
+  TMedianSum = class(TIObject, IFindAnyData)
+  private
+    FData: TArray<Double>;
+  protected
+    procedure Add(Data: Double); virtual;
+    procedure Reset;
+    function Get: Double; virtual;
+  end;
+
+  TAngleMedianSum = class(TMedianSum)
+  private
+    FData: TArray<Double>;
+    FOld: Double;
+  protected
+    procedure Add(Data: Double); override;
+    function Get: Double; override;
+  end;
 
 { TIUpdateDeviceMetrol }
 
@@ -370,6 +406,86 @@ begin
   FS_UpdateDeviceMetrology := Data;
   Notify('S_UpdateDeviceMetrology');
 end;
+
+{ TMedianSum }
+
+procedure TMedianSum.Add(Data: Double);
+begin
+  CArray.Add<Double>(FData, Data);
+end;
+
+function TMedianSum.Get: Double;
+begin
+  if Length(FData) = 0 then
+    raise ESumDataException.Create('Нет данных для расчета медианы');
+  TArray.Sort<Double>(FData);
+  Result := FData[Length(FData) div 2];
+end;
+
+procedure TMedianSum.Reset;
+begin
+  SetLength(FData, 0);
+end;
+
+{ TAngleSum }
+
+procedure TAngleSum.Add(Data: Double);
+var
+  dP, dM: Double;
+begin
+  if FCount = 0 then
+  begin
+    FSum := Data;
+    FOld := Data;
+  end
+  else
+  begin
+    dP := Data - FOld;
+    if dP < 0 then
+      dP := 360 + dP;
+    dM := 360 - dP;
+    if dP > dM then
+      dP := -dM;
+    FOld := FOld + dP;
+    FSum := FSum + FOld;
+  end;
+  Inc(FCount);
+end;
+
+function TAngleSum.Get: Double;
+begin
+  if FCount = 0 then
+    raise ESumDataException.Create('Нет данных для расчета результата осреднения');
+  Result := DegNormalize(FSum / FCount);
+end;
+
+procedure TAngleSum.Reset;
+begin
+  FCount := 0;
+end;
+
+{ TAngleMadianSum }
+
+procedure TAngleMedianSum.Add(Data: Double);
+var
+  d: Double;
+begin
+  if Length(FData) = 0 then
+    FOld := Data;
+  d := FOld - Data;
+  if abs(d) < 180 then
+    inherited Add(Data)
+  else if d > 0 then
+    inherited Add(Data + 360)
+  else
+    inherited Add(360 - Data)
+end;
+
+function TAngleMedianSum.Get: Double;
+begin
+  Result := DegNormalize(inherited);
+end;
+
 
 
 { TAutomatMetrology }
@@ -389,18 +505,20 @@ procedure TAutomatMetrology.DelayKadr(NCadr: Integer; Res: TProc);
 begin
   FDelayCadrData.n := NCadr;
   FDelayCadrData.ev := Res;
-  Owner.AutoReport(samEnd, Format('Задержка, осталось %d кадров',[FDelayCadrData.n]));
+  Owner.AutoReport(samEnd, Format('Задержка, осталось %d кадров', [FDelayCadrData.n]));
 end;
 
 procedure TAutomatMetrology.KadrEvent();
 begin
   FKadrEvent := True;
   if FDelayCadrData.n > 0 then
-   begin
+  begin
     Dec(FDelayCadrData.n);
-    if FDelayCadrData.n = 0 then FDelayCadrData.ev()
-    else Owner.AutoReport(samEnd, Format('Задержка, осталось %d кадров',[FDelayCadrData.n]));
-   end;
+    if FDelayCadrData.n = 0 then
+      FDelayCadrData.ev()
+    else
+      Owner.AutoReport(samEnd, Format('Задержка, осталось %d кадров', [FDelayCadrData.n]));
+  end;
 end;
 
 procedure TAutomatMetrology.DoEndMetrology;
@@ -428,18 +546,19 @@ begin
   FDelayKadr := 0;
 
   FStep := Step.ChildNodes.FindNode('TASK');
-  if not Assigned(FStep) then raise EFormMetrolog.Create('Ветвь TASK ненайдена');
+  if not Assigned(FStep) then
+    raise EFormMetrolog.Create('Ветвь TASK ненайдена');
 
-  if Boolean(step.Attributes['EXECUTED']) then
-   if (MessageDlg(Format('Выполнить шаг %s заново?'#$D#$A'%s', [step.Attributes['STEP'], step.Attributes['INFO']]), TMsgDlgType.mtWarning, [mbYes, mbCancel], 0) = mrCancel) then
-   begin
-    Owner.BAutoStop.Click;
-    raise EAbort.Create('Прервано Пользователем');
-   end
-   else
+  if Boolean(Step.Attributes['EXECUTED']) then
+    if (MessageDlg(Format('Выполнить шаг %s заново?'#$D#$A'%s', [Step.Attributes['STEP'], Step.Attributes['INFO']]), TMsgDlgType.mtWarning, [mbYes, mbCancel], 0) = mrCancel) then
     begin
-     step.Attributes['EXECUTED'] := False;
-     Owner.ReCalc();
+      Owner.BAutoStop.Click;
+      raise EAbort.Create('Прервано Пользователем');
+    end
+    else
+    begin
+      Step.Attributes['EXECUTED'] := False;
+      Owner.ReCalc();
     end;
 end;
 
@@ -450,22 +569,22 @@ begin
 end;
 
 procedure TAutomatMetrology.Error(const TextErr: string);
- var
+var
   hResource: HGLOBAL;
   p: Pointer;
 begin
   hResource := LoadResource(hInstance, FindResource(hInstance, 'AutomatErr', RT_RCDATA));
   try
-   p := LockResource(hResource);
-   try
-    PlaySound(p, 0, SND_MEMORY + SND_ASYNC + SND_LOOP);
-    MessageDlg(TextErr, mtError, [mbOk], 0);
-    PlaySound(nil, 0, 0);
-   finally
-    UnLockResource(hResource);
-   end;
+    p := LockResource(hResource);
+    try
+      PlaySound(p, 0, SND_MEMORY + SND_ASYNC + SND_LOOP);
+      MessageDlg(TextErr, mtError, [mbOk], 0);
+      PlaySound(nil, 0, 0);
+    finally
+      UnLockResource(hResource);
+    end;
   finally
-   FreeResource(hResource);
+    FreeResource(hResource);
   end;
 end;
 
@@ -483,21 +602,22 @@ begin
 end;
 
 procedure TFormMetrolog.InitializeNewForm;
- procedure AddButton(Ind, col: Integer; const Capt: string; ev: TNotifyEvent; var bt: TButton);
- begin
-   bt := TButton.Create(FPanel);
-   with bt do
+
+  procedure AddButton(Ind, col: Integer; const Capt: string; ev: TNotifyEvent; var bt: TButton);
+  begin
+    bt := TButton.Create(FPanel);
+    with bt do
     begin
-     Parent := FPanel;
-     ParentFont := False;
-     Enabled := False;
-     SetBounds(5 + 85*ind, (5+col*(24+3)), 80, 24);
-     Caption := Capt;
-     OnClick := ev;
+      Parent := FPanel;
+      ParentFont := False;
+      Enabled := False;
+      SetBounds(5 + 85 * Ind, (5 + col * (24 + 3)), 80, 24);
+      Caption := Capt;
+      OnClick := ev;
     end;
- end;
- var
-  n: TMenuItem;
+  end;
+
+var
   Doc: IXMLDocument;
   ie: IXMLNode;
 begin
@@ -519,22 +639,24 @@ begin
   FPanel.ShowCaption := False;
   FPanel.BevelOuter := bvNone;
 
-  if Supports(self, IAutomatMetrology) then FPanel.SetBounds(0, 0, 333, 55)
-  else FPanel.SetBounds(0, 0, 333, 33);
+  if Supports(self, IAutomatMetrology) then
+    FPanel.SetBounds(0, 0, 333, 55)
+  else
+    FPanel.SetBounds(0, 0, 333, 33);
 
-  AddButton(0,0, 'Аттестация', BAttStartClick, BAttStart);
-  AddButton(1,0, 'Закончить', BAttStopClick, BAttStop);
-  AddButton(2,0, 'Отмена', BAttCancelClick, BAttCancel);
+  AddButton(0, 0, 'Аттестация', BAttStartClick, BAttStart);
+  AddButton(1, 0, 'Закончить', BAttStopClick, BAttStop);
+  AddButton(2, 0, 'Отмена', BAttCancelClick, BAttCancel);
 
   if Supports(self, IAutomatMetrology) then
-   begin
-    AddButton(0,1, 'Старт', BAutoStartClick, BAutoStart);
-    AddButton(1,1, 'Стоп', BAutoStopClick, BAutoStop);
+  begin
+    AddButton(0, 1, 'Старт', BAutoStartClick, BAutoStart);
+    AddButton(1, 1, 'Стоп', BAutoStopClick, BAutoStop);
     FLabelAuto := TLabel.Create(FPanel);
     FLabelAuto.Parent := FPanel;
     FLabelAuto.SetBounds(260, 30, 60, 13);
     FLabelAuto.Caption := 'Автомат';
-   end;
+  end;
 
   FLabel := TLabel.Create(FPanel);
   FLabel.Parent := FPanel;
@@ -542,10 +664,10 @@ begin
   FLabel.Caption := 'Аттестация';
 
   AddToNCMenu('-');
-  n := AddToNCMenu('Файл');
-  NFileNew := AddToNCMenu('Создать новый файл тарировки...', NFileNewClick, -1, -1, n);
-  NFileOpen := AddToNCMenu('Открыть существующий...', NFileOpenClick, -1, -1, n);
-  NFileSaveAs:= AddToNCMenu('Сохранить как...', NFileSaveAsClick, -1, -1, n);
+  NFile := AddToNCMenu('Файл');
+  NFileNew := AddToNCMenu('Создать новый файл тарировки...', NFileNewClick, -1, -1, NFile);
+  NFileOpen := AddToNCMenu('Открыть существующий...', NFileOpenClick, -1, -1, NFile);
+  NFileSaveAs := AddToNCMenu('Сохранить как...', NFileSaveAsClick, -1, -1, NFile);
   NFileNew.Enabled := False;
   NFileSaveAs.Enabled := False;
 
@@ -561,7 +683,7 @@ begin
 
   Doc := NewXDocument();
   FEtalonData := Doc.AddChild(MetrolMame);
-  ScriptExec(FEtalonData, FEtalonData, MetrolMame,'','SETUP_METR');
+  (GContainer as IXMLScriptFactory).ScriptExec(FEtalonData, FEtalonData, MetrolMame, '', 'SETUP_METR');
   DoUpdateEtalonData(FEtalonData);
 
   Doc := NewXDocument();
@@ -569,16 +691,18 @@ begin
 
   AddDefaultOptions(FEtalonAlg, GetOptions);
 
-  if not UserSetupAlg(FEtalonAlg) then ScriptExec(FEtalonAlg, FEtalonAlg, MetrolMame, MetrolType,'SETUP_METR');
+  if not UserSetupAlg(FEtalonAlg) then
+    (GContainer as IXMLScriptFactory).ScriptExec(FEtalonAlg, FEtalonAlg, MetrolMame, MetrolType, 'SETUP_METR');
 
  // FEtalonAlg.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'NNK_ALG.xml');
 
-  ie := GetXNode(TPars.XMLScript, MetrolMame+'.MODEL.'+ MetrolType);
-  if Assigned(ie) then FImportExport := TImportExport.Create(ie);
+  ie := GetXNode((GlobalCore as IXMLScriptFactory).ScriptRoot, MetrolMame + '.TRR_MODEL.' + MetrolType);
+  if Assigned(ie) then
+    FImportExport := TImportExport.Create(ie);
 end;
 
 procedure TFormMetrolog.Loaded;
- var
+var
   d: IDevice;
   de: IDeviceEnum;
   ex: IXMLNode;
@@ -587,44 +711,51 @@ begin
   inherited;
 //  NIsMedian.Checked := IsMedian;
   GlobalCore.QueryInterface(IDeviceEnum, de);
-  if Assigned(de) then  Bind('C_RemoveDevice', de, ['S_BeforeRemove']);// (de as IBind).CreateManagedBinding(Self, , ['S_BeforeRemove']);
+  if Assigned(de) then
+    Bind('C_RemoveDevice', de, ['S_BeforeRemove']); // (de as IBind).CreateManagedBinding(Self, , ['S_BeforeRemove']);
   FStatusBar.Top := ClientHeight;
 
-  FexeScript := CreateUnLoad<TXmlScript>;
+  FexeScript := (GContainer as IXMLScriptFactory).Get(Self); // CreateUnLoad<TXmlScript>;
 
 
-  ex := GetXNode(TPars.XMLScript.ChildNodes.FindNode(MetrolMame), 'MODEL.'+ MetrolType);
+  ex := GetXNode((GlobalCore as IXMLScriptFactory).ScriptRoot.ChildNodes.FindNode(MetrolMame), 'TRR_MODEL.' + MetrolType);
 
-  if not Assigned(ex) then raise EFormMetrolog.CreateFmt('Метрология %s %s не найдена', [MetrolMame, MetrolType]);
+  if not Assigned(ex) then
+    raise EFormMetrolog.CreateFmt('Метрология %s %s не найдена', [MetrolMame, MetrolType]);
 
   if ex.HasAttribute('EXEC_METR') then
-   begin
+  begin
     FexeScript.Lines.Text := ex.Attributes['EXEC_METR'];
-    if not FexeScript.Compile then MessageDlg('Ошибка компиляции '+MetrolType+' '+FexeScript.ErrorMsg+':'+FexeScript.ErrorPos,TMsgDlgType.mtError, [mbOK], 0);
-   end;
+    if not FexeScript.Compile then
+      MessageDlg('Ошибка компиляции ' + MetrolType + ' ' + FexeScript.ErrorMsg + ':' + FexeScript.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
+  end;
 
-  if Assigned(de) then d := de.Get(FDataDevice);
-  if Assigned(d) and Supports(d, IDataDevice) then C_MetaDataInfo := (d as IDataDevice).GetMetaData();
+  if Assigned(de) then
+    d := de.Get(FDataDevice);
+  if Assigned(d) and Supports(d, IDataDevice) then
+    C_MetaDataInfo := (d as IDataDevice).GetMetaData();
 
   Exclude(FState, mstLockUpdate);
   DoUpdateData(True);
-
+  if FDataDevice = '' then
+    Caption := 'Устройство не подключено';
 //  BAttStop.Enabled := True;
 end;
 
 procedure TFormMetrolog.SetTrrFile(const Value: string);
- var
+var
   GDoc: IXMLDocument;
   m, t: IXMLNode;
+
   procedure LoadFile;
   begin
     if HasXTree(FEtalonData, m) then
-     begin
+    begin
       if not Assigned(t) then
-       begin
+      begin
         m.ChildNodes.Add(FEtalonAlg.CloneNode(True));
         GDoc.SaveToFile(Value);
-       end;
+      end;
       FTrrFile := Value;
       FStatusBar.Panels[1].Text := FTrrFile;
       FFileData := GDoc.DocumentElement;
@@ -632,51 +763,60 @@ procedure TFormMetrolog.SetTrrFile(const Value: string);
       NTrrApply.Click;
       NFileSaveAs.Enabled := True;
 //        UpdateRunXmlDir;
-      if not (csLoading in ComponentState) then DoUpdateData(True);
+      if not (csLoading in ComponentState) then
+        DoUpdateData(True);
       (GlobalCore as IUpdateDeviceMetrol).Update(FMetaDataInfo);
-     end
-    else MessageDlg('Открыть файл не удается - неверная структура', TMsgDlgType.mtError, [mbOK], 0);
+    end
+    else
+      MessageDlg('Открыть файл не удается - неверная структура', TMsgDlgType.mtError, [mbOK], 0);
   end;
+
 begin
-  if FTrrFile = Value then Exit;
+  if FTrrFile = Value then
+    Exit;
   if FileExists(Value) then
-   begin
+  begin
     GDoc := NewXDocument();
     GDoc.LoadFromFile(Value);
     m := GetMetr([], GDoc.DocumentElement);
     if Assigned(m) then
-     begin
+    begin
       t := m.ChildNodes.FindNode(MetrolType);
       if Assigned(t) and not HasXTree(FEtalonAlg, t) then
-       if mrYes = MessageDlg('Открыть файл не удается - неверная структура алгоритма метрологии,'
-                            +'Открыть в любом случае?', TMsgDlgType.mtError, [mbYes, mbNo], 0) then LoadFile
-       else Exit
-      else LoadFile
-     end
-    else MessageDlg('Открыть файл не удается - не найдена метрология', TMsgDlgType.mtError, [mbOK], 0);
-   end
-  else MessageDlg('Открыть файл не удается - нет файла', TMsgDlgType.mtError, [mbOK], 0);
+        if mrYes = MessageDlg('Открыть файл не удается - неверная структура алгоритма метрологии,' + 'Открыть в любом случае?', TMsgDlgType.mtError, [mbYes, mbNo], 0) then
+          LoadFile
+        else
+          Exit
+      else
+        LoadFile
+    end
+    else
+      MessageDlg('Открыть файл не удается - не найдена метрология', TMsgDlgType.mtError, [mbOK], 0);
+  end
+  else
+    MessageDlg('Открыть файл не удается - нет файла', TMsgDlgType.mtError, [mbOK], 0);
 end;
 
 procedure TFormMetrolog.SetUpdateDeviceMetrology(const Value: TInfoEventRes);
- var
+var
   Res: Integer;
 begin
   Res := 0;
-  if not (Assigned(FFileData) and Assigned(FDevData) and (Value.Info = FDevData)
-     and HasXTree(GetMetr([], FDevData), GetMetr([], FileData),
-     procedure(devroot, dev, failRoot, fail: IXMLNode)
-     begin
-       if dev.NodeValue <> fail.NodeValue then
-        begin
-         Res := Res or 1;
-        end;
-     end, false)) then
-      begin
-       Res := Res or 2;
-      end;
-  if Res = 0 then  FStatusBar.Panels[0].Text := 'Поправки в устройстве:G'
-  else if Res = 1 then FStatusBar.Panels[0].Text := 'Поправки ДРУГИЕ!!!:RB';
+  if not (Assigned(FFileData) and Assigned(FDevData) and (Value.Info = FDevData) and HasXTree(GetMetr([], FDevData), GetMetr([], FileData),
+  procedure(devroot, dev, failRoot, fail: IXMLNode)
+  begin
+    if dev.NodeValue <> fail.NodeValue then
+    begin
+      Res := Res or 1;
+    end;
+  end, false)) then
+  begin
+    Res := Res or 2;
+  end;
+  if Res = 0 then
+    FStatusBar.Panels[0].Text := 'Поправки в устройстве:G'
+  else if Res = 1 then
+    FStatusBar.Panels[0].Text := 'Поправки ДРУГИЕ!!!:RB';
 end;
 
 procedure TFormMetrolog.TreeCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
@@ -686,7 +826,8 @@ end;
 
 procedure TFormMetrolog.TreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
 begin
-  if Assigned(FAllowEditNode) then FAllowEditNode(PNodeExData(FStepTree.GetNodeData(Node)).XMNode, Column, Allowed)
+  if Assigned(FAllowEditNode) then
+    FAllowEditNode(PNodeExData(FStepTree.GetNodeData(Node)).XMNode, Column, Allowed)
 end;
 
 procedure TFormMetrolog.SetupEditor(Allow: TAllowEditNode; GetText: TGetTextNode; SetText: TSetTextNode);
@@ -699,28 +840,30 @@ begin
 end;
 
 procedure TFormMetrolog.SetupStepTree(Tree: TVirtualStringTree);
- var
+var
   ip: IImagProvider;
   n: TMenuItem;
   i: Integer;
 begin
   FStepTree := Tree;
   FStepTree.NodeDataSize := SizeOf(TNodeExData);
-  if Supports(GlobalCore, IImagProvider, ip) then FStepTree.Images := ip.GetImagList;
+  if Supports(GlobalCore, IImagProvider, ip) then
+    FStepTree.Images := ip.GetImagList;
   FStepTree.OnGetImageIndex := TreeGetImageIndex;
   FStepTree.OnPaintText := TreePaintText;
 
   FStepTree.Header.PopupMenu := CreateUnLoad<TPopupActionBar>;
-  with FStepTree.Header do for i := 0 to Columns.Count-1 do
-   begin
-    n := TMenuItem.Create(PopupMenu);
-    n.AutoCheck := True;
-    n.Checked :=  coVisible in Columns[i].Options;
-    n.OnClick := NTreeHeaderClick;
-    n.Caption := Columns[i].Text;
-    n.Tag := i;
-    PopupMenu.Items.Add(n);
-   end;
+  with FStepTree.Header do
+    for i := 0 to Columns.Count - 1 do
+    begin
+      n := TMenuItem.Create(PopupMenu);
+      n.AutoCheck := True;
+      n.Checked := coVisible in Columns[i].Options;
+      n.OnClick := NTreeHeaderClick;
+      n.Caption := Columns[i].Text;
+      n.Tag := i;
+      PopupMenu.Items.Add(n);
+    end;
   FStepTreePopupMenu := CreateUnLoad<TPopupActionBar>;
   n := TMenuItem.Create(PopupMenu);
   n.OnClick := NTrrResetClick;
@@ -739,135 +882,155 @@ begin
 end;
 
 procedure TFormMetrolog.StatusBarDrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel; const Rect: TRect);
- var
+var
   s: TArray<string>;
 begin
   s := Panel.Text.Split([':']);
   if Length(s) >= 2 then
-   begin
+  begin
     case s[1].Chars[0] of
-     'R': StatusBar.Canvas.Font.Color := clRed;
-     'G': StatusBar.Canvas.Font.Color := clGreen;
+      'R':
+        StatusBar.Canvas.Font.Color := clRed;
+      'G':
+        StatusBar.Canvas.Font.Color := clGreen;
     end;
     case s[1].Chars[1] of
-     'B': StatusBar.Canvas.Font.Style :=  StatusBar.Canvas.Font.Style + [fsBold];
+      'B':
+        StatusBar.Canvas.Font.Style := StatusBar.Canvas.Font.Style + [fsBold];
     end
-   end
-  else StatusBar.Canvas.Font := StatusBar.Font;
+  end
+  else
+    StatusBar.Canvas.Font := StatusBar.Font;
   StatusBar.Canvas.TextOut(Rect.Left, Rect.Top, s[0]);
 end;
 
 procedure TFormMetrolog.NSetExecutedClick(Sender: TObject);
- var
+var
   pv: PVirtualNode;
   cur: IXMLNode;
 begin
   for pv in FStepTree.SelectedNodes do
-   begin
+  begin
     cur := PNodeExData(FStepTree.GetNodeData(pv)).XMNode;
     cur.Attributes['EXECUTED'] := True;
     ReCalc();
     DoUpdateData;
-   end;
+  end;
 end;
 
 procedure TFormMetrolog.NTrrApplyClick(Sender: TObject);
 begin
-  HasXTree(GetMetr([], FDevData), GetMetr([], FileData), procedure(devroot, dev, failRoot, fail: IXMLNode)
-  begin
-    dev.NodeValue := fail.NodeValue;
-  end);
+  HasXTree(GetMetr([], FDevData), GetMetr([], FileData),
+    procedure(devroot, dev, failRoot, fail: IXMLNode)
+    begin
+      dev.NodeValue := fail.NodeValue;
+    end);
   (GlobalCore as IUpdateDeviceMetrol).Update(FMetaDataInfo);
 end;
 
 procedure TFormMetrolog.NTrrResetClick(Sender: TObject);
- var
+var
   pv: PVirtualNode;
   cur: IXMLNode;
   s: string;
   t: IXMLNode;
+
   function Fet(): Boolean;
   begin
     t := cur.ParentNode.ChildNodes.FindNode(s);
     Result := Assigned(t);
   end;
+
 begin
   for pv in FStepTree.SelectedNodes do
-   begin
+  begin
     cur := PNodeExData(FStepTree.GetNodeData(pv)).XMNode;
     s := cur.NodeName;
     while Fet do
-     begin
+    begin
       t.Attributes['EXECUTED'] := False;
-      s := 'STEP'+ (Integer(t.Attributes['STEP'])+1).ToString;
-     end;
+      s := 'STEP' + (Integer(t.Attributes['STEP']) + 1).ToString;
+    end;
     ReCalc();
     DoUpdateData;
-   end;
+  end;
 end;
 
 procedure TFormMetrolog.NTrrSetClick(Sender: TObject);
- var
+var
   pv: PVirtualNode;
   cur: IXMLNode;
   i: Integer;
 begin
   for pv in FStepTree.SelectedNodes do
-   begin
+  begin
     cur := PNodeExData(FStepTree.GetNodeData(pv)).XMNode;
-    for i := 1 to cur.Attributes['STEP'] do cur.ParentNode.ChildNodes.FindNode('STEP'+i.ToString).Attributes['EXECUTED'] := True;
+    for i := 1 to cur.Attributes['STEP'] do
+      cur.ParentNode.ChildNodes.FindNode('STEP' + i.ToString).Attributes['EXECUTED'] := True;
     ReCalc();
     DoUpdateData;
-   end;
+  end;
+end;
+
+procedure TFormMetrolog.OptionChanged;
+begin
+  if FTrrFile <> '' then FFileData.OwnerDocument.SaveToFile(FTrrFile)
 end;
 
 procedure TFormMetrolog.TreeClear;
- var
+var
   pv: PVirtualNode;
 begin
-  for pv in FStepTree.Nodes do PNodeExData(FStepTree.GetNodeData(pv)).XMNode := nil;
+  for pv in FStepTree.Nodes do
+    PNodeExData(FStepTree.GetNodeData(pv)).XMNode := nil;
   FStepTree.Clear;
 end;
 
 procedure TFormMetrolog.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex);
- var
+var
   xd: PNodeExData;
 begin
   xd := Sender.GetNodeData(Node);
-  if (Column = 0) and Assigned(xd.XMNode) and xd.XMNode.HasAttribute('EXECUTED') and Boolean(xd.XMNode.Attributes['EXECUTED']) then ImageIndex := 304
+  if (Column = 0) and Assigned(xd.XMNode) and xd.XMNode.HasAttribute('EXECUTED') and Boolean(xd.XMNode.Attributes['EXECUTED']) then
+    ImageIndex := 304
 end;
 
 procedure TFormMetrolog.TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
- var
+var
   xd: PNodeExData;
 begin
   xd := Sender.GetNodeData(Node);
   if Assigned(xd.XMNode) and xd.XMNode.HasAttribute('EXECUTED') then
-    if Sender.Selected[Node] then TargetCanvas.Font.Style := TargetCanvas.Font.Style + [fsBold]
-    else if not Boolean(xd.XMNode.Attributes['EXECUTED']) then TargetCanvas.Font.Color := clLtGray
+    if Sender.Selected[Node] then
+      TargetCanvas.Font.Style := TargetCanvas.Font.Style + [fsBold]
+    else if not Boolean(xd.XMNode.Attributes['EXECUTED']) then
+      TargetCanvas.Font.Color := clLtGray
 end;
 
 procedure TFormMetrolog.TreeSetFont(T: TVirtualStringTree);
- var
+var
   pv: PVirtualNode;
 begin
-  T.DefaultNodeHeight := Abs(Font.Height) + T.TextMargin*2;
+  T.DefaultNodeHeight := Abs(Font.Height) + T.TextMargin * 2;
   T.Header.Height := T.DefaultNodeHeight;
-  for pv in T.Nodes do T.NodeHeight[pv] := T.DefaultNodeHeight;
+  for pv in T.Nodes do
+    T.NodeHeight[pv] := T.DefaultNodeHeight;
 end;
 
 procedure TFormMetrolog.TreeUpdate;
- var
+var
   alg, n: IXMLNode;
 begin
   FStepTree.BeginUpdate;
   try
-   TreeClear;
-   alg := GetMetr([MetrolType], FileData);
-   if not Assigned(alg) then Exit;
-   for n in XEnum(alg) do PNodeExData(FStepTree.GetNodeData(FStepTree.AddChild(nil))).XMNode := n;
+    TreeClear;
+    alg := GetMetr([MetrolType], FileData);
+    if not Assigned(alg) then
+      Exit;
+    for n in XEnum(alg) do
+      PNodeExData(FStepTree.GetNodeData(FStepTree.AddChild(nil))).XMNode := n;
   finally
-   FStepTree.EndUpdate;
+    FStepTree.EndUpdate;
   end;
 end;
 
@@ -882,32 +1045,38 @@ begin
 end;
 
 procedure TFormMetrolog.SetDataDevice(const Value: string);
- var
+var
   d: IDevice;
   InfoNil: TInfoEventRes;
   de: IDeviceEnum;
   udm: IUpdateDeviceMetrol;
 begin
-  if FDataDevice = Value then Exit;
-  TBindHelper.RemoveControlExpressions(Self, ['C_UpdateDeviceMetrology, C_MetaDataInfo', 'C_BindWorkRes']);//  Bind.RemoveManagedBinding(['MetaDataInfo', 'BindWorkRes']);
+  if mstAutomat in FState then BAutoStopClick(self)
+  else if mstAttr in FState then BAttCancelClick(self);
+
+  if FDataDevice = Value then
+    Exit;
+  TBindHelper.RemoveControlExpressions(Self, ['C_UpdateDeviceMetrology, C_MetaDataInfo', 'C_BindWorkRes']); //  Bind.RemoveManagedBinding(['MetaDataInfo', 'BindWorkRes']);
   FDataDevice := Value;
   if FDataDevice <> '' then
-   begin
-    if Supports(GlobalCore, IUpdateDeviceMetrol, udm) then Bind( 'C_UpdateDeviceMetrology', udm, ['S_UpdateDeviceMetrology']);
-    if Supports(GlobalCore, IDeviceEnum, de) then d := de.Get(FDataDevice);
+  begin
+    if Supports(GlobalCore, IUpdateDeviceMetrol, udm) then
+      Bind('C_UpdateDeviceMetrology', udm, ['S_UpdateDeviceMetrology']);
+    if Supports(GlobalCore, IDeviceEnum, de) then
+      d := de.Get(FDataDevice);
     if Assigned(d) and Supports(d, IDataDevice) then
-     begin
-      Caption := (d as ICaption).Text +'.'+ MetrolMame;
-      Bind( 'C_MetaDataInfo', d, ['S_MetaDataInfo']);
-      Bind( 'C_BindWorkRes', d, ['S_WorkEventInfo']);
+    begin
+      Caption := (d as ICaption).Text + '.' + MetrolMame;
+      Bind('C_MetaDataInfo', d, ['S_MetaDataInfo']);
+      Bind('C_BindWorkRes', d, ['S_WorkEventInfo']);
       if not (csLoading in ComponentState) then
-       begin
+      begin
         C_MetaDataInfo := (d as IDataDevice).GetMetaData();
         C_UpdateDeviceMetrology := C_UpdateDeviceMetrology;
-       end;
+      end;
       Exit;
-     end
-   end;
+    end
+  end;
   FDataDevice := '';
   InfoNil.Info := nil;
   C_MetaDataInfo := InfoNil;
@@ -916,19 +1085,20 @@ end;
 
 procedure TFormMetrolog.SetMetaDataInfo(const Value: TInfoEventRes);
 begin
-  if C_MetaDataInfo.Info = Value.Info then Exit;
+  if C_MetaDataInfo.Info = Value.Info then
+    Exit;
   FMetaDataInfo := Value;
   if not Assigned(GetMetr([], C_MetaDataInfo.Info)) then
-   begin
+  begin
     FStatusBar.Panels[0].Text := 'устройство не готово';
     FDevData := nil;
     NTrrApply.Enabled := False;
     NFileNew.Enabled := False;
     FStepTree.PopupMenu := nil;
     Exclude(FState, mstInitDev);
-   end
+  end
   else
-   begin
+  begin
     FStatusBar.Panels[0].Text := 'Устройство подключено.';
     FDevData := C_MetaDataInfo.Info;
     NTrrApply.Enabled := True;
@@ -937,12 +1107,13 @@ begin
     FStepTree.PopupMenu := FStepTreePopupMenu;
 //    UpdateRunXmlDir;
     Include(FState, mstInitDev);
-   end;
-  if not (csLoading in ComponentState) then DoUpdateData(True);
+  end;
+  if not (csLoading in ComponentState) then
+    DoUpdateData(True);
 end;
 
 procedure TFormMetrolog.NCPopup(Sender: TObject);
- var
+var
   d: IDevice;
   dd: IDataDevice;
   Item: TMenuItem;
@@ -950,99 +1121,114 @@ procedure TFormMetrolog.NCPopup(Sender: TObject);
 begin
   inherited;
   NConnect.Clear;
-  if Supports(GlobalCore, IDeviceEnum, de) then for d in de do
-   if Supports(d, IDataDevice, dd) and Assigned(GetMetr([], dd.GetMetaData().Info)) then
-   begin
-    Item := TMenuItem.Create(NConnect);
-    Item.Name := (d as ImanagItem).IName;
-    Item.Caption := (d as ICaption).Text;
-    Item.OnClick := NConnectClick;
-    if SameText(Item.Name, DataDevice) then Item.Checked := True;
-    NConnect.Add(Item);
-   end;
+  if Supports(GlobalCore, IDeviceEnum, de) then
+    for d in de do
+      if Supports(d, IDataDevice, dd) and Assigned(GetMetr([], dd.GetMetaData().Info)) then
+      begin
+        Item := TMenuItem.Create(NConnect);
+        Item.Name := (d as ImanagItem).IName;
+        Item.Caption := (d as ICaption).Text;
+        Item.OnClick := NConnectClick;
+        if SameText(Item.Name, DataDevice) then
+          Item.Checked := True;
+        NConnect.Add(Item);
+      end;
+  if (NConnect.Count = 1) and (DataDevice = '') then
+    DataDevice := NConnect.Items[0].Name;
   NConnect.Visible := NConnect.Count <> 0;
 end;
 
 function TFormMetrolog.GetMetr(nm: array of string; Root: IXMLNode): IXMLNode;
- var
+var
   n: IXMLNode;
   s: string;
 begin
 //  if Assigned(Root) then Root.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'TrrTst.xml');
 
-  if not Assigned(Root) then Exit(nil);
+  if not Assigned(Root) then
+    Exit(nil);
   for n in XEnum(Root) do
-   begin
+  begin
     Result := n.ChildNodes.FindNode(T_MTR);
-    if not Assigned(Result) then Continue;
+    if not Assigned(Result) then
+      Continue;
     Result := Result.ChildNodes.FindNode(MetrolMame);
-    if not Assigned(Result) then Continue;
+    if not Assigned(Result) then
+      Continue;
     for s in nm do
-     begin
+    begin
       Result := Result.ChildNodes.FindNode(s);
-      if not Assigned(Result) then Exit;
-     end;
+      if not Assigned(Result) then
+        Exit;
+    end;
     Break;
-   end;
+  end;
 end;
 
 function TFormMetrolog.GetOption(const index: string): variant;
 begin
-   Result := GetMetr([MetrolType], FileData).Attributes[index];
+  Result := GetMetr([MetrolType], FileData).Attributes[index];
 end;
 
 function TFormMetrolog.GetOptions: IXMLNode;
- var
+var
   Ldoc: IXMLdocument;
   optFile: string;
 begin
   optFile := Format('%sDevices\Метрология.%s.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame, MetrolType]);
-  if not FileExists(optFile) then optFile := Format('%sDevices\Метрология.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame]);
-  if not FileExists(optFile) then optFile := Format('%sDevices\Метрология.xml', [ExtractFilePath(ParamStr(0))]);
-  LDoc := NewXDocument();
-  LDoc.LoadFromFile(optFile);
+  if not FileExists(optFile) then
+    optFile := Format('%sDevices\Метрология.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame]);
+  if not FileExists(optFile) then
+    optFile := Format('%sDevices\Метрология.xml', [ExtractFilePath(ParamStr(0))]);
+  Ldoc := NewXDocument();
+  Ldoc.LoadFromFile(optFile);
   Result := Ldoc.DocumentElement;
 end;
 
 function TFormMetrolog.GetAttCount: Integer;
- var
-  rm: IXMLNode;
 begin
   try
-   Result := GetMetr([MetrolType], FileData).Attributes['AttCount'];
+    Result := GetMetr([MetrolType], FileData).Attributes['AttCount'];
   except
-   Result := 5;
+    Result := 5;
   end;
 end;
 
 function TFormMetrolog.GetIsMedian: Boolean;
- var
-  rm: IXMLNode;
 begin
   try
-   Result := GetMetr([MetrolType], FileData).Attributes['IsMedian'];
+    Result := GetMetr([MetrolType], FileData).Attributes['IsMedian'];
   except
-   Result := False;
+    Result := False;
   end;
 end;
 
 function TFormMetrolog.GetCurrentNode: IXMLNode;
- var
+var
   pv: PVirtualNode;
 begin
   Result := nil;
-  for pv in FStepTree.SelectedNodes do Result := PNodeExData(FStepTree.GetNodeData(pv)).XMNode;
+  for pv in FStepTree.SelectedNodes do
+    Result := PNodeExData(FStepTree.GetNodeData(pv)).XMNode;
+end;
+
+function TFormMetrolog.GetDataDevice: string;
+begin
+  Result := FDataDevice;
 end;
 
 function TFormMetrolog.GetFileOrDevData: IXMLNode;
 begin
-  if Assigned(FFileData) then Result := FFileData
-  else if Assigned(FDevData) then Result := FDevData
-  else Result := nil
+  if Assigned(FFileData) then
+    Result := FFileData
+  else if Assigned(FDevData) then
+    Result := FDevData
+  else
+    Result := nil
 end;
 
 function TFormMetrolog.NewFFileData(const DevName: string): IXMLNode;
- var
+var
   GDoc: IXMLDocument;
   d: IXMLNode;
   i: integer;
@@ -1060,72 +1246,78 @@ end;
 procedure TFormMetrolog.NFileNewClick(Sender: TObject);
 begin
   with TSaveDialog.Create(nil) do
-   try
+  try
     InitialDir := ExtractFilePath(ParamStr(0)) + T_MTR;
     DefaultExt := 'xml';
     Options := Options + [ofOverwritePrompt, ofPathMustExist];
     Filter := 'Файл тарировки (*.xml)|*.xml';
     if Execute(Handle) then
-     begin
+    begin
       NewFFileData(GetMetr([], C_MetaDataInfo.Info).ParentNode.ParentNode.NodeName);
       FFileData.OwnerDocument.SaveToFile(FileName);
       TrrFile := FileName;
-     end;
-   finally
+    end;
+  finally
     Free;
-   end;
+  end;
 end;
 
 procedure TFormMetrolog.NFileOpenClick(Sender: TObject);
 begin
   with TOpenDialog.Create(nil) do
-   try
+  try
     InitialDir := ExtractFilePath(ParamStr(0)) + T_MTR;
     Options := Options + [ofPathMustExist, ofFileMustExist];
     DefaultExt := 'xml';
     Filter := 'Файл тарировки (*.xml)|*.xml';
 
-    if Assigned(FImportExport) then Filter := Filter + FImportExport.GetImportFilters;
+    if Assigned(FImportExport) then
+      Filter := Filter + FImportExport.GetImportFilters;
 
     if Execute(Handle) then
-      if FilterIndex = 1 then TrrFile := FileName
+      if FilterIndex = 1 then
+        TrrFile := FileName
       else
-       begin
-        FImportExport.ExecuteImport(FilterIndex-1, FileName, GetMetr([MetrolType], NewFFileData('ANY_DEVICE')));
+      begin
+        FImportExport.ExecuteImport(FilterIndex - 1, FileName, GetMetr([MetrolType], NewFFileData('ANY_DEVICE')));
         ReCalc(False);
         DoUpdateData(True);
         FStatusBar.Panels[1].Text := FileName;
         NFileSaveAs.Enabled := True;
         FImportFile := FileName;
-       end;
-   finally
+      end;
+  finally
     Free;
-   end;
+  end;
 end;
 
 procedure TFormMetrolog.NFileSaveAsClick(Sender: TObject);
 begin
   with TSaveDialog.Create(nil) do
-   try
+  try
     InitialDir := ExtractFilePath(ParamStr(0)) + T_MTR;
-    if TrrFile <> '' then FileName := TPath.GetFileNameWithoutExtension(TrrFile)
-    else if FImportFile <> '' then FileName := TPath.GetFileNameWithoutExtension(FImportFile);
+    if TrrFile <> '' then
+      FileName := TPath.GetFileNameWithoutExtension(TrrFile)
+    else if FImportFile <> '' then
+      FileName := TPath.GetFileNameWithoutExtension(FImportFile);
     Options := Options + [ofOverwritePrompt, ofPathMustExist];
     DefaultExt := 'xml';
     Filter := 'Файл тарировки (*.xml)|*.xml';
-    if Assigned(FImportExport) then Filter := Filter + FImportExport.GetExportFilters;
+    if Assigned(FImportExport) then
+      Filter := Filter + FImportExport.GetExportFilters;
     if Execute(Handle) then
-     begin
+    begin
       if FilterIndex = 1 then
-       begin
+      begin
         FFileData.OwnerDocument.SaveToFile(FileName);
         TrrFile := FileName;
-       end
-      else FImportExport.ExecuteExport(FilterIndex-1, FileName, GetMetr([], FFileData));// NewFFileData(GetMetr([], GetFileOrDevData).ParentNode.ParentNode.NodeName)));
-     end;
-   finally
+      end
+      else
+        FImportExport.ExecuteExport(FilterIndex - 1, FileName, GetMetr([], FFileData)); // NewFFileData(GetMetr([], GetFileOrDevData).ParentNode.ParentNode.NodeName)));
+    end;
+  finally
     Free;
-   end;
+  end;
 end;
 
 //procedure TFormMetrolog.NIsMedianClick(Sender: TObject);
@@ -1134,43 +1326,49 @@ end;
 //end;
 
 procedure TFormMetrolog.NTreeHeaderClick(Sender: TObject);
- var
+var
   co: TVTColumnOptions;
   n: TMenuItem;
 begin
   n := TMenuItem(Sender);
-  co :=  FStepTree.Header.Columns[n.Tag].Options;
-  if n.Checked then Include(co, coVisible) else Exclude(co, coVisible);
+  co := FStepTree.Header.Columns[n.Tag].Options;
+  if n.Checked then
+    Include(co, coVisible)
+  else
+    Exclude(co, coVisible);
   FStepTree.Header.Columns[n.Tag].Options := co;
 end;
 
 procedure TFormMetrolog.DoUpdateData(NewFileData: Boolean);
- var
+var
   md, mf: IXMLNode;
 begin
-  if mstLockUpdate in FState then Exit;
+  if mstLockUpdate in FState then
+    Exit;
   if NewFileData then
-   begin
+  begin
     BAttStop.Enabled := False;
     BAttCancel.Enabled := False;
     Exclude(FState, mstAttr);
     if Assigned(FDevData) and Assigned(FFileData) then
-     begin
+    begin
       BAttStart.Enabled := True;
-      if Supports(Self, IAutomatMetrology) then BAutoStart.Enabled := True;
+      if Supports(Self, IAutomatMetrology) then
+        BAutoStart.Enabled := True;
       md := GetMetr([], FDevData).ParentNode.ParentNode;
       mf := GetMetr([], FFileData).ParentNode.ParentNode;
       if (mf.NodeName <> 'ANY_DEVICE') and (md.NodeName <> mf.NodeName) then
-       MessageDlg(Format('Текущий файл тарировки прибора %s а выбран прибор %s',[mf.NodeName, md.NodeName]), TMsgDlgType.mtWarning, [mbOK], 0)
+        MessageDlg(Format('Текущий файл тарировки прибора %s а выбран прибор %s', [mf.NodeName, md.NodeName]), TMsgDlgType.mtWarning, [mbOK], 0)
       else if mf.HasAttribute(AT_SERIAL) and md.HasAttribute(AT_SERIAL) and (mf.Attributes[AT_SERIAL] <> md.Attributes[AT_SERIAL]) then
-       MessageDlg(Format('Текущий файл тарировки прибора с номером %s а выбран прибор с номером %s', [mf.Attributes[AT_SERIAL], md.Attributes[AT_SERIAL]]), TMsgDlgType.mtWarning, [mbOK], 0);
-     end
+        MessageDlg(Format('Текущий файл тарировки прибора с номером %s а выбран прибор с номером %s', [mf.Attributes[AT_SERIAL], md.Attributes[AT_SERIAL]]), TMsgDlgType.mtWarning, [mbOK], 0);
+    end
     else
-     begin
+    begin
       BAttStart.Enabled := False;
-      if Supports(Self, IAutomatMetrology) then BAutoStart.Enabled := False;
-     end;
-   end;
+      if Supports(Self, IAutomatMetrology) then
+        BAutoStart.Enabled := False;
+    end;
+  end;
   TreeUpdate;
 end;
 
@@ -1195,30 +1393,19 @@ begin
 end;
 
 procedure TFormMetrolog.NStandartSetupClick(Sender: TObject);
- var
+var
   d: IDialog;
-  rm, ro: IXMLNode;
-//  Ldoc: IXMLdocument;
-//  optFile: string;
+  rm: IXMLNode;
 begin
   rm := GetMetr([MetrolType], FileData);
-
   Assert(Assigned(rm));
+  rm.Attributes['DevName'] := rm.ParentNode.ParentNode.ParentNode.NodeName + '.' + rm.ParentNode.NodeName;
 
- { optFile := Format('%sDevices\Метрология.%s.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame, MetrolType]);
-  if not FileExists(optFile) then optFile := Format('%sDevices\Метрология.%s.xml', [ExtractFilePath(ParamStr(0)), MetrolMame]);
-  if not FileExists(optFile) then optFile := Format('%sDevices\Метрология.xml', [ExtractFilePath(ParamStr(0))]);
-  LDoc := NewXDocument();
-  LDoc.LoadFromFile(optFile);}
-
-  rm.Attributes['DevName'] := rm.ParentNode.ParentNode.ParentNode.NodeName +'.'+rm.ParentNode.NodeName;
-
-  if RegisterDialog.TryGet<Dialog_SetupOptions>(d) then (d as IDialogOptions).Execute(GetOptions{LDoc.DocumentElement}, rm, DoStandartSetup,
-  procedure(d: IDialog; Res: TModalResult)
-  begin
-    if (Res = mrOk) and (FTrrFile <> '') then FFileData.OwnerDocument.SaveToFile(FTrrFile)
-  end);
-  //TFormMetrSetup.Execute(Self);
+  if RegisterDialog.TryGet<Dialog_SetupOptions>(d) then
+    (d as IDialogOptions).Execute(GetOptions, rm, DoStandartSetup, procedure(d: IDialog; Res: TModalResult)
+    begin
+      if Res = mrOk then OptionChanged();
+    end);
 end;
 
 procedure TFormMetrolog.NConnectClick(Sender: TObject);
@@ -1228,41 +1415,57 @@ end;
 
 procedure TFormMetrolog.SetRemoveDevice(const Value: string);
 begin
-  if DataDevice = Value then DataDevice := '';
+  if DataDevice = Value then
+    DataDevice := '';
 end;
 
 procedure TFormMetrolog.SetBindWorkRes(const Value: TWorkEventRes);
- var
+var
   d, cur: IXMLNode;
   am: IAutomatMetrology;
   a: IFindAnyData;
 begin
   FBindWorkRes := Value;
   d := FBindWorkRes.Work.ChildNodes.FindNode(MetrolMame);
-  if not Assigned(d) then Exit;
-  if Supports(Self, IAutomatMetrology ,am) then am.SetDeviceData(d);
-  if mstAutomat in FState then (Self as IAutomatMetrology).KadrEvent();
-  if FAttCnt <= 0 then Exit;
-  HasXTree(FAttSum, d, procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
-  begin
-    if EtalonAttr.NodeName <> AT_VALUE then EtalonAttr.NodeValue := TestAttr.NodeValue
-    else if EtalonRoot.ParentNode.HasAttribute(AT_METR) and (EtalonRoot.ParentNode.Attributes[AT_METR] = ME_ANGLE) then
-     if IsMedian then TMetrInclinMath.AddSum<TAngleMedianSum>(EtalonRoot, Double(TestAttr.NodeValue))
-     else TMetrInclinMath.AddSum<TAngleSum>(EtalonRoot, Double(TestAttr.NodeValue))
-    else
-     if IsMedian then TMetrInclinMath.AddSum<TMedianSum>(EtalonRoot, Double(TestAttr.NodeValue))
-     else EtalonAttr.NodeValue := Double(EtalonAttr.NodeValue) + Double(TestAttr.NodeValue)
-  end);
+  if not Assigned(d) then
+    Exit;
+  if Supports(Self, IAutomatMetrology, am) then
+    am.SetDeviceData(d);
+  if mstAutomat in FState then
+    (Self as IAutomatMetrology).KadrEvent();
+  if FAttCnt <= 0 then
+    Exit;
+  HasXTree(FAttSum, d,
+    procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
+    begin
+      if EtalonAttr.NodeName <> AT_VALUE then
+        EtalonAttr.NodeValue := TestAttr.NodeValue
+      else if EtalonRoot.ParentNode.HasAttribute(AT_METR) and (EtalonRoot.ParentNode.Attributes[AT_METR] = ME_ANGLE) then
+        if IsMedian then
+          AddSum<TAngleMedianSum>(EtalonRoot, Double(TestAttr.NodeValue))
+        else
+          AddSum<TAngleSum>(EtalonRoot, Double(TestAttr.NodeValue))
+      else if IsMedian then
+        AddSum<TMedianSum>(EtalonRoot, Double(TestAttr.NodeValue))
+      else
+        EtalonAttr.NodeValue := Double(EtalonAttr.NodeValue) + Double(TestAttr.NodeValue)
+    end);
   cur := GetCurrentNode;
   Dec(FAttCnt);
-  HasXTree(cur, FAttSum, procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
-  begin
-    if EtalonAttr.NodeName <> AT_VALUE then EtalonAttr.NodeValue := TestAttr.NodeValue
-    else if XSupport(TestRoot, IFindAnyData, a) then EtalonAttr.NodeValue := a.Data
-         else EtalonAttr.NodeValue := Double(TestAttr.NodeValue) / (FAttN - FAttCnt);
-  end);
-  if FAttCnt = 0 then DoStopAtt(cur)
-  else DoRunAtt(cur);
+  HasXTree(cur, FAttSum,
+    procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
+    begin
+      if EtalonAttr.NodeName <> AT_VALUE then
+        EtalonAttr.NodeValue := TestAttr.NodeValue
+      else if XSupport(TestRoot, IFindAnyData, a) then
+        EtalonAttr.NodeValue := a.Data
+      else
+        EtalonAttr.NodeValue := Double(TestAttr.NodeValue) / (FAttN - FAttCnt);
+    end);
+  if FAttCnt = 0 then
+    DoStopAtt(cur)
+  else
+    DoRunAtt(cur);
 end;
 
 destructor TFormMetrolog.Destroy;
@@ -1282,7 +1485,7 @@ begin
 //AccessViolation    Access violation at address 0508796B in module 'Metrol.dlp'. Read of address 00000000
 //[0508796B]{Metrol.dlp  } MetrForm.TFormMetrolog.DoRunAtt$qqr48System.%DelphiInterface$t20Xml.Xmlintf.IXMLNode% (Line 702, "MetrForm.pas")
  { TODO : AttNode =0 }
-  FLabel.Caption := Format('Шаг: %s-Аттестация осталось %d',[AttNode.Attributes['STEP'], FAttCnt]);
+  FLabel.Caption := Format('Шаг: %s-Аттестация осталось %d', [AttNode.Attributes['STEP'], FAttCnt]);
   BAttStop.Enabled := not (mstAutomat in Fstate);
   FStepTree.Repaint;
 end;
@@ -1295,7 +1498,8 @@ end;
 
 procedure TFormMetrolog.DoStandartSetup(Item: TJvCustomInspectorItem; Option: IXMLNode; var Data: IXMLNode);
 begin
-  if Option.NodeName = AT_SERIAL then Data := Data.ParentNode.ParentNode.ParentNode;
+  if Option.NodeName = AT_SERIAL then
+    Data := Data.ParentNode.ParentNode.ParentNode;
 end;
 
 procedure TFormMetrolog.DoStartAtt(AttNode: IXMLNode);
@@ -1305,42 +1509,51 @@ begin
 end;
 
 procedure TFormMetrolog.ReCalc(NeedSave: Boolean = True);
- var
+var
   alg, n, df: IXMLNode;
 begin
   // reset file trr data
   df := GetMetr([], FileData);
-  if not FlagNoUpdateFromEtalon then HasXTree(FEtalonData, df, procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
-  begin
-    TestAttr.NodeValue := EtalonAttr.NodeValue;
-  end);
+  if not FlagNoUpdateFromEtalon then
+    HasXTree(FEtalonData, df,
+      procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
+      begin
+        TestAttr.NodeValue := EtalonAttr.NodeValue;
+      end);
   // execute trr too last none executed step
   alg := GetMetr([MetrolType], FileData);
   for n in XEnum(alg) do
-   if not Boolean(n.Attributes['EXECUTED']) then Break
-   else if not UserExecStep(n.Attributes['STEP'], alg, df) then FexeScript.CallFunction('execute_step', VarArrayOf([Integer(n.Attributes['STEP']), XToVar(alg), XToVar(df)]));
+    if not Boolean(n.Attributes['EXECUTED']) then
+      Break
+    else if not UserExecStep(n.Attributes['STEP'], alg, df) then
+      FexeScript.CallFunction('execute_step', [Integer(n.Attributes['STEP']), XToVar(alg), XToVar(df)]);
   // copy file trr to dev
-  HasXTree(GetMetr([], FDevData), df, procedure(dev, devAttr, fRoot, fAttr: IXMLNode)
-  begin
-    devAttr.NodeValue := fAttr.NodeValue;
-  end);
+  HasXTree(GetMetr([], FDevData), df,
+    procedure(dev, devAttr, fRoot, fAttr: IXMLNode)
+    begin
+      devAttr.NodeValue := fAttr.NodeValue;
+    end);
 //  UpdateRunXmlDir;
   if NeedSave then
-   if FTrrFile <> '' then FFileData.OwnerDocument.SaveToFile(FTrrFile)
-   else NFileSaveAsClick(nil);
+    if FTrrFile <> '' then
+      FFileData.OwnerDocument.SaveToFile(FTrrFile)
+    else
+      NFileSaveAsClick(nil);
   (GlobalCore as IUpdateDeviceMetrol).Update(FMetaDataInfo);
 end;
 
 procedure TFormMetrolog.DoStopAtt(AttNode: IXMLNode);
- var
+var
   pv: PVirtualNode;
-  md,mf: IXMLNode;
+  md, mf: IXMLNode;
   s: string;
   f: Boolean;
 begin
   BAttStart.Enabled := not (mstAutomat in Fstate);
   BAttCancel.Enabled := False;
   BAttStop.Enabled := False;
+  NFile.Visible := True;
+  NConnect.Visible := True;
   FAttCnt := 0;
   AttNode.Attributes['EXECUTED'] := True;
   Exclude(FState, mstAttr);
@@ -1351,53 +1564,57 @@ begin
   FAttOld := nil;
   FAttSum := nil;
 
-  FStepTree.SelectionLocked := False;// mstAutomat in Fstate;
-  s := 'STEP'+ (Integer(AttNode.Attributes['STEP'])+1).ToString();
+  FStepTree.SelectionLocked := False; // mstAutomat in Fstate;
+  s := 'STEP' + (Integer(AttNode.Attributes['STEP']) + 1).ToString();
   f := False;
   try
-   for pv in FStepTree.Nodes do
-    if PNodeExData(FStepTree.GetNodeData(pv)).XMNode.NodeName = s then
-     begin
-      FStepTree.Selected[pv] := True;
-      FStepTree.ScrollIntoView(pv, True);
-      f := True;
-      if mstAutomat in Fstate then
-       begin
-        FStepTree.SelectionLocked := True;
-        (Self as IAutomatMetrology).StartStep(PNodeExData(FStepTree.GetNodeData(pv)).XMNode);
-       end;
-      Break;
-     end;
-   if not f and (mstAutomat in Fstate) then
+    for pv in FStepTree.Nodes do
+      if PNodeExData(FStepTree.GetNodeData(pv)).XMNode.NodeName = s then
+      begin
+        FStepTree.Selected[pv] := True;
+        FStepTree.ScrollIntoView(pv, True);
+        f := True;
+        if mstAutomat in Fstate then
+        begin
+          FStepTree.SelectionLocked := True;
+          (Self as IAutomatMetrology).StartStep(PNodeExData(FStepTree.GetNodeData(pv)).XMNode);
+        end;
+        Break;
+      end;
+    if not f and (mstAutomat in Fstate) then
     begin
-     (Self as IAutomatMetrology).DoEndMetrology();
-     DoStopAuto();
+      (Self as IAutomatMetrology).DoEndMetrology();
+      DoStopAuto();
     end;
   finally
-   md := FBindWorkRes.Work.ParentNode.ChildNodes.FindNode(T_MTR);
-   md := md.ChildNodes.FindNode(MetrolMame);
-   mf := GetMetr([], FFileData);
-   HasXTree(md, mf, procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
-   begin
-     EtalonAttr.NodeValue := TestAttr.NodeValue;
-   end);
-   FStepTree.Repaint;
+    md := FBindWorkRes.Work.ParentNode.ChildNodes.FindNode(T_MTR);
+    md := md.ChildNodes.FindNode(MetrolMame);
+    mf := GetMetr([], FFileData);
+    HasXTree(md, mf,
+      procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
+      begin
+        EtalonAttr.NodeValue := TestAttr.NodeValue;
+      end);
+    FStepTree.Repaint;
   end;
 end;
 
 procedure TFormMetrolog.BAttCancelClick(Sender: TObject);
- var
+var
   cur: IXMLNode;
 begin
   BAttStart.Enabled := not (mstAutomat in Fstate);
   BAttCancel.Enabled := False;
   BAttStop.Enabled := False;
+  NFile.Visible := True;
+  NConnect.Visible := NFile.Visible;
   cur := GetCurrentNode;
-  FLabel.Caption := Format('Шаг: %s-Отмена аттестации',[cur.Attributes['STEP']]);
-  HasXTree(cur, FAttOld, procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
-  begin
-    EtalonAttr.NodeValue := TestAttr.NodeValue;
-  end);
+  FLabel.Caption := Format('Шаг: %s-Отмена аттестации', [cur.Attributes['STEP']]);
+  HasXTree(cur, FAttOld,
+    procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
+    begin
+      EtalonAttr.NodeValue := TestAttr.NodeValue;
+    end);
   Exclude(FState, mstAttr);
   FAttCnt := 0;
   FAttOld := nil;
@@ -1406,30 +1623,38 @@ begin
 end;
 
 procedure TFormMetrolog.BAttStartClick(Sender: TObject);
- var
+var
   cur: IXMLNode;
 begin
   cur := GetCurrentNode;
-  if not Assigned(cur) then MessageDlg('Не выбран шаг тарировки', TMsgDlgType.mtError, [mbOK], 0)
+  if not Assigned(cur) then
+    MessageDlg('Не выбран шаг тарировки', TMsgDlgType.mtError, [mbOK], 0)
   else
-   begin
-    if Boolean(cur.Attributes['EXECUTED']) and (MessageDlg(Format('Выполнить шаг %s заново?'#$D#$A'%s', [cur.Attributes['STEP'], cur.Attributes['INFO']]), TMsgDlgType.mtWarning, [mbYes, mbCancel], 0) = mrCancel) then Exit;
+  begin
+    if Boolean(cur.Attributes['EXECUTED']) and (MessageDlg(Format('Выполнить шаг %s заново?'#$D#$A'%s', [cur.Attributes['STEP'], cur.Attributes['INFO']]), TMsgDlgType.mtWarning, [mbYes, mbCancel], 0) = mrCancel) then
+      Exit;
     BAttStart.Enabled := False;
     BAttStop.Enabled := False;
+    NFile.Visible := False;
+    NConnect.Visible := NFile.Visible;
     BAttCancel.Enabled := not (mstAutomat in Fstate);
     FAttOld := cur.CloneNode(True);
-    if cur.HasAttribute('ATT_COUNT') then FAttCnt := cur.Attributes['ATT_COUNT']
-    else FAttCnt := AttCount;
+    if cur.HasAttribute('ATT_COUNT') then
+      FAttCnt := cur.Attributes['ATT_COUNT']
+    else
+      FAttCnt := AttCount;
     FAttN := FAttCnt;
-    FLabel.Caption := Format('Шаг: %s-Начало аттестации',[cur.Attributes['STEP']]);
+    FLabel.Caption := Format('Шаг: %s-Начало аттестации', [cur.Attributes['STEP']]);
     Include(FState, mstAttr);
-    HasXTree(cur, cur, procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
-    begin
-      if EtalonAttr.NodeName = AT_VALUE then TestAttr.NodeValue := 0;
-    end);
+    HasXTree(cur, cur,
+      procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
+      begin
+        if EtalonAttr.NodeName = AT_VALUE then
+          TestAttr.NodeValue := 0;
+      end);
     FAttSum := cur.CloneNode(True);
     DoStartAtt(cur);
-   end;
+  end;
 end;
 
 procedure TFormMetrolog.BAttStopClick(Sender: TObject);
@@ -1438,28 +1663,39 @@ begin
 end;
 
 procedure TFormMetrolog.BAutoStartClick(Sender: TObject);
- var
+var
   cur: IXMLNode;
 begin
-  if mstAttr in FState then Exit;
+  if mstAttr in FState then
+    Exit;
   cur := GetCurrentNode;
-  if not Assigned(cur) then MessageDlg('Не выбран шаг тарировки', TMsgDlgType.mtError, [mbOK], 0)
+  if not Assigned(cur) then
+    MessageDlg('Не выбран шаг тарировки', TMsgDlgType.mtError, [mbOK], 0)
   else
-   begin
+  begin
     (Self as IAutomatMetrology).StartStep(cur);
     FStepTree.SelectionLocked := True;
     BAutoStart.Enabled := False;
     BAutoStop.Enabled := True;
     BAttStart.Enabled := False;
+    NFile.Visible := False;
+    NConnect.Visible := NFile.Visible;
     Include(FState, mstAutomat);
-   end;
+  end;
 end;
 
 procedure TFormMetrolog.BAutoStopClick(Sender: TObject);
 begin
   DoStopAuto();
   (Self as IAutomatMetrology).Stop();
-  if mstAttr in FState then BAttCancelClick(nil);
+  if mstAttr in FState then
+    BAttCancelClick(nil);
+end;
+
+constructor TFormMetrolog.CreateUser(const aName: string = '');
+begin
+  inherited;
+  NCPopup(Self);
 end;
 
 procedure TFormMetrolog.DoStopAuto;
@@ -1468,16 +1704,33 @@ begin
   BAutoStart.Enabled := True;
   BAutoStop.Enabled := False;
   BAttStart.Enabled := True;
+  NFile.Visible := True;
+  NConnect.Visible := NFile.Visible;
   Exclude(FState, mstAutomat);
 end;
 
 procedure TFormMetrolog.AddDefaultOptions(RootTrr, RootOption: IXMLNode);
- var
-  c,o: IXMLNode;
+var
+  c, o: IXMLNode;
 begin
   for c in XEnum(RootOption) do
     for o in XEnum(c) do
-      if (o.NodeName <> AT_SERIAL) and o.HasAttribute('Значение') then RootTrr.Attributes[o.NodeName] := o.Attributes['Значение']
+      if (o.NodeName <> AT_SERIAL) and o.HasAttribute('Значение') then
+        RootTrr.Attributes[o.NodeName] := o.Attributes['Значение']
+end;
+
+class procedure TFormMetrolog.AddSum<c>(Root: IXMLNode; Data: Double);
+var
+  a: IFindAnyData;
+begin
+  if not XSupport(Root, IFindAnyData, a) then
+  begin
+    if Supports(c.Create(), IFindAnyData, a) then
+      (Root as IOwnIntfXMLNode).Intf := a
+    else
+      raise EBaseException.CreateFmt('XMLNode %s не поддерживает IFindAnyData', [Root.NodeName]);
+  end;
+  a.Add(Data);
 end;
 
 procedure TFormMetrolog.AutoReport(Status: TStatusAutomatMetrology; const info: string);
@@ -1487,4 +1740,6 @@ end;
 
 initialization
   TRegister.AddType<TUpdateDeviceMetrol, IUpdateDeviceMetrol>.LiveTime(ltSingleton);
+
 end.
+

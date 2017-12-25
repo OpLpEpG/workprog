@@ -4,7 +4,7 @@ interface
 
 uses
   RootIntf, RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, Container, Actns, DBIntf, DBImpl, DataExchange,
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.TypInfo, Plot, Plot.GraphParams,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.TypInfo,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, EditControl, Data.DB, Winapi.GDIPAPI;
 
 type
@@ -56,9 +56,6 @@ type
     edGlu2: TEdit;
     btClose: TButton;
     Label3: TLabel;
-    edKadr2: TDataExchangeEdit;
-    edKadr1: TDataExchangeEdit;
-    edPorog: TDataExchangeEdit;
     procedure btCloseClick(Sender: TObject);
     procedure btRUNClick(Sender: TObject);
     procedure DataExchageClick(Sender: TObject);

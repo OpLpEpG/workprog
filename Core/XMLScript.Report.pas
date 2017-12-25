@@ -27,7 +27,7 @@ end;
 
 class constructor TXMLScriptReport.Create;
 begin
-  TXmlScript.RegisterMethods([
+  TXmlScriptInner.RegisterMethods([
   'procedure ExportToCalc(const ReportShablon, ReportXML, ReportFile: string; Data: variant)'], CallMeth);
 end;
 

@@ -73,12 +73,12 @@
         <VerInfo_Release>1</VerInfo_Release>
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <DCC_Description>Core 2.0.0 Корневые классы и утилиты</DCC_Description>
+        <DCC_Description>Core 3.0.0 Корневые классы и утилиты</DCC_Description>
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>936</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.1.936;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>975</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.1.975;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_DUPLICATE_CTOR_DTOR>false</DCC_DUPLICATE_CTOR_DTOR>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -95,9 +95,9 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
-        <VerInfo_Build>54</VerInfo_Build>
+        <VerInfo_Build>55</VerInfo_Build>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.54;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.55;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -120,9 +120,10 @@
         <DCCReference Include="Jcl.dcp"/>
         <DCCReference Include="JvCore.dcp"/>
         <DCCReference Include="JvDocking.dcp"/>
-        <DCCReference Include="fs_oleg.dcp"/>
         <DCCReference Include="GR32_RSXE10.dcp"/>
         <DCCReference Include="JvRuntimeDesign.dcp"/>
+        <DCCReference Include="debug_except.pas"/>
+        <DCCReference Include="Container.pas"/>
         <DCCReference Include="..\AbstractPlugin.pas"/>
         <DCCReference Include="..\DeviceIntf.pas"/>
         <DCCReference Include="..\ExtendIntf.pas"/>
@@ -131,13 +132,9 @@
         <DCCReference Include="..\PluginAPI.pas"/>
         <DCCReference Include="..\RootIntf.pas"/>
         <DCCReference Include="..\tools.pas"/>
-        <DCCReference Include="debug_except.pas"/>
-        <DCCReference Include="Container.pas"/>
         <DCCReference Include="Actns.pas"/>
         <DCCReference Include="LasImpl.pas"/>
         <DCCReference Include="Parser.pas"/>
-        <DCCReference Include="Plot.DB.pas"/>
-        <DCCReference Include="XMLScript.pas"/>
         <DCCReference Include="ImportExport.pas"/>
         <DCCReference Include="DockIForm.pas"/>
         <DCCReference Include="CoreReg.pas"/>
@@ -153,17 +150,12 @@
         <DCCReference Include="..\..\..\Libs\WlanAPI\nduWinNT.pas"/>
         <DCCReference Include="..\..\..\Libs\WlanAPI\nduWlanAPI.pas"/>
         <DCCReference Include="..\..\..\Libs\WlanAPI\nduWlanTypes.pas"/>
-        <DCCReference Include="DataExchange.pas"/>
         <DCCReference Include="EditControl.pas"/>
-        <DCCReference Include="Plot.GraphParams.pas"/>
         <DCCReference Include="ExcelImpl.pas"/>
         <DCCReference Include="..\UakiIntf.pas"/>
-        <DCCReference Include="XMLScript.Math.pas"/>
         <DCCReference Include="..\Fibonach.pas"/>
         <DCCReference Include="..\StolGKIntf.pas"/>
         <DCCReference Include="Math.Telesistem.pas"/>
-        <DCCReference Include="XMLScript.IKN.pas"/>
-        <DCCReference Include="Plot.pas"/>
         <DCCReference Include="FileCachImpl.pas"/>
         <DCCReference Include="OtklonitelPaintClass.pas"/>
         <DCCReference Include="AVRtypes.pas"/>
@@ -178,9 +170,7 @@
         <DCCReference Include="JDtools.pas"/>
         <DCCReference Include="LasDataSet.pas"/>
         <DCCReference Include="FileDataSet.pas"/>
-        <DCCReference Include="XMLDataSet.pas"/>
         <DCCReference Include="Plot.DataLink.pas"/>
-        <DCCReference Include="XMLScript.Report.pas"/>
         <DCCReference Include="Plot.GR32.Buffer.pas"/>
         <DCCReference Include="..\StolBKIntf.pas"/>
         <DCCReference Include="Fifo.pas"/>
@@ -190,6 +180,20 @@
         <DCCReference Include="..\IndexBuffer.pas"/>
         <DCCReference Include="CFifo.pas"/>
         <DCCReference Include="..\SDcardTools.pas"/>
+        <DCCReference Include="VerySimpleLua\VerySimple.Lua.Lib.pas"/>
+        <DCCReference Include="VerySimpleLua\VerySimple.Lua.pas"/>
+        <DCCReference Include="Scintilla\DScintilla.pas"/>
+        <DCCReference Include="Scintilla\DScintillaCustom.pas"/>
+        <DCCReference Include="Scintilla\DScintillaTypes.pas"/>
+        <DCCReference Include="Scintilla\DScintillaUtils.pas"/>
+        <DCCReference Include="ScinLua.pas"/>
+        <DCCReference Include="XMLLua.IKN.pas"/>
+        <DCCReference Include="XMLLua.Math.pas"/>
+        <DCCReference Include="XMLLua.pas"/>
+        <DCCReference Include="XMLLua.Report.pas"/>
+        <DCCReference Include="XMLDataSet.pas"/>
+        <DCCReference Include="RangeSelector.pas"/>
+        <None Include="..\Script.inc"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -249,7 +253,16 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployClass Name="ProjectiOSDeviceResourceRules"/>
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                </DeployClass>
                 <DeployClass Name="ProjectOSXResource">
                     <Platform Name="OSX32">
                         <RemoteDir>Contents\Resources</RemoteDir>
@@ -565,16 +578,7 @@
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                </DeployClass>
+                <DeployClass Name="ProjectiOSDeviceResourceRules"/>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>

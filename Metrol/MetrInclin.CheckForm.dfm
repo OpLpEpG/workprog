@@ -1,6 +1,7 @@
 object FormInclinCheck: TFormInclinCheck
   Left = 0
   Top = 0
+  ActiveControl = Tree
   Caption = #1055#1086#1074#1077#1088#1082#1072' '#1080#1085#1082#1083#1080#1085#1086#1084#1077#1090#1088#1072
   ClientHeight = 314
   ClientWidth = 757

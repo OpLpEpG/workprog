@@ -2,7 +2,7 @@ unit XMLScript.Math;
 
 interface
 
-uses  XMLScript, tools, debug_except, MathIntf, System.UITypes, WinAPI.GDIPObj, WinAPI.GDIPApi,
+uses  XMLScript, tools, debug_except, MathIntf, System.UITypes,{ WinAPI.GDIPObj, WinAPI.GDIPApi,}
     SysUtils, o_iinterpreter, o_ipascal, Xml.XMLIntf, System.Generics.Collections, System.Classes, math, System.Variants;
 
 type
@@ -17,7 +17,7 @@ type
     class function AddMetrology(root: Variant; const Title, eu: string; Znd: Double = 0; varTip: Integer = 5): Variant; static;
     class function AddMetrologyFM(root: Variant; Digits, Aqu: Integer): Variant; static;
     class function AddMetrologyRG(root: Variant; Lo, Hi: Double): Variant; static;
-    class function AddMetrologyCL(root: Variant; Color: TAlphaColor; Width: Single = 2; Dash: TDashStyle = DashStyleSolid): Variant; static;
+    class function AddMetrologyCL(root: Variant; Color: TAlphaColor; Width: Single = 2; Dash: Integer = 0): Variant; static;
 
     class procedure TrrVect3D(root, Inp: Variant; Scale: Integer = 1); static;
     class procedure AddXmlMatrix(root: Variant; Row, col: Integer); overload; static;
@@ -74,7 +74,7 @@ end;
 
 class constructor TXMLScriptMath.Create;
 begin
-  TXmlScript.RegisterMethods([
+  TXmlScriptInner.RegisterMethods([
   'procedure ExecStepGK1(stp: integer; alg, trr: variant; IsGk: boolean)',
   'function AddXmlPath(root: Variant; const path: string): Variant',
   'procedure AddXmlMatrix(root: Variant; Row, col: Integer)',
@@ -104,7 +104,7 @@ end;
 
 class destructor TXMLScriptMath.Destroy;
 begin
-  TXmlScript.UnRegisterMethods(CallMeth);
+  TXmlScriptInner.UnRegisterMethods(CallMeth);
 end;
 
 class procedure TXMLScriptMath.ExecStepGK1(stp: integer; alg, trr: variant; IsGk: boolean);
@@ -178,7 +178,7 @@ begin
   Result := XToVar(r);
 end;
 
-class function TXMLScriptMath.AddMetrologyCL(root: Variant; Color: TAlphaColor; Width: Single; Dash: TDashStyle): Variant;
+class function TXMLScriptMath.AddMetrologyCL(root: Variant; Color: TAlphaColor; Width: Single; Dash: Integer): Variant;
  var
   r: IXMLNode;
 begin
@@ -186,7 +186,7 @@ begin
   if not CNode.IsData(r) then r := CNode.GetCalc(r);
   r.Attributes[AT_COLOR] := Color;
   if Width <> 2 then r.Attributes[AT_WIDTH] := Width;
-  if Dash <> DashStyleSolid then r.Attributes[AT_DASH] := Dash;
+  if Dash <> 0 then r.Attributes[AT_DASH] := Dash;
   Result := XToVar(r);
 end;
 

@@ -31,8 +31,7 @@ uses
   VCL.JDType.TGamma in 'VCL.JDType.TGamma.pas' {JDTypeFormGamma},
   VCL.Dlg.Error in 'VCL.Dlg.Error.pas' {FormError},
   VCL.JDtype.Clolor in 'VCL.JDtype.Clolor.pas' {FormSetColor},
-  VCL.JDtype.AlphaClolor in 'VCL.JDtype.AlphaClolor.pas' {FormSetAlphaColor},
-  VCL.Dlg.ExportLAS in 'VCL.Dlg.ExportLAS.pas' {FormExportLASP3};
+  VCL.JDtype.AlphaClolor in 'VCL.JDtype.AlphaClolor.pas' {FormSetAlphaColor};
 
 {$R *.res}
 

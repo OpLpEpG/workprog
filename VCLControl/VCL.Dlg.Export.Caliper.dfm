@@ -1,0 +1,110 @@
+object FormDlgExportCaliper: TFormDlgExportCaliper
+  Left = 0
+  Top = 0
+  Caption = #1087#1088#1086#1092#1080#1083#1077#1084#1077#1088' '#1074' '#1072#1082'1'
+  ClientHeight = 275
+  ClientWidth = 289
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  DesignSize = (
+    289
+    275)
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label3: TLabel
+    Left = 8
+    Top = 30
+    Width = 58
+    Height = 13
+    Caption = #1044#1083#1080#1085#1072' '#1060#1050#1044
+  end
+  object od: TJvFilenameEdit
+    Left = 8
+    Top = 8
+    Width = 273
+    Height = 21
+    DialogKind = dkSave
+    DefaultExt = 'if'
+    Filter = #1041#1080#1085#1072#1088#1085#1099#1081' '#1092#1072#1081#1083' (*.if,*ak1)|*.if;*.ak1;'
+    DialogOptions = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist]
+    DirectInput = False
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 0
+    Text = ''
+  end
+  object sb: TStatusBar
+    Left = 0
+    Top = 256
+    Width = 289
+    Height = 19
+    Panels = <
+      item
+        Width = 50
+      end>
+  end
+  object btStart: TButton
+    Left = 8
+    Top = 227
+    Width = 75
+    Height = 25
+    Caption = #1057#1090#1072#1088#1090
+    TabOrder = 2
+    OnClick = btExportClick
+  end
+  object btTerminate: TButton
+    Left = 89
+    Top = 227
+    Width = 75
+    Height = 25
+    Caption = #1055#1088#1077#1088#1074#1072#1090#1100
+    TabOrder = 3
+    OnClick = btTerminateClick
+  end
+  object btExit: TButton
+    Left = 207
+    Top = 227
+    Width = 75
+    Height = 25
+    Caption = #1042#1099#1093#1086#1076
+    ModalResult = 1
+    TabOrder = 4
+    OnClick = btExitClick
+  end
+  object Progress: TProgressBar
+    Left = 8
+    Top = 204
+    Width = 273
+    Height = 17
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 5
+  end
+  object edFKD: TEdit
+    Left = 8
+    Top = 46
+    Width = 121
+    Height = 21
+    TabOrder = 6
+    Text = '682'
+  end
+  inline RangeSelect: TFrameRangeSelect
+    Left = 8
+    Top = 72
+    Width = 273
+    Height = 113
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 7
+    ExplicitLeft = 8
+    ExplicitTop = 72
+    ExplicitWidth = 273
+    ExplicitHeight = 113
+    inherited Range: TRangeSelector
+      Width = 273
+      ExplicitWidth = 273
+    end
+  end
+end

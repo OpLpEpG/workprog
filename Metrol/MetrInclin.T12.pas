@@ -2,7 +2,7 @@ unit MetrInclin.T12;
 
 interface
 
-uses AutoMetr.Inclin, MetrInclin.Math, MetrForm,
+uses AutoMetr.Inclin, LuaInclin.Math, MetrForm,
   DeviceIntf, PluginAPI, ExtendIntf, RootIntf, RootImpl, Container, Actns, debug_except, DockIForm, math, MetrInclin,
   Winapi.Windows, Winapi.Messages,
   System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.Bindings.Expression,
@@ -270,7 +270,6 @@ begin
 end;
 
 initialization
-  TMetrInclinMath.Nop();
   RegisterClasses([TFormInclinT12, TTabSheet]);
 //  TRegister.AddType<TFormInclinT12, IForm>.LiveTime(ltSingletonNamed);
 finalization

@@ -19,6 +19,7 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
     FAutoCheck: Boolean;
     FChecked: Boolean;
     FDivider: Boolean;
+    FIsUpdate: Boolean;
   public
     ///	<param name="Capt">
     ///	  им€
@@ -35,7 +36,8 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
     ///	  хоз€ин поддерживает ICaption
     ///	</param>
     constructor Create(const Capt, Categ: string; AImageIndex: Integer; const APaths: string; const AHint: string = '';
-    AAutoCheck: Boolean = False; AChecked: Boolean = False; AGroupIndex: Integer = 0; AEnabled: Boolean = True); virtual;
+    AAutoCheck: Boolean = False; AChecked: Boolean = False; AGroupIndex: Integer = 0; AEnabled: Boolean = True;
+    AIsUpdate: Boolean = False); virtual;
 
     property Caption: string read FCaption;
     property Category: string read FCategory;
@@ -45,19 +47,22 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
     property Checked: Boolean read FChecked;
     property GroupIndex: Integer read FGroupIndex;
     property Enabled: Boolean read FEnabled;
+    property IsUpdate: Boolean read FIsUpdate;
     property Paths: string read FPaths;
   end;
 
   StaticActionAttribute = class(ActionAttribute)
   public
     constructor Create(const Capt, Categ: string; AImageIndex: Integer; const APaths: string; const AHint: string = '';
-    AAutoCheck: Boolean = False; AChecked: Boolean = False; AGroupIndex: Integer = 0; AEnabled: Boolean = True); override;
+    AAutoCheck: Boolean = False; AChecked: Boolean = False; AGroupIndex: Integer = 0; AEnabled: Boolean = True;
+    AIsUpdate: Boolean = False); override;
   end;
 
   DynamicActionAttribute = class(ActionAttribute)
   public
     constructor Create(const Capt, Categ: string; AImageIndex: Integer; const APaths: string; const AHint: string = '';
-    AAutoCheck: Boolean = False; AChecked: Boolean = False; AGroupIndex: Integer = 0; AEnabled: Boolean = True); override;
+    AAutoCheck: Boolean = False; AChecked: Boolean = False; AGroupIndex: Integer = 0; AEnabled: Boolean = True;
+    AIsUpdate: Boolean = False); override;
   end;
 
   TShowInfo = record
@@ -129,17 +134,22 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
   TICustRTTIAction = class(TICustomAction)
   private
     FInstanceType: TRttiInstanceType;
-    FMethodName: string;
+    FMethodNameExec: string;
+    FMethodNameUpdate: string;
     FInstanceName: string;
     FActionClass: string;
-    FMethod: TRttiMethod;
+    FMethodExec: TRttiMethod;
+    FMethodUpdate: TRttiMethod;
     FModelType: ModelType;
     FLiveTime: TLiveTime;
-    function CheckMethod: Boolean;
+    function CheckMethod(const nm: string; var m: TRttiMethod): Boolean;
+    function Invoke(m: TRttiMethod):boolean;
   public
     function Execute: Boolean; override;
+    function Update: Boolean; override;
     property InstanceName: string read FInstanceName write FInstanceName;
-    property ActionMethodName: string read FMethodName write FMethodName;
+    property ActionMethodNameExec: string read FMethodNameExec write FMethodNameExec;
+    property ActionMethodNameUpdate: string read FMethodNameUpdate write FMethodNameUpdate;
     property ActionComponentClass: string read FActionClass write FActionClass;
   end;
 
@@ -149,7 +159,8 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
   public
     constructor Create; override;
   published
-    property ActionMethodName;
+    property ActionMethodNameExec;
+    property ActionMethodNameUpdate;
     property ActionComponentClass;
   end;
 
@@ -157,7 +168,8 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
   protected
     function OwnerExists: Boolean; override;
   published
-    property ActionMethodName;
+    property ActionMethodNameExec;
+    property ActionMethodNameUpdate;
     property InstanceName;
     property ActionComponentClass;
   end;
@@ -169,7 +181,8 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
   public
     constructor CreateUser(atr: ActionAttribute; const InstName: string); reintroduce; overload;
   published
-    property ActionMethodName;
+    property ActionMethodNameExec;
+    property ActionMethodNameUpdate;
     property InstanceName;
     property ActionComponentClass;
   end;
@@ -195,9 +208,11 @@ uses tools;
 
 { ActionAttribute }
 
-constructor ActionAttribute.Create(const Capt, Categ: string; AImageIndex: Integer; const APaths, AHint: string; AAutoCheck, AChecked: Boolean; AGroupIndex: Integer; AEnabled: Boolean);
+constructor ActionAttribute.Create(const Capt, Categ: string; AImageIndex: Integer; const APaths, AHint: string; AAutoCheck, AChecked: Boolean;
+AGroupIndex: Integer; AEnabled, AisUpdate: Boolean);
 begin
   FService := TypeInfo(IAction);
+  FModel := TypeInfo(TICustomAction);
   FCategory := Categ;
   FImagIndex := AImageIndex;
   FHint := AHint;
@@ -206,6 +221,7 @@ begin
   FChecked := AChecked;
   FEnabled := AEnabled;
   FGroupIndex := AGroupIndex;
+  FIsUpdate := AIsUpdate;
   if not Capt.StartsWith('-') then FCaption := Capt
   else
    begin
@@ -217,7 +233,7 @@ end;
 
 { StaticActionAttribute }
 
-constructor StaticActionAttribute.Create(const Capt, Categ: string; AImageIndex: Integer; const APaths, AHint: string; AAutoCheck, AChecked: Boolean; AGroupIndex: Integer; AEnabled: Boolean);
+constructor StaticActionAttribute.Create(const Capt, Categ: string; AImageIndex: Integer; const APaths, AHint: string; AAutoCheck, AChecked: Boolean; AGroupIndex: Integer; AEnabled, AIsUpdate: Boolean);
 begin
   inherited;
   FModel := TypeInfo(TStaticAction);
@@ -225,7 +241,7 @@ end;
 
 { DinamicActionAttribute }
 
-constructor DynamicActionAttribute.Create(const Capt, Categ: string; AImageIndex: Integer; const APaths, AHint: string; AAutoCheck, AChecked: Boolean; AGroupIndex: Integer; AEnabled: Boolean);
+constructor DynamicActionAttribute.Create(const Capt, Categ: string; AImageIndex: Integer; const APaths, AHint: string; AAutoCheck, AChecked: Boolean; AGroupIndex: Integer; AEnabled, AIsUpdate: Boolean);
 begin
   inherited;
   FModel := TypeInfo(TDynamicAction);
@@ -425,31 +441,45 @@ end;
 
 { TICustRTTIAction }
 
-function TICustRTTIAction.CheckMethod: Boolean;
+function TICustRTTIAction.CheckMethod(const nm: string; var m: TRttiMethod): Boolean;
  var
   ct: TRttiContext;
 begin
-  if Assigned(FMethod) then Exit(True);
+  if Assigned(m) then Exit(True);
+  if nm = '' then Exit(False);
   ct := TRttiContext.Create;
   FModelType := GContainer.GetModelType(FActionClass);
   FLiveTime := GContainer.GetModelLiveTime(FModelType);
   FInstanceType := ct.GetType(FModelType).AsInstance;
-  FMethod := FInstanceType.GetMethod(FMethodName);
-  Result := Assigned(FMethod);
+  m := FInstanceType.GetMethod(nm);
+  Result := Assigned(m);
 end;
 
-function TICustRTTIAction.Execute: Boolean;
+function TICustRTTIAction.Invoke(m: TRttiMethod): boolean;
  var
   i: IInterface;
 begin
-  if Caption = '-' then Exit(inherited Execute);
-  if not CheckMethod then Exit(False);
   Result := True;
-  if FMethod.IsClassMethod then FMethod.Invoke(FInstanceType.MetaclassType, [TValue.From<IAction>(Self as IAction)])
+  if m.IsClassMethod then m.Invoke(FInstanceType.MetaclassType, [TValue.From<IAction>(Self as IAction)])
   else if ((FLiveTime in [ltSingletonNamed, ltTransientNamed]) and GContainer.TryGetInstance(FModelType, InstanceName, i))
        or ((FLiveTime = ltSingleton) and GContainer.TryGetInstance(FModelType, i)) then
-            FMethod.Invoke(TObject(i), [TValue.From<IAction>(Self as IAction)])
+            m.Invoke(TObject(i), [TValue.From<IAction>(Self as IAction)])
   else Result := False;
+end;
+
+function TICustRTTIAction.Execute: Boolean;
+begin
+  if Caption = '-' then Exit(inherited Execute);
+  if not CheckMethod(FMethodNameExec, FMethodExec) then Exit(inherited Execute);
+  Result := Invoke(FMethodExec);
+  ActionComponent := nil;
+end;
+
+function TICustRTTIAction.Update: Boolean;
+begin
+  if Caption = '-' then Exit(inherited Update);
+  if not CheckMethod(FMethodNameUpdate, FMethodUpdate) then Exit(inherited Update);
+  Result := Invoke(FMethodUpdate);
   ActionComponent := nil;
 end;
 
@@ -542,7 +572,10 @@ begin
   sa := TStaticAction.CreateUser(StaticActionAttribute(Atr));
   sa.Name := s;
   sa.ActionComponentClass := RootModel.Name;
-  sa.ActionMethodName := RttiMember.Name;
+  if  StaticActionAttribute(Atr).IsUpdate then
+    sa.ActionMethodNameUpdate := RttiMember.Name
+  else
+    sa.ActionMethodNameExec := RttiMember.Name;
   TRegister.AddType<TStaticAction>.AddInstance(s, sa as IInterface);
   (GlobalCore as IActionProvider).RegisterAction(sa);
   // создаютс€ при при загрузке будет позднее вызван ResetActions в основной программе
@@ -576,7 +609,10 @@ begin
   da := TDynamicAction.CreateUser(DynamicActionAttribute(Atr), txt);
   da.Name := s;
   da.ActionComponentClass := RootModel.Name;
-  da.ActionMethodName := RttiMember.Name;
+  if  DynamicActionAttribute(Atr).IsUpdate then
+    da.ActionMethodNameUpdate := RttiMember.Name
+  else
+    da.ActionMethodNameExec := RttiMember.Name;
   da.InstanceName := InstName;
   TRegister.AddType<TDynamicAction>.AddInstance(s, da as IInterface);
   (GlobalCore as IActionProvider).RegisterAction(da);

@@ -2,9 +2,9 @@ unit MetrInclin.Math2;
 
 interface
 
-uses  Vector, System.Math.Vectors,
+uses  Vector, System.Math.Vectors, LuaInclin.Math,
       SysUtils, System.Classes, math, System.Variants, Container, RootImpl, System.Generics.Collections, Winapi.ActiveX,
-      XMLScript, XMLScript.Math, tools, debug_except, MathIntf, Xml.XMLIntf, ExtendIntf, MetrInclin.Math;
+      tools, debug_except, MathIntf, Xml.XMLIntf, ExtendIntf;
 
 
 type

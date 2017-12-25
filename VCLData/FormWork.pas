@@ -32,6 +32,7 @@ type
     procedure ClearTree;
     procedure SetBindWorkRes(const Value: TWorkEventRes);
     procedure SetDataDevice(const Value: string);
+    function GetDataDevice: string;
     procedure NConnectClick(Sender: TObject);
     procedure SetRemoveDevice(const Value: string);
     procedure SetMetaDataInfo(const Value: TInfoEventRes);
@@ -57,7 +58,7 @@ type
     property C_MetaDataInfo: TInfoEventRes read FMetaDataInfo write SetMetaDataInfo; //live binding
     property C_RemoveDevice: string read FDataDevice write SetRemoveDevice;
   published
-    property DataDevice: string read FDataDevice write SetDataDevice;
+    property DataDevice: string read GetDataDevice write SetDataDevice;
   end;
 
 implementation
@@ -186,6 +187,7 @@ end;
 procedure TFormWrok.ppMPopup(Sender: TObject);
  var
   i: Integer;
+  FRoot,Fvis: Boolean;
 begin
   FEditNode := nil;
   FEditData := nil;
@@ -194,8 +196,12 @@ begin
   FEditNode := Tree.HotNode;
   FEditData := Tree.GetNodeData(FEditNode);
   TDebug.Log(FEditData.XMNode.NodeName);
-  if not FEditData.XMNode.HasAttribute(AT_ARRAY) then Exit;
-  for i := 0 to  ppM.Items.Count-1  do ppM.Items[i].Visible := True;
+  ExecXTree(FEditData.XMNode, procedure (n: IXMLNode)
+  begin
+    if (n.NodeName = T_WRK)or (n.NodeName = T_RAM) then FRoot := True;
+    if  n.HasAttribute(AT_ARRAY) then Fvis := True;
+  end);
+  if Fvis and not FRoot then for i := 0 to ppM.Items.Count-1 do ppM.Items[i].Visible := True;
 end;
 
 procedure TFormWrok.NShowClick(Sender: TObject);
@@ -216,6 +222,11 @@ begin
   Tree.DefaultNodeHeight := Abs(Font.Height) + Tree.TextMargin*2;
   Tree.Header.Height := Tree.DefaultNodeHeight;
   for pv in Tree.Nodes do Tree.NodeHeight[pv] := Tree.DefaultNodeHeight;
+end;
+
+function TFormWrok.GetDataDevice: string;
+begin
+  Result := FDataDevice;
 end;
 
 procedure TFormWrok.SetMetaDataInfo(const Value: TInfoEventRes);
@@ -333,7 +344,7 @@ end;
 
 initialization
   RegisterClass(TFormWrok);
-  TRegister.AddType<TFormWrok, IForm>.LiveTime(ltSingletonNamed);
+  TRegister.AddType<TFormWrok, IForm, ISetDevice>.LiveTime(ltSingletonNamed);
 finalization
   GContainer.RemoveModel<TFormWrok>;
 end.

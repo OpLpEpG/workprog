@@ -3,7 +3,7 @@ unit MetrNNK;
 interface
 
 uses system.UITypes,
-  DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, MetrForm, tools, XMLScript.Math,
+  DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, MetrForm, tools, XMLLua.Math,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, VirtualTrees,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Menus,

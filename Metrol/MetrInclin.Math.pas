@@ -2,9 +2,12 @@
 
 interface
 
+{$I Script.inc}
+
 uses  Vector,
       SysUtils, System.Classes, math, System.Variants, Container, RootImpl, System.Generics.Collections, Winapi.ActiveX,
-      XMLScript, XMLScript.Math, tools, debug_except, MathIntf, Xml.XMLIntf, ExtendIntf;
+      XMLScript, XMLScript.Math,
+       tools, debug_except, MathIntf, Xml.XMLIntf, ExtendIntf;
 
 type
   EExportReportException = class(EBaseException);
@@ -317,7 +320,7 @@ end;
 
 class constructor TMetrInclinMath.Create;
 begin
-  TXmlScript.RegisterMethods([
+  TXmlScriptInner.RegisterMethods([
   'procedure ExecStepIncl_OLD(stp: Integer; alg, trr: Variant)',
   'procedure ImportIncFile(const TrrFile: string; NewTrr: Variant)',
   'procedure ExportToInc(const TrrFile: string; NewTrr: Variant)',
@@ -339,6 +342,10 @@ begin
   else if MethodName = 'EXPORTP3TOCALC' then  ExportP3ToCalc(Params[0], Params[1])
   else if MethodName = 'EXPORTP4TOCALC' then  ExportP4ToCalc(Params[0], Params[1])
 end;
+class procedure TMetrInclinMath.Nop;
+begin
+
+end;
 
 class function TMetrInclinMath.CorrAngle(ang: Double): Double;
 begin
@@ -353,12 +360,7 @@ end;
 
 class destructor TMetrInclinMath.Destroy;
 begin
-  TXmlScript.UnRegisterMethods(CallMeth);
-end;
-
-class procedure TMetrInclinMath.Nop;
-begin
-
+  TXmlScriptInner.UnRegisterMethods(CallMeth);
 end;
 
 class function TMetrInclinMath.AddStep(Step: integer; const Info: string; trr: variant): Variant;

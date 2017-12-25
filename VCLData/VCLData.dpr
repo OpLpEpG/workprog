@@ -28,8 +28,6 @@ uses
   AbstractDlgParams in 'AbstractDlgParams.pas' {FormParamsAbstract},
   DataDBForm in 'DataDBForm.pas',
   FormDBCursor in 'FormDBCursor.pas' {FormCursor},
-  FormDBGR in 'FormDBGR.pas' {FormGraph},
-  DlgEditParam in 'DlgEditParam.pas' {FormEditParam},
   DlgFltParam in 'DlgFltParam.pas',
   DlgViewParam in 'DlgViewParam.pas',
   DlgFromToGlu in 'DlgFromToGlu.pas' {FormDlgGluFilter},
@@ -37,7 +35,9 @@ uses
   VCL.FormShowArray in 'VCL.FormShowArray.pas' {FormShowArray},
   VCL.CustomDataForm in 'VCL.CustomDataForm.pas',
   VCL.GraphDataForm in 'VCL.GraphDataForm.pas' {GraphDataForm},
-  ExportLas in 'ExportLas.pas' {FormParamsAbstract3};
+  ExportLas in 'ExportLas.pas' {FormParamsAbstract3},
+  VCL.TableDataForm in 'VCL.TableDataForm.pas' {TableDataForm},
+  DlgEditParam in 'DlgEditParam.pas' {FormEditParam};
 
 {$R *.res}
 

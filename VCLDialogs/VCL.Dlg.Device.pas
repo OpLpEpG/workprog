@@ -24,7 +24,7 @@ type
 
 implementation
 
-uses tools;
+uses tools, Container;
 {$R *.dfm}
 
 { TDlgSetupDev }

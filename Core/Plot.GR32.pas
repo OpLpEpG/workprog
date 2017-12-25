@@ -7,7 +7,7 @@ uses
   Plot.DataLink, Vcl.Graphics, Vcl.Themes, Winapi.Windows, Winapi.Messages,
   System.Math, GR32_Math, GR32, GR32_Image, GR32_RangeBars, GR32_Blend,
   GR32_Polygons, GR32_Resamplers, GR32_VectorUtils, GR32_Geometry, RootImpl,
-  RootIntf, tools, JDtools, debug_except, CustomPlot;
+  Container, tools, JDtools, debug_except, CustomPlot;
 
 type
   TGR32GraphicCollumn = class(TGraphColmn, ICaption)
@@ -842,7 +842,7 @@ begin
             for i := 0 to Length(pntrs) - 1 do
             begin
               pntrs[i].X := (i - p.DeltaX) * pp2mm * p.ScaleX;
-              pntrs[i].Y := Ye + X[i];
+              pntrs[i].Y := Ye - X[i];
             end;
           end;
         end);

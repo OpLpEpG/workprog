@@ -1,0 +1,3 @@
+
+{$DEFINE USE_LUA_SCRIPT}
+

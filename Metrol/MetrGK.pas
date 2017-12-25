@@ -2,7 +2,9 @@
 
 interface
 
-uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, debug_except, DockIForm, MetrForm, Container, Actns, ExcelImpl,XMLScript,
+ {$M+}
+
+uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, debug_except, DockIForm, MetrForm, Container, Actns, ExcelImpl, XMLLua, VerySimple.Lua.Lib,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.StdCtrls, Vcl.ExtCtrls, Winapi.ActiveX,
   VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, Vcl.Menus,
@@ -25,8 +27,8 @@ type
 //    procedure NParamClick(Sender: TObject);
     class constructor Create;
     class destructor Destroy;
-    class function CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
-    class procedure ExportGKToCalc(const TrrFile: string; NewTrr: variant; const GkNgk: string); static;
+//    class function CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
+    class procedure ExportGKToCalc(const TrrFile: string; NewTrr: IXMLNode; const GkNgk: string); overload; static;
   protected
     procedure Loaded; override;
     procedure DoStopAtt(AttNode: IXMLNode); override;
@@ -45,6 +47,8 @@ type
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
     class function MetrolType: string; override;
+  published
+    class function ExportGKToCalc(L: lua_State): Integer; overload; cdecl; static;
   end;
 
   TFormGK_LS = class(TFormGK)
@@ -90,14 +94,14 @@ uses {MetrGK.CheckFormSetup,} tools;
 {$REGION 'TFormGK'}
 class constructor TFormGK.Create;
 begin
-  TXmlScript.RegisterMethods([
-  'procedure ExportGKToCalc(const TrrFile: string; NewTrr: variant; const GkNgk: string)'
-  ], CallMeth);
+//  TXmlScriptInner.RegisterMethods([
+//  'procedure ExportGKToCalc(const TrrFile: string; NewTrr: variant; const GkNgk: string)'
+//  ], CallMeth);
 end;
 
 class destructor TFormGK.Destroy;
 begin
-  TXmlScript.UnRegisterMethods(CallMeth);
+//  TXmlScriptInner.UnRegisterMethods(CallMeth);
 end;
 
 class function TFormGK.MetrolMame: string;
@@ -116,18 +120,18 @@ end;
 //     if TrrFile <> '' then FileData.OwnerDocument.SaveToFile(TrrFile)
 //end;
 
-class function TFormGK.CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
-begin
-  if MethodName = 'EXPORTGKTOCALC' then  ExportGKToCalc(Params[0], Params[1], Params[2])
-end;
+//class function TFormGK.CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
+//begin
+//  if MethodName = 'EXPORTGKTOCALC' then  ExportGKToCalc(Params[0], Params[1], Params[2])
+//end;
 
-class procedure TFormGK.ExportGKToCalc(const TrrFile: string; NewTrr: variant; const GkNgk: string);
+class procedure TFormGK.ExportGKToCalc(const TrrFile: string; NewTrr: IXMLNode; const GkNgk: string);
  var
   root: variant;
 begin
-  if GkNgk = 'NGK' then  root := NewTrr.TNGK else root := NewTrr.TGK;
-  if not TVxmlData(root).Node.HasAttribute('DevName') or
-     not TVxmlData(NewTrr).Node.ParentNode.ParentNode.HasAttribute(AT_SERIAL) then
+  if GkNgk = 'NGK' then  root := NewTrr.ChildNodes['TNGK'] else root := NewTrr.ChildNodes['TGK'];
+  if not root.HasAttribute('DevName') or
+     not NewTrr.ParentNode.ParentNode.HasAttribute(AT_SERIAL) then
      raise EBaseException.Create('Параметры метрологии не установлены');
   TThread.CreateAnonymousThread(procedure
    var
@@ -148,19 +152,19 @@ begin
       Sheet := r.Document.GetSheets.getByName('Метрология ГК');
       for i := 1 to 10 do if GkNgk = 'NGK' then
        begin
-        st := XToVar(GetXNode(TVxmlData(NewTrr).Node, 'TNGK.STEP'+i.ToString));
+        st := XToVar(GetXNode(NewTrr, 'TNGK.STEP'+i.ToString));
          v[i-1, 0] := Double(st.нгк.DEV.VALUE);
        end
       else
        begin
-        st := XToVar(GetXNode(TVxmlData(NewTrr).Node, 'TGK.STEP'+i.ToString));
+        st := XToVar(GetXNode(NewTrr, 'TGK.STEP'+i.ToString));
          v[i-1, 0] := Double(st.гк.DEV.VALUE);
        end;
       Range := Sheet.getCellRangeByName('B12:K12');
       Range.setDataArray(v);
 
       SetCell('E5', root.DevName);
-      SetCell('G5', TVxmlData(NewTrr).Node.ParentNode.ParentNode.Attributes[AT_SERIAL]);
+      SetCell('G5', NewTrr.ParentNode.ParentNode.Attributes[AT_SERIAL]);
       SetCell('B5', root.TIME_ATT);
       SetCell('I34', root.Metrolog);
 
@@ -247,6 +251,13 @@ begin
   inherited;
   DoUpdateAlpha;
   DoUpdateChart;
+end;
+
+class function TFormGK.ExportGKToCalc(L: lua_State): Integer;
+begin
+  //const TrrFile: string; NewTrr: IXMLNode; const GkNgk: string);
+  ExportGKToCalc(string(lua_tostring(L,1)), TXMLLua.XNode(L,2), string(lua_tostring(L,3)));
+  Result := 0;
 end;
 
 procedure TFormGK.Loaded;

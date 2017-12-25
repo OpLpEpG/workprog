@@ -2,7 +2,7 @@ unit AutoMetr.Inclin;
 
 interface
 
-uses System.SysUtils, System.Generics.Collections, MetrInclin.Math, Vcl.ExtCtrls, System.Types, Vcl.Dialogs,
+uses System.SysUtils, System.Generics.Collections, Vcl.ExtCtrls, System.Types, Vcl.Dialogs,
 ExtendIntf, MetrForm, Xml.XMLIntf, RootIntf, RootImpl, UakiIntf, Container, DeviceIntf, debug_except, tools;
 
 type
@@ -29,6 +29,25 @@ type
    procedure Start(); override;
    procedure Iterate; override;
   end;
+
+  // 1 подождать выполнение заданий стола
+  // 2 итераци€ми найти макс или мин  90 45 и тд
+  //
+  { TODO :
+т.к. нет команды относительного поворота нужно продумать работу алгоритма в районе 0
+пока не делаю сложно разработать акуратную работу}
+  TGOMaxMinVIzir = class(TGOTask)
+   LastAmp: Double;
+   LastAng: TAngle;
+   FIsRun: Boolean;
+   FIsMax: Integer;
+   Fpath: string;
+   constructor Create(AOwner: TinclAuto; NewVizir: TAngle; axsVizir: IAxis; const pathXorY: string; IsMax: Boolean);
+   function AxisMax: Double;
+   procedure Start(); override;
+   procedure Iterate; override;
+  end;
+
 
   TinclAuto = class(TAutomatMetrology)
   private
@@ -68,8 +87,13 @@ uses math;
 { TGOTask }
 
 function TGOTask.CheckAngle(CurAndle: TAngle): Boolean;
+  function DeltaAngle(ang: Double): Double;
+  begin
+    Result := DegNormalize(ang);
+    if Result > 180  then Result := Result - 360;
+  end;
 begin
-  Result := Abs(TMetrInclinMath.DeltaAngle(Ang - CurAndle)) < FTolerance
+  Result := Abs(DeltaAngle(Ang - CurAndle)) < FTolerance
 end;
 
 constructor TGOTask.Create(AOwner: TinclAuto; Angl: TAngle; axs: IAxis; tolerance: Double);
@@ -168,6 +192,45 @@ begin
   Owner.Report(samRun, Format('ѕереход с %.1f  на %.1f  приб: %.1f надо: %.1f',[ax.CurrentAngle.Angle, a.Angle, Ang.Angle, da.Angle]));
   ax.GotoAngle(a);
 end;
+
+
+{ TGOMaxMinVIzir }
+
+function TGOMaxMinVIzir.AxisMax: Double;
+ var
+  x: IXMLNode;
+begin
+  if not TryGetX(Owner.FMetr, Fpath, x, 'VALUE') then raise EFormMetrolog.Createfmt('ѕуть %s не найден', [Fpath]);
+  Result := FIsMax * X.NodeValue;
+end;
+
+constructor TGOMaxMinVIzir.Create(AOwner: TinclAuto; NewVizir: TAngle; axsVizir: IAxis; const pathXorY: string; IsMax: Boolean);
+begin
+  Fpath := pathXorY;
+  if IsMax then FIsMax := 1 else FIsMax := -1;
+  inherited Create(AOwner, NewVizir, axsVizir, 2);
+end;
+
+procedure TGOMaxMinVIzir.Iterate;
+begin
+  if FIsRun then
+   begin
+
+   end
+  else if Owner.FTask.Count = 1 then
+   begin
+    FIsRun := True;
+    IterCnt := 10;
+    LastAmp := AxisMax;
+    LastAng := ax.CurrentAngle;
+   end;
+end;
+
+procedure TGOMaxMinVIzir.Start;
+begin
+  FIsRun := False;
+end;
+
 
 { TinclAuto }
 

@@ -3,7 +3,7 @@ unit MetrInclin.CheckForm;
 interface
 
 uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, Container, Actns, debug_except, DockIForm, math, MetrForm, AutoMetr.Inclin, RootImpl,
-     MetrInclin.Math, XMLScript.Math, UakiIntf,
+     LuaInclin.Math, XMLLua.Math, UakiIntf,
      VirtualTrees, Xml.XMLIntf, Vcl.Menus, JvInspector,
      Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
      Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls;
@@ -36,7 +36,7 @@ type
   protected
     FStep: record
             stp: Integer;
-            root: Variant;
+            root: IXMLNode;
            end;
     FCurAzim, FCurViz, FCurZu: Double;
     FExtendMenus: TMenuItem;
@@ -312,16 +312,19 @@ begin
 end;
 
 function TFormInclinCheck.AddStep(const Info: string; a, z, o: Double): Variant;
+ var
+  r: IXMLNode;
 begin
-  Result := TMetrInclinMath.AddStep(FStep.stp, Format(Info, [a,z,o]), FStep.root);
-  TXMLScriptMath.AddXmlPath(Result, 'зенит.CLC');
-  TXMLScriptMath.AddXmlPath(Result, 'азимут.CLC');
-  TXMLScriptMath.AddXmlPath(Result, 'отклонитель.CLC');
-  TXMLScriptMath.AddXmlPath(Result, 'маг_отклон.CLC');
-  TXMLScriptMath.AddXmlPath(Result, 'амплит_accel.CLC');
-  TXMLScriptMath.AddXmlPath(Result, 'амплит_magnit.CLC');
-  TXMLScriptMath.AddXmlPath(Result, 'маг_наклон.CLC');
-  TXMLScriptMath.AddXmlPath(Result, 'СТОЛ');
+  r := TMetrInclinMath.AddStep(FStep.stp, Format(Info, [a,z,o]), FStep.root);
+  TXMLScriptMath.AddXmlPath(r, 'зенит.CLC');
+  TXMLScriptMath.AddXmlPath(r, 'азимут.CLC');
+  TXMLScriptMath.AddXmlPath(r, 'отклонитель.CLC');
+  TXMLScriptMath.AddXmlPath(r, 'маг_отклон.CLC');
+  TXMLScriptMath.AddXmlPath(r, 'амплит_accel.CLC');
+  TXMLScriptMath.AddXmlPath(r, 'амплит_magnit.CLC');
+  TXMLScriptMath.AddXmlPath(r, 'маг_наклон.CLC');
+  TXMLScriptMath.AddXmlPath(r, 'СТОЛ');
+  Result := XToVar(r);
   Result.зенит.CLC.VALUE := 0;
   Result.зенит.METR := ME_ANGLE;
   Result.азимут.CLC.VALUE := 0;
@@ -364,7 +367,7 @@ function TFormInclinCheck.UserSetupAlg(alg: IXMLNode): Boolean;
   end;
 begin
   Result := True;
-  FStep.root := XToVar(alg);
+  FStep.root := alg;
   FStep.stp := 1;
   FCurZu := 30;
   FCurAzim := 0;

@@ -107,6 +107,13 @@ object FormMetr: TFormMetr
     OnPopup = ppTabPopup
     Left = 360
     Top = 168
+    object NCompile: TMenuItem
+      Caption = #1054#1090#1082#1086#1084#1087#1080#1083#1080#1088#1086#1074#1072#1090#1100
+      OnClick = NCompileClick
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
     object Nexp: TMenuItem
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1086#1074#1099#1081' '#1101#1082#1089#1087#1086#1088#1090
       OnClick = NexpClick

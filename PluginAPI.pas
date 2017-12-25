@@ -35,7 +35,7 @@ type
     property Version: TVersion read GetVersion;
   end;
 
-  EClearItem = (ecIO, ecDevice, ecForm);
+  EClearItem = (ecIO, ecDevice, ecForm, ecFile);
   EClearItems = set of EClearItem;
   ///	<summary>
   ///	  контейнер всех динамических объектов (один из плугинов)
@@ -47,7 +47,7 @@ type
     ///	<summary>
     ///	  Удаляет  динамически созданные объекты
     ///	</summary>
-    procedure ClearItems(ClearItems: EClearItems = [ecIO, ecDevice, ecForm]);
+    procedure ClearItems(ClearItems: EClearItems = [ecIO, ecDevice, ecForm, ecFile]);
     ///	<summary>
     ///	  сообщает динамическим объектам (для показа в меню осн.прог.)
     ///	</summary>
@@ -156,6 +156,9 @@ type
   Dialog_RamRead = interface
   ['{B24C949D-2774-4A98-8077-A26CCC7B722A}']
   end;
+  Dialog_ClcWrite = interface
+  ['{FF7A4140-4795-43C5-A90F-183AA1F70B09}']
+  end;
   Dialog_SetupProject = interface
   ['{03E77FD4-62AD-4821-BA63-C5BAB425F9FA}']
   end;
@@ -194,6 +197,9 @@ type
   end;
   Dialog_Export = interface
   ['{419B512F-A0EA-4D08-ABFA-43A032539F3C}']
+  end;
+  Dialog_Export_Caliper = interface
+  ['{CE0DE5D0-56BC-4285-93DF-445AFC7EAAF0}']
   end;
   Dialog_Error = interface
   ['{679FB10F-DD4B-44CB-BAF7-8AC674BE9B04}']

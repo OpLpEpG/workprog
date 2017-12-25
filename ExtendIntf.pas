@@ -2,7 +2,7 @@ unit ExtendIntf;
 
 interface
 
-uses
+uses Container, tools,
      DeviceIntf, PluginAPI, RootIntf, System.UITypes, System.TypInfo, Xml.XMLIntf, Rtti,
      winapi.Windows, Vcl.Graphics, SysUtils, VCL.Controls, VCL.Menus, System.Bindings.Expression, System.Classes, Data.DB;
 
@@ -76,12 +76,13 @@ type
   ['{0AC2EF7D-DACE-49FC-82D1-7607F8EE47AB}']
     procedure Show;
   end;
+
   ISetDevice = interface
   ['{E52C6567-7F1E-4EED-842A-B6EEA2D71380}']
     procedure SetDataDevice(const Value: string);
+    function GetDataDevice: string;
+    property DataDevice: string read GetDataDevice write SetDataDevice;
   end;
-
-
 
   IControlForm = interface(IForm)
   ['{1CBBE75B-6C6B-4C62-8458-79E98D99A4E8}']
@@ -97,11 +98,12 @@ type
     property SubControlName: String read GetSubControlName write SetSubControlName;
   end;
 
-  IPlotForm = interface(IForm)
-  ['{3B525A57-E0D2-41AC-91FA-F7265005EAEB}']
-    function Plot: IInterface;
-    procedure SetContextPopupParametr(Parametr: TObject);
-  end;
+
+//  IPlotForm = interface(IForm)
+//  ['{3B525A57-E0D2-41AC-91FA-F7265005EAEB}']
+//    function Plot: IInterface;
+//    procedure SetContextPopupParametr(Parametr: TObject);
+//  end;
 
   IDialog = interface(IForm)
   ['{CF5F6A82-A4B3-41C9-9540-F3726204A237}']
@@ -188,28 +190,38 @@ type
     function ConstructDataFileName(Root: IXMLNode; const  SubName: string = ''): string;
     function DataFileExists(Root: IXMLNode; const SubDir: string = ''; const SubName: string = ''): Boolean;
     procedure DataSectionDelete(Root: IXMLNode);
+    procedure DeviceDataDelete(Dev: IDevice);
     procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
     procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen, CurAdr, CurKadr: Integer; CurTime: TDateTime);
+    procedure SaveEnd(Data: IXMLInfo);
   end;
 
-  IFileData = interface
+  IFileData = interface(IManagItem)
   ['{4405AC54-233B-4E82-9065-F1852B93337E}']
     procedure Lock;
     procedure UnLock;
     function GetPosition: Int64;
     function GetSize: Int64;
+    function GetDataSize: Int64;
     procedure SetPosition(const Value: Int64);
     function GetFileName: string;
     function Read(Count: Integer; out PData: Pointer; From: Int64 = -1): Integer;
-    function Write(Count: Integer; PData: Pointer;  From: Int64 = -1): Integer;
+    function Write(Count: Integer; PData: Pointer;  From: Int64 = -1; doBind: Boolean = True): Integer;
     property FileName: string read GetFileName;
     property Position: Int64 read GetPosition write SetPosition;
     property Size: Int64 read GetSize;
+    property DataSize: Int64 read GetDataSize;
   end;
+
+//  IFileEnum = interface(IServiceManager<IFileData>)
+//  ['{878DB917-B6CD-44BE-9D9D-3FD2BB07D18B}']
+//    function GetFileData(const FileName: string; Initialize: Boolean = True): IFileData;
+//  end;
 
   ICashedData = interface
   ['{787172A0-1677-4E86-B473-D9864BD0C552}']
     procedure SetCashSize(const Value: Integer);
+    procedure EndWrite;
     function GetCashSize: Integer;
     function GetMaxCashSize: Int64;
     property CashSize: Integer read GetCashSize write SetCashSize;
@@ -233,6 +245,9 @@ type
                           Hidden: Boolean = True;
                           ReadOnly: Boolean = False;
                           DataType: Integer = -1);
+
+    function DelayStart: TDateTime;
+    function IntervalWork: TDateTime;
 
     property Option[const Name: string]: Variant read GetOption write SetOption;
   end;
@@ -350,6 +365,38 @@ type
     property DecimalSeparator: Char read GetDecimalSeparator;
   end;
 
+  IXMLScript = interface
+  ['{6FE588DE-5D74-414A-991C-AA3C3AA30222}']
+  //private
+    function GetScriptRoot: IXMLNode;
+    procedure SetScriptRoot(const Value: IXMLNode);
+    function PropGetLines: TStrings;
+    procedure PropSetLines(const Value: TStrings);
+    function  GetErrorMsg: String;
+    function  GetErrorPos: String;
+  //public
+    procedure AddXML(Aadr: Integer; const RnPath: string; TrRoot, RnRoot: IXMLNode;  Script: IXMLNode; const ScriptAtr: string; const RootPrefix: string = '');
+    procedure ClearLines;
+    function Compile: Boolean;
+    function CallFunction(const Name: String; const Params: TArray<Variant>; Nres: Integer = 0): TArray<Variant>;
+    procedure Execute(); overload;
+    procedure Execute(const ExePath: string); overload;
+    procedure Execute(const ExePath: string; adr: Integer); overload;
+    procedure GetMetrStrings(var Values: TStrings; node: IXMLNode = nil);
+    procedure SetMetr(node: IXMLNode; ExeSc: IXmlScript; ExecSetup: Boolean);
+    property Lines: TStrings read PropGetLines write PropSetLines;
+    property ErrorMsg: String read GetErrorMsg;
+    property ErrorPos: String read GetErrorPos;
+    property ScriptRoot: IXMLNode read GetScriptRoot write SetScriptRoot;
+  end;
+
+  IXMLScriptFactory = interface
+  ['{F4A7A436-41E7-474D-B4DF-9D0CF9AE2405}']
+    function GetScriptRoot: IXMLNode;
+    function Get(AOwner: TComponent): IXMLScript;
+    function ScriptExec(TrrData, Data: IXMLNode; const RootName, Name, Attr: string): Boolean;
+    property ScriptRoot: IXMLNode read GetScriptRoot;
+  end;
 //  IExportToPSK = interface
 //  ['{83AF1A77-DF8A-4CDD-8AD9-A076F73DF487}']
 //   procedure ExportToPSK6(const IfFileName: string);
@@ -368,8 +415,8 @@ type
  // Inputdata  Dialog  interface вспомогательный
 
  // обмен данными по мышке
-  StatusDataAsk = (sdaGood, sdaUnknownTypeData, sdaCancel, sdaBadData);
-  TAnswerFunc<T> = reference to procedure (Rez: StatusDataAsk; Data: T);
+//  StatusDataAsk = (sdaGood, sdaUnknownTypeData, sdaCancel, sdaBadData);
+//  TAnswerFunc<T> = reference to procedure (Rez: StatusDataAsk; Data: T);
 //  IDataAsk = interface
 //  ['{00597E97-42AC-4EC4-8350-04D4D1C5A384}']
 //    procedure Ask<T>(Data: T; Func: TResultDataAskFunc);
@@ -378,30 +425,30 @@ type
 //     class procedure Ask<TAsk, TAns>(Data: TAsk; Func: TResultDataAskFunc<TAns>);
 //   end;
 
-  TAskRamY = type string;
-  TAskPlotFormFormMouse = type string;
-  TAnswePlotFormFormMouse = record
-   X, Y: Integer;
-   Active: Boolean;
-   Form: IPlotForm;
-  end;
+//  TAskRamY = type string;
+//  TAskPlotFormFormMouse = type string;
+//  TAnswePlotFormFormMouse = record
+//   X, Y: Integer;
+//   Active: Boolean;
+//   Form: IPlotForm;
+//  end;
 
-  IDataAsk = interface
-  ['{5A5A8DD5-BA93-478F-A41F-BDFA83CDC86F}']
-    function Check(Ask, Ans: PTypeInfo): Boolean;
-  end;
+//  IDataAsk = interface
+//  ['{5A5A8DD5-BA93-478F-A41F-BDFA83CDC86F}']
+//    function Check(Ask, Ans: PTypeInfo): Boolean;
+//  end;
 
-  IDataAsk<TAsk, TAns> = interface(IDataAsk)
-  ['{66931295-08FF-4E89-A4E7-175CB1A80254}']
-    function GetTAsk: TAsk;
-    procedure Answer(Rez: StatusDataAsk; const Ans: TAns);
-    property Ask: TAsk read GetTAsk;
-  end;
-
-  IDataAnswer = interface
-  ['{471DB150-DD27-4245-9C1F-2ABE01C79269}']
-    procedure Answer(Rez: StatusDataAsk);
-  end;
+//  IDataAsk<TAsk, TAns> = interface(IDataAsk)
+//  ['{66931295-08FF-4E89-A4E7-175CB1A80254}']
+//    function GetTAsk: TAsk;
+//    procedure Answer(Rez: StatusDataAsk; const Ans: TAns);
+//    property Ask: TAsk read GetTAsk;
+//  end;
+//
+//  IDataAnswer = interface
+//  ['{471DB150-DD27-4245-9C1F-2ABE01C79269}']
+//    procedure Answer(Rez: StatusDataAsk);
+//  end;
 
   // экспортирование данных в Exel OO Calc
 

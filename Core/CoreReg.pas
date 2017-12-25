@@ -2,7 +2,7 @@ unit CoreReg;
 
 interface
 
-uses System.Classes, RootImpl, Plot, Plot.DB, EditControl, OtklonitelPaintClass, CustomPlot, DataImportImpl, LasDataSet;//, DBGrid;
+uses System.Classes, RootImpl, EditControl, OtklonitelPaintClass, CustomPlot, DataImportImpl, LasDataSet, RangeSelector;//, DBGrid;
 
 procedure Register;
 
@@ -10,7 +10,7 @@ implementation
 
 procedure Register;
 begin
-  RegisterComponents('Горизонт', [TCPageControl, TPlot, TPlotDB, TDataExchangeEdit, TOtklonitelPaint, TGraph, TCNavigator]);
+  RegisterComponents('Горизонт', [TCPageControl, TDataExchangeEdit, TOtklonitelPaint, TGraph, TCNavigator, TRangeSelector]);
 end;
 
 end.

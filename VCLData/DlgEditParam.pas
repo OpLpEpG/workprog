@@ -2,23 +2,23 @@ unit DlgEditParam;
 
 interface
 
-uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, Plot,  RTTI, Container, RootIntf, JDtools,
+uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI,  RTTI, Container, RootIntf, JDtools,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.UITypes, System.TypInfo,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, JvExControls, JvInspector, Vcl.ExtCtrls, JvComponentBase;
 
 type
-  TFormEditParam = class(TDialogIForm, IDialog, IDialog<TGraphParam>)
+  TFormEditParam = class(TDialogIForm, IDialog, IDialog<TObject>)
     btExit: TButton;
     insp: TJvInspector;
     InspectorBorlandPainter: TJvInspectorBorlandPainter;
     procedure btExitClick(Sender: TObject); virtual;
   private
-    FEditParam: TGraphParam;
+    FEditParam: TObject;
   public
     { Public declarations }
   protected
     function GetInfo: PTypeInfo; override;
-    function Execute(InputData: TGraphParam): Boolean;
+    function Execute(InputData: TObject): Boolean;
   end;
 
   TFormEditArrayParam = class(TFormEditParam, IDialog<TArray<TObject>, TNotifyEvent, TNotifyEvent>)
@@ -44,7 +44,7 @@ begin
   RegisterDialog.UnInitialize<Dialog_EditViewParameters>;
 end;
 
-function TFormEditParam.Execute(InputData: TGraphParam): Boolean;
+function TFormEditParam.Execute(InputData: TObject): Boolean;
 begin
   Result := True;
   FEditParam := InputData;

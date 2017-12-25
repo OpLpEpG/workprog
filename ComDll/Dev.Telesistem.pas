@@ -459,7 +459,7 @@ begin
     if not Assigned(Info) then CArray.Add<Integer>(ErrAdr, FAddressArray[0])
     else
      try
-      TPars.SetMetr(Info, FExeMetr, True);
+      FExeMetr.SetMetr(Info, FExeMetr, True);
       finally
        try
         if Supports(GlobalCore, IProjectMetaData, ip) then

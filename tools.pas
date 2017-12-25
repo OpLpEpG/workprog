@@ -2,13 +2,26 @@ unit tools;
 
 interface
 
-uses  DeviceIntf, ExtendIntf, RootIntf, debug_except, System.SyncObjs, System.Math,
+uses
+      debug_except,
+      System.SyncObjs, System.Math,
       SysUtils, Xml.XMLIntf, Xml.XMLDoc, Xml.xmldom,
       System.Generics.Collections,
       System.Generics.Defaults,
       System.Classes,
       Data.DB, RTTI, System.Variants, Winapi.ActiveX;
 
+type
+  IXMLInfo = IXMLNode;
+  // функция обратного вызова при вызове функции построения списка доступных устройств байтного протокола
+  TGetDevicesCB = procedure (DevAdr: Integer; const DevNodeName, DevInfo: WideString);
+  TAddressArray = TArray<Integer>;
+  // событие считывания информаци об устройствах (создается новый XML документ Info: IXMLInfo)
+  // addr: TAddressArray - считанные или нет адреса, Exception: TAddressArray- сответствующая адресу ошибка 0-считан -1 - нет
+  TDeviceMetaData = record
+    ErrAdr: TAddressArray;
+    Info: IXMLInfo;
+  end;
 const
 
   PRG_TIP_VARIANT = 0;
@@ -51,6 +64,7 @@ const
   T_MTR = 'Метрология';
 
   AT_FILE_NAME = 'FILE_NAME';
+  AT_FILE_CLC = 'FILE_NAME_CLC';
 //  свойства прибора
   AT_ADDR = 'ADDR';
   AT_CHIP = 'CHIP_INDEX';
@@ -453,16 +467,16 @@ type
     function Params: string;
   end;
 
-  THelperXMLtoDB = class(TInterfacedObject, IHelperXMLtoDB)
+{  THelperXMLtoDB = class(TInterfacedObject, IHelperXMLtoDB)
   protected
    type
-
+}
     {TParam = record
       array_len: Integer;
       Value: IXMLNode;
       constructor Create(Root: IXMLNode; const AttrName: string);
     end;}
-  protected
+{  protected
     fRoot: IXMLNode;
     fCheckedOnly: Boolean;
     fParams: TArray<IXMLNode>;
@@ -489,7 +503,7 @@ type
 //    class procedure UnDuplicateNames(var FieldNames: TArray<string>); static;
 //    class function CreateName(Node: IXMLNode; const pre: string): string; static;
     constructor Create(Root: IXMLNode; CheckedOnly: Boolean = False);
-  end;
+  end;}
 
    TVxmlData = packed record
     VType: TVarType;
@@ -538,9 +552,12 @@ function XEnumDec(ANode: IXMLNode): TXMLNodeEnumeratorDec;
 function XEnum(ANode: IXMLNode): TXMLNodeEnumerator;
 function XEnumAttr(ANode: IXMLNode): TXMLNodeEnumerator;
 
+var
+  XMLVariantType: Word;
+
 implementation
 
-uses parser;
+//uses parser;
 
 const
  K_DEVTIME_TO_TIME = 2.097152/3600/24;
@@ -659,7 +676,7 @@ end;
 class function CTime.AsString(t: TTime): string;
 begin
   Result := TimeToStr(t);
-  if Abs(Double(t)) >= 1 then Result := IntToStr(Trunc(Abs(t))) + ' ' + Result;
+  if Abs(Double(t)) >= 1 then Result := Format('%2d %8s',[Trunc(Abs(t)), Result])
 end;
 
 class function CTime.FromString(const s: string): TTime;
@@ -1801,7 +1818,7 @@ end;}
 
 { THelperXMLtoDB }
 
-constructor THelperXMLtoDB.Create(Root: IXMLNode; CheckedOnly: Boolean);
+{constructor THelperXMLtoDB.Create(Root: IXMLNode; CheckedOnly: Boolean);
 begin
   fRoot := Root;
   fCheckedOnly := CheckedOnly;
@@ -1829,7 +1846,7 @@ begin
   if Length(FieldTypes) <= 0 then Exit('');
   Result := ':p1';
   for i := 2 to Length(FieldTypes) do Result := Format('%s,:p%d', [Result, i]);
-end;
+end;    }
 
 {class procedure THelperXMLtoDB.UnDuplicateNames(var FieldNames: TArray<string>);
  var
@@ -1849,7 +1866,7 @@ begin
      end;
 end;}
 
-class function THelperXMLtoDB.FieldTypesToTxtTypes(FieldType: TFieldType): string;
+{class function THelperXMLtoDB.FieldTypesToTxtTypes(FieldType: TFieldType): string;
 begin
   case FieldType of
    ftString: Result := 'TEXT';
@@ -1857,7 +1874,7 @@ begin
    ftBlob: Result := 'BLOB';
    else Result := 'INT';
   end
-end;
+end;}
 
 //class function THelperXMLtoDB.XArrayToVar(Data: IXMLNode): Variant;
 // var
@@ -1884,7 +1901,7 @@ begin
   Result := pre + '_' + Result + '_' + Node.NodeName;
 end;}
 
-function THelperXMLtoDB.FieldNames: TArray<string>;
+{function THelperXMLtoDB.FieldNames: TArray<string>;
 begin
   if Length(fFieldNames) = 0 then ExecXTree(fRoot, procedure(n: IXMLNode)
   begin
@@ -1965,7 +1982,7 @@ begin
     ftInteger: Fields[i].Attributes[AT_VALUE] := 0;
     ftFloat:Fields[i].Attributes[AT_VALUE] := 0.0;
    end;
-end;
+end;      }
 
 {$ENDREGION}
 
@@ -2023,6 +2040,7 @@ end;
 
 initialization
   TVxml.This := TVxml.Create;
+  XMLVariantType := TVxml.This.VarType;
   TVsql.This := TVsql.Create;
   TVsqlAutoClear.This := TVsqlAutoClear.Create;
 //  TVxml.Init(TCaseSensDispInv(TVxml.This));

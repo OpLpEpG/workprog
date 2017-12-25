@@ -2,20 +2,13 @@ unit DeviceIntf;
 
 interface
 
-uses winapi.Windows, SysUtils, XMLIntf, Classes, RootIntf, System.TypInfo;//, Controls;
+uses Container, tools,
+     winapi.Windows, SysUtils, XMLIntf, Classes, RootIntf, System.TypInfo;//, Controls;
 
 type
-  IXMLInfo = IXMLNode;
   IRAMInfo = IXMLNode;
   IRAMData = IXMLNode;
   IEEPData = IXMLNode;
-  TAddressArray = TArray<Integer>;
-  // событие считывания информаци об устройствах (создается новый XML документ Info: IXMLInfo)
-  // addr: TAddressArray - считанные или нет адреса, Exception: TAddressArray- сответствующая адресу ошибка 0-считан -1 - нет
-  TDeviceMetaData = record
-    ErrAdr: TAddressArray;
-    Info: IXMLInfo;
-  end;
   TInfoEventRes = TDeviceMetaData;
   TInfoEvent = procedure (Res: TInfoEventRes) of object;
   // события считывания данных (режим инвормации (контроль))
@@ -36,11 +29,9 @@ type
   // события о состоянии считывания ОЗУ
   //                        одиночная ошибка  невозможно считать  конец    прервано      конец но есть еще устройства
                                                                                        // для чтения с другими адресами
-  EnumReadRam = (eirReadOk, eirReadErrSector,     eirCantRead,    eirEnd,  eirTerminate);//,       eirEndDev);
+//  EnumReadRam = (eirReadOk, eirReadErrSector,     eirCantRead,    eirEnd,  eirTerminate);//,       eirEndDev);
   // ProcToEnd - % до окончания считывания для текущего устройства
-  TReadRamEvent = procedure (EnumRR: EnumReadRam; DevAdr: Integer; ProcToEnd: Double) of object;
-  // функция обратного вызова при вызове функции построения списка доступных устройств байтного протокола
-  TGetDevicesCB = procedure (DevAdr: Integer; const DevNodeName, DevInfo: WideString);
+  TReadRamEvent = procedure (EnumRR: EnumCopyAsyncRun; DevAdr: Integer; Statistic: TStatistic) of object;
   // функция обратного вызова при вызове функции построения списка доступных устройств обмена а внешним миром
   TGetConnectIOCB = reference to procedure (ConnectID: Integer; const ConnectName, ConnectInfo: string);
 
@@ -390,12 +381,14 @@ type
 //    procedure SetFastSpeed(Flag: Boolean);
 //    function GetFastSpeed: Boolean;
 
+    function GetCreateClcFile: Boolean;
+    procedure SetCreateClcFile(const Value: Boolean);
     // public
     // абсолютное время. По умолчанию - вся память (FromTime=ToTime=0)
 //    procedure SetReadTime(FromTime, ToTime: TDateTime);
     // асинхронный метод читает, перечитывает и сохраняет бинарные файлы на диск
     // обновляет в процессе на диске IRAMInfo создает в PathToReadRamDir xxxxxxx.bin для каждого устройства
-    procedure Execute(const binFile: string; FromTime, ToTime: TDateTime; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
+    procedure Execute(const binFile: string; FromKadr, ToKadr: Integer; ReadToFF: Boolean; FastSpeed, Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer; PacketLen: Integer = 0);
     // прерывает длительный асинхронный метод Execute
     procedure Terminate(Res: TResultEvent = nil);
 
@@ -404,7 +397,7 @@ type
     // Флаг скорость 0.5 МБод По умолчанию - да
 //    property FastSpeed: Boolean read GetFastSpeed write SetFastSpeed;
 //    property FromTime: TDateTime read GetFromTime;
-//    property ToTime: TDateTime read GetToTime;
+    property CreateClcFile: Boolean read GetCreateClcFile write SetCreateClcFile;
   end;
 
   TRunEvent = reference to procedure (ProcToEnd: Double);
@@ -419,7 +412,7 @@ type
   IRamImport = interface(IFileDialog)
   ['{C9ACE1A0-E1AA-4751-9128-99EC616DDBD2}']
     procedure Import(const FileName: string; FilterIndex: Integer;
-                      FromTime, ToTime: TDateTime; ReadToFF: Boolean;
+                      FromKadr, ToKadr: Integer; ReadToFF: Boolean;
                       Adr: Integer; evInfoRead: TReadRamEvent; ModulID: integer);
     // прерывает длительный асинхронный метод Execute
 //    procedure Terminate(Res: TResultEvent = nil);

@@ -9,7 +9,7 @@ interface
 uses DeviceIntf, PluginAPI, ExtendIntf, RootIntf, RootImpl, Container, Actns, debug_except, DockIForm, math, MetrInclin,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.Bindings.Expression, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, Vcl.ImgList, Vcl.ExtCtrls, Vcl.StdCtrls,
-  MetrForm, Vcl.ComCtrls, AutoMetr.Inclin, FrameInclinGraph,MetrInclin.Math;
+  MetrForm, Vcl.ComCtrls, AutoMetr.Inclin, FrameInclinGraph,LuaInclin.Math;
 
 type
  TFormInclinADV = class(TFormInclin)
@@ -121,35 +121,35 @@ function TFormInclinADV.UserSetupAlg(alg: IXMLNode): Boolean;
   s: Variant;
 begin
   Result := True;
-  s := TMetrInclinMath.AddStep(1, 'Установить стол: Зенит 0, визирный угол 0 стол градусов.', alg);
+  s := XtoVar(TMetrInclinMath.AddStep(1, 'Установить стол: Зенит 0, визирный угол 0 стол градусов.', alg));
   s.TASK.Vizir_Stol := 0;
   s.TASK.Zenit_Stol := 0;
   s.TASK.Dalay_Kadr := 5;
-  s := TMetrInclinMath.AddStep(2, 'стол: визирный угол 90 градусов.', alg);
+  s := XtoVar(TMetrInclinMath.AddStep(2, 'стол: визирный угол 90 градусов.', alg));
   s.TASK.Vizir_Stol := 90;
   s.TASK.Dalay_Kadr := 5;
-  s := TMetrInclinMath.AddStep(3, 'стол: визирный угол 180 градусов.', alg);
+  s := XtoVar(TMetrInclinMath.AddStep(3, 'стол: визирный угол 180 градусов.', alg));
   s.TASK.Vizir_Stol := 180;
   s.TASK.Dalay_Kadr := 5;
-  s := TMetrInclinMath.AddStep(4, 'стол: визирный угол 270 градусов.', alg);
+  s := XtoVar(TMetrInclinMath.AddStep(4, 'стол: визирный угол 270 градусов.', alg));
   s.TASK.Vizir_Stol := 270;
   s.TASK.Dalay_Kadr := 5;
-  s := TMetrInclinMath.AddStep(5, 'стол: Установить стол: Зенит 19.5, Азимут 0, визирный угол 0 градусов.', alg);
+  s := XtoVar(TMetrInclinMath.AddStep(5, 'стол: Установить стол: Зенит 19.5, Азимут 0, визирный угол 0 градусов.', alg));
   s.TASK.Vizir_Stol := 0;
   s.TASK.Azimut_Stol := 0;
   s.TASK.Zenit_Stol := 19.5;
   s.TASK.Dalay_Kadr := 5;
-  s := TMetrInclinMath.AddStep(6, 'стол: визирный угол 90 градусов.', alg);
+  s := XtoVar(TMetrInclinMath.AddStep(6, 'стол: визирный угол 90 градусов.', alg));
   s.TASK.Vizir_Stol := 90;
   s.TASK.Dalay_Kadr := 5;
-  s := TMetrInclinMath.AddStep(7, 'стол: визирный угол 180 градусов.', alg);
+  s :=XtoVar(TMetrInclinMath.AddStep(7, 'стол: визирный угол 180 градусов.', alg));
   s.TASK.Vizir_Stol := 180;
   s.TASK.Dalay_Kadr := 5;
-  s := TMetrInclinMath.AddStep(8, 'стол: визирный угол 270 градусов.', alg);
+  s := XtoVar(TMetrInclinMath.AddStep(8, 'стол: визирный угол 270 градусов.', alg));
   s.TASK.Vizir_Stol := 270;
   s.TASK.Dalay_Kadr := 5;
   TMetrInclinMath.SetupRoll(9, 90, 90, alg);
-  s := TMetrInclinMath.AddStep(45, 'стол: Азимут стол 180, Зенит 70.5, прибор: визир 0 градусов.', alg);
+  s := XtoVar(TMetrInclinMath.AddStep(45, 'стол: Азимут стол 180, Зенит 70.5, прибор: визир 0 градусов.', alg));
   s.TASK.Azimut_Stol := 180;
   s.TASK.Zenit_Stol := 70.5;
   s.TASK.Vizir_Dev :=  0;
@@ -399,9 +399,9 @@ begin
 end;
 
 initialization
-  TMetrInclinMath.Nop();
+//  TMetrInclinMath.Nop();
   RegisterClasses([TFormInclinADV, TTabSheet]);
-//  TRegister.AddType<TFormInclinADV, IForm>.LiveTime(ltSingletonNamed);
+  //TRegister.AddType<TFormInclinADV, IForm>.LiveTime(ltSingletonNamed);
 finalization
-//  GContainer.RemoveModel<TFormInclinADV>;
+ // GContainer.RemoveModel<TFormInclinADV>;
 end.

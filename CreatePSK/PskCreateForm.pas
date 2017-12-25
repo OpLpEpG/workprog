@@ -2,7 +2,8 @@ unit PskCreateForm;
 
 interface
 
-uses RootIntf, PluginAPI, ExtendIntf, DockIForm, DeviceIntf, debug_except, Parser, Container, Actns,
+uses
+    RootIntf, PluginAPI, ExtendIntf, DockIForm, DeviceIntf, debug_except, Parser, Container, Actns, tools,
   XMLDoc, Xml.XMLIntf,  System.Generics.Collections, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, VirtualTrees, Vcl.ImgList;
 
@@ -97,6 +98,7 @@ type
     procedure NewAddrClick(Sender: TObject);
   private
     FXMLInfo: IXMLInfo;
+    FScript: IXMLScript;
 
     FEdit: TWinControl;
     FEditColumn: TColumnIndex;
@@ -118,6 +120,7 @@ type
     procedure AddDirNode( Sel: IXMLNode; const Name: string; NeedUpdateTree: Boolean = False);
     procedure AddTypeNode(Sel: IXMLNode; const Name: string; NeedUpdateTree: Boolean = False);
     function RenameNode(Src: IXMLNode; const NewName: string; NeedUpdateTree: Boolean = False): IXMLNode;
+    procedure GetMetrStrings(var Values: TStrings; node: IXMLNode = nil);
   protected
    const
     NICON = 44;
@@ -145,7 +148,7 @@ implementation
 
 {$R *.dfm}
 
-uses AbstractPlugin, tools;
+uses AbstractPlugin;
 
 type
   PNodeExData = ^TNodeExData;
@@ -183,6 +186,7 @@ begin
   Tree.NodeDataSize := SizeOf(TNodeExData);
   if Supports(GlobalCore, IImagProvider, ip) then Tree.Images := ip.GetImagList;
   Memo.Clear;
+  FScript := (GLobalCore as IXMLScriptFactory).Get(nil);
   LoadDev(FFileDev);
 end;
 
@@ -1017,6 +1021,11 @@ begin
   Result := FEdit.BoundsRect;
 end;
 
+procedure TFormPsk.GetMetrStrings(var Values: TStrings; node: IXMLNode = nil);
+begin
+  FScript.GetMetrStrings(Values, node);
+end;
+
 function TFormPsk.PrepareEdit(Tree: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex): Boolean;
  type
    TGetItems = procedure(var Items: TStrings; node: IXMLNode = nil) of object;
@@ -1074,7 +1083,7 @@ begin
      0: CreateEdit(n, n.NodeName, True);
      1,2,3: Exit;
      4: CreateEdit(n, AT_ZND);
-     5: CreateComboBox(n, AT_METR, TPars.GetMetrStrings, '');
+     5: CreateComboBox(n, AT_METR, GetMetrStrings, '');
     end;
    end
   else if Assigned(d) and d.HasAttribute(AT_TIP) then
@@ -1089,7 +1098,7 @@ begin
      2: CreateEdit(d, AT_INDEX);
      3: CreateEdit(n, AT_ARRAY);
      4: CreateEdit(n, AT_ZND);
-     5: CreateComboBox(n, AT_METR, TPars.GetMetrStrings, '');
+     5: CreateComboBox(n, AT_METR, GetMetrStrings, '');
     end;
    end
   else Exit;

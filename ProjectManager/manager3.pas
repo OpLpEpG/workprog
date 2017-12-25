@@ -2,7 +2,7 @@ unit manager3;
 
 interface
 
-uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils, Actns, System.UITypes,
+uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.DateUtils, Actns, System.UITypes,
      RootImpl, AbstractPlugin, PluginAPI, DockIForm, System.SyncObjs, XMLEnumers,
      Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows, System.IOUtils,
      System.SysUtils, Vcl.Graphics, System.Classes, System.Generics.Collections, System.Generics.Defaults,
@@ -12,6 +12,8 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
    T_DEV = 'DEVICES';
    T_CON = 'CONNECTIOS';
    T_OPT = 'OPTIONS';
+   T_FILES = 'FILES';
+
  type
   EManagerexception = class(EBaseException);
 
@@ -67,8 +69,10 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
     procedure SetMetaData(Dev: IDevice; Adr: Integer; MetaData: IXMLInfo);
     procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
     procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen, CurAdr, CurKadr: Integer; CurTime: TDateTime);
+    procedure SaveEnd(Data: IXMLInfo);
     function DataFileExists(Root: IXMLNode; const SubDir: string = ''; const SubName: string = ''): Boolean;
     procedure DataSectionDelete(Root: IXMLNode);
+    procedure DeviceDataDelete(Dev: IDevice);
     function ConstructDataDir(Root: IXMLNode; NeedCreate: Boolean = True; const SubDir: string = ''): string;
     function ConstructDataFileName(Root: IXMLNode; const SubName: string = ''): string;
 
@@ -86,6 +90,8 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
                           ReadOnly: Boolean = False;
                           DataType: Integer = -1);
 
+    function DelayStart: TDateTime;
+    function IntervalWork: TDateTime;
    // IDelayManager = interface
 //    procedure InternalInitDelay;
 //    procedure SetDelay(SetTime, Delay, WorkTime: Variant);
@@ -96,7 +102,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
   public
     FProjectFile: string;
     FProjecDoc: IXMLDocument;
-    Froot, FConnect, FDevices, Foptions : IXMLNode;
+    Froot, FConnect, FDevices, Foptions{, FFiles} : IXMLNode;
 
     class var This: TManager;
     class function ProjectDir: string;
@@ -114,7 +120,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, Container, System.DateUtils
 
 implementation
 
-uses tools, FileCachImpl;//, PrjTool;
+uses FileCachImpl;//, PrjTool;
 
 const
   IFORMS_INI_DIR = 'IFormObjs';
@@ -185,7 +191,7 @@ function TManager.GetMemorySize(Need: Int64): Int64;
 begin
   memStatus.dwLength := sizeOf (memStatus);
   GlobalMemoryStatusEx (memStatus);
-  Result := memStatus.ullAvailVirtual div 2;
+  Result := memStatus.ullAvailVirtual div 4;
   if Need < Result then Result := Need;  
 end;
 
@@ -222,6 +228,32 @@ end;
 function TManager.GetProjectFilter: string;
 begin
   Result := 'Файл проекта (*.xml)|*.xml';
+end;
+
+function TManager.DelayStart: TDateTime;
+ var
+  v: Variant;
+begin
+  v := Option['TIME_START'];
+  if v = null then Exit(0);
+  try
+   Result := StrToDateTime(v);
+  except
+   Result := Double(v);
+  end;
+end;
+
+function TManager.IntervalWork: TDateTime;
+ var
+  v: Variant;
+begin
+  v := Option['WORK_INTERVAL'];
+  if v = null then Exit(0);
+  try
+   Result := StrToDateTime(v);
+  except
+   Result := Double(v);
+  end;
 end;
 
 function TManager.GetOption(const Name: string): Variant;
@@ -286,6 +318,7 @@ begin
   if dv <> MetaData.ParentNode then dv.ChildNodes.Add(MetaData);
 //  MetaData.OwnerDocument.FileName := FDevices.OwnerDocument.FileName;
   Save;
+  dv.OwnerDocument.Resync;
   S_TableUpdate := 'Modul';
 end;
 
@@ -371,6 +404,14 @@ begin
   FProjecDoc.SaveToFile(FProjectFile);
 end;
 
+procedure TManager.SaveEnd(Data: IXMLInfo);
+ var
+  f: IFileData;
+  c: ICashedData;
+begin
+  if XSupport(Data, IFileData, f) and Supports(f, ICashedData, c) then c.EndWrite();
+end;
+
 procedure TManager.SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
  var
   f: IFileData;
@@ -384,7 +425,7 @@ begin
 end;
 
 procedure TManager.SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen, CurAdr, CurKadr: Integer; CurTime: TDateTime);
-const
+ const
   {$J+} tick: Cardinal = 0;{$J-}
  var
   f: IFileData;
@@ -411,7 +452,8 @@ procedure TManager.ClearItems(ClearItems: EClearItems);
 begin
   if ecIO in ClearItems then (GlobalCore as IConnectIOEnum).Clear;
   if ecDevice in ClearItems then (GlobalCore as IDeviceEnum).Clear;
-  if ecForm in ClearItems then (GlobalCore as IFormEnum).Clear;//  FFormEnum.Clear;
+  if ecForm in ClearItems then (GlobalCore as IFormEnum).Clear;
+//  if ecFile in ClearItems then (GlobalCore as IFileEnum).Clear;
 end;
 
     /// <summary>
@@ -428,9 +470,13 @@ end;
     /// </summary>
 function TManager.ConstructDataDir(Root: IXMLNode; NeedCreate: Boolean; const SubDir: string): string;
 begin
-  Result := TPath.GetDirectoryName(Root.OwnerDocument.FileName)
-         + '\' + Root.ParentNode.ParentNode.NodeName + '\' + Root.ParentNode.NodeName + '\' + Root.NodeName+ '\' ;
+  if Root.OwnerDocument.FileName = '' then Result := TPath.GetDirectoryName(FProjecDoc.FileName)
+  else Result := TPath.GetDirectoryName(Root.OwnerDocument.FileName);
+
+  Result := Result + '\' + Root.ParentNode.ParentNode.NodeName + '\' + Root.ParentNode.NodeName + '\' + Root.NodeName+ '\' ;
+
   if SubDir <> '' then Result := Result +'\' +SubDir +'\';
+
   if NeedCreate then if not TDirectory.Exists(Result) then TDirectory.CreateDirectory(Result);
 end;
 
@@ -451,10 +497,40 @@ end;
 procedure TManager.DataSectionDelete(Root: IXMLNode);
  var
   dir: string;
+  procedure RemoveIfile;
+   var
+    f: IFileData;
+  begin
+  if XSupport(Root, IFileData , f) then
+   begin
+    (Root as IOwnIntfXMLNode).Intf := nil;
+    f := nil;
+   end;
+  end;
 begin
+  RemoveIfile;
   dir := ConstructDataDir(Root, False);
   if TDirectory.Exists(dir) then TDirectory.Delete(dir, True);
+  if TDirectory.Exists(dir) then raise Exception.Create('Немогу удалить директорию '+ dir);
+
   RemoveXMLAttr(Root, AT_FILE_NAME);
+end;
+
+
+procedure TManager.DeviceDataDelete(Dev: IDevice);
+ var
+  dir: string;
+  dd: IDataDevice;
+  i: IXMLInfo;
+begin
+  if not Supports(Dev, IDataDevice, dd) then Exit;
+  i := dd.GetMetaData.Info;
+//  dd.ClearMetaData;
+  if not Assigned(i) then Exit;
+  dir := TPath.GetDirectoryName(i.OwnerDocument.FileName)+'\'+ i.NodeName;
+  i := nil;
+  if TDirectory.Exists(dir) then TDirectory.Delete(dir, True);
+  if TDirectory.Exists(dir) then raise Exception.Create('Немогу удалить директорию '+ dir);
 end;
 
 class function TManager.ProjectDir: string;
@@ -493,7 +569,7 @@ end;
 
 procedure TManager.LoadProject(const FileName: string; AfterCreateProject: Tproc = nil);
 begin
-  ClearItems([ecIO, ecDevice]);
+  ClearItems([ecIO, ecDevice, ecfile]);
   if FileExists(FileName) then
    begin
     FProjectFile := FileName;
@@ -504,11 +580,14 @@ begin
       FConnect := Froot.ChildNodes.FindNode(T_CON);
       FDevices := Froot.ChildNodes.FindNode(T_DEV);
       Foptions := Froot.ChildNodes.FindNode(T_OPT);
+//      FFiles := Froot.ChildNodes.FindNode(T_FILES);
 
       if Assigned(AfterCreateProject) then AfterCreateProject();
 
       ((GlobalCore as IConnectIOEnum) as IStorable).Load;
       ((GlobalCore as IDeviceEnum) as IStorable).Load;
+//      ((GlobalCore as IFileEnum) as IStorable).Load;
+
     except
       on E: Exception do TDebug.DoException(E, False);
     end;
@@ -520,6 +599,7 @@ begin
     FConnect := nil;
     FDevices := nil;
     Foptions := nil;
+//    FFiles := nil;
     FProjecDoc := nil;
     FProjectFile := '';
     if Assigned(AfterCreateProject) then AfterCreateProject();
@@ -545,13 +625,14 @@ begin
     TDirectory.CreateDirectory(dir);
    end;
 
-  ClearItems([ecIO, ecDevice]);
+  ClearItems([ecIO, ecDevice, ecfile]);
 
   FProjectFile := dir + Tpath.DirectorySeparatorChar + TPath.GetFileName(FileName);
   FProjecDoc := NewXDocument();
   Froot := FProjecDoc.AddChild('PROJECT');
   FConnect := Froot.AddChild(T_CON);
   FDevices := Froot.AddChild(T_DEV);
+//  FFiles := Froot.AddChild(T_FILES);
   LDoc := NewXDocument();
   LDoc.LoadFromFile(ExtractFilePath(ParamStr(0))+'Devices\Options.xml');
   Froot.ChildNodes.Add(Ldoc.DocumentElement);
@@ -561,6 +642,7 @@ begin
 
   ((GlobalCore as IConnectIOEnum) as IStorable).New;
   ((GlobalCore as IDeviceEnum) as IStorable).New;
+//  ((GlobalCore as IFileEnum) as IStorable).New;
 
   FProjecDoc.FileName := FProjectFile;
   FProjecDoc.SaveToFile(FProjectFile);

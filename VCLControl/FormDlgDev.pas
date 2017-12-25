@@ -2,7 +2,7 @@ unit FormDlgDev;
 
 interface
 
-uses  RootIntf, debug_except,ExtendIntf, DeviceIntf, Container, RootImpl,
+uses  RootIntf, debug_except,ExtendIntf, DeviceIntf, Container, Tools, RootImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, math,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, VirtualTrees, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, CPortCtl;
 
@@ -39,7 +39,7 @@ implementation
 
 {$R *.dfm}
 
-uses AbstractPlugin, Tools, ConnectDeviceHelper;
+uses AbstractPlugin,  ConnectDeviceHelper;
 
 function TFormCreateDev.CheckState: ChekDevs;
  var
@@ -87,6 +87,17 @@ procedure TFormCreateDev.ButtonOKClick(Sender: TObject);
   de: IDeviceEnum;
   pv: PVirtualNode;
   wf: IForm;
+  function SetToEmptyWorkWindow: Boolean;
+   var
+    isd: ISetDevice;
+  begin
+    for isd in GContainer.Enum<ISetDevice> do if isd.DataDevice = '' then
+     begin
+       isd.DataDevice := FDevice.IName;
+       Exit(True);
+     end;
+    Result := False;
+  end;
 begin
   if CheckState = cdNone then
   begin
@@ -100,7 +111,7 @@ begin
     de.Add(FDevice);
     MainScreenChanged;
     for pv in Tree.LevelNodes(0) do pv.CheckState := csUnCheckedNormal;
-    if cbTree.Checked then
+    if cbTree.Checked and not SetToEmptyWorkWindow then
      begin
       wf := GContainer.CreateValuedInstance<string>('TFormWrok', 'CreateUser', '') as IForm;
       (GContainer as IFormEnum).Add(wf);
@@ -108,7 +119,6 @@ begin
       wf.Show;
       (GContainer as ITabFormProvider).Dock(wf, 0);
      end;
-
     (GlobalCore as IActionProvider).SaveActionManager;
     ((GlobalCore as IActionEnum) as IStorable).Save;
    end;

@@ -33,6 +33,13 @@ type
     function Root: IXmlNode; override;
   end;
 
+  { TODO : плохая идея необходимо о длинне данных держать информацию в другом файле !!! }
+//  TFiles = class(TXMEnum<IFileData>, IFileEnum)
+//  protected
+//    function GetFileData(const FileName: string): IFileData;
+//    function Root: IXmlNode; override;
+//  end;
+
 
 implementation
 
@@ -141,11 +148,32 @@ begin
   if Assigned(mi.Inst) then n.Attributes[AT_CAPTION] := (mi.Inst as ICaption).Text;
 end;}
 
+
 function TDevices.Root: IXmlNode;
 begin
   Result := TManager.This.FDevices;
 end;
 
+
+{ TFiles }
+
+//function TFiles.GetFileData(const FileName: string): IFileData;
+// var
+//  i: TInstanceRec<IFileData>;
+//begin
+//  for i in AsArrayRec do
+//   if Assigned(i.Inst) then
+//    begin
+//     if SameStr(i.Inst.FileName, FileName) then Exit(i.Inst);
+//    end
+//   else if Gcon  then
+//
+//end;
+//
+//function TFiles.Root: IXmlNode;
+//begin
+//  Result := TManager.This.FFiles;
+//end;
 
 initialization
   RegisterClasses([TDevices, TConnectIOs]);
@@ -155,7 +183,11 @@ initialization
   TRegister.AddType<TConnectIOs, IConnectIOEnum>
            .LiveTime(ltSingletonNamed)
            .AddInstance(TConnectIOs.Create as IInterface);
+//  TRegister.AddType<TFiles, IFileEnum>
+//           .LiveTime(ltSingletonNamed)
+//           .AddInstance(TFiles.Create as IInterface);
 finalization
   GContainer.RemoveModel<TDevices>;
+//  GContainer.RemoveModel<TFiles>;
   GContainer.RemoveModel<TConnectIOs>;
 end.

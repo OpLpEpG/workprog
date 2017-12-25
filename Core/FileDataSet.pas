@@ -41,6 +41,7 @@ type
     procedure SetFieldProps(Field: TField; FieldDef: TFieldDef); override;
     function QueryInterface(const IID: TGUID; out Obj): HResult; override; stdcall;
     function GetRecData(Buffer: PRecBuffer): PByte;
+    function GetCalcData(Buffer: PRecBuffer): PByte; virtual;
     function InternalCalcRecBuffer(Buffer: PRecBuffer): Boolean; virtual;
     function FindFieldData(Buffer: PRecBuffer; Field: TField): PByte;
     function GetFieldDefsClass: TFieldDefsClass; override;
@@ -107,6 +108,11 @@ begin
    end;
 end;
 
+function TFileDataSet.GetCalcData(Buffer: PRecBuffer): PByte;
+begin
+  Result := nil;
+end;
+
 function TFileDataSet.CreateBlobStream(Field: TField; Mode: TBlobStreamMode): TStream;
 begin
   Result := TFileBlobStream.Create(TBlobField(Field), Mode);
@@ -124,7 +130,8 @@ end;
 function TFileDataSet.GetRecData(Buffer: PRecBuffer): PByte;
 begin
   if FCurrDataID = Buffer.ID then Exit(FCurrDataBuffer)
-  else if FileData.Read(RecordLength, Pointer(Result), (Buffer.ID-1)*RecordLength) <> RecordLength then Result := nil
+  else
+    if FileData.Read(RecordLength, Pointer(Result), (Buffer.ID-1)*RecordLength) <> RecordLength then Result := nil
   else
    begin
     FCurrDataBuffer := Result;
@@ -135,7 +142,7 @@ end;
 function TFileDataSet.FindFieldData(Buffer: PRecBuffer; Field: TField): PByte;
  var
   Index: Integer;
- // pb: PBoolean;
+//  clcb: PBoolean;
   f: TFileFieldDef;
 begin
   Result := nil;
@@ -145,8 +152,12 @@ begin
   f := TFileFieldDef(FieldDefList[Index]);
   if f.CalcField and AutoCalcFields then
    begin
-    if not Buffer.AutoCalculated and not InternalCalcRecBuffer(Buffer) then Exit;
-    Result := PByte(Buffer) + SizeOf(TRecBuffer);
+    Result := GetCalcData(Buffer);
+    if not Assigned(Result) then
+     begin
+      if not Buffer.AutoCalculated and not InternalCalcRecBuffer(Buffer) then Exit;
+      Result := PByte(Buffer) + SizeOf(TRecBuffer);
+     end;
    end
   else if Field.FieldKind = fkData then Result := GetRecData(Buffer);
   if not Assigned(Result) then Exit;

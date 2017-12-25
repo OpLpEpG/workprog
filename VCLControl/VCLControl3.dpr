@@ -26,7 +26,11 @@ uses
   VCL.Dlg.Ram in 'VCL.Dlg.Ram.pas' {FormDlgRam},
   ConnectDeviceHelper in 'ConnectDeviceHelper.pas',
   DlgSetupDate in 'DlgSetupDate.pas' {FormCalendar},
-  ExportToPSK6_V3 in 'ExportToPSK6_V3.pas' {FormExportToPSK6_V3};
+  ExportToPSK6_V3 in 'ExportToPSK6_V3.pas' {FormExportToPSK6_V3},
+  VCL.Dlg.Export.Caliper in 'VCL.Dlg.Export.Caliper.pas' {FormDlgExportCaliper},
+  VCL.Dlg.Clc in 'VCL.Dlg.Clc.pas' {FormDlgClc},
+  VCL.Frame.RangeSelect in 'VCL.Frame.RangeSelect.pas' {FrameRangeSelect: TFrame},
+  VCL.Dlg.ExportLAS in 'VCL.Dlg.ExportLAS.pas' {FormExportLASP3};
 
 {$R *.res}
 

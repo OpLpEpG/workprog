@@ -33,7 +33,7 @@ package Core;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Core 2.0.0 Корневые классы и утилиты'}
+{$DESCRIPTION 'Core 3.0.0 Корневые классы и утилиты'}
 {$IMPLICITBUILD ON}
 
 requires
@@ -50,11 +50,12 @@ requires
   Jcl,
   JvCore,
   JvDocking,
-  fs_oleg,
   GR32_RSXE10,
   JvRuntimeDesign;
 
 contains
+  debug_except in 'debug_except.pas',
+  Container in 'Container.pas',
   AbstractPlugin in '..\AbstractPlugin.pas',
   DeviceIntf in '..\DeviceIntf.pas',
   ExtendIntf in '..\ExtendIntf.pas',
@@ -63,13 +64,9 @@ contains
   PluginAPI in '..\PluginAPI.pas',
   RootIntf in '..\RootIntf.pas',
   tools in '..\tools.pas',
-  debug_except in 'debug_except.pas',
-  Container in 'Container.pas',
   Actns in 'Actns.pas',
   LasImpl in 'LasImpl.pas',
   Parser in 'Parser.pas',
-  Plot.DB in 'Plot.DB.pas',
-  XMLScript in 'XMLScript.pas',
   ImportExport in 'ImportExport.pas',
   DockIForm in 'DockIForm.pas',
   CoreReg in 'CoreReg.pas',
@@ -85,17 +82,12 @@ contains
   nduWinNT in '..\..\..\Libs\WlanAPI\nduWinNT.pas',
   nduWlanAPI in '..\..\..\Libs\WlanAPI\nduWlanAPI.pas',
   nduWlanTypes in '..\..\..\Libs\WlanAPI\nduWlanTypes.pas',
-  DataExchange in 'DataExchange.pas',
   EditControl in 'EditControl.pas',
-  Plot.GraphParams in 'Plot.GraphParams.pas',
   ExcelImpl in 'ExcelImpl.pas',
   UakiIntf in '..\UakiIntf.pas',
-  XMLScript.Math in 'XMLScript.Math.pas',
   Fibonach in '..\Fibonach.pas',
   StolGKIntf in '..\StolGKIntf.pas',
   Math.Telesistem in 'Math.Telesistem.pas',
-  XMLScript.IKN in 'XMLScript.IKN.pas',
-  Plot in 'Plot.pas',
   FileCachImpl in 'FileCachImpl.pas',
   OtklonitelPaintClass in 'OtklonitelPaintClass.pas',
   AVRtypes in 'AVRtypes.pas',
@@ -110,9 +102,7 @@ contains
   JDtools in 'JDtools.pas',
   LasDataSet in 'LasDataSet.pas',
   FileDataSet in 'FileDataSet.pas',
-  XMLDataSet in 'XMLDataSet.pas',
   Plot.DataLink in 'Plot.DataLink.pas',
-  XMLScript.Report in 'XMLScript.Report.pas',
   Plot.GR32.Buffer in 'Plot.GR32.Buffer.pas',
   StolBKIntf in '..\StolBKIntf.pas',
   Fifo in 'Fifo.pas',
@@ -121,9 +111,23 @@ contains
   Fifo.Decoder in 'Fifo.Decoder.pas',
   IndexBuffer in '..\IndexBuffer.pas',
   CFifo in 'CFifo.pas',
-  SDcardTools in '..\SDcardTools.pas';
+  SDcardTools in '..\SDcardTools.pas',
+  VerySimple.Lua.Lib in 'VerySimpleLua\VerySimple.Lua.Lib.pas',
+  VerySimple.Lua in 'VerySimpleLua\VerySimple.Lua.pas',
+  DScintilla in 'Scintilla\DScintilla.pas',
+  DScintillaCustom in 'Scintilla\DScintillaCustom.pas',
+  DScintillaTypes in 'Scintilla\DScintillaTypes.pas',
+  DScintillaUtils in 'Scintilla\DScintillaUtils.pas',
+  ScinLua in 'ScinLua.pas',
+  XMLLua.IKN in 'XMLLua.IKN.pas',
+  XMLLua.Math in 'XMLLua.Math.pas',
+  XMLLua in 'XMLLua.pas',
+  XMLLua.Report in 'XMLLua.Report.pas',
+  XMLDataSet in 'XMLDataSet.pas',
+  RangeSelector in 'RangeSelector.pas';
 
 end.
+
 
 
 

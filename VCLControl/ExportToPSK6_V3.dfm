@@ -3,8 +3,8 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
   Top = 0
   BorderStyle = bsSizeToolWin
   Caption = #1101#1082#1089#1087#1086#1088#1090' '#1074' '#1055#1057#1050'6'
-  ClientHeight = 154
-  ClientWidth = 292
+  ClientHeight = 223
+  ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,44 +15,14 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
   Position = poMainFormCenter
   OnCreate = FormCreate
   DesignSize = (
-    292
-    154)
+    295
+    223)
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 8
-    Top = 8
-    Width = 41
-    Height = 13
-    Caption = #1057' '#1082#1072#1076#1088#1072
-  end
-  object Label2: TLabel
-    Left = 161
-    Top = 8
-    Width = 41
-    Height = 13
-    Caption = #1055#1086' '#1082#1072#1076#1088
-  end
-  object edFrom: TEdit
-    Left = 8
-    Top = 24
-    Width = 121
-    Height = 21
-    TabOrder = 0
-    Text = '0'
-  end
-  object edTo: TEdit
-    Left = 161
-    Top = 24
-    Width = 121
-    Height = 21
-    TabOrder = 1
-    Text = '0'
-  end
   object od: TJvFilenameEdit
     Left = 8
-    Top = 51
-    Width = 274
+    Top = 8
+    Width = 273
     Height = 21
     DialogKind = dkSave
     DefaultExt = 'if'
@@ -60,53 +30,71 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
     DialogOptions = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist]
     DirectInput = False
     Anchors = [akLeft, akTop, akRight]
-    TabOrder = 2
+    TabOrder = 0
     Text = ''
+    ExplicitWidth = 386
   end
   object sb: TStatusBar
     Left = 0
-    Top = 135
-    Width = 292
+    Top = 204
+    Width = 295
     Height = 19
     Panels = <
       item
         Width = 50
       end>
+    ExplicitTop = 135
+    ExplicitWidth = 292
   end
   object btStart: TButton
     Left = 8
-    Top = 101
+    Top = 171
     Width = 75
     Height = 25
     Caption = #1057#1090#1072#1088#1090
-    TabOrder = 4
+    TabOrder = 2
     OnClick = btStartClick
   end
   object btTerminate: TButton
     Left = 89
-    Top = 101
+    Top = 171
     Width = 75
     Height = 25
     Caption = #1055#1088#1077#1088#1074#1072#1090#1100
-    TabOrder = 5
+    TabOrder = 3
     OnClick = btTerminateClick
   end
   object btExit: TButton
     Left = 207
-    Top = 101
+    Top = 171
     Width = 75
     Height = 25
     Caption = #1042#1099#1093#1086#1076
     ModalResult = 1
-    TabOrder = 6
+    TabOrder = 4
     OnClick = btExitClick
   end
   object Progress: TProgressBar
     Left = 8
-    Top = 78
-    Width = 274
+    Top = 148
+    Width = 273
     Height = 17
     Anchors = [akLeft, akTop, akRight]
-    TabOrder = 7
+    TabOrder = 5
+    ExplicitWidth = 386
+  end
+  inline RangeSelect: TFrameRangeSelect
+    Left = 8
+    Top = 30
+    Width = 273
+    Height = 112
+    Anchors = [akLeft, akTop, akRight]
+    TabOrder = 6
+    ExplicitLeft = 8
+    ExplicitTop = 30
+    ExplicitWidth = 386
+    inherited Range: TRangeSelector
+      Width = 273
+    end
   end
 end

@@ -2,7 +2,7 @@ unit VCL.Frame.SelectPath;
 
 interface
 
-uses Container, ExtendIntf,
+uses Container, ExtendIntf, System.IOUtils,
   Xml.XMLIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees;
@@ -56,9 +56,27 @@ procedure TFrameSelectPath.Execute(const FileName: string; CheckEvent: TCheckEve
     ex.Caption := Caption;
     ex.XMLSection := u;
   end;
+  function FileLen(n: IXMLNode): Boolean;
+   var
+    s: string;
+  begin
+    s := (GContainer as  IProjectDataFile).ConstructDataDir(n)+ n.Attributes[AT_FILE_NAME];
+    Result := False;
+    if not TFile.Exists(s) then Exit;
+    try
+     with TFile.OpenRead(s) do
+     try
+      Result := Size > 0;
+     finally
+      Free;
+     end;
+    except
+     Result := True;  //если занят то данные есть
+    end;
+  end;
  var
   r, n, d, s: IXMLNode;
-  pvDev, pvModul, pvSect: PVirtualNode;
+  pvDev, pvModul: PVirtualNode;
 begin
   FCheckEvent := CheckEvent;
   if FileName = '' then
@@ -76,13 +94,16 @@ begin
      begin
       pvModul := CreatePV(pvDev, d.NodeName);
       s := d.ChildNodes.FindNode(T_WRK);
-      if Assigned(s) and s.HasAttribute(AT_FILE_NAME) then CreatePV(pvModul, 'история данных информации', s, ctRadioButton)
+      if Assigned(s) and s.HasAttribute(AT_FILE_NAME)
+         and FileLen(s) then CreatePV(pvModul, 'история данных информации', s, ctRadioButton)
       else CreatePV(pvModul, 'история данных информации', s, ctNone);
       s := d.ChildNodes.FindNode(T_RAM);
-      if Assigned(s) and s.HasAttribute(AT_FILE_NAME) then CreatePV(pvModul, 'память по кадрам', s, ctRadioButton)
+      if Assigned(s) and s.HasAttribute(AT_FILE_NAME)
+         and FileLen(s) then CreatePV(pvModul, 'память по кадрам', s, ctRadioButton)
       else CreatePV(pvModul, 'память по кадрам', s, ctNone);
       s := d.ChildNodes.FindNode(T_GLU);
-      if Assigned(s) and s.HasAttribute(AT_FILE_NAME) then CreatePV(pvModul, 'память по глубине', s, ctRadioButton)
+      if Assigned(s) and s.HasAttribute(AT_FILE_NAME)
+        and FileLen(s) then CreatePV(pvModul, 'память по глубине', s, ctRadioButton)
       else CreatePV(pvModul, 'память по глубине', s, ctNone)
      end;
     end;

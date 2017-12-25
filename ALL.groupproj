@@ -6,10 +6,10 @@
         <Projects Include="Core\Core.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="ProjectManager\ProjectManager.dproj">
+        <Projects Include="VCLControl\VCLControl3.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="VCLControl\VCLControl.dproj">
+        <Projects Include="ProjectManager\ProjectManager3.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="ComDll\ComDev.dproj">
@@ -42,16 +42,7 @@
         <Projects Include="D3H\D3H.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="РП-45_VCL\VCL_RP45.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="ProjectManager\ProjectManager3.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="VCLControl\VCLControl3.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="GeneratePSK\CreateDev.dproj">
@@ -105,6 +96,9 @@
         <Projects Include="..\SDcard_MicroSD\MySd\SDRead.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="..\lua3\Examples\Example 2 - Extend TVerySimpleLua\Example2.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -122,23 +116,23 @@
     <Target Name="Core:Make">
         <MSBuild Projects="Core\Core.dproj" Targets="Make"/>
     </Target>
-    <Target Name="ProjectManager">
-        <MSBuild Projects="ProjectManager\ProjectManager.dproj"/>
+    <Target Name="VCLControl3">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj"/>
     </Target>
-    <Target Name="ProjectManager:Clean">
-        <MSBuild Projects="ProjectManager\ProjectManager.dproj" Targets="Clean"/>
+    <Target Name="VCLControl3:Clean">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="ProjectManager:Make">
-        <MSBuild Projects="ProjectManager\ProjectManager.dproj" Targets="Make"/>
+    <Target Name="VCLControl3:Make">
+        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Make"/>
     </Target>
-    <Target Name="VCLControl">
-        <MSBuild Projects="VCLControl\VCLControl.dproj"/>
+    <Target Name="ProjectManager3">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj"/>
     </Target>
-    <Target Name="VCLControl:Clean">
-        <MSBuild Projects="VCLControl\VCLControl.dproj" Targets="Clean"/>
+    <Target Name="ProjectManager3:Clean">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="VCLControl:Make">
-        <MSBuild Projects="VCLControl\VCLControl.dproj" Targets="Make"/>
+    <Target Name="ProjectManager3:Make">
+        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Make"/>
     </Target>
     <Target Name="ComDev">
         <MSBuild Projects="ComDll\ComDev.dproj"/>
@@ -230,15 +224,6 @@
     <Target Name="D3H:Make">
         <MSBuild Projects="D3H\D3H.dproj" Targets="Make"/>
     </Target>
-    <Target Name="VCL_RP45">
-        <MSBuild Projects="РП-45_VCL\VCL_RP45.dproj"/>
-    </Target>
-    <Target Name="VCL_RP45:Clean">
-        <MSBuild Projects="РП-45_VCL\VCL_RP45.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="VCL_RP45:Make">
-        <MSBuild Projects="РП-45_VCL\VCL_RP45.dproj" Targets="Make"/>
-    </Target>
     <Target Name="VCLNNKDAC">
         <MSBuild Projects="VCL_NNK_DAC\VCLNNKDAC.dproj"/>
     </Target>
@@ -247,24 +232,6 @@
     </Target>
     <Target Name="VCLNNKDAC:Make">
         <MSBuild Projects="VCL_NNK_DAC\VCLNNKDAC.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="ProjectManager3">
-        <MSBuild Projects="ProjectManager\ProjectManager3.dproj"/>
-    </Target>
-    <Target Name="ProjectManager3:Clean">
-        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="ProjectManager3:Make">
-        <MSBuild Projects="ProjectManager\ProjectManager3.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="VCLControl3">
-        <MSBuild Projects="VCLControl\VCLControl3.dproj"/>
-    </Target>
-    <Target Name="VCLControl3:Clean">
-        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="VCLControl3:Make">
-        <MSBuild Projects="VCLControl\VCLControl3.dproj" Targets="Make"/>
     </Target>
     <Target Name="CreateDev">
         <MSBuild Projects="GeneratePSK\CreateDev.dproj"/>
@@ -419,14 +386,23 @@
     <Target Name="SDRead:Make">
         <MSBuild Projects="..\SDcard_MicroSD\MySd\SDRead.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Example2">
+        <MSBuild Projects="..\lua3\Examples\Example 2 - Extend TVerySimpleLua\Example2.dproj"/>
+    </Target>
+    <Target Name="Example2:Clean">
+        <MSBuild Projects="..\lua3\Examples\Example 2 - Extend TVerySimpleLua\Example2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Example2:Make">
+        <MSBuild Projects="..\lua3\Examples\Example 2 - Extend TVerySimpleLua\Example2.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;ProjectManager;VCLControl;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;D3H;VCL_RP45;VCLNNKDAC;ProjectManager3;VCLControl3;CreateDev;h2meta;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;LSQLMega;Easy64Inc;AT3AVR38Z;LasToSucop;dirdemo;Project3;Project7;SDRead"/>
+        <CallTarget Targets="Core;VCLControl3;ProjectManager3;ComDev;VCLTelesis;Monitor;VCLData;VCLDialogs;CreateData;WorkProg;bootLoader;Metrol;D3H;VCLNNKDAC;CreateDev;h2meta;CreateMeta;Glut;ErrAzim;tst;tstD2D1;Project4;ObjectFields;LSQLMega;Easy64Inc;AT3AVR38Z;LasToSucop;dirdemo;Project3;Project7;SDRead;Example2"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;ProjectManager:Clean;VCLControl:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;D3H:Clean;VCL_RP45:Clean;VCLNNKDAC:Clean;ProjectManager3:Clean;VCLControl3:Clean;CreateDev:Clean;h2meta:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;LSQLMega:Clean;Easy64Inc:Clean;AT3AVR38Z:Clean;LasToSucop:Clean;dirdemo:Clean;Project3:Clean;Project7:Clean;SDRead:Clean"/>
+        <CallTarget Targets="Core:Clean;VCLControl3:Clean;ProjectManager3:Clean;ComDev:Clean;VCLTelesis:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;CreateData:Clean;WorkProg:Clean;bootLoader:Clean;Metrol:Clean;D3H:Clean;VCLNNKDAC:Clean;CreateDev:Clean;h2meta:Clean;CreateMeta:Clean;Glut:Clean;ErrAzim:Clean;tst:Clean;tstD2D1:Clean;Project4:Clean;ObjectFields:Clean;LSQLMega:Clean;Easy64Inc:Clean;AT3AVR38Z:Clean;LasToSucop:Clean;dirdemo:Clean;Project3:Clean;Project7:Clean;SDRead:Clean;Example2:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;ProjectManager:Make;VCLControl:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;D3H:Make;VCL_RP45:Make;VCLNNKDAC:Make;ProjectManager3:Make;VCLControl3:Make;CreateDev:Make;h2meta:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;LSQLMega:Make;Easy64Inc:Make;AT3AVR38Z:Make;LasToSucop:Make;dirdemo:Make;Project3:Make;Project7:Make;SDRead:Make"/>
+        <CallTarget Targets="Core:Make;VCLControl3:Make;ProjectManager3:Make;ComDev:Make;VCLTelesis:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;CreateData:Make;WorkProg:Make;bootLoader:Make;Metrol:Make;D3H:Make;VCLNNKDAC:Make;CreateDev:Make;h2meta:Make;CreateMeta:Make;Glut:Make;ErrAzim:Make;tst:Make;tstD2D1:Make;Project4:Make;ObjectFields:Make;LSQLMega:Make;Easy64Inc:Make;AT3AVR38Z:Make;LasToSucop:Make;dirdemo:Make;Project3:Make;Project7:Make;SDRead:Make;Example2:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
@@ -436,23 +412,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLControl\VCLControl.dproj">
-            <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="..\w2001\AVRv3.6\AT3AVR38Z.dproj">
             <ProjectGuid>{362FA924-268D-4FED-A6D4-0C599BF014D6}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+        <BuildGroupProject Include="Frame_Test\Project7.dproj">
+            <ProjectGuid>{46EBA10B-03EE-4AC5-9168-CC39EED14C1F}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -507,18 +477,6 @@
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
-            <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
-            <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="CreatePSK\CreateData.dproj">
             <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
@@ -598,6 +556,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\lua3\Examples\Example 2 - Extend TVerySimpleLua\Example2.dproj">
+            <ProjectGuid>{E40EE218-4E4D-46EB-957C-68B73B73B6E4}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
             <ProjectGuid>{3F5B4110-95F0-4BF2-BBD2-7380C565B4FD}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -616,12 +580,6 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Frame_Test\Project7.dproj">
-            <ProjectGuid>{46EBA10B-03EE-4AC5-9168-CC39EED14C1F}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
@@ -633,6 +591,12 @@
             <Configurations/>
             <Platforms/>
             <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='RELEA'">
@@ -642,23 +606,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLControl\VCLControl.dproj">
-            <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="..\w2001\AVRv3.6\AT3AVR38Z.dproj">
             <ProjectGuid>{362FA924-268D-4FED-A6D4-0C599BF014D6}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+        <BuildGroupProject Include="Frame_Test\Project7.dproj">
+            <ProjectGuid>{46EBA10B-03EE-4AC5-9168-CC39EED14C1F}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -713,18 +671,6 @@
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
-            <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
-            <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="CreatePSK\CreateData.dproj">
             <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
@@ -804,6 +750,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\lua3\Examples\Example 2 - Extend TVerySimpleLua\Example2.dproj">
+            <ProjectGuid>{E40EE218-4E4D-46EB-957C-68B73B73B6E4}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
             <ProjectGuid>{3F5B4110-95F0-4BF2-BBD2-7380C565B4FD}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -822,12 +774,6 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Frame_Test\Project7.dproj">
-            <ProjectGuid>{46EBA10B-03EE-4AC5-9168-CC39EED14C1F}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -839,6 +785,12 @@
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='D1'">
@@ -848,23 +800,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLControl\VCLControl.dproj">
-            <ProjectGuid>{2B76D14A-C40F-450E-BB94-49C81CDD6DA9}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="..\w2001\AVRv3.6\AT3AVR38Z.dproj">
             <ProjectGuid>{362FA924-268D-4FED-A6D4-0C599BF014D6}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
-            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
-            <Configurations>Release</Configurations>
+        <BuildGroupProject Include="Frame_Test\Project7.dproj">
+            <ProjectGuid>{46EBA10B-03EE-4AC5-9168-CC39EED14C1F}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -919,18 +865,6 @@
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager.dproj">
-            <ProjectGuid>{C85873FC-4C27-4F49-9C10-5AF8AA26E6E4}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="РП-45_VCL\VCL_RP45.dproj">
-            <ProjectGuid>{FAEB0401-9B7C-4CF4-AFF8-CC68567CCFBE}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="CreatePSK\CreateData.dproj">
             <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
@@ -1010,6 +944,12 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\lua3\Examples\Example 2 - Extend TVerySimpleLua\Example2.dproj">
+            <ProjectGuid>{E40EE218-4E4D-46EB-957C-68B73B73B6E4}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="..\mULTILINE_TDbGrid_title\ObjectFields.dproj">
             <ProjectGuid>{3F5B4110-95F0-4BF2-BBD2-7380C565B4FD}</ProjectGuid>
             <Configurations>Debug</Configurations>
@@ -1028,12 +968,6 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Frame_Test\Project7.dproj">
-            <ProjectGuid>{46EBA10B-03EE-4AC5-9168-CC39EED14C1F}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
             <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
             <Configurations/>
@@ -1042,6 +976,12 @@
         </BuildGroupProject>
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
             <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>

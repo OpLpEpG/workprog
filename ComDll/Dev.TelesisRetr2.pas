@@ -2,7 +2,8 @@ unit Dev.TelesisRetr2;
 
 interface
 
-uses  System.SysUtils,  System.Classes, System.TypInfo, Xml.XMLIntf, Math.Telesistem, RootIntf, SubDevImpl, RootImpl, IndexBuffer,
+uses  tools,
+      System.SysUtils,  System.Classes, System.TypInfo, Xml.XMLIntf, Math.Telesistem, RootIntf, SubDevImpl, RootImpl, IndexBuffer,
       Container, DeviceIntf, Dev.Telesistem, ExtendIntf, Actns, Dev.Telesistem.Data, Dev.Telesistem.Decoder, JDtools, Vcl.ExtCtrls,
       CFifo, MathIntf, debug_except, Fifo.FFT, Fifo.Decoder, Math.Telesistem.Custom, Vcl.Dialogs, Vcl.Forms,
       JvExControls, JvInspector, JvComponentBase,  JvResources, System.Math, AVRtypes,
@@ -279,8 +280,6 @@ type
   end;
 
 implementation
-
-uses tools;
 
 function IsDataFifo(Obj: TObject): Boolean;
 begin
@@ -744,7 +743,7 @@ begin
   Result := False;
   if Supports(GContainer, IProjectOptions, opt) then
    begin
-    st := StrToDateTime(opt.Option['TIME_START']);
+    st := opt.DelayStart;
     if st > 0 then Result := st - Now <= 0;
     if not Result and Assigned(FFileStream) then  FFileStream.size := 0;
    end;

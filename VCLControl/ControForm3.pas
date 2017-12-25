@@ -39,6 +39,7 @@ type
     NGlu: TMenuItem;
     Neep: TMenuItem;
     NMetrol: TMenuItem;
+    NClc: TMenuItem;
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure NUpdateClick(Sender: TObject);
     procedure ppMPopup(Sender: TObject);
@@ -51,6 +52,7 @@ type
     procedure TreeCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
     procedure TreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
     procedure NReadRamClick(Sender: TObject);
+    procedure NClcClick(Sender: TObject);
   private
     FEditData: PNodeExData;
     FEditNode: PVirtualNode;
@@ -417,6 +419,23 @@ begin
   end;
 end;
 
+procedure TFormControl.NClcClick(Sender: TObject);
+ var
+  d: Idialog;
+  dr: IDialog<IXMLNode, TDialogResult>;
+begin
+  if (FEditData.Item as IXMLNode).NodeType = ntAttribute then
+   begin
+    FEditNode := FEditNode.Parent;
+    FEditData := Tree.GetNodeData(FEditNode);
+   end;
+   if RegisterDialog.TryGet<Dialog_ClcWrite>(d) then IDialog<IXMLNode, TDialogResult>(d).Execute(FEditData.Item as IXMLNode,
+   procedure(Sender: IDialog; Res: TModalResult)
+   begin
+
+   end);
+end;
+
 procedure TFormControl.NRemoveClick(Sender: TObject);
  var
   de: IDeviceEnum;
@@ -424,18 +443,28 @@ begin
   if not ((FEditData.Item as IDevice).Status in [dsNoInit, dsPartReady, dsReady]) then
     if not (FEditData.Item as IDevice).CanClose then
     raise EFormControlException.Create('Необходимо завершить операцию обмена данными');
+  try
   if Supports(GlobalCore, IDeviceEnum, de) then
    begin
-    de.Remove(FEditData.Item as IDevice);
-    (GlobalCore as IActionProvider).HideUnusedMenus;
-    (GlobalCore as IActionProvider).UpdateWidthBars;
-    (GlobalCore as IActionProvider).SaveActionManager;
-    ((GlobalCore as IActionEnum) as IStorable).Save;
+    try
+//     (FEditData.Item as IDataDevice).ClearMetaData;
+     de.Remove(FEditData.Item as IDevice);
+
+     if MessageDlg('Удалить архивные данные ?', mtWarning, [mbYes, mbCancel], 0) = mrYes then
+       (GlobalCore as IProjectDataFile).DeviceDataDelete(FEditData.Item as IDevice);
+    finally
+    end;
    end;
-  FEditData.Item := nil;
-  Tree.DeleteNode(FEditNode);
-  DeleteUnUsed;
-  Tree.Repaint;
+  finally
+   FEditData.Item := nil;
+   (GlobalCore as IActionProvider).HideUnusedMenus;
+   (GlobalCore as IActionProvider).UpdateWidthBars;
+   (GlobalCore as IActionProvider).SaveActionManager;
+   Tree.DeleteNode(FEditNode);
+   DeleteUnUsed;
+   Tree.Repaint;
+   ((GlobalCore as IActionEnum) as IStorable).Save;
+  end;
 end;
 
 procedure TFormControl.NSetupClick(Sender: TObject);
@@ -667,7 +696,16 @@ procedure TFormControl.ShowModulMenus(Flag: Boolean; node: IXMLnode);
   begin
     Result := Assigned(node) and Assigned(node.ChildNodes.FindNode(Attr))
   end;
+  function Cur(const Attr: string): Boolean;
+  begin
+    Result := Assigned(node) and (node.NodeName = Attr)
+  end;
+  function Atr(const Attr: string): Boolean;
+  begin
+    Result := Assigned(node) and (node.NodeType = ntAttribute) and (node.NodeName = Attr)
+  end;
 begin
+  Nclc.Visible := Flag and (Cur(T_RAM) or Cur(T_WRK) or atr(AT_FILE_NAME) or atr(AT_FILE_CLC));
   NReadRam.Visible := Flag and Chld(T_RAM);
   NInfo.Visible := Flag and Chld(T_WRK);
   Neep.Visible := Flag and Chld(T_EEPROM);

@@ -2,7 +2,7 @@ unit AutoMetr.GK;
 
 interface
 
-uses System.SysUtils, System.Generics.Collections, MetrInclin.Math, Vcl.ExtCtrls, Winapi.mmSystem, System.Types, Vcl.Dialogs,
+uses System.SysUtils, System.Generics.Collections, Vcl.ExtCtrls, Winapi.mmSystem, System.Types, Vcl.Dialogs,
 ExtendIntf, MetrForm, Xml.XMLIntf, RootIntf, RootImpl, StolGKIntf, Container, DeviceIntf, debug_except, tools;
 
 type

@@ -166,7 +166,7 @@ begin
   da.Name := s;
   da.InstanceName := Name;
   da.ActionComponentClass := ClassName;
-  da.ActionMethodName := 'OnShowAction';
+  da.ActionMethodNameExec := 'OnShowAction';
 //  da.AddToActionManager('Окна', Caption, ClassIcon, 0);
   TRegister.AddType<TIDynamicAction>.AddInstance(s, da as IInterface);
   (GlobalCore as IActionProvider).RegisterAction(da);
