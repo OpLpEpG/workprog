@@ -303,7 +303,7 @@ begin
    if not Assigned(FCash) then FCash := TFileMappingCash.Create(FFile);
    Result := FCash.Read(Count, PData, From);
 
-{   SetLength(b, Count);
+{'   SetLength(b, Count);
    PData := @B[0];
    if From >= 0 then FFile.Position := From;
    Result := FFile.Read(b[0], Count)}

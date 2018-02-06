@@ -50,8 +50,8 @@ type
 //    procedure AddToNCMenu(const ACaption: string; AClick: TNotifyEvent; out Item: TMenuItem; Index: Integer = -1; Autocheck: Integer = -1; Root: TMenuItem = nil); overload;
     function AddToNCMenu(const ACaption: string; AClick: TNotifyEvent = nil; Index: Integer = -1; Autocheck: Integer = -1; Root: TMenuItem = nil): TMenuItem;
     class function GetUniqueForm(const FormName: string): IForm;
-  public
     class procedure DoCreateForm(Sender: IAction); virtual;
+  public
     destructor Destroy; override;
     procedure SetNCMenusVisible(const snc: ShowNCMenu);
     function GetDockClient: TJvDockClient;

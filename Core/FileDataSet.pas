@@ -131,7 +131,7 @@ function TFileDataSet.GetRecData(Buffer: PRecBuffer): PByte;
 begin
   if FCurrDataID = Buffer.ID then Exit(FCurrDataBuffer)
   else
-    if FileData.Read(RecordLength, Pointer(Result), (Buffer.ID-1)*RecordLength) <> RecordLength then Result := nil
+    if FileData.Read(RecordLength, Pointer(Result), Int64(Buffer.ID-1)*Int64(RecordLength)) <> RecordLength then Result := nil
   else
    begin
     FCurrDataBuffer := Result;

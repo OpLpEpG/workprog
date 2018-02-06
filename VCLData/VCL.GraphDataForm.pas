@@ -7,7 +7,7 @@ uses  VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl, CustomPlot;
 
 type
-  TGraphDataForm = class(TCustomFormData)
+  TGraphDataForm = class(TCustomFormData, INotifyCanClose)
     Graph: TGraph;
     procedure GraphParamsAdded(d: TDataSet);
     procedure FormShow(Sender: TObject);
@@ -21,6 +21,7 @@ type
   protected
     procedure Loaded; override;
     class function ClassIcon: Integer; override;
+    procedure CanClose(var CanClose: Boolean);
   public
     [StaticAction('Новый график', 'Окна визуализации', NICON, '0:Показать.Окна визуализации')]
     class procedure DoCreateForm(Sender: IAction); override;
@@ -32,6 +33,11 @@ implementation
 {$R *.dfm}
 
 { TGraphDataForm }
+
+procedure TGraphDataForm.CanClose(var CanClose: Boolean);
+begin
+  Graph.Frost;
+end;
 
 class function TGraphDataForm.ClassIcon: Integer;
 begin

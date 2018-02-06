@@ -1214,12 +1214,13 @@ procedure TPskStd.DoData(Sender: IAction);
 //  ix: IProjectDataFile;
 begin
 //  if Supports(GlobalCore, IProjectDBData, pdb) then pdb.CommitTrans;
-  FActData := Sender;
+  FActData := Sender; { TODO : была ошибка с удалением psk возможно новая ошибка рестарта связана}
   if FFlagFlow then
    begin
     StopFlowRef(procedure(Res: boolean; p: PByte; n: integer)
     begin
-      FActData.Checked := False;
+      if Assigned(FActData) then FActData.Checked := False;
+      //FActData := nil; //???? нужно удалить ссылку ,,,
       FFlagFlow := False;
       S_Status := FOldStatus;
       ConnectUnlock;

@@ -85,7 +85,7 @@ begin
   TThread.CreateAnonymousThread(procedure
    var
     f,ak: TFileStream;
-    akFileName: string;
+    akFileName, ifFileName: string;
     frm, i: Integer;
     newPos: Integer;
     akLen: Integer;
@@ -97,17 +97,18 @@ begin
    // fldID: TField;
   begin
      try
-      if od.FileName <> '' then
-       begin
-        akFileName := TPath.ChangeExtension(od.FileName, 'ak1');
-        if TFile.Exists(od.FileName) then TFile.Delete(od.FileName);
-        if TFile.Exists(akFileName) then TFile.Delete(akFileName);
-        f := TFileStream.Create(od.FileName, fmCreate);
-        ak := TFileStream.Create(akFileName, fmCreate);
-       end
-      else Exit;
-      FXDataSet.DisableControls;
       try
+        if od.FileName <> '' then
+         begin
+          akFileName := TPath.ChangeExtension(od.FileName, 'ak1');
+          ifFileName := TPath.ChangeExtension(od.FileName, 'if');
+          if TFile.Exists(ifFileName) then TFile.Delete(ifFileName);
+          if TFile.Exists(akFileName) then TFile.Delete(akFileName);
+          f := TFileStream.Create(ifFileName, fmCreate);
+          ak := TFileStream.Create(akFileName, fmCreate);
+         end
+        else Exit;
+        FXDataSet.DisableControls;
 //        fldID := FXDataSet.FieldByName('ID');
         Setlength(akFields, 9);
         for I := 0 to 8 do akFields[i] := FXDataSet.FieldByName(Format(FKDN,[FXDataSet.XMLSection.ParentNode.NodeName, i]));

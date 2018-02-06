@@ -308,6 +308,7 @@ type
   protected
     FStored: ROOT;
     procedure SetROOT(const Value: ROOT);
+    function GetROOT: ROOT;
   public
     constructor CreateUser(AStored: ROOT);
     destructor Destroy; override;
@@ -2012,6 +2013,11 @@ function TFactoryPersistent<ROOT>.GetClass: string;
 begin
   if Assigned(FStored) then Result := FStored.ClassName
   else Result := '';
+end;
+
+function TFactoryPersistent<ROOT>.GetROOT: ROOT;
+begin
+  Result := FStored;
 end;
 
 procedure TFactoryPersistent<ROOT>.SetClass(const Value: string);

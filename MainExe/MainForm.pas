@@ -814,7 +814,11 @@ begin
         LoadDockTreeFromAppStorage(xini, 'DockTree');
         LoadTabForms();
 
+       try
         FormStorage.RestoreFormPlacement;
+       except
+        on E: Exception do TDebug.DoException(E);
+       end;
 
         //FormPlacement.RestoreFormPlacement;
       finally
@@ -823,11 +827,13 @@ begin
     end;
 end;
 
+
 function TFormMain.IProjectNew(out ProjectName: string): Boolean;
  var
   me: IManagerEx;
   m: IManager;
   s: string;
+  wf: IForm;
 begin
   Result := True;
   with TOpenDialog.Create(nil) do
@@ -846,14 +852,30 @@ begin
     end;
    Options := [ofOverwritePrompt,ofHideReadOnly,ofEnableSizing];
    if not Execute() then Exit(False);
+   try
    IProjectInnerLoad(FileName, True);
-   if Supports(GContainer, IManager, m) then
-    begin
-     s := m.ProjectName;
-     rini.WriteString('CurrentProject', s);
-     ProjectName := s;
-     StatusBar[1] := s;
-    end;
+
+    (GlobalCore as IFormEnum).Clear;
+    ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
+
+    wf := GContainer.CreateValuedInstance<string>('TFormControl', 'CreateUser', 'GlobalControlForm') as IForm;
+    if Assigned(wf) then
+     begin
+      (GContainer as IFormEnum).Add(wf);
+      (GContainer as ITabFormProvider).Dock(wf, 1);
+      ShowDockForm(TForm(wf.GetComponent));
+     end;
+    FMainScreenChange := True;
+    ShowDockForm(TFormExceptions.This);
+   finally
+     if Supports(GContainer, IManager, m) then
+      begin
+       s := m.ProjectName;
+       rini.WriteString('CurrentProject', s);
+       ProjectName := s;
+       StatusBar[1] := s;
+      end;
+   end;
   finally
    Free;
   end;
@@ -993,9 +1015,9 @@ procedure TFormMain.Dock(const Form: IForm; Corner: Integer);
   f: TForm;
 begin
   f := TForm(Form.GetComponent);
-  JvDockServer.LeftDockPanel.Width := f.Width;
-  F.ManualDock(JvDockServer.LeftDockPanel , nil, JvDockServer.LeftDockPanel.Align);
-  JvDockServer.LeftDockPanel.ShowDockPanel(True, F);
+  JvDockServer.DockPanel[TJvDockPosition(Corner)].Width := f.Width;
+  F.ManualDock(JvDockServer.DockPanel[TJvDockPosition(Corner)] , nil, JvDockServer.DockPanel[TJvDockPosition(Corner)].Align);
+  JvDockServer.DockPanel[TJvDockPosition(Corner)].ShowDockPanel(True, F);
 end;
 
 //procedure TFormMain.SowPrg(sho: Boolean);

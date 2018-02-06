@@ -77,17 +77,16 @@
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <VerInfo_Release>1</VerInfo_Release>
         <Debugger_DebugSourcePath>C:\XE\Libs\Graphics32\Source\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
-        <VerInfo_MinorVer>1</VerInfo_MinorVer>
-        <AppEnableHighDPI>true</AppEnableHighDPI>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.40;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_RangeChecking>true</DCC_RangeChecking>
-        <VerInfo_Build>40</VerInfo_Build>
+        <VerInfo_Build>0</VerInfo_Build>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <DCC_MapFile>3</DCC_MapFile>
-        <VerInfo_DLL>true</VerInfo_DLL>
         <DCC_DcuOutput>..\_unit\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -99,11 +98,10 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_MajorVer>1</VerInfo_MajorVer>
+        <VerInfo_AutoIncVersion>false</VerInfo_AutoIncVersion>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <VerInfo_Build>0</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <DCC_MapFile>3</DCC_MapFile>
-        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

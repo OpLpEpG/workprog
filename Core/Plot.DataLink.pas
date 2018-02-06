@@ -2,7 +2,8 @@ unit Plot.DataLink;
 
 interface
 
-uses System.SysUtils, ExtendIntf, System.Rtti, System.TypInfo, Data.DB, System.Classes,  debug_except, DataSetIntf, FileDataSet,
+uses IDataSets,
+     System.SysUtils, ExtendIntf, System.Rtti, System.TypInfo, Data.DB, System.Classes,  debug_except, DataSetIntf, FileDataSet,
      CustomPlot, LasDataSet, XMLDataSet, FileCachImpl, Parser, Winapi.ActiveX;
 
 type
@@ -321,9 +322,9 @@ begin
   FYFrom := YFrom;
   FYto := Yto;
   tick := TThread.GetTickCount;
-  ReadFromDB;
-  TDebug.Log('ReadFromDB %s %f, %f время счит %1.2f',[XFieldDef.FullName, YFrom, Yto, (TThread.GetTickCount- tick)/1000]);
-  Exit;
+ // ReadFromDB;
+//  TDebug.Log('ReadFromDB %s %f, %f время счит %1.2f',[XFieldDef.FullName, YFrom, Yto, (TThread.GetTickCount- tick)/1000]);
+//  Exit;
  //неработает если выбираешь несколько данных LAS проблемма с синхронизацией потоков появляются нулевые У в файле
   if not FbuffReady then
    begin
@@ -332,6 +333,7 @@ begin
     begin
       FFileData.Lock;
       try
+       try
        //Tdebug.Log('TmpBuff: %d, Rec*Len: %d', [FFileData.Size, DataSet.RecordCount*FileRecLen]);
        if FFileData.Size = DataSet.RecordCount*FileRecLen then
         begin
@@ -339,6 +341,9 @@ begin
          InitBuffFromFile;
          FbuffReady := True;
          NillDataSet;
+        end;
+        except
+         on E: Exception do TDebug.DoException(E);
         end;
       finally
        FFileData.UnLock;
@@ -350,15 +355,22 @@ begin
   if FbuffReady then ReadFromMemBuffer
   else if Length(Fbuff) = 0 then
    begin
-    ReadFromDB;
+    //ReadFromDB;
     if not Assigned(FInitBufThread) then FInitBufThread := TReadDataThread.Create(procedure
      var
       ids: IDataSet;
+      DSDef: TIDataSetDef;
+      CapturedException: Exception;
     begin
       FInitBufThread.FreeOnTerminate := True;
       try
-       if not DataSetDef.CreateNew(ids{, False}) then Exit;
-       InitMemBuffer(ids.DataSet);
+        try
+         DSDef := DataSetDef;
+         if not DSDef.CreateNew(ids{, False}) then Exit;
+         InitMemBuffer(ids.DataSet);
+        except
+         on E: Exception do TDebug.DoException(E);
+        end;
       finally
        FInitBufThread := nil;
       end;
@@ -370,10 +382,14 @@ begin
     begin
       FFileData.Lock;
       try
-        if not Assigned(Fids) and not DataSetDef.CreateNew(Fids{, False}) then Exit;
-        InitMemBuffer(Fids.DataSet, false);
-      finally
-       FFileData.UnLock;
+        try
+          if not Assigned(Fids) and not DataSetDef.CreateNew(Fids{, False}) then Exit;
+          InitMemBuffer(Fids.DataSet, false);
+        finally
+         FFileData.UnLock;
+        end;
+      except
+       on E: Exception do TDebug.DoException(E);
       end;
     end);
 //    th.WaitFor;

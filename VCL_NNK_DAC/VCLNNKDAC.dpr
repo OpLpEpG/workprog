@@ -14,7 +14,7 @@ uses
   AbstractPlugin,
   Container,
   System.Classes,
-  NNKDacForm in 'NNKDacForm.pas' {FormDACNNk};
+  NNKDacForm in 'NNKDacForm.pas' {FormDACNNk_abst};
 
 {$R *.res}
 

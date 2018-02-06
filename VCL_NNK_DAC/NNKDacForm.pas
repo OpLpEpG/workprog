@@ -11,7 +11,7 @@ type
   ['{676897CD-846A-4CEE-B3C8-572DA1535FE5}']
   end;
   EFormDACNNk = class(EBaseException);
-  TFormDACNNk = class(TDialogIForm, IDialog, IDialog<Integer>)
+  TFormDACNNk_abst = class(TDialogIForm, IDialog, IDialog<Integer>)
     btRead: TButton;
     btWrite: TButton;
     btExit: TButton;
@@ -26,22 +26,49 @@ type
     NICON = 178;
    var
     Adr: Integer;
-    FGamma: word;
-    FDac2: word;
     FDac1: word;
+    FDac2: word;
+    FDac3: word;
+    FDac4: word;
     function GetDevice: IEepromDevice;
   protected
     class function ClassIcon: Integer; override;
     function GetInfo: PTypeInfo; override;
     function Execute(InputData: Integer): Boolean;
   public
+    property Dac1: word read FDac1 write FDac1;
+    property Dac2: word read FDac2 write FDac2;
+    property Dac3: word read FDac3 write FDac3;
+    property Dac4: word read FDac4 write FDac4;
+  end;
+
+  TFormDACNNk = class(TFormDACNNk_abst)
+  private
+   const
+    NICON = 178;
+  public
     [StaticAction('ЦАП ННК', 'Отладочные', NICON, '0:Показать.Отладочные')]
     class procedure DoCreateDialog5(Sender: IAction);
     [StaticAction('ЦАП Гамма', 'Отладочные', NICON, '0:Показать.Отладочные')]
     class procedure DoCreateDialog4(Sender: IAction);
-    [ShowProp('ННК 1')]  property Dac1: word read FDac1 write FDac1;
-    [ShowProp('ННК 2')]  property Dac2: word read FDac2 write FDac2;
-    [ShowProp('Гамма')]  property Gamma: word read FGamma write FGamma;
+    [ShowProp('ННК 1')]  property Dac1;
+    [ShowProp('ННК 2')]  property Dac2;
+    [ShowProp('Гамма')]  property Dac3;
+  end;
+
+  Dialog_FormDACAGK = interface
+  ['{F8B148AC-F9FC-4809-B027-7268199C8B0C}']
+  end;
+  TFormDACAGK  = class(TFormDACNNk_abst)
+  protected
+    function GetInfo: PTypeInfo; override;
+  public
+    [StaticAction('ЦАП Азим.Гамма', 'Отладочные', TFormDACNNk.NICON, '0:Показать.Отладочные')]
+    class procedure DoCreateDialog9(Sender: IAction);
+    [ShowProp('Гк-1')]  property Dac1;
+    [ShowProp('Гк-2')]  property Dac2;
+    [ShowProp('Гк-3')]  property Dac3;
+    [ShowProp('Гк-4')]  property Dac4;
   end;
 
 implementation
@@ -52,7 +79,7 @@ uses tools;
 
 { TFormDACNNk }
 
-class function TFormDACNNk.ClassIcon: Integer;
+class function TFormDACNNk_abst.ClassIcon: Integer;
 begin
   Result := NICON;
 end;
@@ -71,27 +98,28 @@ begin
   if RegisterDialog.TryGet<Dialog_FormDACNNk>(d) then (d as IDialog<Integer>).Execute(4);
 end;
 
-function TFormDACNNk.GetInfo: PTypeInfo;
+function TFormDACNNk_abst.GetInfo: PTypeInfo;
 begin
   Result := TypeInfo(Dialog_FormDACNNk);
 end;
 
-procedure TFormDACNNk.btExitClick(Sender: TObject);
+procedure TFormDACNNk_abst.btExitClick(Sender: TObject);
 begin
-  RegisterDialog.UnInitialize<Dialog_FormDACNNk>;
+  RegisterDialog.UnInitialize(GetInfo);
 end;
 
-function TFormDACNNk.Execute(InputData: Integer): Boolean;
+function TFormDACNNk_abst.Execute(InputData: Integer): Boolean;
 begin
   Result := True;
   Adr := InputData;
-  if Adr = 5 then Caption := 'Установка ЦАП модуля ННК'
+  if Adr = 9 then Caption := 'Установка ЦАП модуля AGK'
+  else if Adr = 5 then Caption := 'Установка ЦАП модуля ННК'
   else Caption := 'Установка ЦАП модуля Гамма';
   ShowPropAttribute.Apply(Self, Insp);
   IShow;
 end;
 
-function TFormDACNNk.GetDevice: IEepromDevice;
+function TFormDACNNk_abst.GetDevice: IEepromDevice;
  var
   d: IDevice;
   a: Integer;
@@ -101,7 +129,7 @@ begin
   raise EFormDACNNk.CreateFmt('Нет устройств с адресом %d',[Adr]);
 end;
 
-procedure TFormDACNNk.btReadClick(Sender: TObject);
+procedure TFormDACNNk_abst.btReadClick(Sender: TObject);
  var
   ee: IEepromDevice;
   root: Variant;
@@ -115,25 +143,45 @@ begin
     if Res.DevAdr = Adr then
      begin
 //      ee.GetMetaData.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'EEP.xml');
-      FDac1 := root.DAC.нк1.DEV.VALUE shr 4;
-      FDac2 := root.DAC.нк2.DEV.VALUE shr 4;
-      FGamma := root.DAC.нгк.DEV.VALUE shr 4;
+      if Adr = 9 then
+       begin
+        FDac1 := root.GR1.DEV.VALUE shr 4;
+        FDac2 := root.GR2.DEV.VALUE shr 4;
+        FDac3 := root.GR3.DEV.VALUE shr 4;
+        FDac4 := root.GR4.DEV.VALUE shr 4;
+       end
+      else
+       begin
+        FDac1 := root.DAC.нк1.DEV.VALUE shr 4;
+        FDac2 := root.DAC.нк2.DEV.VALUE shr 4;
+        FDac3 := root.DAC.нгк.DEV.VALUE shr 4;
+       end;
       insp.RefreshValues;
       st.Panels[0].Text := 'Read GOOD';
      end;
   end);
 end;
 
-procedure TFormDACNNk.btWriteClick(Sender: TObject);
+procedure TFormDACNNk_abst.btWriteClick(Sender: TObject);
  var
   ee: IEepromDevice;
   root: Variant;
 begin
   ee := GetDevice;
   root := XToVar(FindEeprom(ee.GetMetaData.Info, Adr));
-  Root.DAC.нк1.DEV.VALUE := FDac1 shl 4;
-  Root.DAC.нк2.DEV.VALUE := FDac2 shl 4;
-  Root.DAC.нгк.DEV.VALUE := FGamma shl 4;
+  if Adr = 9 then
+   begin
+    Root.GR1.DEV.VALUE := FDac1 shl 4;
+    Root.GR2.DEV.VALUE := FDac2 shl 4;
+    Root.GR3.DEV.VALUE := FDac3 shl 4;
+    Root.GR4.DEV.VALUE := FDac4 shl 4;
+   end
+  else
+   begin
+    Root.DAC.нк1.DEV.VALUE := FDac1 shl 4;
+    Root.DAC.нк2.DEV.VALUE := FDac2 shl 4;
+    Root.DAC.нгк.DEV.VALUE := FDac3 shl 4;
+   end;
   ee.WriteEeprom(Adr, procedure (Res: Boolean)
   begin
     if Res then st.Panels[0].Text := 'write GOOD'
@@ -141,8 +189,24 @@ begin
   end);
 end;
 
+{ TFormDACAGK }
+
+class procedure TFormDACAGK.DoCreateDialog9(Sender: IAction);
+ var
+  d: Idialog;
+begin
+  if RegisterDialog.TryGet<Dialog_FormDACAGK>(d) then (d as IDialog<Integer>).Execute(9);
+end;
+
+function TFormDACAGK.GetInfo: PTypeInfo;
+begin
+  Result := TypeInfo(Dialog_FormDACAGK);
+end;
+
 initialization
   RegisterDialog.Add<TFormDACNNk, Dialog_FormDACNNk>;
+  RegisterDialog.Add<TFormDACAGK, Dialog_FormDACAGK>;
 finalization
   RegisterDialog.Remove<TFormDACNNk>;
+  RegisterDialog.Remove<TFormDACAGK>;
 end.

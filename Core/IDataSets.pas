@@ -32,7 +32,7 @@ type
     property DataSetIntf: IDataSet read GetIDataSet;
   published
   // затем загружаем published значения DataSetDef
-    property DataSetDef: TIDataSetDef read FStored write SetROOT;
+    property DataSetDef: TIDataSetDef read GetROOT write SetROOT;
   end;
 
   TIDataSet = class(TDataSet, IInterface{!!!!!! иначе _AddRef _Release будут иногда старые}, IManagItem, IBind, IDataSet)

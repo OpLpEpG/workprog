@@ -75,14 +75,15 @@
     </PropertyGroup>
     <Import Project="..\_prg_set.optset" Condition="'$(Cfg_1_Win32)'!='' And Exists('..\_prg_set.optset')"/>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_Build>1</VerInfo_Build>
+        <VerInfo_Release>1</VerInfo_Release>
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
         <DCC_RangeChecking>true</DCC_RangeChecking>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
         <DCC_DcuOutput>unit\$(Config)</DCC_DcuOutput>
-        <VerInfo_Build>293</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.0.293;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <CfgDependentOn>..\_prg_set.optset</CfgDependentOn>
@@ -94,9 +95,14 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
-        <DCC_MapFile>3</DCC_MapFile>
+        <VerInfo_DLL>true</VerInfo_DLL>
+        <AppEnableHighDPI>true</AppEnableHighDPI>
+        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <VerInfo_Build>3</VerInfo_Build>
+        <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.0.3;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

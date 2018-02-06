@@ -4,6 +4,7 @@ interface
 
 uses  RootIntf, debug_except,ExtendIntf, DeviceIntf, Container, Tools, RootImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, math,
+  JvDockControlForm,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, VirtualTrees, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, CPortCtl;
 
 type
@@ -116,8 +117,8 @@ begin
       wf := GContainer.CreateValuedInstance<string>('TFormWrok', 'CreateUser', '') as IForm;
       (GContainer as IFormEnum).Add(wf);
       (wf as ISetDevice).SetDataDevice(FDevice.IName);
-      wf.Show;
       (GContainer as ITabFormProvider).Dock(wf, 0);
+      ShowDockForm(TForm(wf.GetComponent));
      end;
     (GlobalCore as IActionProvider).SaveActionManager;
     ((GlobalCore as IActionEnum) as IStorable).Save;

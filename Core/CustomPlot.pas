@@ -363,11 +363,11 @@ type
   /// </summary>
   TCustomDataLinkClass = class of TCustomDataLink;
 
-  TCustomDataLink = class abstract(TDataSetFactory, IDataLink, ICaption)
+  TCustomDataLink = class(TDataSetFactory, IDataLink, ICaption)
   private
     FOwner: TGraphPar;
     FIDataSet: IDataSet;
-    FDataSetDef: TIDataSetDef;
+//    FDataSetDef: TIDataSetDef;
     FXParamPath: string;
     FYParamPath: string;
     FDrowMemoryBuffer: IInterface;
@@ -412,7 +412,7 @@ type
   published
    // property DataSetDefClass: string read GetDataSetClass write SetDataSetClass;
     [ShowProp('База данных', True)]
-    property DataSetDef;//: TIDataSetDef;// read FDataSetDef write SetDataSetDef;
+    property DataSetDef;//: TIDataSetDef read FStored write SetROOT;
     [ShowProp('X', True)]
     property XParamPath: string read FXParamPath write FXParamPath;
     [ShowProp('Y', True)]
@@ -1598,8 +1598,6 @@ end;
 destructor TCustomDataLink.Destroy;
 begin
   Tdebug.log(' ===  TCustomDataLink.Destroy === ' + XParamPath + '      ');
-  if Assigned(FDataSetDef) then
-    FreeAndNil(FDataSetDef);
   inherited;
 end;
 
@@ -2498,7 +2496,7 @@ begin
           First;
           f := min(f, p.Link.FieldY.AsFloat + p.DeltaY);
           Last;
-          l := max(f, p.Link.FieldY.AsFloat + p.DeltaY);
+          l := max(l, p.Link.FieldY.AsFloat + p.DeltaY);
         finally
           Bookmark := b;
           p.Link.DataSet.active := SaveActive;

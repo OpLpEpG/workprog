@@ -321,6 +321,7 @@ end;
 class procedure ShowPropAttribute.Apply(Obj: TObject; Insp: TJvInspector);
 begin
   Insp.Clear;
+  Insp.Root.SortKind := iskNone;
   RttiContext := TRttiContext.Create;
   try
    ApplyItem(Insp.Root, Obj);
@@ -339,6 +340,7 @@ begin
   else
    begin
     Insp.Clear;
+    Insp.Root.SortKind := iskNone;
     RttiContext := TRttiContext.Create;
     try
      ApplyItemArray(Insp.Root, Obj, BefoSet, AfteSet);

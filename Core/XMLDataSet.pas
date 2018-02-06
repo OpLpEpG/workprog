@@ -231,7 +231,7 @@ begin
   if FCurrClcID = Buffer.ID then Exit(FCurrClcBuffer)
   else
   try
-   if ClcData.Read(CalcDataLen, Pointer(Result), (Buffer.ID-1)*CalcDataLen) <> CalcDataLen then Result := nil
+   if ClcData.Read(CalcDataLen, Pointer(Result), Int64(Buffer.ID-1)*Int64(CalcDataLen)) <> CalcDataLen then Result := nil
    else
     begin
      FCurrClcBuffer := Result;

@@ -7,7 +7,7 @@ ExtendIntf, MetrForm, Xml.XMLIntf, RootIntf, RootImpl, UakiIntf, Container, Devi
 
 type
   TinclAuto = class;
-
+/// движение по к значениям стола
   TGOTask = class
    Owner: TinclAuto;
    ax: IAxis;
@@ -36,7 +36,7 @@ type
   { TODO :
 т.к. нет команды относительного поворота нужно продумать работу алгоритма в районе 0
 пока не делаю сложно разработать акуратную работу}
-  TGOMaxMinVIzir = class(TGOTask)
+{  TGOMaxMinVIzir = class(TGOTask)
    LastAmp: Double;
    LastAng: TAngle;
    FIsRun: Boolean;
@@ -46,8 +46,17 @@ type
    function AxisMax: Double;
    procedure Start(); override;
    procedure Iterate; override;
-  end;
+  end;}
 
+  TTaskTemp = class(TGOTask)
+   FIsNagrev: Boolean;
+   FTemp: Double;
+   Fpath: string;
+   constructor Create(AOwner: TinclAuto; const pathT: string; Temp: Double; IsNagrev: Boolean);
+   function CurTemp: Double;
+   procedure Start(); override;
+   procedure Iterate; override;
+  end;
 
   TinclAuto = class(TAutomatMetrology)
   private
@@ -196,7 +205,7 @@ end;
 
 { TGOMaxMinVIzir }
 
-function TGOMaxMinVIzir.AxisMax: Double;
+{function TGOMaxMinVIzir.AxisMax: Double;
  var
   x: IXMLNode;
 begin
@@ -229,8 +238,40 @@ end;
 procedure TGOMaxMinVIzir.Start;
 begin
   FIsRun := False;
+end;}
+
+
+{ TTaskTempOst }
+
+constructor TTaskTemp.Create(AOwner: TinclAuto; const pathT: string; Temp: Double; IsNagrev: Boolean);
+begin
+  Owner := AOwner;
+  Fpath := pathT;
+  FTemp := Temp;
+  FIsNagrev := IsNagrev;
+  Owner.FTask.Add(self);
 end;
 
+function TTaskTemp.CurTemp: Double;
+ var
+  x: IXMLNode;
+begin
+  if not TryGetX(Owner.FMetr, Fpath, x, 'VALUE') then raise EFormMetrolog.Createfmt('Путь %s не найден', [Fpath]);
+  Result := x.NodeValue;
+end;
+
+procedure TTaskTemp.Iterate;
+begin
+  if (not FIsNagrev and (CurTemp - FTemp <= 0)) or (FIsNagrev and (CurTemp - FTemp >= 0)) then
+     Owner.FTask.Remove(Self)
+  else
+     Owner.Report(samRun, Format('Остывание от %1.0f до %1.0f',[CurTemp, FTemp]));
+end;
+
+procedure TTaskTemp.Start;
+begin
+
+end;
 
 { TinclAuto }
 
@@ -330,6 +371,7 @@ procedure TinclAuto.RunAutomat;
  end;
   var
    i: Integer;
+   a: TAngle;
 begin
   case Fauto of
     eaNone: Report(samEnd, 'Ожидание следующей команды');
@@ -343,6 +385,24 @@ begin
        AddStol('Azimut_Stol', uaki.Azi, gp('Azimut_tol', 2));
        AddStol('Zenit_Stol', uaki.Zen, gp('Zenit_tol', 0.2));
        AddStol('Vizir_Stol', uaki.Viz, gp('Vizir_tol', 2));
+       if FStep.HasAttribute('Vizir_StolPA') then
+        begin
+         a := Tangle(FStep.Attributes['Vizir_StolPA']) + Tangle(FStep.ParentNode.ParentNode.Attributes['MagNaklon']);
+         TGOTask.Create(Self, a, uaki.Viz, 2);
+        end;
+       if FStep.HasAttribute('Zenit_StolPA') then
+        begin
+         a := Tangle(FStep.Attributes['Zenit_StolPA']) + Tangle(FStep.ParentNode.ParentNode.Attributes['MagNaklon']);
+         TGOTask.Create(Self, a, uaki.Zen, 0.2);
+        end;
+       if FStep.HasAttribute('Temp_Nagr') then
+        begin
+         TTaskTemp.Create(Self, 'Inclin1.T.DEV', FStep.Attributes['Temp_Nagr'], True);
+        end;
+       if FStep.HasAttribute('Temp_Ost') then
+        begin
+         TTaskTemp.Create(Self, 'Inclin1.T.DEV', FStep.Attributes['Temp_Ost'], False);
+        end;
        if FStep.HasAttribute('Vizir_Dev') then
         begin
          TGODev.Create(Self, FStep.Attributes['Vizir_Dev'], uaki.Viz, 'accel.X', 'accel.Y', gp('Vizir_tol', 0.06), gp('Vizir_NIter', 7));

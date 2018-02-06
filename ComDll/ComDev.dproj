@@ -74,10 +74,11 @@
     </PropertyGroup>
     <Import Project="..\_prg_set.optset" Condition="'$(Cfg_1_Win32)'!='' And Exists('..\_prg_set.optset')"/>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <VerInfo_Build>2</VerInfo_Build>
+        <VerInfo_Release>1</VerInfo_Release>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
-        <VerInfo_Build>35</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.1.0.35;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=2.1.0.0;Comments=</VerInfo_Keys>
-        <Manifest_File>None</Manifest_File>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <UsePackages>true</UsePackages>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
         <DCC_DcuOutput>unit\$(Config)</DCC_DcuOutput>
@@ -91,11 +92,12 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Build>1</VerInfo_Build>
+        <VerInfo_DLL>true</VerInfo_DLL>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <VerInfo_AutoIncVersion>false</VerInfo_AutoIncVersion>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <UsePackages>true</UsePackages>
-        <DCC_MapFile>3</DCC_MapFile>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <ItemGroup>
