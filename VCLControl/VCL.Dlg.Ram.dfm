@@ -2,7 +2,7 @@ object FormDlgRam: TFormDlgRam
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1095#1090#1077#1085#1080#1103' '#1087#1072#1084#1103#1090#1080
-  ClientHeight = 333
+  ClientHeight = 344
   ClientWidth = 384
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,7 +14,7 @@ object FormDlgRam: TFormDlgRam
   Position = poMainFormCenter
   DesignSize = (
     384
-    333)
+    344)
   PixelsPerInch = 96
   TextHeight = 13
   object lbFile: TLabel
@@ -40,8 +40,8 @@ object FormDlgRam: TFormDlgRam
     Enabled = False
   end
   object btStart: TButton
-    Left = 17
-    Top = 282
+    Left = 16
+    Top = 294
     Width = 75
     Height = 25
     Caption = #1057#1090#1072#1088#1090
@@ -49,8 +49,8 @@ object FormDlgRam: TFormDlgRam
     OnClick = btStartClick
   end
   object btExit: TButton
-    Left = 292
-    Top = 282
+    Left = 291
+    Top = 294
     Width = 75
     Height = 25
     Caption = #1042#1099#1093#1086#1076
@@ -65,20 +65,21 @@ object FormDlgRam: TFormDlgRam
     Height = 17
     Caption = #1063#1080#1090#1072#1090#1100' '#1076#1086' '#1087#1091#1089#1090#1086#1081' '#1087#1072#1084#1103#1090#1080
     Checked = True
+    Enabled = False
     State = cbChecked
     TabOrder = 2
   end
   object Progress: TProgressBar
-    Left = 18
-    Top = 259
+    Left = 17
+    Top = 271
     Width = 348
     Height = 17
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 3
   end
   object btTerminate: TButton
-    Left = 98
-    Top = 282
+    Left = 97
+    Top = 294
     Width = 75
     Height = 25
     Caption = #1055#1088#1077#1088#1074#1072#1090#1100
@@ -87,7 +88,7 @@ object FormDlgRam: TFormDlgRam
   end
   object sb: TStatusBar
     Left = 0
-    Top = 314
+    Top = 325
     Width = 384
     Height = 19
     Panels = <
@@ -175,8 +176,9 @@ object FormDlgRam: TFormDlgRam
     Left = 18
     Top = 144
     Width = 348
-    Height = 112
+    Height = 122
     Anchors = [akLeft, akTop, akRight]
+    AutoSize = True
     TabOrder = 11
     ExplicitLeft = 18
     ExplicitTop = 144

@@ -44,6 +44,18 @@ object FormInclin: TFormInclin
       WordWrap = True
       ExplicitWidth = 3
     end
+    object pc: TCPageControl
+      Left = 0
+      Top = 0
+      Width = 646
+      Height = 276
+      Align = alClient
+      TabOrder = 1
+      ExplicitLeft = 248
+      ExplicitTop = 40
+      ExplicitWidth = 289
+      ExplicitHeight = 193
+    end
     object Tree: TVirtualStringTree
       Left = 0
       Top = 0

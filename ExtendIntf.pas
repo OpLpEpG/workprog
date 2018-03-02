@@ -384,6 +384,17 @@ type
     procedure Execute(const ExePath: string; adr: Integer); overload;
     procedure GetMetrStrings(var Values: TStrings; node: IXMLNode = nil);
     procedure SetMetr(node: IXMLNode; ExeSc: IXmlScript; ExecSetup: Boolean);
+    /// <summary>
+    /// Вызывается при удачном чтении метаданных устройства
+    ///  обновляет данные скрипта выполнения прибора, вынолняет локальный скрипт установки
+    /// </summary>
+    /// <param name="node"> Корневой элемент прибора или устройства </param>
+    ///
+    /// <param name="adr">адрес устройства</param>
+    ///
+    /// <param name="ExeSc"> Глобальный скрипт выполнения прибора</param>
+    procedure UpdateExecRunSetupMetr(node: IXMLNode;  adr: Integer; ExeSc: IXmlScript);
+
     property Lines: TStrings read PropGetLines write PropSetLines;
     property ErrorMsg: String read GetErrorMsg;
     property ErrorPos: String read GetErrorPos;

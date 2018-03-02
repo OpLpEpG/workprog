@@ -675,6 +675,7 @@ end;
 
 class function CTime.AsString(t: TTime): string;
 begin
+  if t > 365  then Exit('99 00:00:00');
   Result := TimeToStr(t);
   if Abs(Double(t)) >= 1 then Result := Format('%2d %8s',[Trunc(Abs(t)), Result])
 end;
@@ -1017,7 +1018,7 @@ function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootA
        begin
         Result := False;
         //OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'ie.xml');
-        TDebug.Log(ie.NodeName);
+       // TDebug.Log(ie.NodeName);
        end
       else if Assigned(Action) then Action(e, ie, t, it)
      end;
@@ -1027,7 +1028,7 @@ function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootA
       if not Assigned(it) then
        begin
         Result := False;
-        TDebug.Log(ie.NodeName);
+       // TDebug.Log(ie.NodeName);
        end
       else rec(ie, it)
      end;

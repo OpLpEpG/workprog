@@ -90,7 +90,8 @@ type
     procedure Tab(const Form: IForm);
     procedure UnTab(const Form: IForm);
     procedure SetActiveTab(const Form: IForm);
-    procedure Dock(const Form: IForm; Corner: Integer);
+    procedure ITabFormProvider.Dock = ITabFormProviderDock;
+    procedure ITabFormProviderDock(const Form: IForm; Corner: Integer);
     //IMainScreen
     procedure IMainScreen.Changed = MainScreenChanged;
     procedure MainScreenChanged;
@@ -116,6 +117,7 @@ type
   private
     FDecimalSeparator: Char;
     FMainScreenChange: Boolean;
+    procedure InjectDependDevs;
     procedure SaveScreeDialog;
     function ChildFormsBusy: boolean;
     function DeviceBusy: boolean;
@@ -219,6 +221,7 @@ begin
   else
    begin
     LoadScreen(True);
+    InjectDependDevs; // чтобы устранить ошибку пропадания меню приборов
 //    TActionBarHelper.ShowHidenActions(ActionManager);
 //    UpdateWidthBars;
    end;
@@ -881,6 +884,14 @@ begin
   end;
 end;
 
+procedure TFormMain.InjectDependDevs;
+ var
+  de: IDeviceEnum;
+  d: IDevice;
+begin
+  if Supports(GlobalCore, IDeviceEnum, de) then for d in de.Enum() do GContainer.InjectDependences(d.IName);
+end;
+
 procedure TFormMain.IProjectClose;
  var
   m: IManager;
@@ -912,7 +923,7 @@ function TFormMain.IProjectLoad(out ProjectName: string): Boolean;
 begin
   SaveScreeDialog;
   CanClose := not (ChildFormsBusy or DeviceBusy);
-  if not CanClose then Exit;
+  if not CanClose then Exit(False);
   Result := True;
   with TOpenDialog.Create(nil) do
   try
@@ -1009,9 +1020,9 @@ begin
    end;
 end;
 
-procedure TFormMain.Dock(const Form: IForm; Corner: Integer);
+procedure TFormMain.ITabFormProviderDock(const Form: IForm; Corner: Integer);
  var
-  Source: TJvDockDragDockObject;
+//  Source: TJvDockDragDockObject;
   f: TForm;
 begin
   f := TForm(Form.GetComponent);
@@ -1048,6 +1059,7 @@ end;
 
 procedure TFormMain.ActionUpdateExecute(Sender: TObject);
 begin
+  InjectDependDevs;
   TActionBarHelper.ShowHidenActions(ActionManager);
   UpdateWidthBars;
 end;

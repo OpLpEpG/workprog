@@ -1214,13 +1214,16 @@ procedure TPskStd.DoData(Sender: IAction);
 //  ix: IProjectDataFile;
 begin
 //  if Supports(GlobalCore, IProjectDBData, pdb) then pdb.CommitTrans;
-  FActData := Sender; { TODO : была ошибка с удалением psk возможно нова€ ошибка рестарта св€зана}
   if FFlagFlow then
    begin
     StopFlowRef(procedure(Res: boolean; p: PByte; n: integer)
+     procedure DeleteAct;
+     begin
+      FActData := nil; //???? нужно удалить ссылку ,,,
+     end;
     begin
       if Assigned(FActData) then FActData.Checked := False;
-      //FActData := nil; //???? нужно удалить ссылку ,,,
+      DeleteAct;
       FFlagFlow := False;
       S_Status := FOldStatus;
       ConnectUnlock;
@@ -1234,6 +1237,7 @@ begin
     FOldStatus := S_Status;
     CheckConnect;
     CheckLocked;
+    FActData := Sender; { TODO : была ошибка с удалением psk возможно нова€ ошибка рестарта св€зана}
     try
      S_Status := dsData;
      ConnectLock;
@@ -1340,14 +1344,14 @@ begin
   else
    try
       i := 0;
-      while (i < cio.FICount-1) and (cio.FICount >= FWorkLen) do if TestSP(@cio.FInput[i], cio.FICount-i) then
+      while (i < cio.FICount-1) and (cio.FICount >= FWorkLen*2) do if TestSP(@cio.FInput[i], cio.FICount-i) then
      // if (DataSize >= FWorkLen) and TestSP(@DataB[0], DataSize) then  // пашин вакиант
        begin
         with cio do
          begin
           Move(FInput[i], FWorkInput[0], FWorkLen);
           Move(FInput[FWorkLen+i], FInput[0], FWorkLen+i);
-          Dec(FICount, FWorkLen+i);
+          Dec(FICount, FWorkLen+i);// cio.FICount >= FWorkLen*2 !!!!
           i := 0;
          end;
         TPars.SetPsk(FWorkEventInfo.Work, @FWorkInput[0]);

@@ -223,7 +223,7 @@ begin
   btExit.Enabled := FlagEna;
   NCanClose := FlagEna;
   cbClcCreate.Enabled := FlagEna;
-  cbToFF.Enabled := FlagEna;
+  cbToFF.Enabled := False;// FlagEna;
   RangeSelect.Enabled := FlagEna;
 end;
 
@@ -345,7 +345,7 @@ begin
   ram := FModul.ChildNodes.FindNode(T_RAM);
   ram.Attributes[AT_TO_ADR] := Format('0x%x',[FFrom + Stat.NRead]);
   ram.Attributes[AT_TO_KADR] := (FFrom + Stat.NRead) div FRecSize;
-  ram.Attributes[AT_TO_TIME] := CTime.AsString(2.097152/24/3600 * ((FFrom + Stat.NRead) div FRecSize));
+  ram.Attributes[AT_TO_TIME] := CTime.AsString(2.097152/24/3600 * Double(ram.Attributes[AT_TO_KADR]));
 
   Trminate := FTerminate;
   if not FTerminated and (TTask.CurrentTask.Status <> TTaskStatus.Canceled) then

@@ -156,6 +156,9 @@ type
   Dialog_RamRead = interface
   ['{B24C949D-2774-4A98-8077-A26CCC7B722A}']
   end;
+  Dialog_Eep = interface
+  ['{F41B3170-69F2-423D-91E8-D06FA0192529}']
+  end;
   Dialog_ClcWrite = interface
   ['{FF7A4140-4795-43C5-A90F-183AA1F70B09}']
   end;

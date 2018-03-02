@@ -66,7 +66,7 @@ type
     property StolZenit: Double read FStolZenit;
     property StolAzimut: Double read FStolAzimut;
 
-    [StaticAction('Новая поверка', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
+    [StaticAction('Новая поверка 104', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
     class function MetrolType: string; override;
@@ -296,12 +296,12 @@ begin
     9: SetData('амплит_accel.CLC', AT_VALUE,     '%7.1f');
    10: SetData('амплит_magnit.CLC',AT_VALUE,     '%7.1f');
    11: SetData('маг_наклон.CLC',   AT_VALUE,     '%6.1f');
-   12: SetData('accel.X.DEV',      AT_VALUE,     '%7.0f');
-   13: SetData('accel.Y.DEV',      AT_VALUE,     '%7.0f');
-   14: SetData('accel.Z.DEV',      AT_VALUE,     '%7.0f');
-   15: SetData('magnit.X.DEV',     AT_VALUE,     '%7.0f');
-   16: SetData('magnit.Y.DEV',     AT_VALUE,     '%7.0f');
-   17: SetData('magnit.Z.DEV',     AT_VALUE,     '%7.0f');
+   12: SetData('accel.X.DEV',      AT_VALUE,     '%7.4f');
+   13: SetData('accel.Y.DEV',      AT_VALUE,     '%7.4f');
+   14: SetData('accel.Z.DEV',      AT_VALUE,     '%7.4f');
+   15: SetData('magnit.X.DEV',     AT_VALUE,     '%7.4f');
+   16: SetData('magnit.Y.DEV',     AT_VALUE,     '%7.4f');
+   17: SetData('magnit.Z.DEV',     AT_VALUE,     '%7.4f');
    18: SetData('accel.X.CLC',      AT_VALUE,     '%7.1f');
    19: SetData('accel.Y.CLC',      AT_VALUE,     '%7.1f');
    20: SetData('accel.Z.CLC',      AT_VALUE,     '%7.1f');

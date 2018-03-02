@@ -243,7 +243,7 @@ end;
 initialization
   RegisterClass(TSaveDialog);
   RegisterClass(TFormInclin);
-//  TRegister.AddType<TFormInclin, IForm>.LiveTime(ltSingletonNamed);
+ // TRegister.AddType<TFormInclin, IForm>.LiveTime(ltSingletonNamed);
 finalization
 //  GContainer.RemoveModel<TFormInclin>;
 end.

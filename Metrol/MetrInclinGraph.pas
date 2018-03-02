@@ -41,7 +41,7 @@ type
     function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; override;
     function UserSetupAlg(alg: IXMLNode): Boolean; override;
   public
-    [StaticAction('Новая калибровка Т_OLD', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
+    [StaticAction('Калибровка график отклонитель', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolType: string; override;
     constructor CreateUser(const aName: string =''); override;
@@ -401,7 +401,7 @@ end;
 initialization
 //  TMetrInclinMath.Nop();
   RegisterClasses([TFormInclinADV, TTabSheet]);
-  //TRegister.AddType<TFormInclinADV, IForm>.LiveTime(ltSingletonNamed);
+  TRegister.AddType<TFormInclinADV, IForm>.LiveTime(ltSingletonNamed);
 finalization
- // GContainer.RemoveModel<TFormInclinADV>;
+  GContainer.RemoveModel<TFormInclinADV>;
 end.

@@ -524,7 +524,7 @@ begin
 //     FMetaDataInfo.Info := GDoc.AddChild('DEVICE');
      FMetaDataInfo.Info := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get().Get(), Name);
 
-//     TDebug.Log('Root1: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);
+//     TDebug.Log('Root1: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]); проблемма записи ресинк
     end;
 
    SetLength(TmpErr, 0);
@@ -539,9 +539,8 @@ begin
        begin
         TPars.SetInfo(FMetaDataInfo.Info, Data, n); // parse all data for device
 
-  //      TDebug.Log('Root2: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);
-
-//        FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'DevBur_SetInfo.xml');
+  //      TDebug.Log('Root2: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);проблемма записи ресинк
+//        FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'DevBur_SetInfo.xml');проблемма записи ресинк
 
         CArray.Add<Integer>(TmpGood,  adr);
        end
@@ -557,16 +556,16 @@ begin
 
         if IsOldClose then connectClose;
 
-        FExeMetr.SetMetr(FMetaDataInfo.Info, FExeMetr, True);
-
-      //  TDebug.Log('Root3: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);
+      //  TDebug.Log('Root3: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]); проблемма записи ресинк
 
         if Supports(GlobalCore, IProjectMetaData, ip) then
           for i in TmpGood do
-            ip.SetMetaData(Self as IDevice, i, FindDev(FMetaDataInfo.Info, i));
+           begin
+             FExeMetr.UpdateExecRunSetupMetr(FMetaDataInfo.Info, i, FExeMetr);
+             ip.SetMetaData(Self as IDevice, i, FindDev(FMetaDataInfo.Info, i)); //проблемма записи ресинк решена сдесь
+           end;
 
-      //  TDebug.Log('Root4: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);
-
+      //  TDebug.Log('Root4: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]); проблемма записи ресинк
   //      FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'DevBur_SetMetr.xml');
 
        finally
@@ -771,6 +770,7 @@ procedure TDeviceBur.ReadEepromAdrRef(root: IXMLNode; adr: Byte; ev: TEepromEven
   siz: Integer;
 begin
   siz := root.Attributes[AT_SIZE];
+  if siz > 250 then raise EAsyncBurException.CreateFmt('Данная версия программы поддерживает длину EEPROM меньше 250 текущая: %d', [siz]);
   with SerialQe, ConnectIO do
    begin
      Add(procedure()

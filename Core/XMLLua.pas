@@ -16,6 +16,7 @@ type
   ELuaException = class(EBaseException);
   TXMLLua = class(TVerySimpleLua, IXMLScript)
   private
+    procedure InnerAddAll(dev, Mtr: IXMLNode; adr: Integer; const ExePath: string; ExeSc, SetupDev: IXmlScript);
     type
      TRunScriptRec = record
        TrrRoot: IXMLNode;
@@ -41,6 +42,7 @@ type
 
 //    class function InerAddMetrology(root: IXMLNode; const Title, eu: string; Znd: Double = 0; varTip: Integer = 5): IXMLNode; static;
    // procedure AddXML(Aadr: Integer; const RnPath: string; TrRoot, RnRoot: IXMLNode;  Script: IXMLNode; const ScriptAtr: string; const RootPrefix: string = '');
+    procedure TrrExec(rr: TRunScriptRec);
  protected
     function LuaErrorPaser(const LuaErr: string): string;
     procedure DoError(Msg: String); override;
@@ -49,7 +51,6 @@ type
     destructor Destroy; override;
     procedure Open; override;
     class procedure CheckFunction(L: lua_State; const FuncName: string); static; inline;
-    procedure TrrExec(const FName: string; alg, t: IXMLNode);
 //    class procedure CallXMLFunc(L: lua_State; const FuncName: string; arg1: IXMLNode; x2: IXMLNode = nil; x3: IXMLNode = nil); static;
     class procedure PushXmlToTable(L: lua_State; Node: IXMLNode); static; inline;
     class function XNode(L: lua_State; index: Integer): IXMLNode; static; inline;
@@ -75,6 +76,16 @@ type
     procedure Execute(const ExePath: string; adr: Integer); overload;
     procedure GetMetrStrings(var Values: TStrings; node: IXMLNode = nil);
     procedure SetMetr(node: IXMLNode; ExeSc: IXmlScript; ExecSetup: Boolean);
+    /// <summary>
+    /// Вызывается при удачном чтении метаданных устройства
+    ///  обновляет данные скрипта выполнения прибора, вынолняет локальный скрипт установки
+    /// </summary>
+    /// <param name="node"> Корневой элемент прибора или устройства </param>
+    ///
+    /// <param name="adr">адрес устройства</param>
+    ///
+    /// <param name="ExeSc"> Глобальный скрипт выполнения прибора</param>
+    procedure UpdateExecRunSetupMetr(node: IXMLNode;  adr: Integer; ExeSc: IXmlScript);
   end;
 
 implementation
@@ -124,7 +135,7 @@ procedure TXMLLua.Execute;
  var
   p: TRunScriptRec;
 begin
-  for p in FRunScript do TrrExec(p.RunFunc, p.RunRoot, p.TrrRoot);
+  for p in FRunScript do TrrExec(p);
 end;
 
 procedure TXMLLua.Execute(const ExePath: string);
@@ -132,7 +143,7 @@ procedure TXMLLua.Execute(const ExePath: string);
   p: TRunScriptRec;
 begin
   for p in FRunScript do
-    if ExePath = p.RunPath then TrrExec(p.RunFunc, p.RunRoot, p.TrrRoot);
+    if ExePath = p.RunPath then TrrExec(p);
 end;
 
 procedure TXMLLua.Execute(const ExePath: string; adr: Integer);
@@ -140,7 +151,22 @@ procedure TXMLLua.Execute(const ExePath: string; adr: Integer);
   p: TRunScriptRec;
 begin
   for p in FRunScript do
-   if (p.RunAdr = adr) and (ExePath = p.RunPath) then TrrExec(p.RunFunc, p.RunRoot, p.TrrRoot);
+   if (p.RunAdr = adr) and (ExePath = p.RunPath) then TrrExec(p);
+end;
+
+procedure TXMLLua.TrrExec(rr: TRunScriptRec);
+ var
+  m: TMarshaller;
+begin
+  CheckFunction(LuaState, rr.RunFunc);
+  PushXmlToTable(LuaState, rr.RunRoot);
+  PushXmlToTable(LuaState, rr.TrrRoot);
+  lua_pushstring(LuaState, m.AsAnsi(rr.RunPath).ToPointer);
+  lua_pushinteger(LuaState, rr.RunAdr);
+  if Report(LuaState, DoCall(LuaState, 4, 0)) <> LUA_OK then
+   begin
+    raise ELuaException.Create(FLastError);
+   end;
 end;
 
 class procedure TXMLLua.RegisterLuaMethods(const LuaMethClass: TClass);
@@ -265,6 +291,93 @@ begin
   FErrorPos := LuaErrorPaser(Msg);
 end;
 
+procedure TXMLLua.AddXML(Aadr: Integer; const RnPath: string; TrRoot, RnRoot, Script: IXMLNode; const ScriptAtr, RootPrefix: string);
+ const
+  NL = #$D#$A;
+  FUNC_FMT = 'function %s(v, t, run_path, run_address)'; //'procedure %s(v, t: variant);';
+ var
+  fs, fn: string;
+  function fnd(): Boolean;
+   var
+    s: string;
+  begin
+    Result := False;
+    for s in FLines do if SameText(s,fn) then Exit(True);
+  end;
+  function ChekStr(const inp: string): string;
+   const
+    SSinp: array[0..4]of string =('ИКН','ГК','ННК','ВИК','Глубиномер');
+    SSout: array[0..4]of string =('IKN','GK','NNK','VIK','Glu');
+   var
+    i: Integer;
+  begin
+    Result := inp;
+    for i := 0 to High(SSinp) do if SameText(inp, SSinp[i]) then Exit(SSout[i]);
+  end;
+begin
+  if not Assigned(Script) or not Script.HasAttribute(ScriptAtr) then Exit;
+  fs := ChekStr(RootPrefix) +'_' + ChekStr(Script.NodeName) +'_'+ ScriptAtr;
+  fn := Format(FUNC_FMT, [fs]);
+  if not Fnd() then FLines.Text := FLines.Text + NL + fn + NL + Script.Attributes[ScriptAtr]+ NL + 'end'+NL +NL;
+  //TDebug.Log('TrRoot.NodeName %s, RnRoot.NodeName %s',[GetPathXNode(TrRoot), GetPathXNode(RnRoot)]);
+  FRunScript := FRunScript + [TRunScriptRec.Create(TrRoot, RnRoot, RnPath, fs, AAdr)];
+end;
+
+procedure TXMLLua.InnerAddAll(dev, Mtr: IXMLNode; adr: Integer; const ExePath: string; ExeSc, SetupDev: IXmlScript);
+ var
+  r: IXMLNode;
+begin
+  r := dev.ChildNodes.FindNode(ExePath);
+  if not Assigned(r) then Exit;
+  ExecXTree(r, procedure(n: IXMLNode)
+   var
+    s: string;
+    sr, mc: IXMLNode;
+   procedure AddX(TrRoot, Script: IXMLNode; const RootPrefix: string = '');
+   begin
+     if Assigned(SetupDev) then SetupDev.AddXML(adr, ExePath, TrRoot, n, Script, SETUP, RootPrefix);
+     ExeSc.AddXml(adr, ExePath, TrRoot, n, Script, EXEC, RootPrefix);
+   end;
+   const
+    SF = 'SIMPLE_FORMAT';
+    MD = 'MODEL';
+  begin
+    s := n.NodeName;
+    sr := GScript.ChildNodes.FindNode(s);
+    if Assigned(sr) then
+     begin
+      mc := mtr.ChildNodes.FindNode(s);
+      if not Assigned(mc) then
+       begin
+        mc := mtr.AddChild(s);
+        if n.HasAttribute(AT_METR) then mc.Attributes[AT_METR] := n.Attributes[AT_METR];
+       end;
+      AddX(mc, sr);
+      if n.HasAttribute(AT_METR) then AddX(mc, sr.ChildNodes[MD].ChildNodes[n.Attributes[AT_METR]], s);
+     end
+    else if n.HasAttribute(AT_METR) then AddX(mtr, GScript.ChildNodes[SF].ChildNodes[MD].ChildNodes[n.Attributes[AT_METR]], SF);
+  end);
+end;
+
+procedure TXMLLua.UpdateExecRunSetupMetr(node: IXMLNode; adr: Integer; ExeSc: IXmlScript);
+ var
+  sd: IXmlScript;
+  mtr, dev: IXMLNode;
+begin
+  if node.HasAttribute(AT_ADDR) then dev := node
+  else dev := FindDev(node, adr);
+  if not Assigned(dev) then raise ELuaException.CreateFmt('нет устройства в проекте %d', [adr]);
+  mtr := dev.ChildNodes.FindNode(T_MTR);
+  if not Assigned(mtr) then mtr := dev.AddChild(T_MTR);
+  sd := (GContainer as IXMLScriptFactory).Get(nil);
+  InnerAddAll(dev, mtr, adr, T_WRK, ExeSc, sd);
+  InnerAddAll(dev, mtr, adr, T_RAM, ExeSc, sd);
+  if not sd.Compile then MessageDlg('Ошибка компиляции установок-'+sd.ErrorMsg+':'+sd.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
+  sd.Execute; { TODO 5 -cОШИВКА!!! : ОШИБКА заполняется метрология (если есть) значениями по умолчанию!!!
+см todo Устройство из нескольких приб}
+  if not ExeSc.Compile then MessageDlg('Ошибка компиляции выполнения-'+ExeSc.ErrorMsg+':'+ExeSc.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
+end;
+
 procedure TXMLLua.SetMetr(node: IXMLNode; ExeSc: IXmlScript; ExecSetup: Boolean);
  const
   SF = 'SIMPLE_FORMAT';
@@ -326,7 +439,8 @@ begin
 //    sd.Lines.SaveToFile(ExtractFilePath(ParamStr(0))+'LuaScriptSetup.txt');
 
      if not sd.Compile then MessageDlg('Ошибка компиляции установок-'+sd.ErrorMsg+':'+sd.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
-     sd.Execute; { TODO 5 -cОШИВКА!!! : ОШИБКА заполняется метрология (если есть) значениями по умолчанию!!! }
+     sd.Execute; { TODO 5 -cОШИВКА!!! : ОШИБКА заполняется метрология (если есть) значениями по умолчанию!!!
+см todo Устройство из нескольких приб}
      //sd.Lines.SaveToFile(ExtractFilePath(ParamStr(0))+'GKScriptSetup.txt');
     end;
 //      ExeSc.Lines.SaveToFile(ExtractFilePath(ParamStr(0))+'LuaScriptExec.txt');
@@ -383,41 +497,10 @@ begin
   else
    begin
     r := node.ChildNodes.FindNode(name);
-    if not Assigned(r) then raise ELuaException.Createfmt('XML Node [%s] не имеет дочерней [%s]',[Node.NodeName, name]);
+    if not Assigned(r) then raise ELuaException.Createfmt('XML Node [%s] не имеет дочерней [%s]',[GetPathXNode(Node), name]);
     PushXmlToTable(L, r);
    end;
   Result := 1;
-end;
-
-procedure TXMLLua.AddXML(Aadr: Integer; const RnPath: string; TrRoot, RnRoot, Script: IXMLNode; const ScriptAtr, RootPrefix: string);
- const
-  NL = #$D#$A;
-  FUNC_FMT = 'function %s(v, t)'; //'procedure %s(v, t: variant);';
- var
-  fs, fn: string;
-  function fnd(): Boolean;
-   var
-    s: string;
-  begin
-    Result := False;
-    for s in FLines do if SameText(s,fn) then Exit(True);
-  end;
-  function ChekStr(const inp: string): string;
-   const
-    SSinp: array[0..4]of string =('ИКН','ГК','ННК','ВИК','Глубиномер');
-    SSout: array[0..4]of string =('IKN','GK','NNK','VIK','Glu');
-   var
-    i: Integer;
-  begin
-    Result := inp;
-    for i := 0 to High(SSinp) do if SameText(inp, SSinp[i]) then Exit(SSout[i]);
-  end;
-begin
-  if not Assigned(Script) or not Script.HasAttribute(ScriptAtr) then Exit;
-  fs := ChekStr(RootPrefix) +'_' + ChekStr(Script.NodeName) +'_'+ ScriptAtr;
-  fn := Format(FUNC_FMT, [fs]);
-  if not Fnd() then FLines.Text := FLines.Text + NL + fn + NL + Script.Attributes[ScriptAtr]+ NL + 'end'+NL +NL;
-  FRunScript := FRunScript + [TRunScriptRec.Create(TrRoot, RnRoot, RnPath, fs, AAdr)];
 end;
 
 function TXMLLua.CallFunction(const Name: String; const Params: TArray<Variant>; Nres: Integer = 0): TArray<Variant>;
@@ -466,17 +549,6 @@ begin
    begin
     lua_pop(L, Lua_GetTop(L));
     raise ELuaException.Createfmt('LUA функция [%s] не найдена',[FuncName]);
-   end;
-end;
-
-procedure TXMLLua.TrrExec(const FName: string; alg, t: IXMLNode);
-begin
-  CheckFunction(LuaState, FName);
-  PushXmlToTable(LuaState, alg);
-  PushXmlToTable(LuaState, t);
-  if Report(LuaState, DoCall(LuaState, 2, 0)) <> LUA_OK then
-   begin
-    raise ELuaException.Create(FLastError);
    end;
 end;
 

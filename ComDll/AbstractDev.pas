@@ -1136,6 +1136,7 @@ end;   }
 {$REGION  'TComConnectIO - все процедуры и функции'}
 constructor TComConnectIO.Create();
 begin
+  TDebug.Log('----------TComConnectIO.Create();---------------');
   inherited Create;
   FConnectInfo := 'COM1';
   FCom := TComPort.Create(nil);
@@ -1153,6 +1154,7 @@ end;
 
 procedure TComConnectIO.InnerClose;
 begin
+ // FCom.OnRxChar := nil;
   FCom.OnException := ComPortException;
   FCloseErrNessage := '';
   FCom.Close;
@@ -1168,6 +1170,7 @@ end;
 
 destructor TComConnectIO.Destroy;
 begin
+  TDebug.Log('----------TComConnectIO.Destroy;---------------');
   InnerClose();
   FCom.Free;
   inherited;
@@ -1312,6 +1315,7 @@ end;
 destructor TProtocolBur.Destroy;
 begin
   FQe.Free;
+  TDebug.Log('----------TProtocolBur.Destroy;---------------');
   inherited;
 end;
 
@@ -1389,8 +1393,8 @@ begin
   with Sender do
    begin
     FTimerRxTimeOut.Enabled := False;
+//    TDebug.Log('FICount === %d ====', [FICount]);
     DoEvent(@FInput[0], FICount);
-   // TDebug.Log('FICount === %d ====', [FICount]);
    end;
 end;
 

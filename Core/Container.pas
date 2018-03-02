@@ -290,6 +290,8 @@ type
     procedure RemoveInstance(model: ModelType); overload; // singleton
     procedure RemoveInstance(const InstanceName: string); overload;
     procedure RemoveInstKnownServ(serv: ServiceType; const InstanceName: string);
+
+    procedure InjectDependences(const InstanceName: string);
     {$IFDEF MEMO_DEBUG}
     procedure UpdateDebugData(ss: TStrings);
     {$ENDIF}
@@ -703,7 +705,8 @@ begin
 //  if fLiveTime <> ltSingletonNamed then raise Exception.Create(' <> ltSingletonNamed');
   Result := nil;
   if not Assigned(fInst) then Exit;
-  if fInst.TryGetValue(Name, v) then Result := GetInstance(v, Initialize);
+  if fInst.TryGetValue(Name, v) then
+     Result := GetInstance(v, Initialize);
 end;
 
 procedure TComponentModel.InjectInstance(const Name: string);
@@ -1190,6 +1193,18 @@ begin
   a.m := cm;
   a.p.Value := nil;
   CArray.Add<TModelsInst>(mi, a);
+end;
+
+procedure TContainer.InjectDependences(const InstanceName: string);
+ var
+  m: TComponentModel;
+begin
+  for m in FModels.Values do
+   if Assigned(m.fInst) and m.fInst.ContainsKey(InstanceName) then
+    begin
+     m.InjectInstance(InstanceName);
+     Exit;
+    end;
 end;
 
 function TContainer.InstancesAsArray<Service>(InitializeInstatces: Boolean): TArray<Service>;

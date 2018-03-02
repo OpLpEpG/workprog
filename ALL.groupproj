@@ -42,6 +42,9 @@
         <Projects Include="D3H\D3H.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="VCLEEPROM\VCLeeprom.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <Dependencies/>
         </Projects>
@@ -170,6 +173,15 @@
     <Target Name="D3H:Make">
         <MSBuild Projects="D3H\D3H.dproj" Targets="Make"/>
     </Target>
+    <Target Name="VCLeeprom">
+        <MSBuild Projects="VCLEEPROM\VCLeeprom.dproj"/>
+    </Target>
+    <Target Name="VCLeeprom:Clean">
+        <MSBuild Projects="VCLEEPROM\VCLeeprom.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLeeprom:Make">
+        <MSBuild Projects="VCLEEPROM\VCLeeprom.dproj" Targets="Make"/>
+    </Target>
     <Target Name="VCLNNKDAC">
         <MSBuild Projects="VCL_NNK_DAC\VCLNNKDAC.dproj"/>
     </Target>
@@ -180,13 +192,13 @@
         <MSBuild Projects="VCL_NNK_DAC\VCLNNKDAC.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;VCLControl3;ProjectManager3;ComDev;Monitor;VCLData;VCLDialogs;WorkProg;CreateData;VCLTelesis;bootLoader;Metrol;D3H;VCLNNKDAC"/>
+        <CallTarget Targets="Core;VCLControl3;ProjectManager3;ComDev;Monitor;VCLData;VCLDialogs;WorkProg;CreateData;VCLTelesis;bootLoader;Metrol;D3H;VCLeeprom;VCLNNKDAC"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;VCLControl3:Clean;ProjectManager3:Clean;ComDev:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;WorkProg:Clean;CreateData:Clean;VCLTelesis:Clean;bootLoader:Clean;Metrol:Clean;D3H:Clean;VCLNNKDAC:Clean"/>
+        <CallTarget Targets="Core:Clean;VCLControl3:Clean;ProjectManager3:Clean;ComDev:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;WorkProg:Clean;CreateData:Clean;VCLTelesis:Clean;bootLoader:Clean;Metrol:Clean;D3H:Clean;VCLeeprom:Clean;VCLNNKDAC:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;VCLControl3:Make;ProjectManager3:Make;ComDev:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;WorkProg:Make;CreateData:Make;VCLTelesis:Make;bootLoader:Make;Metrol:Make;D3H:Make;VCLNNKDAC:Make"/>
+        <CallTarget Targets="Core:Make;VCLControl3:Make;ProjectManager3:Make;ComDev:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;WorkProg:Make;CreateData:Make;VCLTelesis:Make;bootLoader:Make;Metrol:Make;D3H:Make;VCLeeprom:Make;VCLNNKDAC:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
@@ -196,17 +208,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
-            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Core\Core.dproj">
+            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -226,17 +238,23 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="Monitor\Monitor.dproj">
+            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="D3H\D3H.dproj">
             <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Monitor\Monitor.dproj">
-            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+        <BuildGroupProject Include="VCLEEPROM\VCLeeprom.dproj">
+            <ProjectGuid>{56F0A71C-1450-497A-98B7-BFA1C4C3FA12}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="CreatePSK\CreateData.dproj">
             <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
@@ -258,21 +276,21 @@
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ComDll\ComDev.dproj">
-            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Core\Core.dproj">
-            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='RELEA'">
@@ -282,17 +300,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
-            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+        <BuildGroupProject Include="Core\Core.dproj">
+            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -312,17 +330,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="D3H\D3H.dproj">
-            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="Monitor\Monitor.dproj">
             <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="D3H\D3H.dproj">
+            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="CreatePSK\CreateData.dproj">
             <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
@@ -346,19 +364,19 @@
             <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Core\Core.dproj">
-            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ComDll\ComDev.dproj">
-            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='D1'">
@@ -368,17 +386,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
-            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
+        <BuildGroupProject Include="Core\Core.dproj">
+            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -398,14 +416,14 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="D3H\D3H.dproj">
-            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
+        <BuildGroupProject Include="Monitor\Monitor.dproj">
+            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Monitor\Monitor.dproj">
-            <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
+        <BuildGroupProject Include="D3H\D3H.dproj">
+            <ProjectGuid>{3BF5E2A4-DE21-408C-9B4E-F701E982BD76}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
@@ -434,15 +452,15 @@
             <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ComDll\ComDev.dproj">
-            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Core\Core.dproj">
-            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
-            <Configurations>Release</Configurations>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>

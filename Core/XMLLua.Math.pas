@@ -48,8 +48,10 @@ type
     class function AddMetrologyCL(L: lua_State): Integer; overload; cdecl; static;
     class function TrrVect3D(L: lua_State): Integer; overload; cdecl; static;
     class function AddXmlMatrix(L: lua_State): Integer; cdecl; static;
+    class function SetIfNotExist(L: lua_State): Integer; cdecl; static;
     class function AddXmlPath(L: lua_State): Integer; overload; cdecl; static;
     class function FindXmlRoot(L: lua_State): Integer; cdecl; static;
+    class function DebugLog(L: lua_State): Integer; cdecl; static;
 
     class function ArcTan2(L: lua_State): Integer; cdecl; static;
     class function KadrToStr(L: lua_State): Integer; cdecl; static;
@@ -72,6 +74,17 @@ implementation
 class constructor TXMLScriptMath.Create;
 begin
   TXMLLua.RegisterLuaMethods(TXMLScriptMath);
+end;
+
+class function TXMLScriptMath.DebugLog(L: lua_State): Integer;
+var
+  i: integer;
+  dat: string;
+begin
+  dat := '';
+  for i := 2 to Lua_GetTop(L) do dat := dat + ', '+ string(lua_tostring(L,i));
+  if Assigned(TDebug.ExeptionEvent) then TDebug.ExeptionEvent(string(lua_tostring(L,1)), dat, '');
+  Result := 0;
 end;
 
 class destructor TXMLScriptMath.Destroy;
@@ -191,7 +204,7 @@ begin
   ArgCount := Lua_GetTop(L);
   r := TXMLLua.XNode(L, 1);
   Color := lua_tointeger(L, 2);
-  if ArgCount>=3 then Width := lua_tonumber(L,3) else Width := 1;
+  if ArgCount >= 3 then Width := lua_tonumber(L,3) else Width := 1;
   Dash := lua_tointeger(L, 4);
 
   if not CNode.IsData(r) then r := CNode.GetCalc(r);
@@ -270,6 +283,9 @@ class procedure TXMLScriptMath.TrrVect3D(r, Inp: IXMLNode; var x: Double; var y:
   ix,iy,iz, rx,ry,rz: IXMLNode;
   m11,m12,m13,m14, m21,m22,m23,m24, m31,m32,m33,m34: Double;
 begin
+
+  //r.OwnerDocument.SaveToFile('e:\inclMetr.xml');
+
   rx := Inp.ChildNodes.FindNode('X');
   ry := Inp.ChildNodes.FindNode('Y');
   rz := Inp.ChildNodes.FindNode('Z');
@@ -278,9 +294,9 @@ begin
   iy := DevNode(ry);
   iz := DevNode(rz);
 
-  tx := Double(ix.Attributes[AT_VALUE])*Scale;
-  ty := Double(iy.Attributes[AT_VALUE])*Scale;
-  tz := Double(iz.Attributes[AT_VALUE])*Scale;
+  tx := Double(ix.Attributes[AT_VALUE]); // *Scale; НЕВЕРНО !!! т.к. m*X + m*Y + m*Z + d =tX  d- осталось без масштабирования
+  ty := Double(iy.Attributes[AT_VALUE]); // *Scale;
+  tz := Double(iz.Attributes[AT_VALUE]); // *Scale;
   m11 := Double(r.Attributes['m11']);
   m12 := Double(r.Attributes['m12']);
   m13 := Double(r.Attributes['m13']);
@@ -301,9 +317,9 @@ begin
   x := m11*tx + m12*ty + m13*tz + m14;
   y := m21*tx + m22*ty + m23*tz + m24;
   z := m31*tx + m32*ty + m33*tz + m34;
-  ix.Attributes[AT_VALUE] := x;
-  iy.Attributes[AT_VALUE] := y;
-  iz.Attributes[AT_VALUE] := z;
+  ix.Attributes[AT_VALUE] := x*Scale; // *Scale; ВЕРНО !!!
+  iy.Attributes[AT_VALUE] := y*Scale;
+  iz.Attributes[AT_VALUE] := z*Scale;
 //  ix.Attributes[AT_TIP] := varDouble;
 //  iy.Attributes[AT_TIP] := varDouble;
 //  iz.Attributes[AT_TIP] := varDouble;
@@ -389,10 +405,16 @@ begin
   Row := lua_tointeger(L,2);
   Col := lua_tointeger(L,3);
   mn := Format('m%dx%d',[Row, col]);
-  if Assigned(root.ChildNodes.FindNode(mn)) then Exit(0);
+  if Assigned(root.ChildNodes.FindNode(mn)) then
+   begin
+    lua_pushboolean(L, 0);
+    Exit(1);
+   end;
   root := root.AddChild(mn);
   for r := 1 to Row do for c := 1 to Col do root.Attributes[Format('m%d%d',[r, c])] := 0;
-  Result := 0;
+
+  lua_pushboolean(L, 1);
+  Result := 1;
 end;
 
 class function TXMLScriptMath.AddXmlPath(root: IXMLNode; const path: string): IXMLNode;
@@ -622,6 +644,19 @@ begin
   CheckMath(rbf, rbf.Calc2(x1,x2, Rz));
   lua_pushnumber(L, rz);
   Result := 1;
+end;
+
+class function TXMLScriptMath.SetIfNotExist(L: lua_State): Integer;
+ var
+  root: IXMLNode;
+  path: string;
+begin
+  root := TXMLLua.XNode(L, 1);
+  path := string(lua_tostring(L,2));
+  if not root.HasAttribute(path) then
+    if lua_isnumber(L,3) = 0 then root.Attributes[path] := string(lua_tostring(L,3))
+    else root.Attributes[path] := lua_tonumber(L,3);
+  Result := 0;
 end;
 
 class function TXMLScriptMath.SGK_FindGK(L: lua_State): Integer;

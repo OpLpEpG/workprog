@@ -20,6 +20,9 @@ type
     lbKaBegin: TLabel;
     lbKaCnt: TLabel;
     lbKaEnd: TLabel;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
     procedure RangeChange(Sender: TObject);
     procedure edOtnBeginKeyPress(Sender: TObject; var Key: Char);
     procedure edOtnCntKeyPress(Sender: TObject; var Key: Char);
@@ -146,10 +149,14 @@ begin
     TimMaxKadr := Ctime.ToKadr(Now - FDelayStart);
     if TimMaxKadr < FMaxKadr then FLastWorkKadr := TimMaxKadr;
    end;
-  Range.SelStart := 0;
-  Range.SelEnd := 0;
+  if FMaxKadr / FLastWorkKadr > 10 then FMaxKadr := FLastWorkKadr*10;
+
   Range.Max := FMaxKadr;
   Range.ReadyEnd := FLastWorkKadr;
+
+  Range.SelStart := 0;
+  Range.SelEnd := FLastWorkKadr;
+
   if Assigned(FOnChange) then FOnChange();
 end;
 

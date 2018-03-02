@@ -70,7 +70,8 @@ begin
     Sheet, Range: Variant;
     Path: string;
     rngarr, Indarr, xyarr: TArray<string>;
-    fs: TFormatSettings;
+    fs, fsold: TFormatSettings;
+    d: Double;
   begin
     try
       CoInitialize(nil);
@@ -107,7 +108,7 @@ begin
         if Assigned(cell) then
           for n in XEnumAttr(cell) do
             try
-             if TryValX(Root, n.NodeValue, v) then
+             if TryValX(Root, n.NodeValue, v) and not VarIsNull(v) then
                Sheet.getCellRangeByName(n.NodeName).getCellByPosition(0,0).SetString(v)
             else
               raise Exception.CreateFmt('Нет пути %s %s', [n.NodeName, n.NodeValue]);
@@ -134,15 +135,25 @@ begin
             { TODO : check rng and X Y }
             // заполняем массив
             varr := VarArrayCreate([0, Xhi-Xlo, 0, Yhi-Ylo], varVariant);
-            for x := Xlo to Xhi do
-             for y := Ylo to Yhi do
-              begin
-               path := Format(n.Attributes['Source'], [x, y]);
-               if TryValX(Root, path, v) then
-                  varr[x-Xlo, y-Ylo] :=  Double(v).ToString(fs)
-               else
-                 raise Exception.CreateFmt('Нет пути %s ', [path]);
-              end;
+            fsold := FormatSettings;
+            try
+              for x := Xlo to Xhi do
+               for y := Ylo to Yhi do
+                begin
+                 path := Format(n.Attributes['Source'], [x, y]);
+                 if TryValX(Root, path, v) then
+                  begin
+                   d := v;
+                   FormatSettings := fs;
+                   varr[x-Xlo, y-Ylo] := d; // офис требует число и с разделителем системы или офиса в программе разделитель точка
+                   FormatSettings := fsold;
+                  end
+                 else
+                   raise Exception.CreateFmt('Нет пути %s ', [path]);
+                end;
+            finally
+             FormatSettings := fsold;
+            end;
             // пишим в офис
             Range := Sheet.getCellRangeByName(rngarr[i]);
             Range.setDataArray(varr);

@@ -54,7 +54,7 @@ object FormControl: TFormControl
       item
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coEditable]
         Position = 2
-        Width = 176
+        Width = 170
         WideText = #1042#1088#1077#1084#1103
       end>
   end
@@ -107,11 +107,21 @@ object FormControl: TFormControl
     object NGlu: TMenuItem
       Caption = #1044#1072#1085#1085#1099#1077' '#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1087#1086' '#1075#1083#1091#1073#1080#1085#1077
     end
-    object Neep: TMenuItem
-      Caption = 'EEPROM'
+    object NeepEdit: TMenuItem
+      Caption = 'EEPROM '#1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1090#1100'...'
+      OnClick = NeepEditClick
     end
-    object NMetrol: TMenuItem
-      Caption = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1103
+    object NeepCmp: TMenuItem
+      Caption = 'EEPROM '#1057#1088#1072#1074#1085#1080#1090#1100' '#1089' '#1052#1077#1090#1088#1086#1083#1086#1075#1080#1077#1081'...'
+      OnClick = NeepCmpClick
+    end
+    object NMetrolExport: TMenuItem
+      Caption = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1103' '#1069#1082#1089#1087#1086#1088#1090'...'
+      OnClick = NMetrolExportClick
+    end
+    object NMetrolImport: TMenuItem
+      Caption = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1103' '#1048#1084#1087#1086#1088#1090'...'
+      OnClick = NMetrolImportClick
     end
     object NSepDEv: TMenuItem
       Caption = '-'

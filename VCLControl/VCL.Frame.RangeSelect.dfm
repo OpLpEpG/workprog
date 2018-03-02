@@ -2,52 +2,74 @@ object FrameRangeSelect: TFrameRangeSelect
   Left = 0
   Top = 0
   Width = 293
-  Height = 112
+  Height = 122
+  AutoSize = True
   TabOrder = 0
   DesignSize = (
     293
-    112)
+    122)
   object lbBegin: TLabel
     Left = 0
-    Top = 64
+    Top = 74
     Width = 37
     Height = 13
     Caption = #1053#1072#1095#1072#1083#1086
   end
   object lbEnd: TLabel
     Left = 0
-    Top = 96
+    Top = 106
     Width = 31
     Height = 13
     Caption = #1050#1086#1085#1077#1094
   end
   object lbCnt: TLabel
     Left = 0
-    Top = 80
+    Top = 90
     Width = 35
     Height = 13
     Caption = #1050#1086#1083'-'#1074#1086
   end
   object lbKaBegin: TLabel
     Left = 233
-    Top = 67
+    Top = 77
     Width = 6
     Height = 13
     Caption = '0'
   end
   object lbKaCnt: TLabel
     Left = 233
-    Top = 83
+    Top = 93
     Width = 6
     Height = 13
     Caption = '0'
   end
   object lbKaEnd: TLabel
     Left = 233
-    Top = 99
+    Top = 109
     Width = 6
     Height = 13
     Caption = '0'
+  end
+  object Label1: TLabel
+    Left = 38
+    Top = 63
+    Width = 70
+    Height = 13
+    Caption = #1074#1088#1077#1084#1103' '#1086#1090' '#1074#1082#1083'.'
+  end
+  object Label2: TLabel
+    Left = 124
+    Top = 63
+    Width = 58
+    Height = 13
+    Caption = #1076#1072#1090#1072' '#1074#1088#1077#1084#1103
+  end
+  object Label3: TLabel
+    Left = 232
+    Top = 63
+    Width = 33
+    Height = 13
+    Caption = #1082#1072#1076#1088#1099
   end
   object Range: TRangeSelector
     Left = 0
@@ -60,11 +82,10 @@ object FrameRangeSelect: TFrameRangeSelect
     SelEnd = 70.000000000000000000
     ReadyEnd = 80.000000000000000000
     OnChange = RangeChange
-    ExplicitWidth = 337
   end
   object edOtnBegin: TMaskEdit
     Left = 38
-    Top = 66
+    Top = 76
     Width = 80
     Height = 16
     AutoSize = False
@@ -76,7 +97,7 @@ object FrameRangeSelect: TFrameRangeSelect
   end
   object edOtnEnd: TMaskEdit
     Left = 38
-    Top = 96
+    Top = 106
     Width = 80
     Height = 16
     AutoSize = False
@@ -88,7 +109,7 @@ object FrameRangeSelect: TFrameRangeSelect
   end
   object edOtnCnt: TMaskEdit
     Left = 38
-    Top = 81
+    Top = 91
     Width = 80
     Height = 16
     AutoSize = False
@@ -100,7 +121,7 @@ object FrameRangeSelect: TFrameRangeSelect
   end
   object edGlobBegin: TMaskEdit
     Left = 120
-    Top = 66
+    Top = 76
     Width = 111
     Height = 16
     AutoSize = False
@@ -118,7 +139,7 @@ object FrameRangeSelect: TFrameRangeSelect
   end
   object edGlobEnd: TMaskEdit
     Left = 120
-    Top = 96
+    Top = 106
     Width = 111
     Height = 16
     AutoSize = False

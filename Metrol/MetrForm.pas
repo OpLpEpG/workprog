@@ -802,6 +802,11 @@ var
   Res: Integer;
 begin
   Res := 0;
+//  if Assigned(FDevData) then
+//   begin
+//    FDevData.OwnerDocument.SaveToFile('e:\_dev.xml');
+//    FFileData.OwnerDocument.SaveToFile('e:\_fil.xml');
+//   end;
   if not (Assigned(FFileData) and Assigned(FDevData) and (Value.Info = FDevData) and HasXTree(GetMetr([], FDevData), GetMetr([], FileData),
   procedure(devroot, dev, failRoot, fail: IXMLNode)
   begin
@@ -1101,6 +1106,9 @@ begin
   begin
     FStatusBar.Panels[0].Text := 'Устройство подключено.';
     FDevData := C_MetaDataInfo.Info;
+
+    //  FDevData.OwnerDocument.SaveToFile('e:\_dev_dat_firs.xml');
+
     NTrrApply.Enabled := True;
     NTrrApply.Click;
     NFileNew.Enabled := True;
@@ -1355,8 +1363,15 @@ begin
       BAttStart.Enabled := True;
       if Supports(Self, IAutomatMetrology) then
         BAutoStart.Enabled := True;
+
       md := GetMetr([], FDevData).ParentNode.ParentNode;
       mf := GetMetr([], FFileData).ParentNode.ParentNode;
+
+   //   FDevData.OwnerDocument.SaveToFile('e:\_dev_dat.xml');
+//      md.OwnerDocument.SaveToFile('e:\_dev.xml');
+  //    TDebug.Log(md.OwnerDocument.FileName);
+    //  mf.OwnerDocument.SaveToFile('e:\_fil.xml');
+
       if (mf.NodeName <> 'ANY_DEVICE') and (md.NodeName <> mf.NodeName) then
         MessageDlg(Format('Текущий файл тарировки прибора %s а выбран прибор %s', [mf.NodeName, md.NodeName]), TMsgDlgType.mtWarning, [mbOK], 0)
       else if mf.HasAttribute(AT_SERIAL) and md.HasAttribute(AT_SERIAL) and (mf.Attributes[AT_SERIAL] <> md.Attributes[AT_SERIAL]) then

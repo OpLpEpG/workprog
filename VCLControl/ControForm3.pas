@@ -13,8 +13,8 @@ type
     Item: IInterface;
     ImagIndex: Integer;
     Color: TColor;
-    Data: array[0..2]of string;
-    ReadOnly: array[0..2]of Boolean;
+    Data: array[0..2]of string; // texsts colons
+    ReadOnly: array[0..2]of Boolean; // readonly texsts colons
   end;
 
   EFormControlException = class(EBaseException);
@@ -37,9 +37,11 @@ type
     NReadRam: TMenuItem;
     NInfo: TMenuItem;
     NGlu: TMenuItem;
-    Neep: TMenuItem;
-    NMetrol: TMenuItem;
+    NeepCmp: TMenuItem;
+    NMetrolImport: TMenuItem;
     NClc: TMenuItem;
+    NeepEdit: TMenuItem;
+    NMetrolExport: TMenuItem;
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure NUpdateClick(Sender: TObject);
     procedure ppMPopup(Sender: TObject);
@@ -53,6 +55,10 @@ type
     procedure TreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
     procedure NReadRamClick(Sender: TObject);
     procedure NClcClick(Sender: TObject);
+    procedure NeepEditClick(Sender: TObject);
+    procedure NeepCmpClick(Sender: TObject);
+    procedure NMetrolExportClick(Sender: TObject);
+    procedure NMetrolImportClick(Sender: TObject);
   private
     FEditData: PNodeExData;
     FEditNode: PVirtualNode;
@@ -436,6 +442,33 @@ begin
    end);
 end;
 
+procedure TFormControl.NeepCmpClick(Sender: TObject);
+begin
+//
+end;
+
+procedure TFormControl.NeepEditClick(Sender: TObject);
+ var
+  d: Idialog;
+  dr: IDialog<IXMLNode, TDialogResult>;
+begin
+  if RegisterDialog.TryGet<Dialog_Eep>(d) then IDialog<IXMLNode, TDialogResult>(d).Execute(FEditData.Item as IXMLNode,
+  procedure(Sender: IDialog; Res: TModalResult)
+  begin
+
+  end);
+end;
+
+procedure TFormControl.NMetrolExportClick(Sender: TObject);
+begin
+//
+end;
+
+procedure TFormControl.NMetrolImportClick(Sender: TObject);
+begin
+//
+end;
+
 procedure TFormControl.NRemoveClick(Sender: TObject);
  var
   de: IDeviceEnum;
@@ -708,9 +741,11 @@ begin
   Nclc.Visible := Flag and (Cur(T_RAM) or Cur(T_WRK) or atr(AT_FILE_NAME) or atr(AT_FILE_CLC));
   NReadRam.Visible := Flag and Chld(T_RAM);
   NInfo.Visible := Flag and Chld(T_WRK);
-  Neep.Visible := Flag and Chld(T_EEPROM);
   NGlu.Visible := Flag and Chld(T_GLU);
-  NMetrol.Visible := Flag and Chld(T_MTR);
+  NeepEdit.Visible := RegisterDialog.Support<Dialog_Eep> and  Flag and Cur(T_EEPROM);
+  NeepCmp.Visible := Flag and Cur(T_EEPROM);
+  NMetrolExport.Visible := Flag and Cur(T_MTR);
+  NMetrolImport.Visible := Flag and Cur(T_MTR);
 end;
 
 procedure TFormControl.TreeClear;

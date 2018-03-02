@@ -124,7 +124,8 @@ contains
   XMLLua in 'XMLLua.pas',
   XMLLua.Report in 'XMLLua.Report.pas',
   XMLDataSet in 'XMLDataSet.pas',
-  RangeSelector in 'RangeSelector.pas';
+  RangeSelector in 'RangeSelector.pas',
+  XMLLua.EEPROM in 'XMLLua.EEPROM.pas';
 
 end.
 

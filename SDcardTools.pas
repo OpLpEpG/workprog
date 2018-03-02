@@ -550,19 +550,19 @@ begin
     inc(Result.NumLoad, nread);
     Dec(n, nread);
     prc := GetStatistic(Result.NumLoad);
-    // check end
-    if prc.ProcRun >= 100 then
-     begin
-      Result.Res := carEnd;
-      Fevent(carEnd, prc, temn);
-      Exit;
-     end
-    // check empty
-    else if FToZ and CheckZerroes(Cur, nread, lastNZ) then
+    // check empty  обязательно сначала вычисляем нули  т.к. считано может быть до конца
+    if FToZ and CheckZerroes(Cur, nread, lastNZ) then
      begin
       Result.Res := carZerroes;
       Result.NumLoad := Result.NumLoad - nread + lastNZ;
-      Fevent(carZerroes, prc, temn);
+      Fevent(carZerroes, GetStatistic(Result.NumLoad), temn);
+      Exit;
+     end
+    // check end
+    else if prc.ProcRun >= 100 then
+     begin
+      Result.Res := carEnd;
+      Fevent(carEnd, prc, temn);
       Exit;
      end
     else

@@ -537,12 +537,12 @@ end;
 
 procedure TActionEnum.Load;
 begin
-  (TRegistryStorable<IAction>.Create(Self, PATH) as IStorable).Load;
+//  (TRegistryStorable<IAction>.Create(Self, PATH) as IStorable).Load;  // все пересоздается
 end;
 
 procedure TActionEnum.Save;
 begin
-  (TRegistryStorable<IAction>.Create(Self, PATH) as IStorable).Save;
+//  (TRegistryStorable<IAction>.Create(Self, PATH) as IStorable).Save; // все пересоздается
 end;
 
 {$REGION ' ActionResolver '}

@@ -418,6 +418,7 @@ type
   public
     class procedure Add<T: class; D: IInterface>(const Category: string = ''; const Description: string = '');
     class procedure Remove<T: class>;
+    class function Support<D: IInterface>: Boolean;
     class function TryGet<D: IInterface>(out Dialog: IDialog): Boolean; overload;
     class function TryGet(const Category, Description: string; out Dialog: IDialog): Boolean; overload;
     class procedure UnInitialize<D: IInterface>; overload;
@@ -1730,6 +1731,15 @@ class procedure RegisterDialog.Remove<T>;
 begin
   FItems.Remove(TypeInfo(T));
   GContainer.RemoveModel<T>;
+end;
+
+class function RegisterDialog.Support<D>: Boolean;
+ var
+  p : TPair<PTypeInfo,TDialogData>;
+  i : IInterface;
+begin
+  Result := False;
+  for p in FItems do if (p.Value.DialogID = TypeInfo(D)) then Exit(True);
 end;
 
 class function RegisterDialog.TryGet(const Category, Description: string; out Dialog: IDialog): Boolean;

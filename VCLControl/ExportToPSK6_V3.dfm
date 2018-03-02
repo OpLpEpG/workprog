@@ -3,7 +3,7 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
   Top = 0
   BorderStyle = bsSizeToolWin
   Caption = #1101#1082#1089#1087#1086#1088#1090' '#1074' '#1055#1057#1050'6'
-  ClientHeight = 223
+  ClientHeight = 235
   ClientWidth = 295
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,7 +16,7 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
   OnCreate = FormCreate
   DesignSize = (
     295
-    223)
+    235)
   PixelsPerInch = 96
   TextHeight = 13
   object od: TJvFilenameEdit
@@ -32,23 +32,21 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
     Text = ''
-    ExplicitWidth = 386
   end
   object sb: TStatusBar
     Left = 0
-    Top = 204
+    Top = 216
     Width = 295
     Height = 19
     Panels = <
       item
         Width = 50
       end>
-    ExplicitTop = 135
-    ExplicitWidth = 292
+    ExplicitTop = 204
   end
   object btStart: TButton
     Left = 8
-    Top = 171
+    Top = 178
     Width = 75
     Height = 25
     Caption = #1057#1090#1072#1088#1090
@@ -57,7 +55,7 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
   end
   object btTerminate: TButton
     Left = 89
-    Top = 171
+    Top = 178
     Width = 75
     Height = 25
     Caption = #1055#1088#1077#1088#1074#1072#1090#1100
@@ -66,7 +64,7 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
   end
   object btExit: TButton
     Left = 207
-    Top = 171
+    Top = 178
     Width = 75
     Height = 25
     Caption = #1042#1099#1093#1086#1076
@@ -76,25 +74,26 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
   end
   object Progress: TProgressBar
     Left = 8
-    Top = 148
+    Top = 155
     Width = 273
     Height = 17
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 5
-    ExplicitWidth = 386
   end
   inline RangeSelect: TFrameRangeSelect
     Left = 8
     Top = 30
     Width = 273
-    Height = 112
+    Height = 122
     Anchors = [akLeft, akTop, akRight]
+    AutoSize = True
     TabOrder = 6
     ExplicitLeft = 8
     ExplicitTop = 30
-    ExplicitWidth = 386
+    ExplicitWidth = 273
     inherited Range: TRangeSelector
       Width = 273
+      ExplicitWidth = 273
     end
   end
 end
