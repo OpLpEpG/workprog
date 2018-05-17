@@ -30,7 +30,7 @@ object DlgOpenP3DataSet: TDlgOpenP3DataSet
     Top = 36
     Width = 145
     Height = 368
-    Directory = 'C:\Gorizont'
+    Directory = 'C:\Program Files\Embarcadero\Studio\17.0\bin'
     FileList = FileList
     DriveCombo = DriveCombo
     ItemHeight = 17
@@ -45,7 +45,7 @@ object DlgOpenP3DataSet: TDlgOpenP3DataSet
     Height = 368
     Anchors = [akLeft, akTop, akBottom]
     ItemHeight = 13
-    Mask = '*.XML'
+    Mask = '*.XML;*.XMLPrj'
     TabOrder = 2
     OnChange = FileListChange
     ForceFileExtensions = True
@@ -167,10 +167,6 @@ object DlgOpenP3DataSet: TDlgOpenP3DataSet
     object tshData: TTabSheet
       Caption = #1057#1084#1086#1090#1088#1077#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object DBGrid1: TDBGrid
         Left = 0
         Top = 0

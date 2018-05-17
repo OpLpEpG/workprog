@@ -78,10 +78,12 @@ object FormGK: TFormGK
         end
         item
           Position = 2
+          Width = 61
           WideText = 'P('#1084#1082#1088'/'#1095') '
         end
         item
           Position = 3
+          Width = 52
           WideText = #1080#1084#1087'/'#1082#1072#1076#1088
         end
         item
@@ -90,7 +92,7 @@ object FormGK: TFormGK
         end
         item
           Position = 5
-          Width = 73
+          Width = 60
           WideText = #948'('#1056'),%'
         end>
     end

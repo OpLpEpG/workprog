@@ -14,15 +14,15 @@ Title=Помощь по программе
 help.htm
 Metrol\Metrology.htm
 Metrol\Metrology.Inclin.htm
-Devices\CorrectTime.htm
-Devices\Delay.htm
 Devices\IO.htm
-Project\Control.htm
 Project\Progect.htm
 Project\ReadRam.htm
-Project\SetTrr.htm
 Moduls.htm
 Devices\Devices.htm
+Алгоритм Работы(Профилемер).htm
+Project\View.htm
+Project\Export.htm
+Project\Delay.htm
 
 [ALIAS]
 #include Alias.h

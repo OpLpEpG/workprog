@@ -169,6 +169,7 @@ object FormMain: TFormMain
                     ImageIndex = 221
                   end
                   item
+                    Visible = False
                     Action = ActionLoadDesktop
                     ImageIndex = 225
                   end>
@@ -199,13 +200,12 @@ object FormMain: TFormMain
             Items = <
               item
                 Action = ActionUpdate
-                Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1082#1088#1099#1090#1099#1077' '#1080' '#1086#1073#1085#1086#1074#1080#1090#1100' '#1082#1085#1086#1087#1082#1080
                 ImageIndex = 36
               end
               item
                 Caption = '-'
               end>
-            Caption = #1054#1082#1085#1072
+            Caption = #1057#1082#1088#1099#1090#1099#1077' '#1086#1082#1085#1072
           end>
         ActionBar = MainMenu
       end
@@ -244,8 +244,8 @@ object FormMain: TFormMain
       OnExecute = ActionExitExecute
     end
     object CustomizeActionBars: TCustomizeActionBars
-      Category = #1054#1082#1085#1072
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1084#1077#1085#1102' '#1080' '#1087#1072#1085#1077#1083#1080'...'
+      Category = #1057#1082#1088#1099#1090#1099#1077' '#1086#1082#1085#1072
+      Caption = #1053#1072#1089#1090#1088#1086#1080#1090#1100' '#1084#1077#1085#1102
       ImageIndex = 35
       ShortCut = 24693
       ActionManager = ActionManager
@@ -270,11 +270,12 @@ object FormMain: TFormMain
       Category = #1056#1072#1073#1086#1095#1080#1081' '#1089#1090#1086#1083
       Caption = #1055#1077#1088#1077#1079#1072#1075#1088#1091#1079#1080#1090#1100
       ImageIndex = 225
+      Visible = False
       OnExecute = Debug_ReloadClick
     end
     object ActionUpdate: TAction
-      Category = #1054#1082#1085#1072
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1082#1085#1086#1087#1082#1080
+      Category = #1057#1082#1088#1099#1090#1099#1077' '#1086#1082#1085#1072
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1084#1077#1085#1102
       ImageIndex = 36
       OnExecute = ActionUpdateExecute
     end
@@ -289,7 +290,7 @@ object FormMain: TFormMain
     Left = 34
     Top = 49
     Bitmap = {
-      494C010167019001180410001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010167015404CC0410001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000A0050000010020000000000000A0
       0500000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

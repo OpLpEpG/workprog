@@ -3,14 +3,16 @@ unit ControForm3;
 interface
 
 uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RootIntf, Container, Actns,
-  Winapi.Windows, Winapi.Messages, Xml.XMLIntf, System.UITypes,
+  Winapi.Windows, Winapi.Messages, Xml.XMLIntf, System.UITypes,  System.IOUtils,
   System.SysUtils, Vcl.Graphics, VirtualTrees, System.Bindings.Expression, Vcl.Forms, Vcl.Dialogs, JvDockControlForm,
   Vcl.ImgList, Vcl.Controls, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, System.Classes, Vcl.StdCtrls;
 
 type
   PNodeExData = ^TNodeExData;
+  TUpdateTextFunc = procedure (xd: PNodeExData; Column: Integer) of object;
   TNodeExData = record
     Item: IInterface;
+    UpdateTextFunc: TUpdateTextFunc;
     ImagIndex: Integer;
     Color: TColor;
     Data: array[0..2]of string; // texsts colons
@@ -57,7 +59,7 @@ type
     procedure NClcClick(Sender: TObject);
     procedure NeepEditClick(Sender: TObject);
     procedure NeepCmpClick(Sender: TObject);
-    procedure NMetrolExportClick(Sender: TObject);
+    procedure NMetrolTestClick(Sender: TObject);
     procedure NMetrolImportClick(Sender: TObject);
   private
     FEditData: PNodeExData;
@@ -94,12 +96,19 @@ type
     procedure DeleteUnUsed;
     procedure SetAddCon(const Value: string);
     procedure SetAddDev(const Value: string);
-    class procedure ViewRamData(Sender: TFormControl; Root: PVirtualNode; node: IXMLNode); static;
-    class procedure ViewWrkData(Sender: TFormControl; Root: PVirtualNode; node: IXMLNode); static;
+    procedure ViewRamData(Root: PVirtualNode; node: IXMLNode);
+    procedure ViewWrkData(Root: PVirtualNode; node: IXMLNode);
+    procedure ViewMetrData(Root: PVirtualNode; node: IXMLNode);
+    procedure UpdateTextFunc_Metr_File(xd: PNodeExData; Column: Integer);
+    procedure UpdateTextFunc_Metr_MetrData(xd: PNodeExData; Column: Integer);
     procedure SetC_TableUpdate(const Value: string);
   protected
+    type
+     TRunViewSectionFunc = procedure(Root: PVirtualNode; node: IXMLNode) of object;
    const
     NICON = 269;
+   var
+    AVAIL_T_Func: array[0..4] of TRunViewSectionFunc;// = (TFormControl.ViewWrkData, TFormControl.ViewRamData, nil, nil, TFormControl.ViewMetrData);
     function Priority: Integer; override;
     class function ClassIcon: Integer; override;
     procedure Loaded; override;
@@ -116,8 +125,6 @@ type
     property C_TableUpdate: string read FC_TableUpdate write SetC_TableUpdate;
   end;
 
-  TRunMetrFunc = procedure (Sender: TFormControl; Root: PVirtualNode; node: IXMLNode);
-
 implementation
 
 {$R *.dfm}
@@ -129,7 +136,7 @@ const
   AVAIL_ATTR_Caption: array[0..4] of string = ('Адрес', 'Инфо', 'Серийный номер', 'Чип', 'Маска скорости порта');
   AVAIL_T: array[0..4] of string = (T_WRK, T_RAM, T_EEPROM, T_GLU, T_MTR);
   AVAIL_T_Caption: array[0..4] of string = ('Режим информации', 'Чтение памяти', 'EEPROM', 'Данные по глубине', 'Метрология');
-  AVAIL_T_Func: array[0..4] of TRunMetrFunc = (TFormControl.ViewWrkData, TFormControl.ViewRamData, nil, nil, nil);
+  //AVAIL_T_Func: array[0..4] of TRunMetrFunc = (TFormControl.ViewWrkData, TFormControl.ViewRamData, nil, nil, TFormControl.ViewMetrData);
   IMG_ATTR = 306;
   CLR_ATTR = TColors.Brown;
 
@@ -198,13 +205,16 @@ begin
   if Column < 0 then Exit;
   if not Assigned(xd.Item) then Result := xd.Data[Column]
   else if Supports(xd.Item, IXMLNode, n) then
+   begin
+    if Assigned(xd.UpdateTextFunc) then xd.UpdateTextFunc(xd, Column);
     case Column of
      0: if xd.Data[0] <> '' then Result := xd.Data[0]
         else Result := n.NodeName;
-     1: if n.NodeType = ntAttribute then Result := n.NodeValue
+     1: if (n.NodeType = ntAttribute) and not Assigned(xd.UpdateTextFunc) then Result := n.NodeValue
         else Result := xd.Data[1];
      2: Result := xd.Data[2];
     end
+   end
   else if Supports(xd.Item, IDevice, d) then
     case Column of
      0: Result := (d as ICaption).Text;
@@ -377,6 +387,9 @@ procedure TFormControl.Loaded;
  var
   ip: IImagProvider;
 begin
+  AVAIL_T_Func[0] := ViewWrkData;
+  AVAIL_T_Func[1] := ViewRamData;
+  AVAIL_T_Func[4] := ViewMetrData;
   inherited;
   Tree.NodeDataSize := SizeOf(TNodeExData);
   if Supports(GlobalCore, IImagProvider, ip) then
@@ -459,14 +472,50 @@ begin
   end);
 end;
 
-procedure TFormControl.NMetrolExportClick(Sender: TObject);
+procedure TFormControl.NMetrolTestClick(Sender: TObject);
+ var
+  x, mtr: IXMLNode;
 begin
-//
+  with TOpenDialog.Create(nil) do
+  try
+   InitialDir := ExtractFilePath(ParamStr(0)) + T_MTR;
+   Options := Options + [ofPathMustExist, ofFileMustExist];
+   DefaultExt := 'XMLMtr';
+   Filter := 'Файл тарировки (*.XMLMtr)|*.XMLMtr|Файл xml (*.xml)|*.xml';
+   if Execute(Handle) and Supports(FEditData.Item, IXMLNode, x) then
+     (GlobalCore as IMetrology).Check(x, filename,[AT_METR,AT_FILE_NAME, AT_TIMEATT, AT_METROLOG], mtr);
+  finally
+    Free;
+  end;
 end;
 
 procedure TFormControl.NMetrolImportClick(Sender: TObject);
+ var
+  x, mtr, m: IXMLNode;
+  devnm: string;
 begin
-//
+  with TOpenDialog.Create(nil) do
+  try
+   InitialDir := ExtractFilePath(ParamStr(0)) + T_MTR;
+   Options := Options + [ofPathMustExist, ofFileMustExist];
+   DefaultExt := 'XMLMtr';
+   Filter := 'Файл тарировки (*.XMLMtr)|*.XMLMtr|Файл xml (*.xml)|*.xml';
+   if Execute(Handle) and Supports(FEditData.Item, IXMLNode, x) then
+    begin
+     (GlobalCore as IMetrology).Setup(x, filename,[AT_METR,AT_FILE_NAME, AT_TIMEATT, AT_METROLOG], mtr);
+     x.Attributes[AT_FILE_NAME] := FileName;
+     devnm := x.ParentNode.ParentNode.NodeName + '.' + x.NodeName;
+     for m in XEnum(mtr) do if m.HasAttribute(AT_DEVNAME) and (m.Attributes[AT_DEVNAME] = devnm) then
+      begin
+       if m.HasAttribute(AT_TIMEATT) then x.Attributes[AT_TIMEATT] := m.Attributes[AT_TIMEATT];
+       if m.HasAttribute(AT_METROLOG) then x.Attributes[AT_METROLOG] := m.Attributes[AT_METROLOG];
+      end;
+     (GContainer as IALLMetaDataFactory).Get.Save;
+     TreeUpdate;
+    end;
+  finally
+    Free;
+  end;
 end;
 
 procedure TFormControl.NRemoveClick(Sender: TObject);
@@ -737,15 +786,19 @@ procedure TFormControl.ShowModulMenus(Flag: Boolean; node: IXMLnode);
   begin
     Result := Assigned(node) and (node.NodeType = ntAttribute) and (node.NodeName = Attr)
   end;
+  function prnt(const t_atr: string): Boolean;
+  begin
+    Result := Assigned(node) and Assigned(node.ParentNode) and (node.ParentNode.NodeName = t_atr)
+  end;
 begin
-  Nclc.Visible := Flag and (Cur(T_RAM) or Cur(T_WRK) or atr(AT_FILE_NAME) or atr(AT_FILE_CLC));
+  Nclc.Visible := Flag and (Cur(T_RAM) or Cur(T_WRK));// or atr(AT_FILE_NAME) or atr(AT_FILE_CLC));
   NReadRam.Visible := Flag and Chld(T_RAM);
-  NInfo.Visible := Flag and Chld(T_WRK);
+  NInfo.Visible := False;// Flag and Chld(T_WRK);
   NGlu.Visible := Flag and Chld(T_GLU);
   NeepEdit.Visible := RegisterDialog.Support<Dialog_Eep> and  Flag and Cur(T_EEPROM);
   NeepCmp.Visible := Flag and Cur(T_EEPROM);
-  NMetrolExport.Visible := Flag and Cur(T_MTR);
-  NMetrolImport.Visible := Flag and Cur(T_MTR);
+  NMetrolExport.Visible := Flag and prnt(T_MTR);
+  NMetrolImport.Visible := Flag and prnt(T_MTR);
 end;
 
 procedure TFormControl.TreeClear;
@@ -796,42 +849,34 @@ procedure TFormControl.AddMetaData(d: IDataDevice; Rt: PVirtualNode);
   e: PNodeExData;
   i: Integer;
   n, a, s: Ixmlnode;
+  function SData(root: PVirtualNode; item: IXMLNode; const Caption, col1: string): PVirtualNode;
+  begin
+    Result := Tree.AddChild(Root);
+    Include(Result.States, vsExpanded);
+    e := PNodeExData(Tree.GetNodeData(Result));
+    e.Item := item;
+    SetData(e, Caption, col1);
+    SetReadOnly(e);
+    e.UpdateTextFunc := nil;
+  end;
 begin
   m := d.GetMetaData;
   ///  Ошибки инициализации
   if Length(m.ErrAdr) > 0 then
    begin
-    v := Tree.AddChild(Rt);
-    Include(v.States, vsExpanded);
-    e := PNodeExData(Tree.GetNodeData(v));
-    e.Item := nil;
-    SetData(e,'Не инициализированны', TAddressRec(m.ErrAdr).ToNames);
-    SetReadOnly(e);
+    v := SData(Rt, nil, 'Не инициализированны', TAddressRec(m.ErrAdr).ToNames);
    end;
   if Assigned(m.Info) then for n in XEnum(m.Info) do
    begin
     ///  модуль
-    v := Tree.AddChild(Rt);
-    Include(v.States, vsExpanded);
-    e := PNodeExData(Tree.GetNodeData(v));
-    e.Item := n;
-    SetData(e);
-    SetReadOnly(e);
+    v := SData(Rt, n, '', '');
     e.Color := TColors.Blueviolet;
     e.ImagIndex := 322;
     ///  модуль атрибуты метаданных
     for i := 0 to High(AVAIL_ATTR) do
      begin
       a := n.AttributeNodes.FindNode(AVAIL_ATTR[i]);
-      if Assigned(a) then
-       begin
-        sv := Tree.AddChild(v);
-        Include(sv.States, vsExpanded);
-        e := PNodeExData(Tree.GetNodeData(sv));
-        e.Item := a;
-        SetData(e,AVAIL_ATTR_Caption[i]);
-        SetReadOnly(e);
-       end;
+      if Assigned(a) then sv := SData(v, a, AVAIL_ATTR_Caption[i], '');
      end;
     ///  модуль режим информации лог памяти EEPROM  glu  метрология
     for i := 0 to High(AVAIL_T) do
@@ -839,28 +884,116 @@ begin
       a := n.ChildNodes.FindNode(AVAIL_T[i]);
       if Assigned(a) then
        begin
-        sv := Tree.AddChild(v);
-        Include(sv.States, vsExpanded);
-        e := PNodeExData(Tree.GetNodeData(sv));
-        e.Item := a;
-        SetData(e, AVAIL_T_Caption[i]);
-        SetReadOnly(e);
+        sv := SData(v, a, AVAIL_T_Caption[i], '');
         e.Color := TColors.Blueviolet;
         e.ImagIndex := 315;
-        if a.HasAttribute(AT_FILE_NAME) then
-         begin
-          ssv := Tree.AddChild(sv);
-          Include(ssv.States, vsExpanded);
-          e := PNodeExData(Tree.GetNodeData(ssv));
-          e.Item := a.AttributeNodes.FindNode(AT_FILE_NAME);
-          SetData(e,'Файл', a.Attributes[AT_FILE_NAME]);
-          SetReadOnly(e);
-         end;
-        if Assigned(AVAIL_T_Func[i]) then AVAIL_T_Func[i](Self, sv, a);
+        if Assigned(AVAIL_T_Func[i]) then AVAIL_T_Func[i](sv, a);
        end;
      end;
    end;
 end;
+
+procedure TFormControl.UpdateTextFunc_Metr_File(xd: PNodeExData; Column: Integer);
+ var
+  fp: string;
+begin
+  fp := IXMLNode(xd.Item).NodeValue;
+  if not TFile.Exists(fp) then xd.Color := clRed;
+  xd.Data[1] := TPath.GetFileName(fp);
+  xd.Data[2] := TPath.GetDirectoryName(fp);
+end;
+
+procedure TFormControl.UpdateTextFunc_Metr_MetrData(xd: PNodeExData;
+  Column: Integer);
+  var
+   n: IXMLNode;
+begin
+  n := IXMLNode(xd.Item);
+  if n.HasAttribute(AT_METROLOG) then xd.Data[1] := n.Attributes[AT_METROLOG];
+  if n.HasAttribute(AT_TIMEATT) then xd.Data[2] := n.Attributes[AT_TIMEATT];
+end;
+
+procedure TFormControl.ViewMetrData(Root: PVirtualNode; node: IXMLNode);
+ var
+  n, a: IXMLNode;
+  e: PNodeExData;
+  v, sv, ssv: PVirtualNode;
+  function SData(Rt: PVirtualNode; item: IXMLNode; const Caption, col1, col2: string; f: TUpdateTextFunc): PVirtualNode;
+  begin
+    Result := Tree.AddChild(Rt);
+    Include(Result.States, vsExpanded);
+    e := PNodeExData(Tree.GetNodeData(Result));
+    e.Item := item;
+    SetData(e, Caption, col1, col2);
+    SetReadOnly(e);
+    e.UpdateTextFunc := f;
+  end;
+begin
+  for n in XEnum(node) do if n.HasAttribute(AT_METR) then
+   begin
+    v := SData(root, n, n.NodeName, n.Attributes[AT_METR], '', nil);
+    e.Color := TColors.Seagreen;
+    e.ImagIndex := 315;
+    if n.HasAttribute(AT_FILE_NAME) then
+     begin
+      a := n.AttributeNodes.FindNode(AT_FILE_NAME);
+      SData(v, a, 'Файл','', '', UpdateTextFunc_Metr_File);
+     end;
+    if n.HasAttribute(AT_TIMEATT)or n.HasAttribute(AT_METROLOG) then
+     begin
+      SData(v, n, 'Аттестовал','', '', UpdateTextFunc_Metr_MetrData);
+     end;
+   end;
+end;
+
+procedure TFormControl.ViewRamData(Root: PVirtualNode; node: IXMLNode);
+  procedure SData(const Caption, AttrName: string);
+   var
+    v: PVirtualNode;
+    e: PNodeExData;
+  begin
+    if node.HasAttribute(AttrName) then
+     begin
+      v := Tree.AddChild(Root);
+      Include(v.States, vsExpanded);
+      e := PNodeExData(Tree.GetNodeData(v));
+      e.Item := node.AttributeNodes.FindNode(AttrName);
+      e.UpdateTextFunc := nil;
+      SetData(e, Caption, node.Attributes[AttrName]);
+      SetReadOnly(e);
+     end;
+  end;
+begin
+  SData('Файл', AT_FILE_NAME);
+  SData('с кадра', AT_FROM_KADR);
+  SData('по кадр', AT_TO_KADR);
+  SData('со времени', AT_FROM_TIME);
+  SData('до времени', AT_TO_TIME);
+  SData('с адреса', AT_FROM_ADR);
+  SData('по адрес', AT_TO_ADR);
+end;
+
+procedure TFormControl.ViewWrkData(Root: PVirtualNode; node: IXMLNode);
+  procedure SData(const Caption, AttrName: string);
+   var
+    v: PVirtualNode;
+    e: PNodeExData;
+  begin
+    if node.HasAttribute(AttrName) then
+     begin
+      v := Tree.AddChild(Root);
+      Include(v.States, vsExpanded);
+      e := PNodeExData(Tree.GetNodeData(v));
+      e.Item := node.AttributeNodes.FindNode(AttrName);
+      e.UpdateTextFunc := nil;
+      SetData(e, Caption, node.Attributes[AttrName]);
+      SetReadOnly(e);
+     end;
+  end;
+begin
+  SData('Файл', AT_FILE_NAME);
+end;
+
 
 procedure TFormControl.TreeUpdate;
  var
@@ -894,36 +1027,6 @@ begin
   finally
    Tree.EndUpdate;
   end;
-end;
-
-class procedure TFormControl.ViewRamData(Sender: TFormControl; Root: PVirtualNode; node: IXMLNode);
-  procedure SetData(const Caption, AttrName: string);
-   var
-    v: PVirtualNode;
-    e: PNodeExData;
-  begin
-    if node.HasAttribute(AttrName) then
-     begin
-      v := Sender.Tree.AddChild(Root);
-      Include(v.States, vsExpanded);
-      e := PNodeExData(Sender.Tree.GetNodeData(v));
-      e.Item := node.AttributeNodes.FindNode(AttrName);
-      Sender.SetData(e, Caption, node.Attributes[AttrName]);
-      Sender.SetReadOnly(e);
-     end;
-  end;
-begin
-  SetData('с кадра', AT_FROM_KADR);
-  SetData('по кадр', AT_TO_KADR);
-  SetData('со времени', AT_FROM_TIME);
-  SetData('до времени', AT_TO_TIME);
-  SetData('с адреса', AT_FROM_ADR);
-  SetData('по адрес', AT_TO_ADR);
-end;
-
-class procedure TFormControl.ViewWrkData(Sender: TFormControl; Root: PVirtualNode; node: IXMLNode);
-begin
-
 end;
 
 procedure TFormControl.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex);

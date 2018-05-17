@@ -5,7 +5,7 @@ unit FormDBCursor;
 interface
 
 uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, Xml.XMLIntf,Container,
-  DataDBForm,
+ // DataDBForm,
 {$IFDEF USE_EH}
   DBGridEhGrouping, ToolCtrlsEh, DBGridEhToolCtrls, DynVarsEh, GridsEh,
   DBAxisGridsEh, DBGridEh,

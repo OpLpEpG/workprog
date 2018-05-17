@@ -207,6 +207,7 @@ type
     class procedure SetupRoll(FirstStep: integer; Zen, Azim: Double; trr: IXMLNode); overload; static;
     class procedure SolvRoll(const Y: TRollData; out rep: TResultSolvRoll); static;
     class function AddStep(Step: integer; const Info: string; trr: IXMLNode): IXMLNode; static;
+    class function AddStepAccel(Step: integer; const Info: string; trr: IXMLNode): IXMLNode; static;
     class procedure ExecStepIncl_OLD(stp: Integer; alg, trr: IXMLNode); overload; static;
     class procedure M3x4ToHorizont(mul: Double; var Data: TConvert); static;
     class procedure HorizontToM3x4(mul: Double; var Data: TConvert); static;
@@ -339,6 +340,30 @@ begin
   AddHG(Result, 'magnit');
   TXMLScriptMath.AddXmlPath(Result, 'TASK');
 end;
+
+class function TMetrInclinMath.AddStepAccel(Step: integer; const Info: string; trr: IXMLNode): IXMLNode;
+ var
+  v: Variant;
+begin
+  Result := TXMLScriptMath.AddXmlPath(trr, 'STEP'+Step.ToString());
+  v := XToVar(Result);
+  v.EXECUTED := False;
+  v.STEP := Step;
+  v.INFO := Format('%d) %s',[step, Info]);
+  TXMLScriptMath.AddXmlPath(Result, 'X.DEV');
+  TXMLScriptMath.AddXmlPath(Result, 'X.CLC');
+  TXMLScriptMath.AddXmlPath(Result, 'Y.DEV');
+  TXMLScriptMath.AddXmlPath(Result, 'Y.CLC');
+  TXMLScriptMath.AddXmlPath(Result, 'Z.DEV');
+  TXMLScriptMath.AddXmlPath(Result, 'Z.CLC');
+  v.X.CLC.VALUE := 0;
+  v.Y.CLC.VALUE := 0;
+  v.Z.CLC.VALUE := 0;
+  v.X.DEV.VALUE := 0;
+  v.Y.DEV.VALUE := 0;
+  v.Z.DEV.VALUE := 0;
+end;
+
 
 class procedure TMetrInclinMath.SetupRoll(FirstStep: integer; Zen, Azim: Double; trr: IXMLNode);
  var

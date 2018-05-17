@@ -212,7 +212,12 @@ end;
 class procedure TXMLDataSet.Get(RootSection: IXMLNode; out DataSet: IDataSet; ObjectFields: Boolean);
  var
   pdf: IProjectDataFile;
+  x:IXMLnode;
 begin
+//  RootSection.OwnerDocument.Savetofile('d:\tst.xml');
+//  RootSection.Resync;
+// for x in XenumAttr(RootSection) do Tdebug.Log('atr[%s] =%s', [x.NodeName, x.NodeValue]);
+//  RootSection.Resync;
   if not RootSection.HasAttribute(AT_FILE_NAME) then raise Exception.Create('Нет файла данных');
 
   if not Supports(GContainer, IProjectDataFile, pdf) then raise Exception.Create('Error IProjectDataFile не поддерживается');

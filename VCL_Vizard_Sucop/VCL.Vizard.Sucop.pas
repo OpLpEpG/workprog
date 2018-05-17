@@ -2,7 +2,7 @@ unit VCL.Vizard.Sucop;
 
 interface
 
-uses LAS, LasImpl, System.IOUtils, SucopAdapter,  MetrInclin.Math,
+uses LAS, LasImpl, System.IOUtils, SucopAdapter,  LuaInclin.Math,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, JvExMask, JvToolEdit;
 

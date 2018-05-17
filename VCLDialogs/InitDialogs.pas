@@ -2,7 +2,7 @@ unit InitDialogs;
 
 interface
 
-uses DeviceIntf, DockIForm, debug_except, ExtendIntf, RootImpl, PluginAPI, RootIntf, DBIntf, DBImpl, Data.DB,
+uses DeviceIntf, DockIForm, debug_except, ExtendIntf, RootImpl, PluginAPI, RootIntf, DBIntf, Data.DB,
      System.Variants, Container, System.TypInfo, System.SysUtils, System.UITypes;
 type
 //  EDialogDelayException = class(EBaseException);

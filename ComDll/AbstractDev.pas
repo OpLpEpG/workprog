@@ -560,12 +560,12 @@ begin
   FTimerRxTimeOut.OnTimer := OnTimerRxTimeOut;
   FTimerRxTimeOut.Interval := 2000;
   FComWait := FTimerRxTimeOut.Interval;
-  OutputDebugString(PWideChar('TAbstractConnectIO.Create()'));
+  Tdebug.Log('------TConnectIO.Create()-------');
 end;
 
 destructor TAbstractConnectIO.Destroy;
 begin
-  OutputDebugString(PWideChar('TAbstractConnectIO.Destroy [' + FConnectInfo));
+  Tdebug.Log('-----TConnectIO.Destroy %s',[FConnectInfo]);
   FTimerRxTimeOut.Free;
   inherited;
 end;

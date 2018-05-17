@@ -971,6 +971,7 @@ begin
     Render();
   if Column.Visible and Row.Visible then
     FBitmap.DrawTo(Graph.Canvas.Handle, ClientRect, FShowRect);
+   Tdebug.Log('------- TGR32GraphicData.Paint -----------');
 end;
 
 procedure TGR32GraphicData.ParamCollectionChanged;
@@ -1156,7 +1157,7 @@ begin
   pp2mm := Screen.PixelsPerInch / 2.54 * 2;
   FBitmap.FillRect(0, 0, FBitmap.Width, FBitmap.Height, clWhite32);
   RenderWaveparams;
-  RenderLineparams;
+  RenderLineparams; //
   DrowAxis;
 end;
 

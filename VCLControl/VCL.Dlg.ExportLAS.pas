@@ -2,7 +2,7 @@ unit VCL.Dlg.ExportLAS;
 
 interface
 
-uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, Actns, Container, DBImpl, tools,
+uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, Actns, Container, tools,
   Xml.XMLIntf, DataSetIntf, XMLDataSet, System.TypInfo, LAS, LasImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids, VCL.Frame.SelectParam, Vcl.StdCtrls, Vcl.ExtCtrls,
@@ -40,7 +40,7 @@ type
    function Execute(dummy: Integer): Boolean;
    function GetInfo: PTypeInfo; override;
    class function ClassIcon: Integer; override;
-   [StaticAction('-Сохранить как LAS...', 'Экспорт', 128, '0:Файл.Экспорт|1:2')]
+   [StaticAction('-LAS...', 'Экспорт', 128, '0:Файл.Экспорт|1:2')]
    class procedure DoExportLAS(Sender: IAction);
   end;
 

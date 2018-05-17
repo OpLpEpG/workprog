@@ -89,8 +89,8 @@ uses  tools, System.IOUtils, RootIntf,
     //Capt, Categ: string; AImageIndex: Integer; APaths: string; AHint: string; AAutoCheck AChecked AGroupIndex AEnabled
     [DynamicAction('<I> Задержка...', '<I>', 142, '0:Управление|3.<I>:-1', 'Окно постановки на задержку')]
     procedure DoDelay(Sender: IAction);
-    [DynamicAction('<I> Коррекция часов...', '<I>', Dialog_SyncDelay_ICON, '0:Управление|3.<I>', 'Окно коррекции часов модулей. Вызывается перед чтением памяти,в режиме информации.')]
-    procedure DoSync(Sender: IAction);
+//    [DynamicAction('<I> Коррекция часов...', '<I>', Dialog_SyncDelay_ICON, '0:Управление|3.<I>', 'Окно коррекции часов модулей. Вызывается перед чтением памяти,в режиме информации.')]
+//    procedure DoSync(Sender: IAction);
     [DynamicAction('<I> Информация', '<I>', 52, '0:Управление|3.<I>;2:', 'Выход/Вход в режим чтения информации')]
     procedure DoData(Sender: IAction);
 //    procedure DoInfo(Sender: IAction);
@@ -426,6 +426,8 @@ procedure TDeviceBur.DoDelay(Sender: IAction);
  var
   d: Idialog;
 begin
+  (GContainer as IActionEnum).Get(IName + '_DoStd').Checked := True;
+  (Self as ICycleEx).StdOnly := True;
   if RegisterDialog.TryGet<Dialog_SetDeviceDelay>(d) then (d as IDialog<IDelayDevice>).Execute(Self as IDelayDevice);
 //  if Supports(GlobalCore, Idialogs, d) then d.Execute(DIALOG_SetDeviceDelay, Self);
 end;
@@ -459,12 +461,12 @@ begin
   (Self as ICycleEx).StdOnly := Sender.Checked;
 end;
 
-procedure TDeviceBur.DoSync(Sender: IAction);
- var
-  d: Idialog;
-begin
-  if RegisterDialog.TryGet<Dialog_SyncDelay>(d) then (d as IDialog<IDevice>).Execute(Self as IDevice);
-end;
+//procedure TDeviceBur.DoSync(Sender: IAction);
+// var
+//  d: Idialog;
+//begin
+//  if RegisterDialog.TryGet<Dialog_SyncDelay>(d) then (d as IDialog<IDevice>).Execute(Self as IDevice);
+//end;
 
 //function TDeviceBur.GetActionsDevClass: TAbstractActionsDevClass;
 //begin

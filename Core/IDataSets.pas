@@ -193,12 +193,12 @@ begin
   while GContainer.Contains(RootName + i.ToString()) do Inc(i);
   Name := RootName + i.ToString;
   FWeekContainerReference := True;
-  TDebug.Log('======== TIDataSet.Create ----- %s', [Iname]);
+  TDebug.Log('======== TIDataSet.Create ----- "%s" %s', [Iname, name]);
 end;
 
 destructor TIDataSet.Destroy;
 begin
-  TDebug.Log('TIDataSet.Destroy %s', [Iname]);
+  TDebug.Log('======TIDataSet.Destroy====== "%s" %s', [Iname, name]);
   TBindHelper.RemoveExpressions(Self);
   inherited;
 end;

@@ -70,7 +70,7 @@ begin
   GetConnectIOCB(2, 'NetPort', 'Соединение по Ethernet');
   GetConnectIOCB(3, 'WlanPort', 'Соединение по WiFi');
   GetConnectIOCB(4, 'UDP', 'Соединение по UDP');
-  GetConnectIOCB(5, 'MicroSD', 'Чтение памяти с SD карты');
+ // GetConnectIOCB(5, 'MicroSD', 'Чтение памяти с SD карты');
 end;
 
 function TComDevPlugin.ConnectIO(ConnectID: Integer): IConnectIO;
@@ -79,7 +79,7 @@ begin
    2:  Result := TNetConnectIO.Create();
    3:  Result := TWlanConnectIO.Create();
    4:  Result := TUDPConnectIO.Create();
-   5:  Result := TMicroSDConnectIO.Create();
+ //  5:  Result := TMicroSDConnectIO.Create();
   else Result := TComConnectIO.Create();
   end;
 end;

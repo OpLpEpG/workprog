@@ -289,7 +289,8 @@ type
     procedure RemoveInstance<T: class>(const InstanceName: string); overload;
     procedure RemoveInstance(model: ModelType); overload; // singleton
     procedure RemoveInstance(const InstanceName: string); overload;
-    procedure RemoveInstKnownServ(serv: ServiceType; const InstanceName: string);
+    procedure RemoveInstKnownServ(serv: ServiceType; const InstanceName: string);overload;
+    procedure RemoveInstKnownServ(serv: ServiceType);overload;
 
     procedure InjectDependences(const InstanceName: string);
     {$IFDEF MEMO_DEBUG}
@@ -1109,6 +1110,17 @@ begin
   for m in FModels.Values do m.RemovInstances;
 end;
 
+procedure TContainer.RemoveInstKnownServ(serv: ServiceType);
+ var
+  m: TComponentModel;
+  ms: TModels;
+begin
+  if FServices.TryGetValue(Serv, ms) then for m in ms do
+   begin
+    m.RemovInstances;
+   end;
+end;
+
 procedure TContainer.RemoveModel<T>;
 begin
   FModels.Remove(TypeInfo(T));
@@ -1313,7 +1325,12 @@ begin
   if FServices.TryGetValue(st, ms) then
    for m in ms do
      if m.LiveTime in [ltSingletonNamed, ltTransientNamed] then
-       if Assigned(m.fInst) then for i in m.fInst do CArray.Add<TInstanceRec>(Result, TInstanceRec.Create(i.Value));
+       if Assigned(m.fInst) then for i in m.fInst do
+        try
+         CArray.Add<TInstanceRec>(Result, TInstanceRec.Create(i.Value));
+        except
+         on E: Exception do TDebug.DoException(E, False);
+        end;
 end;
 
 function TContainer.ModelsAsArray(Serv: ServiceType): TArray<ModelType>;

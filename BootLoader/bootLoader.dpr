@@ -16,7 +16,8 @@ uses
   System.Classes,
   BootForm in 'BootForm.pas' {FormBoot},
   DlgSetupForm in 'DlgSetupForm.pas' {DlgSetupAdr},
-  TestRAMForm in 'TestRAMForm.pas' {FormRamTest};
+  TestRAMForm in 'TestRAMForm.pas' {FormRamTest},
+  VCL.Dlg.Error in 'VCL.Dlg.Error.pas' {FormError};
 
 {$R *.res}
 

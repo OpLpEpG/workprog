@@ -73,7 +73,7 @@ object FormSUCOPconverter: TFormSUCOPconverter
     Height = 21
     DialogKind = dkSave
     DefaultExt = 'sur'
-    Filter = #1060#1072#1081#1083' '#1074#1093#1086#1076#1085#1099#1093' '#1076#1072#1085#1085#1099#1093' SUCOP (*.SUR) |*.SUR'
+    Filter = #1060#1072#1081#1083' '#1074#1093#1086#1076#1085#1099#1093' '#1076#1072#1085#1085#1099#1093' SUCOP (*.SUR) |*.SUR|'#1060#1072#1081#1083'  (*.*) |*.*'
     DialogOptions = [ofOverwritePrompt, ofHideReadOnly, ofPathMustExist]
     DirectInput = False
     Anchors = [akLeft, akTop, akRight]

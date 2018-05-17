@@ -2,7 +2,7 @@ unit ExportToPSK6_V3;
 
 interface
 
-uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, Actns, Container, DBImpl, tools,
+uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, Actns, Container, tools,
   Xml.XMLIntf, DataSetIntf, XMLDataSet,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Data.DB, System.IOUtils,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Mask, JvExMask, JvToolEdit, VCL.Frame.RangeSelect;
@@ -44,6 +44,7 @@ type
      Table: TXMLDataSet;
      IdName: string;
      FirstKadr, LastKadr: Integer;
+     FirstKadrID, LastKadrID: Integer;
      Data: TArray<TFldRec>;
     end;
   protected
@@ -61,7 +62,7 @@ type
     procedure Open;
     procedure RecNo(Kadr: Integer);
   public
-   [StaticAction('-Сохранить как ПСК6...', 'Экспорт', 226, '0:Файл.Экспорт|1:2')]
+   [StaticAction('-ПСК6...', 'Экспорт', 226, '0:Файл.Экспорт|1:2')]
    class procedure DoExportPSK6(Sender: IAction);
   end;
 
@@ -83,13 +84,23 @@ const
 //{12}  FS_Import.CLList.Add('Hy,мВ');
 //{13}  FS_Import.CLList.Add('Hz,мВ');
 
+{  RM_INCL: array[0..5]of TRecMap =(
+    (ix:8;  name:'Inclin.accel.X.CLC'; k:10),
+    (ix:9;  name:'Inclin.accel.Y.CLC'; k:10),
+    (ix:10; name:'Inclin.accel.Z.CLC'; k:10),
+    (ix:11; name:'Inclin.magnit.X.CLC'; k:10),
+    (ix:12; name:'Inclin.magnit.Y.CLC'; k:10),
+    (ix:13; name:'Inclin.magnit.Z.CLC'; k:10));//}
+
+
   RM_INCL: array[0..5]of TRecMap =(
-    (ix:8;  name:'Inclin.accel.X.CLC'; k:1),
-    (ix:9;  name:'Inclin.accel.Y.CLC'; k:1),
-    (ix:10; name:'Inclin.accel.Z.CLC'; k:1),
-    (ix:11; name:'Inclin.magnit.X.CLC'; k:1),
-    (ix:12; name:'Inclin.magnit.Y.CLC'; k:1),
-    (ix:13; name:'Inclin.magnit.Z.CLC'; k:1));
+    (ix:8;  name:'Inclin.accel.X.DEV'; k:10000),
+    (ix:9;  name:'Inclin.accel.Y.DEV'; k:10000),
+    (ix:10; name:'Inclin.accel.Z.DEV'; k:10000),
+    (ix:11; name:'Inclin.magnit.X.DEV'; k:10000),
+    (ix:12; name:'Inclin.magnit.Y.DEV'; k:10000),
+    (ix:13; name:'Inclin.magnit.Z.DEV'; k:10000));//}
+
 
 //{14}  FS_Import.CLList.Add('ГК,имп/2c');
 //{15}  FS_Import.CLList.Add('ННКт-25,имп/2c');
@@ -315,14 +326,14 @@ begin
                  fld := cr.Table.FieldByName(fr.FieldName);
                  try
                   if Assigned(fld) and not fld.isNull and (frm <= cr.LastKadr) and (frm >= cr.FirstKadr) then
-                   if fld is TFloatField then
+                  // if fld is TFloatField then
                     begin
-                    // dfloat := cr.Table.FieldByName(fr.FieldName).AsFloat * fr.k;
-                    dfloat := fld.AsFloat * fr.k;
+                     // dfloat := cr.Table.FieldByName(fr.FieldName).AsFloat * fr.k;
+                     dfloat := fld.AsFloat * fr.k;
                      if (dfloat < LongInt.MaxValue) and (dfloat > LongInt.MinValue)  then d.Par[fr.Index] := Round(dfloat)
                      else d.Par[fr.Index] := 0;
                     end
-                   else d.Par[fr.Index] := fld.AsInteger //d.Par[fr.Index] := cr.Table.FieldByName(fr.FieldName).AsInteger
+                  // else d.Par[fr.Index] := fld.AsInteger //d.Par[fr.Index] := cr.Table.FieldByName(fr.FieldName).AsInteger
                   else  d.Par[fr.Index] := 0;
                  except
                   d.Par[fr.Index] := 0;
@@ -366,6 +377,16 @@ end;
 procedure TFormExportToPSK6_V3.FormCreate(Sender: TObject);
  var
   i, lc, fc: Integer;
+ function CheckKadrID(kdr, kdrid: integer): boolean;
+ begin
+   if kdr <> kdrid then
+    begin
+     Result := False;
+     if Assigned(TDebug.ExeptionEvent) then TDebug.ExeptionEvent('Неверная структура данных',
+        Format('Ммя: %s ID: %d КадрID: %d', [acr[i].IdName, kdrid, kdr]), '');
+    end
+   else Result := True;
+ end;
 begin
   GetDockClient.EnableDock := False;
   rams := GetProjectRams;
@@ -387,9 +408,13 @@ begin
    begin
     rams[i].DataSet.First;
     acr[i].FirstKadr := rams[i].DataSet.FieldByName(acr[i].IdName).AsInteger;
+    acr[i].FirstKadrID := rams[i].DataSet.FieldByName('ID').AsInteger;
+    if not CheckKadrID(acr[i].FirstKadr, acr[i].FirstKadrID) then acr[i].FirstKadr := acr[i].FirstKadrID;
     fc := Min(fc, acr[i].FirstKadr);
     rams[i].DataSet.Last;
     acr[i].LastKadr := rams[i].DataSet.FieldByName(acr[i].IdName).AsInteger;
+    acr[i].LastKadrID := rams[i].DataSet.FieldByName('ID').AsInteger;
+    if not CheckKadrID(acr[i].LastKadr, acr[i].LastKadrID) then acr[i].LastKadr := acr[i].LastKadrID;
     lc := max(lc, acr[i].LastKadr);
    end;
   if fc > lc then 
@@ -416,7 +441,7 @@ begin
   SetLength(d.Data, Length(drm));
   d.Table := ds;
   d.ModulName := ds.XMLSection.ParentNode.NodeName;
-  d.IdName := d.ModulName +'.время.DEV';
+  d.IdName := d.ModulName +'.время.DEV'; //если проблемма с кадрами 'ID'
   for I := 0 to High(drm) do
    begin
     d.Data[i].FieldName := d.ModulName+'.' + drm[i].name;

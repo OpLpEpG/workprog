@@ -99,6 +99,8 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
     function GetChecked: Boolean;
     function GetAutoCheck: Boolean;
     function GetEnabled: Boolean;
+    function GetVisible: Boolean;
+//    procedure SetVisible(Value: Boolean); override;
     function GetHint: String;
     function GetImageIndex: System.UITypes.TImageIndex;
     function GetGroupIndex: Integer;
@@ -128,6 +130,7 @@ uses RootIntf, ExtendIntf, debug_except, Container, RootImpl,  RTTI, System.UITy
     property AutoCheck;
 //    property Enabled;
 //    property Checked;
+//    property Visible;
   end;
   TICustomActionClass = class of TICustomAction;
 
@@ -390,6 +393,24 @@ function TICustomAction.GetPath: String;
 begin
   Result := FPaths;
 end;
+
+function TICustomAction.GetVisible: Boolean;
+begin
+  Result := Visible;
+end;
+
+//type
+// _TContainedActionLink = class(TContainedActionLink);
+//procedure TICustomAction.SetVisible(Value: Boolean);
+//var
+//  I: Integer;
+//begin
+//    for I := 0 to ClientCount - 1 do
+//      if Clients[I] is TContainedActionLink then
+//        _TContainedActionLink(Clients[I]).SetVisible(Value);
+//  inherited;
+//end;
+
 
 procedure TICustomAction.Loaded;
 begin

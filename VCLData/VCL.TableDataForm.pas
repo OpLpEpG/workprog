@@ -28,7 +28,7 @@ type
     class var SubActions: TArray<IAction>;
     constructor Create; override;
     destructor Destroy; override;
-    [StaticAction('Новая таблица', 'Окна визуализации', NICON, '0:Показать.Окна визуализации','',False,False,0,True,True)]
+    [StaticAction('Новая таблица', 'Окна визуализации', NICON, '0:Показать.Окна визуализации','',False,False,0,True, True)]
     class procedure DoUpdate(Sender: IAction);
     property C_Write: Integer read FC_Write write SetC_Write;
   published
@@ -90,20 +90,24 @@ end;
 
 class procedure TTableDataForm.DoUpdate(Sender: IAction);
  const
-  SWRK = 'Данные Информации';
-  SRAM = 'Данные Памяти';
+  SWRK = 'Таблица Информации';
+  SRAM = 'Таблица Памяти';
   SPATH = '0:Показать.Окна визуализации.Новая таблица';
+ var
+  visFlag: Boolean;
   procedure AddMenu(n: IXMLNode; const subpath: string);
    var
     xa: TxmlAct;
     ia: IAction;
   begin
+    if not n.HasAttribute(AT_FILE_NAME) then Exit;    
     xa := TxmlAct.CreateUser(ActionAttribute.Create(n.ParentNode.NodeName, 'Окна визуализации', NICON, SPATH+'.'+subpath));
     xa.XmlSection := n;
     xa.OnExecute := Act1Click;
     ia := xa as IAction;
     ia.DefaultShow;
     SubActions := SubActions +[ia];
+    visFlag := True;;
   end;
  var
   w,r: IAction;
@@ -116,9 +120,19 @@ begin
   SubActions := SubActions +[w, r];
   w.DefaultShow;
   r.DefaultShow;
-  devs := FindDevs((GContainer as IALLMetaDataFactory).Get.Get.DocumentElement);
-  for n in GetDevsSections(devs, T_WRK) do AddMenu(n, SWRK);
-  for n in GetDevsSections(devs, T_RAM) do AddMenu(n, SRAM);
+  if Assigned((GContainer as IALLMetaDataFactory).Get) and Assigned((GContainer as IALLMetaDataFactory).Get.Get) then
+   begin
+    devs := FindDevs((GContainer as IALLMetaDataFactory).Get.Get.DocumentElement);
+    visFlag := False;
+    for n in GetDevsSections(devs, T_WRK) do AddMenu(n, SWRK);
+    w.Visible := visFlag;
+    visFlag := False;
+    for n in GetDevsSections(devs, T_RAM) do AddMenu(n, SRAM);
+    r.Visible := visFlag;
+    Sender.Visible := r.Visible or w.Visible;
+   // Sender.DefaultShow;
+   end
+  else Sender.Visible := False;
 end;
 
 procedure TTableDataForm.Loaded;

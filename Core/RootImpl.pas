@@ -352,7 +352,7 @@ type
     function GetManagItem(model: ModelType; const ItemName: string; Initialize: Boolean = True): IManagItem; overload;
     function GetManagItem(const ItemName: string; Initialize: Boolean = True): IManagItem; overload;
     function GetService: ServiceType;
-    procedure Clear;
+    procedure Clear();
   // IServiceManager<T>
     function GetEnumerator: TEnumerator<T>;
     type
@@ -1402,7 +1402,7 @@ begin
   Result := TArray<TInstanceRec<T>>(GContainer.InstancesAsArrayRec<T>);
 end;
 
-procedure TRootServiceManager<T>.Clear;
+procedure TRootServiceManager<T>.Clear();
  var
   i: Integer;
   a: TArray<T>;
@@ -1415,6 +1415,7 @@ begin
       GContainer.RemoveInstance(a[i].Model, a[i].IName); //Remove(a[i]);
     a[i] := nil;
    end;
+  GContainer.RemoveInstKnownServ(TypeInfo(T)); // ”ƒјЋя≈ћ текстовые не инициализированные объекты
 end;
 
 procedure TRootServiceManager<T>.DoAfterAdd(mi: IManagItem);
@@ -1605,7 +1606,7 @@ end;
 
 procedure TRootServiceManager<T>.New;
 begin
-
+  GContainer.RemoveInstKnownServ(TypeInfo(T));
 end;
 
 procedure TRootServiceManager<T>.Save;
@@ -1678,10 +1679,12 @@ begin
 //    if not (Assigned(left.Inst) and Assigned(Right.Inst)) then Result := 0
 //    else Result := (Left.Inst as ImanagItem).Priority - (Right.Inst as ImanagItem).Priority
 //  end));
-  for r in a do if r.Priority > 0 then CArray.Add<string>(b, r.Priority.ToString + '|'+ Ffunc(r.Text));
-
-
-
+  for r in a do if r.Priority > 0 then
+   try
+    CArray.Add<string>(b, r.Priority.ToString + '|'+ Ffunc(r.Text));
+   except
+    on E: Exception do TDebug.DoException(E, False);
+   end;
 //  for i := 0 to Length(a)-1 do
 //    if not (Assigned(a[i].Inst) and ((a[i].Inst as IManagItem).Priority < 0)) then
 //      CArray.Add<WideString>(TArray<WideString>(b), a[i] Ffunc(a[i].Text));

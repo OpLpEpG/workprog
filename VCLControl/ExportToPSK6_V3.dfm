@@ -42,7 +42,6 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
       item
         Width = 50
       end>
-    ExplicitTop = 204
   end
   object btStart: TButton
     Left = 8

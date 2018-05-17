@@ -306,8 +306,8 @@ procedure TXMLLua.AddXML(Aadr: Integer; const RnPath: string; TrRoot, RnRoot, Sc
   end;
   function ChekStr(const inp: string): string;
    const
-    SSinp: array[0..4]of string =('ИКН','ГК','ННК','ВИК','Глубиномер');
-    SSout: array[0..4]of string =('IKN','GK','NNK','VIK','Glu');
+    SSinp: array[0..5]of string =('ИКН','ГК','АГК','ННК','ВИК','Глубиномер');
+    SSout: array[0..5]of string =('IKN','GK','AGK','NNK','VIK','Glu');
    var
     i: Integer;
   begin
@@ -375,7 +375,7 @@ begin
   if not sd.Compile then MessageDlg('Ошибка компиляции установок-'+sd.ErrorMsg+':'+sd.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
   sd.Execute; { TODO 5 -cОШИВКА!!! : ОШИБКА заполняется метрология (если есть) значениями по умолчанию!!!
 см todo Устройство из нескольких приб}
-  if not ExeSc.Compile then MessageDlg('Ошибка компиляции выполнения-'+ExeSc.ErrorMsg+':'+ExeSc.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
+  if not ExeSc.Compile then  MessageDlg('Ошибка компиляции выполнения-'+ExeSc.ErrorMsg+':'+ExeSc.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
 end;
 
 procedure TXMLLua.SetMetr(node: IXMLNode; ExeSc: IXmlScript; ExecSetup: Boolean);
@@ -445,7 +445,8 @@ begin
     end;
 //      ExeSc.Lines.SaveToFile(ExtractFilePath(ParamStr(0))+'LuaScriptExec.txt');
 
-    if not ExeSc.Compile then MessageDlg('Ошибка компиляции выполнения-'+ExeSc.ErrorMsg+':'+ExeSc.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
+    if not ExeSc.Compile then
+      MessageDlg('Ошибка компиляции выполнения-'+ExeSc.ErrorMsg+':'+ExeSc.ErrorPos+ExeSc.Lines.Text, TMsgDlgType.mtError, [mbOK], 0);
 
    // node.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'PSKafter.xml');
 

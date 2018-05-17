@@ -1256,9 +1256,9 @@ begin
   with TSaveDialog.Create(nil) do
   try
     InitialDir := ExtractFilePath(ParamStr(0)) + T_MTR;
-    DefaultExt := 'xml';
+    DefaultExt := 'XMLMtr';
     Options := Options + [ofOverwritePrompt, ofPathMustExist];
-    Filter := 'Файл тарировки (*.xml)|*.xml';
+    Filter := 'Файл тарировки (*.XMLMtr)|*.XMLMtr';
     if Execute(Handle) then
     begin
       NewFFileData(GetMetr([], C_MetaDataInfo.Info).ParentNode.ParentNode.NodeName);
@@ -1276,18 +1276,18 @@ begin
   try
     InitialDir := ExtractFilePath(ParamStr(0)) + T_MTR;
     Options := Options + [ofPathMustExist, ofFileMustExist];
-    DefaultExt := 'xml';
-    Filter := 'Файл тарировки (*.xml)|*.xml';
+    DefaultExt := 'XMLMtr';
+    Filter := 'Файл тарировки (*.XMLMtr)|*.XMLMtr|Файл xml (*.xml)|*.xml';
 
     if Assigned(FImportExport) then
       Filter := Filter + FImportExport.GetImportFilters;
 
     if Execute(Handle) then
-      if FilterIndex = 1 then
+      if FilterIndex < 3 then
         TrrFile := FileName
       else
       begin
-        FImportExport.ExecuteImport(FilterIndex - 1, FileName, GetMetr([MetrolType], NewFFileData('ANY_DEVICE')));
+        FImportExport.ExecuteImport(FilterIndex - 2, FileName, GetMetr([MetrolType], NewFFileData('ANY_DEVICE')));
         ReCalc(False);
         DoUpdateData(True);
         FStatusBar.Panels[1].Text := FileName;
@@ -1309,8 +1309,8 @@ begin
     else if FImportFile <> '' then
       FileName := TPath.GetFileNameWithoutExtension(FImportFile);
     Options := Options + [ofOverwritePrompt, ofPathMustExist];
-    DefaultExt := 'xml';
-    Filter := 'Файл тарировки (*.xml)|*.xml';
+    DefaultExt := 'XMLMtr';
+    Filter := 'Файл тарировки (*.XMLMtr)|*.XMLMtr';
     if Assigned(FImportExport) then
       Filter := Filter + FImportExport.GetExportFilters;
     if Execute(Handle) then
@@ -1412,6 +1412,7 @@ var
   d: IDialog;
   rm: IXMLNode;
 begin
+  if not Assigned(FileData) then raise EFormMetrolog.Create('Нет файла аттестации (*.XMLTrr).');
   rm := GetMetr([MetrolType], FileData);
   Assert(Assigned(rm));
   rm.Attributes['DevName'] := rm.ParentNode.ParentNode.ParentNode.NodeName + '.' + rm.ParentNode.NodeName;

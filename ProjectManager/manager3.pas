@@ -76,8 +76,12 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
     function ConstructDataDir(Root: IXMLNode; NeedCreate: Boolean = True; const SubDir: string = ''): string;
     function ConstructDataFileName(Root: IXMLNode; const SubName: string = ''): string;
 
-    procedure IMetrology.Setup = SetMetrol;
-    procedure SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
+//    procedure SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
+    procedure IMetrology.Setup = IMetrologySetup;
+    procedure IMetrologySetup(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: TArray<string>; out Metr: IXMLInfo);
+    procedure IMetrology.Check = IMetrologyCheck;
+    procedure IMetrologyCheck(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: TArray<string>; out Metr: IXMLInfo);
+    procedure CheckMetrol(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: Tarray<string>; out Metr: IXMLNode);
 
     // IProjectOptions
     function GetOption(const Name: string): Variant;
@@ -138,9 +142,13 @@ type
 
 constructor TALLMetaData.Create(const Name: string);
 begin
-  XDoc := NewXDocument;
   FName := Name;
-  XDoc.LoadFromFile(FName);
+  if SameText(Name, TManager.This.ProjectName) then XDoc := TManager.This.FProjecDoc
+  else
+   begin
+    XDoc := NewXDocument;
+    XDoc.LoadFromFile(FName);
+   end;
 end;
 
 function TALLMetaData.Get: IXMLDocument;
@@ -217,7 +225,7 @@ end;}
 
 function TManager.GetProjectDefaultExt: string;
 begin
-  Result := 'xml';
+  Result := 'XMLPrj';
 end;
 
 function TManager.GetProjectDirectory: string;
@@ -227,7 +235,7 @@ end;
 
 function TManager.GetProjectFilter: string;
 begin
-  Result := 'Файл проекта (*.xml)|*.xml';
+  Result := 'Файл проекта (*.XMLPrj)|*.XMLPrj';
 end;
 
 function TManager.DelayStart: TDateTime;
@@ -241,6 +249,76 @@ begin
   except
    Result := Double(v);
   end;
+end;
+
+procedure TManager.CheckMetrol(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: Tarray<string>; out Metr: IXMLNode);
+ var
+  d: IXMLDocument;
+  mtrroot,n: IXMLNode;
+  DevMtr, DevPrg: IXMLNode;
+begin
+  d := NewXDocument();
+  if not TFile.Exists(MetrolFile) then raise EManagerexception.CreateFmt('Нет файла %s', [MetrolFile]);
+  d.LoadFromFile(MetrolFile);
+  for n in XEnum(d.DocumentElement) do
+   begin
+    mtrroot := n.ChildNodes.FindNode(T_MTR);
+    if not Assigned(mtrroot) then
+      Continue;
+    Metr := mtrroot.ChildNodes.FindNode(MetrolName.NodeName);
+    if Assigned(Metr) then
+     begin
+      if not HasXTree(MetrolName, Metr, nil, True, function(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode): boolean
+       var
+        s: string;
+      begin
+        Result := False;
+        for s in NotInTreeAttr do
+         begin
+          Result := EtalonAttr.NodeName = s;
+          if Result then break;
+         end;
+      end) then raise EManagerexception.CreateFmt('В импортируемом файле несовметимая метрология %s',[MetrolName.NodeName]);
+      DevMtr := Metr.ParentNode.ParentNode;
+      DevPrg := MetrolName.ParentNode.ParentNode;
+    // проверка без исключения
+     if (DevMtr.NodeName <> 'ANY_DEVICE') and (DevPrg.NodeName <> DevMtr.NodeName)  then
+          MessageDlg(Format('Текущий файл тарировки прибора %s а выбран прибор %s',[DevMtr.NodeName, DevPrg.NodeName]),
+          TMsgDlgType.mtWarning, [mbOK], 0)
+     else if DevPrg.HasAttribute(AT_SERIAL) and DevMtr.HasAttribute(AT_SERIAL)
+          and (DevMtr.Attributes[AT_SERIAL] <> DevPrg.Attributes[AT_SERIAL]) then
+          MessageDlg(Format('Текущий файл тарировки прибора с номером %s а выбран прибор с номером %s',
+          [DevMtr.Attributes[AT_SERIAL], DevPrg.Attributes[AT_SERIAL]]),
+          TMsgDlgType.mtWarning, [mbOK], 0);
+      exit;
+     end;
+   end;
+  raise EManagerexception.CreateFmt('В импортируемом файле метрологии %s нет',[MetrolName.NodeName]);
+end;
+
+procedure TManager.IMetrologyCheck(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: TArray<string>; out Metr: IXMLInfo);
+ var
+  BadFlag: Boolean;
+begin
+  CheckMetrol(MetrolName, MetrolFile, NotInTreeAttr, Metr);
+  BadFlag := false;
+  HasXTree(MetrolName, metr, procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
+  begin
+    if EtalonAttr.NodeValue <> TestAttr.NodeValue then BadFlag := True;
+  end);
+  if BadFlag then
+    MessageDlg('Мерологии файа и проекта отличаютя', TMsgDlgType.mtWarning, [mbOK], 0)
+  else
+    MessageDlg('Мерологии файа и проекта идеинтичны', TMsgDlgType.mtInformation, [mbOK], 0)
+end;
+
+procedure TManager.IMetrologySetup(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: TArray<string>; out Metr: IXMLInfo);
+begin
+  CheckMetrol(MetrolName, MetrolFile, NotInTreeAttr, Metr);
+  HasXTree(MetrolName, metr, procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
+  begin
+    EtalonAttr.NodeValue := TestAttr.NodeValue;
+  end);
 end;
 
 function TManager.IntervalWork: TDateTime;
@@ -322,18 +400,18 @@ begin
   S_TableUpdate := 'Modul';
 end;
 
-procedure TManager.SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
- var
-  d: IDevice;
-  de: IDeviceEnum;
-  info, dev,  trr,  tip,  run: IXMLnode;
-      fdev,       ftip, frun: IXMLnode;
-  atr: IXMLnode;
-  Vnomer, Vtime: Variant;
-  id: Integer;
-begin
-  id := 0;
-  de := GContainer as IDeviceEnum;
+//procedure TManager.SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
+// var
+//  d: IDevice;
+//  de: IDeviceEnum;
+//  info, dev,  trr,  tip,  run: IXMLnode;
+//      fdev,       ftip, frun: IXMLnode;
+//  atr: IXMLnode;
+//  Vnomer, Vtime: Variant;
+//  id: Integer;
+//begin
+//  id := 0;
+//  de := GContainer as IDeviceEnum;
  { Query.Acquire;
   try
    Query.Open(Format(GET_TRR_FROM_METR_ID, [MetrolID]));
@@ -396,12 +474,13 @@ begin
   finally
    Query.Release;
   end;     }
-  (de as IBind).Notify('S_PublishedChanged');
-end;
+//  (de as IBind).Notify('S_PublishedChanged');
+//end;
 
 procedure TManager.Save;
 begin
   FProjecDoc.SaveToFile(FProjectFile);
+ // FProjecDoc.Resync;
 end;
 
 procedure TManager.SaveEnd(Data: IXMLInfo);
@@ -453,7 +532,7 @@ begin
   if ecIO in ClearItems then (GlobalCore as IConnectIOEnum).Clear;
   if ecDevice in ClearItems then (GlobalCore as IDeviceEnum).Clear;
   if ecForm in ClearItems then (GlobalCore as IFormEnum).Clear;
-//  if ecFile in ClearItems then (GlobalCore as IFileEnum).Clear;
+ // if ecFile in ClearItems then (GlobalCore as IFileEnum).Clear;
 end;
 
     /// <summary>
@@ -569,7 +648,7 @@ end;
 
 procedure TManager.LoadProject(const FileName: string; AfterCreateProject: Tproc = nil);
 begin
-  ClearItems([ecIO, ecDevice, ecfile]);
+  ClearItems([ecIO, ecDevice, ecForm]);
   if FileExists(FileName) then
    begin
     FProjectFile := FileName;
@@ -625,7 +704,7 @@ begin
     TDirectory.CreateDirectory(dir);
    end;
 
-  ClearItems([ecIO, ecDevice, ecfile]);
+  ClearItems([ecIO, ecDevice, ecform]);
 
   FProjectFile := dir + Tpath.DirectorySeparatorChar + TPath.GetFileName(FileName);
   FProjecDoc := NewXDocument();
@@ -642,7 +721,7 @@ begin
 
   ((GlobalCore as IConnectIOEnum) as IStorable).New;
   ((GlobalCore as IDeviceEnum) as IStorable).New;
-//  ((GlobalCore as IFileEnum) as IStorable).New;
+  ((GlobalCore as IFormEnum) as IStorable).New;
 
   FProjecDoc.FileName := FProjectFile;
   FProjecDoc.SaveToFile(FProjectFile);

@@ -110,7 +110,7 @@ type
     ///	</summary>
     function GetManagItem(model: ModelType; const ItemName: string; Initialize: Boolean = True): IManagItem; overload;
     function GetManagItem(const ItemName: string; Initialize: Boolean = True): IManagItem; overload;
-    procedure Clear;
+    procedure Clear();
     ///	<summary>
     ///	  т.к. возможна отложенная загрузка объектов то они сами информируют о
     ///	  своем создании в процедуре Loaded

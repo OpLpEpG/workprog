@@ -4,7 +4,7 @@ interface
 
 {$I Script.inc}
 
-uses DeviceIntf, ExtendIntf, RootIntf, IndexBuffer, Container,
+uses DeviceIntf, ExtendIntf, RootIntf, IndexBuffer, Container, JvDockGlobals,
   Winapi.Messages, System.Variants, Vcl.HtmlHelpViewer,
   System.SysUtils, PluginAPI, Vcl.Dialogs, Vcl.ImgList, Vcl.Controls, Vcl.StdActns, Vcl.BandActn, System.Classes, Vcl.ActnList, Vcl.ActnMan,
   Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ComCtrls, Vcl.Forms, Vcl.Graphics, Winapi.Windows, JvAppStorage, JvAppRegistryStorage, JvDockControlForm,
@@ -79,7 +79,7 @@ type
     procedure UpdateWidthBars;
     function HideUnusedMenus: boolean;
     procedure SaveActionManager();
-    procedure ResetActions();
+    procedure ResetActions(isNew: Boolean =false);
     // IRegistry
     procedure SaveString(const Name, Value: String; Registry: Boolean = False);
     function LoadString(const Name, DefValue: String; Registry: Boolean = False): String;
@@ -121,6 +121,8 @@ type
     procedure SaveScreeDialog;
     function ChildFormsBusy: boolean;
     function DeviceBusy: boolean;
+    procedure debug_log_dock;
+    procedure clear_dock_zones;
 //    procedure AfterLoadScreen;
 //    procedure SetProjectFile(const Value: WideString);
 //    procedure SowPrg(sho: Boolean);
@@ -139,6 +141,9 @@ type
 
 var
   FormMain: TFormMain;
+
+//type
+// MyTJvDockTree = class(TJvDockVSNETTree);
 
 implementation
 
@@ -166,7 +171,7 @@ begin
   SetErrorMode(SetErrorMode(0) or SEM_NOOPENFILEERRORBOX or SEM_FAILCRITICALERRORS);
   Plugins.SetVersion(VERS1000);
 
-  StatusBar[1] := ExtractFilePath(ParamStr(0)) + 'Default.xml';
+//  StatusBar[1] := 'Проект не создан';//ExtractFilePath(ParamStr(0)) + 'Default.xml';
 
   TFormExceptions.This.Icon := 257;
   //  *******************************************8
@@ -217,12 +222,12 @@ begin
 end;
 procedure TFormMain.LoadNotify; // call LoadPlugins
 begin
-  if (ParamCount >= 1) and (Trim(ParamStr(1)) = '-nl') then ResetActions
+  if (ParamCount >= 1) and (Trim(ParamStr(1)) = '-nl') then ResetActions(True)
   else
    begin
     LoadScreen(True);
     InjectDependDevs; // чтобы устранить ошибку пропадания меню приборов
-//    TActionBarHelper.ShowHidenActions(ActionManager);
+    TActionBarHelper.VisibleContainedToIAction(ActionManager);
 //    UpdateWidthBars;
    end;
 end;
@@ -329,6 +334,7 @@ begin
    ObjectBinaryToText(ms, ss);
    //(GContainer as IProjectOptions).Option['ActionManager'] := ss.DataString;
    xini.WriteString('ActionManager\ObjectText', ss.DataString);
+//   ss.SaveToFile('c:\XE\Projects\Device2\_exe\ActionManager.txt');
   finally
    ss.Free;
    ms.Free;
@@ -346,6 +352,7 @@ end;
 procedure TFormMain.SaveScreenClick(Sender: TObject);
  var
   m: IManager;
+  i: Integer;
 begin
   FMainScreenChange := False;
   FormStorage.StoredValue['ErrorInfo'] := TFormExceptions.This.NShowDebug.Checked;
@@ -423,7 +430,7 @@ begin
    end;
 end;
 
-procedure TFormMain.ResetActions();
+procedure TFormMain.ResetActions(isNew: Boolean =false);
  var
   a: IAction;
   ar: TArray<IAction>;
@@ -433,14 +440,20 @@ begin
   begin
     Result := string.Compare(Left.GetPath, Right.GetPath);
   end));
-  LoadActionManager; // скрывает часть { TODO : проблемма с - и логикой действий}
+  if isNew then
+   begin
+    ActionManager.ResetActionBar(0);
+    ActionManager.ResetActionBar(1);
+    ActionManager.ResetActionBar(2);
+   end
+  else LoadActionManager; // скрывает часть { TODO : проблемма с - и логикой действий}
   for a in ar do
    begin
     if not a.OwnerExists then
      begin
       GContainer.RemoveInstance(a.Model, a.IName);
      end
-    else if not Assigned(ActionManager.FindItemByAction(TCustomAction(a.GetComponent))) then
+    else if not Assigned(ActionManager.FindItemByAction(TCustomAction(a.GetComponent))) or isNew then
      begin
       a.DefaultShow;
      end;
@@ -787,42 +800,45 @@ begin
     sa: TArray<IStorable>;
     s: IStorable;
   begin
-    (GlobalCore as IFormEnum).Clear;
-
     (GContainer as IProjectOptions).AddOrIgnore('CurrentScreen', 'Screen');
 
     if not VarIsNull((GContainer as IProjectOptions).Option['CurrentScreen']) then
        xini.AsString := (GContainer as IProjectOptions).Option['CurrentScreen'];
 
     // m.LoadScreen();                 //  загрузка текстов!!! обьектов - форм actions
-    sa := GContainer.InstancesAsArray<IStorable>(true);
-    TArray.Sort<IStorable>(sa, TManagItemComparer<IStorable>.Create);
-    for s in sa do s.Load;
-  end;
 
+    if not isNew then
+     begin
+      sa := GContainer.InstancesAsArray<IStorable>(true);
+      TArray.Sort<IStorable>(sa, TManagItemComparer<IStorable>.Create);
+      for s in sa do s.Load;
+     end;
+  end;
     //xini.Reload; // !!!
+    BeginDockLoading;
     try
       if Supports(Plugins, IManager, m) then
        if isNew then m.NewProject(PrjName, AfterCreateProject)
        else m.LoadProject(PrjName, AfterCreateProject);
     finally
-      BeginDockLoading;
       try
-        // create actions
-        ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
+        ResetActions(isNew);     // показывает все { TODO : проблемма с - и логикой действий}
 
         // create forms
+      if not isNew then
+       begin
         GContainer.InstancesAsArray<IForm>(True);
 
         LoadDockTreeFromAppStorage(xini, 'DockTree');
         LoadTabForms();
 
-       try
-        FormStorage.RestoreFormPlacement;
-       except
-        on E: Exception do TDebug.DoException(E);
-       end;
-
+        try
+         FormStorage.RestoreFormPlacement;
+        except
+         on E: Exception do TDebug.DoException(E);
+        end;
+       end
+      else HideAllPopupPanel(nil);
         //FormPlacement.RestoreFormPlacement;
       finally
         EndDockLoading;
@@ -837,8 +853,11 @@ function TFormMain.IProjectNew(out ProjectName: string): Boolean;
   m: IManager;
   s: string;
   wf: IForm;
+  CanClose: Boolean;
 begin
-  Result := True;
+  SaveScreeDialog;
+  CanClose := not (ChildFormsBusy or DeviceBusy);
+  if not CanClose then Exit(False);
   with TOpenDialog.Create(nil) do
   try
    if Supports(GContainer, IManagerEx, me) then
@@ -856,20 +875,24 @@ begin
    Options := [ofOverwritePrompt,ofHideReadOnly,ofEnableSizing];
    if not Execute() then Exit(False);
    try
-   IProjectInnerLoad(FileName, True);
+    IProjectInnerLoad(FileName, True);
+    begin // создание форм по умолчанию
+      TFormExceptions.DeInit;
+      TFormExceptions.Init;
+      DoFloatForm(TFormExceptions.This);
+      wf := GContainer.CreateValuedInstance<string>('TFormControl', 'CreateUser', 'GlobalControlForm') as IForm;
+      if Assigned(wf) then
+       begin
+        (GContainer as IFormEnum).Add(wf);
+        DoFloatForm(TForm(wf.GetComponent));
+        (GContainer as ITabFormProvider).Dock(wf, 1);
+        ShowDockForm(TForm(wf.GetComponent));
+       end;//}
+      ShowDockForm(TFormExceptions.This);
+      (GContainer as ITabFormProvider).Dock(TFormExceptions.This as IForm, 3);
+      FMainScreenChange := True;
+    end;
 
-    (GlobalCore as IFormEnum).Clear;
-    ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
-
-    wf := GContainer.CreateValuedInstance<string>('TFormControl', 'CreateUser', 'GlobalControlForm') as IForm;
-    if Assigned(wf) then
-     begin
-      (GContainer as IFormEnum).Add(wf);
-      (GContainer as ITabFormProvider).Dock(wf, 1);
-      ShowDockForm(TForm(wf.GetComponent));
-     end;
-    FMainScreenChange := True;
-    ShowDockForm(TFormExceptions.This);
    finally
      if Supports(GContainer, IManager, m) then
       begin
@@ -907,7 +930,7 @@ begin
     if Supports(Plugins, IManager, m) then m.LoadProject('');
 
     // create actions
-    ResetActions;     // показывает все { TODO : проблемма с - и логикой действий}
+    ResetActions(True);     // показывает все { TODO : проблемма с - и логикой действий}
     rini.WriteString('CurrentProject', '');
     StatusBar[1] := '';
   finally
@@ -949,6 +972,11 @@ begin
   finally
    Free;
   end;
+  InjectDependDevs;
+  TActionBarHelper.VisibleContainedToIAction(ActionManager); // процедура бестолковая т.к. ResetActions делает видимыми все меню
+                                                             // т.к. выключено сохранение IActions
+//  TActionBarHelper.ShowHidenActions(ActionManager);  // процедура бестолковая
+  UpdateWidthBars;
 end;
 
 function TFormMain.IProjectSetup: Boolean;
@@ -999,9 +1027,53 @@ begin
      end;
 end;
 
+procedure TFormMain.clear_dock_zones;
+ var
+  i: integer;
+   o: TJvDockVSNETTree;
+  function DoPrune(Zone: TJvDockZone): boolean;
+  begin
+    Result := False;
+    if Zone.NextSibling <> nil then
+      if DoPrune(Zone.NextSibling) then ;//Zone.NextSibling := nil;
+    if Zone.ChildZones <> nil then
+      if DoPrune(Zone.ChildZones) then ;//Zone.ChildZones := nil;
+    if Assigned(Zone.ChildControl) then
+     begin
+       Zone.ChildControl := nil;
+     // Zone.Free;
+      Result := True;
+     end;
+  end;
+
+begin
+//  JvDockServer.EnableDock := False;
+//  JvDockServer.EnableDock := True;
+  HideAllPopupPanel(nil);
+  JvDockServer.DockStyle := nil;
+  JvDockServer.DockStyle := JvDockVSNetStyle;
+  Exit;
+  for I := 0 to 4 do if Assigned(JvDockServer.DockPanel[TJvDockPosition(i)]) then
+   begin
+    SetDockSite(JvDockServer.DockPanel[TJvDockPosition(i)], False);
+     SetDockSite(JvDockServer.DockPanel[TJvDockPosition(i)], False);
+
+    SetDockSite(TJvDockVSNETPanel(JvDockServer.DockPanel[TJvDockPosition(i)]).VSChannel.VSPopupPanel, False);
+    SetDockSite(TJvDockVSNETPanel(JvDockServer.DockPanel[TJvDockPosition(i)]).VSChannel.VSPopupPanel, True);
+{     if (JvDockServer.DockPanel[TJvDockPosition(i)].jvDockManager is TJvDockVSNETTree) then
+      begin
+       o := JvDockServer.DockPanel[TJvDockPosition(i)].jvDockManager as TJvDockVSNETTree;
+       MyTJvDockTree(o).PruneZone((JvDockServer.DockPanel[TJvDockPosition(i)].jvDockManager as TJvDockTree).TopZone);
+      end;}
+    //DoPrune((JvDockServer.DockPanel[TJvDockPosition(i)].jvDockManager as TJvDockTree).TopZone);
+   // (JvDockServer.DockPanel[TJvDockPosition(i)].jvDockManager as TJvDockTree).TopZone.ResetChildren(nil);
+  //  (JvDockServer.DockPanel[TJvDockPosition(i)].jvDockManager as TJvDockTree).TopZone := nil;
+   end;
+end;
+
 procedure TFormMain.SaveScreeDialog;
 begin
-  if FMainScreenChange and (MessageDlg('Сохранить экран ?', mtWarning, [mbYes, mbNo], 0) = mrYes) then SaveScreenClick(nil);
+  {if FMainScreenChange and (MessageDlg('Сохранить экран ?', mtWarning, [mbYes, mbNo], 0) = mrYes) then} SaveScreenClick(nil);
 end;
 
 function TFormMain.DeviceBusy: boolean;
@@ -1059,6 +1131,9 @@ end;
 
 procedure TFormMain.ActionUpdateExecute(Sender: TObject);
 begin
+  ActionManager.ResetActionBar(0);
+  ActionManager.ResetActionBar(1);
+  ActionManager.ResetActionBar(2);
   InjectDependDevs;
   TActionBarHelper.ShowHidenActions(ActionManager);
   UpdateWidthBars;
@@ -1088,6 +1163,59 @@ end;
 procedure TFormMain.CustomizeActionBarsCustomizeDlgClose(Sender: TObject);
 begin
   UpdateWidthBars;
+end;
+
+function o2i(obj: Tobject): Integer;inline;
+begin
+  Result := Integer(Pointer(obj))
+end;
+
+procedure TFormMain.debug_log_dock;
+ var
+  lst:TList;
+  i,j:integer;
+  tz: TJvDockZone;
+  procedure recurTZ(z: TJvDockZone; level: integer);
+  begin
+    if Assigned(z.ChildControl) then
+     begin
+      try
+       Tdebug.Log('---[%x]tree[%x]zone: %d class: %s  control[%x]:%s, name "%s"',
+       [o2i(z.tree), o2i(z), level, z.ClassName, o2i(z.ChildControl), z.ChildControl.ClassName, z.ChildControl.Name]);
+      except
+        Tdebug.Log('---[%x]tree[%x]zone: %d class: %s  control[%x]:%s, name "%s"',
+        [o2i(z.tree), o2i(z), level, z.ClassName, o2i(z.ChildControl), 'z.ChildControl.ClassName ERROR', 'error_destroyed_control']);
+      end;
+      //z.ChildControl := nil;
+     end
+    else Tdebug.Log('---[%x]tree[%x]zone: %d class: %s',[o2i(z.tree), o2i(z), level, z.ClassName]);
+    if Assigned(z.ChildZones) then  recurTZ(z.ChildZones, level+1);
+    if Assigned(z.NextSibling) then  recurTZ(z.NextSibling, level+100);
+
+  end;
+begin
+    lst:= TList.Create;
+    if JvGlobalDockManager.DockServer[0] <> JvDockServer then Tdebug.Log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!JVSERVER|||||||||||||||||||||');
+
+    for I := 0 to 4 do if Assigned(JvDockServer.DockPanel[TJvDockPosition(i)]) then
+     begin
+      Tdebug.Log('=================[%x] Panel:%d name "%s" class: "%s"',[Integer(Pointer(JvDockServer.DockPanel[TJvDockPosition(i)])), i,
+              JvDockServer.DockPanel[TJvDockPosition(i)].Name,
+              JvDockServer.DockPanel[TJvDockPosition(i)].ClassName]);
+
+      if Assigned(JvDockServer.DockPanel[TJvDockPosition(i)].jvDockManager)
+         and Assigned((JvDockServer.DockPanel[TJvDockPosition(i)].jvDockManager as TJvDockVSNETTree).TopZone) then
+          recurTZ((JvDockServer.DockPanel[TJvDockPosition(i)].jvDockManager as TJvDockVSNETTree).TopZone, 0);
+      if Assigned(TJvDockVSNETPanel(JvDockServer.DockPanel[TJvDockPosition(i)]).VSChannel.VSPopupPanel.JvDockManager) then
+          recurTZ((TJvDockVSNETPanel(JvDockServer.DockPanel[TJvDockPosition(i)]).VSChannel.VSPopupPanel.JvDockManager as TJvDockVSNETTree).TopZone, 1000);
+
+
+
+      JvDockServer.DockPanel[TJvDockPosition(i)].GetDockedControls(lst);
+      for J := 0 to LST.Count-1 do
+        Tdebug.Log('Panel:%d contr:%d class: %s',[i, j, TWinControl(lst[j]).ClassName]);
+     end;
+    lst.Free;
 end;
 
 //procedure TFormMain.ToolBarCanResize(Sender: TObject; var NewWidth, NewHeight: Integer; var Resize: Boolean);

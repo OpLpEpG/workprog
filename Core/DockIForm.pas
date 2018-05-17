@@ -2,9 +2,9 @@ unit DockIForm;
 
 interface
 
-uses System.SysUtils, Vcl.Controls, debug_except, Winapi.Windows, Vcl.Graphics, Container, Actns, System.TypInfo,
-     DeviceIntf, ExtendIntf, RootImpl, JvDockControlForm, JvDockVSNetStyle, Vcl.ActnPopup, Vcl.Menus, System.Classes, Vcl.Dialogs,
-     Vcl.ComCtrls;
+uses System.SysUtils, Vcl.Controls, debug_except, Winapi.Windows, Vcl.Graphics, Container, Actns, System.TypInfo, Vcl.Forms,
+     DeviceIntf, ExtendIntf, RootImpl,JvDockGlobals, JvDockControlForm, JvDockVSNetStyle, Vcl.ActnPopup, Vcl.Menus, System.Classes,
+      Vcl.Dialogs, Vcl.ComCtrls;
 
 type
   ShowNCMenu = set of (sncClose, sncTab, sncDock);
@@ -18,36 +18,33 @@ type
 
   TDockIFormClass = class of TDockIForm;
 
-  TDockIForm = class(TIForm, IDockClient, INotifyBeforeRemove, INotifyBeforeClean)
+  TDockIForm = class(TIForm, IDockClient)//.NotifyBeforeRemove, INotifyBeforeClean)
   private
 //    FShowAction: IAction;
-    FDockClient: TJvDockClient;
     FDockVSNetStyle: TJvDockVSNetStyle;
     FCaption: string;
     procedure Tab_ItemClick(Sender: TObject);
     procedure Dock_ItemClick(Sender: TObject);
     function IsAutoHidden: Boolean;
     function IsTabbedDocument: Boolean;
-    procedure OnFormShowHide(Sender: TObject);
-//    procedure CreateShowAction;
+    procedure OnFormHide(Sender: TObject);
+    procedure OnFormShow(Sender: TObject);
     procedure SetCaption(const Value: string);
   protected
    const
     AUTO_CHECK: array[Boolean]of Integer = (0,1);
    var
+    FDockClient: TJvDockClient;
+    FEnableCloseDialog: Boolean;
     NCanClose: Boolean;
     NClose, NTab, NDock: TMenuItem;
-    procedure BeforeRemove(); virtual;
-   procedure BeforeClean(var CanClean: Boolean); virtual;
+    procedure RemoveSelfFromDock;
+    procedure DoShow;  override;
     procedure InitializeNewForm; override;
     procedure IShow; override;
-//    procedure LoadBeroreAdd(); virtual;
-//    procedure BeforeAdd(); virtual;
-//    procedure AfteActionManagerLoad(); virtual;
     class function ClassIcon: Integer; virtual;
     procedure Close_ItemClick(Sender: TObject); virtual;
     procedure NCPopup(Sender: TObject); virtual;
-//    procedure AddToNCMenu(const ACaption: string; AClick: TNotifyEvent; out Item: TMenuItem; Index: Integer = -1; Autocheck: Integer = -1; Root: TMenuItem = nil); overload;
     function AddToNCMenu(const ACaption: string; AClick: TNotifyEvent = nil; Index: Integer = -1; Autocheck: Integer = -1; Root: TMenuItem = nil): TMenuItem;
     class function GetUniqueForm(const FormName: string): IForm;
     class procedure DoCreateForm(Sender: IAction); virtual;
@@ -59,8 +56,6 @@ type
   published
     property Caption: string read FCaption write SetCaption;
   end;
-
-//  TDialogIFormClass = class of TDialogIForm;
 
   TDialogIForm = class(TDockIForm)
   protected
@@ -114,16 +109,13 @@ begin
 end;
 
 procedure TDockIForm.InitializeNewForm;
-// var
-//  n: TMenuItem;
-//  pp: TPopupActionBar;
 begin
   inherited;
   FDockClient := CreateUnLoad<TJvDockClient>;
-  FDockClient.OnFormShow := OnFormShowHide;
-  FDockClient.OnFormHide := OnFormShowHide;
   FDockVSNetStyle := CreateUnLoad<TJvDockVSNetStyle>;
   FDockClient.DockStyle := FDockVSNetStyle;
+  FDockClient.OnFormShow := OnFormShow;
+  FDockClient.OnFormHide := OnFormHide;
   FDockClient.NCPopupMenu := CreateUnLoad<TPopupActionBar>;
   FDockClient.NCPopupMenu.OnPopup := NCPopup;
   NClose := AddToNCMenu('Закрыть Окно', Close_ItemClick);
@@ -140,7 +132,7 @@ procedure TDockIForm.NCPopup(Sender: TObject);
 begin
   with FDockClient.NCPopupMenu do if (PopupComponent = Self) or (PopupComponent is TPageControl) then
    begin
-    Nclose.Enabled := NCanClose;
+    Nclose.Enabled := NCanClose and not (HostDockSite is TJvDockTabPageControl);
     Ntab.Enabled := not IsAutoHidden;
     NDock.Enabled := not (IsAutoHidden or IsTabbedDocument);
     Ntab.Checked := IsTabbedDocument;
@@ -154,24 +146,40 @@ begin
    end;
 end;
 
-procedure TDockIForm.OnFormShowHide(Sender: TObject);
+procedure TDockIForm.OnFormShow(Sender: TObject);
  var
   da: TIDynamicAction;
   s: string;
 begin
   s:= Format('%s_%s',[Name, 'OnShowAction']);
   GContainer.RemoveInstance(TypeInfo(TIDynamicAction), s);
-  if Visible then Exit;
-  da := TIDynamicAction.CreateUser(Caption, 'Окна', Icon);
-  da.Name := s;
-  da.InstanceName := Name;
-  da.ActionComponentClass := ClassName;
-  da.ActionMethodNameExec := 'OnShowAction';
-//  da.AddToActionManager('Окна', Caption, ClassIcon, 0);
-  TRegister.AddType<TIDynamicAction>.AddInstance(s, da as IInterface);
-  (GlobalCore as IActionProvider).RegisterAction(da);
-  (GlobalCore as IActionProvider).ShowInBar(0, 'Окна', da as IAction);
-//  AfteActionManagerLoad;
+end;
+
+procedure TDockIForm.OnFormHide(Sender: TObject);
+ var
+  da: TIDynamicAction;
+  s: string;
+begin
+  ///
+  if FEnableCloseDialog and not (HostDockSite is TJvDockTabPageControl)
+     and (MessageDlg('Закрыть окно '+Caption+' ? (No - скрыть)', mtWarning, [mbYes, mbNo], 0) = mrYes) then
+    Close_ItemClick(Sender)
+  ///
+  else
+   begin
+    s:= Format('%s_%s',[Name, 'OnShowAction']);
+    GContainer.RemoveInstance(TypeInfo(TIDynamicAction), s);
+    da := TIDynamicAction.CreateUser(Caption, 'Скрытые окна', Icon);
+    da.Name := s;
+    da.InstanceName := Name;
+    da.ActionComponentClass := ClassName;
+    da.ActionMethodNameExec := 'OnShowAction';
+  //  da.AddToActionManager('Окна', Caption, ClassIcon, 0);
+    TRegister.AddType<TIDynamicAction>.AddInstance(s, da as IInterface);
+    (GlobalCore as IActionProvider).RegisterAction(da);
+    (GlobalCore as IActionProvider).ShowInBar(0, 'Скрытые окна', da as IAction);
+  //  AfteActionManagerLoad;
+   end;
 end;
 
 procedure TDockIForm.OnShowAction(Sender: IAction);
@@ -179,11 +187,45 @@ begin
   ShowDockForm(Self);
 end;
 
+procedure TDockIForm.RemoveSelfFromDock;
+ var
+  vs: TJvDockVSNETPanel;
+  ppp: TJvDockPosition;
+  s: TJvDockServer;
+  p: TJvDockPanel;
+
+  Channel: TJvDockVSChannel;
+
+begin
+  FDockClient.OnFormShow := nil;
+  FDockClient.OnFormHide := nil;
+
+  HideDockForm(Self); // не удалять!!!! скрытие формы из экрана и док-системы
+
+  //вручную удаляю все ссылки  на блоки нашел в DoFolatForm
+  Channel := RetrieveChannel(HostDockSite);
+  if Assigned(Channel) then Channel.RemoveDockControl(self);
+  //вручную удаляю все ссылки на зоны
+  if JvGlobalDockManager.DockServerCount > 0 then
+   begin
+    s := JvGlobalDockManager.DockServer[0];
+    for ppp := dpLeft to dpCustom do
+      if Assigned(s.DockPanel[ppp]) and Assigned(s.DockPanel[ppp].JvDockManager) then
+       begin
+        s.DockPanel[ppp].JvDockManager.RemoveControl(self);
+        if s.DockPanel[ppp] is TJvDockVSNETPanel then
+         begin
+          vs := TJvDockVSNETPanel(s.DockPanel[ppp]);
+          vs.VSChannel.VSPopupPanel.JvDockManager.RemoveControl(self);
+         end;
+       end;
+   end;
+end;
+
 procedure TDockIForm.SetCaption(const Value: string);
 begin
   FCaption := Value;
   inherited Caption := FCaption;
-//  if Assigned(FShowAction) then FShowAction.Caption := FCaption;
 end;
 
 procedure TDockIForm.SetNCMenusVisible(const snc: ShowNCMenu);
@@ -192,43 +234,6 @@ begin
   NTab.Visible := sncTab in snc;
   NDock.Visible := sncDock in snc;
 end;
-
-{procedure TDockIForm.AddToNCMenu(const ACaption: string; AClick: TNotifyEvent; out Item : TMenuItem; Index, Autocheck: Integer; Root: TMenuItem);
-begin
-  Item := TMenuItem.Create(FDockClient.NCPopupMenu);
-  Item.Caption := ACaption;
-  Item.OnClick := AClick;
-  if Assigned(Root) then Root.Add(Item)
-  else FDockClient.NCPopupMenu.Items.Add(Item);
-  if Index <> -1 then Item.MenuIndex := Index;
-  if Autocheck <> -1 then
-   begin
-    Item.AutoCheck := True;
-    Item.Checked := Autocheck = 1;
-   end;
-end;}
-
-{procedure TDockIForm.AfteActionManagerLoad;
- var
-  ap: IActionProvider;
-begin
-  CreateShowAction;
-  if Supports(GlobalCore, IActionProvider, ap) and Assigned(FShowAction) then
-   if not Visible then
-      ap.ShowInBar(0,'Окна', FShowAction)
-   else
-      ap.HideInBar(0, FShowAction);
-end;
-
-procedure TDockIForm.BeforeAdd;
-begin
-  CreateShowAction
-end;
-
-procedure TDockIForm.LoadBeroreAdd;
-begin
-  CreateShowAction
-end;}
 
 function TDockIForm.AddToNCMenu(const ACaption: string; AClick: TNotifyEvent; Index, Autocheck: Integer; Root: TMenuItem): TMenuItem;
 begin
@@ -245,16 +250,6 @@ begin
    end;
 end;
 
-procedure TDockIForm.BeforeClean(var CanClean: Boolean);
-begin
-  HideDockForm(Self); // не удалять !!!
-end;
-
-procedure TDockIForm.BeforeRemove;
-begin
-  HideDockForm(Self); // не удалять !!!
-end;
-
 class function TDockIForm.ClassIcon: Integer;
 begin
   Result := 305;
@@ -264,29 +259,17 @@ procedure TDockIForm.Close_ItemClick(Sender: TObject);
  var
   fe: IFormEnum;
 begin
-  FDockClient.OnFormShow := nil;
-  FDockClient.OnFormHide := nil;
-  //HideDockForm(Self); // не удалять !!!
-  if Supports(GlobalCore, IFormEnum, fe) then fe.Remove(Self as IForm);
+  if Supports(GlobalCore, IFormEnum, fe) then
+   begin
+    fe.Remove(Self as IForm);
+    MainScreenChanged;
+   end;
 end;
-
-//procedure TDockIForm.CreateShowAction;
-// var
-//  ap: IActionProvider;
-//begin
-//  if Assigned(FShowAction) then Exit;
-//  if Supports(GlobalCore, IActionProvider, ap) then FShowAction := ap.Create('Окна', Caption, Name +  '_ShowAction', OnShowAction, Icon);
-//end;
-
-//destructor TDockIForm.Destroy;
-//begin
-//  TDebug.Log('TDockIForm.Destroy    '+ Name+ '    ' + caption+ '    ' );
-//  FShowAction := nil;
-//  inherited;
-//end;
 
 destructor TDockIForm.Destroy;
 begin
+//  TDebug.Log('TDockIForm.Destroy    '+ Name+ '    ' + caption+ '    ' );
+  RemoveSelfFromDock;
   GContainer.RemoveInstance(TypeInfo(TIDynamicAction), Format('%s_%s',[Name, 'OnShowAction']));
   inherited;
 end;
@@ -312,6 +295,7 @@ begin
     Result := CreateUser(FormName) as IForm;
     if Assigned(fe) then fe.Add(Result);
     Result.Show;
+    MainScreenChanged;
    end;
 end;
 
@@ -323,6 +307,13 @@ begin
   f := CreateUser() as IForm;
   if Supports(GlobalCore, IFormEnum, fe) then fe.Add(f);
   f.Show;
+  MainScreenChanged;
+end;
+
+procedure TDockIForm.DoShow;
+begin
+  inherited;
+  FEnableCloseDialog := True;
 end;
 
 procedure TDockIForm.Tab_ItemClick(Sender: TObject);

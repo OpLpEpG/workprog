@@ -118,6 +118,7 @@ begin
       (GContainer as IFormEnum).Add(wf);
       (wf as ISetDevice).SetDataDevice(FDevice.IName);
       (GContainer as ITabFormProvider).Dock(wf, 0);
+      TForm(wf.GetComponent).Visible:= False; //      HIdeDockForm(TForm(wf.GetComponent));
       ShowDockForm(TForm(wf.GetComponent));
      end;
     (GlobalCore as IActionProvider).SaveActionManager;

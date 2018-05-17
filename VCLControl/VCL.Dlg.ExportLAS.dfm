@@ -27,6 +27,10 @@ object FormExportLASP3: TFormExportLASP3
     object tshSelDir: TTabSheet
       Caption = #1055#1091#1090#1100
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inline FrameSelectPath: TFrameSelectPath
         Left = 0
         Top = 0
@@ -45,7 +49,7 @@ object FormExportLASP3: TFormExportLASP3
             item
               Position = 0
               Style = vsOwnerDraw
-              Width = 310
+              Width = 316
               WideText = #1055#1091#1090#1100
             end>
         end
@@ -86,7 +90,7 @@ object FormExportLASP3: TFormExportLASP3
             end
             item
               Position = 2
-              Width = 262
+              Width = 268
               WideText = #1048#1084#1103
             end>
         end
@@ -95,6 +99,10 @@ object FormExportLASP3: TFormExportLASP3
     object tshData: TTabSheet
       Caption = #1057#1084#1086#1090#1088#1077#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object DBGrid1: TDBGrid
         Left = 0
         Top = 0
@@ -114,6 +122,10 @@ object FormExportLASP3: TFormExportLASP3
       Caption = #1057#1074#1086#1081#1089#1090#1074#1072' '
       ImageIndex = 3
       OnShow = tshLasShow
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       DesignSize = (
         316
         364)
@@ -174,10 +186,12 @@ object FormExportLASP3: TFormExportLASP3
         Width = 292
         Height = 112
         Anchors = [akLeft, akTop, akRight]
+        AutoSize = True
         TabOrder = 3
         ExplicitLeft = 7
         ExplicitTop = 103
         ExplicitWidth = 292
+        ExplicitHeight = 112
         inherited Range: TRangeSelector
           Width = 292
           ExplicitWidth = 292

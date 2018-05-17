@@ -97,6 +97,7 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     Width = 273
     Height = 113
     Anchors = [akLeft, akTop, akRight]
+    AutoSize = True
     TabOrder = 7
     ExplicitLeft = 8
     ExplicitTop = 72

@@ -8,7 +8,7 @@ uses System.SysUtils,  ExtendIntf, RootImpl, debug_except, DeviceIntf, DockIForm
   Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, PluginAPI, Vcl.ActnList, Vcl.StdActns, System.Actions;
 
 type
-  TFormExceptions = class(TDockIForm)
+  TFormExceptions = class(TDockIForm, INotifyBeforeClean)
     Memo: TMemo;
     procedure FormShow(Sender: TObject);
   private
@@ -18,7 +18,8 @@ type
     procedure NCloseClick(Sender: TObject);
     class procedure AsyncException(const CsName, msg, StackTrace: WideString);
   protected
-    procedure BeforeClean(var CanClean: Boolean); override;
+    procedure DoShow;  override;
+    procedure BeforeClean(var CanClean: Boolean); //virtual;
     procedure InitializeNewForm; override;
     function Priority: Integer; override;
     class function ClassIcon: Integer; override;
@@ -69,11 +70,17 @@ begin
 //  NShowDebug.Checked := True;
   AddToNCMenu('-');
   AddToNCMenu('Сохранить в файл...', NSaveAsClick);
+  FDockClient.OnFormShow := nil;
+  FDockClient.OnFormHide := nil;
 end;
 
 class procedure TFormExceptions.DeInit;
 begin
-  if Assigned(This) then FreeAndNil(This);
+  if Assigned(This) then
+   begin
+    This.RemoveSelfFromDock;
+    FreeAndNil(This);
+   end;
 end;
 
 destructor TFormExceptions.Destroy;
@@ -84,10 +91,15 @@ begin
   inherited;
 end;
 
+procedure TFormExceptions.DoShow;
+begin
+  inherited;
+  FEnableCloseDialog := False;
+end;
+
 procedure TFormExceptions.BeforeClean(var CanClean: Boolean);
 begin
   CanClean := False;
-  inherited;
 end;
 
 procedure TFormExceptions.NCloseClick(Sender: TObject);

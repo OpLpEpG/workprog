@@ -2,7 +2,7 @@ unit VCL.CustomDataForm;
 
 interface
 
-uses DBintf, DBImpl, AbstractDlgParams, DlgFltParam, RootIntf, Container, DataSetIntf, DataImportIntf,
+uses DBintf, AbstractDlgParams, DlgFltParam, RootIntf, Container, DataSetIntf, DataImportIntf,
      RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI,
      Xml.XMLIntf, System.Generics.Collections,
      System.Classes, System.SysUtils,

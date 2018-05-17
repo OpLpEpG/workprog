@@ -1,74 +1,76 @@
-<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
-<HEAD>
-<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
-<!-- Sitemap 1.0 -->
-</HEAD><BODY>
+ <HEAD>
+  <META name="GENERATOR" content="htm2chm 3.0.9.3">
+  <!-- Sitemap 1.0 -->
+ </HEAD>
+<BODY>
+ <OBJECT type="text/site properties">
+  <PARAM name="Window Styles" value="0x800027">
+ </OBJECT>
 <UL>
-	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="&Acirc;&acirc;&aring;&auml;&aring;&iacute;&egrave;&aring;">
-		<param name="Local" value="help.htm">
-		<param name="New" value="1">
-		</OBJECT>
-	<LI> <OBJECT type="text/sitemap">
-		<param name="Name" value="&Igrave;&icirc;&auml;&oacute;&euml;&egrave; &eth;&agrave;&ntilde;&oslash;&egrave;&eth;&aring;&iacute;&egrave;&yuml;">
-		<param name="Local" value="Moduls.htm">
-		</OBJECT>
-	<UL>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="&Iuml;&eth;&icirc;&aring;&ecirc;&ograve;">
-			<param name="Local" value="Project\Progect.htm">
-			</OBJECT>
-		<UL>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="&Oacute;&iuml;&eth;&agrave;&acirc;&euml;&aring;&iacute;&egrave;&aring;">
-				<param name="Local" value="Project\Control.htm">
-				</OBJECT>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="&Egrave;&igrave;&iuml;&icirc;&eth;&ograve; &igrave;&aring;&ograve;&eth;&icirc;&euml;&icirc;&atilde;&egrave;&egrave;">
-				<param name="Local" value="Project\SetTrr.htm">
-				</OBJECT>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="&times;&ograve;&aring;&iacute;&egrave;&aring; &iuml;&agrave;&igrave;&yuml;&ograve;&egrave;">
-				<param name="Local" value="Project\ReadRam.htm">
-				</OBJECT>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="&Oacute;&ntilde;&ograve;&eth;&icirc;&eacute;&ntilde;&ograve;&acirc;&agrave;">
-				<param name="Local" value="Devices\Devices.htm">
-				</OBJECT>
-			<UL>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="&Oacute;&ntilde;&ograve;&eth;&icirc;&eacute;&ntilde;&ograve;&acirc;&agrave; &Acirc;&acirc;&icirc;&auml;&agrave;-&Acirc;&ucirc;&acirc;&icirc;&auml;&agrave;">
-					<param name="Local" value="Devices\IO.htm">
-					</OBJECT>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="&Ccedil;&agrave;&auml;&aring;&eth;&aelig;&ecirc;&agrave;">
-					<param name="Local" value="Devices\Delay.htm">
-					</OBJECT>
-				<LI> <OBJECT type="text/sitemap">
-					<param name="Name" value="&Ecirc;&icirc;&eth;&eth;&aring;&ecirc;&ouml;&egrave;&yuml; &divide;&agrave;&ntilde;&icirc;&acirc;">
-					<param name="Local" value="Devices\CorrectTime.htm">
-					</OBJECT>
-			</UL>
-		</UL>
-		<LI> <OBJECT type="text/sitemap">
-			<param name="Name" value="&Igrave;&aring;&ograve;&eth;&icirc;&euml;&icirc;&atilde;&egrave;&yuml;">
-			<param name="Local" value="Metrol\Metrology.htm">
-			</OBJECT>
-		<UL>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="&Egrave;&iacute;&ecirc;&euml;&egrave;&iacute;&icirc;&igrave;&aring;&ograve;&eth;&ucirc;">
-				<param name="Local" value="Metrol\Metrology.Inclin.htm">
-				</OBJECT>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="&Atilde;&agrave;&igrave;&igrave;&agrave;">
-				<param name="Local" value="Devices\Delay.htm">
-				</OBJECT>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="&Iacute;&Iacute;&Ecirc;">
-				<param name="Local" value="Devices\Delay.htm">
-				</OBJECT>
-		</UL>
-	</UL>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Acirc;&acirc;&aring;&auml;&aring;&iacute;&egrave;&aring;">
+  <PARAM name="Local" value="help.htm">
+ </OBJECT>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Igrave;&icirc;&auml;&oacute;&euml;&egrave; &eth;&agrave;&ntilde;&oslash;&egrave;&eth;&aring;&iacute;&egrave;&yuml;">
+  <PARAM name="Local" value="Moduls.htm">
+ </OBJECT>
+<UL>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Iuml;&eth;&icirc;&aring;&ecirc;&ograve;">
+  <PARAM name="Local" value="Project\Progect.htm">
+ </OBJECT>
+<UL>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Ccedil;&agrave;&auml;&aring;&eth;&aelig;&ecirc;&agrave;">
+  <PARAM name="Local" value="Project\Delay.htm">
+ </OBJECT>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&times;&ograve;&aring;&iacute;&egrave;&aring; &iuml;&agrave;&igrave;&yuml;&ograve;&egrave;">
+  <PARAM name="Local" value="Project\ReadRam.htm">
+ </OBJECT>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Acirc;&egrave;&ccedil;&oacute;&agrave;&euml;&egrave;&ccedil;&agrave;&ouml;&egrave;&yuml; &auml;&agrave;&iacute;&iacute;&ucirc;&otilde;">
+  <PARAM name="Local" value="Project\View.htm">
+ </OBJECT>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Yacute;&ecirc;&ntilde;&iuml;&icirc;&eth;&ograve;&egrave;&eth;&icirc;&acirc;&agrave;&iacute;&egrave;&aring; &auml;&agrave;&iacute;&iacute;&ucirc;&otilde; &iuml;&eth;&icirc;&aring;&ecirc;&ograve;&agrave;">
+  <PARAM name="Local" value="Project\Export.htm">
+ </OBJECT>
 </UL>
-</BODY></HTML>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Oacute;&ntilde;&ograve;&eth;&icirc;&eacute;&ntilde;&ograve;&acirc;&agrave;">
+  <PARAM name="Local" value="Devices\Devices.htm">
+ </OBJECT>
+<UL>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Oacute;&ntilde;&ograve;&eth;&icirc;&eacute;&ntilde;&ograve;&acirc;&agrave; &Acirc;&acirc;&icirc;&auml;&agrave;-&Acirc;&ucirc;&acirc;&icirc;&auml;&agrave;">
+  <PARAM name="Local" value="Devices\IO.htm">
+ </OBJECT>
+</UL>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Igrave;&aring;&ograve;&eth;&icirc;&euml;&icirc;&atilde;&egrave;&yuml;">
+  <PARAM name="Local" value="Metrol\Metrology.htm">
+ </OBJECT>
+<UL>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Egrave;&iacute;&ecirc;&euml;&egrave;&iacute;&icirc;&igrave;&aring;&ograve;&eth;&ucirc;">
+  <PARAM name="Local" value="Metrol\Metrology.Inclin.htm">
+ </OBJECT>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Atilde;&agrave;&igrave;&igrave;&agrave;">
+  <PARAM name="Local" value="Metrol/Metrology.GK.htm">
+ </OBJECT>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Iacute;&Iacute;&Ecirc;">
+  <PARAM name="Local" value="Metrol/Metrology.NNK.htm">
+ </OBJECT>
+</UL>
+</UL>
+ <LI><OBJECT type="text/sitemap">
+  <PARAM name="Name" value="&Agrave;&euml;&atilde;&icirc;&eth;&egrave;&ograve;&igrave; &Dstrok;&agrave;&aacute;&icirc;&ograve;&ucirc;(&Iuml;&eth;&icirc;&ocirc;&egrave;&euml;&aring;&igrave;&aring;&eth;)">
+  <PARAM name="Local" value="Алгоритм Работы(Профилемер).htm">
+ </OBJECT>
+</BODY>
+</HTML>

@@ -80,11 +80,11 @@
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <VerInfo_Release>1</VerInfo_Release>
         <Debugger_DebugSourcePath>C:\XE\Libs\Graphics32\Source\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_RangeChecking>true</DCC_RangeChecking>
-        <VerInfo_Build>0</VerInfo_Build>
+        <VerInfo_Build>1</VerInfo_Build>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <DCC_MapFile>3</DCC_MapFile>
         <DCC_DcuOutput>..\_unit\$(Config)</DCC_DcuOutput>
@@ -113,10 +113,6 @@
         <DCCReference Include="AbstractDlgParams.pas">
             <Form>FormParamsAbstract</Form>
         </DCCReference>
-        <DCCReference Include="DataDBForm.pas"/>
-        <DCCReference Include="FormDBCursor.pas">
-            <Form>FormCursor</Form>
-        </DCCReference>
         <DCCReference Include="DlgFltParam.pas"/>
         <DCCReference Include="DlgViewParam.pas"/>
         <DCCReference Include="DlgFromToGlu.pas">
@@ -134,10 +130,6 @@
         <DCCReference Include="VCL.CustomDataForm.pas"/>
         <DCCReference Include="VCL.GraphDataForm.pas">
             <Form>GraphDataForm</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="ExportLas.pas">
-            <Form>FormParamsAbstract3</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="VCL.TableDataForm.pas">

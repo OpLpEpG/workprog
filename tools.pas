@@ -63,6 +63,13 @@ const
 
   T_MTR = 'Метрология';
 
+  ATTESTAT_ATTR: array[0..12] of string = ('DevName','Maker','UsedStol','Category','Room','Metrolog', 'kalibrov',
+                                          'TIME_ATT','NextDate','Ready','ErrZU','ErrAZ','ErrAZ5');
+  ATTESTAT_CAPTION: array[0..12] of string = ('Прибор','Производитель','Оборудование','Категория','Помещение','Метролог', 'Калибровал',
+                                          'Время аттестации','Следующая аттестация','Готов','Ошибка ЗУ',
+                                          'Ошибка Азим','Ошибка Азим ЗУ<5');
+
+
   AT_FILE_NAME = 'FILE_NAME';
   AT_FILE_CLC = 'FILE_NAME_CLC';
 //  свойства прибора
@@ -73,6 +80,8 @@ const
   AT_SERIAL = 'SERIAL_NO';
   AT_SPEED = 'COMUNICATION_PROPERTY';   // BIT15:USB  BIT14:SSD BIT7:125Kbt BIT6:500Kbt
   AT_TIMEATT = 'TIME_ATT';
+  AT_METROLOG = 'Metrolog';
+  AT_DEVNAME = 'DevName';
   AT_DELAYDV = 'DELAY_DEVIDER';
   AT_WORKTIME = 'WORK_TIME_ENABLE';
   AT_DEV_ID = 'DEV_ID'; // для проекта
@@ -144,6 +153,7 @@ type
   TTestRef = reference to function(n: IXMLNode): boolean; // если да то прекратить рекурсию
   TWorkDataRef = reference to procedure(wrk: IXMLNode; adr: Byte; const name: string);
   THasXtreeRef = reference to procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode);
+  TNotHasXtreeRef = reference to function(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode): boolean;
 //  TRamDataRef = TWorkDataRef;
 
 function TryValX(Root: IXMLNode; const Path: string; var v: Variant): Boolean;
@@ -153,7 +163,7 @@ function GetXNode(Root: IXMLNode; const Path: string; CreatePathNotExists: Boole
 // проверяет содержит ли Test Etalon структуру и атрибуты
 // для каждого атрибута вызывается действие
 // прiменяется для копирования только данных
-function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True): Boolean;
+function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True; BadTree: TNotHasXtreeRef =nil): Boolean;
 function ExecXTree(root: IXMLNode; func: TTestRef): IXMLNode; overload; //возвращает первое совпадение
 procedure ExecXTree(root: IXMLNode; func: Tproc<IXMLNode>; Dec: Boolean = False); overload;
 
@@ -1005,7 +1015,7 @@ begin
   if Assigned(root) then rec(root);
 end;
 
-function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True): Boolean;
+function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True; BadTree: TNotHasXtreeRef =nil): Boolean;
   procedure rec(e, t: IXMLNode);
    var
     ie, it: IXMLNode;
@@ -1016,7 +1026,8 @@ function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootA
       it := t.AttributeNodes.FindNode(ie.NodeName);
       if not Assigned(it) then
        begin
-        Result := False;
+        if Assigned(BadTree) then Result := Result and BadTree(e, ie, t, it)
+        else Result := False;
         //OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'ie.xml');
        // TDebug.Log(ie.NodeName);
        end
@@ -1027,7 +1038,8 @@ function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootA
       it := t.ChildNodes.FindNode(ie.NodeName);
       if not Assigned(it) then
        begin
-        Result := False;
+        if Assigned(BadTree) then Result := Result and BadTree(e, ie, t, it)
+        else Result := False;
        // TDebug.Log(ie.NodeName);
        end
       else rec(ie, it)

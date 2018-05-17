@@ -2510,9 +2510,16 @@ begin
   if (l <> oldl) or (f <> oldf) then (GContainer as IMainScreen).Changed;
   if OldActiveData and ((l <> oldl) or (f <> oldf)) then
    begin
+//    Frost;
+//    try
     for c in Columns do
-     for p in c.Params do p.FLink.ResetBuffer;
+     begin
+      for p in c.Params do p.FLink.ResetBuffer;
+     end;
     YPosition := Ylast;
+//    finally
+//     DeFrost;
+//    end;
    end
   else
    begin

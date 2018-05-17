@@ -234,7 +234,7 @@ begin
        inc(i);
        d.Next;
       end;
- //   TDebug.Log('  %d   ',[FOwner.FFileData.Size div 8]);
+    //TDebug.Log('FbuffReady := True;   %d   ',[FFileData.Size]);
     FbuffReady := True;
    finally
     d.Active := False;
@@ -329,28 +329,31 @@ begin
   if not FbuffReady then
    begin
     if not Assigned(FFileData) then FFileData := GFileDataFactory.Factory(TFileData, BufferFileName);
-    th := TReadDataThread.Create(procedure
-    begin
-      FFileData.Lock;
-      try
-       try
-       //Tdebug.Log('TmpBuff: %d, Rec*Len: %d', [FFileData.Size, DataSet.RecordCount*FileRecLen]);
-       if FFileData.Size = DataSet.RecordCount*FileRecLen then
-        begin
-         SetLength(Fbuff, FFileData.Size div FileRecLen);
-         InitBuffFromFile;
-         FbuffReady := True;
-         NillDataSet;
+    if FFileData.Size = DataSet.RecordCount*FileRecLen then
+     begin
+      th := TReadDataThread.Create(procedure
+      begin
+        FFileData.Lock;
+        try
+         try
+         //Tdebug.Log('TmpBuff: %d, Rec*Len: %d', [FFileData.Size, DataSet.RecordCount*FileRecLen]);
+         if FFileData.Size = DataSet.RecordCount*FileRecLen then
+          begin
+           SetLength(Fbuff, FFileData.Size div FileRecLen);
+           InitBuffFromFile;
+           FbuffReady := True;
+           NillDataSet;
+          end;
+          except
+           on E: Exception do TDebug.DoException(E);
+          end;
+        finally
+         FFileData.UnLock;
         end;
-        except
-         on E: Exception do TDebug.DoException(E);
-        end;
-      finally
-       FFileData.UnLock;
-      end;
-    end);
-    th.WaitFor;
-    th.Free;
+      end);
+      th.WaitFor;
+      th.Free;
+     end;
    end;
   if FbuffReady then ReadFromMemBuffer
   else if Length(Fbuff) = 0 then
@@ -378,8 +381,9 @@ begin
    end
   else
    begin
-    th := TReadDataThread.Create(procedure
-    begin
+//    Owner.Graph.Frost;
+//    th := TReadDataThread.Create(procedure
+//    begin
       FFileData.Lock;
       try
         try
@@ -387,14 +391,23 @@ begin
           InitMemBuffer(Fids.DataSet, false);
         finally
          FFileData.UnLock;
+//         TThread.Queue(TThread.CurrentThread, procedure
+//         begin
+//         end);
         end;
       except
        on E: Exception do TDebug.DoException(E);
       end;
-    end);
+//    end);
 //    th.WaitFor;
-//    th.Free;
+//    th.Free;   // вызывается из  Render RenderLineparams Paint надо вс
+//    Owner.Graph.DeFrost;
+    { TODO :
+// вызывается из  Render RenderLineparams Paint если убрать th.WaitFor то данные рисоваться не будут
+надо все переделывать в потоке готовить новые буферы данных
+а затем рисовать ?????}
     if FbuffReady then ReadFromMemBuffer;
+//    Owner.Graph.DeFrost;
    end;
 end;
 

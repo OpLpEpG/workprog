@@ -53,7 +53,7 @@ begin
   FkoefH := koefH;
   FkoefG := koefG;
   Fstrings := TStringList.Create;
-  s := Format('%1.3f', [H*koefH]);
+  s := Format('%1.3f', [H{*koefH}]);
   s := s + Format(' %1.3f', [dip]);
   for i := 2 to LHS - 1 do s := s + DEF_HEADER_SUR[i];
   Fstrings.Add(S);

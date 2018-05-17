@@ -27,6 +27,7 @@ type
     function GetChecked: Boolean;
     function GetAutoCheck: Boolean;
     function GetEnabled: Boolean;
+    function GetVisible: Boolean;
     function GetHint: String;
     function GetImageIndex: System.UITypes.TImageIndex;
     function GetGroupIndex: Integer;
@@ -38,6 +39,8 @@ type
     procedure SetCategory(const AValue: String);
     procedure SetChecked(AValue: Boolean);
     procedure SetAutoCheck(AValue: Boolean);
+    procedure SetVisible(Value: Boolean);
+
     procedure SetEnabled(AValue: Boolean);
     procedure SetHint(const AValue: String);
     procedure SetImageIndex(AValue: System.UITypes.TImageIndex);
@@ -54,6 +57,8 @@ type
     property AutoCheck: Boolean read GetAutoCheck write SetAutoCheck;
     property Checked: Boolean read GetChecked write SetChecked;
     property Enabled: Boolean read GetEnabled write SetEnabled;
+    property Visible: Boolean read GetVisible write SetVisible;
+
     property Hint: String read GetHint write SetHint;
 //    property Name: String read GetActionName write SetActionName;
     property ImageIndex: System.UITypes.TImageIndex read GetImageIndex write SetImageIndex;
@@ -254,7 +259,19 @@ type
 
   IMetrology = interface
   ['{60B08497-20FD-4740-8B1B-38710546BC3F}']
-    procedure Setup(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
+    //procedure Setup(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
+    /// <summary>
+    ///  установка метрологии
+    /// </summary>
+    /// <param name="MetrolName"> указывает на Имя метрологии (Inclin ННК ГК) </param>
+    /// <param name="MetrolFile"></param>
+    procedure Setup(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: TArray<string>; out Metr: IXMLInfo);
+    /// <summary>
+    ///  проверка данных метрологии
+    /// </summary>
+    /// <param name="MetrolName"> указывает на Имя метрологии (Inclin ННК ГК) </param>
+    /// <param name="MetrolFile"></param>
+    procedure Check(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: TArray<string>; out Metr: IXMLInfo);
   end;
 
 //  DelayStatus = (dsNone, dsSetDelay, dsEndDelay);
@@ -323,7 +340,7 @@ type
     function HideUnusedMenus: boolean;
     procedure UpdateWidthBars;
     procedure SaveActionManager;
-    procedure ResetActions;
+    procedure ResetActions(isNew: Boolean =false);
   end;
 
  // TWideStrings = array of WideString;

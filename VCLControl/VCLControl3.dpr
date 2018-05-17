@@ -42,6 +42,15 @@ type
    class function GetHInstance: THandle; override;
  public
    class function PluginName: string; override;
+//    [StaticAction('Новая таблица', 'Окна визуализации', NICON, '0:Показать.Окна визуализации','',False,False,0,True, True)]
+   [StaticAction('Проект', 'Файл', -1, '0:Файл|1:0','',False,False,0,True, True)]
+    class procedure DoUpdate(Sender: IAction);
+   [StaticAction('Экспорт', 'Файл', -1, '0:Файл|1:1','',False,False,0,True, True)]
+    class procedure DoUpdateExp(Sender: IAction);
+   [StaticAction('Рабочий стол', 'Файл', -1, '0:Файл','',False,False,0,True, True)]
+    class procedure DoUpdateWrk(Sender: IAction);
+   [StaticAction('Показать', '', -1, '0','',False,False,0,True, True)]
+    class procedure DoUpdateShow(Sender: IAction);
   //Capt, Categ: string; AImageIndex: Integer; APaths: string; AHint: string; AAutoCheck AChecked AGroupIndex AEnabled
    [StaticAction('Новый проект...', 'Проект', 16, '0:Файл.Проект|1:0')]
    class procedure DoNewProject(Sender: IAction);
@@ -97,6 +106,38 @@ end;
 class procedure TVCLControl.DoSloseProject(Sender: IAction);
 begin
   (GContainer as IProject).Close;
+end;
+
+class procedure TVCLControl.DoUpdate(Sender: IAction);
+begin
+  Sender.Visible := Supports(GContainer, IManager);
+end;
+
+class procedure TVCLControl.DoUpdateExp(Sender: IAction);
+ var
+  m: IManager;
+begin
+  Sender.Visible := Supports(GContainer, IManager, m) and (m.ProjectName <> '');
+end;
+
+class procedure TVCLControl.DoUpdateShow(Sender: IAction);
+ var
+  m: IManager;
+  v: Boolean;
+  a: IAction;
+begin
+  v := Supports(GContainer, IManager, m) and (m.ProjectName <> '');
+  a := (GlobalCore as IActionEnum).Get('TFormControl_DoCreateForm', False);
+  a.Visible := v;
+  a := (GlobalCore as IActionEnum).Get('TFormWrok_DoCreateForm', False);
+  a.Visible := v;
+end;
+
+class procedure TVCLControl.DoUpdateWrk(Sender: IAction);
+ var
+  m: IManager;
+begin
+  Sender.Visible := Supports(GContainer, IManager, m) and (m.ProjectName <> '');
 end;
 
 class procedure TVCLControl.DoZPropertyProject(Sender: IAction);

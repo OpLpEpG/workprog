@@ -25,6 +25,7 @@ type
   class procedure Hide(ActionBar: TActionClient; Action: IAction);
   class function HideUnusedMenus(ActionMan: TActionManager): boolean;
   class procedure ShowHidenActions(ActionMan: TActionManager);
+  class procedure VisibleContainedToIAction(ActionMan: TActionManager);
  end;
 
 implementation
@@ -129,7 +130,11 @@ begin
   for s in path.Split(['.'], ExcludeEmpty) do
    begin
     a := FindByCaption(root, s);
-    if Assigned(a) then root := a
+    if Assigned(a) then
+     begin
+      root := a;
+      root.Visible := True;
+     end
     else
      begin
       if root = ActionBar then
@@ -143,7 +148,15 @@ begin
       root.Visible := True;
      end;
    end;
-  if Assigned(FindByAction(root, Action)) then Exit;
+  a := FindByCaption(root, Action.Caption);
+  if Assigned(a) then
+   begin
+    a.Action := TCustomAction((Action as IInterfaceComponentReference).GetComponent);
+    a.Action.Visible := True;
+    a.Visible := True;
+    Exit;
+   end
+  else if Assigned(FindByAction(root, Action)) then Exit;
   root := root.Items.Add;
   if FAction.Caption = '-' then root.Caption := '-'
   else root.Action := FAction;
@@ -188,7 +201,12 @@ begin
   for pf in path do
    begin
     a := FindByCaption(root, pf.Caption);
-    if Assigned(a) then root := a
+    if Assigned(a) then
+     begin
+      root := a;
+      if Assigned(root.Action) then root.Action.Visible := True;
+      root.Visible := True;
+     end
     else
      begin
       a := root.Items.Add;
@@ -203,7 +221,14 @@ begin
       root := a;
      end;
    end;
-  if not Assigned(FindByAction(root, Action)) then
+  a := FindByCaption(root, Action.Caption);
+  if Assigned(a) then
+   begin
+    a.Action := TCustomAction((Action as IInterfaceComponentReference).GetComponent);
+    a.Action.Visible := True;
+    a.Visible := True;
+   end
+  else if not Assigned(FindByAction(root, Action)) then
    begin
     a := root.Items.Add;
     a.Action := FAction;
@@ -230,6 +255,17 @@ class procedure TActionBarHelper.ShowHidenActions(ActionMan: TActionManager);
   ia: IAction;
 begin
   for a in ActionMan do if Supports(a, IAction, ia) then ia.DefaultShow;
+end;
+
+class procedure TActionBarHelper.VisibleContainedToIAction(ActionMan: TActionManager);
+ var
+  a: TContainedAction;
+  ia: IAction;
+begin
+  for a in ActionMan do if Supports(a, IAction, ia) then
+   begin
+    ia.Visible := a.Visible;
+   end;
 end;
 
 end.

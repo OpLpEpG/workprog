@@ -263,6 +263,14 @@ begin
     end;
    ram := FModul.ChildNodes.FindNode(T_RAM);
    CheckRAMFile(ram);
+   //////////////////
+  // ram.Attributes['test_before_construct']:= 'test_before_construct';
+  // /.ConstructFileName(ram);
+  // ram.Attributes['test_before_resync']:= 'test_before_resync';
+  // ram.OwnerDocument.Resync;
+ //  ram.Attributes['test_after_resync']:= 'test_after_resync';
+ //  exit;
+   /////////////////
    UpdateControls(False);
    try
     if not IsImport then
@@ -362,6 +370,8 @@ begin
 end;
 
 procedure TFormDlgRam.ReadRamEvent(EnumRR: EnumCopyAsyncRun; DevAdr: Integer; Stat: TStatistic);
+ ////var
+ // r:Ixmlnode;
 begin
   UpdateStat(EnumRR, Stat);
   if EnumRR in COPY_STOP_EVENT then

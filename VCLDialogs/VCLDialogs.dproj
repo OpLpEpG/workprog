@@ -79,7 +79,7 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>2</VerInfo_Build>
+        <VerInfo_Build>4</VerInfo_Build>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <VerInfo_Release>1</VerInfo_Release>
         <VerInfo_DLL>true</VerInfo_DLL>
@@ -90,7 +90,7 @@
         <UsePackages>true</UsePackages>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
         <DCC_DcuOutput>unit\$(Config)</DCC_DcuOutput>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.4;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
     </PropertyGroup>
@@ -168,10 +168,6 @@
         <DCCReference Include="VCL.JDType.Form.pas"/>
         <DCCReference Include="VCL.JDType.TGamma.pas">
             <Form>JDTypeFormGamma</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
-        <DCCReference Include="VCL.Dlg.Error.pas">
-            <Form>FormError</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="VCL.JDtype.Clolor.pas">
