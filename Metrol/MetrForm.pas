@@ -12,6 +12,7 @@ uses
 
 type
   EFormMetrolog = class(EBaseException);
+  EFormMetrologDlg = class(ENeedDialogException);
 
   MetrologState = (mstInitDev, mstInitFile, mstAttr, mstLockUpdate, mstAutomat);
 
@@ -1412,7 +1413,7 @@ var
   d: IDialog;
   rm: IXMLNode;
 begin
-  if not Assigned(FileData) then raise EFormMetrolog.Create('Нет файла аттестации (*.XMLTrr).');
+  if not Assigned(FileData) then raise EFormMetrologDlg.Create('Нет файла аттестации (*.XMLTrr).');
   rm := GetMetr([MetrolType], FileData);
   Assert(Assigned(rm));
   rm.Attributes['DevName'] := rm.ParentNode.ParentNode.ParentNode.NodeName + '.' + rm.ParentNode.NodeName;

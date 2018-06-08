@@ -530,10 +530,9 @@ begin
    begin
     try
 //     (FEditData.Item as IDataDevice).ClearMetaData;
+     //if MessageDlg('Удалить архивные данные ?', mtWarning, [mbYes, mbCancel], 0) = mrYes then
+     (GlobalCore as IProjectDataFile).DeviceDataDelete(FEditData.Item as IDevice);
      de.Remove(FEditData.Item as IDevice);
-
-     if MessageDlg('Удалить архивные данные ?', mtWarning, [mbYes, mbCancel], 0) = mrYes then
-       (GlobalCore as IProjectDataFile).DeviceDataDelete(FEditData.Item as IDevice);
     finally
     end;
    end;

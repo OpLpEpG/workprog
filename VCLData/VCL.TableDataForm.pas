@@ -2,13 +2,13 @@ unit VCL.TableDataForm;
 
 interface
 
-uses IDataSets, Vcl.ActnList, debug_except, Xml.XMLIntf,
+uses IDataSets, Vcl.ActnList, debug_except, Xml.XMLIntf, FileDataSet,
      VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls, Data.DB, XMLDataSet, RootIntf,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl, CustomPlot, Vcl.Grids, Vcl.DBGrids;
 
 type
-  TTableDataForm = class(TCustomFormData)
+  TTableDataForm = class(TCustomFormData, INotifyClientBeforeRemove)
     Grid: TDBGrid;
     ds: TDataSource;
   private
@@ -24,6 +24,7 @@ type
   protected
     procedure Loaded; override;
     class function ClassIcon: Integer; override;
+    procedure ClientBeforeRemove(Service: ServiceType; ClientName: string);
   public
     class var SubActions: TArray<IAction>;
     constructor Create; override;
@@ -74,6 +75,16 @@ end;
 class function TTableDataForm.ClassIcon: Integer;
 begin
   Result := NICON;
+end;
+
+procedure TTableDataForm.ClientBeforeRemove(Service: ServiceType; ClientName: string);
+begin
+  if SameText(ClientName, TXMLDataSetDef(DataSetFactory.DataSetDef).BINFileName) then
+   begin
+    TDebug.Log('TTableDataForm.ClientBeforeRemove[%s] %s = %s',[Caption, ClientName, TXMLDataSetDef(DataSetFactory.DataSetDef).BINFileName]);
+    Close_ItemClick(Self);
+   end
+  else TDebug.Log('TTableDataForm.ClientBeforeRemove[%s] %s <> %s',[Caption, ClientName, TXMLDataSetDef(DataSetFactory.DataSetDef).BINFileName]);
 end;
 
 constructor TTableDataForm.Create;
@@ -169,7 +180,7 @@ end;
 
 initialization
   RegisterClass(TTableDataForm);
-  TRegister.AddType<TTableDataForm, IForm>.LiveTime(ltSingletonNamed);
+  TRegister.AddType<TTableDataForm, IForm, INotifyClientBeforeRemove>.LiveTime(ltSingletonNamed);
 finalization
   GContainer.RemoveModel<TTableDataForm>;
 end.

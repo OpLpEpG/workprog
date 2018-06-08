@@ -366,7 +366,7 @@ type
   TCustomDataLink = class(TDataSetFactory, IDataLink, ICaption)
   private
     FOwner: TGraphPar;
-    FIDataSet: IDataSet;
+   // FIDataSet: IDataSet;
 //    FDataSetDef: TIDataSetDef;
     FXParamPath: string;
     FYParamPath: string;
@@ -405,6 +405,8 @@ type
     property FieldX: TField read GetXField write FFieldX;
     property FieldY: TField read GetYField write FFieldY;
     property XFieldDef: TFieldDef read GetXFieldDef write FXFieldDef;
+    property BufferFileName: string read GenerateBufferFileName;
+
     /// <summary>
     /// Live Bind last write Size ib Bytes
     /// </summary>
@@ -1744,7 +1746,7 @@ end;
 
 procedure TCustomDataLink.NillDataSet;
 begin
-  FIDataSet := nil;
+  //FIDataSet := nil;
   FFieldX := nil;
   FFieldY := nil;
   FXFieldDef := nil;

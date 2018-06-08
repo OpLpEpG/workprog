@@ -2,7 +2,7 @@ unit Plot.DataLink;
 
 interface
 
-uses IDataSets,
+uses IDataSets, Container,
      System.SysUtils, ExtendIntf, System.Rtti, System.TypInfo, Data.DB, System.Classes,  debug_except, DataSetIntf, FileDataSet,
      CustomPlot, LasDataSet, XMLDataSet, FileCachImpl, Parser, Winapi.ActiveX;
 

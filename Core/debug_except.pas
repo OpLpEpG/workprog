@@ -14,28 +14,30 @@ type
     constructor CreateFmt(const Msg: string; const Args: array of const);
   end;
   ENeedDialogException = class(EBaseException);
-  ENoDialogException = class(EBaseException);
+  ENoStackException = class(EBaseException);
   EHiddenException = class(EBaseException);
 
   TAsyncException = procedure (const ClassName, msg, StackTrace: WideString) of object;
 
   TDebug = class(TObject)
   private
-   type
-         TRaiseProc = procedure (dwExceptionCode, dwExceptionFlags, nNumberOfArguments: DWORD; lpArguments: PDWORD); stdcall;
-         THanldleAutoException = function (excPtr: PExceptionRecord; errPtr: Pointer; ctxPtr: Pointer; dspPtr: Pointer): DWord; stdcall;
+//   type
+//         TRaiseProc = procedure (dwExceptionCode, dwExceptionFlags, nNumberOfArguments: DWORD; lpArguments: PDWORD); stdcall;
+//         THanldleAutoException = function (excPtr: PExceptionRecord; errPtr: Pointer; ctxPtr: Pointer; dspPtr: Pointer): DWord; stdcall;
    const GUID_DefaultErrorSource: TGUID = '{EFA9AA52-4A4E-4007-85D8-5F46CB65C426}';
-         cDelphiException: DWord = $EEDFADE;
-         PHanldleAutoException: Pointer = Pointer($500409A0);
-   class var IsInit: Boolean;
+//         cDelphiException: DWord = $EEDFADE;
+//         PHanldleAutoException: Pointer = Pointer($500409A0);
+//   class var IsInit: Boolean;
    class var FjclDbgInfo: TStrings;
-   class var PrevRaiseExceptionProc: Pointer;
+//   class var PrevRaiseExceptionProc: Pointer;
    class var HandlingAutoException: boolean;
-   class var CSRaiseException: TRTLCriticalSection;
+//   class var CSRaiseException: TRTLCriticalSection;
+   class constructor Create;
+   class destructor Destroy;
   public
    class var ExeptionEvent: TAsyncException;
-   class procedure Init;
-   class procedure DeInit;
+//   class procedure Init;
+//   class procedure DeInit;
    class function GetStack(): string;
    ///	<summary>
    ///	  Если нужно скрыть диалог исключения
@@ -130,8 +132,7 @@ threadvar
 //   end;
 //end;
 //{$O+}
-
-class procedure TDebug.Init;
+{(class procedure TDebug.Init;
 begin
   if not IsInit then
    begin
@@ -145,7 +146,7 @@ begin
 //    Include(JclStackTrackingOptions,  stRawMode);
     JclStartExceptionTracking;
    end;
-end;
+end;}
 
 class procedure TDebug.Log(const DebugMessage: string; const Args: array of const);
  var
@@ -162,7 +163,28 @@ begin
   {$ENDIF}
 end;
 
-class procedure TDebug.DeInit;
+class constructor TDebug.Create;
+begin
+  Log('     ----- TDebug.Init ------    ');
+//  InitializeCriticalSection(CSRaiseException);
+//  PrevRaiseExceptionProc := RaiseExceptionProc;
+  HandlingAutoException := False;
+//  IsInit := True;
+  FjclDbgInfo := TStringList.Create;
+  Include(JclStackTrackingOptions, stAllModules);
+//    Include(JclStackTrackingOptions,  stRawMode);
+  JclStartExceptionTracking;
+end;
+
+class destructor TDebug.Destroy;
+begin
+  JclStopExceptionTracking;
+  FjclDbgInfo.Free;
+//    DeleteCriticalSection(CSRaiseException);
+  Log('   ---- TDebug.DeInit ----   ');
+end;
+
+{class procedure TDebug.DeInit;
 begin
   if IsInit then
    begin
@@ -172,7 +194,7 @@ begin
     DeleteCriticalSection(CSRaiseException);
     Log('   ---- TDebug.DeInit ----   ');
    end;
-end;
+end;}
 
 class function TDebug.GetStack: string;
  var
@@ -245,15 +267,18 @@ begin
   Result := Assigned(ExeptionEvent);
   if Result then
    begin
-    if (E is EOleException) and (EOleException(E).HelpFile <> '') then ExeptionEvent(EOleException(E).Source, E.Message, EOleException(E).HelpFile)
+    if E is ENeedDialogException then Exit(False)
+    else if E is EHiddenException then Exit(True)
+    else if E is ENoStackException then ExeptionEvent(E.ClassName, E.Message, '')
+    else if (E is EOleException) and (EOleException(E).HelpFile <> '') then ExeptionEvent(EOleException(E).Source, E.Message, EOleException(E).HelpFile)
 //    else if ShoNoSafe then ExeptionEvent('[НЕ safe]'+E.ClassName, E.Message, GetStack())
          else ExeptionEvent(E.ClassName, E.Message, GetStack())
    end;
 end;
 {$ENDREGION  TDebug}
 
-initialization
-  TDebug.Init;
-finalization
-  TDebug.DeInit;
+//initialization
+//  TDebug.Init;
+//finalization
+//  TDebug.DeInit;
 end.

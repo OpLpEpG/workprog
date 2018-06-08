@@ -24,8 +24,6 @@ object FormAGK: TFormAGK
     Caption = 'PanelM'
     ShowCaption = False
     TabOrder = 0
-    ExplicitWidth = 870
-    ExplicitHeight = 311
     object Splitter: TSplitter
       Left = 537
       Top = 0
@@ -41,7 +39,6 @@ object FormAGK: TFormAGK
       Align = alBottom
       Alignment = taCenter
       AutoSize = False
-      WordWrap = True
       ExplicitTop = 402
     end
     object lbAlpha: TLabel
@@ -51,7 +48,6 @@ object FormAGK: TFormAGK
       Height = 13
       Align = alBottom
       AutoSize = False
-      WordWrap = True
       ExplicitTop = 377
     end
     object Tree: TVirtualStringTree
@@ -71,7 +67,6 @@ object FormAGK: TFormAGK
       TreeOptions.SelectionOptions = [toFullRowSelect]
       OnAddToSelection = TreeAddToSelection
       OnGetText = TreeGetText
-      ExplicitHeight = 285
       Columns = <
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
@@ -168,9 +163,6 @@ object FormAGK: TFormAGK
       Zoom.Pen.Mode = pmNotXor
       Align = alClient
       TabOrder = 1
-      ExplicitLeft = 456
-      ExplicitWidth = 413
-      ExplicitHeight = 285
       DefaultCanvas = 'TTeeCanvas3D'
       PrintMargins = (
         15

@@ -2,12 +2,12 @@ unit VCL.GraphDataForm;
 
 interface
 
-uses  VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls, Data.DB, XMLDataSet, RootIntf,
+uses  VCL.CustomDataForm, Container, ExtendIntf, Actns, plot.GR32, plot.Controls, Data.DB, XMLDataSet, RootIntf,  FileCachImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RootImpl, CustomPlot;
 
 type
-  TGraphDataForm = class(TCustomFormData, INotifyCanClose)
+  TGraphDataForm = class(TCustomFormData, INotifyCanClose, INotifyClientBeforeRemove)
     Graph: TGraph;
     procedure GraphParamsAdded(d: TDataSet);
     procedure FormShow(Sender: TObject);
@@ -22,6 +22,7 @@ type
     procedure Loaded; override;
     class function ClassIcon: Integer; override;
     procedure CanClose(var CanClose: Boolean);
+    procedure ClientBeforeRemove(Service: ServiceType; ClientName: string);
   public
     [StaticAction('Новый график', 'Окна визуализации', NICON, '0:Показать.Окна визуализации')]
     class procedure DoCreateForm(Sender: IAction); override;
@@ -42,6 +43,31 @@ end;
 class function TGraphDataForm.ClassIcon: Integer;
 begin
   Result := NICON;
+end;
+
+procedure TGraphDataForm.ClientBeforeRemove(Service: ServiceType; ClientName: string);
+var
+  c: TGraphColmn;
+  p: TGraphPar;
+  i: Integer;
+  br: INotifyClientBeforeRemove;
+begin
+  Graph.Frost;
+  try
+  for c in Graph.Columns do
+   for i := c.Params.Count-1 downto 0 do if (c.Params[i].Link.DataSet is TXMLDataSet) then
+    begin
+     p := c.Params[i];
+     if  (SameText(ClientName, TXMLDataSet(p.Link.DataSet).BinFileName)
+         or SameText(ClientName, TXMLDataSet(p.Link.DataSet).CLCFileName)) then
+      begin
+       (GContainer as IProjectDataFile).TmpFileNeedDelete(p.Link.BufferFileName);
+       p.Free;
+      end;
+     end;
+  finally
+   Graph.DeFrost;
+  end;
 end;
 
 class procedure TGraphDataForm.DoCreateForm(Sender: IAction);
@@ -103,7 +129,7 @@ end;
 
 initialization
   RegisterClass(TGraphDataForm);
-  TRegister.AddType<TGraphDataForm, IForm>.LiveTime(ltSingletonNamed);
+  TRegister.AddType<TGraphDataForm, IForm, INotifyClientBeforeRemove>.LiveTime(ltSingletonNamed);
 finalization
   GContainer.RemoveModel<TGraphDataForm>;
 end.

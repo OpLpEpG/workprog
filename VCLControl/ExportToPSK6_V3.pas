@@ -30,6 +30,7 @@ type
     procedure btExitClick(Sender: TObject);
     procedure btStartClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   public
    type
     TFldRec = record
@@ -50,6 +51,7 @@ type
   protected
     function Priority: Integer; override;
   private
+    FbadData: Boolean;
     rams: TArray<IDataSet>;
     acr: TArray<TCheckRec>;
     Fterminate: Boolean;
@@ -402,7 +404,7 @@ begin
   StRec(rams[3], RM_BK,   acr[3]);
   /// инициализация имен Ranger
   Open;
-  lc := 1; 
+  lc := 1;
   fc := Integer.MaxValue;
   for I := 0 to High(rams) do if Assigned(rams[i]) then
    begin
@@ -417,12 +419,18 @@ begin
     if not CheckKadrID(acr[i].LastKadr, acr[i].LastKadrID) then acr[i].LastKadr := acr[i].LastKadrID;
     lc := max(lc, acr[i].LastKadr);
    end;
-  if fc > lc then 
-   begin 
-    RangeSelect.Init(1, 0, 1, (GContainer as IProjectOptions).DelayStart);
-    raise Exception.Create('Какие-либо данные для экспорта в ПСК6 отсутствуют !!!');
+  if fc > lc then
+   begin
+//    RangeSelect.Init(1, 0, 1, (GContainer as IProjectOptions).DelayStart);
+    FbadData := True;
+    raise ENeedDialogException.Create('Какие-либо данные для экспорта в ПСК6 отсутствуют !!!');
    end;
   RangeSelect.Init(1, fc, lc, (GContainer as IProjectOptions).DelayStart);
+end;
+
+procedure TFormExportToPSK6_V3.FormShow(Sender: TObject);
+begin
+  if FbadData then btExitClick(Self);
 end;
 
 function TFormExportToPSK6_V3.Priority: Integer;

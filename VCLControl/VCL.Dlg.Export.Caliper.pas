@@ -208,13 +208,13 @@ function TFormDlgExportCaliper.Execute(Res: TDialogResult): Boolean;
        Result := n.ChildNodes.FindNode(T_RAM);
        if Assigned(Result) and Result.HasAttribute(AT_FILE_NAME) then Exit(Result);
       end;
-   raise EBaseException.Create('Нет считанных данных или модуля профилемера!!!');
+   raise ENeedDialogException.Create('Нет считанных данных или модуля профилемера!!!');
   end;
  var
   i: Integer;
 begin
   TXMLDataSet.Get(getCal, FIDataSet);
-  if not Assigned(FIDataSet) then raise EBaseException.Create('Нет базы данных профилемера!!!');
+  if not Assigned(FIDataSet) then raise ENeedDialogException.Create('Нет базы данных профилемера!!!');
   FXDataSet := FIDataSet.DataSet as TXMLDataSet;
   FXDataSet.Open;
   FXDataSet.DisableControls;

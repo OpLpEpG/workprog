@@ -14,6 +14,7 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
   OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
+  OnShow = FormShow
   DesignSize = (
     295
     235)

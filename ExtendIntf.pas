@@ -196,6 +196,7 @@ type
     function DataFileExists(Root: IXMLNode; const SubDir: string = ''; const SubName: string = ''): Boolean;
     procedure DataSectionDelete(Root: IXMLNode);
     procedure DeviceDataDelete(Dev: IDevice);
+    procedure TmpFileNeedDelete(const Fname: string);
     procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
     procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen, CurAdr, CurKadr: Integer; CurTime: TDateTime);
     procedure SaveEnd(Data: IXMLInfo);
@@ -668,6 +669,12 @@ type
   INotifyBeforeRemove = interface
   ['{C7DBD4A9-C19D-40C6-9D71-672586F9E409}']
    procedure BeforeRemove();
+  end;
+
+
+  INotifyClientBeforeRemove = interface
+  ['{214F9A3A-BF6E-4A4F-B423-06FB25CAB5B5}']
+   procedure ClientBeforeRemove(Service: ServiceType; ClientName: string);
   end;
 
   ///	<summary>

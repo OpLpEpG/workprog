@@ -37,7 +37,6 @@ object FormGK: TFormGK
       Height = 13
       Align = alBottom
       Alignment = taCenter
-      WordWrap = True
       ExplicitWidth = 3
     end
     object lbAlpha: TLabel
@@ -46,7 +45,6 @@ object FormGK: TFormGK
       Width = 670
       Height = 13
       Align = alBottom
-      WordWrap = True
       ExplicitWidth = 3
     end
     object Tree: TVirtualStringTree

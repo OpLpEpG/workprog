@@ -127,9 +127,9 @@ procedure TFormExportLASP3.btOKClick(Sender: TObject);
   mnem, eu, desc, aq: string;
   v: array of Variant;
 begin
-  if Length(flds) = 0 then raise Exception.Create('Не выбраны параметры');
-  if od.FileName = '' then raise Exception.Create('Не выбран файл');
-  if not Assigned(ids) then raise Exception.Create('Не выбран файл');
+  if Length(flds) = 0 then raise ENeedDialogException.Create('Не выбраны параметры');
+  if od.FileName = '' then raise ENeedDialogException.Create('Не выбран файл');
+  if not Assigned(ids) then raise ENeedDialogException.Create('Не выбран файл');
   from := RangeSelect.kadr.first;
   last := RangeSelect.kadr.last;
   il := NewLasDoc();

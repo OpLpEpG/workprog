@@ -1306,7 +1306,7 @@ procedure TPskStd.FlowDataEvent(Res: boolean; DataB: PByte; DataSize: integer);
     ww := FWorkLen div 2;
     if FSpHi = 0 then
      begin
-      if (Data[0] = 0) and (FcheckSP or ((FWorkLen+2 <= cnt) and (Data[ww] = 0))) then
+      if (Data[0] = 0) and (FWorkLen <= cnt) and (FcheckSP or ((FWorkLen+2 <= cnt) and (Data[ww] = 0))) then
        begin
         Result := True;
         FcheckSP := True;
@@ -1338,24 +1338,27 @@ begin
        begin
         FICount := 0;
         FcheckSP := False;
+      //  TDebug.Log('-1 FICount > FWorkLen*8==========   FICount:%d   FWorkLen:%d =============',[cio.FICount, FWorkLen]);
        end;
+      // TDebug.Log('-1 ==========   FICount:%d   FWorkLen:%d =============',[cio.FICount, FWorkLen]);
      end;
    end
   else
    try
       i := 0;
-      while (i < cio.FICount-1) and (cio.FICount >= FWorkLen*2) do if TestSP(@cio.FInput[i], cio.FICount-i) then
+      while (i < cio.FICount) and (cio.FICount >= FWorkLen) do if TestSP(@cio.FInput[i], cio.FICount-i) then
      // if (DataSize >= FWorkLen) and TestSP(@DataB[0], DataSize) then  // пашин вакиант
        begin
         with cio do
          begin
           Move(FInput[i], FWorkInput[0], FWorkLen);
-          Move(FInput[FWorkLen+i], FInput[0], FWorkLen+i);
           Dec(FICount, FWorkLen+i);// cio.FICount >= FWorkLen*2 !!!!
+          Move(FInput[FWorkLen+i], FInput[0], FICount);
+       //   TDebug.Log('SP========i:%d   FICount:%d   FWorkLen:%d =============',[i, FICount, FWorkLen]);
           i := 0;
          end;
         TPars.SetPsk(FWorkEventInfo.Work, @FWorkInput[0]);
-       // TDebug.Log(FWorkEventInfo.Work.OwnerDocument.FileName);
+        TDebug.Log(FWorkEventInfo.Work.OwnerDocument.FileName);
 
         FWorkEventInfo.DevAdr := FAddressArray[0];
         try
@@ -1370,7 +1373,11 @@ begin
          Notify('S_WorkEventInfo');
         end;
        end
-       else Inc(i);
+       else
+         begin
+          Inc(i);
+        //  TDebug.Log('==========i:%d   FICount:%d   FWorkLen:%d =============',[i, cio.FICount, FWorkLen]);
+         end;
    finally
     WaitRxData(FlowDataEvent);
    end;

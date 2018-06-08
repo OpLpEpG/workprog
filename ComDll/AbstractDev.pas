@@ -15,7 +15,7 @@ type
 
 {$REGION 'AbstractConnect'}
   TDevice = class;
-  EConnectIOException = class(EBaseException);
+  EConnectIOException = class(ENoStackException);
     EAsyncConnectIOException = class(EConnectIOException);
 
   TAbstractConnectIO = class;
@@ -127,7 +127,7 @@ type
 //  TRamReadInfoClass = class of TRamReadInfo;
 
   // Класс от которого происходят все считыватели памати приборов
-  EReadRamException = class(EBaseException);
+  EReadRamException = class(ENeedDialogException);
     EAsyncReadRamException = class(EReadRamException);
   TReadRam = class(TAggObject)
   private
@@ -257,7 +257,7 @@ type
 
 {$REGION 'Device'}
 
-  EDeviceException = class(EBaseException);
+  EDeviceException = class(ENoStackException);
    EAsyncDeviceException = class(EDeviceException);
   TDevice = class(TIComponent, ICaption, IDevice, ILowLevelDeviceIO)
   private
@@ -458,6 +458,9 @@ type
     procedure InnerClose;
 //    procedure OnComClose(Sender: TObject);
     procedure ComRxChar(Sender: TObject; Count: Integer);
+    procedure ComPortCloseException(Sender:TObject;
+                          TComException:TComExceptions; ComportMessage:String;
+                          WinError:Int64; WinMessage:String);
     procedure ComPortException(Sender:TObject;
                           TComException:TComExceptions; ComportMessage:String;
                           WinError:Int64; WinMessage:String);
@@ -1149,23 +1152,30 @@ begin
   Fcom.TriggersOnRxChar := True;
   Fcom.OnRxChar := ComRxChar;
   Fcom.Port := FConnectInfo;
+  FCom.OnException := ComPortException;
 //  Fcom.Timeouts.ReadInterval := 200;
 end;
 
 procedure TComConnectIO.InnerClose;
 begin
  // FCom.OnRxChar := nil;
-  FCom.OnException := ComPortException;
+  FCom.OnException := ComPortCloseException;
   FCloseErrNessage := '';
   FCom.Close;
-  FCom.OnException := nil;
+  FCom.OnException := ComPortException;
   inherited Close;
+end;
+
+procedure TComConnectIO.ComPortCloseException(Sender: TObject; TComException: TComExceptions; ComportMessage: String; WinError: Int64; WinMessage: String);
+begin
+  FCloseErrNessage := ComportMessage + '  '+ WinMessage;
+  S_Status := FStatus + [iosError];
 end;
 
 procedure TComConnectIO.ComPortException(Sender: TObject; TComException: TComExceptions; ComportMessage: String; WinError: Int64; WinMessage: String);
 begin
-  FCloseErrNessage := ComportMessage + '  '+ WinMessage;
   S_Status := FStatus + [iosError];
+  raise EComConnectIOException.Create(ComportMessage + ' ['+WinError.ToString +'] '+ WinMessage);
 end;
 
 destructor TComConnectIO.Destroy;
@@ -1249,13 +1259,13 @@ end;
 procedure TComConnectIO.Open;
 begin
   if Fcom.Connected then raise EComConnectIOException.CreateFmt(RS_NeedClosePort, [Fcom.Port]);
-  try
+//  try
    Fcom.Open;
    inherited Open;
-  except
-   S_Status := FStatus + [iosError];
-   raise
-  end;
+//  except
+//   S_Status := FStatus + [iosError];
+//   raise
+//  end;
 end;
 procedure TComConnectIO.CheckOpen;
 begin

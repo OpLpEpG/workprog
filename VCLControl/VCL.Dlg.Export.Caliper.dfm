@@ -95,14 +95,13 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     Left = 8
     Top = 72
     Width = 273
-    Height = 113
+    Height = 122
     Anchors = [akLeft, akTop, akRight]
     AutoSize = True
     TabOrder = 7
     ExplicitLeft = 8
     ExplicitTop = 72
     ExplicitWidth = 273
-    ExplicitHeight = 113
     inherited Range: TRangeSelector
       Width = 273
       ExplicitWidth = 273

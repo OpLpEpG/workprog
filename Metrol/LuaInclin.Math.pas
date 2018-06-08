@@ -10,7 +10,7 @@ uses  Vector,
        tools, debug_except, MathIntf, Xml.XMLIntf, ExtendIntf;
 
 type
-  EExportReportException = class(EBaseException);
+  EExportReportException = class(ENeedDialogException);
 
   TRollData = array[0..35] of Double;
   TResultSolvRoll = record

@@ -15,7 +15,8 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
    T_FILES = 'FILES';
 
  type
-  EManagerexception = class(EBaseException);
+  EManagereNoDlgxception = class(EBaseException);
+  EManagerexception = class(ENeedDialogException);
 
   TManager = class(TAbstractPlugin,
                                IManager, IManagerEx,
@@ -31,6 +32,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
 //    FDelayStatus: DelayStatus;
    // FDBConnection: IDBConnection;
     FC_TableUpdate: string;
+    FtmpFiles: TStrings;
 
 //    FSQLMonitor: TSQLMonitor;
 //    DbgMon: TFDMoniRemoteClientLink;
@@ -71,8 +73,10 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
     procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen, CurAdr, CurKadr: Integer; CurTime: TDateTime);
     procedure SaveEnd(Data: IXMLInfo);
     function DataFileExists(Root: IXMLNode; const SubDir: string = ''; const SubName: string = ''): Boolean;
+    procedure DeleteFiles(const dir: string);
     procedure DataSectionDelete(Root: IXMLNode);
     procedure DeviceDataDelete(Dev: IDevice);
+    procedure TmpFileNeedDelete(const Fname: string);
     function ConstructDataDir(Root: IXMLNode; NeedCreate: Boolean = True; const SubDir: string = ''): string;
     function ConstructDataFileName(Root: IXMLNode; const SubName: string = ''): string;
 
@@ -111,7 +115,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
     class var This: TManager;
     class function ProjectDir: string;
     constructor Create; override;
-//    destructor Destroy; override;
+    destructor Destroy; override;
     class function PluginName: string; override;
 
     property Option[const Name: string]: Variant read GetOption write SetOption;
@@ -211,17 +215,19 @@ end;
 constructor TManager.Create;
 begin
   inherited;
+  FtmpFiles := TStringList.Create;
   This := Self;
 //  DbgMon := TADMoniRemoteClientLink.Create(nil);
 //  TDebug.Log('----------- TManager.Create ---------------------');
 end;
 
-{destructor TManager.Destroy;
+destructor TManager.Destroy;
 begin
-  TDebug.Log('----------- TManager.Destroy ---------------------');
-  DbgMon.Free;
+  FtmpFiles.Free;
+//  TDebug.Log('----------- TManager.Destroy ---------------------');
+//  DbgMon.Free;
   inherited;
-end;}
+end;
 
 function TManager.GetProjectDefaultExt: string;
 begin
@@ -249,6 +255,36 @@ begin
   except
    Result := Double(v);
   end;
+end;
+
+procedure TManager.DeleteFiles(const dir: string);
+  procedure FindFiles(const DirPath: string);
+   var
+    SR: TSearchRec;
+  begin
+    if FindFirst(DirPath + '*.*', faAnyFile, SR) = 0 then
+    try
+     repeat
+      if not ((SR.Name = '.') or (SR.Name = '..')) then
+       if SR.Attr = faDirectory then
+        FindFiles(DirPath + SR.Name + '\')
+       else
+        GFileDataFactory.Destroy(DirPath + SR.Name);
+     until FindNext(SR) <> 0;
+    finally
+     FindClose(SR);
+    end;
+  end;
+  var
+   s: string;
+begin
+  if TDirectory.Exists(dir) then
+   begin
+    FtmpFiles.Clear;
+    FindFiles(dir);
+    for s in FtmpFiles do if TFile.Exists(s) then TFile.Delete(s);
+    FtmpFiles.Clear;
+   end;
 end;
 
 procedure TManager.CheckMetrol(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: Tarray<string>; out Metr: IXMLNode);
@@ -574,8 +610,6 @@ begin
 end;
 
 procedure TManager.DataSectionDelete(Root: IXMLNode);
- var
-  dir: string;
   procedure RemoveIfile;
    var
     f: IFileData;
@@ -586,30 +620,53 @@ procedure TManager.DataSectionDelete(Root: IXMLNode);
     f := nil;
    end;
   end;
+  var
+   dir : string;
 begin
-  RemoveIfile;
   dir := ConstructDataDir(Root, False);
-  if TDirectory.Exists(dir) then TDirectory.Delete(dir, True);
-  if TDirectory.Exists(dir) then raise Exception.Create('Немогу удалить директорию '+ dir);
-
+  RemoveIfile;
+  DeleteFiles(dir);
   RemoveXMLAttr(Root, AT_FILE_NAME);
+  TDirectory.Delete(dir, True);
+  if TDirectory.Exists(dir) then raise EManagerexception.Create('Немогу удалить директорию '+ dir);
 end;
 
 
 procedure TManager.DeviceDataDelete(Dev: IDevice);
  var
-  dir: string;
   dd: IDataDevice;
   i: IXMLInfo;
+  dir: string;
+  de: IDeviceEnum;
+  procedure RemoveIfile(const Section: string);
+   var
+    f: IFileData;
+    Root, dv: IXMLNode;
+  begin
+    for dv in XEnum(i) do
+     begin
+      Root := dv.ChildNodes.FindNode(Section);
+      if XSupport(Root, IFileData , f) then
+       begin
+        (Root as IOwnIntfXMLNode).Intf := nil;
+        f := nil;
+       end;
+     end;
+  end;
 begin
   if not Supports(Dev, IDataDevice, dd) then Exit;
   i := dd.GetMetaData.Info;
 //  dd.ClearMetaData;
   if not Assigned(i) then Exit;
-  dir := TPath.GetDirectoryName(i.OwnerDocument.FileName)+'\'+ i.NodeName;
+  dir := TPath.GetDirectoryName(i.OwnerDocument.FileName)+'\'+ i.NodeName + '\';
+  RemoveIfile(T_WRK);
+  RemoveIfile(T_RAM);
+  DeleteFiles(dir);
   i := nil;
-  if TDirectory.Exists(dir) then TDirectory.Delete(dir, True);
-  if TDirectory.Exists(dir) then raise Exception.Create('Немогу удалить директорию '+ dir);
+  if Supports(GlobalCore, IDeviceEnum, de) then de.Remove(Dev);
+
+  TDirectory.Delete(dir, True);
+  if TDirectory.Exists(dir) then raise EManagerexception.Create('Немогу удалить директорию '+ dir);
 end;
 
 class function TManager.ProjectDir: string;
@@ -644,6 +701,11 @@ procedure TManager.SetTableUpdate(const Value: string);
 begin
   FC_TableUpdate := Value;
   Notify('S_TableUpdate');
+end;
+
+procedure TManager.TmpFileNeedDelete(const Fname: string);
+begin
+  FtmpFiles.Add(Fname);
 end;
 
 procedure TManager.LoadProject(const FileName: string; AfterCreateProject: Tproc = nil);

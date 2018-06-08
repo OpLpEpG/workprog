@@ -10,7 +10,7 @@ uses RootIntf,
   System.Bindings.Helper, Vcl.ExtCtrls, Vcl.Mask, JvExMask, JvToolEdit, RangeSelector, VCL.Frame.RangeSelect;
 
 type
-  EFrmDlgRam = class(EBaseException);
+  EFrmDlgRam = class(ENeedDialogException);
   TFormDlgRam = class(TDialogIForm, IDialog, IDialog<IXMLNode, TDialogResult>)
     btStart: TButton;
     btExit: TButton;
@@ -106,9 +106,11 @@ begin
   Result := True;
   TBindHelper.RemoveExpressions(Self);
   FModul := Modul;
-
   ram := FModul.ChildNodes.FindNode(T_RAM);
   if not Assigned(Ram) then raise EFrmDlgRam.CreateFmt('Метаданные RAM %s не найдены', [Fmodul.NodeName]);
+
+  if (XToVar(FModul).WRK.автомат.DEV.VALUE and $3F) < 4 then
+    raise EFrmDlgRam.CreateFmt('Модуль %s не выключен !!! Находится в состоянии [%s].', [Fmodul.NodeName, XToVar(FModul).WRK.автомат.CLC.VALUE]);
 
   if not ram.HasAttribute(AT_RAMSIZE) then RamSize := MAX_RAM
   else if ram.Attributes[AT_RAMSIZE] = 5 then RamSize := MAX_RAM
@@ -317,7 +319,7 @@ procedure TFormDlgRam.inerReadSSD;
   i: Integer;
   ram: IXMLNode;
 begin
-  if cbSD.ItemIndex < 0  then raise Exception.Create('Не выбран диск');
+  if cbSD.ItemIndex < 0  then raise EFrmDlgRam.Create('Не выбран диск');
   ram := FModul.ChildNodes.FindNode(T_RAM);
   CheckRAMFile(ram);  
   if Assigned(FSDStream) then FreeAndNil(FSDStream);

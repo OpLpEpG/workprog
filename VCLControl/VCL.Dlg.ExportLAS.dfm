@@ -27,10 +27,6 @@ object FormExportLASP3: TFormExportLASP3
     object tshSelDir: TTabSheet
       Caption = #1055#1091#1090#1100
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inline FrameSelectPath: TFrameSelectPath
         Left = 0
         Top = 0
@@ -49,7 +45,7 @@ object FormExportLASP3: TFormExportLASP3
             item
               Position = 0
               Style = vsOwnerDraw
-              Width = 316
+              Width = 310
               WideText = #1055#1091#1090#1100
             end>
         end
