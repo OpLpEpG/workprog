@@ -48,7 +48,10 @@
         <Projects Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="..\..\Libs\jvcl\jvcl\packages\d23\JvDocking.dproj">
+        <Projects Include="~alglib_test\alglibtest.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\algliv_test_mlfit\Test_BKS.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -194,23 +197,32 @@
     <Target Name="VCLNNKDAC:Make">
         <MSBuild Projects="VCL_NNK_DAC\VCLNNKDAC.dproj" Targets="Make"/>
     </Target>
-    <Target Name="JvDocking">
-        <MSBuild Projects="..\..\Libs\jvcl\jvcl\packages\d23\JvDocking.dproj"/>
+    <Target Name="alglibtest">
+        <MSBuild Projects="~alglib_test\alglibtest.dproj"/>
     </Target>
-    <Target Name="JvDocking:Clean">
-        <MSBuild Projects="..\..\Libs\jvcl\jvcl\packages\d23\JvDocking.dproj" Targets="Clean"/>
+    <Target Name="alglibtest:Clean">
+        <MSBuild Projects="~alglib_test\alglibtest.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="JvDocking:Make">
-        <MSBuild Projects="..\..\Libs\jvcl\jvcl\packages\d23\JvDocking.dproj" Targets="Make"/>
+    <Target Name="alglibtest:Make">
+        <MSBuild Projects="~alglib_test\alglibtest.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Test_BKS">
+        <MSBuild Projects="..\algliv_test_mlfit\Test_BKS.dproj"/>
+    </Target>
+    <Target Name="Test_BKS:Clean">
+        <MSBuild Projects="..\algliv_test_mlfit\Test_BKS.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Test_BKS:Make">
+        <MSBuild Projects="..\algliv_test_mlfit\Test_BKS.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;VCLControl3;ProjectManager3;ComDev;Monitor;VCLData;VCLDialogs;WorkProg;CreateData;VCLTelesis;bootLoader;Metrol;D3H;VCLeeprom;VCLNNKDAC;JvDocking"/>
+        <CallTarget Targets="Core;VCLControl3;ProjectManager3;ComDev;Monitor;VCLData;VCLDialogs;WorkProg;CreateData;VCLTelesis;bootLoader;Metrol;D3H;VCLeeprom;VCLNNKDAC;alglibtest;Test_BKS"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;VCLControl3:Clean;ProjectManager3:Clean;ComDev:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;WorkProg:Clean;CreateData:Clean;VCLTelesis:Clean;bootLoader:Clean;Metrol:Clean;D3H:Clean;VCLeeprom:Clean;VCLNNKDAC:Clean;JvDocking:Clean"/>
+        <CallTarget Targets="Core:Clean;VCLControl3:Clean;ProjectManager3:Clean;ComDev:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;WorkProg:Clean;CreateData:Clean;VCLTelesis:Clean;bootLoader:Clean;Metrol:Clean;D3H:Clean;VCLeeprom:Clean;VCLNNKDAC:Clean;alglibtest:Clean;Test_BKS:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;VCLControl3:Make;ProjectManager3:Make;ComDev:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;WorkProg:Make;CreateData:Make;VCLTelesis:Make;bootLoader:Make;Metrol:Make;D3H:Make;VCLeeprom:Make;VCLNNKDAC:Make;JvDocking:Make"/>
+        <CallTarget Targets="Core:Make;VCLControl3:Make;ProjectManager3:Make;ComDev:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;WorkProg:Make;CreateData:Make;VCLTelesis:Make;bootLoader:Make;Metrol:Make;D3H:Make;VCLeeprom:Make;VCLNNKDAC:Make;alglibtest:Make;Test_BKS:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='Main'">
@@ -220,17 +232,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
-            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Core\Core.dproj">
+            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -243,12 +255,6 @@
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\jvcl\jvcl\packages\d23\JvDocking.dproj">
-            <ProjectGuid>{45F663F1-EF6E-436F-AE8A-85B96C6EE41E}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="Metrol\Metrol.dproj">
             <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
@@ -267,6 +273,12 @@
             <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="~alglib_test\alglibtest.dproj">
+            <ProjectGuid>{C1BE7FA5-E0C8-4A7A-9AB5-AE5DE3BDC090}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCLEEPROM\VCLeeprom.dproj">
             <ProjectGuid>{56F0A71C-1450-497A-98B7-BFA1C4C3FA12}</ProjectGuid>
@@ -292,22 +304,28 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\algliv_test_mlfit\Test_BKS.dproj">
+            <ProjectGuid>{7EA50A48-D127-418A-A99C-D855DB56E1DA}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ComDll\ComDev.dproj">
-            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Core\Core.dproj">
-            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
     </ItemGroup>
@@ -318,17 +336,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
-            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+        <BuildGroupProject Include="Core\Core.dproj">
+            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
             <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
@@ -341,12 +359,6 @@
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\jvcl\jvcl\packages\d23\JvDocking.dproj">
-            <ProjectGuid>{45F663F1-EF6E-436F-AE8A-85B96C6EE41E}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="Metrol\Metrol.dproj">
             <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
@@ -365,6 +377,12 @@
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="~alglib_test\alglibtest.dproj">
+            <ProjectGuid>{C1BE7FA5-E0C8-4A7A-9AB5-AE5DE3BDC090}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCLEEPROM\VCLeeprom.dproj">
             <ProjectGuid>{56F0A71C-1450-497A-98B7-BFA1C4C3FA12}</ProjectGuid>
@@ -390,20 +408,26 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\algliv_test_mlfit\Test_BKS.dproj">
+            <ProjectGuid>{7EA50A48-D127-418A-A99C-D855DB56E1DA}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
             <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Core\Core.dproj">
-            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="ComDll\ComDev.dproj">
-            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -416,15 +440,15 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
-            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
+        <BuildGroupProject Include="ComDll\ComDev.dproj">
+            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
-            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
-            <Configurations>Debug</Configurations>
+        <BuildGroupProject Include="Core\Core.dproj">
+            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
+            <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
@@ -439,12 +463,6 @@
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\jvcl\jvcl\packages\d23\JvDocking.dproj">
-            <ProjectGuid>{45F663F1-EF6E-436F-AE8A-85B96C6EE41E}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="Metrol\Metrol.dproj">
             <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
@@ -463,6 +481,12 @@
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="~alglib_test\alglibtest.dproj">
+            <ProjectGuid>{C1BE7FA5-E0C8-4A7A-9AB5-AE5DE3BDC090}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCLEEPROM\VCLeeprom.dproj">
             <ProjectGuid>{56F0A71C-1450-497A-98B7-BFA1C4C3FA12}</ProjectGuid>
@@ -488,23 +512,29 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="..\algliv_test_mlfit\Test_BKS.dproj">
+            <ProjectGuid>{7EA50A48-D127-418A-A99C-D855DB56E1DA}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCL_NNK_DAC\VCLNNKDAC.dproj">
+            <ProjectGuid>{D019B19E-56D7-43F7-ACA3-8EE752A0977F}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
             <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
             <Configurations/>
             <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ComDll\ComDev.dproj">
-            <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
+        <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
+            <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Core\Core.dproj">
-            <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
     </ItemGroup>
 </Project>

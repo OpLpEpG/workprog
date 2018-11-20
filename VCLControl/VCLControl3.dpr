@@ -30,7 +30,8 @@ uses
   VCL.Dlg.Export.Caliper in 'VCL.Dlg.Export.Caliper.pas' {FormDlgExportCaliper},
   VCL.Dlg.Clc in 'VCL.Dlg.Clc.pas' {FormDlgClc},
   VCL.Frame.RangeSelect in 'VCL.Frame.RangeSelect.pas' {FrameRangeSelect: TFrame},
-  VCL.Dlg.ExportLAS in 'VCL.Dlg.ExportLAS.pas' {FormExportLASP3};
+  VCL.Dlg.ExportLAS in 'VCL.Dlg.ExportLAS.pas' {FormExportLASP3},
+  FormDlgSetupProject in 'FormDlgSetupProject.pas' {FormSetupProject};
 
 {$R *.res}
 
@@ -54,7 +55,7 @@ type
   //Capt, Categ: string; AImageIndex: Integer; APaths: string; AHint: string; AAutoCheck AChecked AGroupIndex AEnabled
    [StaticAction('Новый проект...', 'Проект', 16, '0:Файл.Проект|1:0')]
    class procedure DoNewProject(Sender: IAction);
-//   [StaticAction('-Свойства проекта...', 'Проект', 238, '0:Файл.Проект|1:4')]
+   [StaticAction('-Свойства проекта...', 'Проект', 238, '0:Файл.Проект|1:4')]
    class procedure DoZPropertyProject(Sender: IAction);
    [StaticAction('Открыть проект...', 'Проект', 329, '0:Файл.Проект|1:1')]
    class procedure DoOpenProject(Sender: IAction);

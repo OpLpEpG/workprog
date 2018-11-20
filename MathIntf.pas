@@ -44,6 +44,7 @@ type
  	  function FitV(const x, y: PDouble; Len, m: Integer; var info: Integer): HRESULT; stdcall;
     function GetY(x: Double; var y: Double): HRESULT; stdcall;
     function GetLastFitReport(out Rep: PPolynomialFitReport): HRESULT; stdcall;
+    function GetLastPow2(var pow: PDouble): HRESULT; stdcall;
   end;
 
   PComplex = ^TComplex;
@@ -72,8 +73,10 @@ type
  	  function Kmeans(restarts,  maxits, k: Integer;  out cidx: PIntegerArray; out c: IDoubleMatrix; out terminationtype: Integer): HRESULT; stdcall;
   end;
 
-  TDoubleArray  = array[0..$0ffffffe] of Double;
-  PDoubleArray = ^TDoubleArray;
+  //TDoubleArray  = array[0..$0ffffffe] of Double;
+  PDoubleArray = array of Double;
+  PMatrix = array of array of Double;
+
 
   PaeDynBlock = ^TaeDynBlock;
   TaeDynBlock = record
@@ -170,6 +173,7 @@ type
 
 
   TLMFittingCB = procedure(const x, f: PDoubleArray); cdecl;
+  TLMFittingJacCB = procedure(const x, f: PDoubleArray; const jac: PMatrix); cdecl;
 
 {  /*************************************************************************
 Optimization report, filled by MinLMResults() function
@@ -198,6 +202,12 @@ FIELDS:
                   func: TLMFittingCB; out xout: PDoubleArray; out Rep: PLMFittingReport): HRESULT; stdcall;
     function FitV(n, m: Integer; const xin: PDoubleArray; const diffstep, epsg, epsf, epsx: Double; const maxits: Integer;
                   func: TLMFittingCB; out xout: PDoubleArray; out Rep: PLMFittingReport): HRESULT; stdcall;
+    function FitJ(n, m: Integer; const xin: PDoubleArray; const epsx: Double; const maxits: Integer;
+                  func: TLMFittingCB; jac: TLMFittingJacCB;
+                  out xout: PDoubleArray; out Rep: PLMFittingReport): HRESULT; stdcall;
+    function FitJB(n, m: Integer; const xin, bndL, bndU: PDoubleArray; const epsx: Double; const maxits: Integer;
+                  func: TLMFittingCB; jac: TLMFittingJacCB;
+                  out xout: PDoubleArray; out Rep: PLMFittingReport): HRESULT; stdcall;
   end;
 
 {typedef struct

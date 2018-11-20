@@ -20,7 +20,7 @@ uses
   MetrForm in 'MetrForm.pas',
   MetrInclinSetup in 'MetrInclinSetup.pas' {FormInclSetup},
   MetrBK in 'MetrBK.pas' {FormBK},
-  MetrNNK in 'MetrNNK.pas' {FormNNK},
+  MetrGGKP in 'MetrGGKP.pas' {FormGGKP},
   VTEditors in '..\VTEditors.pas',
   MetrUAKI in 'MetrUAKI.pas' {FormUAKI},
   UakiUI in 'UakiUI.pas' {FrameUakiUI: TFrame},
@@ -41,7 +41,8 @@ uses
   MetrAGK in 'MetrAGK.pas' {FormAGK},
   MetrInclin.Temp.Form in 'MetrInclin.Temp.Form.pas' {FormMetrInclinT},
   MetrInclin.CheckForm in 'MetrInclin.CheckForm.pas' {FormInclinCheck},
-  MetrGK in 'MetrGK.pas' {FormGK};
+  MetrGK in 'MetrGK.pas' {FormGK},
+  MetrNNK in 'MetrNNK.pas' {FormNNK};
 
 {$R *.res}
 

@@ -82,13 +82,25 @@ begin
 end;
 
 procedure TFormUAKI.BeforeRemove;
+ var
+  g: IGetDevice;
+  de: IDeviceEnum;
+  d: IDevice;
+  a: TAddressArray;
+  u: IUaki;
 begin
-  (Uaki as ICycle).Cycle := False;
-  while (Uaki as ICycle).Cycle do
+  u := Uaki;
+  (u as ICycle).Cycle := False;
+  while (u as ICycle).Cycle do
    begin
 //    TDebug.Log('%s', ['--------------------------NOP---------------------']);
     Application.ProcessMessages;
    end;
+//  if  Supports(GlobalCore, IDeviceEnum, de) then
+//   begin
+//    TBindHelper.RemoveExpressions(u.GetComponent);
+//    de.Remove(u);
+//   end;
 end;
 
 procedure TFormUAKI.btGoClick(Sender: TObject);

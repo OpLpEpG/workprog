@@ -9,26 +9,22 @@ Index file=Index.hhk
 Language=0x419 Русский (Россия)
 Title=Помощь по программе
 
-
 [FILES]
 help.htm
+Moduls.htm
 Metrol\Metrology.htm
 Metrol\Metrology.Inclin.htm
 Devices\IO.htm
 Project\Progect.htm
 Project\ReadRam.htm
-Moduls.htm
 Devices\Devices.htm
-Алгоритм Работы(Профилемер).htm
 Project\View.htm
 Project\Export.htm
 Project\Delay.htm
+Алгоритм Работы(Профилемер).htm
 
 [ALIAS]
 #include Alias.h
 
 [MAP]
 #include Map.h
-
-[INFOTYPES]
-

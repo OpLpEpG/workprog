@@ -44,6 +44,7 @@ type
     NClc: TMenuItem;
     NeepEdit: TMenuItem;
     NMetrolExport: TMenuItem;
+    NRamSize: TMenuItem;
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure NUpdateClick(Sender: TObject);
     procedure ppMPopup(Sender: TObject);
@@ -61,9 +62,11 @@ type
     procedure NeepCmpClick(Sender: TObject);
     procedure NMetrolTestClick(Sender: TObject);
     procedure NMetrolImportClick(Sender: TObject);
+    procedure NRamSizeClick(Sender: TObject);
   private
     FEditData: PNodeExData;
     FEditNode: PVirtualNode;
+//    FKadrLen: Integer;
 
     FDummi: string;
     FProject: string;
@@ -99,6 +102,7 @@ type
     procedure ViewRamData(Root: PVirtualNode; node: IXMLNode);
     procedure ViewWrkData(Root: PVirtualNode; node: IXMLNode);
     procedure ViewMetrData(Root: PVirtualNode; node: IXMLNode);
+    procedure UpdateTextFunc_SetRamSize(xd: PNodeExData; Column: Integer);
     procedure UpdateTextFunc_Metr_File(xd: PNodeExData; Column: Integer);
     procedure UpdateTextFunc_Metr_MetrData(xd: PNodeExData; Column: Integer);
     procedure SetC_TableUpdate(const Value: string);
@@ -132,13 +136,14 @@ implementation
 uses AbstractPlugin, tools, FormDlgDev;
 
 const
-  AVAIL_ATTR: array[0..4] of string = (AT_ADDR, AT_INFO, AT_SERIAL, AT_CHIP, AT_SPEED);
-  AVAIL_ATTR_Caption: array[0..4] of string = ('Адрес', 'Инфо', 'Серийный номер', 'Чип', 'Маска скорости порта');
+  AVAIL_ATTR: array[0..4] of string = (AT_ADDR, AT_INFO, AT_SERIAL, AT_CHIP, AT_SPEED);//, AT_RAMSIZE);
+  AVAIL_ATTR_Caption: array[0..4] of string = ('Адрес', 'Инфо', 'Серийный номер', 'Чип', 'Маска скорости порта');//, 'Память Мб');
   AVAIL_T: array[0..4] of string = (T_WRK, T_RAM, T_EEPROM, T_GLU, T_MTR);
   AVAIL_T_Caption: array[0..4] of string = ('Режим информации', 'Чтение памяти', 'EEPROM', 'Данные по глубине', 'Метрология');
   //AVAIL_T_Func: array[0..4] of TRunMetrFunc = (TFormControl.ViewWrkData, TFormControl.ViewRamData, nil, nil, TFormControl.ViewMetrData);
   IMG_ATTR = 306;
   CLR_ATTR = TColors.Brown;
+  MAX_T = 'Макс.Вр.Раб.(Сут)';
 
 {$REGION 'TEditor'}
 
@@ -404,6 +409,19 @@ begin
   Bind('C_AddCon', GlobalCore as IConnectIOEnum, ['S_AfterAdd']);
 end;
 
+procedure TFormControl.NRamSizeClick(Sender: TObject);
+  var
+   n: IXMLNode;
+   c: Integer;
+   s: string;
+begin
+  n := FEditData.Item as IXMLNode;
+  c := n.ParentNode.ChildNodes.FindNode(T_WRK).Attributes[AT_SIZE];
+  s := InputBox('Новое время заполнения памяти модуля в сутках', MAX_T, '10');
+  n.Attributes[AT_RAMSIZE] := Round(Int64(CTime.ToKadr(s.ToDouble))*c/1024/1024);
+  TreeUpdate;
+end;
+
 procedure TFormControl.NReadRamClick(Sender: TObject);
  var
   d: Idialog;
@@ -532,7 +550,7 @@ begin
 //     (FEditData.Item as IDataDevice).ClearMetaData;
      //if MessageDlg('Удалить архивные данные ?', mtWarning, [mbYes, mbCancel], 0) = mrYes then
      (GlobalCore as IProjectDataFile).DeviceDataDelete(FEditData.Item as IDevice);
-     de.Remove(FEditData.Item as IDevice);
+    // de.Remove(FEditData.Item as IDevice);
     finally
     end;
    end;
@@ -684,7 +702,8 @@ begin
   else if Supports(FEditData.Item, IXMLNode, x) then
    begin
     ShowModulMenus(True, x);
-   end;
+   end
+  else ShowModulMenus(True);
 end;
 
 function TFormControl.Priority: Integer;
@@ -790,7 +809,8 @@ procedure TFormControl.ShowModulMenus(Flag: Boolean; node: IXMLnode);
     Result := Assigned(node) and Assigned(node.ParentNode) and (node.ParentNode.NodeName = t_atr)
   end;
 begin
-  Nclc.Visible := Flag and (Cur(T_RAM) or Cur(T_WRK));// or atr(AT_FILE_NAME) or atr(AT_FILE_CLC));
+  Nclc.Visible := Flag and (Cur(T_RAM) or Cur(T_WRK)) and not (FEditData.Data[0] = MAX_T);
+  NRamSize.Visible := Flag and (FEditData.Data[0] = MAX_T);
   NReadRam.Visible := Flag and Chld(T_RAM);
   NInfo.Visible := False;// Flag and Chld(T_WRK);
   NGlu.Visible := Flag and Chld(T_GLU);
@@ -902,14 +922,23 @@ begin
   xd.Data[2] := TPath.GetDirectoryName(fp);
 end;
 
-procedure TFormControl.UpdateTextFunc_Metr_MetrData(xd: PNodeExData;
-  Column: Integer);
+procedure TFormControl.UpdateTextFunc_Metr_MetrData(xd: PNodeExData; Column: Integer);
   var
    n: IXMLNode;
 begin
   n := IXMLNode(xd.Item);
   if n.HasAttribute(AT_METROLOG) then xd.Data[1] := n.Attributes[AT_METROLOG];
   if n.HasAttribute(AT_TIMEATT) then xd.Data[2] := n.Attributes[AT_TIMEATT];
+end;
+
+procedure TFormControl.UpdateTextFunc_SetRamSize(xd: PNodeExData; Column: Integer);
+  var
+   n: IXMLNode;
+   c: Integer;
+begin
+  n := IXMLNode(xd.Item);
+  c := n.ParentNode.ChildNodes.FindNode(T_WRK).Attributes[AT_SIZE];
+  xd.Data[1] := CTime.AsString(Round(CTime.FromKadr(n.Attributes[AT_RAMSIZE]*1024*1024/c))).Split([' '],ExcludeEmpty)[0]
 end;
 
 procedure TFormControl.ViewMetrData(Root: PVirtualNode; node: IXMLNode);
@@ -946,23 +975,31 @@ begin
 end;
 
 procedure TFormControl.ViewRamData(Root: PVirtualNode; node: IXMLNode);
-  procedure SData(const Caption, AttrName: string);
+  function SData(const Caption, AttrName: string; cl:TColor = CLR_ATTR): PNodeExData;
    var
     v: PVirtualNode;
-    e: PNodeExData;
   begin
     if node.HasAttribute(AttrName) then
      begin
       v := Tree.AddChild(Root);
       Include(v.States, vsExpanded);
-      e := PNodeExData(Tree.GetNodeData(v));
-      e.Item := node.AttributeNodes.FindNode(AttrName);
-      e.UpdateTextFunc := nil;
-      SetData(e, Caption, node.Attributes[AttrName]);
-      SetReadOnly(e);
+      Result := PNodeExData(Tree.GetNodeData(v));
+      Result.Item := node.AttributeNodes.FindNode(AttrName);
+      Result.UpdateTextFunc := nil;
+      SetData(Result, Caption, node.Attributes[AttrName]);
+      Result.Color := cl;
+      SetReadOnly(Result);
      end;
   end;
+  var
+   e: PNodeExData;
 begin
+  if node.HasAttribute(AT_RAMSIZE) then
+   begin
+     e := SData(MAX_T, AT_RAMSIZE, TColors.Seagreen);
+     e.UpdateTextFunc := UpdateTextFunc_SetRamSize;
+     e.Item := node;
+   end;
   SData('Файл', AT_FILE_NAME);
   SData('с кадра', AT_FROM_KADR);
   SData('по кадр', AT_TO_KADR);

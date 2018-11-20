@@ -432,6 +432,7 @@ class procedure TPars.FromVar(const Data: Variant; vt: Integer; pOutData: Pointe
   d: Double;
 begin                                   // Data - Ole string XML only string;
   case vt of
+    varByte        : PByte(pOutData)^ := Byte(Data);
     varWord        : PWord(pOutData)^ := Word(Data);
     varSmallint    : PSmallint(pOutData)^ := Smallint(Data);
     varDouble      : PDouble(pOutData)^ := Double(Data);

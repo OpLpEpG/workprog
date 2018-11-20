@@ -275,6 +275,33 @@ procedure TFormAccelCheck.RefindZen(from, too: Integer; alg, trr: IXMLNode);
        end;
      end;
   end;
+  procedure FindZenViz(stp, trr: Variant);
+   var
+    o, zu, x,y,z: Double;
+  begin
+    TXMLScriptMath.TrrVect3D(TVxmlData(trr.m3x4).Node, TVxmlData(stp).Node, x, y, z);//, 1000);
+    stp.амплит_accel.CLC.VALUE := TXMLScriptMath.Hypot3D(x, y, z);
+
+    o := Arctan2(y, -x);
+    zu := Arctan2(Hypot(x, y), z);
+
+    stp.зенит.CLC.VALUE       := TXMLScriptMath.RadToDeg360(zu);
+    stp.отклонитель.CLC.VALUE := TXMLScriptMath.RadToDeg360(o);
+  end;
+
+  procedure ApplyZen(from, too: Integer; alg, trr: IXMLNode);
+   var
+    i: Integer;
+    t, a: variant;
+  begin
+    t := XtoVar(trr);
+    for I := from to too do
+     begin
+      a := XToVar(GetXNode(alg, Format('STEP%d',[I])));
+      FindZenViz(a, t);
+     end;
+  end;
+
 begin
 {  tG := Matrix4Identity;
   tH := Matrix4Identity;
@@ -312,6 +339,7 @@ begin
      FSaveAccel := TZAlignLS.Apply(Res, a, b);
     end;
     Matrix4AssignToVariant(FSaveAccel, XToVar(trr));
+    ApplyZen(from, too, alg, trr);
 end;
 
 function TFormAccelCheck.UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean;

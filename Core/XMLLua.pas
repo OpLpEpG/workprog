@@ -306,8 +306,8 @@ procedure TXMLLua.AddXML(Aadr: Integer; const RnPath: string; TrRoot, RnRoot, Sc
   end;
   function ChekStr(const inp: string): string;
    const
-    SSinp: array[0..5]of string =('ИКН','ГК','АГК','ННК','ВИК','Глубиномер');
-    SSout: array[0..5]of string =('IKN','GK','AGK','NNK','VIK','Glu');
+    SSinp: TArray<string> = ['ИКН','ГК','АГК','ННК','ВИК','Глубиномер','ГГКП', 'БКС'];
+    SSout: TArray<string> = ['IKN','GK','AGK','NNK','VIK','Glu','GGKP','BKS'];
    var
     i: Integer;
   begin

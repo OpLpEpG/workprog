@@ -3,8 +3,8 @@ object FormAccelCheck: TFormAccelCheck
   Top = 0
   ActiveControl = Tree
   Caption = #1040#1090#1090#1077#1089#1090#1072#1094#1080#1103' '#1072#1082#1089#1077#1083#1077#1088#1086#1084#1077#1090#1088#1072
-  ClientHeight = 314
-  ClientWidth = 672
+  ClientHeight = 313
+  ClientWidth = 760
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,8 +16,8 @@ object FormAccelCheck: TFormAccelCheck
   TextHeight = 13
   object Splitter: TSplitter
     Left = 0
-    Top = 227
-    Width = 672
+    Top = 226
+    Width = 760
     Height = 3
     Cursor = crVSplit
     Align = alBottom
@@ -27,38 +27,41 @@ object FormAccelCheck: TFormAccelCheck
   object PanelM: TPanel
     Left = 0
     Top = 0
-    Width = 672
-    Height = 227
+    Width = 760
+    Height = 226
     Align = alClient
     BevelOuter = bvNone
     Caption = 'PanelM'
     ShowCaption = False
     TabOrder = 0
-    ExplicitWidth = 757
+    ExplicitWidth = 672
+    ExplicitHeight = 227
     object lbInfo: TLabel
       Left = 0
-      Top = 214
-      Width = 672
+      Top = 213
+      Width = 760
       Height = 13
       Align = alBottom
       Alignment = taCenter
       WordWrap = True
+      ExplicitTop = 214
       ExplicitWidth = 3
     end
     object pc: TCPageControl
       Left = 0
       Top = 0
-      Width = 672
-      Height = 214
+      Width = 760
+      Height = 213
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 757
+      ExplicitWidth = 672
+      ExplicitHeight = 214
     end
     object Tree: TVirtualStringTree
       Left = 0
       Top = 0
-      Width = 672
-      Height = 214
+      Width = 760
+      Height = 213
       Align = alClient
       BorderWidth = 1
       Header.AutoSizeIndex = -1
@@ -71,7 +74,8 @@ object FormAccelCheck: TFormAccelCheck
       TreeOptions.SelectionOptions = [toFullRowSelect]
       OnAddToSelection = TreeAddToSelection
       OnGetText = TreeGetText
-      ExplicitWidth = 757
+      ExplicitWidth = 672
+      ExplicitHeight = 214
       Columns = <
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
@@ -121,15 +125,15 @@ object FormAccelCheck: TFormAccelCheck
         end
         item
           Position = 9
-          Width = 68
+          Width = 156
           WideText = 'Gz.'#1090#1072#1088#1080#1088'.'
         end>
     end
   end
   object PanelP: TPanel
     Left = 0
-    Top = 230
-    Width = 672
+    Top = 229
+    Width = 760
     Height = 84
     Align = alBottom
     BevelOuter = bvNone
@@ -137,11 +141,12 @@ object FormAccelCheck: TFormAccelCheck
     ShowCaption = False
     TabOrder = 1
     Visible = False
-    ExplicitWidth = 757
+    ExplicitTop = 230
+    ExplicitWidth = 672
     object TreeA: TVirtualStringTree
       Left = 0
       Top = 0
-      Width = 672
+      Width = 760
       Height = 84
       Align = alClient
       BorderWidth = 1
@@ -154,7 +159,7 @@ object FormAccelCheck: TFormAccelCheck
       TreeOptions.PaintOptions = [toHotTrack, toShowButtons, toShowDropmark, toShowHorzGridLines, toShowVertGridLines, toThemeAware, toUseBlendedImages]
       TreeOptions.SelectionOptions = [toDisableDrawSelection, toExtendedFocus, toMiddleClickSelect, toMultiSelect, toRightClickSelect]
       OnGetText = TreeAHGetText
-      ExplicitWidth = 757
+      ExplicitWidth = 672
       Columns = <
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
@@ -179,7 +184,7 @@ object FormAccelCheck: TFormAccelCheck
         end
         item
           Position = 4
-          Width = 244
+          Width = 332
           WideText = 'D'
         end>
     end

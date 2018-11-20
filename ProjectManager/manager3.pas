@@ -88,6 +88,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
     procedure CheckMetrol(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: Tarray<string>; out Metr: IXMLNode);
 
     // IProjectOptions
+    function GetOptionType(const Name: string): Integer;
     function GetOption(const Name: string): Variant;
     procedure SetOption(const Name: string; const Value: Variant);
     procedure AddOrIgnore(const Name, Section: string;
@@ -97,6 +98,8 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
                           Hidden: Boolean = True;
                           ReadOnly: Boolean = False;
                           DataType: Integer = -1);
+    function GetOptoins: IXMLNode;
+
 
     function DelayStart: TDateTime;
     function IntervalWork: TDateTime;
@@ -387,6 +390,28 @@ begin
   end;
 end;
 
+function TManager.GetOptionType(const Name: string): Integer;
+ var
+  c, v: IXMLNode;
+begin
+  Result := 0;
+  if Assigned(Foptions) then for c in XEnum(Foptions) do
+  begin
+  // TDebug.Log(c.NodeName);
+   v := c.ChildNodes.FindNode(Name);
+   if Assigned(v) then
+    begin
+     if v.HasAttribute('DataType') then Result := StrToIntDef(v.Attributes['DataType'], 0);
+     Break;
+    end;
+  end;
+end;
+
+function TManager.GetOptoins: IXMLNode;
+begin
+  Result := Foptions;
+end;
+
 procedure TManager.SetOption(const Name: string; const Value: Variant);
  var
   c, v: IXMLNode;
@@ -597,7 +622,7 @@ end;
 
 function TManager.ConstructDataFileName(Root: IXMLNode; const SubName: string): string;
 begin
-  Result := Root.ParentNode.NodeName + Root.NodeName + SubName + '.bin'
+  Result := Root.ParentNode.NodeName + Root.NodeName + SubName + '.DEV'
 end;
 
 function TManager.DataFileExists(Root: IXMLNode; const SubDir, SubName: string): Boolean;
@@ -665,7 +690,7 @@ begin
   i := nil;
   if Supports(GlobalCore, IDeviceEnum, de) then de.Remove(Dev);
 
-  TDirectory.Delete(dir, True);
+  if TDirectory.Exists(dir) then TDirectory.Delete(dir, True);
   if TDirectory.Exists(dir) then raise EManagerexception.Create('Немогу удалить директорию '+ dir);
 end;
 

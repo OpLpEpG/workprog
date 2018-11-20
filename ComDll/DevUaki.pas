@@ -157,6 +157,7 @@ end;
 
 destructor TDevUaki.Destroy;
 begin
+  TDebug.Log('----------------TDevUaki.Destroy----------------');
   FCycle.SetCycle(False);
   while FCycle.GetCycle do TThread.Yield;
   FCycle.Free;

@@ -2,7 +2,7 @@ unit FormDlgSetupProject;
 
 interface
 
-uses RootImpl, RootIntf, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, Data.DB,  TypInfo, Xml.XMLIntf, Container,
+uses RootImpl, RootIntf, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, TypInfo, Xml.XMLIntf, Container,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, JvExControls, JvInspector, JvComponentBase, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls,
   Vcl.ActnPopup;
@@ -36,7 +36,7 @@ implementation
 
 {$R *.dfm}
 
-uses tools, DlgSetupDate, DBImpl;
+uses tools, DlgSetupDate;
 
 
 type
@@ -49,7 +49,7 @@ type
 
  TData = class(TJvCustomInspectorData)
  private
-   FData: Variant;
+   FData: IXMLNode;
    DBName: string;
  protected
    procedure InnerAsString(const Value: string); virtual;
@@ -67,8 +67,7 @@ type
    function HasValue: Boolean; override;
    function IsAssigned: Boolean; override;
    function IsInitialized: Boolean; override;
-   class function New(const AParent: TJvCustomInspectorItem; const DBName, DispName: string;
-         Units, Data, ReadOnly, DataTip: Variant): TJvCustomInspectorItem; reintroduce; overload;
+   class function New(const AParent: TJvCustomInspectorItem; opt: IXMLNode): TJvCustomInspectorItem; reintroduce; overload;
  end;
 
  TDataDev = class(TData)
@@ -87,21 +86,43 @@ type
    class function New(const AParent: TJvCustomInspectorItem; Node: IXMLNode; Id: Integer; ReadOnly: Boolean): TJvCustomInspectorItem; reintroduce; overload;
  end;
 
+
+function IsTrue(const atr: string; h: IXMLNode): boolean;
+ var
+  s: string;
+begin
+  Result := False;
+  if h.HasAttribute(atr) then
+   begin
+     s := h.Attributes[atr];
+     Result := sameText(S, 'True') or SameText(s, '1');
+   end;
+end;
+
+
 { TData }
 
-class function TData.New(const AParent: TJvCustomInspectorItem; const DBName, DispName: string;
-      Units, Data, ReadOnly, DataTip: Variant): TJvCustomInspectorItem;
+class function TData.New(const AParent: TJvCustomInspectorItem; opt: IXMLNode): TJvCustomInspectorItem;
  var
   Dat: TData;
   dn: string;
   tip: Pointer;
   intTip: Integer;
 begin
-  if not VarIsNull(Units) and (Units <> '') then dn := Format('%s [%s]', [DispName, string(Units)])
-  else dn := DispName;
+//   v.Attributes['Описание'] := Description;
+//   v.Attributes['Единицы'] := Units;
+//   v.Attributes['Hidden'] := Hidden;
+//   v.Attributes['ReadOnly'] := ReadOnly;
+//   v.Attributes['DataType'] := DataType;
 
-  if VarIsNull(DataTip) then intTip := 0
-  else intTip := Integer(DataTip);
+
+  if opt.HasAttribute('Единицы') and (opt.Attributes['Единицы'] <> '') then
+     dn := Format('%s [%s]', [opt.Attributes['Описание'], opt.Attributes['Единицы']])
+  else dn := opt.Attributes['Описание'];
+
+  if opt.HasAttribute('DataType') and (opt.Attributes['DataType'] <> '') then
+     intTip := Integer(opt.Attributes['DataType'])
+  else intTip := 0;
 
   case intTip of
    PRG_TIP_INT      : tip := System.TypeInfo(Integer);
@@ -114,25 +135,23 @@ begin
   end;
 
   Dat := CreatePrim(dn, tip);
-  Dat.DBName := DBName;
-  Dat.FData := Data;
+  Dat.DBName := opt.NodeName;
+  Dat.FData := opt;
   Dat := TData(DataRegister.Add(Dat));
 
   if Dat <> nil then
    begin
     Result := Dat.NewItem(AParent);
-    if VarIsNull(ReadOnly) then Result.ReadOnly := False
-    else Result.ReadOnly := Boolean(ReadOnly);
+    Result.ReadOnly := IsTrue('ReadOnly', opt);
    end
   else Result := nil;
 end;
 
 procedure TData.InnerAsString(const Value: string);
 begin
-  if  VarIsNull(FData) or (FData <> Value) then
+  if  Assigned(FData) and not SameText(FData.Attributes['Значение'], Value) then
    begin
-    FData := Value;
-    (GlobalCore as IProjectOptions).Option[DBName] := FData;
+    (GlobalCore as IProjectOptions).Option[DBName] := Value;
    end;
 end;
 
@@ -151,7 +170,7 @@ end;
 function TData.GetAsFloat: Extended;
 begin
   try
-   Result := Extended(FData);
+   Result := Extended(FData.Attributes['Значение']);
   except
    Result := 0;
   end;
@@ -159,7 +178,7 @@ end;
 function TData.GetAsInt64: Int64;
 begin
   try
-   Result := Int64(FData);
+   Result := Int64(FData.Attributes['Значение']);
   except
    Result := 0;
   end;
@@ -167,18 +186,18 @@ end;
 function TData.GetAsOrdinal: Int64;
 begin
   try
-   Result := Int64(FData);
+   Result := Int64(FData.Attributes['Значение']);
   except
    Result := 0;
   end;
 end;
 function TData.GetAsString: string;
 begin
-  Result := FData;
+  Result := FData.Attributes['Значение'];
 end;
 function TData.GetAsVariant: Variant;
 begin
-  Result := FData;
+  Result := FData.Attributes['Значение'];
 end;
 procedure TData.SetAsString(const Value: string);
 begin
@@ -205,15 +224,15 @@ end;
 
 procedure TDataDev.InnerAsString(const Value: string);
 begin
-  if  VarIsNull(FData) or (FData <> Value) then
+  if  Assigned(Fdata) and (FData.Attributes['Значение'] <> Value) then
    begin
-    FData := Value;
-    ConnectionsPool.Query.Acquire;
+    FData.Attributes['Значение'] := Value;
+{    ConnectionsPool.Query.Acquire;
     try
      ConnectionsPool.Query.ExecSQL('UPDATE Device SET Znd = :P1 WHERE id = :P2', [Value, Fid]);
     finally
      ConnectionsPool.Query.Release;
-    end;
+    end;}
    end;
 end;
 
@@ -223,7 +242,7 @@ class function TDataDev.New(const AParent: TJvCustomInspectorItem; Data: Variant
 begin
   Dat := CreatePrim(Data.Имя, System.TypeInfo(Double));
   Dat.Fid := Data.id;
-  Dat.FData := Double(Data.Znd);
+  Dat.FData.Attributes['Значение'] := Double(Data.Znd);
   Dat := TDataDev(DataRegister.Add(Dat));
   if Dat <> nil then
    begin
@@ -238,16 +257,16 @@ end;
 
 procedure TDataZ.InnerAsString(const Value: string);
 begin
-  if  VarIsNull(FData) or (FData <> Value) then
+  if  Assigned(Fdata) and (FData.Attributes['Значение'] <> Value) then
    begin
-    FData := Value;
-    FNode.Attributes[AT_ZND] := FData;
-    ConnectionsPool.Query.Acquire;
+    FData.Attributes['Значение'] := Value;
+    FNode.Attributes[AT_ZND] := FData.Attributes['Значение'];
+{    ConnectionsPool.Query.Acquire;
     try
      ConnectionsPool.Query.ExecSQL('UPDATE Modul SET MetaData = :P1 WHERE id = :P2', [FNode.OwnerDocument.XML.Text, Fid]);
     finally
      ConnectionsPool.Query.Release;
-    end;
+    end;}
    end;
 end;
 
@@ -258,7 +277,7 @@ begin
   if Node.HasAttribute(AT_ZND) then
    begin
     Dat := CreatePrim(Node.NodeName, System.TypeInfo(Double));
-    Dat.FData := Double(Node.Attributes[AT_ZND]);
+    Dat.FData.Attributes['Значение'] := Double(Node.Attributes[AT_ZND]);
    end
 //  else if not ReadOnly then  Dat := CreatePrim(Node.NodeName, System.TypeInfo(Double))
   else Dat := CreatePrim(Node.NodeName, System.TypeInfo(string));
@@ -294,7 +313,7 @@ procedure TFormSetupProject.UpdateGlu(Sender: TObject);
   end;
 begin
   InspZ.Clear;
-  ConnectionsPool.Query.Acquire;
+{ ConnectionsPool.Query.Acquire;
   try
    ConnectionsPool.Query.Open('SELECT * FROM Device');
    for v in ConnectionsPool.Query do TDataDev.New(InspZ.Root, v);
@@ -315,42 +334,34 @@ begin
    end;
   finally
    ConnectionsPool.Query.Release;
-  end;
+  end;}
 end;
 
 function TFormSetupProject.Execute(InputData: Pointer): Boolean;
  var
-  v: Variant;
-  ctarr: TArray<TCategory>;
-  function GetCategory(): TCategory;
-   var
-    ii: TCategory;
-  begin
-    for ii in ctarr do if ii.DBCateg = v.Section then Exit(ii);
-    Result := TCategory.Create(Insp.Root, nil);
-    Result.SortKind := iskNone;
-    Result.DBCateg := v.Section;
-    Result.DisplayName := v.Категория;
-    Result.Expanded := True;
-    CArray.Add<TCategory>(ctarr, Result);
-  end;
+  cat, opt: IXMLNode;
+  ii: TCategory;
 begin
   Result := True;
   // Свойства проекта
   Insp.Clear;
-  ConnectionsPool.Query.Acquire;
-  try
-   ConnectionsPool.Query.Open('SELECT * FROM Options');
-   try
-    for v in ConnectionsPool.Query do
-       if VarIsNull(v.Hidden) or not Boolean(v.Hidden) then
-          TData.New(GetCategory, v.Имя, v.Описание, v.Единицы, v.Значение, v.ReadOnly, v.DataType);
-   finally
-    ConnectionsPool.Query.Close;
-   end;
-  finally
-   ConnectionsPool.Query.Release;
-  end;
+    for cat in XEnum((GContainer as IProjectOptions).GetOptoins) do
+     begin
+      ii := nil;
+      for opt in XEnum(cat) do
+        if not IsTrue('Hidden', opt) then
+         begin
+          if not Assigned(ii) then
+           begin
+            ii := TCategory.Create(Insp.Root, nil);
+            ii.SortKind := iskNone;
+            ii.DBCateg := cat.NodeName;
+            ii.DisplayName := cat.Attributes['Категория'];
+            ii.Expanded := True;
+           end;
+          TData.New(ii, opt);
+         end;
+     end;
   // Cмещение глубины
   UpdateGlu(Self);
   IShow;

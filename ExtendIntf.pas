@@ -255,6 +255,10 @@ type
     function DelayStart: TDateTime;
     function IntervalWork: TDateTime;
 
+    function GetOptionType(const Name: string): Integer;
+
+    function GetOptoins: IXMLNode;
+
     property Option[const Name: string]: Variant read GetOption write SetOption;
   end;
 

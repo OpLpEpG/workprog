@@ -76,13 +76,13 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_Release>1</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.12;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.14;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <UsePackages>true</UsePackages>
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
         <DCC_RangeChecking>true</DCC_RangeChecking>
-        <VerInfo_Build>12</VerInfo_Build>
+        <VerInfo_Build>14</VerInfo_Build>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <DCC_MapFile>3</DCC_MapFile>
         <VerInfo_DLL>true</VerInfo_DLL>
@@ -149,6 +149,10 @@
         </DCCReference>
         <DCCReference Include="VCL.Dlg.ExportLAS.pas">
             <Form>FormExportLASP3</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="FormDlgSetupProject.pas">
+            <Form>FormSetupProject</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

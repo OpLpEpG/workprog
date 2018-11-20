@@ -212,6 +212,7 @@ type
     class procedure M3x4ToHorizont(mul: Double; var Data: TConvert); static;
     class procedure HorizontToM3x4(mul: Double; var Data: TConvert); static;
     class procedure ExportToInc(const TrrFile: string; XNewTrr: IXMLNode);  overload; static;
+    class procedure ExportToIncAccel(const TrrFile: string; XNewTrr: IXMLNode);  overload; static;
     class procedure ShowReportTitle(Rep: IReport; data: Variant); static;
     class procedure ExportP1ToCalc(const TrrFile: string; NewTrr: IXMLNode); overload; static;
     class procedure ExportP2ToCalc(const TrrFile: string; NewTrr: IXMLNode); overload; static;
@@ -237,6 +238,7 @@ type
     class function ExecStepIncl_OLD(L: lua_State): Integer; overload; cdecl; static;
     class function ImportIncFile(L: lua_State): Integer; overload; cdecl; static;
     class function ExportToInc(L: lua_State): Integer; overload; cdecl; static;
+    class function ExportToIncAccel(L: lua_State): Integer; overload; cdecl; static;
     class function ExportP1ToCalc(L: lua_State): Integer; overload; cdecl; static;
     class function ExportP2ToCalc(L: lua_State): Integer; overload; cdecl; static;
     class function ExportP3ToCalc(L: lua_State): Integer; overload; cdecl; static;
@@ -661,6 +663,71 @@ begin
   Result := 0;
 end;
 
+class function TMetrInclinMath.ExportToIncAccel(L: lua_State): Integer;
+begin
+  ExportToIncAccel(string(lua_tostring(L, 1)), TXMLLua.XNode(L, 2));
+  Result := 0;
+end;
+
+class procedure TMetrInclinMath.ExportToIncAccel(const TrrFile: string; XNewTrr: IXMLNode);
+ var
+  Convert: TConvert;
+  sernom: Integer;
+  NewTrr: Variant;
+begin
+  NewTrr := XToVar(XNewTrr);
+  with Convert, TstringList.Create do
+   try
+    sernom := TVxmlData(NewTrr).Node.ParentNode.ParentNode.Attributes[AT_SERIAL];
+    m11 := NewTrr.m3x4.m11;
+    m12 := NewTrr.m3x4.m12;
+    m13 := NewTrr.m3x4.m13;
+    m14 := NewTrr.m3x4.m14;
+
+    m21 := NewTrr.m3x4.m21;
+    m22 := NewTrr.m3x4.m22;
+    m23 := NewTrr.m3x4.m23;
+    m24 := NewTrr.m3x4.m24;
+
+    m31 := NewTrr.m3x4.m31;
+    m32 := NewTrr.m3x4.m32;
+    m33 := NewTrr.m3x4.m33;
+    m34 := NewTrr.m3x4.m34;
+
+    M3x4ToHorizont(8, Convert);
+
+    Add(Format('%g {Sgx-смещение нуля акселерометра X, дв.ед.} INCL_%d',[sx, sernom]));
+    Add(Format('%g {Sgy-смещение нуля акселерометра Y, дв.ед.}',[sy]));
+    Add(Format('%g {Sgz-смещение нуля акселерометра Z, дв.ед.}',[sz]));
+    Add(Format('%g {Kgx-коэффициент преобразования акселерометра X}',[Kx]));
+    Add(Format('%g {Kgy-коэффициент преобразования акселерометра Y}',[Ky]));
+    Add(Format('%g {Kgz-коэффициент преобразования акселерометра Z}',[Kz]));
+    Add(Format('%g {Axy-угол отклонения оси акселерометра OX в плоскости XOY, град.}', [Kxy]));
+    Add(Format('%g {Axz-угол отклонения оси акселерометра OX в плоскости XOZ, град.}', [Kxz]));
+    Add(Format('%g {Ayz-угол отклонения оси акселерометра OY в плоскости YOZ, град.}', [Kyz]));
+    Add(Format('%g {Azx-угол отклонения оси акселерометра OZ в плоскости XOZ, град.}', [Kzx]));
+    Add(Format('%g {Azy-угол отклонения оси акселерометра OZ в плоскости YOZ, град.}', [Kzy]));
+
+    M3x4ToHorizont(1, Convert);
+
+    Add(Format('%g {Shx-смещение нуля феррозонда X, дв.ед.}',[sx]));
+    Add(Format('%g {Shy-смещение нуля феррозонда Y, дв.ед.}',[sy]));
+    Add(Format('%g {Shz-смещение нуля феррозонда Z, дв.ед.}',[sz]));
+    Add(Format('%g {Khx-коэффициент преобразования феррозонда X}',[Kx]));
+    Add(Format('%g {Khy-коэффициент преобразования феррозонда Y}',[Ky]));
+    Add(Format('%g {Khz-коэффициент преобразования феррозонда Z}',[Kz]));
+    Add(Format('%g {Fxy-угол отклонения оси феррозонда OX в плоскости XOY, град.}',[Kxy]));
+    Add(Format('%g {Fxz-угол отклонения оси феррозонда OX в плоскости XOZ, град.}',[Kxz]));
+    Add(Format('%g {Fyx-угол отклонения оси феррозонда OY в плоскости XOY, град.}',[Kyx]));
+    Add(Format('%g {Fyz-угол отклонения оси феррозонда OY в плоскости YOZ, град.}',[Kyz]));
+    Add(Format('%g {Fzx-угол отклонения оси феррозонда OZ в плоскости XOZ, град.}',[Kzx]));
+    Add(Format('%g {Fzy-угол отклонения оси феррозонда OZ в плоскости YOZ, град.}',[Kzy]));
+    SaveToFile(TrrFile);
+   finally
+    Free;
+   end;
+end;
+
 class procedure TMetrInclinMath.ExportP2ToCalc(const TrrFile: string; NewTrr: IXMLNode);
   const
    TBL_ZU_AZ: array[0..1] of Integer = (45,90);
@@ -947,6 +1014,8 @@ begin
     Add(Format('%g {Ayz-угол отклонения оси акселерометра OY в плоскости YOZ, град.}', [Kyz]));
     Add(Format('%g {Azx-угол отклонения оси акселерометра OZ в плоскости XOZ, град.}', [Kzx]));
     Add(Format('%g {Azy-угол отклонения оси акселерометра OZ в плоскости YOZ, град.}', [Kzy]));
+
+
 
     m11 := NewTrr.magnit.m3x4.m11;
     m12 := NewTrr.magnit.m3x4.m12;

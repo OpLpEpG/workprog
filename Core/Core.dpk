@@ -72,7 +72,6 @@ contains
   CoreReg in 'CoreReg.pas',
   RootImpl in 'RootImpl.pas',
   DBIntf in '..\DBIntf.pas',
-  DBImpl in 'DBImpl.pas',
   WlanClass in 'WlanClass.pas',
   nduCType in '..\..\..\Libs\WlanAPI\nduCType.pas',
   nduEapTypes in '..\..\..\Libs\WlanAPI\nduEapTypes.pas',

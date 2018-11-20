@@ -2,7 +2,7 @@ unit XMLLua.Math;
 
 interface
 
-uses  XMLLua, tools, debug_except, MathIntf, System.UITypes, VerySimple.Lua.Lib,
+uses  XMLLua, tools, debug_except, MathIntf, System.UITypes, VerySimple.Lua.Lib, Container, ExtendIntf,
     SysUtils, Xml.XMLIntf, System.Generics.Collections, System.Classes, math, System.Variants;
 
  {$M+}
@@ -50,8 +50,13 @@ type
     class function AddXmlMatrix(L: lua_State): Integer; cdecl; static;
     class function SetIfNotExist(L: lua_State): Integer; cdecl; static;
     class function AddXmlPath(L: lua_State): Integer; overload; cdecl; static;
+    class function HasXmlPath(L: lua_State): Integer; cdecl; static;
     class function FindXmlRoot(L: lua_State): Integer; cdecl; static;
     class function DebugLog(L: lua_State): Integer; cdecl; static;
+
+    class function GetProjectOption(L: lua_State): Integer; cdecl; static;
+    class function SetProjectOption(L: lua_State): Integer; cdecl; static;
+
 
     class function ArcTan2(L: lua_State): Integer; cdecl; static;
     class function KadrToStr(L: lua_State): Integer; cdecl; static;
@@ -64,9 +69,32 @@ type
     class function Now(L: lua_State): Integer; cdecl; static;
 //    class function VarAsType(L: lua_State): Integer; cdecl; static;
     class function RbfInterp(L: lua_State): Integer; overload; cdecl; static;
+    class function PolyAprox(L: lua_State): Integer; overload; cdecl; static;
+
     class function XmlPathExists(L: lua_State): Integer; cdecl; static;
     class function SGK_FindGK(L: lua_State): Integer; cdecl; static;
     class function ImportNNK10(L: lua_State): Integer; cdecl; static;
+  end;
+
+  TXMLLuaBKS = class
+  private
+    type
+      TCurrentArray = array [0..7] of Double;
+      TBKSPoint = record
+        Current: TCurrentArray;
+        Vizir: Double;
+      end;
+    const FZOND: TCurrentArray = (0,pi/4,pi/2,3*pi/4,pi,5*pi/4,6*pi/4,7*pi/4);
+    class var CurY: TBKSPoint;
+    class var X0: array[0..2] of Double;
+    class var X0L: array[0..2] of Double;
+    class var X0U: array[0..2] of Double;
+    class procedure cb_Bks_func(const x, f: PDoubleArray); cdecl; static;
+    class procedure cb_Bks_jac(const x, f: PDoubleArray; const jac: PMatrix); cdecl; static;
+  public
+    class procedure FindBKS(focus: IXMLNode; otk: Double; out XOut: PDoubleArray); overload; static;
+  published
+    class function FindBKS(L: lua_State): Integer; overload; cdecl; static;
   end;
 
 implementation
@@ -74,6 +102,14 @@ implementation
 class constructor TXMLScriptMath.Create;
 begin
   TXMLLua.RegisterLuaMethods(TXMLScriptMath);
+  TXMLLua.RegisterLuaMethods(TXMLLuaBKS);
+  TXMLLuaBKS.X0[1] := 0;
+  TXMLLuaBKS.X0L[0] := 0;
+  TXMLLuaBKS.X0L[1] := -pi;
+  TXMLLuaBKS.X0L[2] := 0;
+  TXMLLuaBKS.X0U[0] := 10000;
+  TXMLLuaBKS.X0U[1] := pi;
+  TXMLLuaBKS.X0U[2] := 10000;
 end;
 
 class function TXMLScriptMath.DebugLog(L: lua_State): Integer;
@@ -205,7 +241,7 @@ begin
   r := TXMLLua.XNode(L, 1);
   Color := lua_tointeger(L, 2);
   if ArgCount >= 3 then Width := lua_tonumber(L,3) else Width := 1;
-  Dash := lua_tointeger(L, 4);
+  if ArgCount >= 4 then Dash := lua_tointeger(L, 4) else Dash := 0;
 
   if not CNode.IsData(r) then r := CNode.GetCalc(r);
   r.Attributes[AT_COLOR] := Color;
@@ -457,8 +493,15 @@ begin
   Section := string(lua_tostring(L, 2));
   root := string(lua_tostring(L, 3));
   Result := 2;
-
-  while Assigned(r.ParentNode) do r := r.ParentNode;
+  while Assigned(r.ParentNode) do
+   begin
+    r := r.ParentNode;
+    if r.HasAttribute(AT_ADDR) then
+     begin
+      r := r.ParentNode;
+      break;
+     end;
+   end;
   lua_pushboolean(L, Integer(FindXmlNode(r, Section, root, n)));
   if Assigned(n) then TXMLLua.PushXmlToTable(L, n) else Result := 1;
 end;
@@ -552,6 +595,20 @@ begin
   else Result := X * Sqrt(1 + Sqr(Z/X)+ Sqr(Y/X));
 end;
 
+class function TXMLScriptMath.HasXmlPath(L: lua_State): Integer;
+ var
+  root: IXMLNode;
+  path: string;
+//  ArgCount: Integer;
+begin
+//  ArgCount := Lua_GetTop(L);
+
+  root := TXMLLua.XNode(L, 1);
+  path := string(lua_tostring(L,2));
+  lua_pushboolean(L, Integer(Assigned(root.childnodes.FindNode(path))));
+  Result := 1;
+end;
+
 class function TXMLScriptMath.Hypot(L: lua_State): Integer;
 begin
   lua_pushnumber(L, math.Hypot(lua_tonumber(L, 1), lua_tonumber(L, 2)));
@@ -570,6 +627,40 @@ class function TXMLScriptMath.Now(L: lua_State): Integer;
 begin
   lua_pushnumber(L, SysUtils.now);
   Result := 1;
+end;
+
+class function TXMLScriptMath.PolyAprox(L: lua_State): Integer;
+ var
+  ib: IBaryCentric;
+  x, y: TArray<Double>;
+  pow2: PDouble;
+  info, n,nres, i: Integer;
+begin
+  luaL_checktype(L, 1, LUA_TTABLE);
+  luaL_checktype(L, 2, LUA_TTABLE);
+  n := lua_rawlen(L, 1);
+  SetLength(x, n);
+  SetLength(y, n);
+  for i := 1 to n do
+    begin
+     lua_rawgeti(L, 1, i);
+     x[i-1] := lua_tonumber(L,-1);
+     lua_rawgeti(L, 2, i);
+     y[i-1] := lua_tonumber(L,-1);
+     lua_pop(L, 2);
+    end;
+  nres := lua_tointeger(L,3);
+  BaryCentricFactory(ib);
+  CheckMath(ib, ib.FitV(@x[0], @y[0], n, nres, info));
+  CheckMath(ib, ib.GetLastPow2(pow2));
+//  lua_createtable(L, nres, 0);
+  for i := 1 to nres do
+    begin
+     lua_pushnumber(L, pow2^);
+//     lua_rawseti(L, -2, i);
+     inc(pow2);
+    end;
+  Result := nres;{1}
 end;
 
 class function TXMLScriptMath.RadToDeg(L: lua_State): Integer;
@@ -659,6 +750,44 @@ begin
   Result := 0;
 end;
 
+class function TXMLScriptMath.GetProjectOption(L: lua_State): Integer;
+ var
+  m: TMarshaller;
+  d: Variant;
+  opt: string;
+  tip: Integer;
+begin
+  opt := string(lua_tostring(L,1));
+  d := (GContainer as IProjectOptions).Option[opt];
+  tip := (GContainer as IProjectOptions).GetOptionType(opt);
+  if d = null then
+   lua_pushnil(L)
+  else
+   case tip of
+   PRG_TIP_INT      : lua_pushinteger(L, d);
+   PRG_TIP_REAL     : lua_pushnumber(L, d);
+   PRG_TIP_BOOL     : lua_pushboolean(L, Integer(d));
+   else              lua_pushstring(L, m.AsAnsi(d).ToPointer);
+  end;
+  Result := 1;
+end;
+
+class function TXMLScriptMath.SetProjectOption(L: lua_State): Integer;
+ var
+  opt: string;
+begin
+  opt := string(lua_tostring(L,1));
+  case lua_type(L, 1) of
+   //LUA_TNIL: Node.Attributes[name] := nil;
+   LUA_TBOOLEAN: (GContainer as IProjectOptions).Option[opt] := Boolean(lua_toboolean(L, 2));
+   LUA_TNUMBER: (GContainer as IProjectOptions).Option[opt] := lua_tonumber(L, 2);
+   LUA_TSTRING: (GContainer as IProjectOptions).Option[opt] := string(lua_tostring(L, 2));
+   else raise ELuaException.Createfmt('Error SetProjectOption type: %s',[string(lua_typename(L, 2))]);
+  end;
+  lua_settop(L, 0);
+  Result := 0;
+end;
+
 class function TXMLScriptMath.SGK_FindGK(L: lua_State): Integer;
  var
   s,d: string;
@@ -732,6 +861,93 @@ begin
    ss.Free;
   end;
   Result := 0;
+end;
+
+
+class procedure TXMLLuaBKS.cb_Bks_func(const x, f: PDoubleArray);
+ var
+  i: Integer;
+begin
+  for i := 0 to 7 do f[i] := x[0]*Cos(FZOND[i]+CurY.Vizir+x[1]) + x[2] - CurY.Current[i];
+end;
+
+class procedure TXMLLuaBKS.cb_Bks_jac(const x, f: PDoubleArray; const jac: PMatrix);
+ var
+  i: Integer;
+  s,c: Double;
+begin
+  for i := 0 to 7 do
+   begin
+    Math.SinCos(FZOND[i] +CurY.Vizir + x[1], s, c);
+    f[i] := x[0]*c + x[2] - CurY.Current[i];
+    jac[i,0] := c; jac[i,1] := -x[0]*s; jac[i,2] := 1;
+   end;
+end;
+
+class procedure TXMLLuaBKS.FindBKS(focus: IXMLNode; otk: Double; out XOut: PDoubleArray);
+  procedure FindX0;
+   var
+    i,nmi,nma: Integer;
+    max,min,sred: Double;
+  begin
+    sred := 0;
+    max := Double.MinValue;
+    min := Double.MaxValue;
+    nma := 0;
+    nmi := 0;
+    for i := 0 to 7 do
+     begin
+      sred := sred +CurY.Current[i];
+      if CurY.Current[i] > max then
+       begin
+        max := CurY.Current[i];
+        nma := i;
+       end;
+      if CurY.Current[i] < min then
+       begin
+        min := CurY.Current[i];
+        nmi := i;
+       end;
+     end;
+    X0[0] := max-min;
+    //X0[1] := FZOND[nma];
+    X0[2] := sred/8;
+  end;
+ var
+  e: ILMFitting;
+  i: Integer;
+  rep: PLMFittingReport;
+begin
+  if not Assigned((focus as IOwnIntfXMLNode).Intf) then
+   begin
+    LMFittingFactory(e);
+    (focus as IOwnIntfXMLNode).Intf := e;
+   end
+  else e := ILMFitting((focus as IOwnIntfXMLNode).Intf);   
+  CurY.Vizir := DegtoRad(360-otk);
+  for i := 1 to 8 do CurY.Current[i-1] := focus.Childnodes.FindNode('I'+i.tostring).Childnodes.FindNode(T_CLC).Attributes[AT_VALUE];
+  FindX0();
+  CheckMath(e, e.FitJB(3, 8, @X0[0],@X0L[0],@X0U[0],  0.00000001, 1000, cb_Bks_func, cb_Bks_jac, XOut, rep));
+end;
+
+class function TXMLLuaBKS.FindBKS(L: lua_State): Integer;
+ var
+  X: PDoubleArray;
+  d: Double;
+begin
+  FindBKS(TXMLLua.XNode(L, 1), lua_tonumber(L,2), X);
+  Result := 3;
+  lua_pushnumber(L, X[0]);
+
+//  d := (RadToDeg(X[1]));
+  d := DegNormalize(RadToDeg(X[1]));
+  X0L[1] := X[1]-pi/2;
+  X0[1] := X[1];
+  X0U[1] := X[1]+pi/2;
+
+//  if d < 0 then d := 360 + d;
+  lua_pushnumber(L, d);
+  lua_pushnumber(L, X[2]);
 end;
 
 end.
