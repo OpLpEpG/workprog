@@ -37,23 +37,13 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     TabOrder = 0
     Text = ''
   end
-  object sb: TStatusBar
-    Left = 0
-    Top = 256
-    Width = 289
-    Height = 19
-    Panels = <
-      item
-        Width = 50
-      end>
-  end
   object btStart: TButton
     Left = 8
     Top = 227
     Width = 75
     Height = 25
     Caption = #1057#1090#1072#1088#1090
-    TabOrder = 2
+    TabOrder = 1
     OnClick = btExportClick
   end
   object btTerminate: TButton
@@ -62,7 +52,7 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     Width = 75
     Height = 25
     Caption = #1055#1088#1077#1088#1074#1072#1090#1100
-    TabOrder = 3
+    TabOrder = 2
     OnClick = btTerminateClick
   end
   object btExit: TButton
@@ -72,7 +62,7 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     Height = 25
     Caption = #1042#1099#1093#1086#1076
     ModalResult = 1
-    TabOrder = 4
+    TabOrder = 3
     OnClick = btExitClick
   end
   object Progress: TProgressBar
@@ -81,14 +71,14 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     Width = 273
     Height = 17
     Anchors = [akLeft, akTop, akRight]
-    TabOrder = 5
+    TabOrder = 4
   end
   object edFKD: TEdit
     Left = 8
     Top = 46
     Width = 121
     Height = 21
-    TabOrder = 6
+    TabOrder = 5
     Text = '682'
   end
   inline RangeSelect: TFrameRangeSelect
@@ -98,7 +88,7 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     Height = 122
     Anchors = [akLeft, akTop, akRight]
     AutoSize = True
-    TabOrder = 7
+    TabOrder = 6
     ExplicitLeft = 8
     ExplicitTop = 72
     ExplicitWidth = 273
@@ -106,5 +96,30 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
       Width = 273
       ExplicitWidth = 273
     end
+  end
+  object sb: TStatusBar
+    Left = 0
+    Top = 256
+    Width = 289
+    Height = 19
+    Panels = <
+      item
+        Width = 50
+      end
+      item
+        Width = 50
+      end
+      item
+        Width = 50
+      end
+      item
+        Width = 50
+      end
+      item
+        Width = 50
+      end>
+    ExplicitLeft = -6
+    ExplicitTop = 216
+    ExplicitWidth = 295
   end
 end

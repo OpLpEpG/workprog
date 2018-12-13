@@ -443,7 +443,19 @@ type
     class property IsRemove: Boolean read FRemovin;
   end;
 
-
+  TStatisticCreate =class(TIObject, IStatistic)
+  private
+    FCount: UInt64;
+    FTimeBegin: TDateTime;
+    FStatistic: TStatistic;
+    function GetStatistic: TStatistic;
+    procedure UpdateAll(cnt: UInt64);
+    procedure UpdateAdd(cnt: Cardinal);
+    property Statistic: TStatistic read GetStatistic;
+  public
+    constructor Create(Count: UInt64);
+    class procedure UpdateStandardStatusBar(sb: TStatusBar; Stat: TStatistic);
+  end;
 {  GDIPlus = class
   private
     class var Flock: TCriticalSection;
@@ -2045,6 +2057,51 @@ procedure TFactoryPersistent<ROOT>.SetROOT(const Value: ROOT);
 begin
   if Assigned(FStored) then FStored.Free;
   FStored := Value;
+end;
+
+{ TStatistic }
+
+constructor TStatisticCreate.Create(Count: UInt64);
+begin
+  if Count = 0 then raise EBaseException.Create('Нет данных для работы [Count=0]');
+
+  FCount := Count;
+  FTimeBegin := Now;
+end;
+
+function TStatisticCreate.GetStatistic: TStatistic;
+begin
+  Result := FStatistic;
+end;
+
+procedure TStatisticCreate.UpdateAdd(cnt: Cardinal);
+begin
+  UpdateAll(FStatistic.NRead + cnt);
+end;
+
+procedure TStatisticCreate.UpdateAll(cnt: UInt64);
+ var
+  Spd: double;
+begin
+  FStatistic.NRead := cnt;
+  FStatistic.TimeFromBegin := Now - FTimeBegin;
+  FStatistic.ProcRun := FStatistic.NRead/FCount*100;
+  // speed
+  if FStatistic.TimeFromBegin > 0 then Spd := FStatistic.NRead / FStatistic.TimeFromBegin else Spd := 0;
+  FStatistic.Speed := Spd/1024/1024 /24/3600; // MB/sec
+  if Spd > 0 then FStatistic.TimeToEnd := (FCount - FStatistic.NRead)/spd
+  else FStatistic.TimeToEnd := 1;
+end;
+
+class procedure TStatisticCreate.UpdateStandardStatusBar(sb: TStatusBar; Stat: TStatistic);
+begin
+  sb.Panels[0].Text := Stat.ProcRun.ToString(ffFixed, 7, 1)+'%';
+  if Stat.Speed > 0.1 then
+    sb.Panels[1].Text := Stat.Speed.ToString(ffFixed, 7, 0)+'Mb/s'
+  else
+    sb.Panels[1].Text := (Stat.Speed*1024).ToString(ffFixed, 7, 0)+'Kb/s';
+  sb.Panels[2].Text := TimeToStr(Stat.TimeFromBegin);
+  sb.Panels[3].Text := TimeToStr(Stat.TimeToEnd);
 end;
 
 initialization

@@ -2,7 +2,7 @@ unit VCL.Dlg.Export.Caliper;
 
 interface
 
-uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, Actns, Container, tools,
+uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, RootIntf, debug_except, Actns, Container, tools,
   Xml.XMLIntf, DataSetIntf, XMLDataSet,  System.TypInfo, System.Math, System.IOUtils, DB,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Mask, JvExMask, JvToolEdit, VCL.Frame.RangeSelect;
@@ -16,7 +16,6 @@ type
 
   TFormDlgExportCaliper = class(TDialogIForm, IDialog, IDialog<TDialogResult>)
     od: TJvFilenameEdit;
-    sb: TStatusBar;
     btStart: TButton;
     btTerminate: TButton;
     btExit: TButton;
@@ -24,10 +23,12 @@ type
     Label3: TLabel;
     edFKD: TEdit;
     RangeSelect: TFrameRangeSelect;
+    sb: TStatusBar;
     procedure btExitClick(Sender: TObject);
     procedure btExportClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
   private
+    FIStat: IStatistic;
     FkadrFirst, FkadrLast: Integer;
     FIDataSet: IDataSet;
     FXDataSet: TXMLDataSet;
@@ -95,6 +96,13 @@ begin
     b, bdef: TArray<Byte>;
     umin, umax: Integer;
    // fldID: TField;
+     procedure UpdateSb4(const s: string);
+     begin
+       TThread.Synchronize(nil, procedure
+        begin
+          sb.Panels[4].Text := s;
+        end);
+     end;
   begin
      try
       try
@@ -107,7 +115,11 @@ begin
           f := TFileStream.Create(ifFileName, fmCreate);
           ak := TFileStream.Create(akFileName, fmCreate);
          end
-        else Exit;
+        else
+         begin
+          UpdateSb4('пустое имя файла');
+          Exit;
+         end;
         FXDataSet.DisableControls;
 //        fldID := FXDataSet.FieldByName('ID');
         Setlength(akFields, 9);
@@ -118,6 +130,8 @@ begin
         umin := RangeSelect.kadr.first - FkadrFirst;
         umax := RangeSelect.kadr.last - FkadrFirst;
         FXDataSet.RecNo := umin;
+        FIStat := TStatisticCreate.Create((umax-umin)*Length(ifarr)*Sizeof(Integer));
+        UpdateSb4('работа');
         for frm := umin to umax do
          begin
           for I := 0 to High(ifarr) do
@@ -135,6 +149,7 @@ begin
 //          if ifarr[0] = fldID.AsInteger then
 //           begin
             f.Write(ifarr[0], Length(ifarr)*Sizeof(Integer));
+            FIStat.UpdateAdd(Length(ifarr)*Sizeof(Integer));
 
             cs0[0] := ifarr[0] mod 10;
             cs0[1] := ifarr[0] div 10;
@@ -151,14 +166,21 @@ begin
 
           FXDataSet.Next;
 
-          if Fterminate then Exit;
+          if Fterminate then
+            begin
+             UpdateSb4('прервано');
+             Exit;
+            end;
+
           if (umax - umin) > 0 then newPos := Round((frm - umin)/(umax -umin)*100)
           else newPos := 0;
           if (Progress.Position <> newPos) then TThread.Synchronize(nil, procedure
           begin
             Progress.Position := newPos;
+            TStatisticCreate.UpdateStandardStatusBar(sb, FIStat.Statistic);
           end);
          end;
+        UpdateSb4('конец');
       finally
        UpdateControls(True);
        FXDataSet.EnableControls;

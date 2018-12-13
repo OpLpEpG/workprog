@@ -2,7 +2,7 @@ unit ExportToPSK6_V3;
 
 interface
 
-uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, Actns, Container, tools,
+uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, RootIntf, debug_except, Actns, Container, tools,
   Xml.XMLIntf, DataSetIntf, XMLDataSet,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Data.DB, System.IOUtils,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Mask, JvExMask, JvToolEdit, VCL.Frame.RangeSelect;
@@ -20,12 +20,12 @@ type
 
   TFormExportToPSK6_V3 = class(TDockIForm)
     od: TJvFilenameEdit;
-    sb: TStatusBar;
     btStart: TButton;
     btTerminate: TButton;
     btExit: TButton;
     Progress: TProgressBar;
     RangeSelect: TFrameRangeSelect;
+    sb: TStatusBar;
     procedure FormCreate(Sender: TObject);
     procedure btExitClick(Sender: TObject);
     procedure btStartClick(Sender: TObject);
@@ -51,6 +51,7 @@ type
   protected
     function Priority: Integer; override;
   private
+    FIStat: IStatistic;
     FbadData: Boolean;
     rams: TArray<IDataSet>;
     acr: TArray<TCheckRec>;
@@ -289,6 +290,7 @@ begin
   umin := RangeSelect.kadr.first;// StrToInt(edFrom.Text);
    Fterminate := False;
    UpdateControls(False);
+   //sb.
    TThread.CreateAnonymousThread(procedure
     var
      f: TFileStream;
@@ -304,6 +306,13 @@ begin
       Result := (curKadr <= cr.LastKadr) and (curKadr <= cr.LastKadr)
 
      end;
+     procedure UpdateSb4(const s: string);
+     begin
+       TThread.Synchronize(nil, procedure
+        begin
+          sb.Panels[4].Text := s;
+        end);
+     end;
    begin
      try
       if od.FileName <> '' then
@@ -311,14 +320,17 @@ begin
         if TFile.Exists(od.FileName) then TFile.Delete(od.FileName);
         f := TFileStream.Create(od.FileName, fmCreate);
        end
-      else 
+      else
        begin
         UpdateControls(True);
+        UpdateSb4('пустое имя файла');
         Exit;
        end;
        try
           Open;
           try
+           FIStat := TStatisticCreate.Create((umax-umin)*SizeOf(d));
+           UpdateSb4('работа');
            for frm := umin to umax do
             begin
                RecNo(frm);
@@ -344,15 +356,23 @@ begin
 
                f.Write(d, SizeOf(d));
 
-               if Fterminate then Exit;
+               FIStat.UpdateAdd(SizeOf(d));
+
+               if Fterminate then
+                begin
+                 UpdateSb4('прервано');
+                 Exit;
+                end;
 
                if (umax - umin) > 0 then newPos := Round((frm - umin)/(umax - umin)*100)
                else newPos := 0;
                if (Progress.Position <> newPos) then TThread.Synchronize(nil, procedure
                 begin
                   Progress.Position := newPos;
+                  TStatisticCreate.UpdateStandardStatusBar(sb, FIStat.Statistic);
                 end);
             end;
+            UpdateSb4('конец');
           finally
            Close;
           end;
@@ -361,7 +381,11 @@ begin
         UpdateControls(True);
        end;
      except
-      on E: Exception do TDebug.DoException(E);
+      on E: Exception do
+       begin
+        UpdateSb4('ошибка');
+        TDebug.DoException(E);
+       end;
      end;
    end).Start();
 end;

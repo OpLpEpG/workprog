@@ -27,6 +27,9 @@ type
     Label1: TLabel;
     Memo: TMemo;
     RangeSelect: TFrameRangeSelect;
+    sb: TStatusBar;
+    Label2: TLabel;
+    lbAq: TEdit;
     procedure btCancelClick(Sender: TObject);
     procedure btOKClick(Sender: TObject);
     procedure odBeforeDialog(Sender: TObject; var AName: string; var AAction: Boolean);
@@ -126,6 +129,13 @@ procedure TFormExportLASP3.btOKClick(Sender: TObject);
   n: IXMLNode;
   mnem, eu, desc, aq: string;
   v: array of Variant;
+     procedure UpdateSb4(const s: string);
+     begin
+       TThread.Synchronize(nil, procedure
+        begin
+          sb.Panels[4].Text := s;
+        end);
+     end;
 begin
   if Length(flds) = 0 then raise ENeedDialogException.Create('Не выбраны параметры');
   if od.FileName = '' then raise ENeedDialogException.Create('Не выбран файл');
@@ -133,13 +143,15 @@ begin
   from := RangeSelect.kadr.first;
   last := RangeSelect.kadr.last;
   il := NewLasDoc();
+   UpdateSb4('работа');
+   Application.ProcessMessages;
   // инициализируем поля
   for f in flds do
    begin
     mnem :='';
     eu := '';
     desc := '';
-    aq := '';
+    aq := '%10.'+ lbAq.Text +'f';
     mnem := f.FullName.Replace('.','_');
     if TXMLDataSet(ids).TryGetX(f.FullName, n) then
      begin
@@ -174,6 +186,7 @@ begin
    end;
   il.Encoding := LasEncoding(cb.ItemIndex); 
   il.SaveToFile(od.FileName);
+  UpdateSb4('конец');
 end;
 
 

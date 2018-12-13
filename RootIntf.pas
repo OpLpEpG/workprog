@@ -170,6 +170,16 @@ type
     TimeFromBegin: TTime;
   end;
 
+  IStatistic = interface
+  ['{A0CB3056-6D75-4C8F-866F-13A7531606C7}']
+// private
+    function GetStatistic: TStatistic;
+// published
+    procedure UpdateAll(cnt: UInt64);
+    procedure UpdateAdd(cnt: Cardinal);
+    property Statistic: TStatistic read GetStatistic;
+  end;
+
  EnumCopyAsyncRun = (carOk, carZerroes, carEnd,  carTerminate, carError, carErrorSector);
 
  const
