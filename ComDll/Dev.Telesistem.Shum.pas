@@ -66,7 +66,7 @@ begin
   FS_Data.FifoData.Add(Data, DataSize);
   FS_Data.FifoFShum.Add(@Fshum[0], DataSize);
 
-  d := Data;
+  d := PDoubleArray(Data);
   for i := 0 to DataSize-1 do d[i] := d[i] + Fshum[i];
 
   NotifyData;

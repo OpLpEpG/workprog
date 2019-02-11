@@ -452,7 +452,7 @@ begin                                   // Data - Ole string XML only string;
      end;
     varString      :
      begin
-      b := TEncoding.Default.GetBytes(Data);
+      b := TEncoding.Default.GetBytes(string(Data));
       Move((@b[0])^, pOutData^, Length(b));
      end
     else  raise Exception.Create('мебнглнфмн опенапюгнбюрэ бюпхюмр б аюирш !!!');

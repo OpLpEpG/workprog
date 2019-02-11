@@ -1331,7 +1331,7 @@ begin
   k.df := df;
   Faza0 := arctan2(Y[0], -X[0]);
   LMFittingFactory(e);
-  CheckMath(e, e.FitV(6, 36*2, @k, 0.0001, 0, 0, 0, 0, func_cb_roll, PDoubleArray(xout), rep));
+  CheckMath(e, e.FitV(6, 36*2, PDoubleArray(@k), 0.0001, 0, 0, 0, 0, func_cb_roll, PDoubleArray(xout), rep));
   Faza0 := (xout.dF + Faza0)*180/pi;
 end;
 
@@ -1361,7 +1361,7 @@ begin
   k.m34 := m34;
   ZMax := Zm;
   LMFittingFactory(e);
-  CheckMath(e, e.FitV(3, 36, @k, 0.0001, 0, 0, 0, 0, func_cb_z, PDoubleArray(zout), rep));
+  CheckMath(e, e.FitV(3, 36, PDoubleArray(@k), 0.0001, 0, 0, 0, 0, func_cb_z, PDoubleArray(zout), rep));
 end;
 
 class procedure TLMFitting.Run(AX, AY, AZ: TRollData; ZMaxR, kXR, kYR: Double; out Res: TResult);
@@ -1394,7 +1394,7 @@ begin
   Faza0 := arctan2(Y[0], -X[0]);
 
   LMFittingFactory(e);
-  CheckMath(e, e.FitV(6, 36*2, @xinp, 0.000001, 0, 0, 0, 10000, func_cb_roll, PDoubleArray(xout), rep));
+  CheckMath(e, e.FitV(6, 36*2, PDoubleArray(@xinp), 0.000001, 0, 0, 0, 10000, func_cb_roll, PDoubleArray(xout), rep));
 
   Res.m11 := xout.m11;
   Res.m12 := xout.m12;
@@ -1403,7 +1403,7 @@ begin
   Res.m24 := xout.m24;
   Res.Faza := Faza0 + xout.dF;
 
-  CheckMath(e, e.FitV(3, 36, @zinp, 0.000001, 0, 0, 0, 10000, func_cb_z, PDoubleArray(zout), rep));
+  CheckMath(e, e.FitV(3, 36, PDoubleArray(@zinp), 0.000001, 0, 0, 0, 10000, func_cb_z, PDoubleArray(zout), rep));
   Res.m31 := zout.m31;
   Res.m32 := zout.m32;
   Res.m34 := zout.m34;
@@ -1615,11 +1615,11 @@ begin
   with AInp[0] do Gin.m21 := TXMLScriptMath.Hypot3D(gx,gy,gz)*1.001;
   Gin.m22 := 1;
   LMFittingFactory(e);
-  CheckMath(e, e.FitV(GIn.LenAzi, Length(Inp), @Gin, 0.000001, 0, 0, 0, 10000, func_cb_zen_nostol, PDoubleArray(GOut), rep));
+  CheckMath(e, e.FitV(GIn.LenAzi, Length(Inp), PDoubleArray(@Gin), 0.000001, 0, 0, 0, 10000, func_cb_zen_nostol, PDoubleArray(GOut), rep));
   k := 1000/GOut.m21;
   GOut.m21 := 0;
   GOut.m22 := 1;
-  GOut.MulVect(@k);
+  GOut.MulVect(PDoubleArray(@k));
   ZenMetr := GOut^;
   ZenMetr.m21 := 0;
   Res := ZenMetr;
@@ -1665,7 +1665,7 @@ begin
   GIn := Res;
   LMFittingFactory(e);
 //  CheckMath(e, e.FitV(Gin.LenZu, Length(Inp), @Gin, 0.000001, 0, 0, 0, 10000, func_cb_zen, PDoubleArray(GOut), rep));
-  CheckMath(e, e.FitV(Gin.LenZu+1, Length(Inp)*2, @Gin, 0.000001, 0, 0, 0, 100000, func_cb_zen, PDoubleArray(GOut), rep));
+  CheckMath(e, e.FitV(Gin.LenZu+1, Length(Inp)*2, PDoubleArray(@Gin), 0.000001, 0, 0, 0, 100000, func_cb_zen, PDoubleArray(GOut), rep));
   ZenMetr := GOut^;
   ZenMetr.m22 := ZenMetr.m21;
   ZenMetr.m21 := 0;
@@ -1688,7 +1688,7 @@ begin
   WeitAzi := AWeitAzi;
   HIn.Reset;
   LMFittingFactory(e);
-  CheckMath(e, e.FitV(Hin.LenAzi+1, Length(Inp)*2, @Hin, 0.000001, 0, 0, 0, 100000, func_cb_azi, PDoubleArray(HOut), rep));
+  CheckMath(e, e.FitV(Hin.LenAzi+1, Length(Inp)*2, PDoubleArray(@Hin), 0.000001, 0, 0, 0, 100000, func_cb_azi, PDoubleArray(HOut), rep));
   AziMetr := HOut^;
 
 {  AziMetr.m22 := 1;

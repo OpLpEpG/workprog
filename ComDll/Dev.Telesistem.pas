@@ -1056,7 +1056,7 @@ procedure TbitFlt.InputData(Data: Pointer; DataSize: integer);
   i: Integer;
   FData: TArray<Double>;
 begin
-   a := Data;
+   a := PDoubleArray(Data);
    SetLength(FData, DataSize);
    FS_Data.Data := @Fdata[0];
    FS_Data.Size := DataSize;
@@ -1102,7 +1102,7 @@ procedure TPalseFlt.InputData(Data: Pointer; DataSize: integer);
   sum: Double;
   FData: TArray<Double>;
 begin
-   a := Data;
+   a := PDoubleArray(Data);
    SetLength(FData, DataSize);
    FS_Data.Data := @Fdata[0];
    FS_Data.Size := DataSize;

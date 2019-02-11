@@ -962,7 +962,7 @@ procedure TOiRetrans.InputData(Data: Pointer; DataSize: integer);
   sum: Double;
   Res: TIndexArray;
 begin
-   a := Data;
+   a := PDoubleArray(Data);
    for i := 0 to DataSize-1 do
     begin
      Ffifo[j] := a[i];

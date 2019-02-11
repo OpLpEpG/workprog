@@ -124,7 +124,7 @@ begin
        if FTerminated then RunEvent(carTerminate, FindStat(n, cnt, FBeginTime))
        else RunEvent(carEnd, FindStat(n, cnt, FBeginTime));
       except
-       CapturedException := AcquireExceptionObject;
+       CapturedException := AcquireExceptionObject as Exception;
        RunEvent(carError, FindStat(n, cnt, FBeginTime));
        TThread.Queue(TThread.CurrentThread, procedure
         begin

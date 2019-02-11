@@ -927,7 +927,7 @@ begin
   CurY.Vizir := DegtoRad(360-otk);
   for i := 1 to 8 do CurY.Current[i-1] := focus.Childnodes.FindNode('I'+i.tostring).Childnodes.FindNode(T_CLC).Attributes[AT_VALUE];
   FindX0();
-  CheckMath(e, e.FitJB(3, 8, @X0[0],@X0L[0],@X0U[0],  0.00000001, 1000, cb_Bks_func, cb_Bks_jac, XOut, rep));
+  CheckMath(e, e.FitJB(3, 8, PDoubleArray(@X0[0]),PDoubleArray(@X0L[0]),PDoubleArray(@X0U[0]),  0.00000001, 1000, cb_Bks_func, cb_Bks_jac, XOut, rep));
 end;
 
 class function TXMLLuaBKS.FindBKS(L: lua_State): Integer;

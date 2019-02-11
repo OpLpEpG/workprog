@@ -409,7 +409,7 @@ begin
 //     Inc(len, 1);
   LMFittingFactory(e);
 //  CheckMath(e, e.FitV(2, len, @a, 0.000001, 0, 0, 0, 10000, cb_Rz, HOut, rep));
-  CheckMath(e, e.FitV(Length(a), len, @a[0], 0.0000001, 0, 0, 0, 10000, cb_Rz, HOut, rep));
+  CheckMath(e, e.FitV(Length(a), len, PDoubleArray(@a[0]), 0.0000001, 0, 0, 0, 10000, cb_Rz, HOut, rep));
   ResA := HOut[0];
   ResB := HOut[1];
 end;
@@ -526,7 +526,7 @@ begin
   FInput := Inp;
   Fm11 := Trr.m11;
   LMFittingFactory(e);
-  CheckMath(e, e.FitV(SizeOf(TCrossCorrData) div sizeof(Double)-1, Length(Inp), @Din, 0.0000001, 0, 0, 0, 100000, cb_CrossCorr, DOut, rep));
+  CheckMath(e, e.FitV(SizeOf(TCrossCorrData) div sizeof(Double)-1, Length(Inp), PDoubleArray(@Din), 0.0000001, 0, 0, 0, 100000, cb_CrossCorr, DOut, rep));
 
   Result := PCrossCorrData(DOut)^;
   Result.m11 := Fm11;
@@ -543,7 +543,7 @@ begin
   a[0] := 0;
   a[1] := Degtorad(10);
   FInput := Inp;
-  CheckMath(e, e.FitV(2, Length(Inp), @a, 0.000001, 0, 0, 0, 10000, cb_Cross, HOut, rep));
+  CheckMath(e, e.FitV(2, Length(Inp), PDoubleArray(@a), 0.000001, 0, 0, 0, 10000, cb_Cross, HOut, rep));
   ARad := HOut[0];
   Cross := HOut[1];
 end;
@@ -749,7 +749,7 @@ begin
   Din.G.Identity;
   Din.H.Identity;
 
-  CheckMath(e, e.FitV(6*2, Length(RealIncl)*2{+2}, @Din, 0.0000001, 0, 0, 0, 100000, cb_noise, PDoubleArray(DOut), rep));
+  CheckMath(e, e.FitV(6*2, Length(RealIncl)*2{+2}, PDoubleArray(@Din), 0.0000001, 0, 0, 0, 100000, cb_noise, PDoubleArray(DOut), rep));
   NoiseGinv := Tmatrix3(DOut^.G).inv;
   NoiseHinv := Tmatrix3(DOut^.H).inv;
 
@@ -759,7 +759,7 @@ begin
 
    LMFittingFactory(e);
 
-   CheckMath(e, e.FitV(SizeOf(TrrH) div SizeOf(Double), Length(RealIncl)*2, @TrrH, 0.0000001, 0, 0, 0, 100000, cb_trr, PDoubleArray(DOut2), rep));
+   CheckMath(e, e.FitV(SizeOf(TrrH) div SizeOf(Double), Length(RealIncl)*2, PDoubleArray(@TrrH), 0.0000001, 0, 0, 0, 100000, cb_trr, PDoubleArray(DOut2), rep));
 
    TrrML := TMatrix4(DOut2^);
 end;

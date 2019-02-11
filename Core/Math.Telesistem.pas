@@ -447,12 +447,12 @@ function TTelesistemDecoder.IndexBuffer(ExtBuff: TFifoDouble): PDoubleArray;
 begin
 //  TDebug.Log('ExtBuff.Count %d     Index %d    ', [ExtBuff.Count, Index]);
   Assert(ExtBuff.Count > Index, 'Length(ExtBuff) < Index');
-  Result := @ExtBuff.Data[Index];
+  Result := PDoubleArray(@ExtBuff.Data[Index]);
 end;
 
 function TTelesistemDecoder.GetBuffer: PDoubleArray;
 begin
-  Result := @Buf[Index];
+  Result := PDoubleArray(@Buf[Index]);
 end;
 
 function TTelesistemDecoder.GetCodeTypes: TSetBufferType;

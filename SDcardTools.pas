@@ -419,7 +419,7 @@ begin
       try
        Execute;
       except
-       CapturedException := AcquireExceptionObject;
+       CapturedException := AcquireExceptionObject as Exception;
        Fevent(carError, dummy_stat, dummy);
        TThread.Queue(TThread.CurrentThread, procedure
         begin

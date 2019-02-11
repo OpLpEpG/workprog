@@ -1034,7 +1034,7 @@ begin
   inherited;
   if Graph.LoadOrDestroy then
     Exit;
-  if (Action = cnAdded) then
+  if (Action = TCollectionNotification.cnAdded) then
   begin
     if (Count >= 2) then
     begin
@@ -1810,7 +1810,7 @@ end;
 procedure TGraphParams.Notify(Item: TCollectionItem; Action: TCollectionNotification);
 begin
   inherited;
-  if Action = cnAdded then
+  if Action = TCollectionNotification.cnAdded then
     FColumn.ColumnCollectionChanged(Self);
 end;
 
