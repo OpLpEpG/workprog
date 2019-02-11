@@ -938,7 +938,7 @@ procedure TFormControl.UpdateTextFunc_SetRamSize(xd: PNodeExData; Column: Intege
 begin
   n := IXMLNode(xd.Item);
   c := n.ParentNode.ChildNodes.FindNode(T_WRK).Attributes[AT_SIZE];
-  xd.Data[1] := CTime.AsString(Round(CTime.FromKadr(n.Attributes[AT_RAMSIZE]*1024*1024/c))).Split([' '],ExcludeEmpty)[0]
+  xd.Data[1] := CTime.AsString(Round(CTime.FromKadr(n.Attributes[AT_RAMSIZE]*1024*1024/c))).Split([' '],TStringSplitOptions.ExcludeEmpty)[0]
 end;
 
 procedure TFormControl.ViewMetrData(Root: PVirtualNode; node: IXMLNode);

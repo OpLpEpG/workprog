@@ -462,12 +462,12 @@ begin
     ScennaBegin;
     setPos := False;
     dp := Fposition;
-    for c in string(xcmd.Attributes['COMMAND']).Split([';'], ExcludeEmpty) do
+    for c in string(xcmd.Attributes['COMMAND']).Split([';'], TStringSplitOptions.ExcludeEmpty) do
      begin
       if c.Contains('*') then Add(AnsiString(c))
       else
        begin
-        ca := c.Trim.Split([':'], ExcludeEmpty);
+        ca := c.Trim.Split([':'], TStringSplitOptions.ExcludeEmpty);
         if ca[0] = 'GOTO' then
          begin
           if ca[1].Trim.Chars[0] = 'M' then

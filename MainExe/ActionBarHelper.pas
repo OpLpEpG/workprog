@@ -127,7 +127,7 @@ class procedure TActionBarHelper.Show(ActionBar: TActionClient; path: string; Ac
 begin
   rootA := nil;
   TActionClient(root) := ActionBar;
-  for s in path.Split(['.'], ExcludeEmpty) do
+  for s in path.Split(['.'], TStringSplitOptions.ExcludeEmpty) do
    begin
     a := FindByCaption(root, s);
     if Assigned(a) then
@@ -175,7 +175,7 @@ end;
   s: string;
 begin
   TActionClient(root) := ActionBar;
-  for s in path.Split(['.'], ExcludeEmpty) do
+  for s in path.Split(['.'], TStringSplitOptions.ExcludeEmpty) do
    begin
     a := FindByCaption(root, s);
     if Assigned(a) then root := a

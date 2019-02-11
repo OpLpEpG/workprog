@@ -71,13 +71,13 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>14</VerInfo_Build>
+        <VerInfo_Build>16</VerInfo_Build>
         <VerInfo_Release>1</VerInfo_Release>
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
         <DCC_Description>Core 3.0.0 Корневые классы и утилиты</DCC_Description>
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
-        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.14;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=3.0.1.16;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=3.0.0.0;Comments=</VerInfo_Keys>
         <DCC_DUPLICATE_CTOR_DTOR>false</DCC_DUPLICATE_CTOR_DTOR>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -139,14 +139,6 @@
         <DCCReference Include="RootImpl.pas"/>
         <DCCReference Include="..\DBIntf.pas"/>
         <DCCReference Include="WlanClass.pas"/>
-        <DCCReference Include="..\..\..\Libs\WlanAPI\nduCType.pas"/>
-        <DCCReference Include="..\..\..\Libs\WlanAPI\nduEapTypes.pas"/>
-        <DCCReference Include="..\..\..\Libs\WlanAPI\nduL2cmn.pas"/>
-        <DCCReference Include="..\..\..\Libs\WlanAPI\nduNtDDNdis.pas"/>
-        <DCCReference Include="..\..\..\Libs\WlanAPI\nduWinDot11.pas"/>
-        <DCCReference Include="..\..\..\Libs\WlanAPI\nduWinNT.pas"/>
-        <DCCReference Include="..\..\..\Libs\WlanAPI\nduWlanAPI.pas"/>
-        <DCCReference Include="..\..\..\Libs\WlanAPI\nduWlanTypes.pas"/>
         <DCCReference Include="EditControl.pas"/>
         <DCCReference Include="ExcelImpl.pas"/>
         <DCCReference Include="..\UakiIntf.pas"/>
@@ -191,6 +183,14 @@
         <DCCReference Include="XMLDataSet.pas"/>
         <DCCReference Include="RangeSelector.pas"/>
         <DCCReference Include="XMLLua.EEPROM.pas"/>
+        <DCCReference Include="WlanAPI\nduCType.pas"/>
+        <DCCReference Include="WlanAPI\nduEapTypes.pas"/>
+        <DCCReference Include="WlanAPI\nduL2cmn.pas"/>
+        <DCCReference Include="WlanAPI\nduNtDDNdis.pas"/>
+        <DCCReference Include="WlanAPI\nduWinDot11.pas"/>
+        <DCCReference Include="WlanAPI\nduWinNT.pas"/>
+        <DCCReference Include="WlanAPI\nduWlanAPI.pas"/>
+        <DCCReference Include="WlanAPI\nduWlanTypes.pas"/>
         <None Include="..\Script.inc"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

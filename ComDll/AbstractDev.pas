@@ -3,7 +3,7 @@ unit AbstractDev;
 interface
 
 uses RootImpl, DeviceIntf, debug_except, RootIntf, ExtendIntf, tools, Parser, Container, DataSetIntf, XMLDataSet, FileCachImpl,
-     Menus, Generics.Collections, System.SyncObjs, Math, Winapi.ActiveX, Vcl.Forms,
+     Menus, Generics.Collections, System.SyncObjs, Math, Winapi.ActiveX, Vcl.Forms,  System.Win.Registry,
      Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc,
      System.Bindings.Outputs, RTTI;
 

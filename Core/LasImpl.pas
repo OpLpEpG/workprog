@@ -378,7 +378,7 @@ procedure TDSection.AddLine(const line: String);
   sNul, d: Double;
 begin
   sNul := Double(FOwner.Well.Items['NULL'].Value);
-  sd := line.Split([' '], ExcludeEmpty);
+  sd := line.Split([' '], TStringSplitOptions.ExcludeEmpty);
   SetLength(v, Length(sd));
   for  i := 0 to Length(v)-1 do
    begin

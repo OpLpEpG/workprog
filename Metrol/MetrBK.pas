@@ -318,8 +318,8 @@ class procedure TFormBK.Exec_EL1(v, t: IXMLNode);
   begin
     if index < 0 then  d := GetXNode(root, Format(path, [T_DEV])) else d := GetXNode(root, Format(path, [index, T_DEV])); 
     if index < 0 then  c := GetXNode(root, Format(path, [T_CLC])) else c := GetXNode(root, Format(path, [index, T_CLC])); 
-    c.Attributes[AT_VALUE] := k * Double(d.Attributes[AT_VALUE]);
-  end;  
+    if not VarIsNull(d.Attributes[AT_VALUE]) then c.Attributes[AT_VALUE] := k * Double(d.Attributes[AT_VALUE]);
+  end;
 begin
   root := v;
   trr := t;

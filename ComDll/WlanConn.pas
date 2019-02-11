@@ -48,7 +48,7 @@ class function TWlanConnectIO.ExtractHost(const Info: string): string;
   a: TArray<string>;
 begin
   Result := '192.168.43.5';
-  a := Info.Split([' '], ExcludeEmpty);
+  a := Info.Split([' '], TStringSplitOptions.ExcludeEmpty);
   if Length(a) = 0 then Exit;
   if Length(a) >= 2 then Result := inherited ExtractHost(a[1])
 end;
@@ -63,7 +63,7 @@ class function TWlanConnectIO.ExtractPort(const Info: string): Word;
   a: TArray<string>;
 begin
   Result := 5000;
-  a := Info.Split([' '], ExcludeEmpty);
+  a := Info.Split([' '], TStringSplitOptions.ExcludeEmpty);
   if Length(a) = 0 then Exit;
   if Length(a) >= 2 then Result := inherited ExtractPort(a[1])
 end;

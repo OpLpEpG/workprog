@@ -694,7 +694,7 @@ class function CTime.FromString(const s: string): TTime;
  var
   a: TArray<string>;
 begin
-  a := Trim(s).Split([' '], ExcludeEmpty);
+  a := Trim(s).Split([' '], TStringSplitOptions.ExcludeEmpty);
   if Length(a) = 1 then Result := StrToTime(a[0])
   else Result := a[0].ToInteger + StrToTime(a[1]);
 end;
@@ -907,7 +907,7 @@ end;
  var
   a: TArray<string>;
 begin
-  a := Trim(s).Split([' '], ExcludeEmpty);
+  a := Trim(s).Split([' '], TStringSplitOptions.ExcludeEmpty);
   if Length(a) = 1 then Result := StrToTime(a[0])
   else Result := a[0].ToInteger + StrToTime(a[1]);
 //
@@ -955,7 +955,7 @@ function TryGetX(Root: IXMLNode; const Path: string; out X: IXMLNode; const Attr
 begin
   Result := True;
   if not Assigned(Root) then Exit(False);
-  for s in path.Split(['.'], ExcludeEmpty) do
+  for s in path.Split(['.'], TStringSplitOptions.ExcludeEmpty) do
    begin
     if s = '/' then Root := Root.ParentNode
     else Root := Root.ChildNodes.FindNode(s);
@@ -974,7 +974,7 @@ function GetXNode(Root: IXMLNode; const Path: string; CreatePathNotExists: Boole
   s: string;
 begin
   if not Assigned(Root) then Exit(nil);
-  for s in path.Split(['.'], ExcludeEmpty) do
+  for s in path.Split(['.'], TStringSplitOptions.ExcludeEmpty) do
    begin
     Result := Root;
     Root := Root.ChildNodes.FindNode(s);
@@ -1204,7 +1204,7 @@ class operator TAddressRec.Explicit(const StrAdr: string): TAddressRec;
   s: string;
 begin
   SetLength(Result.Items, 0);
-  for s in StrAdr.Split([';'], ExcludeEmpty) do CArray.Add<Integer>(Result.Items, s.Trim.ToInteger);
+  for s in StrAdr.Split([';'], TStringSplitOptions.ExcludeEmpty) do CArray.Add<Integer>(Result.Items, s.Trim.ToInteger);
 { s := StrAdr;
 while s <> '' do
    begin
@@ -1296,7 +1296,7 @@ type
 //    class procedure Init(var clsInst: TCaseSensDispInv);
 //    class procedure DeInit(var clsInst: TCaseSensDispInv);
   protected
-    procedure DispInvoke(Dest: PVarData; const Source: TVarData; CallDesc: PCallDesc; Params: Pointer); override;
+    procedure DispInvoke(Dest: PVarData; [Ref] const Source: TVarData; CallDesc: PCallDesc; Params: Pointer); override;
   public
     procedure Clear(var V: TVarData); override;
     procedure Copy(var Dest: TVarData; const Source: TVarData; const Indirect: Boolean); override;
@@ -1324,7 +1324,7 @@ end;
 //  if Assigned(clsInst) then FreeAndNil(clsInst);
 //end;
 
-procedure TCaseSensDispInv.DispInvoke(Dest: PVarData; const Source: TVarData; CallDesc: PCallDesc; Params: Pointer);
+procedure TCaseSensDispInv.DispInvoke(Dest: PVarData; [Ref] const Source: TVarData; CallDesc: PCallDesc; Params: Pointer);
  const
   CDoMethod    = $01;
   CPropertyGet = $02;
@@ -2067,3 +2067,4 @@ finalization
 //  TVsql.DeInit(TCaseSensDispInv(TVsql.This));
 //  TVsqlAutoClear.DeInit(TCaseSensDispInv(TVsqlAutoClear.This));
 end.
+

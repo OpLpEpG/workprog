@@ -88,7 +88,7 @@ class function TJDTypeFormGamma.StrToGamma(const StrGamma: string): TGamma;
   i: Integer;
   a: TArray<string>;
 begin
-  a := StrGamma.Split([','], ExcludeEmpty);
+  a := StrGamma.Split([','], TStringSplitOptions.ExcludeEmpty);
   if Length(a) <> 256 then raise Exception.Create('Error Message');
   for i := 0 to 255 {Min(255, High(a))} do Result[i-128] :=('$'+a[i]).ToInteger;
 end;

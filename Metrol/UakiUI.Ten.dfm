@@ -114,7 +114,7 @@ object FrameUakiTEN: TFrameUakiTEN
   object btStop: TButton
     Left = 168
     Top = 22
-    Width = 33
+    Width = 41
     Height = 25
     Caption = #1057#1090#1086#1087
     Font.Charset = DEFAULT_CHARSET
@@ -125,5 +125,62 @@ object FrameUakiTEN: TFrameUakiTEN
     ParentFont = False
     TabOrder = 3
     OnClick = btStopClick
+  end
+  object edOff: TEdit
+    Tag = 2
+    Left = 168
+    Top = 47
+    Width = 41
+    Height = 16
+    AutoSize = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 4
+    Text = '150'
+  end
+  object cbauto: TCheckBox
+    Left = 172
+    Top = 65
+    Width = 80
+    Height = 15
+    BiDiMode = bdRightToLeft
+    Caption = #1072#1074#1090#1086' '#1089#1090#1072#1088#1090
+    ParentBiDiMode = False
+    TabOrder = 5
+  end
+  object btSart: TButton
+    Left = 215
+    Top = 22
+    Width = 41
+    Height = 25
+    Caption = #1057#1090#1072#1088#1090
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 6
+    OnClick = btSartClick
+  end
+  object edOn: TEdit
+    Tag = 2
+    Left = 215
+    Top = 47
+    Width = 41
+    Height = 16
+    AutoSize = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 7
+    Text = '0'
   end
 end

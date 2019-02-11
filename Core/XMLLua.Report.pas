@@ -121,13 +121,13 @@ begin
         if Assigned(ranges) then for n in XEnum(ranges) do
          begin
           // диапазон для офиса  С11 -С22
-          rngarr := string(n.Attributes['Cells']).Split([' '], ExcludeEmpty);
+          rngarr := string(n.Attributes['Cells']).Split([' '], TStringSplitOptions.ExcludeEmpty);
           // диапазон для STEPi калибровки
-          Indarr := string(n.Attributes['DataIndex']).Split([' '], ExcludeEmpty);
+          Indarr := string(n.Attributes['DataIndex']).Split([' '], TStringSplitOptions.ExcludeEmpty);
           if Length(rngarr) <> Length(Indarr) then raise Exception.Create(' Length(Cells) <> Length(DataIndex)');
           for i := 0 to Length(rngarr)-1 do
            try
-            xyarr := Indarr[i].Trim.Split([':'], ExcludeEmpty);
+            xyarr := Indarr[i].Trim.Split([':'], TStringSplitOptions.ExcludeEmpty);
             Xlo := xyarr[0].ToInteger;
             XHi := xyarr[1].ToInteger;
             Ylo := xyarr[2].ToInteger;

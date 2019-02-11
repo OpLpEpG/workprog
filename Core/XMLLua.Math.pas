@@ -797,7 +797,7 @@ begin
   root := Xtovar(TXMLLua.XNode(L, 1));
   s := root.СГК.DEV.VALUE;
   sm := 0;
-  for d in s.Split([' '], ExcludeEmpty) do sm := sm + d.ToInteger;
+  for d in s.Split([' '], TStringSplitOptions.ExcludeEmpty) do sm := sm + d.ToInteger;
   root.гк.DEV.VALUE := Sm;
   Result := 0;
 end;
@@ -850,7 +850,7 @@ begin
    root.Attributes['ISTOCHNIK'] := Trim(Copy(ss[2],1 , pos('Источник', ss[2])-1));
    for i := 1 to 13 do
     begin
-     sp := ss[i+3].Trim.split([' '], ExcludeEmpty);
+     sp := ss[i+3].Trim.split([' '], TStringSplitOptions.ExcludeEmpty);
      UpdatePoint(sp[0].ToDouble, sp[1].ToDouble, sp[2].ToDouble, sp[3].ToDouble, sp[4].ToDouble);
     end;
 {    begin

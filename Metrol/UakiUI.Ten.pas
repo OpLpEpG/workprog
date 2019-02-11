@@ -18,8 +18,13 @@ type
     lbT: TLabel;
     Label1: TLabel;
     btStop: TButton;
+    edOff: TEdit;
+    cbauto: TCheckBox;
+    btSart: TButton;
+    edOn: TEdit;
     procedure edKeyPress(Sender: TObject; var Key: Char);
     procedure btStopClick(Sender: TObject);
+    procedure btSartClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -32,6 +37,11 @@ implementation
 {$R *.dfm}
 
 { TFrameUakiTEN }
+
+procedure TFrameUakiTEN.btSartClick(Sender: TObject);
+begin
+  FuncUaki.TenStart;
+end;
 
 procedure TFrameUakiTEN.btStopClick(Sender: TObject);
 begin
@@ -49,13 +59,22 @@ end;
 
 procedure TFrameUakiTEN.UpdateScreen(TenLen: Integer; uaki: IUaki);
  var
-  a: Double;
+  a, amax: Double;
 begin
   lb1.Caption := uaki.TenPower[0].ToString;
   lb2.Caption := uaki.TenPower[1].ToString;
   lb3.Caption := uaki.TenPower[2].ToString;
   lbT.Caption := '';
-  for a in uaki.Temperature do lbT.Caption := lbT.Caption + Format('%6.2f ',[a]);
+  amax := 0;
+  for a in uaki.Temperature do
+   begin
+    lbT.Caption := lbT.Caption + Format('%6.2f ',[a]);
+    if a > amax then amax := a;
+   end;
+  if amax >= StrToFloat(edOff.Text) then
+      uaki.TenStop
+  else if cbauto.Checked and (amax < StrToFloat(edOn.Text)) then
+      uaki.TenStart;
 end;
 
 end.

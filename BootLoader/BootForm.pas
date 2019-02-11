@@ -55,8 +55,12 @@ type
     procedure DoOut;
     procedure DoRead;
     procedure DoLoad;
+    procedure DoRead32;
+    procedure DoLoad32;
     class var Recs: Integer;
     class var Pages: Integer;
+    class var adr_sz: Integer;
+    class var flash_begin: DWORD;
   protected
    const
     NICON = 293;
@@ -121,10 +125,11 @@ end;
 procedure TFormBoot.Loaded;
 begin
   inherited ;
-  CArray.Add<TChip>(Chips, Tchip.Create(1,  64, $34, 128, 'ATMega88'));
-  CArray.Add<TChip>(Chips, Tchip.Create(2, 128, $7C, 128, 'ATMega164'));
-  CArray.Add<TChip>(Chips, Tchip.Create(3, 128, $A9, 128, 'STM32'));
-  CArray.Add<TChip>(Chips, Tchip.Create(4, 128, $7C, 256, 'ATMega664'));
+  CArray.Add<TChip>(Chips, Tchip.Create(1,  64, $34, 128, 'ATMega88',8));
+  CArray.Add<TChip>(Chips, Tchip.Create(2, 128, $7C, 128, 'ATMega164',8));
+  CArray.Add<TChip>(Chips, Tchip.Create(3, 128, $180, 1024, 'STM32F103CB',32,$08002000));
+  CArray.Add<TChip>(Chips, Tchip.Create(4, 128, $7C, 256, 'ATMega664',8));
+  CArray.Add<TChip>(Chips, Tchip.Create(5, 128, $400, 4096, 'STM32F401',32,$08004000));
   SetAdr(-1);
   SetChip(-1);
   SetSerial(-1);
@@ -162,6 +167,8 @@ begin
     sb.Panels[SBT_CHIP].Text := Format('чип: %s', [Ch.Info]);
     Recs := ch.Recs;
     Pages := ch.Pages;
+    adr_sz := ch.adr_sz;
+    flash_begin := ch.flash_begin;
     Exit;
    end;
   sb.Panels[SBT_CHIP].Text := Format('чип %d отсутствует', [chip]);
@@ -341,27 +348,50 @@ type
   PPageRead =^TPageRead;
   TPageRead = packed record
     CmdAdr: Byte;
-    PageAdr: Word;
-    constructor Create(a, PageNo: Byte);
+    PageAdr: word;
+    constructor Create(a: Byte; aPageAdr: word);
+  end;
+  PPageRead32 =^TPageRead32;
+  TPageRead32 = packed record
+    CmdAdr: Byte;
+    PageAdr: Dword;
+    constructor Create(a: Byte; aPageAdr: Dword);
   end;
 
-constructor TPageRead.Create(a, PageNo: Byte);
+constructor TPageRead.Create(a: Byte; aPageAdr: word);
 begin
   CmdAdr := ToAdrCmd(a, CMD_READ);
-  PageAdr := PageNo * TFormBoot.Recs;
+  PageAdr := aPageAdr;//PageNo * TFormBoot.Recs;
 end;
+{ TPageRead32 }
+
+constructor TPageRead32.Create(a: Byte; aPageAdr: Dword);
+begin
+  CmdAdr := ToAdrCmd(a, CMD_READ);
+  PageAdr := aPageAdr;//PageNo * TFormBoot.Recs;
+end;
+
 
 type
   TPageWrite = packed record
     CmdAdr: Byte;
-    PageAdr: Word;
+    PageAdr: word;
     data: array[0..1023] of Byte;
-    constructor Create(a, PageNo: Byte; pp: Pointer);
+    constructor Create(a: Byte; aPageAdr: word; pp: Pointer);
+    class function Size: Integer; static;
+  end;
+  TPageWrite32 = packed record
+    CmdAdr: Byte;
+    PageAdr: DWord;
+    data: array[0..1023] of Byte;
+    constructor Create(a, aPageAdr: dword; pp: Pointer);
     class function Size: Integer; static;
   end;
 
   PPageReadRes =^TPageReadRes;
   TPageReadRes = TPageWrite;
+  PPageReadRes32 =^TPageReadRes32;
+  TPageReadRes32 = TPageWrite32;
 
   PPageWriteRes = ^TPageWriteRes;
   TPageWriteRes = packed record
@@ -369,18 +399,37 @@ type
     PageAdr: Word;
     Res: Word;
   end;
+  PPageWriteRes32 = ^TPageWriteRes32;
+  TPageWriteRes32 = packed record
+    CmdAdr: Byte;
+    PageAdr: DWord;
+    Res: DWord;
+  end;
 
-constructor TPageWrite.Create(a, PageNo: Byte; pp: Pointer);
+constructor TPageWrite32.Create(a, aPageAdr: dword; pp: Pointer);
 begin
   CmdAdr := ToAdrCmd(a, CMD_WRITE);
-  PageAdr := PageNo * TFormBoot.Recs;
+  PageAdr := aPageAdr;
+  Move(pp^, data, TFormBoot.Recs);
+end;
+
+class function TPageWrite32.Size: Integer;
+begin
+  Result := 1 + SizeOf(Dword) + TFormBoot.Recs;
+end;
+
+constructor TPageWrite.Create(a: Byte; aPageAdr: Word; pp: Pointer);
+begin
+  CmdAdr := ToAdrCmd(a, CMD_WRITE);
+  PageAdr := aPageAdr;
   Move(pp^, data, TFormBoot.Recs);
 end;
 
 class function TPageWrite.Size: Integer;
 begin
-  Result := 1 + 2 + TFormBoot.Recs;
+  Result := 1 + SizeOf(word) + TFormBoot.Recs;
 end;
+
 
 procedure TFormBoot.DoRead;
  const
@@ -429,7 +478,7 @@ begin
         Exit;
        end;
      end;
-    PgRd := TPageRead.Create(adr, CurPg); // enxt
+    PgRd := TPageRead.Create(adr, CurPg*Recs); // enxt
     try
      sleep(10);
      GetDevice.SendROW(@PgRd, SizeOf(TPageRead), RecFunc, 1000);
@@ -438,7 +487,7 @@ begin
      raise;
     end;
   end;
-  PgRd := TPageRead.Create(adr, CurPg); // enxt
+  PgRd := TPageRead.Create(adr, CurPg*Recs); // enxt
   try
    GetDevice.SendROW(@PgRd, SizeOf(TPageRead), RecFunc, 1000);
   except
@@ -446,9 +495,75 @@ begin
    raise;
   end;
 end;
+
+procedure TFormBoot.DoRead32;
+ const
+  RD_N = 20;
+  ER_N = 7;
+ var
+  RecFunc: TReceiveDataRef;
+  err: Integer;
+  CurPg: Integer;
+  PgRd: TPageRead32;
+  Flash: array of Byte;
+begin
+  GetDevice;
+  err := -1;
+  CurPg := 0;
+  SetLength(Flash, RD_N*Recs);
+  FFlagStop := False;
+  UpdateControl(False);
+  Memo.Clear;
+  RecFunc := procedure(p: Pointer; n: integer)
+   var
+    d: PPageReadRes32;
+  begin
+    if FFlagStop then Exit; // terminate
+    d := p;
+    if Assigned(d) and (n = TPageReadRes32.Size) and (d.CmdAdr = PgRd.CmdAdr) and (d.PageAdr = PgRd.PageAdr) then
+     begin // good
+      move(d.data[0], Flash[CurPg*Recs], Recs);
+      Inc(CurPg);
+      err := 0;
+      if CurPg >= RD_N then
+       begin // good end
+        UpdateControl(True);
+        ParsChip(@Flash[0]);
+        Exit;
+       end;
+     end
+    else
+     begin // bad
+      Inc(err);
+      memo.Lines.Insert(0, Format('Ошибка чтения %d ', [err]));
+      if err >= ER_N then
+       begin // bad end
+        memo.Lines.Insert(0, 'Невозможно счтитать');
+        UpdateControl(True);
+        Exit;
+       end;
+     end;
+    PgRd := TPageRead32.Create(adr, flash_begin+CurPg*Recs); // enxt
+    try
+     sleep(10);
+     GetDevice.SendROW(@PgRd, SizeOf(TPageRead32), RecFunc, 1000);
+    except
+     UpdateControl(True);
+     raise;
+    end;
+  end;
+  PgRd := TPageRead32.Create(adr, flash_begin+CurPg*Recs); // enxt
+  try
+   GetDevice.SendROW(@PgRd, SizeOf(TPageRead32), RecFunc, 1000);
+  except
+   UpdateControl(True);
+   raise;
+  end;
+end;
+
 procedure TFormBoot.btReadClick(Sender: TObject);
 begin
- DoRead;
+ if adr_sz = 32 then DoRead32 else DoRead;
 end;
 
 procedure TFormBoot.DoLoad;
@@ -508,7 +623,7 @@ begin
         Exit;
        end;
      end;
-    PgWr := TPageWrite.Create(adr, CurPg, @Buf[Recs*CurPg]); // enxt
+    PgWr := TPageWrite.Create(adr, Recs*CurPg, @Buf[Recs*CurPg]); // enxt
     try
      sleep(10);
      GetDevice.SendROW(@PgWr, TPageWrite.Size, RecFunc, 1000);
@@ -517,7 +632,7 @@ begin
      raise;
     end;
   end;
-  PgWr := TPageWrite.Create(adr, CurPg, @Buf[Recs*CurPg]); // enxt
+  PgWr := TPageWrite.Create(adr, Recs*CurPg, @Buf[Recs*CurPg]); // enxt
   try
    GetDevice.SendROW(@PgWr, TPageWrite.Size, RecFunc, 1000);
   except
@@ -526,9 +641,84 @@ begin
   end;
 end;
 
+procedure TFormBoot.DoLoad32;
+ const
+  ER_N = 7;
+ var
+  RecFunc: TReceiveDataRef;
+  err: Integer;
+  CurPg, Npg: Integer;
+  PgWr: TPageWrite32;
+begin
+  GetDevice;
+
+  err := -1;
+  CurPg := 0;
+
+  LoadFile(FFileName);
+
+  Npg := FileSize div Recs;
+  if (FileSize mod Recs) > 0 then Inc(Npg);
+
+  if Serial >0 then WriteSerialToBuf(Serial);
+
+  FFlagStop := False;
+  UpdateControl(False);
+  Memo.Clear;
+  memo.Lines.Add('Запись');
+  RecFunc := procedure(p: Pointer; n: integer)
+   var
+    d: PPageWriteRes32;
+  begin
+    if FFlagStop then Exit; // terminate
+    d := p;
+    if Assigned(d) and (n = SizeOf(TPageWriteRes32)) and (d.CmdAdr = PgWr.CmdAdr) and (d.PageAdr = PgWr.PageAdr)
+      and ((d.Res = $FFFFFFFF) or (d.Res = $FFFFFFFE)) then
+     begin
+      if d.Res = $FFFFFFFE then memo.Lines[0] := memo.Lines[0] + '.'
+      else memo.Lines[0] := memo.Lines[0] + ':';
+      Inc(CurPg);
+      err := 0;
+      if (CurPg >= Npg) and (d.Res = $FFFFFFFF) then
+       begin
+        memo.Lines.Add('Запись окончена');
+        UpdateControl(True);
+        Exit;
+       end;
+     end
+    else
+     begin
+      Inc(err);
+      if Assigned(d) then memo.Lines.Insert(0, Format('Ошибка записи %d page: %4x  err: %4x', [err, d.PageAdr, d.Res]))
+      else  memo.Lines.Insert(0, Format('Ошибка записи err: %d', [err]));
+      if err >= ER_N then
+       begin // bad end
+        memo.Lines.Insert(0, 'Невозможно записать');
+        UpdateControl(True);
+        Exit;
+       end;
+     end;
+    PgWr := TPageWrite32.Create(adr, flash_begin+CurPg*Recs, @Buf[Recs*CurPg]); // enxt
+    try
+     sleep(10);
+     GetDevice.SendROW(@PgWr, TPageWrite32.Size, RecFunc, 1000);
+    except
+     UpdateControl(True);
+     raise;
+    end;
+  end;
+  PgWr := TPageWrite32.Create(adr,flash_begin+CurPg*Recs, @Buf[Recs*CurPg]); // enxt
+  try
+   GetDevice.SendROW(@PgWr, TPageWrite32.Size, RecFunc, 1000);
+  except
+   UpdateControl(True);
+   raise;
+  end;
+end;
+
 procedure TFormBoot.btLoadClick(Sender: TObject);
 begin
-  DoLoad;
+ if adr_sz = 32 then DoLoad32 else DoLoad;
 end;
 
 procedure TFormBoot.btStopClick(Sender: TObject);

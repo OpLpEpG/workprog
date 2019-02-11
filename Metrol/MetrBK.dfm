@@ -34,19 +34,21 @@ object FormBK: TFormBK
     object lbInfo: TLabel
       Left = 0
       Top = 304
-      Width = 3
+      Width = 911
       Height = 13
       Align = alBottom
       Alignment = taCenter
       WordWrap = True
+      ExplicitWidth = 3
     end
     object lbAlpha: TLabel
       Left = 0
       Top = 291
-      Width = 3
+      Width = 911
       Height = 13
       Align = alBottom
       WordWrap = True
+      ExplicitWidth = 3
     end
     object Tree: TVirtualStringTree
       Left = 0
@@ -372,7 +374,7 @@ object FormBK: TFormBK
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 50
-          Width = 49
+          Width = 43
           WideText = 'IT'
         end>
     end

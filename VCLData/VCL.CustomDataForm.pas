@@ -40,7 +40,7 @@ begin
    Options := [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing];
    if not Execute() then Exit;
    TDebug.Log('%s, %d',[filter, FilterIndex]);
-   a := filter.Split([';'], ExcludeEmpty);
+   a := filter.Split([';'], TStringSplitOptions.ExcludeEmpty);
    if (Length(a) >= FilterIndex) and (GContainer as IImportDataManager).Execute(a[FilterIndex-1], FileName, ids) then
     begin
 

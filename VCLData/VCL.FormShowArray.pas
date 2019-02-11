@@ -24,6 +24,7 @@ type
 
   TFormShowArray = class(TDockIForm)
     ChartCode: TChart;
+    procedure ChartCodeMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
   private
     FDataDevice: string;
     FBindWorkRes: TWorkEventRes;
@@ -79,6 +80,20 @@ begin
     Bind('C_RemoveDevice', de, ['S_BeforeRemove']);
     Result := de.Get(FDataDevice);
     if Assigned(Result) then Bind('C_BindWorkRes',Result, ['S_WorkEventInfo']);
+   end;
+end;
+
+procedure TFormShowArray.ChartCodeMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+ var
+  s: TChartSeries;
+  SeriesIndex: Integer;
+begin
+  for s in ChartCode.SeriesList do
+   begin
+    SeriesIndex := s.Clicked(X, Y);
+    ChartCode.ShowHint := SeriesIndex <> -1;
+    if ChartCode.ShowHint then
+     ChartCode.Hint:='X='+FormatFloat('#.00',s.XScreenToValue(X)) +' Y='+FormatFloat('#.00',s.YScreenToValue(y)) + ' : '+s.ValueMarkText[SeriesIndex+1];
    end;
 end;
 

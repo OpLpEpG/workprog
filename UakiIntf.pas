@@ -83,6 +83,9 @@ type
    function GetTemperature: TArray<Double>;
 
    procedure TenStop;
+   procedure TenStart;
+   function GetIsTenPower: Boolean;
+   procedure SetIsTenPower(const Value: Boolean);
    procedure TermimateMoving;
 
    property Azi: IAxisAZI read GetAzi;
@@ -91,6 +94,7 @@ type
 
    property TenPower[Index: Integer]: Integer read GetTenPower write SetTenPower;
    property Temperature: TArray<Double> read GetTemperature;
+   property IzTenPower: Boolean  read GetIsTenPower write SetIsTenPower;
   end;
 
 implementation

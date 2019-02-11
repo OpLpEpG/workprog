@@ -6,6 +6,7 @@ uses sysutils, Classes,
      System.Generics.Collections;
  type
    TMetaData = class
+     class var Len_count: Integer;
      class function Generate(const SS: TStrings): TArray<Byte>;
    end;
 
@@ -160,7 +161,7 @@ end;
 class function TMetaType.ParseSimpleString(const line: string): TMetaValue;
  var
   a: TArray<string>;
-  userData, s, value: string;
+  userData, s, value, es: string;
   i, j: Integer;
   v: TMetaType;
 begin
@@ -171,7 +172,8 @@ begin
    begin
     if s.Contains('define') then
      begin
-      if userData = '' then raise Exception.Create('Error #define userData = "" ');
+      if userData = '' then raise Exception.CreateFmt('[%d,%d] Error #define userData = "" ', [TMetaData.Len_count+1, 0]);
+      s := s.Replace(#9,' ');
       i := s.IndexOf('define');
       s := s.Substring(i+6).Trim;
       value := s.Substring(s.IndexOf(' ')).Trim.Replace('"','').Trim;
@@ -184,26 +186,30 @@ begin
    begin
   // стандартные типы
     i := s.IndexOf(';');
-    if i <= 0 then raise Exception.Create('Error none ";" line ['+ line +']');
+    if i <= 0 then
+     begin
+      if line = '{' then  es := 'начало структукуры { должно быть с новой строки' else es := '';
+      raise Exception.CreateFmt('[%d,%d] Error none ";" line ['+ line +'] %s', [TMetaData.Len_count+1, i, es]);
+     end;
     s := s.Replace(';','').Trim;
     // array
     Result.ArrayLength := 0;
     i := s.IndexOf('[');
     j := s.IndexOf(']');
-    if (i*j < 0) then raise Exception.Create('Error array [ ]');
+    if (i*j < 0) then raise Exception.CreateFmt('[%d,%d] Error array [ ]', [TMetaData.Len_count+1, i]);
     if i > 0 then
      begin
-      if i > j then raise Exception.Create('Error Message ] [ ');
+      if i > j then raise Exception.CreateFmt('[%d,%d] Error Message ] [ ', [TMetaData.Len_count+1, i]);
       Result.ArrayLength := s.Substring(i+1,j-i-1).Trim.ToInteger;
       s := s.Remove(i, j-i+1)
      end;
     // end array
-    a := s.Split([' '], ExcludeEmpty);
+    a := s.Split([' ',#$9], ExcludeEmpty);
     if userData <> '' then Result.value := userData
     else Result.value := a[1].Trim;
     if FRegItem.TryGetValue(a[0].Trim, Result.tip) then Exit(Result);
    end;
-   raise Exception.Createfmt('Error ParseSimpleString %s', [s]);
+   raise Exception.CreateFmt('[%d,%d] Error ParseSimpleString %s', [TMetaData.Len_count+1, i, s]);
 end;
 
 { TMetaRecItem }
@@ -277,7 +283,6 @@ end;
 class function TMetaData.Generate(const SS: TStrings): TArray<Byte>;
  var
   s, recvalue, rectype: string;
-  i: Integer;
   v: TMetaRecItem;
 
   procedure BeginRec;
@@ -288,16 +293,16 @@ class function TMetaData.Generate(const SS: TStrings): TArray<Byte>;
      Exit;
     end;
    repeat
-    inc(i);
-    if i >= SS.Count then raise Exception.Create('none {');
-    s := ss[i].Trim;
+    inc(Len_count);
+    if Len_count >= SS.Count then raise Exception.CreateFmt('[%d,%d] none {', [TMetaData.Len_count+1, 0]);
+    s := ss[Len_count].Trim;
     if s = '' then Continue;
     if s.Chars[0] = '{' then
      begin
       s := s.Substring(1).Trim;  // если ( sss = sdsd;
       Exit;
      end
-    else raise Exception.Create('none {');
+    else raise Exception.CreateFmt('[%d,%d] none {', [TMetaData.Len_count+1, 0]);
    until false;
   end;
 
@@ -305,9 +310,9 @@ class function TMetaData.Generate(const SS: TStrings): TArray<Byte>;
   begin
     Result := False;
     repeat
-     inc(i);
-     if i >= SS.Count then raise Exception.Create('none }');
-     s := ss[i].Trim;
+     inc(Len_count);
+     if Len_count >= SS.Count then raise Exception.CreateFmt('[%d,%d] none }', [TMetaData.Len_count+1, 0]);
+     s := ss[Len_count].Trim;
     until s <> '';
     if s.Contains('}') then
      begin
@@ -315,19 +320,19 @@ class function TMetaData.Generate(const SS: TStrings): TArray<Byte>;
        begin
         s := s.Replace('}','').Replace(';','').Trim;
         recvalue := TMetaType.ExtractUserData(s);
-        rectype := s.Split([' '], ExcludeEmpty)[0];
-        inc(i);
+        rectype := s.Split([' ',#$9], ExcludeEmpty)[0];
+        inc(Len_count);
        end
-      else raise Exception.Create('окончание структукуры }; должно быть с новой строки');
+      else raise Exception.CreateFmt('[%d,%d] окончание структукуры }; должно быть с новой строки', [TMetaData.Len_count+1, 0]);
       Result := True;
      end;
   end;
 begin
-  i := 0;
+  Len_count := 0;
   // поиск структур
-  while i < ss.Count do
+  while Len_count < ss.Count do
    begin
-    s := ss[i].Trim;
+    s := ss[Len_count].Trim;
     // в файле только структуры !!!
     if s.Contains('typedef') then
      begin
@@ -342,9 +347,9 @@ begin
         // один экземпляр основной структуры  AllDataStruct_t
         if rectype = 'AllDataStruct_t' then Exit (v.Meta(recvalue, 0));
        end
-       else raise Exception.Create('typedef only struct');
+       else raise Exception.CreateFmt('[%d,%d] typedef only struct', [Len_count+1, 0]);
      end
-    else inc(i);
+    else inc(Len_count);
    end;
 end;
 

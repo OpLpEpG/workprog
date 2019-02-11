@@ -1062,8 +1062,8 @@ begin
    FS_Data.Size := DataSize;
    for i := 0 to DataSize-1 do
     begin
-     FData[i] := a^[i]+Ffifo[j];
-     Ffifo[j] := a^[i];
+     FData[i] := a[i]+Ffifo[j];
+     Ffifo[j] := a[i];
      j := (j+1) mod Length(Ffifo);
     end;
    NotifyData;
@@ -1108,7 +1108,7 @@ begin
    FS_Data.Size := DataSize;
    for i := 0 to DataSize-1 do
     begin
-     Ffifo[j] := a^[i];
+     Ffifo[j] := a[i];
      j := (j+1) mod Length(Ffifo);
      sum := 0;
      for k := 0 to Length(Ffifo)-1 do sum := sum + Ffifo[k];

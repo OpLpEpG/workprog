@@ -14,7 +14,10 @@ type
     Pages: Integer;
     Info: string;
     cbIndex: Integer;
-    constructor Create(AChip: Integer; ARecs: Integer; AInfoStart: Integer; APages: Integer; const Ainfo: string);
+    adr_sz: Integer;
+    flash_begin: DWORD;
+    constructor Create(AChip: Integer; ARecs: Integer; AInfoStart: Integer; APages: Integer; const Ainfo: string;
+    adrsz: Integer; flashbegin: DWORD=0);
   end;
   TChips = TArray<TChip>;
 
@@ -41,13 +44,15 @@ implementation
 
 { TChip }
 
-constructor TChip.Create(AChip, ARecs, AInfoStart, APages: Integer; const Ainfo: string);
+constructor TChip.Create(AChip, ARecs, AInfoStart, APages: Integer; const Ainfo: string; adrsz: Integer; flashbegin: DWORD);
 begin
   Chip := AChip;
   Recs := ARecs;
   InfoStart := AInfoStart;
   Pages := APages;
   info := Ainfo;
+  adr_sz := adrsz;
+  flash_begin := flashbegin;
 end;
 
 

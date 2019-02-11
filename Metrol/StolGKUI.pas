@@ -212,7 +212,7 @@ begin
      c := '';
      if cmd <> '' then
       begin
-       sa := string(cmd).Split(['|'], ExcludeEmpty);
+       sa := string(cmd).Split(['|'], TStringSplitOptions.ExcludeEmpty);
        if Length(sa) = 2 then
         begin
          sp := sa[0];
@@ -227,7 +227,7 @@ begin
        else ss := sa[0];
        if ss <> '' then
         begin
-         sa := ss.Split(['*'], ExcludeEmpty);
+         sa := ss.Split(['*'], TStringSplitOptions.ExcludeEmpty);
          ss := '';
          if Length(sa) = 2 then
           begin

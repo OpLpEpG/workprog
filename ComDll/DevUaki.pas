@@ -77,6 +77,7 @@ type
     FTemp: TArray<Double>;
     FTen: array[0..2] of Integer;
     FS_TenUpdate: Integer;
+    FIsTenPower: Boolean;
     procedure SetS_AxisUpdate(const Value: Integer);
    type
     TCycleUAK = class(TCycle)
@@ -98,6 +99,10 @@ type
     procedure SetTenPower(Index, Value: Integer);
     function GetTemperature: TArray<Double>;
     procedure TenStop;
+    procedure TenStart;
+
+    function GetIsTenPower: Boolean;
+    procedure SetIsTenPower(const Value: Boolean);
 
     procedure TermimateMoving; virtual;
 
@@ -118,8 +123,10 @@ type
     property Azi: TAxis read FAzi implements  IAxisAZI;
     property Zen: TAxis read FZen implements  IAxisZEN;
     property Viz: TAxis read FViz implements  IAxisVIZ;
+    property IzTenPower: Boolean  read GetIsTenPower write SetIsTenPower;
     property S_AxisUpdate: Integer read FS_AxisUpdate write SetS_AxisUpdate;
     property S_TenUpdate: Integer read FS_TenUpdate write FS_TenUpdate;
+
   published
     property CyclePeriod;
   end;
@@ -200,6 +207,11 @@ begin
   Fazi.QueryInterface(IAxisAZI, Result)
 end;
 
+function TDevUaki.GetIsTenPower: Boolean;
+begin
+  Result := FIsTenPower
+end;
+
 function TDevUaki.GetTemperature: TArray<Double>;
 begin
   Result := FTemp;
@@ -231,6 +243,12 @@ begin
   inherited;
 end;
 
+procedure TDevUaki.SetIsTenPower(const Value: Boolean);
+begin
+  if FIsTenPower <> Value then
+     if Value then TenStart else TenStop;
+end;
+
 procedure TDevUaki.SetS_AxisUpdate(const Value: Integer);
 begin
   FS_AxisUpdate := Value;
@@ -238,6 +256,12 @@ begin
 end;
 
 procedure TDevUaki.SetTenPower(Index, Value: Integer);
+begin
+  FTen[Index] := Value;
+  TenStart;
+end;
+
+procedure TDevUaki.TenStart;
   function p2d(p: integer): Integer;
   begin
     if p<0 then p := 0
@@ -245,13 +269,14 @@ procedure TDevUaki.SetTenPower(Index, Value: Integer);
     Result := Round(p*255/100);
   end;
 begin
-  FTen[Index] := Value;
   (IConnect as IUDPConnectIO).Send(Format('14p%d,%d,%d',[p2d(FTen[0]),p2d(FTen[1]),p2d(FTen[2])]));
+  FIsTenPower := True;
 end;
 
 procedure TDevUaki.TenStop;
 begin
   (IConnect as IUDPConnectIO).Send('14p0,0,0');
+  FIsTenPower := False;
 end;
 
 procedure TDevUaki.TermimateMoving;
@@ -272,7 +297,7 @@ procedure TDevUaki.OnCurrentData(const Data: string; status: integer);
 begin
   if status >= 24 then
    begin
-    a := Data.Trim.Replace('*', '').Split(['{', '[',' ', ',',']', '}'], ExcludeEmpty);
+    a := Data.Trim.Replace('*', '').Split(['{', '[',' ', ',',']', '}'], TStringSplitOptions.ExcludeEmpty);
     if Length(a) >= 4 then for I := 0 to 2 do Ften[i] := Round(a[i+1].Trim.ToInteger*100/255);
     if Length(a)-4 > 0 then
      begin
@@ -496,7 +521,7 @@ procedure TAxis.OnCurrentData(const Data: string; status: integer);
 begin
   if status >= 21 then
    begin
-    a := Data.Split(['{', ',', '}'], ExcludeEmpty);
+    a := Data.Split(['{', ',', '}'], TStringSplitOptions.ExcludeEmpty);
     FCurrentAngle := a[1].Trim.ToInteger / 1000;
   //  NeedAngle :=     a[2].Trim.ToInteger / 1000;
     s :=             a[3].Trim;

@@ -2,7 +2,9 @@ unit Parser;
 
 interface
 
-uses debug_except,
+uses {$IFNDEF UNUSE_debug_except}
+     debug_except,
+     {$ENDIF}
      SysUtils, System.Variants, Data.DB, System.Rtti, Xml.XMLIntf, Xml.XMLDoc, System.Classes,
      System.Generics.Collections;
 
@@ -146,8 +148,13 @@ class procedure TPars.FromVar(const DataArr: string; vt, arr_len: Integer; pOutD
   n: Integer;
   p: PByte;
 begin
-  a := DataArr.Split([' '], ExcludeEmpty);
-  if Length(a) <> arr_len then raise EBaseException.Create('ошибка преобразования массива Length(a) <> arr_len');
+  a := DataArr.Split([' '], TStringSplitOptions.ExcludeEmpty);
+  if Length(a) <> arr_len then
+  {$IFNDEF UNUSE_debug_except}
+    raise EBaseException.Create('ошибка преобразования массива Length(a) <> arr_len');
+  {$ELSE}
+    raise Exception.Create('ошибка преобразования массива Length(a) <> arr_len');
+  {$ENDIF}
   p := pOutData;
   n := VarTypeToLength(vt);
   for s in a do
@@ -406,7 +413,7 @@ class function TPars.ArrayStrToArray(const Data: string): TArray<Double>;
   a: TArray<string>;
   i: Integer;
 begin
-  a := data.Split([' '], ExcludeEmpty);
+  a := data.Split([' '], TStringSplitOptions.ExcludeEmpty);
   SetLength(Result, Length(a));
   for i := 0 to Length(a)-1 do Result[i] := a[i].ToDouble;
 end;
@@ -859,7 +866,7 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
      var
       a: TArray<string>;
     begin
-      a := s.Split(['|'], ExcludeEmpty);
+      a := s.Split(['|'], TStringSplitOptions.ExcludeEmpty);
       Result := u.AddChild(a[0]);
       if Length(a)>1 then Result.Attributes[AT_METR] := a[1];
     end;

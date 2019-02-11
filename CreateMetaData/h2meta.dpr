@@ -4,6 +4,8 @@ program h2meta;
 
 {$R *.res}
 
+{$DEFINE UNUSE_debug_except}
+
 uses
   System.SysUtils,
   System.Classes,
@@ -14,7 +16,7 @@ uses
 const
  PREAMB1 = '#pragma once';
  EMPTY = '';
- PREAMB3 = 'extern uint8_t ReadMetaData(uint8_t* p, uint8_t n, uint16_t from);';
+// PREAMB3 = 'extern uint8_t ReadMetaData(uint8_t* p, uint8_t n, uint16_t from);';
 
  PREAMB2 = 'const unsigned char __attribute__ ((section(".meta_data"), used)) cmetaAll[] = {';
  var
@@ -33,7 +35,7 @@ begin
 //     if TFile.Exists(BinFile) then TFile.Delete(BinFile);
 //     TFile.WriteAllBytes(BinFile, TMetaData.Generate(ss));
      a := TMetaData.Generate(ss);
-     outStr := outStr + [PREAMB1, EMPTY, EMPTY, PREAMB3, EMPTY, EMPTY, PREAMB2];
+     outStr := outStr + [PREAMB1, EMPTY, EMPTY,{ PREAMB3,} EMPTY, EMPTY, PREAMB2];
      n := 0;
      while n < Length(a) do
       begin
@@ -54,6 +56,7 @@ begin
       end;
      outStr := outStr + [EMPTY,EMPTY];
      TFile.WriteAllLines(ParamStr(2), outStr, TEncoding.ANSI);
+     Writeln('MetaData созданы : ', ParamStr(2));
     finally
      ss.Free;
     end;

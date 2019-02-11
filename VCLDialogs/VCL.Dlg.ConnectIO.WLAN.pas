@@ -25,7 +25,7 @@ procedure TFormSetupWlan.ApplyInfo(const inf: string);
  var
   a: TArray<string>;
 begin
-  a := inf.Split([' '], ExcludeEmpty);
+  a := inf.Split([' '], TStringSplitOptions.ExcludeEmpty);
   if Length(a) = 0 then Exit;
   if a[0] <> '' then edSSID.Text := a[0];
   if Length(a) >= 2 then inherited ApplyInfo(a[1])

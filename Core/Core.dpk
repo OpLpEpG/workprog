@@ -73,14 +73,6 @@ contains
   RootImpl in 'RootImpl.pas',
   DBIntf in '..\DBIntf.pas',
   WlanClass in 'WlanClass.pas',
-  nduCType in '..\..\..\Libs\WlanAPI\nduCType.pas',
-  nduEapTypes in '..\..\..\Libs\WlanAPI\nduEapTypes.pas',
-  nduL2cmn in '..\..\..\Libs\WlanAPI\nduL2cmn.pas',
-  nduNtDDNdis in '..\..\..\Libs\WlanAPI\nduNtDDNdis.pas',
-  nduWinDot11 in '..\..\..\Libs\WlanAPI\nduWinDot11.pas',
-  nduWinNT in '..\..\..\Libs\WlanAPI\nduWinNT.pas',
-  nduWlanAPI in '..\..\..\Libs\WlanAPI\nduWlanAPI.pas',
-  nduWlanTypes in '..\..\..\Libs\WlanAPI\nduWlanTypes.pas',
   EditControl in 'EditControl.pas',
   ExcelImpl in 'ExcelImpl.pas',
   UakiIntf in '..\UakiIntf.pas',
@@ -124,7 +116,15 @@ contains
   XMLLua.Report in 'XMLLua.Report.pas',
   XMLDataSet in 'XMLDataSet.pas',
   RangeSelector in 'RangeSelector.pas',
-  XMLLua.EEPROM in 'XMLLua.EEPROM.pas';
+  XMLLua.EEPROM in 'XMLLua.EEPROM.pas',
+  nduCType in 'WlanAPI\nduCType.pas',
+  nduEapTypes in 'WlanAPI\nduEapTypes.pas',
+  nduL2cmn in 'WlanAPI\nduL2cmn.pas',
+  nduNtDDNdis in 'WlanAPI\nduNtDDNdis.pas',
+  nduWinDot11 in 'WlanAPI\nduWinDot11.pas',
+  nduWinNT in 'WlanAPI\nduWinNT.pas',
+  nduWlanAPI in 'WlanAPI\nduWlanAPI.pas',
+  nduWlanTypes in 'WlanAPI\nduWlanTypes.pas';
 
 end.
 

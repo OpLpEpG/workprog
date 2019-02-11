@@ -116,7 +116,7 @@ procedure TScinLua.ErrorShow(const lin_ind_len: string);
   pos: Integer;
   a: Tarray<string>;
 begin
-   a := lin_ind_len.Split([':'], ExcludeEmpty);
+   a := lin_ind_len.Split([':'], TStringSplitOptions.ExcludeEmpty);
    pos := SendEditor(SCI_PositionFromLIne, a[0].ToInteger-1,0);
    IndicatorFillRange(pos+a[1].ToInteger, a[2].ToInteger);
 end;

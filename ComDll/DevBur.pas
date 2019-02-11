@@ -590,7 +590,7 @@ end;
 
 procedure TDeviceBur.Turbo(speed: integer);
  const
-  SPD: array[0..7]of Integer = (125000, 500000, 1000000, 2000000, 3000000, 8000000, 12000000, 100000000);
+  SPD: array[0..7]of Integer = (125000, 500000, 1000000, 2250000, 4500000, 8000000, 12000000, 100000000);
 begin
   with SerialQe, ConnectIO do
    begin

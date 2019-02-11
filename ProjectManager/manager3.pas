@@ -783,7 +783,7 @@ begin
 
   dir := TPath.GetDirectoryName(FileName);
   flName := TPath.GetFileNameWithoutExtension(FileName);
-  last := dir.Split([Tpath.DirectorySeparatorChar], ExcludeEmpty);
+  last := dir.Split([Tpath.DirectorySeparatorChar], TStringSplitOptions.ExcludeEmpty);
   ladtDir := last[High(last)];
   if (not SameText(flName, ladtDir)) {and (MessageDlg('Cоздать директорию ..\'+flName +'\ ?', mtInformation, [mbYes, mbNo], 0) = mrYes)} then
    begin

@@ -75,11 +75,11 @@ implementation
 uses AbstractPlugin, tools;
 
 type
- ESpeed = (S125K = $80, S500K = $40, S1M = $20, S2M = $10,
+ ESpeed = (S125K = $80, S500K = $40, S1M = $20, S2M = $10, S4M = $08,
            SSD_ENA = $4000, USB = $8000);
 const
-  CONST_SPEED: array[0..3] of ESpeed = (S125K, S500K, S1M, S2M);
-  TXT_SPEDE: array[0..Length(CONST_SPEED)-1] of string = ('125K','0.5M','1M','2M');
+  CONST_SPEED: array[0..4] of ESpeed = (S125K, S500K, S1M, S2M, S4M);
+  TXT_SPEDE: array[0..Length(CONST_SPEED)-1] of string = ('125K','0.5M','1M','2.25M','4.5M');
 
 function TFormDlgRam.Execute(Modul: IXMLNode; Res: TDialogResult): Boolean;
   procedure EnableSerial(ena: Boolean);

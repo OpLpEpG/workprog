@@ -260,14 +260,14 @@ class operator TShowInfos.Implicit(const Value: string): TShowInfos;
   mp: TMenuPath;
 begin
   SetLength(Result.Data, 0);
-  for bar in Value.Split([';'], ExcludeEmpty) do // bar paths
+  for bar in Value.Split([';'], TStringSplitOptions.ExcludeEmpty) do // bar paths
    begin
     all := bar.Trim.Split([':']);
     si.Bar := all[0].Trim.ToInteger;
     SetLength(si.path, 0);
-    if Length(all) > 1 then for s in all[1].Split(['.'], ExcludeEmpty) do
+    if Length(all) > 1 then for s in all[1].Split(['.'], TStringSplitOptions.ExcludeEmpty) do
      begin
-      pf := s.Split(['|'], ExcludeEmpty);
+      pf := s.Split(['|'], TStringSplitOptions.ExcludeEmpty);
       mp.Caption := pf[0];
       if Length(pf) > 1 then mp.Index := pf[1].Trim.ToInteger() else mp.Index := -1;
       CArray.Add<TMenuPath>(si.path, mp);

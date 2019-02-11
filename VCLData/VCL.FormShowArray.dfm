@@ -51,6 +51,7 @@ object FormShowArray: TFormShowArray
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    OnMouseMove = ChartCodeMouseMove
     DefaultCanvas = 'TTeeCanvas3D'
     PrintMargins = (
       15

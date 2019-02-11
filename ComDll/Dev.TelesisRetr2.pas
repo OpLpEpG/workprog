@@ -965,7 +965,7 @@ begin
    a := Data;
    for i := 0 to DataSize-1 do
     begin
-     Ffifo[j] := a^[i];
+     Ffifo[j] := a[i];
      j := (j+1) mod Length(Ffifo);
      sum := 0;
      for k := 0 to Length(Ffifo)-1 do sum := sum + Ffifo[k];

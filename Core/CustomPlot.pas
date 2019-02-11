@@ -1889,7 +1889,7 @@ var
   a: TArray<string>;
 begin
 //  Tdebug.log('SetGammaStr(const Value) : '+ Value);
-  a := string(Value).Split([','], ExcludeEmpty);
+  a := string(Value).Split([','], TStringSplitOptions.ExcludeEmpty);
   if Length(a) <> 256 then
     raise Exception.Create('Error Message');
   for i := 0 to 255 {Min(255, High(a))} do
