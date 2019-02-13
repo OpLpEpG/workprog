@@ -22,8 +22,8 @@
 #*.deployproj
 #
 
-!_exe\Debug\*.dll 
-!_exe\Debug\Devices\*.* 
+! _exe\Debug\*.dll 
+! _exe\Debug\Devices\*.* 
 
 .hg/
 .hgignore
