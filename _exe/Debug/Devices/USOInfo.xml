@@ -1,2 +1,0 @@
-<?xml version="1.0"?>
-<DEVICE SIZE="0"><УСО SIZE="0" ADDR="100" INFO="УСО проверка устаревшего протокола"><WRK SIZE="8" FLOW_PROTOCOL="2"><время METR="WT_USO_PSK"><DEV TYPE="2" INDEX="0"/></время><счетчик_подьема><DEV TYPE="18" INDEX="1"/></счетчик_подьема><счетчик_спуска><DEV TYPE="18" INDEX="2"/></счетчик_спуска><нагрузка><DEV TYPE="18" INDEX="3"/></нагрузка></WRK></УСО></DEVICE>
