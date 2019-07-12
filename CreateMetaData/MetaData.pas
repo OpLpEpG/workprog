@@ -29,11 +29,13 @@ type
      FVarType: Integer;
      FItems: TArray<TMetaValue>;
      class var FRegItem: TDictionary<string, TMetaType>;
+     class var FDefines: TDictionary<string, string>;
      class procedure Reg(const typ: string; vart: Integer; cls: TMetaTypeClass); overload;
      class procedure Reg(const typ: string; Item: TMetaType); overload;
      class constructor Create;
      class destructor Destroy;
      class function ExtractUserData(var s: string): string;
+     class function GetValue(const s: string): string;
    protected
      function Size(const Value: string; ArrayLength: Integer): Integer; virtual;
      function Meta(const Value: string; ArrayLength: Integer): TArray<Byte>; virtual;
@@ -82,6 +84,7 @@ end;
 
 class constructor TMetaType.Create;
 begin
+  FDefines := TDictionary<string, string>.Create();
   FRegItem := TDictionary<string, TMetaType>.Create();
   Reg('int8_t', varShortInt, TMetaType);
   Reg('uint8_t', varByte, TMetaType);
@@ -116,6 +119,7 @@ end;
 class destructor TMetaType.Destroy;
 begin
   FRegItem.Free;
+  FDefines.Free;
 end;
 
 function TMetaType.Add(data: TMetaValue): TMetaValue;
@@ -158,12 +162,16 @@ begin
   else Result := '';
 end;
 
+class function TMetaType.GetValue(const s: string): string;
+begin
+  if not FDefines.TryGetValue(s, Result) then Exit(s);
+end;
+
 class function TMetaType.ParseSimpleString(const line: string): TMetaValue;
  var
   a: TArray<string>;
   userData, s, value, es: string;
   i, j: Integer;
-  v: TMetaType;
 begin
   s := line.Trim;
   userData := ExtractUserData(s);
@@ -200,7 +208,7 @@ begin
     if i > 0 then
      begin
       if i > j then raise Exception.CreateFmt('[%d,%d] Error Message ] [ ', [TMetaData.Len_count+1, i]);
-      Result.ArrayLength := s.Substring(i+1,j-i-1).Trim.ToInteger;
+      Result.ArrayLength := GetValue(s.Substring(i+1,j-i-1).Trim).ToInteger;
       s := s.Remove(i, j-i+1)
      end;
     // end array
@@ -327,6 +335,17 @@ class function TMetaData.Generate(const SS: TStrings): TArray<Byte>;
       Result := True;
      end;
   end;
+  procedure AddDefine(const line: string);
+   var
+    a: TArray<string>;
+    i: Integer;
+  begin
+    s := s.Replace(#9,' ');
+    i := s.IndexOf('define');
+    s := s.Substring(i+6).Trim;
+    a := s.Split([' '], ExcludeEmpty);
+    TMetaType.FDefines.Add(a[0], a[1]);
+  end;
 begin
   Len_count := 0;
   // поиск структур
@@ -348,6 +367,12 @@ begin
         if rectype = 'AllDataStruct_t' then Exit (v.Meta(recvalue, 0));
        end
        else raise Exception.CreateFmt('[%d,%d] typedef only struct', [Len_count+1, 0]);
+     end
+    else if (s <> '') and (s.Chars[0] = '#') and s.Contains('define') then
+     begin
+      if s.Contains('/') then Exception.CreateFmt('[%d,%d] не должно быть // /*', [TMetaData.Len_count+1, s.IndexOf('/')]);
+      AddDefine(s);
+      inc(Len_count);
      end
     else inc(Len_count);
    end;

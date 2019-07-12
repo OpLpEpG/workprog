@@ -127,14 +127,6 @@ begin
    Result := Assigned(n) and n.HasAttribute(CheckName) and Boolean(n.Attributes[CheckName]);
 end;
 
-procedure TFormParamsAbstract.SetChecked(Colomn: Integer; node: IXMLNode; Flag: Boolean);
- var
-  n: IXMLNode;
-begin
-  if Colomn = 0 then n := node.ChildNodes.FindNode(T_DEV) else n := node.ChildNodes.FindNode(T_CLC);
-  if Assigned(n) and n.HasAttribute(CheckName) then n.Attributes[CheckName] := Flag;
-end;
-
 procedure TFormParamsAbstract.ClickAllMenu(Sender: TObject);
  var
   n, m, root: IXMLNode;
@@ -153,6 +145,14 @@ end;
 procedure TFormParamsAbstract.ClickAllChild(Sender: TObject);
 begin
   SetCheckedAll(RootHot, TMenuItem(Sender).Tag, TMenuItem(Sender).Parent = NSetChild);
+end;
+
+procedure TFormParamsAbstract.SetChecked(Colomn: Integer; node: IXMLNode; Flag: Boolean);
+ var
+  n: IXMLNode;
+begin
+  if Colomn = 0 then n := node.ChildNodes.FindNode(T_DEV) else n := node.ChildNodes.FindNode(T_CLC);
+  if Assigned(n) and n.HasAttribute(CheckName) then n.Attributes[CheckName] := Flag;
 end;
 
 procedure TFormParamsAbstract.SetCheckedAll(Root: IXMLNode; Colomn: Integer; Flag: Boolean);

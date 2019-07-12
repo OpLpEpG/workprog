@@ -315,9 +315,11 @@ end;
 procedure TFormDlgRam.inerReadSSD;
  const
   MB: int64 = 1024*1024;
+  GB: int64 = 1024*1024*1024;
  var
   i: Integer;
   ram: IXMLNode;
+  lastAdrSave: int64;
 begin
   if cbSD.ItemIndex < 0  then raise EFrmDlgRam.Create('Не выбран диск');
   ram := FModul.ChildNodes.FindNode(T_RAM);
@@ -327,7 +329,7 @@ begin
   FTerminate := False;
   FTerminated := False;
   Progress.Position := 0;
-  
+
   FRecSize := Ram.Attributes[AT_SIZE];
 //  FFrom := (StrToInt64(edBegin.Text)*MB div FRecSize) * FRecSize;
 //  FCnt :=  (StrToInt64(edCnt.Text)*MB div FRecSize) * FRecSize;
@@ -339,6 +341,18 @@ begin
   ram.Attributes[AT_FROM_TIME] := CTime.AsString(2.097152/24/3600 * (FFrom div FRecSize));
 
   for I := 0 to sb.Panels.Count-1 do sb.Panels[i].Text := '';
+
+  if (RangeSelect.adr.last > FSDStream.Size) then
+   begin
+    lastAdrSave := RangeSelect.adr.last;
+    RangeSelect.Range.SelEnd := FSDStream.Size div FRecSize;
+
+    raise ENeedDialogException.CreateFmt('Размер физической памяти %1.2f GB меньше выбранного %1.2f GB ' +#$D#$A +
+    'Установлен соответствующий физической памяти!',
+          [FSDStream.Size / GB, lastAdrSave / GB]);
+   end;
+
+
   UpdateControls(False);
   try
    FSDStream.AsyncCopyTo(GFileDataFactory.ConstructFileName(ram), FFrom, FCnt, cbToFF.Checked, ReadSSDEvent);

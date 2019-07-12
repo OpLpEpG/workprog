@@ -61,13 +61,16 @@ object FrameSelectParam: TFrameSelectParam
       object NSetAll: TMenuItem
         Tag = 2
         Caption = #1042#1089#1077
+        OnClick = ppClick
       end
       object NSetRow: TMenuItem
         Caption = '[D] "'#1057#1099#1088#1099#1077'" '#1076#1072#1085#1085#1099#1077
+        OnClick = ppClick
       end
       object NSetTrr: TMenuItem
         Tag = 1
         Caption = '[C] '#1056#1072#1089#1095#1077#1090#1085#1099#1077
+        OnClick = ppClick
       end
     end
     object NDel: TMenuItem
@@ -75,13 +78,16 @@ object FrameSelectParam: TFrameSelectParam
       object NClrAll: TMenuItem
         Tag = 2
         Caption = #1042#1089#1077
+        OnClick = ppClick
       end
       object NClrRow: TMenuItem
         Caption = '[D] "'#1057#1099#1088#1099#1077'" '#1076#1072#1085#1085#1099#1077
+        OnClick = ppClick
       end
       object NClrTrr: TMenuItem
         Tag = 1
         Caption = '[C] '#1056#1072#1089#1095#1077#1090#1085#1099#1077
+        OnClick = ppClick
       end
     end
     object N1: TMenuItem
@@ -92,13 +98,16 @@ object FrameSelectParam: TFrameSelectParam
       object NSetChildALL: TMenuItem
         Tag = 2
         Caption = #1042#1089#1077
+        OnClick = ppClick
       end
       object NSetChildRow: TMenuItem
         Caption = '[D] "'#1057#1099#1088#1099#1077'" '#1076#1072#1085#1085#1099#1077
+        OnClick = ppClick
       end
       object NSetChildTRR: TMenuItem
         Tag = 1
         Caption = '[C] '#1056#1072#1089#1095#1077#1090#1085#1099#1077
+        OnClick = ppClick
       end
     end
     object NClrChild: TMenuItem
@@ -106,13 +115,16 @@ object FrameSelectParam: TFrameSelectParam
       object NClrChildALL: TMenuItem
         Tag = 2
         Caption = #1042#1089#1077
+        OnClick = ppClick
       end
       object NClrChildRow: TMenuItem
         Caption = '[D] "'#1057#1099#1088#1099#1077'" '#1076#1072#1085#1085#1099#1077
+        OnClick = ppClick
       end
       object NClrChildTrr: TMenuItem
         Tag = 1
         Caption = '[C] '#1056#1072#1089#1095#1077#1090#1085#1099#1077
+        OnClick = ppClick
       end
     end
   end

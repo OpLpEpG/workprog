@@ -1,4 +1,4 @@
-п»ї#pragma  once
+#pragma  once
 #include <stdint.h>
 
 #pragma pack(push, 1)
@@ -31,18 +31,18 @@ typedef struct
 #pragma pack(push, 1)
 typedef struct
 {
-	int16_t gk; /// РіРє
+	int16_t gk; /// гк
 } gamma_t;
 #pragma pack(pop)
-/*    РЈСЃС‚Р°РЅРѕРІРєР° СЂР°Р·РјРµСЂР° РІС‹СЂР°РІРЅРёРІР°РЅРёСЏ РІ 1 Р±Р°Р№С‚,
-    РѕРїРёСЃР°РЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂС‹ Рё РІРѕР·РІСЂР°С‚ РїСЂРµРґС‹РґСѓС‰РµР№ РЅР°СЃС‚СЂРѕР№РєРё. */
+/*    Установка размера выравнивания в 1 байт,
+    описание структуры и возврат предыдущей настройки. */
 
 #pragma pack(push, 1)
 typedef struct
 {
 	float T;
-	uint16_t AmpH;  /// РїРѕС‚СЂРµР±Р»РµРЅРёРµ
-	gamma_t GR;     /// Р“Рљ|GK1
+	uint16_t AmpH;  /// потребление
+	gamma_t GR;     /// ГК|GK1
 	accel_t accel;  /// accel|CLA1
 	fkd_t fkd;
 } Caliper_t ;
@@ -51,8 +51,8 @@ typedef struct
 #pragma pack(push, 1)
 typedef struct
 {
-	uint8_t automat;   /// Р°РІС‚РѕРјР°С‚|AU
-	int32_t Time;      /// РІСЂРµРјСЏ|WT
+	uint8_t automat;   /// автомат|AU
+	int32_t Time;      /// время|WT
 	Caliper_t Caliper;
 } DataStructW_t ;
 #pragma pack(pop)
@@ -61,7 +61,7 @@ typedef struct
 typedef struct
 {
 #   define RAM_SIZE 16000 /// varRamSize
-	int32_t Time;         /// РІСЂРµРјСЏ|WT
+	int32_t Time;         /// время|WT
 	Caliper_t Caliper;
 } DataStructR_t ;
 #pragma pack(pop)
@@ -70,7 +70,7 @@ typedef struct
 typedef struct
 {
 #	define ADDRESS_PROC 7         /// var_adr
-#	define DEV_INFO  "__DATE__ РџСЂРѕС„РёР»РµРјРµСЂ v3" /// var_info
+#	define DEV_INFO  "__DATE__ Профилемер v3" /// var_info
 #	define CHIP_NUMBER 2       		   /// varChip
 #	define SERIAL_NUMBER 1    		   /// varSerial
    DataStructW_t Wrk; /// WRK

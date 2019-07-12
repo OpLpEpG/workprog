@@ -44,8 +44,11 @@ type
       CellRect: TRect);
     procedure TreeMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure ppMPopup(Sender: TObject);
+    procedure ppClick(Sender: TObject);
   private
-    RootHot: PNodeExData;
+    RootHot: PVirtualNode;
+    type TSelType = (stDEV, stCLC, stALL);
+    procedure SelectData(root: PVirtualNode; selFlag: Boolean; itemType: TSelType);
     procedure InnerInitTree(BD: TDataSet);
     procedure DrawCheckBox(const Canvas: TCanvas; const Rect: TRect; const Checked: Boolean);
   public
@@ -179,16 +182,57 @@ begin
   else for i := 0 to BD.FieldList.Count-1 do AddField(BD.FieldList[i], BD.FieldList[i].FullName.Split(['.']));
 end;
 
+procedure TFrameSelectParam.ppClick(Sender: TObject);
+ var
+  Flg: Boolean;
+  m : TMenuItem;
+  t: TSelType;
+begin
+  m := TMenuItem(Sender);
+  Flg := (m.Parent = NSet) or (m.Parent = NSetChild);
+  SelectData(RootHot, Flg, TSelType(m.Tag))
+end;
+
 procedure TFrameSelectParam.ppMPopup(Sender: TObject);
 begin
   NClrChild.Visible := False;
   NSetChild.Visible := False;
   if Assigned(Tree.HotNode) then
    begin
-    RootHot := Tree.GetNodeData(Tree.HotNode);
+    RootHot := Tree.HotNode;
     NClrChild.Visible := True;
     NSetChild.Visible := True;
-   end;
+   end
+  else RootHot := nil;
+end;
+
+procedure TFrameSelectParam.SelectData(root: PVirtualNode; selFlag: Boolean; itemType: TSelType);
+  procedure Chek(n: PVirtualNode);
+  begin
+    with PNodeExData(Tree.GetNodeData(n))^ do
+     begin
+      if Assigned(DEVField) and (itemType in [stALL, stDEV]) then DEVChecked := selFlag;
+      if Assigned(CLCField) and (itemType in [stALL, stCLC]) then CLCChecked := selFlag;
+     end;
+  end;
+  procedure chldChek(rt: PVirtualNode);
+   var
+    n: PVirtualNode;
+  begin
+    for n in Tree.ChildNodes(rt) do
+     begin
+      Chek(n);
+      if n.ChildCount > 0 then chldChek(n);
+     end
+  end;
+ var
+  n: PVirtualNode;
+begin
+  if not Assigned(root) then
+    for n in Tree.Nodes() do Chek(n)
+  else
+    chldChek(root);
+  Tree.Repaint;
 end;
 
 procedure TFrameSelectParam.TreeGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);

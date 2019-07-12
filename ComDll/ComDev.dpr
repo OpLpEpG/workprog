@@ -25,7 +25,7 @@ uses
   AbstractDev in 'AbstractDev.pas',
   DevPsk in 'DevPsk.pas',
   DevBur in 'DevBur.pas',
-  NetConn in 'NetConn.pas',
+  RestConn in 'RestConn.pas',
   WlanConn in 'WlanConn.pas',
   UDPConn in 'UDPConn.pas',
   DevUaki in 'DevUaki.pas',
@@ -39,7 +39,8 @@ uses
   Dev.GLUSonic in 'Dev.GLUSonic.pas',
   Dev.BK in 'Dev.BK.pas',
   Dev.TelesisRetr2 in 'Dev.TelesisRetr2.pas',
-  MicroSDConn in 'MicroSDConn.pas';
+  MicroSDConn in 'MicroSDConn.pas',
+  NetConn in 'NetConn.pas';
 
 {$R *.res}
 
@@ -70,6 +71,7 @@ begin
   GetConnectIOCB(2, 'NetPort', 'Соединение по Ethernet');
   GetConnectIOCB(3, 'WlanPort', 'Соединение по WiFi');
   GetConnectIOCB(4, 'UDP', 'Соединение по UDP');
+  GetConnectIOCB(5, 'Rest', 'Соединение по HTTP');
  // GetConnectIOCB(5, 'MicroSD', 'Чтение памяти с SD карты');
 end;
 
@@ -79,6 +81,7 @@ begin
    2:  Result := TNetConnectIO.Create();
    3:  Result := TWlanConnectIO.Create();
    4:  Result := TUDPConnectIO.Create();
+   5:  Result := TRestConnectIO.Create();
  //  5:  Result := TMicroSDConnectIO.Create();
   else Result := TComConnectIO.Create();
   end;
@@ -95,14 +98,14 @@ begin
    2:  Result := TNetConnectIO.Enum();
    3:  Result := TWlanConnectIO.Enum();
    4:  Result := TUDPConnectIO.Enum();
-   5:  Result := TMicroSDConnectIO.Enum();
+   5:  Result := TRestConnectIO.Enum();
   else Result := TComConnectIO.Enum();
   end;
 end;
 
 function TComDevPlugin.IsManualCreate(ConnectID: Integer): Boolean;
 begin
-  Result := ConnectID in [2,3,4];
+  Result := ConnectID in [2,3,4,5];
 end;
 
 class function TComDevPlugin.GetHInstance: THandle;

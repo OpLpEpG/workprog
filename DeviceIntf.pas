@@ -94,6 +94,9 @@ type
   INetConnectIO = interface(IConnectIO)
   ['{F7222E26-D257-4288-802C-EDAC8ED0EE9E}']
   end;
+  IRestConnectIO = interface(IConnectIO)
+  ['{C31C36BB-C528-496B-9DB5-FE3DFF6F2404}']
+  end;
   ///	<summary>
   ///	  реализация IConnectIO для чтения памяти с microSD Диска
   ///	</summary>

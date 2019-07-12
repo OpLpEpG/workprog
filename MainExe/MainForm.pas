@@ -167,6 +167,10 @@ begin
 
   FDecimalSeparator := FormatSettings.DecimalSeparator;
   FormatSettings.DecimalSeparator := '.';
+  FormatSettings.DateSeparator := '.';
+  FormatSettings.TimeSeparator := ':';
+  FormatSettings.ShortDateFormat := 'dd.MM.yyyy';
+  FormatSettings.LongTimeFormat := 'h:mm:ss';
 
   SetErrorMode(SetErrorMode(0) or SEM_NOOPENFILEERRORBOX or SEM_FAILCRITICALERRORS);
   Plugins.SetVersion(VERS1000);

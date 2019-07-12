@@ -1,7 +1,7 @@
 object FormExportLASP3: TFormExportLASP3
   Left = 0
   Top = 0
-  ClientHeight = 441
+  ClientHeight = 465
   ClientWidth = 340
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,33 +12,35 @@ object FormExportLASP3: TFormExportLASP3
   OldCreateOrder = False
   DesignSize = (
     340
-    441)
+    465)
   PixelsPerInch = 96
   TextHeight = 13
   object pc: TPageControl
     Left = 8
     Top = 8
     Width = 324
-    Height = 369
+    Height = 393
     ActivePage = tshSelDir
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
     TabPosition = tpBottom
+    ExplicitHeight = 369
     object tshSelDir: TTabSheet
       Caption = #1055#1091#1090#1100
       ImageIndex = 1
+      ExplicitHeight = 343
       inline FrameSelectPath: TFrameSelectPath
         Left = 0
         Top = 0
         Width = 316
-        Height = 343
+        Height = 367
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 316
         ExplicitHeight = 343
         inherited Tree: TVirtualStringTree
           Width = 316
-          Height = 343
+          Height = 367
           ExplicitWidth = 316
           ExplicitHeight = 343
           Columns = <
@@ -53,20 +55,21 @@ object FormExportLASP3: TFormExportLASP3
     end
     object tshSelParam: TTabSheet
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
+      ExplicitHeight = 343
       inline FrameSelectParam1: TFrameSelectParam
         Left = 0
         Top = 0
         Width = 316
-        Height = 343
+        Height = 367
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 316
         ExplicitHeight = 343
         inherited Tree: TVirtualStringTree
           Width = 316
-          Height = 343
+          Height = 367
           ExplicitWidth = 316
-          ExplicitHeight = 343
+          ExplicitHeight = 367
           Columns = <
             item
               MaxWidth = 24
@@ -99,7 +102,7 @@ object FormExportLASP3: TFormExportLASP3
         Left = 0
         Top = 0
         Width = 316
-        Height = 343
+        Height = 367
         Align = alClient
         DataSource = ds
         TabOrder = 0
@@ -114,9 +117,10 @@ object FormExportLASP3: TFormExportLASP3
       Caption = #1057#1074#1086#1081#1089#1090#1074#1072' '
       ImageIndex = 3
       OnShow = tshLasShow
+      ExplicitHeight = 343
       DesignSize = (
         316
-        343)
+        367)
       object Label4: TLabel
         Left = 7
         Top = 56
@@ -169,10 +173,11 @@ object FormExportLASP3: TFormExportLASP3
       end
       object Memo: TMemo
         Left = 7
-        Top = 229
+        Top = 255
         Width = 296
-        Height = 113
+        Height = 111
         Anchors = [akLeft, akTop, akRight, akBottom]
+        ScrollBars = ssVertical
         TabOrder = 2
       end
       inline RangeSelect: TFrameRangeSelect
@@ -192,38 +197,61 @@ object FormExportLASP3: TFormExportLASP3
         end
       end
       object lbAq: TEdit
-        Left = 134
+        Left = 195
         Top = 75
-        Width = 121
+        Width = 61
         Height = 21
         TabOrder = 4
         Text = '2'
+        OnExit = cbUnqClick
+      end
+      object lbDg: TEdit
+        Left = 134
+        Top = 75
+        Width = 60
+        Height = 21
+        TabOrder = 5
+        Text = '10'
+        OnExit = cbUnqClick
+      end
+      object cbUnq: TCheckBox
+        Left = 7
+        Top = 232
+        Width = 208
+        Height = 17
+        Caption = #1059#1073#1080#1088#1072#1090#1100' '#1090#1086#1083#1100#1082#1086' '#1086#1076#1080#1085#1072#1082#1086#1074#1099#1077' '#1087#1091#1090#1080
+        Checked = True
+        State = cbChecked
+        TabOrder = 6
+        OnClick = cbUnqClick
       end
     end
   end
   object btCancel: TButton
     Left = 257
-    Top = 390
+    Top = 414
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
     Caption = #1047#1072#1082#1088#1099#1090#1100
     TabOrder = 1
     OnClick = btCancelClick
+    ExplicitTop = 390
   end
   object btOK: TButton
     Left = 152
-    Top = 390
+    Top = 414
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
     Caption = #1057#1086#1079#1076#1072#1090#1100
     TabOrder = 2
     OnClick = btOKClick
+    ExplicitTop = 390
   end
   object sb: TStatusBar
     Left = 0
-    Top = 422
+    Top = 446
     Width = 340
     Height = 19
     Panels = <
@@ -242,6 +270,7 @@ object FormExportLASP3: TFormExportLASP3
       item
         Width = 50
       end>
+    ExplicitTop = 422
   end
   object ds: TDataSource
     Left = 266

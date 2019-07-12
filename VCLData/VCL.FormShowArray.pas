@@ -38,6 +38,7 @@ type
     function SetBind: IDevice;
     procedure UpdateLegend(Root: IXMLNode);
     procedure NPropClick(Sender: TObject);
+    procedure NSaveToFileClick(Sender: TObject);
     procedure SetD3View(const Value: boolean);
     function GetD3View: boolean;
     procedure SetDept(const Value: Integer);
@@ -65,7 +66,7 @@ implementation
 
 {$R *.dfm}
 
-uses tools, Parser;
+uses tools, Parser, math;
 
 { TFormShowArray }
 
@@ -127,6 +128,7 @@ begin
   inherited;
   N3DMenu := AddToNCMenu('Вид 3D', nil, 0, 2);
   AddToNCMenu('Свойства...', NPropClick, 0);
+  AddToNCMenu('Сохранить в файл...', NSaveToFileClick);
   FDept := 10;
   FVX := 1;
   FVY := 1;
@@ -153,6 +155,76 @@ procedure TFormShowArray.NPropClick(Sender: TObject);
   d: IDialog;
 begin
   if RegisterDialog.TryGet<Dialog_EditViewParameters>(d) then (d as IDialog<TFormShowArray>).Execute(Self);
+end;
+
+type
+ Tdatrec = record
+   nam: string;
+   dat: TArray<string>;
+   constructor Create(const anam: string; const adat :string);
+ end;
+
+constructor Tdatrec.Create(const anam, adat: string);
+begin
+  nam := anam;
+  dat := adat.Split([' '], TStringSplitOptions.ExcludeEmpty);
+end;
+
+
+procedure TFormShowArray.NSaveToFileClick(Sender: TObject);
+ var
+  ass: TArray<Tdatrec>;
+  function AssLen: Integer;
+   var
+    i: Tdatrec;
+  begin
+    Result := Length(ass[0].dat);
+    for i in ass do Result := Min(Result, Length(i.Dat));
+  end;
+  function CreateTitle: string;
+   var
+    i: Tdatrec;
+  begin
+    Result := 'Index';
+    for i in ass do Result := Result+';'+i.nam;
+  end;
+  function GetS(idx: Integer): TArray<string>;
+   var
+    i: Tdatrec;
+  begin
+    Result := [];
+    for i in ass do Result := Result + [i.Dat[idx]];
+  end;
+ var
+  n: IXMLNode;
+  s: TChartSeries;
+  i: Integer;
+  ss: TStrings;
+begin
+  with TSaveDialog.Create(nil) do
+  try
+   InitialDir := ExtractFilePath(ParamStr(0));
+   DefaultExt := 'csv';
+   Options := Options + [ofOverwritePrompt, ofPathMustExist];
+   Filter := 'Файл (*.csv)|*.csv';
+   if Execute(Handle) then
+    begin
+     for s in ChartCode.SeriesList do
+       if TryGetX(FBindWorkRes.Work, s.Title+'.'+T_DEV, n, AT_VALUE)
+         and (n.NodeValue <> null)
+           and (n.NodeValue <> '') then ass := ass + [Tdatrec.Create(s.Title, n.NodeValue)];
+     ss := TStringList.Create;
+     try
+      ss.Add(CreateTitle);
+      for i := 0 to AssLen-1 do ss.Add(i.ToString+';'+string.Join(';', GetS(i)));
+      ss.SaveToFile(FileName);
+     finally
+      ss.Free;
+     end;
+    end;
+  finally
+   Free;
+  end;
 end;
 
 procedure TFormShowArray.SetBindWorkRes(const Value: TWorkEventRes);
@@ -303,6 +375,8 @@ begin
     Dec(FLineCount);
    end;
 end;
+
+{ Tdatrec }
 
 initialization
   RegisterClasses([TFormShowArray, TZSeries]);

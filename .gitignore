@@ -22,9 +22,6 @@
 #*.deployproj
 #
 
-! .\_exe\Debug\*.dll 
-! .\_exe\Debug\Devices\*.* 
-
 .hg/
 .hgignore
 
@@ -245,5 +242,8 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+! _exe\Debug\*.dll 
+! _exe\Debug\Devices\*.* 
 
 

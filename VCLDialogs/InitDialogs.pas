@@ -51,7 +51,9 @@ procedure TDialogConnectIO.Show;
 begin
   if Supports(FConect, IComPortConnectIO) then FRes := TFormSetupCom.Execute(FConect)
   else if Supports(FConect, IWlanConnectIO) then FRes := TFormSetupWlan.Execute(FConect)
-  else if Supports(FConect, INetConnectIO) or Supports(FConect, IUDPConnectIO) then FRes := TFormSetupNet.Execute(FConect)
+  else if Supports(FConect, INetConnectIO)
+       or Supports(FConect, IUDPConnectIO)
+       or Supports(FConect, IRestConnectIO) then FRes := TFormSetupNet.Execute(FConect)
   else FRes := mrCancel
 end;
 

@@ -30,26 +30,41 @@ type
     sb: TStatusBar;
     Label2: TLabel;
     lbAq: TEdit;
+    lbDg: TEdit;
+    cbUnq: TCheckBox;
     procedure btCancelClick(Sender: TObject);
     procedure btOKClick(Sender: TObject);
     procedure odBeforeDialog(Sender: TObject; var AName: string; var AAction: Boolean);
     procedure tshLasShow(Sender: TObject);
+    procedure cbUnqClick(Sender: TObject);
   private
+ type
+   TInternalNames = record
+    exclude: Boolean;
+    lf: TLasFormat;
+    DigitFormat: string;
+    namPath: TArray<string>
+   end;
+   var
     ids: IDataSet;
     fldKadr: TField;
     FirstKadr, LastKadr: Integer;
+    lasf: TArray<TInternalNames>;
     flds: TArray<TField>;
+    procedure GenerateNames(excludeOnlyEqal: boolean = true);
   public
-   function Execute(dummy: Integer): Boolean;
-   function GetInfo: PTypeInfo; override;
-   class function ClassIcon: Integer; override;
-   [StaticAction('-LAS...', 'Ёкспорт', 128, '0:‘айл.Ёкспорт|1:2')]
-   class procedure DoExportLAS(Sender: IAction);
+    function Execute(dummy: Integer): Boolean;
+    function GetInfo: PTypeInfo; override;
+    class function ClassIcon: Integer; override;
+    [StaticAction('-LAS...', 'Ёкспорт', 128, '0:‘айл.Ёкспорт|1:2')]
+    class procedure DoExportLAS(Sender: IAction);
   end;
 
 implementation
 
 {$R *.dfm}
+
+uses Math;
 
 { TFormExportLASP3 }
 
@@ -70,6 +85,122 @@ begin
   RegisterDialog.UnInitialize(EXPORT_DIALOG_CATEGORY, 'LAS');
 end;
 
+procedure TFormExportLASP3.GenerateNames(excludeOnlyEqal: boolean);
+ var
+  s, dg, aq: string;
+  i, cnt, findCnt: Integer;
+  n: IXMLNode;
+  function IsUniqe(const idel: Integer): Boolean;
+   var
+    a, nms: TArray<string>;
+    n: TInternalNames;
+    i,j: Integer;
+  begin
+    Result := True;
+    nms := [];
+    for n in lasf do if not n.exclude then
+     begin
+      a := n.namPath;
+      Delete(a, idel, 1);
+      nms := nms + [string.Join('', a)];
+     end;
+    for i := 0 to High(nms)-1 do
+     for j := i+1 to High(nms) do if SameText(nms[i], nms[j]) then Exit(False);
+  end;
+  function GetMaxLen: Integer;
+   var
+    n: TInternalNames;
+  begin
+    Result := 0;
+    for n in lasf do if not n.exclude then Result := max(Result, Length(n.namPath));
+  end;
+  function GetMinLen: Integer;
+   var
+    n: TInternalNames;
+  begin
+    Result := 1000;
+    for n in lasf do if not n.exclude then Result := min(Result, Length(n.namPath));
+  end;
+  function GetFindCnt: Integer;
+   var
+    n: TInternalNames;
+  begin
+    Result := 0;
+    for n in lasf do if not n.exclude then Inc(Result);
+  end;
+  procedure Del(ix: Integer);
+   var
+    i: Integer;
+  begin
+    for i := 0 to Length(lasf)-1 do if not lasf[i].exclude then
+     begin
+      if ix < 0 then Delete(lasf[i].namPath, Length(lasf[i].namPath)-ix, 1)
+      else Delete(lasf[i].namPath, ix, 1);
+     end;
+  end;
+  function ChekEq(ix: Integer): Boolean;
+   var
+    i, idx: Integer;
+    n: TInternalNames;
+    first: string;
+  begin
+    Result := True;
+    first := '';
+    for n in lasf do if not n.exclude then
+     begin
+      if ix < 0 then idx := Length(n.namPath)-ix else idx := ix;
+      if (idx >= Length(n.namPath)) or (idx <0 ) then Exit(False);
+      if first = '' then first := n.namPath[idx]
+      else if not SameText(first, n.namPath[idx]) then Exit(False);
+     end;
+  end;
+begin
+  SetLength(lasf, Length(flds));
+  for i := 0 to High(flds) do with lasf[i] do
+    begin
+      aq := lbAq.Text;
+      dg := lbDg.Text;
+      namPath := flds[i].FullName.Split(['.'], TStringSplitOptions.ExcludeEmpty);
+      if TXMLDataSet(ids).TryGetX(flds[i].FullName, n) then
+       begin
+        if n.HasAttribute(AT_TITLE) then
+         begin
+          exclude := True;
+          lf.Mnem := n.Attributes[AT_TITLE];
+          lf.Description := string.Join('-', namPath);
+         end
+        else
+         begin
+         end;
+        if n.HasAttribute(AT_EU) then lf.Units := n.Attributes[AT_EU];
+        if n.HasAttribute(AT_AQURICY) then aq := n.Attributes[AT_AQURICY];
+        if n.HasAttribute(AT_DIGITS) then dg := n.Attributes[AT_DIGITS];
+       end;
+      DigitFormat := ' %'+dg+'.'+ aq +'f';
+    end;
+   // exclude eqal paths
+    findCnt := GetFindCnt();
+   if findCnt > 1 then
+    begin
+
+     cnt := GetMaxLen;
+     i := 0;
+     while i < cnt do
+      begin
+       while (GetMinLen > 1) and ChekEq(i) do Del(i);
+       if (findCnt > 2) and (i > 0) and ChekEq(-i) then Del(-i);
+       Inc(i);
+      end;
+
+     cnt := GetMinLen;
+     if not excludeOnlyEqal and (cnt > 1) then
+      begin
+       while IsUniqe(0) do Del(0);
+      end;
+    end;
+   for i := 0 to High(flds) do with lasf[i] do if not exclude then lf.Mnem := string.Join('_', namPath);
+end;
+
 function TFormExportLASP3.GetInfo: PTypeInfo;
 begin
   Result := TypeInfo(Dialog_Export);
@@ -80,25 +211,27 @@ begin
   od.FileName := '';
 end;
 
-procedure TFormExportLASP3.tshLasShow(Sender: TObject);
- var 
-  f: TField;
-  n: IXMLNode;
+procedure TFormExportLASP3.cbUnqClick(Sender: TObject);
+ var
   s: string;
+  im: TInternalNames;
 begin
-  flds := FrameSelectParam1.GetSelected;
   memo.Clear;
-  for f in flds do 
+  GenerateNames(cbUnq.Checked);
+  for im in lasf do
    begin
-    s := f.FullName.Replace('.','_');
-    if TXMLDataSet(ids).TryGetX(f.FullName, n) then
-     begin
-      if n.HasAttribute(AT_TITLE) then s := n.Attributes[AT_TITLE];
-      if n.HasAttribute(AT_EU) then s := s+'.'+ n.Attributes[AT_EU];
-      if n.HasAttribute(AT_AQURICY) then s := s+'    |   %1.'+ n.Attributes[AT_AQURICY]+'f';
-     end;
+    s := 'name: '+ im.lf.Mnem;
+    if im.lf.Units <> '' then s := s + '.'+ im.lf.Units;
+    if im.lf.Description <> '' then s := s + ' desc: ' + im.lf.Description;
+    s := s + ' fmt: ' + im.DigitFormat;
     memo.Lines.Add(s);
    end;
+end;
+
+procedure TFormExportLASP3.tshLasShow(Sender: TObject);
+begin
+  flds := FrameSelectParam1.GetSelected;
+  cbUnqClick(nil);
 end;
 
 function TFormExportLASP3.Execute(dummy: Integer): Boolean;
@@ -125,9 +258,8 @@ procedure TFormExportLASP3.btOKClick(Sender: TObject);
  var
   from, last, i : Integer;
   il: ILasDoc;
-  f: TField;
   n: IXMLNode;
-  mnem, eu, desc, aq: string;
+  im: TInternalNames;
   v: array of Variant;
      procedure UpdateSb4(const s: string);
      begin
@@ -146,38 +278,17 @@ begin
    UpdateSb4('работа');
    Application.ProcessMessages;
   // инициализируем пол€
-  for f in flds do
+  for im in lasf do
    begin
-    mnem :='';
-    eu := '';
-    desc := '';
-    aq := '%10.'+ lbAq.Text +'f';
-    mnem := f.FullName.Replace('.','_');
-    if TXMLDataSet(ids).TryGetX(f.FullName, n) then
-     begin
-      if n.HasAttribute(AT_TITLE) then 
-       begin
-        desc :=  mnem;
-        mnem := n.Attributes[AT_TITLE];
-       end;
-      if n.HasAttribute(AT_EU) then eu := n.Attributes[AT_EU];
-      if n.HasAttribute(AT_AQURICY) then aq := '%10.'+ n.Attributes[AT_AQURICY]+'f';
-     end;
-    il.Curve.Add(TlasFormat.Create(mnem,eu,'',desc));
-    il.Curve.DisplayFormat[mnem] := aq;
+    il.Curve.Add(im.lf);
+    il.Curve.DisplayFormat[im.lf.Mnem] := im.DigitFormat;
    end;
-  
-//  if from = 0 then
-//    ids.DataSet.First
-//  else
-    ids.DataSet.RecNo := from - FirstKadr;
-//  if last = 0 then last := ids.DataSet.RecordCount;
-
+  ids.DataSet.RecNo := from - FirstKadr;
   SetLength(v, Length(flds)+1);
   // пишем данные
-  while (not ids.DataSet.Eof) and (last >= fldKadr.AsInteger {ids.DataSet.FieldByName('ID').AsInteger}) do
+  while (not ids.DataSet.Eof) and (last >= fldKadr.AsInteger) do
    begin
-    v[0] := fldKadr.AsInteger;// ids.DataSet.FieldByName('ID').AsInteger;
+    v[0] := fldKadr.AsInteger;
     for i := 1 to Length(flds) do
      if flds[i-1] is TNumericField then  v[i] := flds[i-1].AsFloat
      else v[i] := flds[i-1].AsString;
