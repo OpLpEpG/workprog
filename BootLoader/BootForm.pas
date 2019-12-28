@@ -208,7 +208,7 @@ begin
     SetChip(-1);
     SetSerial(-1);
     try
-     TPars.SetInfo(FXml, @PData[ch.InfoStart-1], len+1, procedure(InternalVarType: Byte; AdrVar: Pointer)
+     TPars.SetInfo(FXml, @PData[ch.InfoStart], len, procedure(InternalVarType: Byte; AdrVar: Pointer)
      begin
        case InternalVarType of
         TPars.var_adr: SetAdr(Pbyte(AdrVar)^);
@@ -298,7 +298,7 @@ end;
 
 type
   TbootInTest = packed record
-    adr_cmd:Byte;
+    adr_cmd:TCmdADR;
     magic: DWORD;
     constructor Create(a: Byte);
   end;
@@ -315,6 +315,8 @@ const
  var
   d: TbootInTest;
 begin
+  if adr = -1 then Exit;
+  
   d := TbootInTest.Create(Adr);
   GetDevice.SendROW(@d, SizeOf(d), procedure(p: Pointer; n: integer)
   begin
@@ -330,10 +332,10 @@ end;
 
 procedure TFormBoot.DoOut;
  var
-  d: byte;
+  d: TCmdADR;
 begin
   d := ToAdrCmd(Adr, CMD_EXIT);
-  GetDevice.SendROW(@d, 1, procedure(p: Pointer; n: integer)
+  GetDevice.SendROW(@d, CASZ, procedure(p: Pointer; n: integer)
   begin
     if (1 = n) and (d = PByte(p)^) then memo.Lines.Insert(0, 'в программе !!!')
     else memo.Lines.Insert(0, 'Ошибка перехода в программу');
@@ -347,13 +349,13 @@ end;
 type
   PPageRead =^TPageRead;
   TPageRead = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     PageAdr: word;
     constructor Create(a: Byte; aPageAdr: word);
   end;
   PPageRead32 =^TPageRead32;
   TPageRead32 = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     PageAdr: Dword;
     constructor Create(a: Byte; aPageAdr: Dword);
   end;
@@ -374,14 +376,14 @@ end;
 
 type
   TPageWrite = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     PageAdr: word;
     data: array[0..1023] of Byte;
     constructor Create(a: Byte; aPageAdr: word; pp: Pointer);
     class function Size: Integer; static;
   end;
   TPageWrite32 = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     PageAdr: DWord;
     data: array[0..1023] of Byte;
     constructor Create(a, aPageAdr: dword; pp: Pointer);
@@ -395,13 +397,13 @@ type
 
   PPageWriteRes = ^TPageWriteRes;
   TPageWriteRes = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     PageAdr: Word;
     Res: Word;
   end;
   PPageWriteRes32 = ^TPageWriteRes32;
   TPageWriteRes32 = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     PageAdr: DWord;
     Res: DWord;
   end;
@@ -415,7 +417,7 @@ end;
 
 class function TPageWrite32.Size: Integer;
 begin
-  Result := 1 + SizeOf(Dword) + TFormBoot.Recs;
+  Result := CASZ + SizeOf(Dword) + TFormBoot.Recs;
 end;
 
 constructor TPageWrite.Create(a: Byte; aPageAdr: Word; pp: Pointer);
@@ -427,13 +429,13 @@ end;
 
 class function TPageWrite.Size: Integer;
 begin
-  Result := 1 + SizeOf(word) + TFormBoot.Recs;
+  Result := CASZ + SizeOf(word) + TFormBoot.Recs;
 end;
 
 
 procedure TFormBoot.DoRead;
  const
-  RD_N = 5;
+  RD_N = 32;
   ER_N = 7;
  var
   RecFunc: TReceiveDataRef;

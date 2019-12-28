@@ -696,7 +696,7 @@ begin
 
     M3x4ToHorizont(8, Convert);
 
-    Add(Format('%g {Sgx-смещение нуля акселерометра X, дв.ед.} INCL_%d',[sx, sernom]));
+    Add(Format('%g {Sgx-смещение нуля акселерометра X, дв.ед.} $$*Ink_%d*$$',[sx, sernom]));
     Add(Format('%g {Sgy-смещение нуля акселерометра Y, дв.ед.}',[sy]));
     Add(Format('%g {Sgz-смещение нуля акселерометра Z, дв.ед.}',[sz]));
     Add(Format('%g {Kgx-коэффициент преобразования акселерометра X}',[Kx]));
@@ -1003,7 +1003,7 @@ begin
 
     M3x4ToHorizont(8, Convert);
 
-    Add(Format('%g {Sgx-смещение нуля акселерометра X, дв.ед.} INCL_%d',[sx, sernom]));
+    Add(Format('%g {Sgx-смещение нуля акселерометра X, дв.ед.} $$*Ink_%d*$$',[sx, sernom]));
     Add(Format('%g {Sgy-смещение нуля акселерометра Y, дв.ед.}',[sy]));
     Add(Format('%g {Sgz-смещение нуля акселерометра Z, дв.ед.}',[sz]));
     Add(Format('%g {Kgx-коэффициент преобразования акселерометра X}',[Kx]));

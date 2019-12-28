@@ -62,7 +62,7 @@ uses
   VCL.Forms,
   System.Win.Registry;
 
-resourcestring
+const
   rsPluginsLoadError = 'One or more plugins has failed to load:' + sLineBreak + '%s';
   rsDuplicatePlugin  = 'Plugin is already loaded.' + sLineBreak + 'ID: %s; Name: %s;' + sLineBreak + 'File name 1: %s' + sLineBreak + 'File name 2: %s';
 

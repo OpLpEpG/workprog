@@ -7,6 +7,9 @@ uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, RootIntf, debug_exc
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Mask, JvExMask, JvToolEdit, VCL.Frame.RangeSelect;
 
+const
+  APPB_END_IF:  PAnsiChar = '#1#34  ';
+  APPB_END_AK1: PAnsiChar = '#1#35  ';
 type
     TRecMap = record
      ix: Integer;
@@ -180,6 +183,8 @@ begin
             TStatisticCreate.UpdateStandardStatusBar(sb, FIStat.Statistic);
           end);
          end;
+        f.Write(APPB_END_IF[0], 7);
+        ak.Write(APPB_END_AK1[0], 7);
         UpdateSb4('конец');
       finally
        UpdateControls(True);

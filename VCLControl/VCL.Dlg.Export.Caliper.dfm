@@ -118,8 +118,5 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
       item
         Width = 50
       end>
-    ExplicitLeft = -6
-    ExplicitTop = 216
-    ExplicitWidth = 295
   end
 end

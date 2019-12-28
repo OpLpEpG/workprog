@@ -262,7 +262,7 @@ procedure TDialogDelay.IsDelayIntervalMenuClick(Sender: TObject);
 begin
   medDelay.EditMask :=  TMSK_SETDELAY[IsDelayIntervalMenu.Checked];
   lbSetDelay.Caption := TLBL_SETDELAY[IsDelayIntervalMenu.Checked];
-  if IsDelayIntervalMenu.Checked then medDelay.Text := '0 03:00:00'
+  if IsDelayIntervalMenu.Checked then medDelay.Text := '0 00:03:00'
   else medDelay.Text := DateToStr(Trunc(Now * HoursPerDay)/ HoursPerDay);
   AnyUserAction(False, False);
 end;

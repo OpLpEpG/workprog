@@ -8,6 +8,10 @@ uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, Actns
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids, VCL.Frame.SelectParam, Vcl.StdCtrls, Vcl.ExtCtrls,
   VCL.Frame.SelectPath, Vcl.ComCtrls, Vcl.Menus, Vcl.DBCtrls, Vcl.Mask, JvExMask, JvToolEdit, VCL.Frame.RangeSelect;
 
+const
+  T_KADR='.время.DEV';
+  T_ID='ID';
+
 type
   TFormExportLASP3 = class(TDialogIForm, IDialog, IDialog<Integer>)
     pc: TPageControl;
@@ -32,6 +36,7 @@ type
     lbAq: TEdit;
     lbDg: TEdit;
     cbUnq: TCheckBox;
+    cbKadr: TCheckBox;
     procedure btCancelClick(Sender: TObject);
     procedure btOKClick(Sender: TObject);
     procedure odBeforeDialog(Sender: TObject; var AName: string; var AAction: Boolean);
@@ -243,7 +248,8 @@ begin
     begin
       TXMLDataSet.Get(XMLSection,  ids,  True);
       ids.DataSet.Open;
-      fldKadr := ids.DataSet.FieldByName(TXMLDataSet(ids.DataSet).XMLSection.ParentNode.NodeName +'.время.DEV');
+    //  fldKadr := ids.DataSet.FieldByName(TXMLDataSet(ids.DataSet).XMLSection.ParentNode.NodeName +'.время.DEV');
+      fldKadr := ids.DataSet.FieldByName(T_ID);
       ids.DataSet.Last;
       LastKadr := fldKadr.AsInteger;
       ids.DataSet.First;

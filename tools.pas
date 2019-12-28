@@ -2,6 +2,8 @@ unit tools;
 
 interface
 
+{$INCLUDE global.inc}
+
 uses
       debug_except,
       System.SyncObjs, System.Math,
@@ -150,6 +152,14 @@ const
 //  AT_RAM_FILE = 'RAM_FILE';
 
 type
+  {$IFDEF BT2}
+   TCmdADR = Word;
+  {$ELSE}
+   TCmdADR = Byte;
+  {$ENDIF}
+  PCmdADR = ^TCmdADR;
+  const CASZ = SizeOf(TCmdADR);
+type
   TTestRef = reference to function(n: IXMLNode): boolean; // если да то прекратить рекурсию
   TWorkDataRef = reference to procedure(wrk: IXMLNode; adr: Byte; const name: string);
   THasXtreeRef = reference to procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode);
@@ -196,7 +206,7 @@ function TimeToAdr(time: TDateTime; KoefTime: Double; RecSize: Integer; TimeStar
 
 //function GetIActionName(ManagOwner: IInterface; Event: TIActionEvent): string;
 procedure EnumDevices(GetDevicesCB: TGetDevicesCB);
-function ToAdrCmd(a, cmd: Byte): Byte;
+function ToAdrCmd(a, cmd: Byte): TCmdADR;
 function XToVar(ANode: IXMLNode): Variant;
 function QToVar(DataSet: TDataSet; AutoClearDataSet: Boolean = True): Variant;
 function RenameXMLNode(Src: IXMLNode; const NewName: string): IXMLNode;
@@ -922,9 +932,13 @@ begin
   if Double(t) >= 1 then Result := IntToStr(Trunc(t)) + ' ' + Result;
 end;  }
 
-function ToAdrCmd(a, cmd: Byte): Byte;
+function ToAdrCmd(a, cmd: Byte): TCmdADR;
 begin
-  Result := (a shl 4) or cmd;
+  {$IFDEF BT2}
+   Result :=Word(a) or Word(cmd) shl 8;
+  {$ELSE}
+   Result := (a shl 4) or cmd;
+  {$ENDIF}
 end;
 
 function GetPathXNode(Node: IXMLNode): string;

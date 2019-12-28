@@ -4,7 +4,7 @@ interface
 
 uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.DateUtils, Actns, System.UITypes,
      RootImpl, AbstractPlugin, PluginAPI, DockIForm, System.SyncObjs, XMLEnumers,
-     Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows, System.IOUtils,
+     Vcl.Dialogs, System.Variants, Vcl.Forms, Winapi.Windows, System.IOUtils, Math,
      System.SysUtils, Vcl.Graphics, System.Classes, System.Generics.Collections, System.Generics.Defaults,
      RTTI, System.TypInfo, Xml.XMLIntf;
 
@@ -33,6 +33,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
    // FDBConnection: IDBConnection;
     FC_TableUpdate: string;
     FtmpFiles: TStrings;
+    FMetrologyName: string;
 
 //    FSQLMonitor: TSQLMonitor;
 //    DbgMon: TFDMoniRemoteClientLink;
@@ -86,6 +87,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
     procedure IMetrology.Check = IMetrologyCheck;
     procedure IMetrologyCheck(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: TArray<string>; out Metr: IXMLInfo);
     procedure CheckMetrol(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: Tarray<string>; out Metr: IXMLNode);
+    function TestEeprom(Eep: IXMLNode; out ErrList: TEEPerrors): Boolean;
 
     // IProjectOptions
     function GetOptionType(const Name: string): Integer;
@@ -124,6 +126,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
     property Option[const Name: string]: Variant read GetOption write SetOption;
 
     property S_ProjectChange: string read FProjectFile write FProjectFile;
+    property S_MetrologyChange: string read FMetrologyName write FMetrologyName;
 
     property C_TableUpdate: string read FC_TableUpdate write SetTableUpdate;
     property S_TableUpdate: string read FC_TableUpdate write SetTableUpdate;
@@ -358,6 +361,8 @@ begin
   begin
     EtalonAttr.NodeValue := TestAttr.NodeValue;
   end);
+  FMetrologyName := MetrolName.NodeName;
+  Notify('S_MetrologyChange');
 end;
 
 function TManager.IntervalWork: TDateTime;
@@ -682,16 +687,20 @@ begin
   if not Supports(Dev, IDataDevice, dd) then Exit;
   i := dd.GetMetaData.Info;
 //  dd.ClearMetaData;
-  if not Assigned(i) then Exit;
-  dir := TPath.GetDirectoryName(i.OwnerDocument.FileName)+'\'+ i.NodeName + '\';
-  RemoveIfile(T_WRK);
-  RemoveIfile(T_RAM);
-  DeleteFiles(dir);
-  i := nil;
+  if Assigned(i) then
+   begin
+    dir := TPath.GetDirectoryName(i.OwnerDocument.FileName)+'\'+ i.NodeName + '\';
+    RemoveIfile(T_WRK);
+    RemoveIfile(T_RAM);
+    DeleteFiles(dir);
+    i := nil;
+   end
+   else dir := '';
+
   if Supports(GlobalCore, IDeviceEnum, de) then de.Remove(Dev);
 
-  if TDirectory.Exists(dir) then TDirectory.Delete(dir, True);
-  if TDirectory.Exists(dir) then raise EManagerexception.Create('Немогу удалить директорию '+ dir);
+  if (dir <> '') and TDirectory.Exists(dir) then TDirectory.Delete(dir, True);
+  if (dir <> '') and TDirectory.Exists(dir) then raise EManagerexception.Create('Немогу удалить директорию '+ dir);
 end;
 
 class function TManager.ProjectDir: string;
@@ -726,6 +735,65 @@ procedure TManager.SetTableUpdate(const Value: string);
 begin
   FC_TableUpdate := Value;
   Notify('S_TableUpdate');
+end;
+
+function FindMetrNode(metr, eepNode: IXMLNode; out node: IXMLNode): boolean;
+  var
+   res: IXMLNode;
+begin
+  res := nil;
+  ExecXTree(metr, function (n: IXMLNode): boolean
+    function CheckPath(tst, etalon: IXMLNode; const rootTst, rootEtalon: string): boolean;
+    begin
+      while Assigned(tst) and Assigned(etalon) do
+       begin
+        if tst.NodeName <> etalon.NodeName then Exit(False);
+        tst := tst.ParentNode;
+        etalon := etalon.ParentNode;
+        if Assigned(tst) and Assigned(etalon) and (etalon.NodeName = rootEtalon) and (tst.NodeName = rootTst) then Exit(True);
+       end;
+      Result := False;
+    end;
+  begin
+    if n.HasAttribute(eepNode.NodeName) and CheckPath(eepNode.ParentNode, n, T_EEPROM, T_MTR) then
+     begin
+      res := n.AttributeNodes.FindNode(eepNode.NodeName);
+      Result := True;
+     end
+    else Result := False;
+  end);
+  Result := Assigned(res);
+  node := res;
+end;
+
+function TManager.TestEeprom(Eep: IXMLNode; out ErrList: TEEPerrors): Boolean;
+ var
+  metr: IXMLNode;
+  GoodData: Boolean;
+  el: TEEPerrors;
+begin
+  GoodData := True;
+  metr := Eep.ParentNode.ChildNodes.FindNode(T_MTR);
+  ExecXTree(Eep,procedure(n: IXMLNode)
+     var
+      u: IXMLNode;
+      d: EepErr;
+   begin
+     if n.HasAttribute(AT_VALUE) and (Trim(n.Attributes[AT_VALUE]) <> '')
+        and FindMetrNode(metr, n.ParentNode, u) and (Trim(u.NodeValue) <> '') then
+      begin
+        d.name := n.ParentNode.NodeName;
+        d.ValEep := n.Attributes[AT_VALUE];
+        d.ValMetr := u.NodeValue;
+        if not SameValue(d.ValEep,d.ValMetr) then
+         begin
+          el := el + [d];
+          GoodData := False;
+         end;
+      end;
+   end);
+   ErrList := el;
+   Result := GoodData;
 end;
 
 procedure TManager.TmpFileNeedDelete(const Fname: string);

@@ -370,6 +370,8 @@ begin
 end;
 
 class function TPars.VarTypeToLength(vt: Integer): Integer;
+ const
+   MAX_STRING: string = 'Выключен [контроль] [ошибка]';
 begin
   case vt of
     varSmallint:Result := SizeOf(Smallint); { vt_i2           2 }
@@ -384,7 +386,7 @@ begin
     varLongWord:Result := SizeOf(LongWord); { vt_ui4         19 }
     varInt64   :Result := SizeOf(Int64); { vt_i8          20 }
     varUInt64  :Result := SizeOf(UInt64); { vt_ui8         21 }
-    varString: Result := 32;
+    varString: Result :=  MAX_STRING.Length*2; // 20 ; // !!! TstringField - размер по-умолчанию
     var_i3     :Result := 3;
     var_ui3    :Result := 3;
     var_i2_15b :Result := 2;
@@ -965,14 +967,14 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
      end;
      u.Attributes[AT_SIZE] := Result;
   end;
- var
-  test: TArray<Byte>;
+// var
+//  test: TArray<Byte>;
 begin
-  SetLength(test, InfoLen);
-  move(Info^,test[0],InfoLen);
+//  SetLength(test, InfoLen);
+//  move(Info^,test[0],InfoLen);
 
   CurIndex := 0;
-  Dec(InfoLen); Inc(Info); // parse cmdadr
+//  Dec(InfoLen, CASZ); Inc(Info, CASZ); // parse cmdadr
   Add(node, Info, InfoLen); // указывает на тип - структуру
 end;
                       //   указывает на device
@@ -1076,6 +1078,9 @@ end;
 
 class procedure TPars.SetData(root: IXMLNode; const Data: PByte; ParsArray: Boolean = True);
 begin
+//  if not Assigned(root.ChildNodes.FindNode('автомат')) then raise ENoStackException.Create('Метаданные "автомат" ненайдены');
+//  if not Assigned(root.ChildNodes.FindNode('время')) then raise ENoStackException.Create('Метаданные "время" ненайдены');
+
    ExecXTree(root, procedure(n: IXMLNode)
    begin
      if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) then
@@ -1090,6 +1095,9 @@ class procedure TPars.SetStd(root: IXMLNode; const Data: PByte);
  var
   u: IXMLNode;
 begin
+//  if not Assigned(root.ChildNodes.FindNode('автомат')) then raise ENoStackException.Create('Метаданные "автомат" ненайдены');
+//  if not Assigned(root.ChildNodes.FindNode('время')) then raise ENoStackException.Create('Метаданные "время" ненайдены');
+  
   u := root.ChildNodes.FindNode('автомат').ChildNodes.FindNode(T_DEV);
 
   if Assigned(u) and u.HasAttribute(AT_TIP) and u.HasAttribute(AT_INDEX) then

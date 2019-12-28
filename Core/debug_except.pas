@@ -4,16 +4,21 @@ interface
 
 uses
      system.Win.comobj, SysUtils, Winapi.Windows, Classes, Generics.Collections,
-     JvDockControlForm,
+     JvDockControlForm, ExtCtrls,
      Vcl.Controls, winapi.ActiveX;
 
 type
   EBaseException = class(EOleException)
   private
     function GetDefaultCode: HRESULT;
+    class var ShowDialog: Boolean;
+    class var timer: TTimer;
+    class procedure TimerTimer(Sender: TObject);
   public
+    class procedure NeedShowDialog(time: Integer = 4000);
     constructor Create(const Msg: string);
     constructor CreateFmt(const Msg: string; const Args: array of const);
+    destructor Destroy; override;
   end;
   ENeedDialogException = class(EBaseException);
   ENoStackException = class(EBaseException);
@@ -66,6 +71,21 @@ begin
   Result := MakeResult(SEVERITY_ERROR, FACILITY_ITF, $EFEA{CalcCRC16(ClassName)});
 end;
 
+class procedure EBaseException.NeedShowDialog(time: Integer);
+begin
+  ShowDialog := True;
+  if not Assigned(timer) then timer := TTimer.Create(nil);
+  timer.OnTimer := TimerTimer;
+  timer.Interval := time;
+  timer.Enabled := True;
+end;
+
+class procedure EBaseException.TimerTimer(Sender: TObject);
+begin
+  FreeAndNil(timer);
+  ShowDialog := False;
+end;
+
 constructor EBaseException.Create(const Msg: string);
 begin
   inherited Create(Msg, GetDefaultCode, '', '', 0);
@@ -75,6 +95,13 @@ constructor EBaseException.CreateFmt(const Msg: string; const Args: array of con
 begin
   inherited Create(Format(Msg, Args), GetDefaultCode, '', '', 0);
 end;
+
+destructor EBaseException.Destroy;
+begin
+
+  inherited;
+end;
+
 {$ENDREGION  EBaseException}
 
 {$REGION  'TDebug - все процедуры и функции'}
@@ -269,7 +296,8 @@ begin
   Result := Assigned(ExeptionEvent);
   if Result then
    begin
-    if E is ENeedDialogException then Exit(False)
+    if EBaseException.ShowDialog then Exit(False)
+    else if E is ENeedDialogException then Exit(False)
     else if E is EHiddenException then Exit(True)
     else if E is ENoStackException then ExeptionEvent(E.ClassName, E.Message, '')
     else if (E is EOleException) and (EOleException(E).HelpFile <> '') then ExeptionEvent(EOleException(E).Source, E.Message, EOleException(E).HelpFile)

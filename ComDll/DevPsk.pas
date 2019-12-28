@@ -313,7 +313,7 @@ implementation
 
 uses tools, CRC16err, Parser;//, AbstractPlugin, PluginTools;
 
-resourcestring
+const
    RS_ZeroLenAdrArr = 'ƒлина массива адресов устройств равна нулю';
    RS_AdrNoXml = 'јдрес xml %d несоответствует адресу %d дл€ чтени€';
    RS_NoRamSize = 'Ќевозможно получить xml информацию дл€ чтени€ пам€ти о размере пам€ти';

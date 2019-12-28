@@ -21,7 +21,7 @@ object FormCalendar: TFormCalendar
     Top = 0
     Width = 162
     Height = 160
-    Date = 41400.662602905090000000
+    Date = 41400.696975138890000000
     TabOrder = 0
     OnClick = MonthCalendarClick
     OnMouseEnter = FormMouseEnter

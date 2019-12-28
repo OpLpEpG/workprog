@@ -77,6 +77,7 @@ object FormDlgEeprom: TFormDlgEeprom
     OnCreateEditor = TreeCreateEditor
     OnEditing = TreeEditing
     OnGetText = TreeGetText
+    OnPaintText = TreePaintText
     Columns = <
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]

@@ -73,9 +73,8 @@ type
  	  function Kmeans(restarts,  maxits, k: Integer;  out cidx: PIntegerArray; out c: IDoubleMatrix; out terminationtype: Integer): HRESULT; stdcall;
   end;
 
-//  TDoubleArray  = array[0..$0ffffffe] of Double;
-//  PDoubleArray = ^TDoubleArray;
-  PDoubleArray = array of Double;
+  TDoubleArray  = array[0..$0ffffffe] of Double;
+  PDoubleArray = ^TDoubleArray;
   PMatrix = array of array of Double;
 
 

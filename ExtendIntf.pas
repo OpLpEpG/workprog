@@ -262,6 +262,13 @@ type
     property Option[const Name: string]: Variant read GetOption write SetOption;
   end;
 
+  EepErr = record
+    name: string;
+    ValEep, ValMetr: Single;
+  end;
+
+  TEEPerrors = TArray<EepErr>;
+
   IMetrology = interface
   ['{60B08497-20FD-4740-8B1B-38710546BC3F}']
     //procedure Setup(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
@@ -277,6 +284,11 @@ type
     /// <param name="MetrolName"> указывает на Имя метрологии (Inclin ННК ГК) </param>
     /// <param name="MetrolFile"></param>
     procedure Check(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: TArray<string>; out Metr: IXMLInfo);
+
+    /// <summary>
+    ///  проверка данных метрологии заисанных в еепром
+    /// </summary>
+    function TestEeprom(Eep: IXMLNode; out ErrList: TEEPerrors): Boolean;
   end;
 
 //  DelayStatus = (dsNone, dsSetDelay, dsEndDelay);

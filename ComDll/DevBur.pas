@@ -9,7 +9,7 @@ uses  tools, System.IOUtils, RootIntf,
 
 
   const
-    LEN_MAX_SHORT = 251; //не 252 из-за фая вая
+    LEN_MAX_SHORT = 252-CASZ; //не 252 из-за фая вая
  type
   EReadRamBurException = class(EReadRamException);
     EAsyncReadRamBurException = class(EAsyncReadRamException);
@@ -18,7 +18,7 @@ uses  tools, System.IOUtils, RootIntf,
    const
     MAX_RAM = $420000;
     MAX_BAD = 70;
-    RLEN =  $7FF-3;// $7FFFF-3;
+    RLEN =  $7FF-2-CASZ;// $7FFFF-3;
     WAIT_RLEN = 2000;
   private
     type TResRef = reference to procedure;
@@ -107,41 +107,41 @@ implementation
 
 uses  Parser;
 
-resourcestring
+const
   RS_ErrReadData = 'Ошибка чтения данных устройства с адресом: %d SZ=%d[%d] CA=0x%x';
   RS_ErrNoInfo = 'Не инициализирована информация об устройствах';
 
 type
   PStdRead = ^TStdRead;
   TStdRead = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     ln: Byte;
     constructor Create(addr, command, ReadLength: Byte);
   end;
   PStdReadLong = ^TStdReadLong;
   TStdReadLong = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     ln: Word;
     constructor Create(addr, command, ReadLength: Word);
   end;
   TAdvStdRead = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     ln: Byte;
     from: Word;
     constructor Create(addr, command, ReadLength: Byte; ReadFrom: Word);
   end;
 
   TEepRead = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     From: Word;
     len: Byte;
     constructor Create(addr: Byte; AFrom: Word; ReadLength: Byte);
   end;
 
   TEepWrite = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     From: Word;
-    Data: array[0..255] of Byte;
+    Data: array[0..251-CASZ] of Byte;
     constructor Create(addr: Byte; AFrom: Word; const AData: array of byte);
   end;
 
@@ -195,7 +195,7 @@ end;
 type
   PRamRead =^TRamRead;
   TRamRead = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     Adr: DWORD;
 //    Len: DWORD;
 //    PH, P6LB2H, BL: Byte;
@@ -236,7 +236,7 @@ begin
       ConnectIO.Send(@a, SizeOf(a), procedure(p: Pointer; n: integer)
       begin
         if FFlagTerminate then ev(nil, -1)
-        else if ((len + 1) = n) and (PbyteArray(p)[0] = a.CmdAdr) then ev(@PbyteArray(p)[1], n-1)
+        else if ((len + SizeOf(Tcmdadr)) = n) and (PCmdADR(p)^ = a.CmdAdr) then ev(@PbyteArray(p)[SizeOf(Tcmdadr)], n-SizeOf(Tcmdadr))
         else ev(nil, -1);
       end, WaitTime);
     end);
@@ -588,6 +588,12 @@ begin
   DoData(FTmpSender);
 end;
 
+type
+  TTurbo = packed record
+    CmdAdr: TCmdADR;
+    speed: Byte;
+  end;
+
 procedure TDeviceBur.Turbo(speed: integer);
  const
   SPD: array[0..7]of Integer = (125000, 500000, 1000000, 2250000, 4500000, 8000000, 12000000, 100000000);
@@ -601,10 +607,10 @@ begin
      end;
     Add(procedure()
      var
-      d: word;
+      d: TTurbo;
     begin
-      d := $FD00 + speed;
-      d := Swap(d);
+      d.CmdAdr := ToAdrCmd($FF,$FD);
+      d.speed := speed;
       Send(@D, Sizeof(D), procedure(p: Pointer; n: integer)
       begin
         if ConnectIO is TComConnectIO then TComConnectIO(ConnectIO).Com.CustomBaudRate := SPD[speed];
@@ -617,7 +623,7 @@ procedure TDeviceBur.ReadInfoAdr(adr: Byte; ev: TNotifyInfoEventRef);
 type
   PInfoDataHeader=^TInfoDataHeader;
   TInfoDataHeader=packed record
-   CmdAdr: Byte;
+   CmdAdr: TCmdADR;
    varType: Byte;
    Length: Word;
   end;
@@ -628,7 +634,7 @@ begin
        var
         D1: TStdRead;
       begin
-        D1 := TStdRead.Create(adr, CMD_INFO, SizeOf(TInfoDataHeader)-1); // SizeOf(TInfoDataHeader)-1 так как в TInfoDataHeader присутствует первый байт адреса-команды
+        D1 := TStdRead.Create(adr, CMD_INFO, SizeOf(TInfoDataHeader)-CASZ); // SizeOf(TInfoDataHeader)-1 так как в TInfoDataHeader присутствует первый байт адреса-команды
       //   Tdebug.Log('std SEND %x', [d1.CmdAdr]);
         Send(@D1, Sizeof(D1), procedure(p1: Pointer; n1: integer)
            var
@@ -648,8 +654,8 @@ begin
             // Tdebug.Log('%d', [savelen]);
              from := 0;
              bads := 0;
-             SetLength(Data, savelen + 1);
-             Data[0] := d1.CmdAdr;
+             SetLength(Data, savelen);// + CASZ);
+            // PCmdAdr(@Data[0])^ := d1.CmdAdr;
 
              recur := procedure(pr: Pointer; nr: integer)
                var
@@ -658,14 +664,14 @@ begin
                 pb := pr;
            //     if Assigned(Pb) then Tdebug.Log('adv recur READ Header=%x adr=%x S=%x', [pb[0], adr, saveCmdAdr])
            //     else Tdebug.Log('adv recur READ Header=NIL adr = %x  D1 = %x', [adr, saveCmdAdr]);
-                if (nr > 1) and (pb[0] = ToAdrCmd(adr, CMD_INFO)) then
+                if (nr > CASZ) and (PCmdAdr(@pb[0])^ = ToAdrCmd(adr, CMD_INFO)) then
                  begin
-                  move(pb[1], Data[from+1], nr-1);
-                  Inc(from, nr-1);
+                  move(pb[CASZ], Data[from{+CASZ}], nr-CASZ);
+                  Inc(from, nr-CASZ);
                   if from >= savelen then
                    begin
                     //Tdebug.Log(from.ToString + '  ' + savelen.ToString());
-                    ev(0, adr, @Data[0], savelen+1);
+                    ev(0, adr, @Data[0], savelen{+CASZ});
                     Exit;
                    end;
                  end
@@ -714,9 +720,9 @@ begin
       begin
         TPars.GetData(e, a);
         D := TEepWrite.Create(Addr, 0, a);
-        Send(@D, Length(a)+3, procedure(p: Pointer; n: integer)
+        Send(@D, Length(a)+2+CASZ, procedure(p: Pointer; n: integer)
         begin;
-          if Assigned(ev) then ev(n = 1);
+          if Assigned(ev) then ev(n = CASZ);
         end, 2000);
       end);
    end;
@@ -782,9 +788,9 @@ begin
         D := TEepRead.Create(adr, 0, siz);
         Send(@D, Sizeof(D), procedure(p: Pointer; n: integer)
         begin
-          if (n > 0) and (n-1 = siz) and (PByte(p)^ = d.CmdAdr) then
+          if (n > 0) and (n-CASZ = siz) and (PCmdADR(p)^ = d.CmdAdr) then
            begin
-            inc(PByte(p));
+            inc(PCmdADR(p));
             TPars.SetData(root, p);
 //            FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'GK.xml');
             FeepromEventInfo.DevAdr := adr;
@@ -793,8 +799,8 @@ begin
             if Assigned(ev) then ev(FeepromEventInfo);
             Notify('S_EepromEventInfo');
            end
-           else if n<=0 then raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, d.CmdAdr])
-           else  raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, PByte(p)^]);
+           else if n<=0 then raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+CASZ, d.CmdAdr])
+           else  raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+CASZ, PByte(p)^]);
         end);
       end);
    end;
@@ -828,9 +834,9 @@ begin
          var
           pb: PByte;
         begin
-          if (n > 0) and (n-1 = siz) and (PByte(p)^ = d.CmdAdr) then
+          if (n > 0) and (n-CASZ = siz) and (Pcmdadr(p)^ = d.CmdAdr) then
            begin
-            inc(PByte(p));
+            inc(Pcmdadr(p));
             if StdOnly then TPars.SetStd(root, p)
             else TPars.SetData(root, p);
 
@@ -846,8 +852,8 @@ begin
               ev(adr, root, p, root.Attributes[AT_SIZE]);
              end;
            end
-           else if n<=0 then raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, d.CmdAdr])
-           else  raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+1, PByte(p)^]);
+           else if n<=0 then raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+CASZ, d.CmdAdr])
+           else  raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz+CASZ, PByte(p)^]);
         end);
       end);
    end;
@@ -871,7 +877,7 @@ end;
 
 type
   TTimeSync = packed record
-    CmdAdr: Byte;
+    CmdAdr: TCmdADR;
     time: Integer;
   end;
 
@@ -892,7 +898,7 @@ begin
      Delay, RDelay : TTime;
      kadrDelay: Integer;
    begin
-     d.CmdAdr := $F5;
+     d.CmdAdr := ToAdrCmd($FF, $F5);//$F5
      if StartTime <> 0 then
       begin
        //LNow := Now();

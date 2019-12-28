@@ -511,7 +511,7 @@ type
   end;
 {$ENDREGION}
 
-resourcestring
+const
    RS_SetIO = '(Lock) Невозможно сменить Порт т.к. прибор занят';
    RS_Flow = '(Flow) Невозможно освободить Порт занятый чтением информации';
    RS_IsCycle = '(Cycle) Порт занят';

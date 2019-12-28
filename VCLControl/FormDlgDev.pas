@@ -49,7 +49,7 @@ begin
   Result := cdNone;
   for pv in Tree.LevelNodes(0) do
    if pv.CheckState = csCheckedNormal then
-    if TAddressRec.Devices[pv.Index].Adr < 16 then Exit(cdBur) else Exit(cdPSK)
+    if TAddressRec.Devices[pv.Index].Adr <= 250 then Exit(cdBur) else Exit(cdPSK)
 end;
 
 class function TFormCreateDev.Execute(out d: IDevice): TModalResult;
@@ -160,7 +160,7 @@ end;
 procedure TFormCreateDev.TreeChecking(Sender: TBaseVirtualTree; Node: PVirtualNode; var NewState: TCheckState; var Allowed: Boolean);
 begin
   if NewState = csCheckedNormal then
-   if (CheckState = cdPSK) or ((CheckState = cdBur) and (TAddressRec.Devices[Node.Index].Adr >= 100)) then Allowed := False
+   if (CheckState = cdPSK) or ((CheckState = cdBur) and (TAddressRec.Devices[Node.Index].Adr >= 1100)) then Allowed := False
 
 end;
 

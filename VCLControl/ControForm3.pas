@@ -5,7 +5,8 @@ interface
 uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RootIntf, Container, Actns,
   Winapi.Windows, Winapi.Messages, Xml.XMLIntf, System.UITypes,  System.IOUtils,
   System.SysUtils, Vcl.Graphics, VirtualTrees, System.Bindings.Expression, Vcl.Forms, Vcl.Dialogs, JvDockControlForm,
-  Vcl.ImgList, Vcl.Controls, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, System.Classes, Vcl.StdCtrls;
+  Vcl.ImgList, Vcl.Controls, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, System.Classes, Vcl.StdCtrls,
+  ActnCtrls;
 
 type
   PNodeExData = ^TNodeExData;
@@ -474,8 +475,31 @@ begin
 end;
 
 procedure TFormControl.NeepCmpClick(Sender: TObject);
+ var
+  dev: PNodeExData;
 begin
-//
+  EBaseException.NeedShowDialog();
+  dev := Tree.GetNodeData(FEditNode.Parent.Parent);
+  (dev.Item as IEepromDevice).ReadEeprom(procedure (Res: TEepromEventRes)
+   var
+    ErrList: TEEPerrors;
+    eep: IXMLNode;
+    e: EepErr;
+    s: string;
+  begin
+    eep := (FEditData.Item as IXMLNode);
+    //TDebug.Log(eep.NodeName);
+    if eep.ParentNode.Attributes[AT_ADDR] = Res.DevAdr then
+     begin
+      if not (GlobalCore as IMetrology).TestEeprom(eep, ErrList) then
+      begin
+       s := '';
+       for e in ErrList do s := s + Format('%s = [%1.4f, %1.4f]'#$D#$A, [e.name, e.ValEep, e.ValMetr]);
+       MessageDlg('Текущие файлы тарировки прибора НЕ совпадают с EEPROM'#$D#$A+s, TMsgDlgType.mtError, [mbOK], 0)
+       end
+      else MessageDlg(Format('Текущие файлы тарировки прибора совпадают с EEPROM',['','' ]), TMsgDlgType.mtConfirmation, [mbOK], 0)
+     end;
+  end);
 end;
 
 procedure TFormControl.NeepEditClick(Sender: TObject);
@@ -537,23 +561,12 @@ begin
 end;
 
 procedure TFormControl.NRemoveClick(Sender: TObject);
- var
-  de: IDeviceEnum;
 begin
   if not ((FEditData.Item as IDevice).Status in [dsNoInit, dsPartReady, dsReady]) then
     if not (FEditData.Item as IDevice).CanClose then
     raise EFormControlException.Create('Необходимо завершить операцию обмена данными');
   try
-  if Supports(GlobalCore, IDeviceEnum, de) then
-   begin
-    try
-//     (FEditData.Item as IDataDevice).ClearMetaData;
-     //if MessageDlg('Удалить архивные данные ?', mtWarning, [mbYes, mbCancel], 0) = mrYes then
-     (GlobalCore as IProjectDataFile).DeviceDataDelete(FEditData.Item as IDevice);
-    // de.Remove(FEditData.Item as IDevice);
-    finally
-    end;
-   end;
+     (GlobalCore as IProjectDataFile).DeviceDataDelete(FEditData.Item as IDevice); // уже есть de.Remove(d as IDevice);
   finally
    FEditData.Item := nil;
    (GlobalCore as IActionProvider).HideUnusedMenus;
@@ -1072,7 +1085,8 @@ procedure TFormControl.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtua
   c: IConnectIO;
 begin                                  // - 306
   xd := Sender.GetNodeData(Node);
-  if Column = 0 then
+  ImageIndex := -1;
+  if (Column = 0) and (Kind in [TVTImageKind.ikNormal, ikSelected]) then
    if Supports(xd.Item, IDevice, d) then ImageIndex := 242
    else if Supports(xd.Item, IConnectIO, c) then
     begin

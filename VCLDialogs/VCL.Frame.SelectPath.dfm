@@ -30,7 +30,7 @@ object FrameSelectPath: TFrameSelectPath
       item
         Position = 0
         Style = vsOwnerDraw
-        Width = 451
+        Width = 445
         WideText = #1055#1091#1090#1100
       end>
   end

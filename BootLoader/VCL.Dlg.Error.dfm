@@ -36,8 +36,6 @@ object FormError: TFormError
     Caption = #1057#1095#1080#1090#1072#1090#1100
     TabOrder = 0
     OnClick = ReadClick
-    ExplicitLeft = 343
-    ExplicitTop = 286
   end
   object btClear: TButton
     Left = 153
@@ -48,8 +46,6 @@ object FormError: TFormError
     Caption = #1057#1073#1088#1086#1089#1080#1090#1100' '#1092#1083#1072#1075
     TabOrder = 1
     OnClick = ReadClick
-    ExplicitLeft = 250
-    ExplicitTop = 286
   end
   object edAdr: TEdit
     Left = 115
@@ -59,8 +55,6 @@ object FormError: TFormError
     Anchors = [akRight, akBottom]
     TabOrder = 2
     Text = '6'
-    ExplicitLeft = 212
-    ExplicitTop = 288
   end
   object MemoX: TMemo
     Left = 8
@@ -71,7 +65,5 @@ object FormError: TFormError
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 3
-    ExplicitWidth = 424
-    ExplicitHeight = 225
   end
 end

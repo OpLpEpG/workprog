@@ -57,7 +57,7 @@ begin
      until (BytesRead < (High(ArrayBuff) + 1));
 //Below, >= makes ASCII files = UTF-8, which is no problem.
 //Simple > would catch only UTF-8;
-     Result := (YesSequences >= NoSequences);
+     Result := (YesSequences > NoSequences);
 
    finally
      Stream.Free;
@@ -68,56 +68,71 @@ end;
 const
  PREAMB1 = '#pragma once';
  EMPTY = '';
-// PREAMB3 = 'extern uint8_t ReadMetaData(uint8_t* p, uint8_t n, uint16_t from);';
-
  PREAMB2 = 'const unsigned char __attribute__ ((section(".meta_data"), used)) cmetaAll[] = {';
+ AMB1 = '}; ';
  var
   ss: TStrings;
   outStr: TStringDynArray;
-  s: string;
-  i,n: Integer;
-  //BinFile: string;
   a: TBytes;
+  function BytesToStringArray(const a: TBytes): string;
+   var
+    s: string;
+    i,n: Integer;
+  begin
+    n := 0;
+    Result := '';
+    while n < Length(a) do
+    begin
+     s := '';
+     for I := 0 to 80 do
+      begin
+       s := s + a[n].ToString;
+       inc(n);
+       if n = Length(a) then exit(Result + s)
+       else s := s + ',';
+       if Length(s) > 80 then break;
+      end;
+     Result := Result + s + #$D#$A;
+    end;
+  end;
 begin
   try
     ss := TStringList.Create;
     try
      if FileMayBeUTF8(ParamStr(1)) then
+       try
         ss.LoadFromFile(ParamStr(1), TEncoding.UTF8)
-     else
-        ss.LoadFromFile(ParamStr(1));//, TEncoding.ANSI);
+       except
+        on E: Exception do
+         begin
+           Writeln(E.ClassName, ': ', E.Message);
+           ss.LoadFromFile(ParamStr(1));
+         end;
+       end
+     else ss.LoadFromFile(ParamStr(1));
 
-//     BinFile := TPath.ChangeExtension(ParamStr(1), 'Bin');
-//     if TFile.Exists(BinFile) then TFile.Delete(BinFile);
-//     TFile.WriteAllBytes(BinFile, TMetaData.Generate(ss));
      a := TMetaData.Generate(ss);
-     outStr := outStr + [PREAMB1, EMPTY, EMPTY,{ PREAMB3,} EMPTY, EMPTY, PREAMB2];
-     n := 0;
-     while n < Length(a) do
+
+     if ParamCount = 2 then
       begin
-       s := '';
-       for I := 0 to 80 do
-        begin
-         s := s + a[n].ToString;
-         inc(n);
-         if n = Length(a) then
-          begin
-           s := s + '}; ';
-           Break;
-          end
-         else s := s + ',';
-         if Length(s) > 80 then Break;         
-        end;
-       outStr := outStr + [s];
+       outStr := outStr + [PREAMB1, EMPTY, EMPTY,{ PREAMB3,} EMPTY, EMPTY, PREAMB2];
+       outStr := outStr + [BytesToStringArray(a), AMB1, EMPTY,EMPTY];
+       TFile.WriteAllLines(ParamStr(2), outStr, TEncoding.ANSI);
+      end
+     else
+      begin
+       TFile.WriteAllText(ParamStr(2), Format(TFile.ReadAllText(ParamStr(3)), [BytesToStringArray(a)]), TEncoding.ANSI);
       end;
-     outStr := outStr + [EMPTY,EMPTY];
-     TFile.WriteAllLines(ParamStr(2), outStr, TEncoding.ANSI);
-     Writeln('MetaData созданы : ', ParamStr(2));
+
+     Writeln('MetaData created : ', ParamStr(2));
     finally
      ss.Free;
     end;
   except
     on E: Exception do
-      Writeln(E.ClassName, ': ', E.Message);
+      begin
+       Writeln(E.ClassName, ': ', E.Message);
+       raise;
+      end;
   end;
 end.

@@ -157,7 +157,7 @@ function TXMLDataSetDef.GetBinFileName: string;
   n: IXMLNode;
   pdf: IProjectDataFile;
 begin
-  if not Supports(GContainer, IProjectDataFile, pdf) then raise Exception.Create('Error IProjectDataFile не поддерживается');
+  if not Supports(GContainer, IProjectDataFile, pdf) then raise EBaseException.Create('Error IProjectDataFile не поддерживается');
   n := GetIDeviceMeta((GContainer as IALLMetaDataFactory).Get(XMLFileName).Get, Device);
   if not Assigned(n) then Exit('');
   n := FindDev(n, ModulAdress);
@@ -199,7 +199,7 @@ class procedure TXMLDataSet.CreateNew(RootSection: IXMLNode; out DataSet: IDataS
  var
   pdf: IProjectDataFile;
 begin
-  if not Supports(GContainer, IProjectDataFile, pdf) then raise Exception.Create('Error IProjectDataFile не поддерживается');
+  if not Supports(GContainer, IProjectDataFile, pdf) then raise EBaseException.Create('Error IProjectDataFile не поддерживается');
   inherited CreateNew(pdf.ConstructDataDir(RootSection) + RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
   with TXMLDataSet(DataSet.DataSet) do
    begin
@@ -218,11 +218,11 @@ begin
 //  RootSection.Resync;
 // for x in XenumAttr(RootSection) do Tdebug.Log('atr[%s] =%s', [x.NodeName, x.NodeValue]);
 //  RootSection.Resync;
-  if not RootSection.HasAttribute(AT_FILE_NAME) then raise Exception.Create('Нет файла данных');
+  if not RootSection.HasAttribute(AT_FILE_NAME) then raise EBaseException.Create('Нет файла данных');
 
-  if not Supports(GContainer, IProjectDataFile, pdf) then raise Exception.Create('Error IProjectDataFile не поддерживается');
+  if not Supports(GContainer, IProjectDataFile, pdf) then raise EBaseException.Create('Error IProjectDataFile не поддерживается');
   inherited Get(pdf.ConstructDataDir(RootSection) + RootSection.Attributes[AT_FILE_NAME], RootSection.Attributes[AT_SIZE], DataSet);
-  if not (DataSet.DataSet is TXMLDataSet) then raise Exception.Create('DataSet is not TXMLDataSet');
+  if not (DataSet.DataSet is TXMLDataSet) then raise EBaseException.Create('DataSet is not TXMLDataSet');
   with TXMLDataSet(DataSet.DataSet) do
    begin
     if (FieldDefs.Count = 0) or (ObjectFields <> ObjectView) then CreateFieldDefs(RootSection, ObjectFields);
@@ -307,6 +307,11 @@ procedure TXMLDataSet.CreateFieldDefs(AXMLSection: IXMLNode; AObjectFields: Bool
     f.DataType := ft;
     f.DataOffset := off;
     f.Precision := aq;
+
+    if ft = ftString then f.Size := sz;  //с.м. TPars.VarTypeToLength(
+
+   //    if f.Size <> sz then TDebug.Log('%s %d %d',[f.Name, f.Size, sz]);
+
 
     if n.ParentNode.HasAttribute(AT_ARRAY) then
      begin

@@ -158,6 +158,7 @@ procedure TXMLLua.TrrExec(rr: TRunScriptRec);
  var
   m: TMarshaller;
 begin
+  try
   CheckFunction(LuaState, rr.RunFunc);
   PushXmlToTable(LuaState, rr.RunRoot);
   PushXmlToTable(LuaState, rr.TrrRoot);
@@ -167,6 +168,11 @@ begin
    begin
     raise ELuaException.Create(FLastError);
    end;
+  except
+    if Assigned(TDebug.ExeptionEvent) then TDebug.ExeptionEvent( '[Debuglog] Error TrrExec',
+       format(': func: %s path: %s adr: %d  ',[rr.RunFunc, rr.RunPath, rr.RunAdr ]), #$D#$A);
+    raise;
+  end;
 end;
 
 class procedure TXMLLua.RegisterLuaMethods(const LuaMethClass: TClass);

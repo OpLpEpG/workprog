@@ -165,6 +165,7 @@ end;
 
 procedure TFormDlgClc.btStartClick(Sender: TObject);
 begin
+  EBaseException.NeedShowDialog();
   if TFile.Exists(DataSet.CLCFileName) then
    begin
     FIDataSet := nil;

@@ -104,7 +104,7 @@ object FormPsk: TFormPsk
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAutoSpring, coSmartResize, coAllowFocus, coEditable]
           Position = 5
-          Width = 170
+          Width = 176
           WideText = #1060#1086#1088#1084#1072#1090#1080#1088#1086#1074#1072#1085#1080#1077
         end>
     end

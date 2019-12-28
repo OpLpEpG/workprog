@@ -107,7 +107,5 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
       item
         Width = 50
       end>
-    ExplicitLeft = -89
-    ExplicitWidth = 384
   end
 end

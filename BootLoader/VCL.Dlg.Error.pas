@@ -7,7 +7,7 @@ uses DeviceIntf, RootImpl, RootIntf, ExtendIntf, DockIForm,  System.TypInfo, Plu
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
 
 const
-   CMD_EROR = 6;
+   CMD_EROR = $E;
 type
   EFormErrorError = class(EBaseException);
   TFormError = class(TDockIForm)

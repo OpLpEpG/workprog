@@ -2,9 +2,9 @@ unit SDcardTools;
 
 interface
 
-uses RootIntf,
+uses RootIntf, debug_except,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.Threading,
-  System.IOUtils, JclFileUtils;
+  System.IOUtils, JclFileUtils, JclBase;
 
 type
   TCopyAsyncEvent = procedure(car: EnumCopyAsyncRun; Stat: TStatistic; var Erminate: Boolean) of object;
@@ -373,7 +373,7 @@ begin
   if not DeviceIoControl(FHandle, IOCTL_DISK_GET_DRIVE_GEOMETRY_EX, nil, 0, @dg, sizeof(dg), cbBytesReturned, nil) then RaiseLastOSError;
   FSectorSize := dg.Geometry.BytesPerSector;
   FDiskSize := dg.DiskSize;
-  FNumSectors := FDiskSize div dg.Geometry.BytesPerSector;
+  FNumSectors := FDiskSize div FSectorSize;
   inherited Create(FHandle);
 end;
 
@@ -401,7 +401,10 @@ begin
   SetLastError(0);
   if Origin = soEnd then Result := FileSeek(FHandle, FDiskSize+Offset, Ord(soBeginning))
   else Result := FileSeek(FHandle, Offset, Ord(Origin));
-  if GetLastError <> ERROR_SUCCESS then RaiseLastOSError;
+  if GetLastError <> ERROR_SUCCESS then
+   begin
+    RaiseLastOSError;
+   end;
 end;
 
 function TSDStream.AsyncCopyTo(const FlName: string; Offset, Count: Int64; ToZ: Boolean; ev: TCopyAsyncEvent): ITask;
@@ -534,19 +537,56 @@ function TAsyncCopy.LoadView: TLoadViewResult;
   Cur: Pbyte;
   prc: TStatistic;
   temn: Boolean;
+  NumRead: Cardinal;
+  ReadSectors: Integer;
+  BadCnt: Integer;
+  posSave: Int64;
+  label M1;
 begin
   Result.Res := carOk;
   Result.NumLoad := 0;
   temn := False;
   n := View.Size;
+  NumREad := M32;
+  ReadSectors := 0;
   while n > 0 do
    begin
-    cur := PByte(View.Memory) + Result.NumLoad;
+    cur := Pointer(TJclAddr(View.Memory) + TJclAddr(Result.NumLoad));
+    if NumREad <> M32 then FillMemory(cur, FStrmSD.FSectorSize, $FF);
+    BadCnt := 0;
     // read
-    if n >= M32 then nread := FStrmSD.Read(cur^, M32)
+M1: SetLastError(0);
+    posSave := FStrmSD.Position;
+    if n >= NumREad then nread := FStrmSD.Read(cur^, NumREad)
     else nread := FStrmSD.Read(cur^, n);
-    if nread = 0 then raise Exception.Create('nread = 0');
+    if GetLastError <> ERROR_SUCCESS then
+     begin
+      if NumREad = M32 then
+       begin
+        FStrmSD.Seek(posSave, soBeginning);
+        NumREad := FStrmSD.FSectorSize;
+        ReadSectors := M32 div FStrmSD.FSectorSize;
+        goto M1;
+       end
+      else if BadCnt > 0 then
+       begin
+        FStrmSD.Seek(posSave, soBeginning);
+        Dec(BadCnt);
+        goto M1;
+       end
+      else
+       begin
+        if Assigned(TDebug.ExeptionEvent) then TDebug.ExeptionEvent('Ошибочный сектор',
+        Format('Сектор: %x Адрес: %x', [(FOffset+FReadCount + Result.NumLoad) div FStrmSD.FSectorSize, FOffset+FReadCount + Result.NumLoad]), '');
+        nread := NumREad;
+        FStrmSD.Seek(posSave+nread, soBeginning);
+       // RaiseLastOSError;
+       end
+     end;
     // next
+    if ReadSectors > 0 then Dec(ReadSectors)
+    else NumREad := M32;
+    
     inc(Result.NumLoad, nread);
     Dec(n, nread);
     prc := GetStatistic(Result.NumLoad);
@@ -567,6 +607,8 @@ begin
      end
     else
      begin
+//      if NumREad <> M32 then Fevent(carErrorSector, prc, temn)
+//      else
       Fevent(carOk, prc, temn);
      // check user terminate
       if temn then

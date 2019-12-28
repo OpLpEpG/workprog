@@ -92,6 +92,9 @@ begin
   Reg('uint16_t', varWord, TMetaType);
   Reg('int32_t', varInteger, TMetaType);
   Reg('uint32_t', varLongWord, TMetaType);
+  Reg('int64_t', varInt64, TMetaType);
+  Reg('uint64_t', varUInt64, TMetaType);
+  Reg('double', varDouble, TMetaType);
   Reg('float', varSingle, TMetaType);
   Reg('var_info', TPars.var_info, TMetaType);
   Reg('var_adr', TPars.var_adr, TMetaUserByte);

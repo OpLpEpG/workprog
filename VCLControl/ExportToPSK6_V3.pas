@@ -7,16 +7,20 @@ uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, RootIntf, debug_exc
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Data.DB, System.IOUtils,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Mask, JvExMask, JvToolEdit, VCL.Frame.RangeSelect;
 
+const
+  MBKPB_END_IF:PAnsiChar = '#1#14  ';
+  DEVS_END_IF: array[3..6] of PAnsiChar = ('*Ink_%d','*GK_%d','*NNK_%d','*BK_%d');
 type
     TFileFormatPSK6 = Record
-      Dep: LongInt;                    //Время
-      Par: Array [0..61] of LongInt;   //формат K-6
+      Dep: Integer;                    //Время
+      Par: Array [0..61] of Integer;   //формат K-6
     end;
     TRecMap = record
      ix: Integer;
      name: string;
      k: Double;
     end;
+
 
   TFormExportToPSK6_V3 = class(TDockIForm)
     od: TJvFilenameEdit;
@@ -39,7 +43,7 @@ type
      Index: Integer;
     end;
     TcheckRec = record
-     adr: Integer;
+     //adr: Integer;
      Checked: Boolean;
      ModulName: string;
      Table: TXMLDataSet;
@@ -56,6 +60,7 @@ type
     rams: TArray<IDataSet>;
     acr: TArray<TCheckRec>;
     Fterminate: Boolean;
+    FSerials: AnsiString;
     procedure StRec(ix: IdataSet; const drm: array of TRecMap; var d: TcheckRec);
     procedure UpdateControls(FlagEna: Boolean);
     function GetProjectRams: TArray<IDataSet>;
@@ -65,7 +70,7 @@ type
     procedure Open;
     procedure RecNo(Kadr: Integer);
   public
-   [StaticAction('-ПСК6...', 'Экспорт', 226, '0:Файл.Экспорт|1:2')]
+   [StaticAction('-МБК...', 'Экспорт', 226, '0:Файл.Экспорт|1:2')]
    class procedure DoExportPSK6(Sender: IAction);
   end;
 
@@ -204,13 +209,18 @@ function TFormExportToPSK6_V3.GetProjectRams(): TArray<IDataSet>;
     begin
       for rm in rms do if not tools.TryGetX(n, rm.name, dummy) then Exit(False);
       Result := True;
+      FSerials := FSerials + AnsiString(Format(DEVS_END_IF[adr],[Integer(n.ParentNode.Attributes[AT_SERIAL])]));
     end;
   begin
     Result := nil;
-    for n in adv do if n.ParentNode.Attributes[AT_ADDR] = adr then
+    for n in adv do // if n.ParentNode.Attributes[AT_ADDR] = adr then
      begin
       TXMLDataSet.Get(n, Result, false);
-      if Assigned(Result) and ContainsRM then Exit(Result);
+      if Assigned(Result) and ContainsRM then
+       begin
+
+         Exit(Result);
+       end;
      end;
     Result := nil;
   end;
@@ -226,10 +236,12 @@ begin
      end;
     end;
    //TODO: adv - массив секций RAM памяти возможны с одинаковыми адресами необходимо создасть диалог выбора
+  FSerials := '$$';
   Result := Result + [GreateIDS(3, RM_INCL)];
   Result := Result + [GreateIDS(4, RM_GK)];
   Result := Result + [GreateIDS(5, RM_NNK)];
   Result := Result + [GreateIDS(6, RM_BK)];
+  FSerials := FSerials + '*$$';
   // если нет нужного адреса устройства то Result[i] = nil;
 end;
 
@@ -372,6 +384,8 @@ begin
                   TStatisticCreate.UpdateStandardStatusBar(sb, FIStat.Statistic);
                 end);
             end;
+            f.Write(Fserials[1], Length(Fserials));
+            f.Write(MBKPB_END_IF[0], 7);
             UpdateSb4('конец');
           finally
            Close;
@@ -418,10 +432,10 @@ begin
   rams := GetProjectRams;
   /// инициализация имен
   SetLength(acr, 4);
-  acr[0].adr := 3;
-  acr[1].adr := 4;
-  acr[2].adr := 5;
-  acr[3].adr := 6;
+//  acr[0].adr := 3;
+//  acr[1].adr := 4;
+//  acr[2].adr := 5;
+//  acr[3].adr := 6;
   StRec(rams[0], RM_INCL, acr[0]);
   StRec(rams[1], RM_GK,   acr[1]);
   StRec(rams[2], RM_NNK,  acr[2]);
@@ -447,7 +461,7 @@ begin
    begin
 //    RangeSelect.Init(1, 0, 1, (GContainer as IProjectOptions).DelayStart);
     FbadData := True;
-    raise ENeedDialogException.Create('Какие-либо данные для экспорта в ПСК6 отсутствуют !!!');
+    raise ENeedDialogException.Create('Какие-либо данные для экспорта в МБК отсутствуют !!!');
    end;
   RangeSelect.Init(1, fc, lc, (GContainer as IProjectOptions).DelayStart);
 end;

@@ -24,11 +24,9 @@ object FormExportLASP3: TFormExportLASP3
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
     TabPosition = tpBottom
-    ExplicitHeight = 369
     object tshSelDir: TTabSheet
       Caption = #1055#1091#1090#1100
       ImageIndex = 1
-      ExplicitHeight = 343
       inline FrameSelectPath: TFrameSelectPath
         Left = 0
         Top = 0
@@ -37,25 +35,24 @@ object FormExportLASP3: TFormExportLASP3
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 316
-        ExplicitHeight = 343
+        ExplicitHeight = 367
         inherited Tree: TVirtualStringTree
           Width = 316
           Height = 367
           ExplicitWidth = 316
-          ExplicitHeight = 343
+          ExplicitHeight = 367
           Columns = <
             item
               Position = 0
               Style = vsOwnerDraw
+              Text = #1055#1091#1090#1100
               Width = 310
-              WideText = #1055#1091#1090#1100
             end>
         end
       end
     end
     object tshSelParam: TTabSheet
       Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099
-      ExplicitHeight = 343
       inline FrameSelectParam1: TFrameSelectParam
         Left = 0
         Top = 0
@@ -64,7 +61,7 @@ object FormExportLASP3: TFormExportLASP3
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 316
-        ExplicitHeight = 343
+        ExplicitHeight = 367
         inherited Tree: TVirtualStringTree
           Width = 316
           Height = 367
@@ -76,21 +73,21 @@ object FormExportLASP3: TFormExportLASP3
               MinWidth = 24
               Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible]
               Position = 0
+              Text = 'D'
               Width = 24
-              WideText = 'D'
             end
             item
               MaxWidth = 24
               MinWidth = 24
               Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible]
               Position = 1
+              Text = 'C'
               Width = 24
-              WideText = 'C'
             end
             item
               Position = 2
+              Text = #1048#1084#1103
               Width = 262
-              WideText = #1048#1084#1103
             end>
         end
       end
@@ -117,7 +114,6 @@ object FormExportLASP3: TFormExportLASP3
       Caption = #1057#1074#1086#1081#1089#1090#1074#1072' '
       ImageIndex = 3
       OnShow = tshLasShow
-      ExplicitHeight = 343
       DesignSize = (
         316
         367)
@@ -225,6 +221,16 @@ object FormExportLASP3: TFormExportLASP3
         TabOrder = 6
         OnClick = cbUnqClick
       end
+      object cbKadr: TCheckBox
+        Left = 221
+        Top = 232
+        Width = 48
+        Height = 17
+        Caption = #1087#1086' ID'
+        TabOrder = 7
+        Visible = False
+        OnClick = cbUnqClick
+      end
     end
   end
   object btCancel: TButton
@@ -236,7 +242,6 @@ object FormExportLASP3: TFormExportLASP3
     Caption = #1047#1072#1082#1088#1099#1090#1100
     TabOrder = 1
     OnClick = btCancelClick
-    ExplicitTop = 390
   end
   object btOK: TButton
     Left = 152
@@ -247,7 +252,6 @@ object FormExportLASP3: TFormExportLASP3
     Caption = #1057#1086#1079#1076#1072#1090#1100
     TabOrder = 2
     OnClick = btOKClick
-    ExplicitTop = 390
   end
   object sb: TStatusBar
     Left = 0
@@ -270,7 +274,6 @@ object FormExportLASP3: TFormExportLASP3
       item
         Width = 50
       end>
-    ExplicitTop = 422
   end
   object ds: TDataSource
     Left = 266

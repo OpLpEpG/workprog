@@ -2,7 +2,7 @@ unit VCL.Form.EEPROM;
 
 interface
 
-uses Container, tools, XMLLua.EEPROM,  Xml.XMLDoc,
+uses Container, tools, XMLLua.EEPROM,  Xml.XMLDoc,  Math,
   RootIntf, DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, SDcardTools, FileCachImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf, System.TypInfo,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, VirtualTrees;
@@ -16,6 +16,7 @@ type
    /// [xmlnode(path.Node); attr(path.Node.DEV.VALUE); attr(path.Node) ]
     ColumnValue: TArray<IInterface>;
     function AsText(Col: Integer): string;
+    function AsColor(Col: Integer): TColor;
     function Editable(Col: Integer): boolean;
     procedure FromText(Col: Integer; const NewData: string);
   end;
@@ -33,16 +34,20 @@ type
     procedure TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure TreeCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
     procedure TreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
+    procedure TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+      TextType: TVSTTextType);
   private
     FRes: TDialogResult;
     FModul, Feep, Fmetr: IXMLNode;
     FAddr: Integer;
+    FC_MetrologyChange: string;
     function GetDevice: IEepromDevice;
     procedure ClearTree;
     procedure InitTree;
     function GetMetrNode(eepNode: IXMLNode): IXMLNode;
     procedure NCopyMetrClick(Sender: TObject);
-    procedure NCmpMetrClick(Sender: TObject);
+//    procedure NCmpMetrClick(Sender: TObject);
+    procedure SetC_MetrologyChange(const Value: string);
   protected
     function GetInfo: PTypeInfo; override;
     function Execute(Eep: IXMLNode; Res: TDialogResult): Boolean;
@@ -50,6 +55,7 @@ type
     property Dev: IEepromDevice read GetDevice;
   public
     { Public declarations }
+    property C_MetrologyChange: string read FC_MetrologyChange write SetC_MetrologyChange;
   end;
 
 
@@ -201,6 +207,19 @@ end;
 
 { TNodeExData }
 
+function TNodeExData.AsColor(Col: Integer): TColor;
+ var
+  e, m: IXMLNode;
+begin
+  Result := clBlack;
+  if (Length(ColumnValue) < 3) and (col <> 1) then Exit;
+  if Supports(ColumnValue[1], IXMLNode, e) and Supports(ColumnValue[2], IXMLNode, m) then
+   begin
+    if (Trim(e.NodeValue) <>'') and (Trim(m.NodeValue) <>'') then
+     if not SameValue(Single(e.NodeValue),Single(m.NodeValue)) then Result := clRed;
+   end;
+end;
+
 function TNodeExData.AsText(Col: Integer): string;
  var
   n: IXMLNode;
@@ -338,20 +357,20 @@ end;
 procedure TFormDlgEeprom.Loaded;
 begin
   inherited;
+  Bind('C_MetrologyChange', GlobalCore as IManager, ['S_MetrologyChange']);
   AddToNCMenu('-', nil, 0);
   AddToNCMenu('Копировать Метрологию в буфер EEPROM', NCopyMetrClick, 0);
-  AddToNCMenu('Сравнить Метрологию и буфер EEPROM', NCopyMetrClick, 0);
+//  AddToNCMenu('Сравнить Метрологию и буфер EEPROM', NCopyMetrClick, 0);
 end;
 
-function CheckPath(tst, etalon: IXMLNode; const rootNodeName: string; CheckRootNode: Boolean = False): boolean;
+function CheckPath(tst, etalon: IXMLNode; const rootTst, rootEtalon: string): boolean;
 begin
   while Assigned(tst) and Assigned(etalon) do
    begin
     if tst.NodeName <> etalon.NodeName then Exit(False);
-    if CheckRootNode and (etalon.NodeName = rootNodeName) then Exit(True);
     tst := tst.ParentNode;
     etalon := etalon.ParentNode;
-    if not CheckRootNode and Assigned(etalon) and (etalon.NodeName = rootNodeName) then Exit(True);
+    if Assigned(tst) and Assigned(etalon) and (etalon.NodeName = rootEtalon) and (tst.NodeName = rootTst) then Exit(True);
    end;
   Result := False;
 end;
@@ -363,25 +382,32 @@ begin
   Res := nil;
   ExecXTree(Fmetr, function (n: IXMLNode): boolean
   begin
-    if n.HasAttribute(eepNode.NodeName) and CheckPath(eepNode.ParentNode, n, T_MTR) then
+    if n.HasAttribute(eepNode.NodeName) and CheckPath(eepNode.ParentNode, n, T_EEPROM, T_MTR) then
      begin
       res := n.AttributeNodes.FindNode(eepNode.NodeName);
       Result := True;
      end
     else Result := False;
   end);
+  Result := res;
 end;
 
-procedure TFormDlgEeprom.NCmpMetrClick(Sender: TObject);
- var
-  e, m: IXMLNode;
-  pv: PVirtualNode;
-begin
-  for pv in Tree.Nodes do with PNodeExData(Tree.GetNodeData(pv))^ do
-    if (Length(ColumnValue) > 3) and Supports(ColumnValue[1], IXMLNode, e) and (e.NodeType = ntAttribute)
-    and Supports(ColumnValue[2], IXMLNode, m) and (m.NodeType = ntAttribute) then e.NodeValue := m.NodeValue;
-  Tree.Repaint;
-end;
+//procedure TFormDlgEeprom.NCmpMetrClick(Sender: TObject);
+// var
+//  e, m: IXMLNode;
+//  pv: PVirtualNode;
+//begin
+//  for pv in Tree.Nodes do with PNodeExData(Tree.GetNodeData(pv))^ do
+//    if (Length(ColumnValue) > 2) and Supports(ColumnValue[1], IXMLNode, e) and (e.NodeType = ntAttribute)
+//    and Supports(ColumnValue[2], IXMLNode, m) and (m.NodeType = ntAttribute) then 
+//     begin
+//       if SameValue(Single(e.NodeValue), Single(m.NodeValue)) then
+//       
+//       e.NodeValue := m.NodeValue;
+//       
+//     end;
+//  Tree.Repaint;
+//end;
 
 procedure TFormDlgEeprom.NCopyMetrClick(Sender: TObject);
  var
@@ -389,9 +415,18 @@ procedure TFormDlgEeprom.NCopyMetrClick(Sender: TObject);
   pv: PVirtualNode;
 begin
   for pv in Tree.Nodes do with PNodeExData(Tree.GetNodeData(pv))^ do
-    if (Length(ColumnValue) > 3) and Supports(ColumnValue[1], IXMLNode, e) and (e.NodeType = ntAttribute)
+    if (Length(ColumnValue) > 2) and Supports(ColumnValue[1], IXMLNode, e) and (e.NodeType = ntAttribute)
     and Supports(ColumnValue[2], IXMLNode, m) and (m.NodeType = ntAttribute) then e.NodeValue := m.NodeValue;
   Tree.Repaint;
+end;
+
+procedure TFormDlgEeprom.SetC_MetrologyChange(const Value: string);
+begin
+  FC_MetrologyChange := Value;
+  if Assigned(Fmetr.ChildNodes.FindNode(FC_MetrologyChange)) then
+   begin
+    InitTree;
+   end;
 end;
 
 procedure TFormDlgEeprom.TreeCreateEditor(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; out EditLink: IVTEditLink);
@@ -410,6 +445,13 @@ begin
   CellText := '';
   if Column < 0 then Exit;
   CellText := PNodeExData(Sender.GetNodeData(Node)).AsText(Column);
+end;
+
+procedure TFormDlgEeprom.TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
+  TextType: TVSTTextType);
+begin
+  if Column < 0 then Exit;
+  TargetCanvas.Font.Color := PNodeExData(Sender.GetNodeData(Node)).AsColor(Column)
 end;
 
 initialization

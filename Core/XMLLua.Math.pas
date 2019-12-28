@@ -92,7 +92,7 @@ type
     class procedure cb_Bks_func(const x, f: PDoubleArray); cdecl; static;
     class procedure cb_Bks_jac(const x, f: PDoubleArray; const jac: PMatrix); cdecl; static;
   public
-    class procedure FindBKS(focus: IXMLNode; otk: Double; out XOut: PDoubleArray); overload; static;
+    class procedure FindBKS(focus: IXMLNode; otk: Double; XOut: PDoubleArray); overload; static;
   published
     class function FindBKS(L: lua_State): Integer; overload; cdecl; static;
   end;
@@ -884,7 +884,7 @@ begin
    end;
 end;
 
-class procedure TXMLLuaBKS.FindBKS(focus: IXMLNode; otk: Double; out XOut: PDoubleArray);
+class procedure TXMLLuaBKS.FindBKS(focus: IXMLNode; otk: Double; XOut: PDoubleArray);
   procedure FindX0;
    var
     i,nmi,nma: Integer;
@@ -917,6 +917,7 @@ class procedure TXMLLuaBKS.FindBKS(focus: IXMLNode; otk: Double; out XOut: PDoub
   e: ILMFitting;
   i: Integer;
   rep: PLMFittingReport;
+  X: PDoubleArray;
 begin
   if not Assigned((focus as IOwnIntfXMLNode).Intf) then
    begin
@@ -927,26 +928,29 @@ begin
   CurY.Vizir := DegtoRad(360-otk);
   for i := 1 to 8 do CurY.Current[i-1] := focus.Childnodes.FindNode('I'+i.tostring).Childnodes.FindNode(T_CLC).Attributes[AT_VALUE];
   FindX0();
-  CheckMath(e, e.FitJB(3, 8, PDoubleArray(@X0[0]),PDoubleArray(@X0L[0]),PDoubleArray(@X0U[0]),  0.00000001, 1000, cb_Bks_func, cb_Bks_jac, XOut, rep));
+  CheckMath(e, e.FitJB(3, 8, PDoubleArray(@X0[0]),PDoubleArray(@X0L[0]),PDoubleArray(@X0U[0]),  0.00000001, 1000, cb_Bks_func, cb_Bks_jac, X, rep));
+  Xout[0] := X[0];
+  Xout[1] := X[1];
+  Xout[2] := X[2];
+  X := nil;
 end;
 
 class function TXMLLuaBKS.FindBKS(L: lua_State): Integer;
  var
-  X: PDoubleArray;
-  d: Double;
+  X: array[0..6] of Double;
 begin
-  FindBKS(TXMLLua.XNode(L, 1), lua_tonumber(L,2), X);
+  FindBKS(TXMLLua.XNode(L, 1), lua_tonumber(L,2), @X);
   Result := 3;
   lua_pushnumber(L, X[0]);
 
 //  d := (RadToDeg(X[1]));
-  d := DegNormalize(RadToDeg(X[1]));
   X0L[1] := X[1]-pi/2;
   X0[1] := X[1];
   X0U[1] := X[1]+pi/2;
+  X[1] := DegNormalize(RadToDeg(X[1]));
 
 //  if d < 0 then d := 360 + d;
-  lua_pushnumber(L, d);
+  lua_pushnumber(L, X[1]);
   lua_pushnumber(L, X[2]);
 end;
 

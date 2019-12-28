@@ -69,7 +69,6 @@ object FormCreateDev: TFormCreateDev
     DragType = dtVCL
     Header.AutoSizeIndex = 1
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring, hoHeaderClickAutoSort]
-    Header.ParentFont = True
     ParentCtl3D = False
     RootNodeCount = 10
     TabOrder = 2
@@ -84,19 +83,19 @@ object FormCreateDev: TFormCreateDev
       item
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
         Position = 0
+        Text = #1059#1089#1090#1088#1086#1081#1089#1090#1074#1086
         Width = 116
-        WideText = #1059#1089#1090#1088#1086#1081#1089#1090#1074#1086
       end
       item
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coDisableAnimatedResize]
         Position = 1
+        Text = #1054#1087#1080#1089#1072#1085#1080#1077
         Width = 207
-        WideText = #1054#1087#1080#1089#1072#1085#1080#1077
       end
       item
         Position = 2
+        Text = #1040#1076#1088#1077#1089
         Width = 45
-        WideText = #1040#1076#1088#1077#1089
       end>
   end
   object edCaption: TEdit

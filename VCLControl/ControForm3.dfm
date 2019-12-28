@@ -26,7 +26,6 @@ object FormControl: TFormControl
     EditDelay = 100
     Header.AutoSizeIndex = 2
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring, hoHeaderClickAutoSort]
-    Header.ParentFont = True
     PopupMenu = ppM
     TabOrder = 0
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
@@ -43,19 +42,19 @@ object FormControl: TFormControl
       item
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 0
+        Text = #1059#1089#1090#1088#1086#1081#1089#1090#1074#1086
         Width = 78
-        WideText = #1059#1089#1090#1088#1086#1081#1089#1090#1074#1086
       end
       item
         Position = 1
+        Text = #1057#1090#1072#1090#1091#1089
         Width = 100
-        WideText = #1057#1090#1072#1090#1091#1089
       end
       item
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coEditable]
         Position = 2
+        Text = #1042#1088#1077#1084#1103
         Width = 170
-        WideText = #1042#1088#1077#1084#1103
       end>
   end
   object ppM: TPopupActionBar

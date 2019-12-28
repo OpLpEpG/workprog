@@ -93,7 +93,7 @@ object DialogSyncDelay: TDialogSyncDelay
       end
       item
         Position = 5
-        Width = 86
+        Width = 90
         WideText = #1050#1086#1101#1092#1092'.'#1089#1086#1093#1088#1072#1085#1077#1085#1085#1099#1081
       end>
   end

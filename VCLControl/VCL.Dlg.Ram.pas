@@ -42,11 +42,11 @@ type
     FRecSize: Integer;
     FFrom: Int64;
     FCnt: Int64;
-    
+
     FModul: IXMLNode;
     FRes: TDialogResult;
     FDev: IDevice;
-    
+
     FS_TableModulUpdate: string;
     procedure CheckRAMFile(ram: IXMLNode);
     procedure inerExecute(IsImport: boolean);
@@ -372,6 +372,7 @@ begin
   ram.Attributes[AT_TO_TIME] := CTime.AsString(2.097152/24/3600 * Double(ram.Attributes[AT_TO_KADR]));
 
   Trminate := FTerminate;
+
   if not FTerminated and (TTask.CurrentTask.Status <> TTaskStatus.Canceled) then
    TThread.Queue(TThread.CurrentThread, procedure
    begin
@@ -413,6 +414,7 @@ end;
 procedure TFormDlgRam.btTerminateClick(Sender: TObject);
 begin
   FTerminate := True;
+  CancelSynchronousIo(FSDStream.Handle);
   if not Assigned(FDev) then Exit;
   try
    (FDev as IReadRamDevice).Terminate();

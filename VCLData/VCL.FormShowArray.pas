@@ -200,6 +200,7 @@ procedure TFormShowArray.NSaveToFileClick(Sender: TObject);
   s: TChartSeries;
   i: Integer;
   ss: TStrings;
+  dsold: Char;
 begin
   with TSaveDialog.Create(nil) do
   try
@@ -214,11 +215,14 @@ begin
          and (n.NodeValue <> null)
            and (n.NodeValue <> '') then ass := ass + [Tdatrec.Create(s.Title, n.NodeValue)];
      ss := TStringList.Create;
+     dsold := FormatSettings.DecimalSeparator;
+     FormatSettings.DecimalSeparator := (GlobalCore as Iproject).DecimalSeparator;
      try
       ss.Add(CreateTitle);
       for i := 0 to AssLen-1 do ss.Add(i.ToString+';'+string.Join(';', GetS(i)));
       ss.SaveToFile(FileName);
      finally
+      FormatSettings.DecimalSeparator := dsold;
       ss.Free;
      end;
     end;
