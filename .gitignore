@@ -68,7 +68,7 @@ __history/
 *.sln.docstates
 
 # Build results
-#[Dd]ebug/
+#[-Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -252,10 +252,10 @@ FakesAssemblies/
 
 #[Dd]ebug/
 ! _exe\Debug\
-#_exe\Debug\*.dll 
+_exe\Debug\* 
+! _exe\Debug\Devices\
 _exe\Debug\Projects\
 _exe\Debug\Метрология 
-! _exe\Debug\Devices\
 
 
 
