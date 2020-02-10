@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CALC>
+  <SHEET1 SheetByIndex="0">
+    <CELL E5="TAGK.DevName" G5="/./.SERIAL_NO" E7="TAGK.ISTOCHNIK" G40="TAGK.Ready" H41="TAGK.kalibrov" H42="TAGK.Metrolog" B5="TAGK.TIME_ATT" />
+    <RANGES>
+      <RANGE3 Cells="B12:K12" DataIndex="1:10:0:0" Source="TAGK.STEP%0:d.GR1.DEV.VALUE" />
+    </RANGES>
+  </SHEET1>
+  <SHEET2 SheetByIndex="1">
+    <CELL E5="TAGK.DevName" G5="/./.SERIAL_NO" B5="TAGK.TIME_ATT" E7="TAGK.ISTOCHNIK" G40="TAGK.Ready" H41="TAGK.kalibrov" H42="TAGK.Metrolog" />
+    <RANGES>
+      <RANGE3 Cells="B12:K12" DataIndex="11:20:0:0" Source="TAGK.STEP%0:d.GR2.DEV.VALUE" />
+    </RANGES>
+  </SHEET2>
+  <SHEET3 SheetByIndex="2">
+    <CELL E5="TAGK.DevName" G5="/./.SERIAL_NO" B5="TAGK.TIME_ATT" E7="TAGK.ISTOCHNIK" G40="TAGK.Ready" H41="TAGK.kalibrov" H42="TAGK.Metrolog" />
+    <RANGES>
+      <RANGE3 Cells="B12:K12" DataIndex="21:30:0:0" Source="TAGK.STEP%0:d.GR3.DEV.VALUE" />
+    </RANGES>
+  </SHEET3>
+  <SHEET4 SheetByIndex="3">
+    <CELL E5="TAGK.DevName" G5="/./.SERIAL_NO" B5="TAGK.TIME_ATT" E7="TAGK.ISTOCHNIK" G40="TAGK.Ready" H41="TAGK.kalibrov" H42="TAGK.Metrolog" />
+    <RANGES>
+      <RANGE3 Cells="B12:K12" DataIndex="31:40:0:0" Source="TAGK.STEP%0:d.GR4.DEV.VALUE" />
+    </RANGES>
+  </SHEET4>
+</CALC>

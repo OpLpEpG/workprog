@@ -1,0 +1,2169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <IKN_AMK SIZE="0" ADDR="1109" INFO="ИКН-АМК" PSK_BYTE_ADDR="1">
+    <WRK SIZE="1024" FLOW_PROTOCOL="4" FLOW_TIMER_INTERVAL="500" SP_HI_BYTE="0">
+      <время METR="WT">
+        <DEV TYPE="3" INDEX="2" />
+      </время>
+      <ГК SIZE="0">
+        <гк>
+          <DEV TYPE="18" INDEX="6" />
+        </гк>
+      </ГК>
+      <ИКН SIZE="0" METR="A2">
+        <TLM SIZE="0">
+          <метка>
+            <DEV TYPE="17" INDEX="16" />
+          </метка>
+          <код>
+            <DEV TYPE="17" INDEX="17" />
+          </код>
+          <timer>
+            <DEV TYPE="19" INDEX="18" />
+          </timer>
+          <тип>
+            <DEV TYPE="18" INDEX="22" />
+          </тип>
+          <время1>
+            <DEV TYPE="18" INDEX="24" />
+          </время1>
+          <время2>
+            <DEV TYPE="19" INDEX="26" />
+          </время2>
+        </TLM>
+        <Фаза SIZE="0">
+          <Ф0 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="30" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="31" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="32" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="36" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="40" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="42" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="44" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="48" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="52" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="54" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="56" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="60" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="64" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="66" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="68" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="72" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="76" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="78" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="80" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="84" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="88" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="90" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="92" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="96" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="100" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="102" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="104" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="108" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="112" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="114" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="116" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="120" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="124" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="126" />
+              </Валидность>
+            </RS7>
+          </Ф0>
+          <Ф1 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="128" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="129" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="130" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="134" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="138" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="140" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="142" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="146" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="150" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="152" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="154" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="158" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="162" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="164" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="166" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="170" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="174" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="176" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="178" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="182" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="186" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="188" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="190" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="194" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="198" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="200" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="202" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="206" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="210" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="212" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="214" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="218" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="222" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="224" />
+              </Валидность>
+            </RS7>
+          </Ф1>
+          <Ф2 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="226" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="227" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="228" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="232" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="236" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="238" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="240" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="244" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="248" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="250" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="252" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="256" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="260" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="262" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="264" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="268" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="272" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="274" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="276" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="280" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="284" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="286" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="288" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="292" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="296" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="298" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="300" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="304" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="308" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="310" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="312" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="316" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="320" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="322" />
+              </Валидность>
+            </RS7>
+          </Ф2>
+          <Ф3 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="324" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="325" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="326" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="330" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="334" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="336" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="338" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="342" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="346" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="348" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="350" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="354" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="358" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="360" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="362" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="366" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="370" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="372" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="374" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="378" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="382" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="384" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="386" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="390" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="394" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="396" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="398" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="402" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="406" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="408" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="410" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="414" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="418" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="420" />
+              </Валидность>
+            </RS7>
+          </Ф3>
+          <Ф4 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="422" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="423" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="424" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="428" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="432" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="434" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="436" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="440" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="444" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="446" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="448" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="452" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="456" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="458" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="460" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="464" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="468" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="470" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="472" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="476" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="480" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="482" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="484" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="488" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="492" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="494" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="496" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="500" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="504" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="506" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="508" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="512" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="516" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="518" />
+              </Валидность>
+            </RS7>
+          </Ф4>
+          <Ф5 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="520" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="521" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="522" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="526" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="530" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="532" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="534" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="538" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="542" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="544" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="546" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="550" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="554" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="556" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="558" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="562" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="566" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="568" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="570" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="574" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="578" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="580" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="582" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="586" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="590" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="592" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="594" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="598" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="602" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="604" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="606" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="610" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="614" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="616" />
+              </Валидность>
+            </RS7>
+          </Ф5>
+          <Ф6 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="618" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="619" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="620" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="624" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="628" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="630" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="632" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="636" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="640" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="642" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="644" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="648" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="652" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="654" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="656" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="660" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="664" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="666" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="668" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="672" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="676" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="678" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="680" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="684" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="688" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="690" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="692" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="696" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="700" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="702" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="704" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="708" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="712" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="714" />
+              </Валидность>
+            </RS7>
+          </Ф6>
+          <Ф7 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="716" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="717" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="718" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="722" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="726" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="728" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="730" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="734" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="738" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="740" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="742" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="746" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="750" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="752" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="754" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="758" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="762" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="764" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="766" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="770" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="774" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="776" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="778" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="782" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="786" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="788" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="790" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="794" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="798" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="800" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="802" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="806" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="810" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="812" />
+              </Валидность>
+            </RS7>
+          </Ф7>
+        </Фаза>
+        <V_PS>
+          <DEV TYPE="4" INDEX="814" />
+        </V_PS>
+        <V_DPS>
+          <DEV TYPE="4" INDEX="818" />
+        </V_DPS>
+        <RES>
+          <DEV TYPE="4" INDEX="822" />
+        </RES>
+        <RES_VAB>
+          <DEV TYPE="4" INDEX="826" />
+        </RES_VAB>
+        <RES_VMN>
+          <DEV TYPE="4" INDEX="830" />
+        </RES_VMN>
+        <STATUS>
+          <DEV TYPE="19" INDEX="834" />
+        </STATUS>
+        <xSTATUS ARRAY_SIZE="4">
+          <DEV TYPE="19" INDEX="838" />
+        </xSTATUS>
+        <CRC>
+          <DEV TYPE="18" INDEX="854" />
+        </CRC>
+      </ИКН>
+      <ИКН_ex SIZE="0">
+        <TLM SIZE="0">
+          <метка>
+            <DEV TYPE="17" INDEX="864" />
+          </метка>
+          <код>
+            <DEV TYPE="17" INDEX="865" />
+          </код>
+          <timer>
+            <DEV TYPE="19" INDEX="866" />
+          </timer>
+          <тип>
+            <DEV TYPE="18" INDEX="870" />
+          </тип>
+          <время1>
+            <DEV TYPE="18" INDEX="872" />
+          </время1>
+          <время2>
+            <DEV TYPE="19" INDEX="874" />
+          </время2>
+        </TLM>
+        <I_IN>
+          <DEV TYPE="4" INDEX="878" />
+        </I_IN>
+        <I_OUT>
+          <DEV TYPE="4" INDEX="882" />
+        </I_OUT>
+        <V_POW_DIG>
+          <DEV TYPE="4" INDEX="886" />
+        </V_POW_DIG>
+        <V_CHARGE>
+          <DEV TYPE="4" INDEX="890" />
+        </V_CHARGE>
+        <V_24V>
+          <DEV TYPE="4" INDEX="894" />
+        </V_24V>
+        <V_12V>
+          <DEV TYPE="4" INDEX="898" />
+        </V_12V>
+        <V_4V>
+          <DEV TYPE="4" INDEX="902" />
+        </V_4V>
+        <V_1V3>
+          <DEV TYPE="4" INDEX="906" />
+        </V_1V3>
+        <VA_3V3>
+          <DEV TYPE="4" INDEX="910" />
+        </VA_3V3>
+        <VA_2V5>
+          <DEV TYPE="4" INDEX="914" />
+        </VA_2V5>
+        <VA_1V8>
+          <DEV TYPE="4" INDEX="918" />
+        </VA_1V8>
+        <VA_1V2>
+          <DEV TYPE="4" INDEX="922" />
+        </VA_1V2>
+        <T>
+          <DEV TYPE="4" INDEX="926" />
+        </T>
+        <CRC>
+          <DEV TYPE="18" INDEX="930" />
+        </CRC>
+      </ИКН_ex>
+    </WRK>
+    <RAM SIZE="1024" RAM_SIZE="64" RAM_LO_SPEED_PROTOCOL="1" FLOW_TIMER_INTERVAL="1200" SP_HI_BYTE="0" FLOW_PROTOCOL="4">
+      <время METR="WT">
+        <DEV TYPE="3" INDEX="2" />
+      </время>
+      <ГК SIZE="0">
+        <гк>
+          <DEV TYPE="18" INDEX="6" />
+        </гк>
+      </ГК>
+      <ИКН SIZE="0" METR="A2">
+        <TLM SIZE="0">
+          <метка>
+            <DEV TYPE="17" INDEX="16" />
+          </метка>
+          <код>
+            <DEV TYPE="17" INDEX="17" />
+          </код>
+          <timer>
+            <DEV TYPE="19" INDEX="18" />
+          </timer>
+          <тип>
+            <DEV TYPE="18" INDEX="22" />
+          </тип>
+          <время1>
+            <DEV TYPE="18" INDEX="24" />
+          </время1>
+          <время2>
+            <DEV TYPE="19" INDEX="26" />
+          </время2>
+        </TLM>
+        <Фаза SIZE="0">
+          <Ф0 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="30" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="31" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="32" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="36" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="40" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="42" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="44" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="48" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="52" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="54" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="56" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="60" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="64" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="66" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="68" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="72" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="76" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="78" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="80" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="84" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="88" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="90" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="92" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="96" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="100" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="102" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="104" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="108" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="112" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="114" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="116" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="120" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="124" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="126" />
+              </Валидность>
+            </RS7>
+          </Ф0>
+          <Ф1 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="128" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="129" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="130" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="134" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="138" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="140" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="142" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="146" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="150" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="152" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="154" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="158" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="162" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="164" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="166" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="170" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="174" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="176" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="178" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="182" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="186" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="188" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="190" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="194" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="198" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="200" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="202" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="206" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="210" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="212" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="214" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="218" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="222" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="224" />
+              </Валидность>
+            </RS7>
+          </Ф1>
+          <Ф2 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="226" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="227" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="228" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="232" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="236" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="238" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="240" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="244" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="248" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="250" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="252" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="256" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="260" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="262" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="264" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="268" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="272" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="274" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="276" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="280" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="284" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="286" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="288" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="292" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="296" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="298" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="300" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="304" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="308" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="310" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="312" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="316" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="320" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="322" />
+              </Валидность>
+            </RS7>
+          </Ф2>
+          <Ф3 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="324" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="325" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="326" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="330" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="334" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="336" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="338" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="342" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="346" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="348" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="350" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="354" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="358" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="360" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="362" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="366" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="370" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="372" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="374" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="378" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="382" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="384" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="386" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="390" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="394" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="396" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="398" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="402" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="406" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="408" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="410" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="414" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="418" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="420" />
+              </Валидность>
+            </RS7>
+          </Ф3>
+          <Ф4 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="422" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="423" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="424" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="428" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="432" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="434" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="436" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="440" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="444" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="446" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="448" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="452" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="456" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="458" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="460" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="464" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="468" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="470" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="472" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="476" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="480" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="482" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="484" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="488" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="492" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="494" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="496" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="500" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="504" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="506" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="508" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="512" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="516" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="518" />
+              </Валидность>
+            </RS7>
+          </Ф4>
+          <Ф5 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="520" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="521" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="522" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="526" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="530" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="532" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="534" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="538" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="542" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="544" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="546" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="550" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="554" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="556" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="558" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="562" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="566" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="568" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="570" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="574" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="578" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="580" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="582" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="586" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="590" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="592" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="594" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="598" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="602" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="604" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="606" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="610" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="614" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="616" />
+              </Валидность>
+            </RS7>
+          </Ф5>
+          <Ф6 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="618" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="619" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="620" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="624" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="628" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="630" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="632" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="636" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="640" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="642" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="644" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="648" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="652" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="654" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="656" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="660" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="664" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="666" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="668" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="672" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="676" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="678" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="680" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="684" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="688" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="690" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="692" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="696" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="700" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="702" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="704" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="708" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="712" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="714" />
+              </Валидность>
+            </RS7>
+          </Ф6>
+          <Ф7 SIZE="0">
+            <HEAD_NM>
+              <DEV TYPE="17" INDEX="716" />
+            </HEAD_NM>
+            <HEAD_VAL>
+              <DEV TYPE="17" INDEX="717" />
+            </HEAD_VAL>
+            <TR0 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="718" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="722" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="726" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="728" />
+              </Валидность>
+            </TR0>
+            <RS1 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="730" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="734" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="738" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="740" />
+              </Валидность>
+            </RS1>
+            <RS2 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="742" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="746" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="750" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="752" />
+              </Валидность>
+            </RS2>
+            <RS3 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="754" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="758" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="762" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="764" />
+              </Валидность>
+            </RS3>
+            <RS4 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="766" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="770" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="774" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="776" />
+              </Валидность>
+            </RS4>
+            <RS5 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="778" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="782" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="786" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="788" />
+              </Валидность>
+            </RS5>
+            <RS6 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="790" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="794" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="798" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="800" />
+              </Валидность>
+            </RS6>
+            <RS7 SIZE="0">
+              <QSin>
+                <DEV TYPE="3" INDEX="802" />
+              </QSin>
+              <QCos>
+                <DEV TYPE="3" INDEX="806" />
+              </QCos>
+              <T>
+                <DEV TYPE="2" INDEX="810" />
+              </T>
+              <Валидность>
+                <DEV TYPE="18" INDEX="812" />
+              </Валидность>
+            </RS7>
+          </Ф7>
+        </Фаза>
+        <V_PS>
+          <DEV TYPE="4" INDEX="814" />
+        </V_PS>
+        <V_DPS>
+          <DEV TYPE="4" INDEX="818" />
+        </V_DPS>
+        <RES>
+          <DEV TYPE="4" INDEX="822" />
+        </RES>
+        <RES_VAB>
+          <DEV TYPE="4" INDEX="826" />
+        </RES_VAB>
+        <RES_VMN>
+          <DEV TYPE="4" INDEX="830" />
+        </RES_VMN>
+        <STATUS>
+          <DEV TYPE="19" INDEX="834" />
+        </STATUS>
+        <xSTATUS ARRAY_SIZE="4">
+          <DEV TYPE="19" INDEX="838" />
+        </xSTATUS>
+        <CRC>
+          <DEV TYPE="18" INDEX="854" />
+        </CRC>
+      </ИКН>
+      <ИКН_ex SIZE="0">
+        <TLM SIZE="0">
+          <метка>
+            <DEV TYPE="17" INDEX="864" />
+          </метка>
+          <код>
+            <DEV TYPE="17" INDEX="865" />
+          </код>
+          <timer>
+            <DEV TYPE="19" INDEX="866" />
+          </timer>
+          <тип>
+            <DEV TYPE="18" INDEX="870" />
+          </тип>
+          <время1>
+            <DEV TYPE="18" INDEX="872" />
+          </время1>
+          <время2>
+            <DEV TYPE="19" INDEX="874" />
+          </время2>
+        </TLM>
+        <I_IN>
+          <DEV TYPE="4" INDEX="878" />
+        </I_IN>
+        <I_OUT>
+          <DEV TYPE="4" INDEX="882" />
+        </I_OUT>
+        <V_POW_DIG>
+          <DEV TYPE="4" INDEX="886" />
+        </V_POW_DIG>
+        <V_CHARGE>
+          <DEV TYPE="4" INDEX="890" />
+        </V_CHARGE>
+        <V_24V>
+          <DEV TYPE="4" INDEX="894" />
+        </V_24V>
+        <V_12V>
+          <DEV TYPE="4" INDEX="898" />
+        </V_12V>
+        <V_4V>
+          <DEV TYPE="4" INDEX="902" />
+        </V_4V>
+        <V_1V3>
+          <DEV TYPE="4" INDEX="906" />
+        </V_1V3>
+        <VA_3V3>
+          <DEV TYPE="4" INDEX="910" />
+        </VA_3V3>
+        <VA_2V5>
+          <DEV TYPE="4" INDEX="914" />
+        </VA_2V5>
+        <VA_1V8>
+          <DEV TYPE="4" INDEX="918" />
+        </VA_1V8>
+        <VA_1V2>
+          <DEV TYPE="4" INDEX="922" />
+        </VA_1V2>
+        <T>
+          <DEV TYPE="4" INDEX="926" />
+        </T>
+        <CRC>
+          <DEV TYPE="18" INDEX="930" />
+        </CRC>
+      </ИКН_ex>
+    </RAM>
+  </IKN_AMK>
+</DEVICE>

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <TS3 ADDR="1002" INFO="Jun 20 2017;TS3_1WARE" SIZE="0">
+    <WRK SIZE="0">
+      <СП SIZE="0">
+        <Уход_тактов>
+          <DEV TYPE="3" />
+        </Уход_тактов>
+        <Амплитуда>
+          <DEV TYPE="4" />
+        </Амплитуда>
+        <Q_СП HIDDEN="true">
+          <DEV TYPE="3" />
+        </Q_СП>
+        <Фаза>
+          <DEV TYPE="3" />
+        </Фаза>
+      </СП>
+      <ГК METR="GK1_TS" SIZE="0">
+        <гк>
+          <CLC TYPE="5" EU="мкР/ч" TITLE="гк" ZND="1.1" DIGITS="8" AQURICY="1" RANGE_LO="0" RANGE_HI="200" COLOR="-65536" />
+          <DEV TYPE="3" />
+        </гк>
+        <Q_гк HIDDEN="true">
+          <DEV TYPE="3" />
+        </Q_гк>
+      </ГК>
+      <Inclin METR="TEST_1WARE" SIZE="0">
+        <зенит>
+          <DEV TYPE="3" />
+          <CLC TYPE="5" />
+        </зенит>
+        <Q_зенит HIDDEN="true">
+          <DEV TYPE="3" />
+        </Q_зенит>
+        <азимут>
+          <DEV TYPE="3" />
+          <CLC TYPE="5" />
+        </азимут>
+        <Q_азимут HIDDEN="true">
+          <DEV TYPE="3" />
+        </Q_азимут>
+        <отклонитель>
+          <CLC TYPE="5" />
+          <DEV TYPE="3" />
+        </отклонитель>
+        <Q_отклонитель HIDDEN="true">
+          <DEV TYPE="3" />
+        </Q_отклонитель>
+      </Inclin>
+    </WRK>
+  </TS3>
+</DEVICE>

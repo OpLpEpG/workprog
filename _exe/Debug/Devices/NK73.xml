@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <NK73 SIZE="0" ADDR="1113" INFO="NK73, проверка протокола">
+    <WRK SIZE="32" FLOW_TIMER_INTERVAL="1200" SP_HI_BYTE="0" FLOW_PROTOCOL="1">
+      <время METR="WT">
+        <DEV TYPE="48" INDEX="2" />
+      </время>
+      <время_HB>
+        <DEV TYPE="49" INDEX="3" />
+      </время_HB>
+      <ГК SIZE="0" METR="GK1">
+        <гк>
+          <DEV TYPE="42" INDEX="7" />
+        </гк>
+      </ГК>
+      <ННК SIZE="0" METR="NNK1">
+        <нгк>
+          <DEV TYPE="42" INDEX="6" />
+        </нгк>
+        <ННК1>
+          <DEV TYPE="42" INDEX="4" />
+        </ННК1>
+        <ННК2>
+          <DEV TYPE="42" INDEX="5" />
+        </ННК2>
+      </ННК>
+      <GZ>
+        <DEV TYPE="41" INDEX="8" />
+      </GZ>
+      <Tmod>
+        <DEV TYPE="41" INDEX="9" />
+      </Tmod>
+      <Ubat>
+        <DEV TYPE="42" INDEX="10" />
+      </Ubat>
+      <Ip>
+        <DEV TYPE="42" INDEX="11" />
+      </Ip>
+      <Ebat>
+        <DEV TYPE="42" INDEX="12" />
+      </Ebat>
+      <Nbat>
+        <DEV TYPE="42" INDEX="13" />
+      </Nbat>
+      <Ngk>
+        <DEV TYPE="42" INDEX="14" />
+      </Ngk>
+      <Nnk>
+        <DEV TYPE="42" INDEX="15" />
+      </Nnk>
+    </WRK>
+  </NK73>
+</DEVICE>

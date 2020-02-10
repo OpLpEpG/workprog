@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CALC>
+  <SHEET1 SheetByIndex="0">
+    <CELL B8="P_2.DevName" B10="/./.SERIAL_NO" B5="P_2.TIME_ATT" B24="P_2.Metrolog"></CELL>
+  </SHEET1>
+  <SHEET2 SheetByIndex="1">
+    <RANGES>
+      <RANGE3 Cells="B12:K12" DataIndex="1:10:0:0" Source="P_2.STEP%0:d.отклонитель.CLC.VALUE" />
+    </RANGES>
+  </SHEET2>
+</CALC>

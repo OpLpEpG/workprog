@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <MetrInclT SIZE="0" ADDR="1110" INFO="PSK4 метрология инклинометра по Т">
+    <WRK SIZE="128" SP_HI_BYTE="0" FLOW_PROTOCOL="1" FLOW_TIMER_INTERVAL="1200">
+      <время METR="WT">
+        <DEV TYPE="47" INDEX="4" />
+      </время>
+      <InclinT SIZE="0">
+        <Inclin1 SIZE="0" METR="DPSK_T">
+          <accel SIZE="0">
+            <X>
+              <DEV TYPE="58" INDEX="18" />
+            </X>
+            <Y>
+              <DEV TYPE="41" INDEX="20" />
+            </Y>
+            <Z>
+              <DEV TYPE="41" INDEX="22" />
+            </Z>
+          </accel>
+          <magnit SIZE="0">
+            <X>
+              <DEV TYPE="58" INDEX="24" />
+            </X>
+            <Y>
+              <DEV TYPE="58" INDEX="26" />
+            </Y>
+            <Z>
+              <DEV TYPE="41" INDEX="28" />
+            </Z>
+          </magnit>
+          <T>
+            <DEV TYPE="41" INDEX="30" />
+          </T>
+        </Inclin1>
+        <Inclin2 SIZE="0" METR="DPSK_T">
+          <accel SIZE="0">
+            <X>
+              <DEV TYPE="58" INDEX="6" />
+            </X>
+            <Y>
+              <DEV TYPE="41" INDEX="8" />
+            </Y>
+            <Z>
+              <DEV TYPE="41" INDEX="10" />
+            </Z>
+          </accel>
+          <magnit SIZE="0">
+            <X>
+              <DEV TYPE="58" INDEX="23" />
+            </X>
+            <Y>
+              <DEV TYPE="58" INDEX="46" />
+            </Y>
+            <Z>
+              <DEV TYPE="41" INDEX="12" />
+            </Z>
+          </magnit>
+          <T>
+            <DEV TYPE="41" INDEX="44" />
+          </T>
+        </Inclin2>
+        <Inclin3 SIZE="0" METR="DPSK_T">
+          <accel SIZE="0">
+            <X>
+              <DEV TYPE="58" INDEX="1" />
+            </X>
+            <Y>
+              <DEV TYPE="41" INDEX="3" />
+            </Y>
+            <Z>
+              <DEV TYPE="41" INDEX="5" />
+            </Z>
+          </accel>
+          <magnit SIZE="0">
+            <X>
+              <DEV TYPE="58" INDEX="27" />
+            </X>
+            <Y>
+              <DEV TYPE="58" INDEX="48" />
+            </Y>
+            <Z>
+              <DEV TYPE="41" INDEX="7" />
+            </Z>
+          </magnit>
+          <T>
+            <DEV TYPE="41" INDEX="25" />
+          </T>
+        </Inclin3>
+        <Inclin4 SIZE="0" METR="DPSK_T">
+          <accel SIZE="0">
+            <X>
+              <DEV TYPE="58" INDEX="29" />
+            </X>
+            <Y>
+              <DEV TYPE="41" INDEX="31" />
+            </Y>
+            <Z>
+              <DEV TYPE="41" INDEX="33" />
+            </Z>
+          </accel>
+          <magnit SIZE="0">
+            <X>
+              <DEV TYPE="58" INDEX="35" />
+            </X>
+            <Y>
+              <DEV TYPE="58" INDEX="37" />
+            </Y>
+            <Z>
+              <DEV TYPE="41" INDEX="39" />
+            </Z>
+          </magnit>
+          <T>
+            <DEV TYPE="41" INDEX="41" />
+          </T>
+        </Inclin4>
+        <Inclin5 SIZE="0" METR="DPSK_T">
+          <accel SIZE="0">
+            <X>
+              <DEV TYPE="58" INDEX="43" />
+            </X>
+            <Y>
+              <DEV TYPE="41" INDEX="45" />
+            </Y>
+            <Z>
+              <DEV TYPE="41" INDEX="47" />
+            </Z>
+          </accel>
+          <magnit SIZE="0">
+            <X>
+              <DEV TYPE="58" INDEX="49" />
+            </X>
+            <Y>
+              <DEV TYPE="58" INDEX="51" />
+            </Y>
+            <Z>
+              <DEV TYPE="41" INDEX="53" />
+            </Z>
+          </magnit>
+          <T>
+            <DEV TYPE="41" INDEX="55" />
+          </T>
+        </Inclin5>
+      </InclinT>
+    </WRK>
+  </MetrInclT>
+</DEVICE>

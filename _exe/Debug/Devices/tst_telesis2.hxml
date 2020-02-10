@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <TS2 ADDR="1001" INFO="Sept  20 2016;TSRETR" SIZE="0">
+    <WRK SIZE="0">
+      <СП SIZE="0">
+        <Уход_тактов>
+          <DEV TYPE="3" />
+        </Уход_тактов>
+        <Амплитуда>
+          <DEV TYPE="4" />
+        </Амплитуда>
+        <Q_СП HIDDEN="true">
+          <DEV TYPE="3" />
+        </Q_СП>
+        <Фаза>
+          <DEV TYPE="3" />
+        </Фаза>
+      </СП>
+      <время METR="WT">
+        <DEV TYPE="3" />
+        <CLC VALUE="0" TYPE="256" />
+      </время>
+      <Q_время HIDDEN="true">
+        <DEV TYPE="3" />
+      </Q_время>
+      <sum>
+        <DEV TYPE="3" />
+      </sum>
+      <Q_sum HIDDEN="true">
+        <DEV TYPE="3" />
+      </Q_sum>
+    </WRK>
+  </TS2>
+</DEVICE>

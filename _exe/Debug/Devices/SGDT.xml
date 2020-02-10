@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <SGDT SIZE="0" ADDR="1108" INFO="СГДТ">
+    <WRK SIZE="32" FLOW_TIMER_INTERVAL="1200" SP_HI_BYTE="0" FLOW_PROTOCOL="1">
+      <время METR="WT">
+        <DEV TYPE="48" INDEX="2" />
+      </время>
+      <ГК SIZE="0">
+        <гк>
+          <DEV TYPE="46" INDEX="12" />
+        </гк>
+      </ГК>
+      <Z SIZE="0">
+        <Z1>
+          <DEV TYPE="46" INDEX="3" />
+        </Z1>
+        <Z2>
+          <DEV TYPE="46" INDEX="4" />
+        </Z2>
+        <Z3>
+          <DEV TYPE="46" INDEX="5" />
+        </Z3>
+        <Z4>
+          <DEV TYPE="46" INDEX="6" />
+        </Z4>
+        <Z5>
+          <DEV TYPE="46" INDEX="7" />
+        </Z5>
+        <Z6>
+          <DEV TYPE="46" INDEX="8" />
+        </Z6>
+        <Z7>
+          <DEV TYPE="46" INDEX="9" />
+        </Z7>
+        <Z8>
+          <DEV TYPE="46" INDEX="10" />
+        </Z8>
+      </Z>
+      <Tol>
+        <DEV TYPE="46" INDEX="11" />
+      </Tol>
+      <Viz>
+        <DEV TYPE="49" INDEX="13" />
+      </Viz>
+      <Gz>
+        <DEV TYPE="60" INDEX="15" />
+      </Gz>
+      <T>
+        <DEV TYPE="49" INDEX="14" />
+      </T>
+      <Up>
+        <DEV TYPE="49" INDEX="15" />
+      </Up>
+    </WRK>
+    <RAM SIZE="32" RAM_SIZE="5" RAM_LO_SPEED_PROTOCOL="1" FLOW_TIMER_INTERVAL="1200" SP_HI_BYTE="0" FLOW_PROTOCOL="1">
+      <время METR="WT">
+        <DEV TYPE="48" INDEX="2" />
+      </время>
+      <ГК SIZE="0">
+        <гк>
+          <DEV TYPE="46" INDEX="12" />
+        </гк>
+      </ГК>
+      <Z SIZE="0">
+        <Z1>
+          <DEV TYPE="46" INDEX="3" />
+        </Z1>
+        <Z2>
+          <DEV TYPE="46" INDEX="4" />
+        </Z2>
+        <Z3>
+          <DEV TYPE="46" INDEX="5" />
+        </Z3>
+        <Z4>
+          <DEV TYPE="46" INDEX="6" />
+        </Z4>
+        <Z5>
+          <DEV TYPE="46" INDEX="7" />
+        </Z5>
+        <Z6>
+          <DEV TYPE="46" INDEX="8" />
+        </Z6>
+        <Z7>
+          <DEV TYPE="46" INDEX="9" />
+        </Z7>
+        <Z8>
+          <DEV TYPE="46" INDEX="10" />
+        </Z8>
+      </Z>
+      <Tol>
+        <DEV TYPE="46" INDEX="11" />
+      </Tol>
+      <Viz>
+        <DEV TYPE="49" INDEX="13" />
+      </Viz>
+      <Gz>
+        <DEV TYPE="60" INDEX="15" />
+      </Gz>
+      <T>
+        <DEV TYPE="49" INDEX="14" />
+      </T>
+      <Up>
+        <DEV TYPE="49" INDEX="15" />
+      </Up>
+    </RAM>
+  </SGDT>
+</DEVICE>

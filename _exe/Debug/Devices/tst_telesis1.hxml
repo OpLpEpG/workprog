@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <TS1 ADDR="1000" INFO="Apr  2 2015;TS1_D3H" SIZE="0">
+    <WRK SIZE="0">
+      <СП SIZE="0">
+        <Уход_тактов>
+          <DEV TYPE="3" />
+        </Уход_тактов>
+        <Амплитуда>
+          <DEV TYPE="4" />
+        </Амплитуда>
+        <Q_СП HIDDEN="true">
+          <DEV TYPE="3" />
+        </Q_СП>
+        <Фаза>
+          <DEV TYPE="3" />
+        </Фаза>
+      </СП>
+      <Inclin METR="D3_TESESIS" SIZE="0">
+        <статика SIZE="0">
+          <отклонитель>
+            <CLC TYPE="5" />
+          </отклонитель>
+          <маг_отклон>
+            <CLC TYPE="5" />
+          </маг_отклон>
+        </статика>
+        <маг_отклон1>
+          <DEV TYPE="4" />
+        </маг_отклон1>
+        <Q_маг_отклон1 HIDDEN="true">
+          <DEV TYPE="3" />
+        </Q_маг_отклон1>
+        <маг_отклон2>
+          <DEV TYPE="4" />
+        </маг_отклон2>
+        <Q_маг_отклон2 HIDDEN="true">
+          <DEV TYPE="3" />
+        </Q_маг_отклон2>
+        <маг_отклон3>
+          <DEV TYPE="4" />
+        </маг_отклон3>
+        <Q_маг_отклон3 HIDDEN="true">
+          <DEV TYPE="3" />
+        </Q_маг_отклон3>
+        <accel SIZE="0">
+          <X>
+            <DEV TYPE="4" />
+          </X>
+          <Q_X HIDDEN="true">
+            <DEV TYPE="3" />
+          </Q_X>
+          <Y>
+            <DEV TYPE="4" />
+          </Y>
+          <Q_Y HIDDEN="true">
+            <DEV TYPE="3" />
+          </Q_Y>
+          <Z>
+            <DEV TYPE="4" />
+          </Z>
+          <Q_Z HIDDEN="true">
+            <DEV TYPE="3" />
+          </Q_Z>
+          <DXY>
+            <DEV TYPE="4" />
+          </DXY>
+          <Q_DXY HIDDEN="true">
+            <DEV TYPE="3" />
+          </Q_DXY>
+          <DZ>
+            <DEV TYPE="4" />
+          </DZ>
+          <Q_DZ HIDDEN="true">
+            <DEV TYPE="3" />
+          </Q_DZ>
+        </accel>
+        <magnit SIZE="0">
+          <X>
+            <DEV TYPE="4" />
+          </X>
+          <Q_X HIDDEN="true">
+            <DEV TYPE="3" />
+          </Q_X>
+          <Y>
+            <DEV TYPE="4" />
+          </Y>
+          <Q_Y HIDDEN="true">
+            <DEV TYPE="3" />
+          </Q_Y>
+          <Z>
+            <DEV TYPE="4" />
+          </Z>
+          <Q_Z HIDDEN="true">
+            <DEV TYPE="3" />
+          </Q_Z>
+        </magnit>
+      </Inclin>
+      <Cmd>
+        <DEV TYPE="3" />
+      </Cmd>
+      <Q_Cmd HIDDEN="true">
+        <DEV TYPE="3" />
+      </Q_Cmd>
+    </WRK>
+  </TS1>
+</DEVICE>

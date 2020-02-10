@@ -25,7 +25,16 @@
 .hg/
 .hgignore
 
+#! _exe\Debug\
+#_exe\Debug\* 
+#! _exe\Debug\Devices\
+_exe\Debug\Projects\
+_exe\Debug\Метрология 
+
 # Delphi compiler-generated binaries (safe to delete)
+
+*.dlp
+
 *.exe
 *.dll
 *.bpl
@@ -119,13 +128,6 @@ dlldata.c
 *.pidb
 *.svclog
 *.scc
-
-*.dlp
-*.exe
-*.drc
-*.map
-*.rsm
-*.bpl
 
 # Chutzpah Test files
 _Chutzpah*
@@ -250,12 +252,6 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
-#[Dd]ebug/
-! _exe\Debug\
-_exe\Debug\* 
-! _exe\Debug\Devices\
-_exe\Debug\Projects\
-_exe\Debug\Метрология 
 
 
 

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CALC>
+  <SHEET1 SheetByIndex="0">
+    <CELL D3="TGGKP1.DevName" H3="/./.SERIAL_NO" F4="TGGKP1.TIME_ATT" F6="TGGKP1.ISTOCHNIK" K36="TGGKP1.Ready" K38="TGGKP1.Metrolog" F5="TGGKP1.UsedStol" J37="TGGKP1.NextDate" />
+    <RANGES>
+      <RANGE1 Cells="C15:D18" DataIndex="1:2:1:4" Source="TGGKP1.STEP%1:d.гк%0:d.DEV.VALUE" />
+      <RANGE1 Cells="C22:D24" DataIndex="1:2:5:7" Source="TGGKP1.STEP%1:d.гк%0:d.DEV.VALUE" />
+      <RANGE1 Cells="C28:D30" DataIndex="1:2:8:10" Source="TGGKP1.STEP%1:d.гк%0:d.DEV.VALUE" />
+    </RANGES>
+  </SHEET1>
+</CALC>

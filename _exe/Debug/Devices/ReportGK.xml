@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CALC MetrType="TGK">
+  <SHEET1 SheetByIndex="0">
+    <CELL E4="TGK.DevName" G4="/./.SERIAL_NO" E5="TGK.TIME_ATT" E7="TGK.ISTOCHNIK" G22="TGK.Ready" I24="TGK.kalibrov" I26="TGK.Metrolog" />
+    <RANGES>
+      <RANGE3 Cells="B12:K12" DataIndex="1:10:0:0" Source="TGK.STEP%0:d.гк.DEV.VALUE" />
+    </RANGES>
+  </SHEET1>
+</CALC>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CALC MetrType="TNNK">
+  <SHEET1 SheetByIndex="0">
+    <CELL E3="TNNK.DevName" G3="/./.SERIAL_NO" E4="TNNK.TIME_ATT" E6="TNNK.ISTOCHNIK" G40="TNNK.Ready" H41="TNNK.kalibrov" H42="TNNK.Metrolog" />
+    <RANGES>
+      <RANGE1 Cells="C14:C17 C19:C21 C23:C25 C28:C30" DataIndex="0:0:1:4 0:0:5:7 0:0:8:10 0:0:12:14" Source="TNNK.STEP%1:d.нк1.DEV.VALUE" />
+      <RANGE2 Cells="D14:D17 D19:D21 D23:D25 D28:D30" DataIndex="0:0:1:4 0:0:5:7 0:0:8:10 0:0:12:14" Source="TNNK.STEP%1:d.нк2.DEV.VALUE" />
+      <RANGE3 Cells="E14:E17 E19:E21 E23:E25 E28:E30" DataIndex="0:0:1:4 0:0:5:7 0:0:8:10 0:0:12:14" Source="TNNK.STEP%1:d.нгк.DEV.VALUE" />
+      <RANGE3 Cells="B35:K35" DataIndex="1:10:0:0" Source="TNGK.STEP%0:d.нгк.DEV.VALUE" />
+    </RANGES>
+  </SHEET1>InclTem1</CALC>

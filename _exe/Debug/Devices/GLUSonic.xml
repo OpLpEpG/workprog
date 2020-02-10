@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <GLU SIZE="0" ADDR="1111" INFO="Глубиномер звуковой">
+    <WRK SIZE="32768" FLOW_PROTOCOL="5">
+      <время METR="WT">
+        <DEV TYPE="48" INDEX="3" />
+      </время>
+      <Ку1>
+        <DEV TYPE="18" INDEX="4" />
+      </Ку1>
+      <Ку2>
+        <DEV TYPE="18" INDEX="5" />
+      </Ку2>
+      <ДН1>
+        <DEV TYPE="18" INDEX="6" />
+      </ДН1>
+      <Rezerv>
+        <DEV TYPE="18" INDEX="7" />
+      </Rezerv>
+      <ФКД1 ARRAY_SIZE="4094">
+        <DEV TYPE="2" INDEX="8" />
+      </ФКД1>
+      <ФКД2 ARRAY_SIZE="4094">
+        <DEV TYPE="2" INDEX="4102" />
+      </ФКД2>
+      <ФКД3 ARRAY_SIZE="4094">
+        <DEV TYPE="2" INDEX="8196" />
+      </ФКД3>
+      <ФКД4 ARRAY_SIZE="4094">
+        <DEV TYPE="2" INDEX="12290" />
+      </ФКД4>
+    </WRK>
+  </GLU>
+</DEVICE>

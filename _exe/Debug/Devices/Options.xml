@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OPTIONS>
+	<Delay Категория="Delay">
+		<TIME_START Описание=" Время включения компоновки приборов" Единицы="" Значение="0" Hidden="1" ReadOnly="" DataType=""/>
+		<WORK_INTERVAL Описание="Интервал работы  компоновки приборов" Единицы="" Значение="0" Hidden="1" ReadOnly="" DataType=""/>
+	</Delay>
+	<W Категория="Well Information Section">
+		<COMP Описание="Имя компании" Единицы="" Значение="" Hidden="" ReadOnly=""/>
+		<WELL Описание="Название скважины" Единицы="" Значение="" Hidden="" ReadOnly=""/>
+		<FLD Описание="Месторождение" Единицы="" Значение="" Hidden="" ReadOnly=""/>
+		<LOC Описание="Место положения" Единицы="" Значение=""/>
+		<SRVC Описание="Сервисная компания" Единицы="" Значение="АМК &quot;Горизонт&quot;" Hidden="" ReadOnly="" DataType=""/>
+		<DATE Описание="Дата проведения" Единицы="" Значение="" Hidden="" ReadOnly="" DataType="4"/>
+		<PROV Описание="Провинция" Единицы="" Значение="" Hidden="" ReadOnly=""/>
+		<NULL Описание="NULL VALUE" Единицы="" Hidden="1" ReadOnly="1" Значение="-999.25"/>
+		<STRT Описание="Глубина первой строки данных" Единицы="M" Hidden="" ReadOnly="1" Значение="" DataType="2"/>
+		<STOP Описание="Глубина последней строки данных" Единицы="M" Hidden="" ReadOnly="1" Значение="" DataType="2"/>
+		<STEP Описание="Шаг глубины" Единицы="M" Hidden="" ReadOnly="1" Значение="" DataType="2"/>
+		<UWI Описание="UNIQUE WELL ID" Единицы="" Hidden="" ReadOnly="" Значение=""/>
+	</W>
+	<P Категория="Параметры скважины">
+		<DFD Описание="Вес бурового расствора" Единицы="K/M3" Значение="" Hidden="" ReadOnly=""/>
+		<RMFS Описание="Mud Filtrate Resistivity" Единицы="OHMM" Значение="2.8200" Hidden="" ReadOnly=""/>
+		<ZND_ROOT Описание="Компоновка" Единицы="M" Hidden="" ReadOnly="" DataType="2" Значение="0"/>
+		<DIAM Описание="Диаметр ствола" Единицы="мм" Hidden="" ReadOnly="" DataType="2" Значение="216"/></P>
+</OPTIONS>
