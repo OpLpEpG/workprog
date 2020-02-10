@@ -10,6 +10,7 @@ uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, RootIntf, debug_exc
 const
   APPB_END_IF:  PAnsiChar = '#1#34  ';
   APPB_END_AK1: PAnsiChar = '#1#35  ';
+  APPB_END_AK1_800: PAnsiChar = '#1#67  ';
 type
     TRecMap = record
      ix: Integer;
@@ -161,7 +162,12 @@ begin
              if Assigned(akFields[i]) and not akFields[i].isNull then
               begin
                FXDataSet.GetFieldData(akFields[i], b);
-               ak.Write(PPointer(@b[0])^^, akLen);
+               if akFields[i].Size < akLen then
+                   move(PPointer(@b[0])^^, bdef[0], akFields[i].Size)
+               else
+                   move(PPointer(@b[0])^^, bdef[0], akLen);
+               ak.Write(bdef[0], akLen);
+               FillChar(bdef[0], akLen, 0);
               end
              else ak.Write(bdef[0], akLen);
 //           end
@@ -184,7 +190,10 @@ begin
           end);
          end;
         f.Write(APPB_END_IF[0], 7);
-        ak.Write(APPB_END_AK1[0], 7);
+        if akLen = 800 then
+           ak.Write(APPB_END_AK1_800[0], 7)
+         else
+           ak.Write(APPB_END_AK1[0], 7);
         UpdateSb4('конец');
       finally
        UpdateControls(True);

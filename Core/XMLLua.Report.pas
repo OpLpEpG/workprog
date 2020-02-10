@@ -89,7 +89,8 @@ begin
 
       if notes.HasAttribute('MetrType')
          and TryGetX(root, notes.Attributes['MetrType'], metr)
-         and metr.HasAttribute('DecimalSeparator') then
+         and metr.HasAttribute('DecimalSeparator')
+         and (metr.Attributes['DecimalSeparator'].Trim <> '') then
          fs.DecimalSeparator := string(metr.Attributes['DecimalSeparator'])[1]
       else
          fs.DecimalSeparator := (GlobalCore as Iproject).DecimalSeparator;
@@ -145,7 +146,7 @@ begin
                   begin
                    d := v;
                    FormatSettings := fs;
-                   varr[x-Xlo, y-Ylo] := d; // офис требует число и с разделителем системы или офиса в программе разделитель точка
+                   varr[x-Xlo, y-Ylo] := d;//.ToString(Fs); // офис требует число и с разделителем системы или офиса в программе разделитель точка
                    FormatSettings := fsold;
                   end
                  else

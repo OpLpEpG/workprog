@@ -396,6 +396,7 @@ type
     function Load(out ProjectName: string): Boolean;
     function Setup: Boolean;
     procedure Close;
+    ///   property: DecimalSeparator - на помпе
     property DecimalSeparator: Char read GetDecimalSeparator;
   end;
 

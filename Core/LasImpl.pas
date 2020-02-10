@@ -577,16 +577,16 @@ procedure TLasDoc.LoadFromFile(const AFileName: String);
  var
   ss: TStrings;
   se: ILasSection;
-  c: Char;
+//  c: Char;
 begin
   ss := TStringList.Create;
-  c := FormatSettings.DecimalSeparator;
-  FormatSettings.DecimalSeparator := '.';
+//  c := FormatSettings.DecimalSeparator;
+//  FormatSettings.DecimalSeparator := '.';
   try
    ss.LoadFromFile(AFileName, GetLasEncoding(FEncoding));
    for se in FSections do TSection(se).FromStrings(ss);
   finally
-   FormatSettings.DecimalSeparator := c;
+//   FormatSettings.DecimalSeparator := c;
    ss.Free;
   end;
   FfileName := AFileName;

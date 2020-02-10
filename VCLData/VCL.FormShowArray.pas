@@ -174,6 +174,7 @@ end;
 procedure TFormShowArray.NSaveToFileClick(Sender: TObject);
  var
   ass: TArray<Tdatrec>;
+  fs: TFormatSettings;
   function AssLen: Integer;
    var
     i: Tdatrec;
@@ -193,14 +194,14 @@ procedure TFormShowArray.NSaveToFileClick(Sender: TObject);
     i: Tdatrec;
   begin
     Result := [];
-    for i in ass do Result := Result + [i.Dat[idx]];
+    for i in ass do Result := Result + [StrToFloat(i.Dat[idx]).ToString(fs)];
   end;
  var
   n: IXMLNode;
   s: TChartSeries;
   i: Integer;
   ss: TStrings;
-  dsold: Char;
+  //dsold: Char;
 begin
   with TSaveDialog.Create(nil) do
   try
@@ -215,14 +216,13 @@ begin
          and (n.NodeValue <> null)
            and (n.NodeValue <> '') then ass := ass + [Tdatrec.Create(s.Title, n.NodeValue)];
      ss := TStringList.Create;
-     dsold := FormatSettings.DecimalSeparator;
-     FormatSettings.DecimalSeparator := (GlobalCore as Iproject).DecimalSeparator;
+     fs := FormatSettings;
+     fs.DecimalSeparator := (GlobalCore as Iproject).DecimalSeparator;
      try
       ss.Add(CreateTitle);
       for i := 0 to AssLen-1 do ss.Add(i.ToString+';'+string.Join(';', GetS(i)));
       ss.SaveToFile(FileName);
      finally
-      FormatSettings.DecimalSeparator := dsold;
       ss.Free;
      end;
     end;

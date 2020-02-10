@@ -87,9 +87,9 @@
         <UsePackages>true</UsePackages>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
         <DCC_DcuOutput>unit\$(Config)</DCC_DcuOutput>
-        <VerInfo_Build>99</VerInfo_Build>
+        <VerInfo_Build>102</VerInfo_Build>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.0.0.99;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.0.0.102;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <DCC_MapFile>3</DCC_MapFile>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <CfgDependentOn>..\..\_Defaul_pak.optset</CfgDependentOn>

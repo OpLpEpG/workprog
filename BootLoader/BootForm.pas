@@ -337,7 +337,7 @@ begin
   d := ToAdrCmd(Adr, CMD_EXIT);
   GetDevice.SendROW(@d, CASZ, procedure(p: Pointer; n: integer)
   begin
-    if (1 = n) and (d = PByte(p)^) then memo.Lines.Insert(0, 'в программе !!!')
+    if (CASZ = n) and (d = PByte(p)^) then memo.Lines.Insert(0, 'в программе !!!')
     else memo.Lines.Insert(0, 'Ошибка перехода в программу');
   end, 100);
 end;

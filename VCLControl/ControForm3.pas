@@ -1020,6 +1020,7 @@ begin
   SData('до времени', AT_TO_TIME);
   SData('с адреса', AT_FROM_ADR);
   SData('по адрес', AT_TO_ADR);
+  SData('окончено', AT_END_REASON);
 end;
 
 procedure TFormControl.ViewWrkData(Root: PVirtualNode; node: IXMLNode);

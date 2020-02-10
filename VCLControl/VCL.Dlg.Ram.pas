@@ -3,7 +3,7 @@ unit VCL.Dlg.Ram;
 interface
 
 uses RootIntf,
-  DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, SDcardTools,  System.Threading, FileCachImpl,
+  DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, SDcardToolsAsync,  System.Threading, FileCachImpl,
   System.TypInfo, Vcl.Menus,  System.IOUtils,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Container,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Xml.XMLIntf,
@@ -35,9 +35,9 @@ type
     procedure cbSDDropDown(Sender: TObject);
     procedure rgClick(Sender: TObject);
   private
-
+    FDevs: TArray<TLogicalDevice>;
     FSDStream: TSDStream;
-    FTerminate: Boolean;
+//    FTerminate: Boolean;
     FTerminated: Boolean;
     FRecSize: Integer;
     FFrom: Int64;
@@ -46,6 +46,10 @@ type
     FModul: IXMLNode;
     FRes: TDialogResult;
     FDev: IDevice;
+
+    FRamSize:Int64;
+    FDelayStart: TDateTime;
+    FkadrSize: Integer;
 
     FS_TableModulUpdate: string;
     procedure CheckRAMFile(ram: IXMLNode);
@@ -57,7 +61,7 @@ type
     procedure UpdateControls(FlagEna: Boolean);
     procedure UpdateControlsSD(SDEna: Boolean);
     procedure UpdateStat(car: EnumCopyAsyncRun; Stat: TStatistic);
-    procedure ReadSSDEvent(car: EnumCopyAsyncRun; Stat: TStatistic; var Trminate: Boolean);
+    procedure ReadSSDEvent(car: EnumCopyAsyncRun; Stat: TStatistic);
     procedure ReadRamEvent(EnumRR: EnumCopyAsyncRun; DevAdr: Integer; Stat: TStatistic);
   protected
     procedure Loaded; override;
@@ -81,6 +85,9 @@ const
   CONST_SPEED: array[0..4] of ESpeed = (S125K, S500K, S1M, S2M, S4M);
   TXT_SPEDE: array[0..Length(CONST_SPEED)-1] of string = ('125K','0.5M','1M','2.25M','4.5M');
 
+ const
+  CARSTR: array[EnumCopyAsyncRun] of string =('Чтение', 'Пустая память', 'Конец', 'Прервано', 'Ошибка', 'Пакет.Ош.');
+
 function TFormDlgRam.Execute(Modul: IXMLNode; Res: TDialogResult): Boolean;
   procedure EnableSerial(ena: Boolean);
   begin
@@ -99,9 +106,7 @@ function TFormDlgRam.Execute(Modul: IXMLNode; Res: TDialogResult): Boolean;
     MAX_RAM = $420000;
  var
   i: Integer;
-  RamSize:Int64;
   ram: IXMLNode;
-  DelayStart: TDateTime;
 begin
   Result := True;
   TBindHelper.RemoveExpressions(Self);
@@ -112,11 +117,14 @@ begin
   if (XToVar(FModul).WRK.автомат.DEV.VALUE and $3F) < 4 then
     raise EFrmDlgRam.CreateFmt('Модуль %s не выключен !!! Находится в состоянии [%s].', [Fmodul.NodeName, XToVar(FModul).WRK.автомат.CLC.VALUE]);
 
-  if not ram.HasAttribute(AT_RAMSIZE) then RamSize := MAX_RAM
-  else if ram.Attributes[AT_RAMSIZE] = 5 then RamSize := MAX_RAM
-  else RamSize := Ram.Attributes[AT_RAMSIZE] * 1024 * 1024;
-  DelayStart := (GContainer as IProjectOptions).DelayStart;
-  RangeSelect.Init(ram.Attributes[AT_SIZE], RamSize, DelayStart);
+  if not ram.HasAttribute(AT_RAMSIZE) then FRamSize := MAX_RAM
+  else if ram.Attributes[AT_RAMSIZE] = 5 then FRamSize := MAX_RAM
+  else FRamSize := Ram.Attributes[AT_RAMSIZE] * 1024 * 1024;
+  FDelayStart := (GContainer as IProjectOptions).DelayStart;
+  FkadrSize := ram.Attributes[AT_SIZE];
+
+  RangeSelect.Init(FkadrSize, FRamSize, FDelayStart);
+
    // BIT15:USB  BIT14:SSD BIT7:125Kbt BIT6:500Kbt  5-1M 4-2M
   if FModul.HasAttribute(AT_SPEED) then
    begin
@@ -152,8 +160,6 @@ end;
 
 
 procedure TFormDlgRam.UpdateStat(car: EnumCopyAsyncRun; Stat: TStatistic);
- const
-  CARSTR: array[EnumCopyAsyncRun] of string =('Чтение', 'Пустая память', 'Конец', 'Прервано', 'Ошибка', 'Пакет.Ош.');
 begin
   sb.Panels[4].Text := CARSTR[car];
   if car = carError then Exit;
@@ -242,6 +248,7 @@ procedure TFormDlgRam.inerExecute(IsImport: boolean);
   ram: IXMLNode;
 begin
    Progress.Position := 0;
+   flIndex := 0;
    if not Assigned(Dev) then raise EFrmDlgRam.CreateFmt('Устройство %s не найдено', [Fmodul.NodeName]);
    if not Supports(Dev, IReadRamDevice) then raise EFrmDlgRam.CreateFmt('Устройство %s без памяти', [Fmodul.NodeName]);
    addr := FModul.Attributes[AT_ADDR];
@@ -307,6 +314,7 @@ begin
   RemoveXMLAttr(ram, AT_TO_TIME);
   RemoveXMLAttr(ram, AT_FROM_ADR);
   RemoveXMLAttr(ram, AT_TO_ADR);
+  RemoveXMLAttr(ram,AT_END_REASON);
   RemoveXMLAttr(ram, AT_FROM_KADR);
   RemoveXMLAttr(ram, AT_TO_KADR);     
 end;
@@ -325,8 +333,8 @@ begin
   ram := FModul.ChildNodes.FindNode(T_RAM);
   CheckRAMFile(ram);  
   if Assigned(FSDStream) then FreeAndNil(FSDStream);
-  FSDStream := TSDStream.Create(cbSD.Items[cbSD.ItemIndex], GENERIC_READ);
-  FTerminate := False;
+  FSDStream := TSDStream.Create(FDevs[cbSD.ItemIndex], GENERIC_READ);
+//  FTerminate := False;
   FTerminated := False;
   Progress.Position := 0;
 
@@ -362,16 +370,14 @@ begin
   end;
 end;
 
-procedure TFormDlgRam.ReadSSDEvent(car: EnumCopyAsyncRun; Stat: TStatistic; var Trminate: Boolean);
+procedure TFormDlgRam.ReadSSDEvent(car: EnumCopyAsyncRun; Stat: TStatistic);
  var
-  ram: IXMLNode; 
+  ram: IXMLNode;
 begin
   ram := FModul.ChildNodes.FindNode(T_RAM);
   ram.Attributes[AT_TO_ADR] := Format('0x%x',[FFrom + Stat.NRead]);
   ram.Attributes[AT_TO_KADR] := (FFrom + Stat.NRead) div FRecSize;
   ram.Attributes[AT_TO_TIME] := CTime.AsString(2.097152/24/3600 * Double(ram.Attributes[AT_TO_KADR]));
-
-  Trminate := FTerminate;
 
   if not FTerminated and (TTask.CurrentTask.Status <> TTaskStatus.Canceled) then
    TThread.Queue(TThread.CurrentThread, procedure
@@ -379,6 +385,7 @@ begin
      if FTerminated then Exit;
      if car <> carOk then
       begin
+       ram.Attributes[AT_END_REASON] := CARSTR[car];
        FTerminated := True;
        UpdateControls(True);
       end;
@@ -413,8 +420,7 @@ end;
 
 procedure TFormDlgRam.btTerminateClick(Sender: TObject);
 begin
-  FTerminate := True;
-  CancelSynchronousIo(FSDStream.Handle);
+  TAsyncCopy.Terminate();
   if not Assigned(FDev) then Exit;
   try
    (FDev as IReadRamDevice).Terminate();
@@ -424,17 +430,27 @@ begin
 end;
 
 procedure TFormDlgRam.cbSDChange(Sender: TObject);
+ var
+  ram: IXMLNode;
 begin
+  ram := FModul.ChildNodes.FindNode(T_RAM);
   rg.ItemIndex := -1;
   UpdateControlsSD(True);
+  if (cbSD.ItemIndex >= 0) and (ram.Attributes[AT_RAMSIZE] < FDevs[cbSD.ItemIndex].DiskSize div 1024 div 1024)
+  and (MessageDlg('Физический объем диска больше указанного в метаданных, выбрать его ?', mtWarning, [mbYes, mbNo], 0) = mrYes) then
+   begin
+    ram.Attributes[AT_RAMSIZE] := FDevs[cbSD.ItemIndex].DiskSize div 1024 div 1024;
+    RangeSelect.Init(FkadrSize, FDevs[cbSD.ItemIndex].DiskSize, FDelayStart);
+   end;
 end;
 
 procedure TFormDlgRam.cbSDDropDown(Sender: TObject);
  var
-  d: Char;
+  d: TLogicalDevice;
 begin
   cbSD.Items.Clear;
-  for d in TSDStream.EnumLogicalDrives do cbSD.Items.Add(d);
+  FDevs := TSDStream.EnumLogicalDrives;
+  for d in FDevs do cbSD.Items.Add(d.Letter);
 end;
 
 initialization

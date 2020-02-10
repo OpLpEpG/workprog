@@ -102,7 +102,6 @@ contains
   Fifo.Decoder in 'Fifo.Decoder.pas',
   IndexBuffer in '..\IndexBuffer.pas',
   CFifo in 'CFifo.pas',
-  SDcardTools in '..\SDcardTools.pas',
   VerySimple.Lua.Lib in 'VerySimpleLua\VerySimple.Lua.Lib.pas',
   VerySimple.Lua in 'VerySimpleLua\VerySimple.Lua.pas',
   DScintilla in 'Scintilla\DScintilla.pas',
@@ -124,7 +123,8 @@ contains
   nduWinDot11 in 'WlanAPI\nduWinDot11.pas',
   nduWinNT in 'WlanAPI\nduWinNT.pas',
   nduWlanAPI in 'WlanAPI\nduWlanAPI.pas',
-  nduWlanTypes in 'WlanAPI\nduWlanTypes.pas';
+  nduWlanTypes in 'WlanAPI\nduWlanTypes.pas',
+  SDcardToolsAsync in '..\SDcardToolsAsync.pas';
 
 end.
 
