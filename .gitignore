@@ -68,7 +68,7 @@ __history/
 *.sln.docstates
 
 # Build results
-[Dd]ebug/
+#[Dd]ebug/
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
@@ -119,6 +119,13 @@ dlldata.c
 *.pidb
 *.svclog
 *.scc
+
+*.dlp
+*.exe
+*.drc
+*.map
+*.rsm
+*.bpl
 
 # Chutzpah Test files
 _Chutzpah*
@@ -243,7 +250,12 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
-! _exe\Debug\*.dll 
-! _exe\Debug\Devices\*.* 
+#[Dd]ebug/
+! _exe\Debug\
+#_exe\Debug\*.dll 
+_exe\Debug\Projects\
+_exe\Debug\Метрология 
+! _exe\Debug\Devices\
+
 
 
