@@ -13,7 +13,6 @@
     <AttCount_Voda Описание="Число данных для аттестации (Вода)" Единицы="" Hidden="" ReadOnly="" Значение="200" DataType="1" />
     <IsMedian Описание="Медианный метод осреднения" Единицы="" Hidden="1" ReadOnly="" Значение="0" DataType="6" />
     <ISTOCHNIK Описание="Источник" Единицы="" Значение="Pu-Be №9" Hidden="" ReadOnly="" />
-    <DecimalSeparator Описание="Разделитель" Единицы="" Hidden="" ReadOnly="" DataType="" Значение="" />
   </STD>
   <Results Категория="Результаты поверки">
     <Metrolog Описание="Поверку провел" Единицы="" Значение="" Hidden="" ReadOnly="" />

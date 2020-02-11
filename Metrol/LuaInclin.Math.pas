@@ -240,7 +240,7 @@ type
     class function ExportToInc(L: lua_State): Integer; overload; cdecl; static;
     class function ExportToIncAccel(L: lua_State): Integer; overload; cdecl; static;
     class function ExportP1ToCalc(L: lua_State): Integer; overload; cdecl; static;
-    class function ExportP2ToCalc(L: lua_State): Integer; overload; cdecl; static;
+    class function ExportP2ToCalc(L: lua_State): Integer; overload; cdecl; static;   // 64
     class function ExportP3ToCalc(L: lua_State): Integer; overload; cdecl; static;
     class function ExportP4ToCalc(L: lua_State): Integer; overload; cdecl; static;
     class function SetupRoll(L: lua_State): Integer; overload; cdecl; static;
@@ -981,10 +981,8 @@ class procedure TMetrInclinMath.ExportToInc(const TrrFile: string; XNewTrr: IXML
   Convert: TConvert;
   sernom: Integer;
   NewTrr: Variant;
-  fs: TFormatSettings;
 begin
   NewTrr := XToVar(XNewTrr);
-  fs := FormatSettings;
   with Convert, TstringList.Create do
    try
     sernom := TVxmlData(NewTrr).Node.ParentNode.ParentNode.Attributes[AT_SERIAL];
@@ -1005,18 +1003,17 @@ begin
 
     M3x4ToHorizont(8, Convert);
 
-    fs.DecimalSeparator := '.';
-    Add(Format('%g {Sgx-смещение нуля акселерометра X, дв.ед.} $$*Ink_%d*$$',[sx, sernom], fs));
-    Add(Format('%g {Sgy-смещение нуля акселерометра Y, дв.ед.}',[sy], fs));
-    Add(Format('%g {Sgz-смещение нуля акселерометра Z, дв.ед.}',[sz], fs));
-    Add(Format('%g {Kgx-коэффициент преобразования акселерометра X}',[Kx], fs));
-    Add(Format('%g {Kgy-коэффициент преобразования акселерометра Y}',[Ky], fs));
-    Add(Format('%g {Kgz-коэффициент преобразования акселерометра Z}',[Kz], fs));
-    Add(Format('%g {Axy-угол отклонения оси акселерометра OX в плоскости XOY, град.}', [Kxy], fs));
-    Add(Format('%g {Axz-угол отклонения оси акселерометра OX в плоскости XOZ, град.}', [Kxz], fs));
-    Add(Format('%g {Ayz-угол отклонения оси акселерометра OY в плоскости YOZ, град.}', [Kyz], fs));
-    Add(Format('%g {Azx-угол отклонения оси акселерометра OZ в плоскости XOZ, град.}', [Kzx], fs));
-    Add(Format('%g {Azy-угол отклонения оси акселерометра OZ в плоскости YOZ, град.}', [Kzy], fs));
+    Add(Format('%g {Sgx-смещение нуля акселерометра X, дв.ед.} $$*Ink_%d*$$',[sx, sernom]));
+    Add(Format('%g {Sgy-смещение нуля акселерометра Y, дв.ед.}',[sy]));
+    Add(Format('%g {Sgz-смещение нуля акселерометра Z, дв.ед.}',[sz]));
+    Add(Format('%g {Kgx-коэффициент преобразования акселерометра X}',[Kx]));
+    Add(Format('%g {Kgy-коэффициент преобразования акселерометра Y}',[Ky]));
+    Add(Format('%g {Kgz-коэффициент преобразования акселерометра Z}',[Kz]));
+    Add(Format('%g {Axy-угол отклонения оси акселерометра OX в плоскости XOY, град.}', [Kxy]));
+    Add(Format('%g {Axz-угол отклонения оси акселерометра OX в плоскости XOZ, град.}', [Kxz]));
+    Add(Format('%g {Ayz-угол отклонения оси акселерометра OY в плоскости YOZ, град.}', [Kyz]));
+    Add(Format('%g {Azx-угол отклонения оси акселерометра OZ в плоскости XOZ, град.}', [Kzx]));
+    Add(Format('%g {Azy-угол отклонения оси акселерометра OZ в плоскости YOZ, град.}', [Kzy]));
 
 
 
@@ -1037,18 +1034,18 @@ begin
 
     M3x4ToHorizont(1, Convert);
 
-    Add(Format('%g {Shx-смещение нуля феррозонда X, дв.ед.}',[sx], fs));
-    Add(Format('%g {Shy-смещение нуля феррозонда Y, дв.ед.}',[sy], fs));
-    Add(Format('%g {Shz-смещение нуля феррозонда Z, дв.ед.}',[sz], fs));
-    Add(Format('%g {Khx-коэффициент преобразования феррозонда X}',[Kx], fs));
-    Add(Format('%g {Khy-коэффициент преобразования феррозонда Y}',[Ky], fs));
-    Add(Format('%g {Khz-коэффициент преобразования феррозонда Z}',[Kz], fs));
-    Add(Format('%g {Fxy-угол отклонения оси феррозонда OX в плоскости XOY, град.}',[Kxy], fs));
-    Add(Format('%g {Fxz-угол отклонения оси феррозонда OX в плоскости XOZ, град.}',[Kxz], fs));
-    Add(Format('%g {Fyx-угол отклонения оси феррозонда OY в плоскости XOY, град.}',[Kyx], fs));
-    Add(Format('%g {Fyz-угол отклонения оси феррозонда OY в плоскости YOZ, град.}',[Kyz], fs));
-    Add(Format('%g {Fzx-угол отклонения оси феррозонда OZ в плоскости XOZ, град.}',[Kzx], fs));
-    Add(Format('%g {Fzy-угол отклонения оси феррозонда OZ в плоскости YOZ, град.}',[Kzy], fs));
+    Add(Format('%g {Shx-смещение нуля феррозонда X, дв.ед.}',[sx]));
+    Add(Format('%g {Shy-смещение нуля феррозонда Y, дв.ед.}',[sy]));
+    Add(Format('%g {Shz-смещение нуля феррозонда Z, дв.ед.}',[sz]));
+    Add(Format('%g {Khx-коэффициент преобразования феррозонда X}',[Kx]));
+    Add(Format('%g {Khy-коэффициент преобразования феррозонда Y}',[Ky]));
+    Add(Format('%g {Khz-коэффициент преобразования феррозонда Z}',[Kz]));
+    Add(Format('%g {Fxy-угол отклонения оси феррозонда OX в плоскости XOY, град.}',[Kxy]));
+    Add(Format('%g {Fxz-угол отклонения оси феррозонда OX в плоскости XOZ, град.}',[Kxz]));
+    Add(Format('%g {Fyx-угол отклонения оси феррозонда OY в плоскости XOY, град.}',[Kyx]));
+    Add(Format('%g {Fyz-угол отклонения оси феррозонда OY в плоскости YOZ, град.}',[Kyz]));
+    Add(Format('%g {Fzx-угол отклонения оси феррозонда OZ в плоскости XOZ, град.}',[Kzx]));
+    Add(Format('%g {Fzy-угол отклонения оси феррозонда OZ в плоскости YOZ, град.}',[Kzy]));
     SaveToFile(TrrFile);
    finally
     Free;

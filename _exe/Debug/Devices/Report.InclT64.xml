@@ -1,11 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CALC>
   <SHEET1 SheetByIndex="0">
-    <CELL B8="P_2.DevName" B10="/./.SERIAL_NO" B5="P_2.TIME_ATT" B24="P_2.Metrolog"></CELL>
+    <CELL B8="P_2.DevName" B10="/./.SERIAL_NO" B20="P_2.TIME_ATT" B24="P_2.Metrolog" B12="P_2.Maker" B14="P_2.UsedStol" B16="P_2.Category" B18="P_2.Room" B21="P_2.NextDate" B27="P_2.ErrZU" B28="P_2.ErrAZ" D2="/./.SERIAL_NO"></CELL>
   </SHEET1>
   <SHEET2 SheetByIndex="1">
     <RANGES>
-      <RANGE3 Cells="B12:K12" DataIndex="1:10:0:0" Source="P_2.STEP%0:d.отклонитель.CLC.VALUE" />
+      <RANGE3 Cells="D5:D64" DataIndex="0:0:5:64" Source="P_2.STEP%1:d.отклонитель.CLC.VALUE" />
+      <RANGE3 Cells="E5:E64" DataIndex="0:0:5:64" Source="P_2.STEP%1:d.зенит.CLC.VALUE" />
+      <RANGE3 Cells="F5:F64" DataIndex="0:0:5:64" Source="P_2.STEP%1:d.азимут.CLC.VALUE" />
+      <RANGE3 Cells="H5:H64" DataIndex="0:0:5:64" Source="P_2.STEP%1:d.СТОЛ.err_азимут" />
+      <RANGE3 Cells="G5:G64" DataIndex="0:0:5:64" Source="P_2.STEP%1:d.СТОЛ.err_зенит" />
     </RANGES>
   </SHEET2>
 </CALC>

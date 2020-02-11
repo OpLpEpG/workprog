@@ -52,7 +52,6 @@ object FormBKS: TFormBKS
       Header.AutoSizeIndex = -1
       Header.Height = 13
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
-      Header.ParentFont = True
       TabOrder = 0
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
       TreeOptions.MiscOptions = [toAcceptOLEDrop, toEditable, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
@@ -65,37 +64,37 @@ object FormBKS: TFormBKS
           MaxWidth = 100
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 0
+          Text = #8470
           Width = 33
-          WideText = #8470
         end
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 1
-          WideText = #1060#1086#1082#1091#1089
+          Text = #1060#1086#1082#1091#1089
         end
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 2
+          Text = #1047#1086#1085#1076
           Width = 42
-          WideText = #1047#1086#1085#1076
         end
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 3
+          Text = #1047#1085#1072#1095#1077#1085#1080#1077
           Width = 61
-          WideText = #1047#1085#1072#1095#1077#1085#1080#1077
         end
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 4
+          Text = #1050#1086#1101#1092
           Width = 92
-          WideText = #1050#1086#1101#1092
         end
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 5
+          Text = 'U '#1073#1082
           Width = 136
-          WideText = 'U '#1073#1082
         end>
     end
   end

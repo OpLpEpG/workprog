@@ -577,16 +577,12 @@ procedure TLasDoc.LoadFromFile(const AFileName: String);
  var
   ss: TStrings;
   se: ILasSection;
-//  c: Char;
 begin
   ss := TStringList.Create;
-//  c := FormatSettings.DecimalSeparator;
-//  FormatSettings.DecimalSeparator := '.';
   try
    ss.LoadFromFile(AFileName, GetLasEncoding(FEncoding));
    for se in FSections do TSection(se).FromStrings(ss);
   finally
-//   FormatSettings.DecimalSeparator := c;
    ss.Free;
   end;
   FfileName := AFileName;
@@ -597,11 +593,8 @@ procedure TLasDoc.SaveToFile(const AFileName: String);
   ss: TStrings;
   se: ILasSection;
   ds: TDSection;
-  c: Char;
 begin
   ss := TStringList.Create;
-  c := FormatSettings.DecimalSeparator;
-  FormatSettings.DecimalSeparator := '.';
   try
    ds := TDSection(Data);
    Well.Items['STRT'].Value := ds.FData[0, 0];
@@ -611,7 +604,6 @@ begin
    for se in FSections do TSection(se).ToStrings(ss);
    ss.SaveToFile(AFileName, GetLasEncoding(FEncoding));
   finally
-   FormatSettings.DecimalSeparator := c;
    ss.Free;
   end;
   FfileName := AFileName;
