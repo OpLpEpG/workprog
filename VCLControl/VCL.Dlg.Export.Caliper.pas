@@ -28,9 +28,12 @@ type
     edFKD: TEdit;
     RangeSelect: TFrameRangeSelect;
     sb: TStatusBar;
+    cbFKD: TComboBox;
+    Label1: TLabel;
     procedure btExitClick(Sender: TObject);
     procedure btExportClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
+    procedure cbFKDChange(Sender: TObject);
   private
     FIStat: IStatistic;
     FkadrFirst, FkadrLast: Integer;
@@ -223,6 +226,12 @@ end;
 procedure TFormDlgExportCaliper.btTerminateClick(Sender: TObject);
 begin
   Fterminate := True;
+end;
+
+procedure TFormDlgExportCaliper.cbFKDChange(Sender: TObject);
+begin
+  if cbFKD.ItemIndex = 2 then edFKD.Text := '800'
+  else edFKD.Text := '682'
 end;
 
 class procedure TFormDlgExportCaliper.DoExportCalip(Sender: IAction);

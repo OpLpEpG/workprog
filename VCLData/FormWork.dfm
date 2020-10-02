@@ -23,7 +23,6 @@ object FormWrok: TFormWrok
     BorderWidth = 1
     Header.AutoSizeIndex = 2
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring, hoHeaderClickAutoSort]
-    Header.ParentFont = True
     PopupMenu = ppM
     TabOrder = 0
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
@@ -35,20 +34,20 @@ object FormWrok: TFormWrok
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
         Position = 0
+        Text = #1055#1072#1088#1072#1084#1077#1090#1088#1099
         Width = 180
-        WideText = #1055#1072#1088#1072#1084#1077#1090#1088#1099
       end
       item
         Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 1
+        Text = #1041#1077#1079' '#1092#1086#1088#1084#1072#1090#1080#1088#1086#1074#1072#1085#1080#1103
         Width = 170
-        WideText = #1041#1077#1079' '#1092#1086#1088#1084#1072#1090#1080#1088#1086#1074#1072#1085#1080#1103
       end
       item
         Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAutoSpring, coSmartResize, coAllowFocus]
         Position = 2
-        Width = 280
-        WideText = #1057' '#1084#1077#1090#1088#1086#1083#1086#1075#1080#1077#1081
+        Text = #1057' '#1084#1077#1090#1088#1086#1083#1086#1075#1080#1077#1081
+        Width = 286
       end>
   end
   object ppM: TPopupActionBar

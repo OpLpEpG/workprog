@@ -170,7 +170,7 @@ begin
    end;
   except
     if Assigned(TDebug.ExeptionEvent) then TDebug.ExeptionEvent( '[Debuglog] Error TrrExec',
-       format(': func: %s path: %s adr: %d  ',[rr.RunFunc, rr.RunPath, rr.RunAdr ]), #$D#$A);
+       format(': func: %s path: %s adr: %d  %s',[rr.RunFunc, rr.RunPath, rr.RunAdr, FLastError]), #$D#$A);
     raise;
   end;
 end;
@@ -324,7 +324,10 @@ begin
   if not Assigned(Script) or not Script.HasAttribute(ScriptAtr) then Exit;
   fs := ChekStr(RootPrefix) +'_' + ChekStr(Script.NodeName) +'_'+ ScriptAtr;
   fn := Format(FUNC_FMT, [fs]);
-  if not Fnd() then FLines.Text := FLines.Text + NL + fn + NL + Script.Attributes[ScriptAtr]+ NL + 'end'+NL +NL;
+  if not Fnd() then
+   begin
+    FLines.Text := FLines.Text + NL + fn + NL + Script.Attributes[ScriptAtr]+ NL + 'end'+NL +NL;
+   end;
   //TDebug.Log('TrRoot.NodeName %s, RnRoot.NodeName %s',[GetPathXNode(TrRoot), GetPathXNode(RnRoot)]);
   FRunScript := FRunScript + [TRunScriptRec.Create(TrRoot, RnRoot, RnPath, fs, AAdr)];
 end;
@@ -378,6 +381,7 @@ begin
   sd := (GContainer as IXMLScriptFactory).Get(nil);
   InnerAddAll(dev, mtr, adr, T_WRK, ExeSc, sd);
   InnerAddAll(dev, mtr, adr, T_RAM, ExeSc, sd);
+  InnerAddAll(dev, mtr, adr, T_EEPROM, ExeSc, sd);
   if not sd.Compile then MessageDlg('Ошибка компиляции установок-'+sd.ErrorMsg+':'+sd.ErrorPos, TMsgDlgType.mtError, [mbOK], 0);
   sd.Execute; { TODO 5 -cОШИВКА!!! : ОШИБКА заполняется метрология (если есть) значениями по умолчанию!!!
 см todo Устройство из нескольких приб}

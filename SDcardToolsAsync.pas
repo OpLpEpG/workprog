@@ -509,7 +509,7 @@ begin
   repeat
    Dec(pdw);
    Dec(n);
-   if pdw^ <> 0 then Exit(False);
+   if not ((pdw^ = 0) or (pdw^ = $FFFFFFFF)) then Exit(False);
   until n = 0;
  // find last no z
   Result := True;
@@ -517,7 +517,8 @@ begin
   repeat
    Dec(pdw);
    Dec(n);
-   if pdw^ <> 0 then Break;
+   if not ((pdw^ = 0) or (pdw^ = $FFFFFFFF)) then Break
+//   if (pdw^ <> 0)   then Break;
   until n = 0;
   Inc(pdw); // первый нулевой указатель
   ZBegin := PByte(pdw) - p;

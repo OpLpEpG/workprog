@@ -997,8 +997,11 @@ var
   xd: PNodeExData;
 begin
   xd := Sender.GetNodeData(Node);
-  if (Column = 0) and Assigned(xd.XMNode) and xd.XMNode.HasAttribute('EXECUTED') and Boolean(xd.XMNode.Attributes['EXECUTED']) then
-    ImageIndex := 304
+  if (Column = 0) and (Kind in [TVTImageKind.ikNormal, ikSelected])
+    and Assigned(xd.XMNode)
+    and xd.XMNode.HasAttribute('EXECUTED')
+    and Boolean(xd.XMNode.Attributes['EXECUTED']) then
+      ImageIndex := 304
 end;
 
 procedure TFormMetrolog.TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);

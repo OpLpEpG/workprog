@@ -1,0 +1,282 @@
+object TGraph
+  Left = 0
+  Top = 0
+  Width = 1002
+  Height = 799
+  YFirstAvail = 1.000000000000000000
+  YLastAvail = 1457.000000000000000000
+  YMirror = False
+  YFromData = 1.000000000000000000
+  YRangeData = 1456.000000000000000000
+  YPosition = 1416.520000000000000000
+  YScale = 0.200000000000000000
+  Align = alClient
+  Parent = Form1.Owner
+  ExplicitWidth = 1181
+  ExplicitHeight = 554
+  GraphRows = <
+    item
+      ItemClassName = 'TGR32LegendRow'
+      Height = 187
+    end
+    item
+      ItemClassName = 'TCustomGraphDataRow'
+      Height = 612
+    end
+    item
+      ItemClassName = 'TCustomGraphInfoRow'
+      Height = 45
+      Visible = False
+    end>
+  GraphColumns = <
+    item
+      ItemClassName = 'TGR32GraphicCollumn'
+      Width = 37
+      Params = <>
+      Regions = <
+        item
+          ItemClassName = 'TGR32GraphicLegend'
+          PropRow = 0
+        end
+        item
+          ItemClassName = 'TGR32GraphicData'
+          PropRow = 1
+        end
+        item
+          ItemClassName = 'TGraphRegion'
+          PropRow = 2
+        end>
+    end
+    item
+      ItemClassName = 'TGR32GraphicCollumn'
+      Width = 948
+      Params = <
+        item
+          ItemClassName = 'TWaveParam'
+          LinkClass = 'TWaveDataLink'
+          Link.DataSetDefClass = 'TXMLDataSetDef'
+          Link.DataSetDef.Device = 'DeviceBur2'
+          Link.DataSetDef.ModulAdress = 7
+          Link.DataSetDef.ModulName = 'Caliper1'
+          Link.DataSetDef.Section = 'WRK'
+          Link.DataSetDef.XMLFileName = 
+            'C:\Users\Public\Documents\'#1043#1086#1088#1080#1079#1086#1085#1090'\WorkProg\Projects\TEST\TEST.x' +
+            'ml'
+          Link.DataSetDef.ObjectFields = True
+          Link.XParamPath = 'Caliper1.Caliper.fkd.d0.DEV'
+          Link.YParamPath = 'ID'
+          Link.BufferFileName = 
+            'C:\Users\Public\Documents\'#1043#1086#1088#1080#1079#1086#1085#1090'\WorkProg\Projects\TEST_Device' +
+            'Bur2_7_WRKIDCaliper1Caliperfkdd0DEV.bin'
+          Link.ArrayType = 2
+          Link.ArrayCount = 681
+          Link.RecordCount = 1458
+          Title = 'Caliper1.Caliper.fkd.d0.DEV'
+          Selected = True
+          Color = -534055525
+          ScaleX = 0.020000000000000000
+          GammaStr = 
+            ',FFFF7E84,FDFF7E84,FBFF7E84,F9FF7E84,F7FF7E84,F5FF7E84,F3FF7E84,' +
+            'F1FF7E84,EFFF7E84,EDFF7E84,EBFF7E84,E9FF7E84,E7FF7E84,E5FF7E84,E' +
+            '3FF7E84,E1FF7E84,DFFF7E84,DDFF7E84,DBFF7E84,D9FF7E84,D7FF7E84,D5' +
+            'FF7E84,D3FF7E84,D1FF7E84,CFFF7E84,CDFF7E84,CBFF7E84,C9FF7E84,C7F' +
+            'F7E84,C5FF7E84,C3FF7E84,C1FF7E84,BFFF7E84,BDFF7E84,BBFF7E84,B9FF' +
+            '7E84,B7FF7E84,B5FF7E84,B3FF7E84,B1FF7E84,AFFF7E84,ADFF7E84,ABFF7' +
+            'E84,A9FF7E84,A7FF7E84,A5FF7E84,A3FF7E84,A1FF7E84,9FFF7E84,9DFF7E' +
+            '84,9BFF7E84,99FF7E84,97FF7E84,95FF7E84,93FF7E84,91FF7E84,8FFF7E8' +
+            '4,8DFF7E84,8BFF7E84,89FF7E84,87FF7E84,85FF7E84,83FF7E84,81FF7E84' +
+            ',80FF7E84,7EFF7E84,7CFF7E84,7AFF7E84,78FF7E84,76FF7E84,74FF7E84,' +
+            '72FF7E84,70FF7E84,6EFF7E84,6CFF7E84,6AFF7E84,68FF7E84,66FF7E84,6' +
+            '4FF7E84,62FF7E84,60FF7E84,5EFF7E84,5CFF7E84,5AFF7E84,58FF7E84,56' +
+            'FF7E84,54FF7E84,52FF7E84,50FF7E84,4EFF7E84,4CFF7E84,4AFF7E84,48F' +
+            'F7E84,46FF7E84,44FF7E84,42FF7E84,40FF7E84,3EFF7E84,3CFF7E84,3AFF' +
+            '7E84,38FF7E84,36FF7E84,34FF7E84,32FF7E84,30FF7E84,2EFF7E84,2CFF7' +
+            'E84,2AFF7E84,28FF7E84,26FF7E84,24FF7E84,22FF7E84,20FF7E84,1EFF7E' +
+            '84,1CFF7E84,1AFF7E84,18FF7E84,16FF7E84,14FF7E84,12FF7E84,10FF7E8' +
+            '4,EFF7E84,CFF7E84,AFF7E84,8FF7E84,6FF7E84,4FF7E84,2FF7E84,2767EF' +
+            'F,4767EFF,6767EFF,8767EFF,A767EFF,C767EFF,E767EFF,10767EFF,12767' +
+            'EFF,14767EFF,16767EFF,18767EFF,1A767EFF,1C767EFF,1E767EFF,20767E' +
+            'FF,22767EFF,24767EFF,26767EFF,28767EFF,2A767EFF,2C767EFF,2E767EF' +
+            'F,30767EFF,32767EFF,34767EFF,36767EFF,38767EFF,3A767EFF,3C767EFF' +
+            ',3E767EFF,40767EFF,42767EFF,44767EFF,46767EFF,48767EFF,4A767EFF,' +
+            '4C767EFF,4E767EFF,50767EFF,52767EFF,54767EFF,56767EFF,58767EFF,5' +
+            'A767EFF,5C767EFF,5E767EFF,60767EFF,62767EFF,64767EFF,66767EFF,68' +
+            '767EFF,6A767EFF,6C767EFF,6E767EFF,70767EFF,72767EFF,74767EFF,767' +
+            '67EFF,78767EFF,7A767EFF,7C767EFF,7E767EFF,80767EFF,81767EFF,8376' +
+            '7EFF,85767EFF,87767EFF,89767EFF,8B767EFF,8D767EFF,8F767EFF,91767' +
+            'EFF,93767EFF,95767EFF,97767EFF,99767EFF,9B767EFF,9D767EFF,9F767E' +
+            'FF,A1767EFF,A3767EFF,A5767EFF,A7767EFF,A9767EFF,AB767EFF,AD767EF' +
+            'F,AF767EFF,B1767EFF,B3767EFF,B5767EFF,B7767EFF,B9767EFF,BB767EFF' +
+            ',BD767EFF,BF767EFF,C1767EFF,C3767EFF,C5767EFF,C7767EFF,C9767EFF,' +
+            'CB767EFF,CD767EFF,CF767EFF,D1767EFF,D3767EFF,D5767EFF,D7767EFF,D' +
+            '9767EFF,DB767EFF,DD767EFF,DF767EFF,E1767EFF,E3767EFF,E5767EFF,E7' +
+            '767EFF,E9767EFF,EB767EFF,ED767EFF,EF767EFF,F1767EFF,F3767EFF,F57' +
+            '67EFF,F7767EFF,F9767EFF,FB767EFF,FD767EFF,FF767EFF'
+          KoeffGamma = 0.010000000000000000
+          Filters = <>
+        end
+        item
+          ItemClassName = 'TWaveParam'
+          LinkClass = 'TWaveDataLink'
+          Link.DataSetDefClass = 'TXMLDataSetDef'
+          Link.DataSetDef.Device = 'DeviceBur2'
+          Link.DataSetDef.ModulAdress = 7
+          Link.DataSetDef.ModulName = 'Caliper1'
+          Link.DataSetDef.Section = 'WRK'
+          Link.DataSetDef.XMLFileName = 
+            'C:\Users\Public\Documents\'#1043#1086#1088#1080#1079#1086#1085#1090'\WorkProg\Projects\TEST\TEST.x' +
+            'ml'
+          Link.DataSetDef.ObjectFields = True
+          Link.XParamPath = 'Caliper1.Caliper.fkd.d1.DEV'
+          Link.YParamPath = 'ID'
+          Link.BufferFileName = 
+            'C:\Users\Public\Documents\'#1043#1086#1088#1080#1079#1086#1085#1090'\WorkProg\Projects\TEST_Device' +
+            'Bur2_7_WRKIDCaliper1Caliperfkdd1DEV.bin'
+          Link.ArrayType = 2
+          Link.ArrayCount = 682
+          Link.RecordCount = 1458
+          Title = 'Caliper1.Caliper.fkd.d1.DEV'
+          Visible = False
+          Selected = False
+          Color = -526134227
+          ScaleX = 0.020000000000000000
+          GammaStr = 
+            ',FFFFFF81,FDFFFF81,FBFFFF81,F9FFFF81,F7FFFF81,F5FFFF81,F3FFFF81,' +
+            'F1FFFF81,EFFFFF81,EDFFFF81,EBFFFF81,E9FFFF81,E7FFFF81,E5FFFF81,E' +
+            '3FFFF81,E1FFFF81,DFFFFF81,DDFFFF81,DBFFFF81,D9FFFF81,D7FFFF81,D5' +
+            'FFFF81,D4FFFF81,D2FFFF81,D0FFFF81,CEFFFF81,CCFFFF81,CAFFFF81,C8F' +
+            'FFF81,C6FFFF81,C4FFFF81,C2FFFF81,C0FFFF81,BEFFFF81,BCFFFF81,BAFF' +
+            'FF81,B8FFFF81,B6FFFF81,B4FFFF81,B2FFFF81,B0FFFF81,AEFFFF81,ACFFF' +
+            'F81,AAFFFF81,A8FFFF81,A6FFFF81,A4FFFF81,A2FFFF81,A0FFFF81,9EFFFF' +
+            '81,9CFFFF81,9AFFFF81,98FFFF81,96FFFF81,94FFFF81,92FFFF81,90FFFF8' +
+            '1,8EFFFF81,8CFFFF81,8AFFFF81,88FFFF81,86FFFF81,84FFFF81,82FFFF81' +
+            ',80FFFF81,7FFFFF81,7DFFFF81,7BFFFF81,79FFFF81,77FFFF81,75FFFF81,' +
+            '73FFFF81,71FFFF81,6FFFFF81,6DFFFF81,6BFFFF81,69FFFF81,67FFFF81,6' +
+            '5FFFF81,63FFFF81,61FFFF81,5FFFFF81,5DFFFF81,5BFFFF81,59FFFF81,57' +
+            'FFFF81,55FFFF81,53FFFF81,51FFFF81,4FFFFF81,4DFFFF81,4BFFFF81,49F' +
+            'FFF81,47FFFF81,45FFFF81,43FFFF81,41FFFF81,3FFFFF81,3DFFFF81,3BFF' +
+            'FF81,39FFFF81,37FFFF81,35FFFF81,33FFFF81,31FFFF81,2FFFFF81,2DFFF' +
+            'F81,2CFFFF81,2AFFFF81,28FFFF81,26FFFF81,24FFFF81,22FFFF81,20FFFF' +
+            '81,1EFFFF81,1CFFFF81,1AFFFF81,18FFFF81,16FFFF81,14FFFF81,12FFFF8' +
+            '1,10FFFF81,EFFFF81,CFFFF81,AFFFF81,8FFFF81,6FFFF81,4FFFF81,2A1FF' +
+            'A3,4A1FFA3,6A1FFA3,8A1FFA3,AA1FFA3,CA1FFA3,EA1FFA3,10A1FFA3,12A1' +
+            'FFA3,14A1FFA3,16A1FFA3,18A1FFA3,1AA1FFA3,1CA1FFA3,1EA1FFA3,20A1F' +
+            'FA3,22A1FFA3,24A1FFA3,26A1FFA3,28A1FFA3,2AA1FFA3,2CA1FFA3,2EA1FF' +
+            'A3,30A1FFA3,32A1FFA3,34A1FFA3,36A1FFA3,38A1FFA3,3AA1FFA3,3CA1FFA' +
+            '3,3EA1FFA3,40A1FFA3,42A1FFA3,44A1FFA3,46A1FFA3,48A1FFA3,4AA1FFA3' +
+            ',4CA1FFA3,4EA1FFA3,50A1FFA3,52A1FFA3,54A1FFA3,56A1FFA3,58A1FFA3,' +
+            '5AA1FFA3,5CA1FFA3,5EA1FFA3,60A1FFA3,62A1FFA3,64A1FFA3,66A1FFA3,6' +
+            '8A1FFA3,6AA1FFA3,6CA1FFA3,6EA1FFA3,70A1FFA3,72A1FFA3,74A1FFA3,76' +
+            'A1FFA3,78A1FFA3,7AA1FFA3,7CA1FFA3,7EA1FFA3,80A1FFA3,81A1FFA3,83A' +
+            '1FFA3,85A1FFA3,87A1FFA3,89A1FFA3,8BA1FFA3,8DA1FFA3,8FA1FFA3,91A1' +
+            'FFA3,93A1FFA3,95A1FFA3,97A1FFA3,99A1FFA3,9BA1FFA3,9DA1FFA3,9FA1F' +
+            'FA3,A1A1FFA3,A3A1FFA3,A5A1FFA3,A7A1FFA3,A9A1FFA3,ABA1FFA3,ADA1FF' +
+            'A3,AFA1FFA3,B1A1FFA3,B3A1FFA3,B5A1FFA3,B7A1FFA3,B9A1FFA3,BBA1FFA' +
+            '3,BDA1FFA3,BFA1FFA3,C1A1FFA3,C3A1FFA3,C5A1FFA3,C7A1FFA3,C9A1FFA3' +
+            ',CBA1FFA3,CDA1FFA3,CFA1FFA3,D1A1FFA3,D3A1FFA3,D5A1FFA3,D7A1FFA3,' +
+            'D9A1FFA3,DBA1FFA3,DDA1FFA3,DFA1FFA3,E1A1FFA3,E3A1FFA3,E5A1FFA3,E' +
+            '7A1FFA3,E9A1FFA3,EBA1FFA3,EDA1FFA3,EFA1FFA3,F1A1FFA3,F3A1FFA3,F5' +
+            'A1FFA3,F7A1FFA3,F9A1FFA3,FBA1FFA3,FDA1FFA3,FFA1FFA3'
+          KoeffGamma = 0.015000000000000000
+          Filters = <>
+        end
+        item
+          ItemClassName = 'TLineParam'
+          LinkClass = 'TlineDataLink'
+          Link.DataSetDefClass = 'TXMLDataSetDef'
+          Link.DataSetDef.Device = 'DeviceBur2'
+          Link.DataSetDef.ModulAdress = 7
+          Link.DataSetDef.ModulName = 'Caliper1'
+          Link.DataSetDef.Section = 'WRK'
+          Link.DataSetDef.XMLFileName = 
+            'C:\Users\Public\Documents\'#1043#1086#1088#1080#1079#1086#1085#1090'\WorkProg\Projects\TEST\TEST.x' +
+            'ml'
+          Link.DataSetDef.ObjectFields = True
+          Link.XParamPath = 'Caliper1.Caliper.accel.X.DEV'
+          Link.YParamPath = 'ID'
+          Link.BufferFileName = 
+            'C:\Users\Public\Documents\'#1043#1086#1088#1080#1079#1086#1085#1090'\WorkProg\Projects\TEST_Device' +
+            'Bur2_7_WRKIDCaliper1CaliperaccelXDEV.bin'
+          Title = 'ax'
+          Selected = True
+          DeltaX = -210000.000000000000000000
+          Color = -2138112000
+          Width = 1
+          ScaleX = 0.000020000000000000
+          FixedParam = False
+          HideInLegend = False
+          Presizion = 0
+          Filters = <>
+        end
+        item
+          ItemClassName = 'TLineParam'
+          LinkClass = 'TlineDataLink'
+          Link.DataSetDefClass = 'TXMLDataSetDef'
+          Link.DataSetDef.Device = 'DeviceBur2'
+          Link.DataSetDef.ModulAdress = 7
+          Link.DataSetDef.ModulName = 'Caliper1'
+          Link.DataSetDef.Section = 'WRK'
+          Link.DataSetDef.XMLFileName = 
+            'C:\Users\Public\Documents\'#1043#1086#1088#1080#1079#1086#1085#1090'\WorkProg\Projects\TEST\TEST.x' +
+            'ml'
+          Link.DataSetDef.ObjectFields = True
+          Link.XParamPath = 'Caliper1.Caliper.accel.Y.DEV'
+          Link.YParamPath = 'ID'
+          Link.BufferFileName = 
+            'C:\Users\Public\Documents\'#1043#1086#1088#1080#1079#1086#1085#1090'\WorkProg\Projects\TEST_Device' +
+            'Bur2_7_WRKIDCaliper1CaliperaccelYDEV.bin'
+          Title = 'ay'
+          Selected = True
+          DeltaX = -447500.000000000000000000
+          Color = -2147447040
+          Width = 1
+          ScaleX = 0.000020000000000000
+          FixedParam = False
+          HideInLegend = False
+          Presizion = 0
+          Filters = <>
+        end
+        item
+          ItemClassName = 'TLineParam'
+          LinkClass = 'TlineDataLink'
+          Link.DataSetDefClass = 'TXMLDataSetDef'
+          Link.DataSetDef.Device = 'DeviceBur2'
+          Link.DataSetDef.ModulAdress = 7
+          Link.DataSetDef.ModulName = 'Caliper1'
+          Link.DataSetDef.Section = 'WRK'
+          Link.DataSetDef.XMLFileName = 
+            'C:\Users\Public\Documents\'#1043#1086#1088#1080#1079#1086#1085#1090'\WorkProg\Projects\TEST\TEST.x' +
+            'ml'
+          Link.DataSetDef.ObjectFields = True
+          Link.XParamPath = 'Caliper1.Caliper.accel.Z.DEV'
+          Link.YParamPath = 'ID'
+          Link.BufferFileName = 
+            'C:\Users\Public\Documents\'#1043#1086#1088#1080#1079#1086#1085#1090'\WorkProg\Projects\TEST_Device' +
+            'Bur2_7_WRKIDCaliper1CaliperaccelZDEV.bin'
+          Title = 'az'
+          Selected = True
+          DeltaX = -322500.000000000000000000
+          Color = -2147483505
+          Width = 1
+          ScaleX = 0.000020000000000000
+          FixedParam = False
+          HideInLegend = False
+          Presizion = 0
+          Filters = <>
+        end>
+      Regions = <
+        item
+          ItemClassName = 'TGR32GraphicLegend'
+          PropRow = 0
+        end
+        item
+          ItemClassName = 'TGR32GraphicData'
+          PropRow = 1
+          ShowYlegend = False
+        end
+        item
+          ItemClassName = 'TGraphRegion'
+          PropRow = 2
+        end>
+    end>
+end

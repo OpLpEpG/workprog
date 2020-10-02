@@ -75,7 +75,6 @@
         <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
-    <Import Project="..\..\_Defaul_pak.optset" Condition="'$(Cfg_1_Win32)'!='' And Exists('..\..\_Defaul_pak.optset')"/>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_Build>100</VerInfo_Build>
         <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
@@ -90,7 +89,6 @@
         <DCC_MapFile>3</DCC_MapFile>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <CfgDependentOn>..\..\_Defaul_pak.optset</CfgDependentOn>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -102,6 +100,7 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_MapFile>3</DCC_MapFile>
     </PropertyGroup>
+    <Import Project="..\..\_Defaul_pak.optset" Condition="'$(Cfg_1_Win32)'!='' And Exists('..\..\_Defaul_pak.optset')"/>
     <Import Project="..\_prg_set.optset" Condition="'$(Base)'!='' And Exists('..\_prg_set.optset')"/>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

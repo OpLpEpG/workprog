@@ -42,8 +42,9 @@ uses
   MetrInclin.Temp.Form in 'MetrInclin.Temp.Form.pas' {FormMetrInclinT},
   MetrInclin.CheckForm in 'MetrInclin.CheckForm.pas' {FormInclinCheck},
   MetrGK in 'MetrGK.pas' {FormGK},
-  MetrNNK in 'MetrNNK.pas' {FormNNK},
-  MetrBKS in 'MetrBKS.pas' {FormBKS};
+  MetrBKS in 'MetrBKS.pas' {FormBKS},
+  MetrNNK2X in 'MetrNNK2X.pas' {FormNNK2X},
+  MetrNNK in 'MetrNNK.pas' {FormNNK};
 
 {$R *.res}
 

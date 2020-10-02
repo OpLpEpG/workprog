@@ -4,7 +4,8 @@ interface
 
 uses DeviceIntf, PluginAPI, ExtendIntf, RootImpl, debug_except, DockIForm, RootIntf, Container, Actns,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.Bindings.Expression, Xml.XMLIntf,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, Vcl.ImgList;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, Vcl.ImgList,
+  ActnCtrls;
 
 type
   TNodeKind = (xkData, xkRoot, xkArray);
@@ -297,7 +298,7 @@ procedure TFormWrok.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNo
 begin
   xd := Sender.GetNodeData(Node);
   if not Assigned(xd.XMNode) then Exit;
-  if Column = 0 then
+  if (Column = 0) and (Kind in [TVTImageKind.ikNormal, ikSelected]) then
    if xd.XMNode.HasAttribute(AT_SIZE) then ImageIndex := 144
    else
     begin

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CALC MetrType="TNNK2X">
+  <SHEET1 SheetByIndex="0">
+    <RANGES>
+      <RANGE1 Cells="A2:A21" DataIndex="0:0:1:20" Source="TNNK2X.STEP%1:d.STEP" />
+      <RANGE1 Cells="B2:B21" DataIndex="0:0:1:20" Source="TNNK2X.STEP%1:d.D" />
+      <RANGE1 Cells="C2:C21" DataIndex="0:0:1:20" Source="TNNK2X.STEP%1:d.KP" />
+      <RANGE1 Cells="D2:D21" DataIndex="0:0:1:20" Source="TNNK2X.STEP%1:d.LR" />
+      <RANGE1 Cells="E2:E21" DataIndex="0:0:1:20" Source="TNNK2X.STEP%1:d.BL.DEV.VALUE" />
+      <RANGE2 Cells="F2:F21" DataIndex="0:0:1:20" Source="TNNK2X.STEP%1:d.BR.DEV.VALUE" />
+      <RANGE3 Cells="G2:G21" DataIndex="0:0:1:20" Source="TNNK2X.STEP%1:d.DL.DEV.VALUE" />
+      <RANGE3 Cells="H2:H21" DataIndex="0:0:1:20" Source="TNNK2X.STEP%1:d.DR.DEV.VALUE" />
+      <RANGE3 Cells="I2:I21" DataIndex="0:0:1:20" Source="TNNK2X.STEP%1:d.INFO" />
+    </RANGES>
+  </SHEET1>
+</CALC>

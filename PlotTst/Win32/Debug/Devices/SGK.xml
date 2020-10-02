@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+	<SGK SIZE="0" ADDR="107" INFO="СГК"><WRK SIZE="256" FLOW_TIMER_INTERVAL="1200" SP_HI_BYTE="0" FLOW_PROTOCOL="1">
+			<время METR="WT">
+				<DEV TYPE="48" INDEX="2"/>
+			</время>
+			<ГК SIZE="0" METR="GK_SGK">
+				<гк>
+					<DEV TYPE="3" INDEX="2"/>
+				</гк>
+				<СГК ARRAY_SIZE="124">
+					<DEV TYPE="42" INDEX="4"/>
+				</СГК>
+			</ГК>
+			<T><DEV TYPE="42" INDEX="3"/>
+			</T></WRK>
+		<RAM SIZE="256" RAM_SIZE="5" RAM_LO_SPEED_PROTOCOL="1" FLOW_TIMER_INTERVAL="1200" SP_HI_BYTE="0" FLOW_PROTOCOL="1">
+			<время METR="WT">
+				<DEV TYPE="48" INDEX="2"/>
+			</время>
+			<ГК SIZE="0" METR="GK_SGK">
+				<гк>
+					<DEV TYPE="3" INDEX="2"/>
+				</гк>
+				<СГК ARRAY_SIZE="124">
+					<DEV TYPE="42" INDEX="4"/>
+				</СГК>
+			</ГК>
+			<T><DEV TYPE="42" INDEX="3"/>
+			</T></RAM>
+	</SGK></DEVICE>

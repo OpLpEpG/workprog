@@ -168,8 +168,6 @@ object FormDlgRam: TFormDlgRam
     Width = 196
     Height = 17
     Caption = #1057#1086#1079#1076#1072#1090#1100' '#1092#1072#1081#1083' '#1088#1072#1089#1089#1095#1077#1090#1085#1099#1093' '#1076#1072#1085#1085#1099#1093
-    Checked = True
-    State = cbChecked
     TabOrder = 10
   end
   inline RangeSelect: TFrameRangeSelect

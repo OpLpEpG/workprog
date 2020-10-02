@@ -125,10 +125,9 @@ begin
               begin
                path := Format(n.Attributes['Source'], [x, y]);
                if TryValX(Root, path, v) then
-                begin
-                 d := v;
-                 varr[x-Xlo, y-Ylo] := d;
-                end
+                if VarIsNull(v) then varr[x-Xlo, y-Ylo] := ''
+                else if TryStrTofloat(v, d) then varr[x-Xlo, y-Ylo] := d
+                     else varr[x-Xlo, y-Ylo] := string(v)
                else
                  raise Exception.CreateFmt('Нет пути %s ', [path]);
               end;

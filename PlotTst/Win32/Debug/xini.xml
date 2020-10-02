@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="windows-1251" standalone="no"?>
+<Project3>
+  <IDataSetObjs>
+    <ItemCount>2</ItemCount>
+    <Item0>50|object LasDataSet1: TLasDataSet
+  FieldDefs = &lt;
+    item
+      Name = &apos;ID&apos;
+      DataType = ftInteger
+    end
+    item
+      Name = &apos;DEPT&apos;
+      DataType = ftFloat
+    end
+    item
+      Name = &apos;Gx&apos;
+      DataType = ftFloat
+    end
+    item
+      Name = &apos;Gy&apos;
+      DataType = ftFloat
+    end
+    item
+      Name = &apos;Gz&apos;
+      DataType = ftFloat
+    end
+    item
+      Name = &apos;Hx&apos;
+      DataType = ftFloat
+    end
+    item
+      Name = &apos;Hy&apos;
+      DataType = ftFloat
+    end
+    item
+      Name = &apos;Hz&apos;
+      DataType = ftFloat
+    end&gt;
+  LasFile = &apos;c:\XE\Projects\Device2\VCL_Vizard_Sucop\Win32\Debug\723.las&apos;
+end
+</Item0>
+    <Item1>50|object XMLDataSet1: TXMLDataSet
+  FieldDefs = &lt;
+    item
+      Name = &apos;ID&apos;
+      DataType = ftInteger
+      DataOffset = 0
+      CalcField = False
+    end
+    item
+      Name = &apos;Caliper1&apos;
+      ChildDefs = &lt;
+        item
+          Name = #1072#1074#1090#1086#1084#1072#1090
+          ChildDefs = &lt;
+            item
+              Name = &apos;DEV&apos;
+              DataType = ftByte
+              DataOffset = 0
+              CalcField = False
+            end
+            item
+              Name = &apos;CLC&apos;
+              DataType = ftString
+              Size = 20
+              DataOffset = 0
+              CalcField = True
+            end&gt;
+          DataType = ftADT
+          Size = 2
+          DataOffset = 0
+          CalcField = False
+        end
+        item
+          Name = #1074#1088#1077#1084#1103
+          ChildDefs = &lt;
+            item
+              Name = &apos;DEV&apos;
+              DataType = ftInteger
+              DataOffset = 1
+              CalcField = False
+            end
+            item
+              Name = &apos;CLC&apos;
+              DataType = ftString
+              Size = 20
+              DataOffset = 255
+              CalcField = True
+            end&gt;
+          DataType = ftADT
+          Size = 2
+          DataOffset = 0
+          CalcField = False
+        end
+        item
+          Name = &apos;Caliper&apos;
+          ChildDefs = &lt;
+            item
+              Name = &apos;accel&apos;
+              ChildDefs = &lt;
+                item
+                  Name = &apos;X&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftSmallint
+                      DataOffset = 5
+                      CalcField = False
+                    end
+                    item
+                      Name = &apos;CLC&apos;
+                      DataType = ftFloat
+                      Precision = 1
+                      DataOffset = 510
+                      CalcField = True
+                    end&gt;
+                  DataType = ftADT
+                  Size = 2
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = &apos;Y&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftSmallint
+                      DataOffset = 7
+                      CalcField = False
+                    end
+                    item
+                      Name = &apos;CLC&apos;
+                      DataType = ftFloat
+                      Precision = 1
+                      DataOffset = 518
+                      CalcField = True
+                    end&gt;
+                  DataType = ftADT
+                  Size = 2
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = &apos;Z&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftSmallint
+                      DataOffset = 9
+                      CalcField = False
+                    end
+                    item
+                      Name = &apos;CLC&apos;
+                      DataType = ftFloat
+                      Precision = 1
+                      DataOffset = 526
+                      CalcField = True
+                    end&gt;
+                  DataType = ftADT
+                  Size = 2
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = #1079#1077#1085#1080#1090
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;CLC&apos;
+                      DataType = ftFloat
+                      Precision = 2
+                      DataOffset = 534
+                      CalcField = True
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = #1086#1090#1082#1083#1086#1085#1080#1090#1077#1083#1100
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;CLC&apos;
+                      DataType = ftFloat
+                      Precision = 1
+                      DataOffset = 542
+                      CalcField = True
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = #1072#1084#1087#1083#1080#1090&apos;_accel&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;CLC&apos;
+                      DataType = ftFloat
+                      Precision = 1
+                      DataOffset = 550
+                      CalcField = True
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end&gt;
+              DataType = ftADT
+              Size = 6
+              DataOffset = 0
+              CalcField = False
+            end
+            item
+              Name = &apos;T&apos;
+              ChildDefs = &lt;
+                item
+                  Name = &apos;DEV&apos;
+                  DataType = ftWord
+                  DataOffset = 11
+                  CalcField = False
+                end&gt;
+              DataType = ftADT
+              Size = 1
+              DataOffset = 0
+              CalcField = False
+            end
+            item
+              Name = &apos;AmpH&apos;
+              ChildDefs = &lt;
+                item
+                  Name = &apos;DEV&apos;
+                  DataType = ftWord
+                  DataOffset = 13
+                  CalcField = False
+                end&gt;
+              DataType = ftADT
+              Size = 1
+              DataOffset = 0
+              CalcField = False
+            end
+            item
+              Name = &apos;fkd&apos;
+              ChildDefs = &lt;
+                item
+                  Name = &apos;d0&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftBytes
+                      Size = 1362
+                      DataOffset = 15
+                      ArraySize = 681
+                      ArrayType = 2
+                      CalcField = False
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = &apos;d1&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftBytes
+                      Size = 1364
+                      DataOffset = 1377
+                      ArraySize = 682
+                      ArrayType = 2
+                      CalcField = False
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = &apos;d2&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftBytes
+                      Size = 1364
+                      DataOffset = 2741
+                      ArraySize = 682
+                      ArrayType = 2
+                      CalcField = False
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = &apos;d3&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftBytes
+                      Size = 1364
+                      DataOffset = 4105
+                      ArraySize = 682
+                      ArrayType = 2
+                      CalcField = False
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = &apos;d4&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftBytes
+                      Size = 1364
+                      DataOffset = 5469
+                      ArraySize = 682
+                      ArrayType = 2
+                      CalcField = False
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = &apos;d5&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftBytes
+                      Size = 1364
+                      DataOffset = 6833
+                      ArraySize = 682
+                      ArrayType = 2
+                      CalcField = False
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = &apos;d6&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftBytes
+                      Size = 1364
+                      DataOffset = 8197
+                      ArraySize = 682
+                      ArrayType = 2
+                      CalcField = False
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = &apos;d7&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftBytes
+                      Size = 1364
+                      DataOffset = 9561
+                      ArraySize = 682
+                      ArrayType = 2
+                      CalcField = False
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end
+                item
+                  Name = &apos;d8&apos;
+                  ChildDefs = &lt;
+                    item
+                      Name = &apos;DEV&apos;
+                      DataType = ftBytes
+                      Size = 1364
+                      DataOffset = 10925
+                      ArraySize = 682
+                      ArrayType = 2
+                      CalcField = False
+                    end&gt;
+                  DataType = ftADT
+                  Size = 1
+                  DataOffset = 0
+                  CalcField = False
+                end&gt;
+              DataType = ftADT
+              Size = 9
+              DataOffset = 0
+              CalcField = False
+            end&gt;
+          DataType = ftADT
+          Size = 4
+          DataOffset = 0
+          CalcField = False
+        end&gt;
+      DataType = ftADT
+      Size = 3
+      DataOffset = 0
+      CalcField = False
+    end&gt;
+  BinFileName = 
+    &apos;C:\Users\Public\Documents\&apos;#1043#1086#1088#1080#1079#1086#1085#1090&apos;\WorkProg\Projects\TEST\Calipe&apos; +
+    &apos;r1WRK.bin&apos;
+  RecordLength = 12289
+  Device = &apos;DeviceBur2&apos;
+  ModulAdress = 7
+  Section = &apos;WRK&apos;
+  XMLFileName = 
+    &apos;C:\Users\Public\Documents\&apos;#1043#1086#1088#1080#1079#1086#1085#1090&apos;\WorkProg\Projects\TEST\TEST.x&apos; +
+    &apos;ml&apos;
+  CalcDataLen = 558
+  object TIntegerField
+    FieldName = &apos;ID&apos;
+  end
+  object TADTField
+    FieldName = &apos;Caliper1&apos;
+  end
+end
+</Item1>
+  </IDataSetObjs>
+</Project3>

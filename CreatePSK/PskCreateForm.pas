@@ -5,7 +5,8 @@ interface
 uses
     RootIntf, PluginAPI, ExtendIntf, DockIForm, DeviceIntf, debug_except, Parser, Container, Actns, tools,
   XMLDoc, Xml.XMLIntf,  System.Generics.Collections, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, VirtualTrees, Vcl.ImgList;
+  Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, VirtualTrees, Vcl.ImgList,
+  ActnCtrls;
 
 const
   // Helper message to decouple node change handling from edit handling.
@@ -789,7 +790,7 @@ procedure TFormPsk.TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNod
 begin
   xd := Sender.GetNodeData(Node);
   if not Assigned(xd.XMNode) then Exit;
-  if Column = 0 then
+  if (Column = 0) and (Kind in [TVTImageKind.ikNormal, ikSelected]) then
    if xd.FlagDelete then ImageIndex := 305
    else if xd.FlagSelect then ImageIndex := 304
    else if xd.XMNode.HasAttribute(AT_SIZE) then ImageIndex := 144

@@ -3,7 +3,7 @@ unit VCL.Form.EEPROM;
 interface
 
 uses Container, tools, XMLLua.EEPROM,  Xml.XMLDoc,  Math,
-  RootIntf, DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, SDcardTools, FileCachImpl,
+  RootIntf, DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, FileCachImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf, System.TypInfo,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, VirtualTrees;
 
@@ -343,8 +343,9 @@ procedure TFormDlgEeprom.InitTree;
          begin
           if not nd.HasAttribute(AT_VALUE) then nd.Attributes[AT_VALUE] := ' ';
           xd.ColumnValue := xd.ColumnValue + [nd.AttributeNodes.FindNode(AT_VALUE), GetMetrNode(u)];
+          xd.ColumnValue := xd.ColumnValue + [nd.AttributeNodes.FindNode(AT_EU)]
          end
-        else xd.ColumnValue := xd.ColumnValue + [nil, nil];
+        else xd.ColumnValue := xd.ColumnValue + [nil, nil, nil];
        end;
    end;
 var

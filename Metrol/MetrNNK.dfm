@@ -48,7 +48,6 @@ object FormNNK: TFormNNK
       BorderWidth = 1
       Header.AutoSizeIndex = -1
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
-      Header.ParentFont = True
       TabOrder = 0
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
       TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
@@ -60,44 +59,44 @@ object FormNNK: TFormNNK
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 0
-          WideText = #8470','#1076#1080#1072#1084#1077#1090#1088
+          Text = #8470','#1076#1080#1072#1084#1077#1090#1088
         end
         item
           Position = 1
-          WideText = #1050#1087',%'
+          Text = #1050#1087',%'
         end
         item
           Position = 2
-          WideText = #1052#1047
+          Text = #1052#1047
         end
         item
           Position = 3
-          WideText = #1041#1047
+          Text = #1041#1047
         end
         item
           Position = 4
-          WideText = #1053#1043#1050
+          Text = #1053#1043#1050
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 5
-          WideText = #1052'/'#1041','#1082' '#1074#1086#1076#1077
+          Text = #1052'/'#1041','#1082' '#1074#1086#1076#1077
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 6
-          WideText = #1052#1047','#1082' '#1074#1086#1076#1077
+          Text = #1052#1047','#1082' '#1074#1086#1076#1077
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 7
-          WideText = #1041#1047','#1082' '#1074#1086#1076#1077
+          Text = #1041#1047','#1082' '#1074#1086#1076#1077
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 8
+          Text = #1053#1043#1050','#1082' '#1074#1086#1076#1077
           Width = 31
-          WideText = #1053#1043#1050','#1082' '#1074#1086#1076#1077
         end>
     end
     object Chart: TChart

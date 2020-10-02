@@ -23,6 +23,13 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     Height = 13
     Caption = #1044#1083#1080#1085#1072' '#1060#1050#1044
   end
+  object Label1: TLabel
+    Left = 129
+    Top = 31
+    Width = 90
+    Height = 13
+    Caption = #1044#1080#1072#1084#1077#1090#1088' '#1055#1088#1080#1073#1086#1088#1072
+  end
   object od: TJvFilenameEdit
     Left = 8
     Top = 8
@@ -78,6 +85,7 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     Top = 46
     Width = 121
     Height = 21
+    Enabled = False
     TabOrder = 5
     Text = '682'
   end
@@ -118,5 +126,20 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
       item
         Width = 50
       end>
+  end
+  object cbFKD: TComboBox
+    Left = 128
+    Top = 46
+    Width = 145
+    Height = 21
+    Style = csDropDownList
+    ItemIndex = 0
+    TabOrder = 8
+    Text = '108'#1084#1084
+    OnChange = cbFKDChange
+    Items.Strings = (
+      '108'#1084#1084
+      '120'#1084#1084
+      '172'#1084#1084)
   end
 end

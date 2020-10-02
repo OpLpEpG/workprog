@@ -7,7 +7,7 @@ uses system.UITypes,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, VirtualTrees,
   Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Menus,
-  Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup;
+  Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, ActnCtrls;
 
 type
   TFormNNK = class(TFormMetrolog, INotifyBeforeSave, INotifyAfteSave)
@@ -48,8 +48,8 @@ type
     class function MetrolType: string; override;
   end;
 
-var
-  FormNNK: TFormNNK;
+//var
+//  FormNNK: TFormNNK;
 
 implementation
 

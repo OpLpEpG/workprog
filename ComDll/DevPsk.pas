@@ -150,7 +150,7 @@ type
     procedure ScennaBegin();
     procedure ScennaRun(Event: TCmdByteRef; ErrEvent: Boolean = False);
     procedure CheckConnect(); override;
-    class function GetPSKInfo(Addr: Byte): IXMLNode;
+    class function GetPSKInfo(Addr: Integer): IXMLNode;
 //    procedure ChLockLockOpen(const User; e: EPskExceptionClass);
 //    procedure UnLockClose(const User);
   end;
@@ -593,7 +593,7 @@ end;
 //  Result := TActionsDev;
 //end;
 
-class function TAbstractPsk.GetPSKInfo(Addr: Byte): IXMLNode;
+class function TAbstractPsk.GetPSKInfo(Addr: Integer): IXMLNode;
  var
   SearchRec: TSearchRec;
   Found: integer;

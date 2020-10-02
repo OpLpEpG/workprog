@@ -64,7 +64,6 @@ object FormPsk: TFormPsk
       EditDelay = 500
       Header.AutoSizeIndex = 5
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring, hoHeaderClickAutoSort]
-      Header.ParentFont = True
       PopupMenu = ppM
       TabOrder = 1
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
@@ -79,33 +78,33 @@ object FormPsk: TFormPsk
         item
           Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coEditable]
           Position = 0
+          Text = #1044#1077#1088#1077#1074#1086
           Width = 150
-          WideText = #1044#1077#1088#1077#1074#1086
         end
         item
           Position = 1
+          Text = #1058#1080#1087
           Width = 170
-          WideText = #1058#1080#1087
         end
         item
           Position = 2
+          Text = #1040#1076#1088#1077#1089
           Width = 65
-          WideText = #1040#1076#1088#1077#1089
         end
         item
           Position = 3
-          WideText = #1052#1072#1089#1089#1080#1074
+          Text = #1052#1072#1089#1089#1080#1074
         end
         item
           Position = 4
+          Text = #1044#1072#1090#1095#1080#1082#1072' '#1089#1084#1077#1097#1077#1085#1080#1077' '
           Width = 73
-          WideText = #1044#1072#1090#1095#1080#1082#1072' '#1089#1084#1077#1097#1077#1085#1080#1077' '
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAutoSpring, coSmartResize, coAllowFocus, coEditable]
           Position = 5
+          Text = #1060#1086#1088#1084#1072#1090#1080#1088#1086#1074#1072#1085#1080#1077
           Width = 176
-          WideText = #1060#1086#1088#1084#1072#1090#1080#1088#1086#1074#1072#1085#1080#1077
         end>
     end
   end

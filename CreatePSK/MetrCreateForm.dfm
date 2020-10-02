@@ -34,7 +34,6 @@ object FormMetr: TFormMetr
     DragType = dtVCL
     Header.AutoSizeIndex = -1
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
-    Header.ParentFont = True
     ParentCtl3D = False
     PopupMenu = ppM
     TabOrder = 0
@@ -47,8 +46,8 @@ object FormMetr: TFormMetr
       item
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
         Position = 0
-        Width = 171
-        WideText = #1057#1082#1088#1080#1087#1090#1099
+        Text = #1057#1082#1088#1080#1087#1090#1099
+        Width = 177
       end>
   end
   object pc: TCPageControl

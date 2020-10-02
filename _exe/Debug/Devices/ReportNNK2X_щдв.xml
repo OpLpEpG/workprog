@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CALC MetrType="TNNK2X">
+  <SHEET1 SheetByIndex="0">
+    <CELL F3="TNNK2X.DevName" J3="/./.SERIAL_NO" F4="TNNK2X.TIME_ATT" F6="TNNK2X.ISTOCHNIK" G40="TNNK2X.Ready" H41="TNNK2X.kalibrov" H42="TNNK2X.Metrolog" />
+    <RANGES>
+      <RANGE1 Cells="C14:C17 C19:C21 C23:C25 C28:C30" DataIndex="0:0:1:4 0:0:5:7 0:0:8:10 0:0:12:14" Source="TNNK2X.STEP%1:d.BL.DEV.VALUE" />
+      <RANGE2 Cells="D14:D17 D19:D21 D23:D25 D28:D30" DataIndex="0:0:1:4 0:0:5:7 0:0:8:10 0:0:12:14" Source="TNNK2X.STEP%1:d.DL.DEV.VALUE" />
+      <RANGE3 Cells="E14:E17 E19:E21 E23:E25 E28:E30" DataIndex="0:0:1:4 0:0:5:7 0:0:8:10 0:0:12:14" Source="TNNK2X.STEP%1:d.BR.DEV.VALUE" />
+      <RANGE3 Cells="F14:F17 F19:F21 F23:F25 F28:F30" DataIndex="0:0:1:4 0:0:5:7 0:0:8:10 0:0:12:14" Source="TNNK2X.STEP%1:d.DR.DEV.VALUE" />
+    </RANGES>
+  </SHEET1>
+</CALC>
