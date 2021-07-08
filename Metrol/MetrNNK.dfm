@@ -33,11 +33,12 @@ object FormNNK: TFormNNK
     object lbInfo: TLabel
       Left = 0
       Top = 369
-      Width = 3
+      Width = 657
       Height = 13
       Align = alBottom
       Alignment = taCenter
       WordWrap = True
+      ExplicitWidth = 3
     end
     object Tree: TVirtualStringTree
       Left = 0
@@ -96,7 +97,7 @@ object FormNNK: TFormNNK
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 8
           Text = #1053#1043#1050','#1082' '#1074#1086#1076#1077
-          Width = 31
+          Width = 25
         end>
     end
     object Chart: TChart

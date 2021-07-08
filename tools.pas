@@ -81,6 +81,8 @@ const
   AT_PSK_BYTE_ADDR = 'PSK_BYTE_ADDR';
   AT_SERIAL = 'SERIAL_NO';
   AT_SPEED = 'COMUNICATION_PROPERTY';   // BIT15:USB  BIT14:SSD BIT7:125Kbt BIT6:500Kbt
+  AT_EXT_NP = 'AT_EXT_NP';      // count extra data
+  AT_EXT_NP_LEN = 'AT_EXT_NP_LEN'; // len in bytes extra data
   AT_TIMEATT = 'TIME_ATT';
   AT_METROLOG = 'Metrolog';
   AT_DEVNAME = 'DevName';
@@ -992,7 +994,8 @@ begin
   for s in path.Split(['.'], TStringSplitOptions.ExcludeEmpty) do
    begin
     Result := Root;
-    Root := Root.ChildNodes.FindNode(s);
+    if s = '/' then Root := Root.ParentNode
+    else Root := Root.ChildNodes.FindNode(s);
     if Assigned(Root) then Continue;
     if not CreatePathNotExists then Break;
     Root := Result.AddChild(s);

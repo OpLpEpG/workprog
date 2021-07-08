@@ -808,17 +808,21 @@ begin
 //    FDevData.OwnerDocument.SaveToFile('e:\_dev.xml');
 //    FFileData.OwnerDocument.SaveToFile('e:\_fil.xml');
 //   end;
-  if not (Assigned(FFileData) and Assigned(FDevData) and (Value.Info = FDevData) and HasXTree(GetMetr([], FDevData), GetMetr([], FileData),
-  procedure(devroot, dev, failRoot, fail: IXMLNode)
-  begin
-    if dev.NodeValue <> fail.NodeValue then
-    begin
-      Res := Res or 1;
-    end;
-  end, false)) then
-  begin
+  if not (Assigned(FFileData)
+          and Assigned(FDevData)
+          and (Value.Info = FDevData)
+          and HasXTree(GetMetr([], FDevData), GetMetr([], FileData),
+                procedure(devroot, dev, failRoot, fail: IXMLNode)
+                begin
+                  if dev.NodeValue <> fail.NodeValue then
+                  begin
+                    Res := Res or 1;
+                  end;
+                end, false))
+  then
+   begin
     Res := Res or 2;
-  end;
+   end;
   if Res = 0 then
     FStatusBar.Panels[0].Text := 'Поправки в устройстве:G'
   else if Res = 1 then

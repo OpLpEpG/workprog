@@ -720,7 +720,7 @@ begin
       begin
         TPars.GetData(e, a);
         D := TEepWrite.Create(Addr, 0, a);
-        Send(@D, Length(a)+2+CASZ, procedure(p: Pointer; n: integer)
+        Send(@D, Length(a) + 2 + CASZ, procedure(p: Pointer; n: integer)
         begin;
           if Assigned(ev) then ev(n = CASZ);
         end, 2000);

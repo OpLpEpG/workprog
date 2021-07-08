@@ -494,10 +494,11 @@ type
 
 class function TFormEnum.RemoveProp(const txt: string): string;
  const
-  FRM: array[0..17] of string = ('Tag', 'Left', 'Top', 'Align', 'ActiveControl', 'BorderStyle',
+  FRM: array of string = ['Tag', 'Left', 'Top', 'Align', 'ActiveControl', 'BorderStyle',
   'ClientHeight',  'ClientWidth',  'DockSite',  'DragMode', 'DragKind', {'Font.Charset',}
-  {'Font.Color',  'Font.Height',  'Font.Name',  'Font.Style',}  'Position',
-  'ExplicitLeft',  'ExplicitTop',  'ExplicitWidth',  'ExplicitHeight', 'PixelsPerInch', 'TextHeight');
+  {'Font.Color', } 'Font.Height',
+  {'Font.Name',  'Font.Style',}  'Position',
+  'ExplicitLeft',  'ExplicitTop',  'ExplicitWidth',  'ExplicitHeight', 'PixelsPerInch', 'TextHeight'];
   OBJ: array[0..3] of string = ('FormMain.ImageList','NodeDataSize', 'RootNodeCount', 'TabOrder');
  var
   ss: TStringList;

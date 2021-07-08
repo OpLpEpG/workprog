@@ -720,7 +720,7 @@ end;
 class procedure TAsyncCopy.Terminate();
 begin
   FTerminate := True;
-  CancelIoEx(FStrmSD.Handle, nil);
+  if Assigned(FStrmSD) then CancelIoEx(FStrmSD.Handle, nil);
 end;
 
 function TAsyncCopy.UpdateStatistic(Cur: Pbyte; size: Cardinal; var Res: TLoadViewResult): Boolean;

@@ -12,6 +12,12 @@ type
   private
     class constructor Create;
     class destructor Destroy;
+    class var NoneLinearLSCB: string;
+    class var NoneLinearLSN: integer;
+    class var NoneLinearLSM: integer;
+    class var NoneLinearLSK: integer;
+    class var NoneLinearLSLua: lua_State;
+    class procedure cbNoneLinearLSFit(const c, x: PDoubleArray; out f: Double); cdecl; static;
   public
 //    class function CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
 //    class procedure ExecStepGK1_t(stp: integer; alg, trr: IXMLNode; IsGk: boolean); static;
@@ -69,8 +75,9 @@ type
     class function Now(L: lua_State): Integer; cdecl; static;
 //    class function VarAsType(L: lua_State): Integer; cdecl; static;
     class function RbfInterp(L: lua_State): Integer; overload; cdecl; static;
-    class function PolyAprox(L: lua_State): Integer; overload; cdecl; static;
-
+    class function PolyAprox(L: lua_State): Integer; cdecl; static;
+    class function LinearLS(L: lua_State): Integer; cdecl; static;
+    class function NoneLinearLSFit(L: lua_State): Integer; cdecl; static;
     class function XmlPathExists(L: lua_State): Integer; cdecl; static;
     class function SGK_FindGK(L: lua_State): Integer; cdecl; static;
     class function ImportNNK10(L: lua_State): Integer; cdecl; static;
@@ -622,12 +629,151 @@ begin
   lua_pushstring(L, m.AsAnsi((CTime.AsString(CTime.FromKadr(lua_tointeger(L,1))))).ToPointer);
   Result := 1;
 end;
+                                                    // K  M
+class procedure TXMLScriptMath.cbNoneLinearLSFit(const c, x: PDoubleArray; out f: Double); cdecl;
+begin
+  var L := NoneLinearLSLua;
+//  var top := lua_gettop(L);
+  if not lua_isfunction(L, 13) then
+   begin
+     raise Exception.Create('if not lua_isfunction(L, 13) then');
+   end;
+   lua_pushvalue (L, 13);
+   lua_createtable(L,  NoneLinearLSK, 0);
+   for var i := 1 to NoneLinearLSK do
+    begin
+     lua_pushnumber(L, c[i-1]);
+     lua_rawseti(L, -2, i);
+    end;
+   lua_createtable(L,  NoneLinearLSM, 0);
+   for var i := 1 to NoneLinearLSM do
+    begin
+     lua_pushnumber(L, x[i-1]);
+     lua_rawseti(L, -2, i);
+    end;
+   lua_call(NoneLinearLSLua, 2, 1);
+   f := lua_tonumber(NoneLinearLSLua, -1);
+   lua_pop(NoneLinearLSLua,1);
+//  var tope := lua_gettop(L);
+//  Tdebug.Log('dtop %d %d', [top,tope]);
+//				var del := c[0]*x[0] + c[1];
+//				if del = 0 then
+//					f := 10000000
+//				else
+//					F := (x[2] - c[2]*x[1])/del
+end;
+
+class function TXMLScriptMath.NoneLinearLSFit(L: lua_State): Integer;
+ var
+  f: ILSFitting;
+  s: string;
+  x, y, c, bl, bh, cs: TArray<Double>;
+  cOut: PDoubleArray;
+  n,m,k, info, niter: Integer;
+  diffstep, epsx: Double;
+  Rep: PSLFittingReport;
+  function LoadTable(LuaStack: Integer): TArray<Double>;
+    var
+     Res: Tarray<Double>;
+  begin
+    luaL_checktype(L, LuaStack, LUA_TTABLE);
+    var n := lua_rawlen(L, LuaStack);
+    SetLength(Res, n);
+    for var i := 1 to n do
+    begin
+     lua_rawgeti(L, LuaStack, i);
+     Res[i-1] := lua_tonumber(L,-1);
+    end;
+    Result := Res;
+  end;
+begin
+//  var top := lua_gettop(L);
+  x := LoadTable(1);
+  c := LoadTable(2);
+  y := LoadTable(3);
+  n := lua_tointeger(L, 4);
+  m := lua_tointeger(L, 5);
+  k := lua_tointeger(L, 6);
+  diffstep := lua_tonumber(L, 7);
+  epsx     := lua_tonumber(L, 8);
+  niter    := lua_tointeger(L, 9);
+  if lua_type(L,10) <> LUA_TTABLE then bl := nil
+  else bl := LoadTable(10);
+  if lua_type(L,11) <> LUA_TTABLE then bh := nil
+  else bh := LoadTable(11);
+  if lua_type(L,12) <> LUA_TTABLE then cs := nil
+  else cs := LoadTable(12);
+  if not lua_isfunction(L, 13) then
+   begin
+     raise Exception.Create('if not lua_isfunction(L, 13) then');
+   end;
+  NoneLinearLSCB := s;
+  NoneLinearLSLua := L;
+  NoneLinearLSN := n;
+  NoneLinearLSM := m;
+  NoneLinearLSK := k;
+
+  LSFittingFactory(f);
+  CheckMath(f, f.NoneLinear(PDouble(x), PDouble(c), PDouble(y), N, M, K,
+                diffstep, epsx, niter,
+                PDouble(bl),PDouble(bh),
+                PDouble(cs),
+                @cbNoneLinearLSFit,
+                PDoubleArray(cOut),
+                info,
+                Rep));
+//  var tope := lua_gettop(L);
+//  Tdebug.Log('dtop %d %d', [top,tope]);
+  for var I := 0 to K-1 do
+    lua_pushnumber(L,cOut[i]);
+  Result := K;
+end;
 
 class function TXMLScriptMath.Now(L: lua_State): Integer;
 begin
   lua_pushnumber(L, SysUtils.now);
   Result := 1;
 end;
+
+class function TXMLScriptMath.LinearLS(L: lua_State): Integer;
+ var
+  e: IEquations;
+  a,b: TArray<Double>;
+  nrows, ncols, cna, cnb, i: Integer;
+  info: Integer;
+  x: PDoubleArray;
+  R2: Double;
+  n: Integer;
+  k: Integer;
+  cx: IDoubleMatrix;
+begin
+  luaL_checktype(L, 1, LUA_TTABLE);
+  nrows := lua_tointeger(L, 2);
+  ncols := lua_tointeger(L, 3);
+  luaL_checktype(L, 4, LUA_TTABLE);
+  cna := lua_rawlen(L, 1);
+  SetLength(a, cna);
+  for i := 1 to cna do
+    begin
+     lua_rawgeti(L, 1, i);
+     a[i-1] := lua_tonumber(L,-1);
+    end;
+  cnb := lua_rawlen(L, 4);
+  SetLength(b, cnb);
+  for i := 1 to cnb do
+    begin
+     lua_rawgeti(L, 4, i);
+     b[i-1] := lua_tonumber(L,-1);
+    end;
+
+  EquationsFactory(e);
+  CheckMath(e, e.LinearLS(@a[0], nrows, ncols, @b[0],
+                     info, x, R2, n, k, cx));
+  for i := 0 to n-1 do lua_pushnumber(L, x[i]);
+  lua_pushnumber(L, R2);
+  Result := n+1;
+end;
+
 
 class function TXMLScriptMath.PolyAprox(L: lua_State): Integer;
  var

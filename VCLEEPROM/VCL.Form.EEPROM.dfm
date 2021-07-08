@@ -57,7 +57,6 @@ object FormDlgEeprom: TFormDlgEeprom
       item
         Width = 50
       end>
-    ExplicitWidth = 507
   end
   object Tree: TVirtualStringTree
     Left = 0

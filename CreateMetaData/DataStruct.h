@@ -73,6 +73,7 @@ typedef struct
 #	define DEV_INFO  "__DATE__ Профилемер v3" /// var_info
 #	define CHIP_NUMBER 2       		   /// varChip
 #	define SERIAL_NUMBER 1    		   /// varSerial
+#	define EXT_NO_PWR_CNT 2    		   /// varExtNoPowerDataCount
    DataStructW_t Wrk; /// WRK
    DataStructR_t Ram; /// RAM
 } AllDataStruct_t; /// Calip3

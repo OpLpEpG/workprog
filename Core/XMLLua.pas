@@ -312,8 +312,8 @@ procedure TXMLLua.AddXML(Aadr: Integer; const RnPath: string; TrRoot, RnRoot, Sc
   end;
   function ChekStr(const inp: string): string;
    const
-    SSinp: TArray<string> = ['ИКН','ГК','АГК','ННК','ВИК','Глубиномер','ГГКП', 'БКС'];
-    SSout: TArray<string> = ['IKN','GK','AGK','NNK','VIK','Glu','GGKP','BKS'];
+    SSinp: TArray<string> = ['ИКН','ГК','АГК','ННК','ВИК','Глубиномер','ГГКП', 'БКС', 'БК'];
+    SSout: TArray<string> = ['IKN','GK','AGK','NNK','VIK','Glu',       'GGKP', 'BKS', 'BK'];
    var
     i: Integer;
   begin
@@ -549,6 +549,7 @@ begin
    LUA_TSTRING: Result[i-1] := string(lua_tostring(LuaState, -i));
    else raise ELuaException.Createfmt('TXMLLua.CallFunction Error lua_type: [%s]',[string(lua_typename(LuaState, -i))]);
   end;
+  lua_pop(LuaState, Nres);
 end;
 
 class procedure TXMLLua.CheckFunction(L: lua_State; const FuncName: string);

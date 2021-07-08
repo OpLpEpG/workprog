@@ -203,14 +203,14 @@
                 <DeployFile LocalName="..\Help\Metrol\Metrology.NNK.htm" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="..\Help\Project\Progect.htm" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="..\_exe\Debug\WorkProg.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\Help\Project\Export.htm" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="..\Help\Project\View.htm" Configuration="Debug" Class="ProjectFile"/>
-                <DeployFile LocalName="..\Help\Project\ReadRam.htm" Configuration="Debug" Class="ProjectFile"/>
-                <DeployFile LocalName="..\Help\Project\Delay.htm" Configuration="Debug" Class="ProjectFile"/>
-                <DeployFile LocalName="..\Help\Metrol\Metrology.GK.htm" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="..\Help\help.htm" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="..\Help\Devices\Devices.htm" Configuration="Debug" Class="ProjectFile"/>
+                <DeployFile LocalName="..\Help\Project\ReadRam.htm" Configuration="Debug" Class="ProjectFile"/>
+                <DeployFile LocalName="..\Help\Project\Delay.htm" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="..\Help\Алгоритм Работы(Профилемер).htm" Configuration="Debug" Class="ProjectFile"/>
-                <DeployFile LocalName="..\Help\Project\Export.htm" Configuration="Debug" Class="ProjectFile"/>
+                <DeployFile LocalName="..\Help\Metrol\Metrology.GK.htm" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="..\Help\Metrol\Metrology.Inclin.htm" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="..\Help\Devices\IO.htm" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="..\Help\InstProf.htm" Configuration="Debug" Class="ProjectFile"/>

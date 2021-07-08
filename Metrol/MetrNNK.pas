@@ -304,7 +304,7 @@ end;
 
 procedure TFormNNK.TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
  const
-  fmtData = '%1.0f';
+  fmtData = '%1.3f';
   fmtDataW = '%1.3f';
  var
   p: PNodeExData;

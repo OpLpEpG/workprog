@@ -30,10 +30,12 @@ type
     sb: TStatusBar;
     cbFKD: TComboBox;
     Label1: TLabel;
+    cbAuto: TCheckBox;
     procedure btExitClick(Sender: TObject);
     procedure btExportClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
     procedure cbFKDChange(Sender: TObject);
+    procedure cbAutoClick(Sender: TObject);
   private
     FIStat: IStatistic;
     FkadrFirst, FkadrLast: Integer;
@@ -131,7 +133,15 @@ begin
 //        fldID := FXDataSet.FieldByName('ID');
         Setlength(akFields, 9);
         for I := 0 to 8 do akFields[i] := FXDataSet.FieldByName(Format(FKDN,[FXDataSet.XMLSection.ParentNode.NodeName, i]));
-        akLen := StrToInt(edFKD.Text)*2;
+        ///
+        if cbAuto.Checked then
+         begin
+          if Abs(akFields[0].Size - 800) < 10 then akLen := 800*2
+          else akLen := 682*2;
+          edFKD.Text := IntToStr(akLen div 2);
+         end
+        ///
+        else akLen := StrToInt(edFKD.Text)*2;
         Setlength(bdef, akLen);
         Setlength(ifarr, Length(FI_FORMAT));
         umin := RangeSelect.kadr.first - FkadrFirst;
@@ -193,7 +203,7 @@ begin
           end);
          end;
         f.Write(APPB_END_IF[0], 7);
-        if akLen = 800 then
+        if akLen = 800*2 then
            ak.Write(APPB_END_AK1_800[0], 7)
          else
            ak.Write(APPB_END_AK1[0], 7);
@@ -228,9 +238,14 @@ begin
   Fterminate := True;
 end;
 
+procedure TFormDlgExportCaliper.cbAutoClick(Sender: TObject);
+begin
+  cbFKD.Enabled := not cbAuto.Checked
+end;
+
 procedure TFormDlgExportCaliper.cbFKDChange(Sender: TObject);
 begin
-  if cbFKD.ItemIndex = 2 then edFKD.Text := '800'
+  if cbFKD.ItemIndex in [2,3] then edFKD.Text := '800'
   else edFKD.Text := '682'
 end;
 

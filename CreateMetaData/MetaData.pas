@@ -103,6 +103,7 @@ begin
   Reg('varRamSize', TPars.varRamSize, TMetaUserWord);
   Reg('varSSDSize', TPars.varSSDSize, TMetaUserDWord);
   Reg('varSupportUartSpeed', TPars.varSupportUartSpeed, TMetaUserWord);
+  Reg('varExtNoPowerDataCount', TPars.varExtNoPowerDataCount, TMetaUserByte);
 end;
 
 class procedure TMetaType.Reg(const typ: string; vart: Integer; cls: TMetaTypeClass);

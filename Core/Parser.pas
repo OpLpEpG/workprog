@@ -54,6 +54,7 @@ type
     var_i2_14b_GZ  = varRecord+24;
     varSSDSize  = varRecord+25; // Cardinal
     varSupportUartSpeed  = varRecord+26; // BitMask Word
+    varExtNoPowerDataCount  = varRecord+27; // byte
 
    type
     TTypeDic = TDictionary<Integer, string>;
@@ -943,6 +944,12 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
           if Assigned(hev) then hev(sp^, sp + 1);
           u.Attributes[AT_SPEED] := PWord(@sp[1])^;
           Inc(sp, 3); Dec(sn, 3);   // parse tip, serial
+        end;
+        varExtNoPowerDataCount:
+        begin
+          if Assigned(hev) then hev(sp^, sp + 1);
+          u.Attributes[AT_EXT_NP] := sp[1]; // parse Ext no power count
+          Inc(sp, 2); Dec(sn, 2);   // parse Ext no power count
         end;
         var_array:
          begin

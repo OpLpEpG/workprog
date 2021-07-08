@@ -403,6 +403,7 @@ begin
     (GContainer as IALLMetaDataFactory).Get.Save;
     FRes(Self, mrOk);
     UpdateControls(True);
+    TBindings.Notify(Self, 'S_TableModulUpdate');
    end;
 end;
 

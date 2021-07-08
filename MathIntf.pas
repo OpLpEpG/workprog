@@ -118,13 +118,67 @@ type
     r2: Double;
   end;
 
+  TLSFittingCB = procedure(const c, x: PDoubleArray; out f: Double); cdecl;
+
   ILSFitting = interface(ILastMathError)
     function Linear(const y, fmatrix: PDouble; n, m: Integer; var info: Integer; out c: PDoubleArray; out Rep: PSLFittingReport): HRESULT; stdcall;
     function LinearW(const y, w, fmatrix: PDouble; n, m: Integer; var info: Integer; out c: PDoubleArray; out Rep: PSLFittingReport): HRESULT; stdcall;
+
+{/*************************************************************************
+Nonlinear least squares fitting using function values only.
+
+Combination of numerical differentiation and secant updates is used to
+obtain function Jacobian.
+
+Nonlinear task min(F(c)) is solved, where
+
+    F(c) = (f(c,x[0])-y[0])^2 + ... + (f(c,x[n-1])-y[n-1])^2,
+
+    * N is a number of points,
+    * M is a dimension of a space points belong to,
+    * K is a dimension of a space of parameters being fitted,
+    * w is an N-dimensional vector of weight coefficients,
+    * x is a set of N points, each of them is an M-dimensional vector,
+    * c is a K-dimensional vector of parameters being fitted
+
+This subroutine uses only f(c,x[i]).
+
+INPUT PARAMETERS:
+    X       -   array[0..N-1,0..M-1], points (one row = one point)
+    Y       -   array[0..N-1], function values.
+    C       -   array[0..K-1], initial approximation to the solution,
+    N       -   number of points, N>1
+    M       -   dimension of space
+    K       -   number of parameters being fitted
+    DiffStep-   numerical differentiation step;
+                should not be very small or large;
+                large = loss of accuracy
+                small = growth of round-off errors
+
+OUTPUT PARAMETERS:
+    State   -   structure which stores algorithm state
+
+  -- ALGLIB --
+     Copyright 18.10.2008 by Bochkanov Sergey
+*************************************************************************/}
+
+    function NoneLinear(const x_matrix, y, c : PDouble;
+		                    n, m, k: Integer;
+                    		diffstep, epsx: Double; maxits: integer; // conditions
+                        const cLow, cHi: PDouble; // bound nil, nil - if not use
+                        const cScale: PDouble; // nil - if not use
+
+		                    cbLSFitting : TLSFittingCB;
+
+                    		out cOut: PDoubleArray; //result
+                    		out info: Integer;      //result q
+                    		out Rep: PSLFittingReport): HRESULT; stdcall;
+
   end;
 //__interface IEquations : public ILastMathError
 //
-//	SAFECALL LinearLS(const double *a, const ae_int_t nrows, const ae_int_t ncols, const double *b, ae_int_t &info, const double **x,
+//	SAFECALL LinearLS(const double *a, const ae_int_t nrows, const ae_int_t ncols, const double *b,
+//ae_int_t &info, const double **x,
 //double &r2, ae_int_t &n, ae_int_t &k, const IDoubleMatrix **cx);
 //;
 
@@ -136,6 +190,7 @@ type
                       out n: Integer;
                       out k: Integer;
                       out cx: IDoubleMatrix): HRESULT; stdcall;
+
     function Linear(const a: PDouble; nrows: Integer; const b: PDouble;
                       out info: Integer;
                       out x: PDoubleArray): HRESULT; stdcall;

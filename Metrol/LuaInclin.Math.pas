@@ -669,6 +669,7 @@ begin
   Result := 0;
 end;
 
+
 class procedure TMetrInclinMath.ExportToIncAccel(const TrrFile: string; XNewTrr: IXMLNode);
  var
   Convert: TConvert;
@@ -1003,7 +1004,12 @@ begin
 
     M3x4ToHorizont(8, Convert);
 
-    Add(Format('%g {Sgx-смещение нуля акселерометра X, дв.ед.} $$*Ink_%d*$$',[sx, sernom]));
+    Add(Format('%g {Sgx-смещение нуля акселерометра X, дв.ед.} Inkl_%d %s %s %s %s %s',[sx, sernom,
+                                    NewTrr.P_2.UsedStol,
+                                    NewTrr.P_2.Method,
+                                    NewTrr.P_2.Plase,
+                                    NewTrr.P_2.TIME_ATT,
+                                    NewTrr.P_2.Metrolog ]));
     Add(Format('%g {Sgy-смещение нуля акселерометра Y, дв.ед.}',[sy]));
     Add(Format('%g {Sgz-смещение нуля акселерометра Z, дв.ед.}',[sz]));
     Add(Format('%g {Kgx-коэффициент преобразования акселерометра X}',[Kx]));
@@ -1046,6 +1052,7 @@ begin
     Add(Format('%g {Fyz-угол отклонения оси феррозонда OY в плоскости YOZ, град.}',[Kyz]));
     Add(Format('%g {Fzx-угол отклонения оси феррозонда OZ в плоскости XOZ, град.}',[Kzx]));
     Add(Format('%g {Fzy-угол отклонения оси феррозонда OZ в плоскости YOZ, град.}',[Kzy]));
+    Add(NewTrr.P_2.MagField);
     SaveToFile(TrrFile);
    finally
     Free;

@@ -15,6 +15,7 @@ type
    ///   eeprom                 eeprom                   Метрология
    /// [xmlnode(path.Node); attr(path.Node.DEV.VALUE); attr(path.Node) ]
     ColumnValue: TArray<IInterface>;
+    FEdited: Boolean;
     function AsText(Col: Integer): string;
     function AsColor(Col: Integer): TColor;
     function Editable(Col: Integer): boolean;
@@ -206,6 +207,8 @@ end;
 
 
 { TNodeExData }
+var
+  FReadedFlag: Boolean;
 
 function TNodeExData.AsColor(Col: Integer): TColor;
  var
@@ -213,10 +216,13 @@ function TNodeExData.AsColor(Col: Integer): TColor;
 begin
   Result := clBlack;
   if (Length(ColumnValue) < 3) and (col <> 1) then Exit;
+  if not FReadedFlag then Result := clGray;
+  if FEdited then Result := clWebBrown;
+
   if Supports(ColumnValue[1], IXMLNode, e) and Supports(ColumnValue[2], IXMLNode, m) then
    begin
     if (Trim(e.NodeValue) <>'') and (Trim(m.NodeValue) <>'') then
-     if not SameValue(Single(e.NodeValue),Single(m.NodeValue)) then Result := clRed;
+     if not SameValue(Single(e.NodeValue),Single(m.NodeValue)) then Result := clRed
    end;
 end;
 
@@ -243,7 +249,7 @@ begin
   if Col >= Length(ColumnValue) then Exit;
   if Supports(ColumnValue[Col], IXMLNode, n) then
    begin
-    if n.NodeType = ntAttribute then Result := true;
+    if (n.NodeType = ntAttribute) and FReadedFlag then Result := true;
    end
 end;
 
@@ -254,7 +260,11 @@ begin
   if Col >= Length(ColumnValue) then Exit;
   if Supports(ColumnValue[Col], IXMLNode, n) then
    begin
-    if n.NodeType = ntAttribute then n.NodeValue := NewData;
+    if n.NodeType = ntAttribute then
+     begin
+      n.NodeValue := NewData;
+      FEdited := True;
+     end;
    end
 end;
 
@@ -295,22 +305,32 @@ end;
 
 procedure TFormDlgEeprom.btReadClick(Sender: TObject);
 begin
+  FReadedFlag := False;
   st.Panels[0].Text := 'Read BAD';
   Dev.ReadEeprom(procedure (Res: TEepromEventRes)
   begin
     if Res.DevAdr <> FAddr then Exit;
     st.Panels[0].Text := 'Read GOOD';
+    FReadedFlag := True;
+    for var pv in Tree.Nodes do PNodeExData(Tree.GetNodeData(pv)).FEdited := False;
     Tree.Repaint;
   end);
 end;
 
 procedure TFormDlgEeprom.btWriteClick(Sender: TObject);
 begin
+  if FReadedFlag then
   Dev.WriteEeprom(FAddr, procedure (Res: Boolean)
   begin
-    if Res then st.Panels[0].Text := 'write GOOD'
+    if Res then
+     begin
+      st.Panels[0].Text := 'write GOOD';
+      for var pv in Tree.Nodes do PNodeExData(Tree.GetNodeData(pv)).FEdited := False;
+      Tree.Repaint;
+     end
     else st.Panels[0].Text := 'write BAD'
-  end);
+  end)
+  else MessageDlg('Память EEPROM не считана предыдущие данные будут удалены!!!', mtError, [mbYes, mbCancel], 0)
 end;
 
 procedure TFormDlgEeprom.ClearTree;
@@ -352,6 +372,7 @@ var
   i: Integer;
 begin
   ClearTree;
+  FReadedFlag := False;
   for i:= 0 to Feep.ChildNodes.Count-1 do Add(nil, Feep.ChildNodes[i]);
 end;
 

@@ -24,8 +24,8 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     Caption = #1044#1083#1080#1085#1072' '#1060#1050#1044
   end
   object Label1: TLabel
-    Left = 129
-    Top = 31
+    Left = 72
+    Top = 30
     Width = 90
     Height = 13
     Caption = #1044#1080#1072#1084#1077#1090#1088' '#1055#1088#1080#1073#1086#1088#1072
@@ -83,7 +83,7 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
   object edFKD: TEdit
     Left = 8
     Top = 46
-    Width = 121
+    Width = 58
     Height = 21
     Enabled = False
     TabOrder = 5
@@ -128,11 +128,12 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
       end>
   end
   object cbFKD: TComboBox
-    Left = 128
-    Top = 46
-    Width = 145
+    Left = 72
+    Top = 45
+    Width = 91
     Height = 21
     Style = csDropDownList
+    Enabled = False
     ItemIndex = 0
     TabOrder = 8
     Text = '108'#1084#1084
@@ -140,6 +141,18 @@ object FormDlgExportCaliper: TFormDlgExportCaliper
     Items.Strings = (
       '108'#1084#1084
       '120'#1084#1084
-      '172'#1084#1084)
+      '172'#1084#1084
+      '120'#1084#1084'-'#1084#1086#1076#1091#1083#1100#1085#1099#1081)
+  end
+  object cbAuto: TCheckBox
+    Left = 168
+    Top = 47
+    Width = 97
+    Height = 17
+    Caption = #1060#1050#1044' '#1072#1074#1090#1086
+    Checked = True
+    State = cbChecked
+    TabOrder = 9
+    OnClick = cbAutoClick
   end
 end
