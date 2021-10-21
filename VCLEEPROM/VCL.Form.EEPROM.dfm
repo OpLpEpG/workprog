@@ -3,7 +3,7 @@ object FormDlgEeprom: TFormDlgEeprom
   Top = 0
   Caption = 'FormDlgEeprom'
   ClientHeight = 498
-  ClientWidth = 414
+  ClientWidth = 551
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +13,7 @@ object FormDlgEeprom: TFormDlgEeprom
   OldCreateOrder = False
   Position = poMainFormCenter
   DesignSize = (
-    414
+    551
     498)
   PixelsPerInch = 96
   TextHeight = 13
@@ -51,7 +51,7 @@ object FormDlgEeprom: TFormDlgEeprom
   object st: TStatusBar
     Left = 0
     Top = 479
-    Width = 414
+    Width = 551
     Height = 19
     Panels = <
       item
@@ -61,11 +61,12 @@ object FormDlgEeprom: TFormDlgEeprom
   object Tree: TVirtualStringTree
     Left = 0
     Top = 0
-    Width = 414
+    Width = 551
     Height = 442
     Anchors = [akLeft, akTop, akRight, akBottom]
     BorderWidth = 1
     Header.AutoSizeIndex = 2
+    Header.Height = 17
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring, hoHeaderClickAutoSort]
     TabOrder = 4
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
@@ -77,6 +78,7 @@ object FormDlgEeprom: TFormDlgEeprom
     OnEditing = TreeEditing
     OnGetText = TreeGetText
     OnPaintText = TreePaintText
+    OnGetNodeDataSize = TreeGetNodeDataSize
     Columns = <
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]
@@ -88,17 +90,22 @@ object FormDlgEeprom: TFormDlgEeprom
         Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 1
         Text = 'EEPROM'
-        Width = 87
+        Width = 60
+      end
+      item
+        Position = 2
+        Text = #1056#1072#1089#1095#1077#1090#1085#1099#1077
+        Width = 82
       end
       item
         Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAutoSpring, coSmartResize, coAllowFocus]
-        Position = 2
+        Position = 3
         Text = #1052#1077#1090#1088#1086#1083#1086#1075#1080#1103
-        Width = 79
+        Width = 161
       end
       item
         Options = [coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus, coStyleColor]
-        Position = 3
+        Position = 4
         Text = #1077#1076#1080#1085#1080#1094#1099
         Width = 60
       end>

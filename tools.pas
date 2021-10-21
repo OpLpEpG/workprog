@@ -154,14 +154,14 @@ const
   AT_TO_KADR = 'TO_KADR';
 //  AT_RAM_FILE = 'RAM_FILE';
 
-type
-  {$IFDEF BT2}
-   TCmdADR = Word;
-  {$ELSE}
-   TCmdADR = Byte;
-  {$ENDIF}
-  PCmdADR = ^TCmdADR;
-  const CASZ = SizeOf(TCmdADR);
+//type
+//  {$IFDEF BT2}
+//   TCmdADR = Word;
+//  {$ELSE}
+//   TCmdADR = Byte;
+//  {$ENDIF}
+//  PCmdADR = ^TCmdADR;
+//  const CASZ = SizeOf(TCmdADR);
 type
   TTestRef = reference to function(n: IXMLNode): boolean; // если да то прекратить рекурсию
   TWorkDataRef = reference to procedure(wrk: IXMLNode; adr: Byte; const name: string);
@@ -209,7 +209,7 @@ function TimeToAdr(time: TDateTime; KoefTime: Double; RecSize: Integer; TimeStar
 
 //function GetIActionName(ManagOwner: IInterface; Event: TIActionEvent): string;
 procedure EnumDevices(GetDevicesCB: TGetDevicesCB);
-function ToAdrCmd(a, cmd: Byte): TCmdADR;
+//function ToAdrCmd(a, cmd: Byte): TCmdADR;
 function XToVar(ANode: IXMLNode): Variant;
 function QToVar(DataSet: TDataSet; AutoClearDataSet: Boolean = True): Variant;
 function RenameXMLNode(Src: IXMLNode; const NewName: string): IXMLNode;
@@ -571,6 +571,30 @@ type
     function GetEnumerator: TDataSetEnumerator;
   end;
 
+  TStdRec = record
+    Buffer: TArray<Byte>;
+    pBuf: PByte;
+    adr, cmd: Byte;
+    len: Integer;
+    function SizeOf(): Integer;
+    function SizeOfAC(): Integer;
+    function Ptr(): Pointer;
+    function DataPtr(): Pointer;
+    function CheckAC(p: Pointer): Boolean;
+    function DataAsType<T>(): T;
+    procedure Assign(data: Pointer);
+    procedure AssignByte(data: integer);
+    procedure AssignWord(data: integer);
+    procedure AssignInt(data: integer);
+    procedure AssignAdvStdRead(ln: Byte; from: Word);
+    procedure AssignEEPRead(from: Word; ln: Byte);
+    procedure AssignEEPWrite(from: Word; const AData: array of byte);
+    procedure AssignRamRead(RmAdr, len: integer);
+    constructor Create(addr, command, DataLength: Integer); overload;
+    constructor Create(buff: Pointer; Bt2: boolean; alen: Integer); overload;
+  end;
+
+
 function XEnumDec(ANode: IXMLNode): TXMLNodeEnumeratorDec;
 function XEnum(ANode: IXMLNode): TXMLNodeEnumerator;
 function XEnumAttr(ANode: IXMLNode): TXMLNodeEnumerator;
@@ -581,6 +605,243 @@ var
 implementation
 
 //uses parser;
+
+//  PStdRec = ^TStdRec;
+//  TStdRead = packed record
+//    CmdAdr: TCmdADR;
+//    ln: Byte;
+//    constructor Create(addr, command, ReadLength: Byte);
+//  end;
+//  PStdReadLong = ^TStdReadLong;
+//  TStdReadLong = packed record
+//    CmdAdr: TCmdADR;
+//    ln: Word;
+//    constructor Create(addr, command, ReadLength: Word);
+//  end;
+//  TAdvStdRead = packed record
+//    CmdAdr: TCmdADR;
+//    ln: Byte;
+//    from: Word;
+//    constructor Create(addr, command, ReadLength: Byte; ReadFrom: Word);
+//  end;
+
+//  TEepRead = packed record
+//    CmdAdr: TCmdADR;
+//    From: Word;
+//    len: Byte;
+//    constructor Create(addr: Byte; AFrom: Word; ReadLength: Byte);
+//  end;
+
+//  TEepWrite = packed record
+//    CmdAdr: TCmdADR;
+//    From: Word;
+//    Data: array[0..251-CASZ] of Byte;
+//    constructor Create(addr: Byte; AFrom: Word; const AData: array of byte);
+//  end;
+//
+{ TEepWrite }
+
+//constructor TEepWrite.Create(addr: Byte; AFrom: Word; const AData: array of byte);
+//begin
+//  CmdAdr := ToAdrCmd(addr, CMD_WRITE_EE);
+//  From := AFrom;
+//  if Length(AData) > Length(Data) then EBurException.Create('длинна данных EEPROM больще 255');
+//  Move(AData, Data, Length(AData));
+//end;
+
+{ TEepRead }
+
+//constructor TEepRead.Create(addr: Byte; AFrom: Word; ReadLength: Byte);
+//begin
+//  CmdAdr := ToAdrCmd(addr, CMD_READ_EE);
+//  From := AFrom;
+//  len := ReadLength;
+//end;
+
+{ TStdRead }
+
+//constructor TStdRead.Create(addr, command, ReadLength: Byte);
+//begin
+//  CmdAdr := ToAdrCmd(addr, command);
+//  ln := ReadLength;
+//end;
+procedure TStdRec.Assign(data: Pointer);
+begin
+  Move(Data^, DataPtr^, len);
+end;
+
+procedure TStdRec.AssignAdvStdRead(ln: Byte; from: Word);
+ var
+  P: PByte;
+begin
+  p := DataPtr;
+  p^ := ln;
+  inc(p);
+  Pword(p)^ := from;
+end;
+
+procedure TStdRec.AssignByte(data: integer);
+begin
+  PByte(DataPtr)^ := data;
+end;
+
+procedure TStdRec.AssignEEPRead(from: Word; ln: Byte);
+ var
+  P: Pword;
+begin
+  p := DataPtr;
+  p^ := from;
+  inc(p);
+  Pbyte(p)^ := ln;
+end;
+
+procedure TStdRec.AssignEEPWrite(from: Word; const AData: array of byte);
+ var
+  P: Pword;
+begin
+  p := DataPtr;
+  p^ := from;
+  inc(p);
+  Move(AData, P^, Length(AData));
+end;
+
+procedure TStdRec.AssignInt(data: integer);
+begin
+  PInteger(DataPtr)^ := data;
+end;
+
+procedure TStdRec.AssignRamRead(RmAdr, len: integer);
+ var
+  P: Pinteger;
+begin
+  p := DataPtr;
+  p^ := RmAdr;
+  inc(p);
+  p^ := len;
+end;
+
+procedure TStdRec.AssignWord(data: integer);
+begin
+  Pword(DataPtr)^ := data;
+end;
+
+function TStdRec.CheckAC(p: Pointer): Boolean;
+begin
+  if adr > 15 then
+    Result := PWORD(pBuf)^ = PWORD(p)^
+  else
+   Result := pBuf[0] = Pbyte(P)^
+end;
+
+constructor TStdRec.Create(buff: Pointer; Bt2: boolean; alen: Integer);
+begin
+  len := alen;
+  pBuf := buff;
+  if bt2 then
+   begin
+    adr := pBuf[0];
+    cmd := pBuf[1];
+   end
+  else
+   begin
+    adr := pBuf[0] shr 4;
+    cmd := pBuf[1] and $0F;
+   end;
+end;
+
+constructor TStdRec.Create(addr, command, DataLength: Integer);
+begin
+  adr := addr;
+  cmd := command;
+  len := DataLength;
+  if adr > 15 then
+   begin
+    SetLength(Buffer, 2+len);
+    Buffer[0] := adr;
+    Buffer[1] := cmd;
+   end
+  else
+   begin
+    SetLength(Buffer, 1+len);
+    Buffer[0] := (adr shl 4) or cmd;;
+   end;
+  pBuf := @Buffer[0];
+end;
+
+function TStdRec.DataAsType<T>: T;
+ var
+  res: T;
+begin
+   res := T(DataPtr^);
+   Result := res;
+end;
+
+function TStdRec.DataPtr: Pointer;
+begin
+  if adr > 15 then Result := @pBuf[2] else Result := @pBuf[1]
+end;
+
+function TStdRec.Ptr: Pointer;
+begin
+  Result := pBuf;
+end;
+
+function TStdRec.SizeOf: Integer;
+begin
+  Result := SizeOfAC + len
+end;
+
+function TStdRec.SizeOfAC: Integer;
+begin
+  if adr > 15 then Result := 2 else Result := 1
+end;
+
+{ TStdReadLong }
+
+//constructor TStdReadLong.Create(addr, command, ReadLength: Word);
+//begin
+//  CmdAdr := ToAdrCmd(addr, command);
+//  ln := ReadLength;
+//end;
+
+
+{ TAdvStdRead }
+
+//constructor TAdvStdRead.Create(addr, command, ReadLength: Byte; ReadFrom: Word);
+//begin
+//  CmdAdr := ToAdrCmd(addr, command);
+//  ln := ReadLength;
+//  from := ReadFrom;
+//end;
+
+
+
+//type
+//  PRamRead =^TRamRead;
+//  TRamRead = packed record
+//    CmdAdr: TCmdADR;
+//    Adr: DWORD;
+////    Len: DWORD;
+////    PH, P6LB2H, BL: Byte;
+//    Length: DWord;
+//    constructor Create(DevAdr: Byte; RmAdr, len: DWord);
+//  end;
+
+{ TRamRead }
+
+//constructor TRamRead.Create(DevAdr: Byte; RmAdr, len: DWord);
+//// var
+////  page, base: Word;
+//begin
+//  CmdAdr := ToAdrCmd(DevAdr, CMD_READ_RAM);
+////  page := RmAdr div 528;
+////  base := RmAdr mod 528;
+////  PH := Byte(page shr 6);
+////  BL := Byte(base);
+////  P6LB2H := Byte(page shl 2) or Byte(base shr 8);
+//  Length := len;
+//  Adr := RmAdr;
+//end;
 
 const
  K_DEVTIME_TO_TIME = 2.097152/3600/24;
@@ -935,14 +1196,14 @@ begin
   if Double(t) >= 1 then Result := IntToStr(Trunc(t)) + ' ' + Result;
 end;  }
 
-function ToAdrCmd(a, cmd: Byte): TCmdADR;
-begin
-  {$IFDEF BT2}
-   Result :=Word(a) or Word(cmd) shl 8;
-  {$ELSE}
-   Result := (a shl 4) or cmd;
-  {$ENDIF}
-end;
+//function ToAdrCmd(a, cmd: Byte): TCmdADR;
+//begin
+//  {$IFDEF BT2}
+//   Result :=Word(a) or Word(cmd) shl 8;
+//  {$ELSE}
+//   Result := (a shl 4) or cmd;
+//  {$ENDIF}
+//end;
 
 function GetPathXNode(Node: IXMLNode): string;
 begin

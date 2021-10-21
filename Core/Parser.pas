@@ -55,6 +55,8 @@ type
     varSSDSize  = varRecord+25; // Cardinal
     varSupportUartSpeed  = varRecord+26; // BitMask Word
     varExtNoPowerDataCount  = varRecord+27; // byte
+    varDigits  = varRecord+28; // byte
+    varPrecision  = varRecord+29; // byte
 
    type
     TTypeDic = TDictionary<Integer, string>;
@@ -65,11 +67,11 @@ type
     // добавляет метрологию и рассчетные рараметры в XML
 //    class procedure SetMetr(node: IXMLNode; ExeSc: IXmlScript; ExecSetup: Boolean);
     // заполняет поля root текущими бинарными данными
-    class procedure SetData(root: IXMLNode; const Data: PByte; ParsArray: Boolean = True); overload; static;
+    class procedure SetData(root: IXMLNode; const Data: PByte; ParsArray: Boolean = True; CntStd: Integer = -1); overload; static;
     class procedure SetData(const value: TArray<TParserData>; const Data: PByte; ParsArray: Boolean = True); overload; static; inline;
     class function FindParserData(root: IXMLNode; ParsArray: Boolean = True): TArray<TParserData>; static;
     class procedure GetData(root: IXMLNode; var Data: TOutArray);
-    class procedure SetStd(root: IXMLNode; const Data: PByte);
+//    class procedure SetStd(root: IXMLNode; const Data: PByte);
     class procedure SetPsk(root: IXMLNode; const Data: PWord);
     class procedure SetPskToStd(root: IXMLNode; const Data: PWord);
 
@@ -443,11 +445,15 @@ class procedure TPars.FromVar(const Data: Variant; vt: Integer; pOutData: Pointe
 begin                                   // Data - Ole string XML only string;
   case vt of
     varByte        : PByte(pOutData)^ := Byte(Data);
+    varShortInt    : PByte(pOutData)^ := Byte(Data);
     varWord        : PWord(pOutData)^ := Word(Data);
     varSmallint    : PSmallint(pOutData)^ := Smallint(Data);
     varDouble      : PDouble(pOutData)^ := Double(Data);
     varSingle      : PSingle(pOutData)^ := Single(Data);
     varInteger     : Pinteger(pOutData)^ := integer(Data);
+    varUInt32      : Pinteger(pOutData)^ := integer(Data);
+    varInt64       : Pint64(pOutData)^ := int64(Data);
+    varUInt64      : Pint64(pOutData)^ := int64(Data);
     varDate        :
      begin
       if TryStrToFloat(Data, d) then PDouble(pOutData)^ := d
@@ -458,7 +464,7 @@ begin                                   // Data - Ole string XML only string;
       b := TEncoding.Default.GetBytes(string(Data));
       Move((@b[0])^, pOutData^, Length(b));
      end
-    else  raise Exception.Create('НЕВОЗМОЖНО ПРЕОБРАЗОВАТЬ ВАРИАНТ В БАЙТЫ !!!');
+    else  raise Exception.Createfmt('НЕВОЗМОЖНО ПРЕОБРАЗОВАТЬ %d %s ВАРИАНТ В БАЙТЫ !!!',[vt, VarToStr(Data)]);
   end
 end;
 
@@ -855,8 +861,24 @@ begin
 end;
 
 class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev: THackEvent = nil);
+type
+  TDataAttr=record
+   AttrName: string;
+   value: Variant;
+  end;
  var
   CurIndex: Integer;
+  DataAttr: TArray<TDataAttr>;
+  NoPowerCnt, NoPowerLen: Integer;
+  NoPowerNode: IXMLNode;
+  procedure AddDataAttr(AttrName: string; value: Variant);
+   var
+    da: TDataAttr;
+  begin
+    da.AttrName := AttrName;
+    da.value := value;
+    DataAttr := DataAttr + [da]
+  end;
   function PStr(var sp: PByte; var sn: integer): string;
   begin
     Result := string(PAnsiChar(sp));
@@ -887,8 +909,19 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
       ch := r.AddChild(T_DEV);
       ch.Attributes[AT_TIP] := tp;
       Result := VarTypeToLength(tp) * arr;
+      if NoPowerCnt > 0 then
+       begin
+        Inc(NoPowerLen, Result);
+        Dec(NoPowerCnt);
+        if NoPowerCnt = 0 then
+         begin
+          NoPowerNode.Attributes[AT_EXT_NP_LEN] := NoPowerLen;
+         end;
+       end;
       ch.Attributes[AT_INDEX] := CurIndex;
+      for var a in DataAttr do ch.Attributes[a.AttrName] := a.value;
       Inc(CurIndex, Result);
+      SetLength(DataAttr,0);
     end;
   begin
     Result := 0;
@@ -949,6 +982,21 @@ class procedure TPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer; hev
         begin
           if Assigned(hev) then hev(sp^, sp + 1);
           u.Attributes[AT_EXT_NP] := sp[1]; // parse Ext no power count
+          NoPowerCnt := sp[1];
+          NoPowerLen := 0;
+          NoPowerNode := u;
+          Inc(sp, 2); Dec(sn, 2);   // parse Ext no power count
+        end;
+        varDigits:
+        begin
+          if Assigned(hev) then hev(sp^, sp + 1);
+          AddDataAttr(AT_DIGITS, sp[1]);
+          Inc(sp, 2); Dec(sn, 2);   // parse Ext no power count
+        end;
+        varPrecision:
+        begin
+          if Assigned(hev) then hev(sp^, sp + 1);
+          AddDataAttr(AT_AQURICY, sp[1]);
           Inc(sp, 2); Dec(sn, 2);   // parse Ext no power count
         end;
         var_array:
@@ -1075,7 +1123,8 @@ begin
    SetLength(d, Integer(root.Attributes[AT_SIZE]));
    ExecXTree(root, procedure(n: IXMLNode)
    begin
-     if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) and n.HasAttribute(AT_VALUE) then
+     if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) and n.HasAttribute(AT_VALUE)
+       and (n.NodeName = T_DEV) then
       if n.ParentNode.HasAttribute(AT_ARRAY) then
            FromVar(n.Attributes[AT_VALUE], Integer(n.Attributes[AT_TIP]), n.ParentNode.Attributes[AT_ARRAY], @d[Integer(n.Attributes[AT_INDEX])])
       else FromVar(n.Attributes[AT_VALUE], Integer(n.Attributes[AT_TIP]), @d[Integer(n.Attributes[AT_INDEX])]);
@@ -1083,38 +1132,47 @@ begin
    Data := d;
 end;
 
-class procedure TPars.SetData(root: IXMLNode; const Data: PByte; ParsArray: Boolean = True);
+class procedure TPars.SetData(root: IXMLNode; const Data: PByte; ParsArray: Boolean = True; CntStd: Integer = -1);
 begin
 //  if not Assigned(root.ChildNodes.FindNode('автомат')) then raise ENoStackException.Create('Метаданные "автомат" ненайдены');
 //  if not Assigned(root.ChildNodes.FindNode('время')) then raise ENoStackException.Create('Метаданные "время" ненайдены');
 
-   ExecXTree(root, procedure(n: IXMLNode)
+   ExecXTree(root, function(n: IXMLNode): boolean
    begin
      if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) then
       if n.ParentNode.HasAttribute(AT_ARRAY) and ParsArray then
         n.Attributes[AT_VALUE] := ArrayToString(Data + Integer(n.Attributes[AT_INDEX]), n.ParentNode.Attributes[AT_ARRAY], n.Attributes[AT_TIP])
       else
         n.Attributes[AT_VALUE] := ToVar(Data + Integer(n.Attributes[AT_INDEX]), n.Attributes[AT_TIP]);
+     if CntStd > 0 then dec(CntStd);
+     Result := CntStd = 0;
    end);
 end;
 
-class procedure TPars.SetStd(root: IXMLNode; const Data: PByte);
- var
-  u: IXMLNode;
-begin
-//  if not Assigned(root.ChildNodes.FindNode('автомат')) then raise ENoStackException.Create('Метаданные "автомат" ненайдены');
-//  if not Assigned(root.ChildNodes.FindNode('время')) then raise ENoStackException.Create('Метаданные "время" ненайдены');
-  
-  u := root.ChildNodes.FindNode('автомат').ChildNodes.FindNode(T_DEV);
+//class procedure TPars.SetStd(root: IXMLNode; const Data: PByte);
+// var
+//  Nopower
+//begin
+//
+//end;
 
-  if Assigned(u) and u.HasAttribute(AT_TIP) and u.HasAttribute(AT_INDEX) then
-     u.Attributes[AT_VALUE] := ToVar(Data + Integer(u.Attributes[AT_INDEX]), u.Attributes[AT_TIP]);
-
-  u := root.ChildNodes.FindNode('время').ChildNodes.FindNode(T_DEV);
-
-  if Assigned(u) and u.HasAttribute(AT_TIP) and u.HasAttribute(AT_INDEX) then
-     u.Attributes[AT_VALUE] := ToVar(Data + Integer(u.Attributes[AT_INDEX]), u.Attributes[AT_TIP]);
-end;
+//class procedure TPars.SetStd(root: IXMLNode; const Data: PByte);
+// var
+//  u: IXMLNode;
+//begin
+////  if not Assigned(root.ChildNodes.FindNode('автомат')) then raise ENoStackException.Create('Метаданные "автомат" ненайдены');
+////  if not Assigned(root.ChildNodes.FindNode('время')) then raise ENoStackException.Create('Метаданные "время" ненайдены');
+//
+//  u := root.ChildNodes.FindNode('автомат').ChildNodes.FindNode(T_DEV);
+//
+//  if Assigned(u) and u.HasAttribute(AT_TIP) and u.HasAttribute(AT_INDEX) then
+//     u.Attributes[AT_VALUE] := ToVar(Data + Integer(u.Attributes[AT_INDEX]), u.Attributes[AT_TIP]);
+//
+//  u := root.ChildNodes.FindNode('время').ChildNodes.FindNode(T_DEV);
+//
+//  if Assigned(u) and u.HasAttribute(AT_TIP) and u.HasAttribute(AT_INDEX) then
+//     u.Attributes[AT_VALUE] := ToVar(Data + Integer(u.Attributes[AT_INDEX]), u.Attributes[AT_TIP]);
+//end;
 
 { TODO : ПСК AT_INDEX в словах и данные PWord надо переделать в байты и сделать единую функцию SetData}
 class procedure TPars.SetPsk(root: IXMLNode; const Data: PWord);

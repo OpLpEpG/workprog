@@ -13,7 +13,6 @@ uses
   System.Types,
   MetaData in 'MetaData.pas';
 
-
 function FileMayBeUTF8(const FileName: string): Boolean;
 var
  Stream: TMemoryStream;

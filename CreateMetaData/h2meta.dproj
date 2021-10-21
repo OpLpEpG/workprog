@@ -5,7 +5,7 @@
         <FrameworkType>None</FrameworkType>
         <MainSource>h2meta.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Console</AppType>
@@ -72,7 +72,7 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_Namespace>Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <Debugger_CWD>C:\XE\Projects\Device2\CreateMetaData\Win32\Debug</Debugger_CWD>
-        <Debugger_RunParams>c:\XE\Projects\Device2\CreateMetaData\Data.h  c:\XE\Projects\Device2\CreateMetaData\MetaData.h c:\XE\Projects\Device2\CreateMetaData\Patern.h</Debugger_RunParams>
+        <Debugger_RunParams>c:\XE\Projects\Device2\CreateMetaData\DataStruct.h  c:\XE\Projects\Device2\CreateMetaData\MetaData.h c:\XE\Projects\Device2\CreateMetaData\Patern.h</Debugger_RunParams>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_UnitSearchPath>..\;..\core;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -97,8 +97,9 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="MetaData.pas"/>
-        <None Include="MetaData.c"/>
         <None Include="DataStruct.h"/>
+        <None Include="Patern.h"/>
+        <None Include="MetaData.h"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -130,6 +131,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="Win32\Release\h2meta.exe" Configuration="Release" Class="ProjectOutput"/>
+                <DeployFile LocalName="Win32\Debug\h2meta.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>h2meta.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="iOSSimulator">
                         <Overwrite>true</Overwrite>
@@ -142,7 +150,6 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Release\h2meta.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="iOSSimulator">
                         <Operation>1</Operation>

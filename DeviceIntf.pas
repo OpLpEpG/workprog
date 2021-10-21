@@ -448,7 +448,7 @@ type
 // включение повышенной скорости новые приборы
   ITurbo = interface(IDevice)
   ['{ED12F5BF-0785-4EC7-A767-08B69AB54893}']
-    procedure Turbo(speed: integer);
+    procedure Turbo(adr: Byte; speed: integer);
   end;
 
 // циклопрос, (Режим информации) новые приборы + усо + глубиромер

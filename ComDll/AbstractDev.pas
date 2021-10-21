@@ -1838,7 +1838,7 @@ end;
 procedure TReadRam.WriteToBD;
   {$J+}
   const
-    t: Integer = 0;
+    t: Cardinal = 0;
   {$J-}
  var
   cnt: Integer;// Length(Fifo) mod FRecSize * FRecSize
@@ -1974,7 +1974,7 @@ end;
 procedure TCycle.SetCycle(const Value: Boolean);
  var
   IsOldClose: Boolean;
-  ix: IProjectDataFile;
+//  ix: IProjectDataFile;
 begin
   IsOldClose := False;
   if Value = FTimer.Enabled then Exit;

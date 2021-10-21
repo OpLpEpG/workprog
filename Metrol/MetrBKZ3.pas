@@ -64,7 +64,7 @@ end;
 
 class function TFormBKZ3.MetrolType: string;
 begin
-  Result := 'TBKZ3'
+  Result := 'TBKZ3nmk'
 end;
 
 procedure TFormBKZ3.Loaded;

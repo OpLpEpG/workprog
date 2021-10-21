@@ -23,7 +23,6 @@ object FormBKZ3: TFormBKZ3
     Caption = 'PanelM'
     ShowCaption = False
     TabOrder = 0
-    ExplicitWidth = 614
     object lbInfo: TLabel
       Left = 0
       Top = 660
@@ -60,7 +59,6 @@ object FormBKZ3: TFormBKZ3
       TreeOptions.SelectionOptions = [toExtendedFocus, toFullRowSelect]
       OnAddToSelection = TreeAddToSelection
       OnGetText = TreeGetText
-      ExplicitWidth = 614
       Columns = <
         item
           MaxWidth = 100

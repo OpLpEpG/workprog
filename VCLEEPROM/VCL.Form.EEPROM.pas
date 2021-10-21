@@ -15,6 +15,7 @@ type
    ///   eeprom                 eeprom                   Метрология
    /// [xmlnode(path.Node); attr(path.Node.DEV.VALUE); attr(path.Node) ]
     ColumnValue: TArray<IInterface>;
+    ColumnNode: TArray<IInterface>;
     FEdited: Boolean;
     function AsText(Col: Integer): string;
     function AsColor(Col: Integer): TColor;
@@ -37,6 +38,7 @@ type
     procedure TreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
     procedure TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
+    procedure TreeGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
   private
     FRes: TDialogResult;
     FModul, Feep, Fmetr: IXMLNode;
@@ -215,27 +217,42 @@ function TNodeExData.AsColor(Col: Integer): TColor;
   e, m: IXMLNode;
 begin
   Result := clBlack;
-  if (Length(ColumnValue) < 3) and (col <> 1) then Exit;
+  if (Length(ColumnValue) < 4) and (col <> 1) then Exit;
   if not FReadedFlag then Result := clGray;
   if FEdited then Result := clWebBrown;
 
-  if Supports(ColumnValue[1], IXMLNode, e) and Supports(ColumnValue[2], IXMLNode, m) then
+  if Supports(ColumnValue[1], IXMLNode, e) and Supports(ColumnValue[3], IXMLNode, m) then
    begin
     if (Trim(e.NodeValue) <>'') and (Trim(m.NodeValue) <>'') then
+     try
      if not SameValue(Single(e.NodeValue),Single(m.NodeValue)) then Result := clRed
+     except
+     if not SameText(e.NodeValue, m.NodeValue) then Result := clRed
+     end;
    end;
 end;
 
 function TNodeExData.AsText(Col: Integer): string;
  var
-  n: IXMLNode;
+  n,r: IXMLNode;
 begin
   Result := '';
   if Col >= Length(ColumnValue) then Exit;
+  if Col >= Length(ColumnNode) then Exit;
   if Supports(ColumnValue[Col], IXMLNode, n) then
    begin
-    if n.NodeType = ntAttribute then
-       Result := n.NodeValue
+    if (n.NodeType = ntAttribute) and not VarIsNull(n.NodeValue) then
+     begin
+      Result := n.NodeValue;
+      Result := Result.Trim;
+      if (Result <> '') and (n.NodeName = AT_VALUE) and
+         Supports(ColumnNode[Col], IXMLNode, r) and
+         r.HasAttribute(AT_DIGITS) and
+         r.HasAttribute(AT_AQURICY) then
+       begin
+         Result := FloatToStrF(StrToFloatDef(Result,0), ffFixed, r.Attributes[AT_DIGITS], r.Attributes[AT_AQURICY])
+       end;
+     end
     else
        Result := n.NodeName;
    end
@@ -337,7 +354,11 @@ procedure TFormDlgEeprom.ClearTree;
  var
   pv: PVirtualNode;
 begin
-  for pv in Tree.Nodes do SetLength(PNodeExData(Tree.GetNodeData(pv)).ColumnValue, 0);
+  for pv in Tree.Nodes do
+   begin
+    SetLength(PNodeExData(Tree.GetNodeData(pv)).ColumnValue, 0);
+    SetLength(PNodeExData(Tree.GetNodeData(pv)).ColumnNode, 0);
+   end;
   Tree.Clear;
 end;
 
@@ -347,25 +368,35 @@ procedure TFormDlgEeprom.InitTree;
      chn: PVirtualNode;
      xd: PNodeExData;
      i: Integer;
-     nd: IXMLNode;
+     nd, nc, an, ac, mtr, eu: IXMLNode;
    begin
      if u.HasAttribute('HIDDEN') and (u.Attributes['HIDDEN'] = True) then Exit;
      chn := Tree.AddChild(Parent);
      Include(chn.States, vsExpanded);
      xd := Tree.GetNodeData(chn);
      xd.ColumnValue := xd.ColumnValue + [u];
+     xd.ColumnNode := xd.ColumnNode + [u];
      if u.HasAttribute(AT_SIZE) then
        for I := 0 to u.ChildNodes.Count-1 do Add(chn, u.ChildNodes[i])
      else
        begin
         nd := u.ChildNodes.FindNode(T_DEV);
+        nc := u.ChildNodes.FindNode(T_CLC);
+        mtr := GetMetrNode(u);
         if Assigned(nd) then
          begin
           if not nd.HasAttribute(AT_VALUE) then nd.Attributes[AT_VALUE] := ' ';
-          xd.ColumnValue := xd.ColumnValue + [nd.AttributeNodes.FindNode(AT_VALUE), GetMetrNode(u)];
-          xd.ColumnValue := xd.ColumnValue + [nd.AttributeNodes.FindNode(AT_EU)]
-         end
-        else xd.ColumnValue := xd.ColumnValue + [nil, nil, nil];
+          an := nd.AttributeNodes.FindNode(AT_VALUE);
+          eu := nd.AttributeNodes.FindNode(AT_EU);
+         end;
+        if Assigned(nc) then
+         begin
+          if not nc.HasAttribute(AT_VALUE) then nc.Attributes[AT_VALUE] := ' ';
+          ac := nc.AttributeNodes.FindNode(AT_VALUE);
+          eu := nc.AttributeNodes.FindNode(AT_EU);
+         end;
+        xd.ColumnValue := xd.ColumnValue + [an, ac, mtr, eu];
+        xd.ColumnNode  :=  xd.ColumnNode + [nd, nc, nil, nil];
        end;
    end;
 var
@@ -459,6 +490,11 @@ end;
 procedure TFormDlgEeprom.TreeEditing(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; var Allowed: Boolean);
 begin
   Allowed := PNodeExData(Tree.GetNodeData(Node)).Editable(Column);
+end;
+
+procedure TFormDlgEeprom.TreeGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+begin
+  NodeDataSize := SizeOf(TNodeExData);
 end;
 
 procedure TFormDlgEeprom.TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;

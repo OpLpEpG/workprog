@@ -40,7 +40,7 @@ typedef struct
 #pragma pack(push, 1)
 typedef struct
 {
-	float T;
+	float T;  /// [varDigits=4; varPrecision=1]
 	uint16_t AmpH;  /// потребление
 	gamma_t GR;     /// ГК|GK1
 	accel_t accel;  /// accel|CLA1

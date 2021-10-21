@@ -35,6 +35,7 @@ type
      class constructor Create;
      class destructor Destroy;
      class function ExtractUserData(var s: string): string;
+     class function ExtractUserDataAttributes(var s: string): TArray<TMetaValue>;
      class function GetValue(const s: string): string;
    protected
      function Size(const Value: string; ArrayLength: Integer): Integer; virtual;
@@ -42,7 +43,8 @@ type
    public
      constructor Create(VarType: Integer); virtual;
      function Add(data: TMetaValue): TMetaValue;
-     class function ParseSimpleString(const line: string): TMetaValue;
+     procedure AddArray(data: TArray<TMetaValue>);
+     class function ParseSimpleString(const line: string): TArray<TMetaValue>;
    end;
 
    TMetaUserByte = class(TMetaType)
@@ -104,6 +106,8 @@ begin
   Reg('varSSDSize', TPars.varSSDSize, TMetaUserDWord);
   Reg('varSupportUartSpeed', TPars.varSupportUartSpeed, TMetaUserWord);
   Reg('varExtNoPowerDataCount', TPars.varExtNoPowerDataCount, TMetaUserByte);
+  Reg('varDigits', TPars.varDigits, TMetaUserByte);
+  Reg('varPrecision', TPars.varPrecision, TMetaUserByte);
 end;
 
 class procedure TMetaType.Reg(const typ: string; vart: Integer; cls: TMetaTypeClass);
@@ -130,6 +134,11 @@ function TMetaType.Add(data: TMetaValue): TMetaValue;
 begin
   Result := data;
   FItems := FItems + [Result];
+end;
+
+procedure TMetaType.AddArray(data: TArray<TMetaValue>);
+begin
+  FItems := FItems + Data;
 end;
 
 function TMetaType.Size(const Value: string; ArrayLength: Integer): Integer;
@@ -166,19 +175,48 @@ begin
   else Result := '';
 end;
 
+class function TMetaType.ExtractUserDataAttributes(var s: string): TArray<TMetaValue>;
+ var
+  i,j: Integer;
+  a,ti: TArray<string>;
+  ai,v: string;
+  m: TMetaValue;
+begin
+  SetLength(Result, 0);
+  s := s.Trim;
+  i := s.IndexOf('[');
+  j := s.IndexOf(']');
+  if (i*j < 0) then raise Exception.CreateFmt('[%d,%d] Error user attr [ ]', [TMetaData.Len_count+1, i]);
+  if i >= 0 then
+   begin
+    if i > j then raise Exception.CreateFmt('[%d,%d] Error Message ] [ ', [TMetaData.Len_count+1, i]);
+    a := s.Substring(i+1, j-i-1).Split([';'], TStringSplitOptions.ExcludeEmpty);
+    for ai in a do
+     begin
+      ti := ai.Split(['='], TStringSplitOptions.ExcludeEmpty);
+      v := ti[0].Replace(#9,'').Trim;
+      m.value := ti[1].Replace(#9,'').Trim;
+      if FRegItem.TryGetValue(v, m.tip) then Result := Result + [m];
+     end;
+    s := s.Substring(0, i).Trim;
+   end;
+end;
+
 class function TMetaType.GetValue(const s: string): string;
 begin
   if not FDefines.TryGetValue(s, Result) then Exit(s);
 end;
 
-class function TMetaType.ParseSimpleString(const line: string): TMetaValue;
+class function TMetaType.ParseSimpleString(const line: string): TArray<TMetaValue>;
  var
   a: TArray<string>;
   userData, s, value, es: string;
   i, j: Integer;
+  Res: TMetaValue;
 begin
   s := line.Trim;
   userData := ExtractUserData(s);
+  Result := ExtractUserDataAttributes(userData);
   // ползовательские атрибуты
   if s.Chars[0] = '#' then
    begin
@@ -190,8 +228,8 @@ begin
       s := s.Substring(i+6).Trim;
       value := s.Substring(s.IndexOf(' ')).Trim.Replace('"','').Trim;
       if value.Contains('__DATE__') then value := value.Replace('__DATE__', DateToStr(Now));
-      Result.value := value;
-      if FRegItem.TryGetValue(userData, Result.tip) then Exit;
+      Res.value := value;
+      if FRegItem.TryGetValue(userData, Res.tip) then Exit(Result + [Res]);
      end;
    end
   else
@@ -204,22 +242,24 @@ begin
       raise Exception.CreateFmt('[%d,%d] Error none ";" line ['+ line +'] %s', [TMetaData.Len_count+1, i, es]);
      end;
     s := s.Replace(';','').Trim;
+    // ползовательские атрибуты
+
     // array
-    Result.ArrayLength := 0;
+    Res.ArrayLength := 0;
     i := s.IndexOf('[');
     j := s.IndexOf(']');
     if (i*j < 0) then raise Exception.CreateFmt('[%d,%d] Error array [ ]', [TMetaData.Len_count+1, i]);
     if i > 0 then
      begin
       if i > j then raise Exception.CreateFmt('[%d,%d] Error Message ] [ ', [TMetaData.Len_count+1, i]);
-      Result.ArrayLength := GetValue(s.Substring(i+1,j-i-1).Trim).ToInteger;
+      Res.ArrayLength := GetValue(s.Substring(i+1,j-i-1).Trim).ToInteger;
       s := s.Remove(i, j-i+1)
      end;
     // end array
-    a := s.Split([' ',#$9], ExcludeEmpty);
-    if userData <> '' then Result.value := userData
-    else Result.value := a[1].Trim;
-    if FRegItem.TryGetValue(a[0].Trim, Result.tip) then Exit(Result);
+    a := s.Split([' ',#$9], TStringSplitOptions.ExcludeEmpty);
+    if userData <> '' then Res.value := userData
+    else Res.value := a[1].Trim;
+    if FRegItem.TryGetValue(a[0].Trim, Res.tip) then  Exit(Result + [Res]);
    end;
    raise Exception.CreateFmt('[%d,%d] Error ParseSimpleString %s', [TMetaData.Len_count+1, i, s]);
 end;
@@ -332,7 +372,7 @@ class function TMetaData.Generate(const SS: TStrings): TArray<Byte>;
        begin
         s := s.Replace('}','').Replace(';','').Trim;
         recvalue := TMetaType.ExtractUserData(s);
-        rectype := s.Split([' ',#$9], ExcludeEmpty)[0];
+        rectype := s.Split([' ',#$9], TStringSplitOptions.ExcludeEmpty)[0];
         inc(Len_count);
        end
       else raise Exception.CreateFmt('[%d,%d] окончание структукуры }; должно быть с новой строки', [TMetaData.Len_count+1, 0]);
@@ -347,7 +387,7 @@ class function TMetaData.Generate(const SS: TStrings): TArray<Byte>;
     s := s.Replace(#9,' ');
     i := s.IndexOf('define');
     s := s.Substring(i+6).Trim;
-    a := s.Split([' '], ExcludeEmpty);
+    a := s.Split([' '], TStringSplitOptions.ExcludeEmpty);
     TMetaType.FDefines.Add(a[0], a[1]);
   end;
 begin
@@ -364,7 +404,7 @@ begin
         v := TMetaRecItem.Create(varRecord);
         BeginRec();
         repeat
-         if s.Trim <> '' then v.Add(TMetaType.ParseSimpleString(s));
+         if s.Trim <> '' then v.AddArray(TMetaType.ParseSimpleString(s));
         until EndRec();
         TMetaType.Reg(rectype, v);
         // один экземпл€р основной структуры  AllDataStruct_t

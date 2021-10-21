@@ -351,6 +351,7 @@ begin
     SF = 'SIMPLE_FORMAT';
     MD = 'MODEL';
   begin
+    try
     s := n.NodeName;
     sr := GScript.ChildNodes.FindNode(s);
     if Assigned(sr) then
@@ -364,7 +365,11 @@ begin
       AddX(mc, sr);
       if n.HasAttribute(AT_METR) then AddX(mc, sr.ChildNodes[MD].ChildNodes[n.Attributes[AT_METR]], s);
      end
-    else if n.HasAttribute(AT_METR) then AddX(mtr, GScript.ChildNodes[SF].ChildNodes[MD].ChildNodes[n.Attributes[AT_METR]], SF);
+    else if n.HasAttribute(AT_METR) then
+     AddX(mtr, GScript.ChildNodes[SF].ChildNodes[MD].ChildNodes[n.Attributes[AT_METR]], SF);
+    except
+     on E: Exception do TDebug.DoException(E);
+    end;
   end);
 end;
 
@@ -443,6 +448,7 @@ begin
      if not Assigned(mtr) then mtr := d.AddChild(T_MTR);
      AddAll(d, T_WRK);
      AddAll(d, T_RAM);
+     AddAll(d, T_EEPROM);
     end;
    if ExecSetup then
     begin
