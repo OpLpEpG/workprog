@@ -223,6 +223,7 @@ end;
 procedure TFormDlgRam.rgClick(Sender: TObject);
 begin
   UpdateControlsSD(false);
+  RangeSelect.RunEnable(True);
 end;
 
 procedure TFormDlgRam.UpdateControls(FlagEna: Boolean);
@@ -286,7 +287,8 @@ begin
      with (FDev as IReadRamDevice) do
       begin
        CreateClcFile := cbClcCreate.Checked;
-       Execute(od.FileName, RangeSelect.kadr.first, RangeSelect.kadr.last, cbToFF.Checked, rg.ItemIndex, addr, ReadRamEvent, addr, StrToInt('$'+edLen.Text))
+       var cnt := StrToInt('$'+edLen.Text);
+       Execute(od.FileName, RangeSelect.kadr.first, RangeSelect.kadr.last, cbToFF.Checked, rg.ItemIndex, addr, ReadRamEvent, addr, cnt)
       end
     else ri.Import(flName, flIndex, RangeSelect.kadr.first, RangeSelect.kadr.last, cbToFF.Checked, addr, ReadRamEvent, addr);
    except

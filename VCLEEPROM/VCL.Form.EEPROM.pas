@@ -469,7 +469,7 @@ procedure TFormDlgEeprom.NCopyMetrClick(Sender: TObject);
 begin
   for pv in Tree.Nodes do with PNodeExData(Tree.GetNodeData(pv))^ do
     if (Length(ColumnValue) > 2) and Supports(ColumnValue[1], IXMLNode, e) and (e.NodeType = ntAttribute)
-    and Supports(ColumnValue[2], IXMLNode, m) and (m.NodeType = ntAttribute) then e.NodeValue := m.NodeValue;
+    and Supports(ColumnValue[3], IXMLNode, m) and (m.NodeType = ntAttribute) then e.NodeValue := m.NodeValue;
   Tree.Repaint;
 end;
 

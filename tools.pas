@@ -1210,7 +1210,7 @@ begin
   Result := Node.NodeName;
   Node := Node.ParentNode;
   repeat
-   if StrIn(Node.NodeName, ARR_META) then Exit;
+  // if StrIn(Node.NodeName, ARR_META) then Exit;
    Result := Node.NodeName +'.'+ Result;
    Node := Node.ParentNode;
   until not Assigned(Node);

@@ -241,7 +241,7 @@ begin
       else NextRead(carOk);
      end;
   end;
-  Read(DWord(FCurAdr), RLEN, FuncRead, wait); //начало рекурсии
+  Read(DWord(FCurAdr), FPacketLen, FuncRead, wait); //начало рекурсии
 end;
 {$ENDREGION  TBurReadRam}
 

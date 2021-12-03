@@ -1140,11 +1140,13 @@ begin
    ExecXTree(root, function(n: IXMLNode): boolean
    begin
      if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) then
+      begin
       if n.ParentNode.HasAttribute(AT_ARRAY) and ParsArray then
         n.Attributes[AT_VALUE] := ArrayToString(Data + Integer(n.Attributes[AT_INDEX]), n.ParentNode.Attributes[AT_ARRAY], n.Attributes[AT_TIP])
       else
         n.Attributes[AT_VALUE] := ToVar(Data + Integer(n.Attributes[AT_INDEX]), n.Attributes[AT_TIP]);
-     if CntStd > 0 then dec(CntStd);
+        if CntStd > 0 then dec(CntStd);
+      end;
      Result := CntStd = 0;
    end);
 end;

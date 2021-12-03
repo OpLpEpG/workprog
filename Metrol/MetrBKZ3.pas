@@ -146,7 +146,7 @@ begin
     0: SetData('', 'STEP');
     1: SetData('', 'R');
     2: SetData('', 'FOCUS');
-    3: SetData('Ubk.DEV', AT_VALUE, '%.3f');
+    3: SetData(Format('focus%d.Ubk.DEV',[Integer(p.XMNode.Attributes['FOCUS'])]), AT_VALUE, '%.3f');
     4: SetData(Format('focus%d.Ifocus.DEV',[Integer(p.XMNode.Attributes['FOCUS'])]), AT_VALUE, '%.8f');
     5: SetData(Format('focus%d.Izond.DEV',[Integer(p.XMNode.Attributes['FOCUS'])]), AT_VALUE, '%.3f');
     6: SetData('', 'Kfocus', '%.3f');

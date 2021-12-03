@@ -812,7 +812,6 @@ begin
   Result := lual_loadfile(LuaState, Marshall.AsAnsi(Filename).ToPointer);
 end;
 
-
 class procedure TVerySimpleLua.LoadLuaLibrary(const LibraryPath: String);
 var
   LoadPath: String;
