@@ -2,8 +2,8 @@ object FormDlgRam: TFormDlgRam
   Left = 0
   Top = 0
   Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1095#1090#1077#1085#1080#1103' '#1087#1072#1084#1103#1090#1080
-  ClientHeight = 344
-  ClientWidth = 384
+  ClientHeight = 349
+  ClientWidth = 386
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,8 +13,8 @@ object FormDlgRam: TFormDlgRam
   OldCreateOrder = False
   Position = poMainFormCenter
   DesignSize = (
-    384
-    344)
+    386
+    349)
   PixelsPerInch = 96
   TextHeight = 13
   object lbFile: TLabel
@@ -65,20 +65,19 @@ object FormDlgRam: TFormDlgRam
     Height = 17
     Caption = #1063#1080#1090#1072#1090#1100' '#1076#1086' '#1087#1091#1089#1090#1086#1081' '#1087#1072#1084#1103#1090#1080
     Checked = True
-    Enabled = False
     State = cbChecked
     TabOrder = 2
   end
   object Progress: TProgressBar
     Left = 17
     Top = 271
-    Width = 348
+    Width = 350
     Height = 17
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 3
   end
   object btTerminate: TButton
-    Left = 97
+    Left = 178
     Top = 294
     Width = 75
     Height = 25
@@ -88,8 +87,8 @@ object FormDlgRam: TFormDlgRam
   end
   object sb: TStatusBar
     Left = 0
-    Top = 325
-    Width = 384
+    Top = 330
+    Width = 386
     Height = 19
     Panels = <
       item
@@ -131,7 +130,7 @@ object FormDlgRam: TFormDlgRam
   object od: TJvFilenameEdit
     Left = 18
     Top = 21
-    Width = 348
+    Width = 350
     Height = 21
     OnBeforeDialog = odBeforeDialog
     DialogKind = dkSave
@@ -187,5 +186,15 @@ object FormDlgRam: TFormDlgRam
       SelEnd = 80.000000000000000000
       ExplicitWidth = 348
     end
+  end
+  object btContinue: TButton
+    Left = 97
+    Top = 294
+    Width = 75
+    Height = 25
+    Caption = #1055#1088#1086#1076#1086#1083#1078#1080#1090#1100
+    Enabled = False
+    TabOrder = 12
+    OnClick = btContinueClick
   end
 end

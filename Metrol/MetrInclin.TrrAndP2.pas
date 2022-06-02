@@ -234,6 +234,7 @@ begin
       hz := v.magnit.Z.DEV.VALUE;
       AziStol := v.СТОЛ.азимут + FAziCorr;
       ZenStol := v.СТОЛ.зенит + FZenCorr;
+      MagAmp := v.СТОЛ.амплит_magnit;
      end;
    end;
 end;

@@ -82,6 +82,9 @@ type
    procedure SetTenPower(Index, Value: Integer);
    function GetTemperature: TArray<Double>;
 
+   function GetMagnitAmp: Double;
+   procedure SetMagnitAmp(const Value: Double);
+
    procedure TenStop;
    procedure TenStart;
    function GetIsTenPower: Boolean;
@@ -95,6 +98,7 @@ type
    property TenPower[Index: Integer]: Integer read GetTenPower write SetTenPower;
    property Temperature: TArray<Double> read GetTemperature;
    property IzTenPower: Boolean  read GetIsTenPower write SetIsTenPower;
+   property MagnitAmp: Double  read GetMagnitAmp write SetMagnitAmp;
   end;
 
 implementation

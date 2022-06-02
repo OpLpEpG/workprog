@@ -171,7 +171,7 @@ type
 
 function TryValX(Root: IXMLNode; const Path: string; var v: Variant): Boolean;
 function TryGetX(Root: IXMLNode; const Path: string; out X: IXMLNode; const AttrName: string = ''): Boolean;
-function GetPathXNode(Node: IXMLNode): string;
+function GetPathXNode(Node: IXMLNode; NoMeta: boolean = false): string;
 function GetXNode(Root: IXMLNode; const Path: string; CreatePathNotExists: Boolean = False): IXMLNode;
 // проверяет содержит ли Test Etalon структуру и атрибуты
 // для каждого атрибута вызывается действие
@@ -1205,12 +1205,12 @@ end;  }
 //  {$ENDIF}
 //end;
 
-function GetPathXNode(Node: IXMLNode): string;
+function GetPathXNode(Node: IXMLNode; NoMeta: boolean): string;
 begin
   Result := Node.NodeName;
   Node := Node.ParentNode;
   repeat
-  // if StrIn(Node.NodeName, ARR_META) then Exit;
+   if NoMeta and StrIn(Node.NodeName, ARR_META) then Exit;
    Result := Node.NodeName +'.'+ Result;
    Node := Node.ParentNode;
   until not Assigned(Node);

@@ -13,9 +13,13 @@ type
     Button1: TButton;
     edDvis: TEdit;
     Label1: TLabel;
+    Label2: TLabel;
+    edMag: TEdit;
+    btUpdateMag: TButton;
     procedure Button1Click(Sender: TObject);
     procedure btZeroClick(Sender: TObject);
     procedure edDvisKeyPress(Sender: TObject; var Key: Char);
+    procedure btUpdateMagClick(Sender: TObject);
   private
     FBinded: Boolean;
     FC_AxisUpdate: Integer;
@@ -72,7 +76,7 @@ implementation
 
 {$R *.dfm}
 
-uses tools, MetrUAKI.ToleranceForm;
+uses tools, MetrUAKI.ToleranceForm, MagniProTool;
 
 { TFormUAKI }
 
@@ -121,6 +125,12 @@ begin
    ADR_AXIS_ZU: Uaki.Zen.FindMarker;
    ADR_AXIS_VIZ: Uaki.Viz.FindMarker;
   end;
+end;
+
+procedure TFormUAKI.btUpdateMagClick(Sender: TObject);
+begin
+  Uaki.MagnitAmp := MagniProGetLastAmp;
+  edMag.Text := FloatToStr(Uaki.MagnitAmp);
 end;
 
 procedure TFormUAKI.Button1Click(Sender: TObject);

@@ -27,6 +27,7 @@ type
     lbSD: TLabel;
     cbClcCreate: TCheckBox;
     RangeSelect: TFrameRangeSelect;
+    btContinue: TButton;
     procedure btExitClick(Sender: TObject);
     procedure btTerminateClick(Sender: TObject);
     procedure btStartClick(Sender: TObject);
@@ -34,6 +35,7 @@ type
     procedure cbSDChange(Sender: TObject);
     procedure cbSDDropDown(Sender: TObject);
     procedure rgClick(Sender: TObject);
+    procedure btContinueClick(Sender: TObject);
   private
     FDevs: TArray<TLogicalDevice>;
     FSDStream: TSDStream;
@@ -51,8 +53,12 @@ type
     FDelayStart: TDateTime;
     FkadrSize: Integer;
 
+    FAppend: Boolean;
+    FAppendEnable: Boolean;
+
     FS_TableModulUpdate: string;
     procedure CheckRAMFile(ram: IXMLNode);
+    procedure inerRead(Append: Boolean);
     procedure inerExecute(IsImport: boolean);
     procedure inerReadSSD;
     procedure NImportClick(Sender: TObject);
@@ -133,8 +139,16 @@ begin
      if (CONST_SPEED[i] and FModul.Attributes[AT_SPEED]) <> 0  then
        rg.Items.AddObject(TXT_SPEDE[i], TObject(CONST_SPEED[i]));
     EnableSSD((SSD_ENA and FModul.Attributes[AT_SPEED]) <> 0);
-    EnableSerial(rg.Items.Count > 0); 
+    EnableSerial(rg.Items.Count > 0);
    end;
+
+  if (GContainer as IProjectDataFile).DataFileExists(ram) and not lbSD.Enabled then
+   begin
+     FAppendEnable := True;
+     RangeSelect.Range.SelStart := ram.Attributes[AT_TO_KADR];
+     btContinue.Enabled := True;
+   end;
+
   FRes := Res;
   FS_TableModulUpdate := 'Ram';
   Caption := '[' + Modul.nodeName +'] Чтение памяти';
@@ -154,7 +168,7 @@ begin
   od.Enabled := not SDEna;
   lbLen.Enabled := not SDEna;
   edLen.Enabled := not SDEna;
-  cbClcCreate.Checked := not SDEna;
+//  cbClcCreate.Checked := not SDEna;
   cbClcCreate.Enabled := not SDEna;
 end;
 
@@ -162,12 +176,16 @@ end;
 procedure TFormDlgRam.UpdateStat(car: EnumCopyAsyncRun; Stat: TStatistic);
 begin
   sb.Panels[4].Text := CARSTR[car];
-  if car = carError then Exit;
+  if car = carErrorSector then
+   begin
+    sb.Panels[4].Text := sb.Panels[4].Text + Stat.NRead.ToString;
+   end
+  else if car = carError then Exit;
   sb.Panels[0].Text := Stat.ProcRun.ToString(ffFixed, 7, 1)+'%';
   if Stat.Speed > 0.1 then
-    sb.Panels[1].Text := Stat.Speed.ToString(ffFixed, 7, 0)+'Mb/s'
+    sb.Panels[1].Text := Stat.Speed.ToString(ffFixed, 7, 0)+'MB/s'
   else
-    sb.Panels[1].Text := (Stat.Speed*1024).ToString(ffFixed, 7, 0)+'Kb/s';
+    sb.Panels[1].Text := (Stat.Speed*1024).ToString(ffFixed, 7, 0)+'KB/s';
   sb.Panels[2].Text := TimeToStr(Stat.TimeFromBegin);
   sb.Panels[3].Text := TimeToStr(Stat.TimeToEnd);
   Progress.Position := Round(Stat.ProcRun);
@@ -229,11 +247,17 @@ end;
 procedure TFormDlgRam.UpdateControls(FlagEna: Boolean);
 begin
   btStart.Enabled := FlagEna;
+  btContinue.Enabled := FlagEna and FAppendEnable;
   btExit.Enabled := FlagEna;
   NCanClose := FlagEna;
   cbClcCreate.Enabled := FlagEna;
-  cbToFF.Enabled := False;// FlagEna;
+  cbToFF.Enabled := FlagEna;
   RangeSelect.Enabled := FlagEna;
+end;
+
+procedure TFormDlgRam.btContinueClick(Sender: TObject);
+begin
+  inerRead(True);
 end;
 
 procedure TFormDlgRam.btExitClick(Sender: TObject);
@@ -273,6 +297,9 @@ begin
     end;
    ram := FModul.ChildNodes.FindNode(T_RAM);
    CheckRAMFile(ram);
+   if FAppend then RangeSelect.Range.SelStart := ram.Attributes[AT_TO_KADR];
+
+   
    //////////////////
   // ram.Attributes['test_before_construct']:= 'test_before_construct';
   // /.ConstructFileName(ram);
@@ -288,6 +315,11 @@ begin
       begin
        CreateClcFile := cbClcCreate.Checked;
        var cnt := StrToInt('$'+edLen.Text);
+       if cnt <$100 then
+        begin
+         cnt := $100;
+         edLen.Text := '100';
+        end;
        Execute(od.FileName, RangeSelect.kadr.first, RangeSelect.kadr.last, cbToFF.Checked, rg.ItemIndex, addr, ReadRamEvent, addr, cnt)
       end
     else ri.Import(flName, flIndex, RangeSelect.kadr.first, RangeSelect.kadr.last, cbToFF.Checked, addr, ReadRamEvent, addr);
@@ -300,27 +332,38 @@ end;
 procedure TFormDlgRam.CheckRAMFile(ram: IXMLNode);
 begin
   if not Assigned(Ram) then raise EFrmDlgRam.CreateFmt('Метаданные RAM %s не найдены', [Fmodul.NodeName]);
-  if (GContainer as IProjectDataFile).DataFileExists(ram) then
-  if (MessageDlg('Память уже считана предыдущие данные будут удалены!!!', mtWarning, [mbYes, mbCancel], 0) = mrCancel) then
-    raise EAbort.Create('mrCancel')
-  else
+  if not FAppend then
    begin
-    (GContainer as IProjectDataFile).DataSectionDelete(ram);
-    TBindings.Notify(Self, 'S_TableModulUpdate');
-   end;
-//   RemoveXMLAttr(ram, AT_START_TIME);
-//   RemoveXMLAttr(ram, AT_DELAY_TIME);
-//   RemoveXMLAttr(ram, AT_KOEF_TIME);
-//   RemoveXMLAttr(ram, AT_FILE_NAME);
-  RemoveXMLAttr(ram, AT_FROM_TIME);
-  RemoveXMLAttr(ram, AT_TO_TIME);
-  RemoveXMLAttr(ram, AT_FROM_ADR);
-  RemoveXMLAttr(ram, AT_TO_ADR);
-  RemoveXMLAttr(ram,AT_END_REASON);
-  RemoveXMLAttr(ram, AT_FROM_KADR);
-  RemoveXMLAttr(ram, AT_TO_KADR);     
+    if (GContainer as IProjectDataFile).DataFileExists(ram) then
+    if (MessageDlg('Память уже считана предыдущие данные будут удалены!!!', mtWarning, [mbYes, mbCancel], 0) = mrCancel) then
+      raise EAbort.Create('mrCancel')
+    else
+     begin
+      (GContainer as IProjectDataFile).DataSectionDelete(ram);
+      TBindings.Notify(Self, 'S_TableModulUpdate');
+     end;
+  //   RemoveXMLAttr(ram, AT_START_TIME);
+  //   RemoveXMLAttr(ram, AT_DELAY_TIME);
+  //   RemoveXMLAttr(ram, AT_KOEF_TIME);
+  //   RemoveXMLAttr(ram, AT_FILE_NAME);
+    RemoveXMLAttr(ram, AT_FROM_TIME);
+    RemoveXMLAttr(ram, AT_TO_TIME);
+    RemoveXMLAttr(ram, AT_FROM_ADR);
+    RemoveXMLAttr(ram, AT_TO_ADR);
+    RemoveXMLAttr(ram,AT_END_REASON);
+    RemoveXMLAttr(ram, AT_FROM_KADR);
+    RemoveXMLAttr(ram, AT_TO_KADR);
+  end;
 end;
 
+
+procedure TFormDlgRam.inerRead(Append: Boolean);
+begin
+  Fappend := Append;
+  (GlobalCore as IMainScreen).Changed;
+  if rg.ItemIndex <> -1 then inerExecute(False)
+  else inerReadSSD();
+end;
 
 procedure TFormDlgRam.inerReadSSD;
  const
@@ -331,7 +374,7 @@ procedure TFormDlgRam.inerReadSSD;
   ram: IXMLNode;
   lastAdrSave: int64;
 begin
-  if cbSD.ItemIndex < 0  then raise EFrmDlgRam.Create('Не выбран диск');
+  if cbSD.ItemIndex < 0  then raise EFrmDlgRam.Create('Не выбран диск или скорость UART');
   ram := FModul.ChildNodes.FindNode(T_RAM);
   CheckRAMFile(ram);  
   if Assigned(FSDStream) then FreeAndNil(FSDStream);
@@ -416,9 +459,10 @@ end;
 
 procedure TFormDlgRam.btStartClick(Sender: TObject);
 begin
-  (GlobalCore as IMainScreen).Changed;
-  if rg.ItemIndex <> -1 then inerExecute(False)
-  else inerReadSSD();
+  inerRead(False);
+//  (GlobalCore as IMainScreen).Changed;
+//  if rg.ItemIndex <> -1 then inerExecute(False)
+//  else inerReadSSD();
 end;
 
 procedure TFormDlgRam.btTerminateClick(Sender: TObject);

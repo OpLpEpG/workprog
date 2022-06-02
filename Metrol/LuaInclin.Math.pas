@@ -132,7 +132,7 @@ type
     end;
     TInputRec = record
       gx, gy, gz, hx, hy, hz: Double;
-      AziStol, ZenStol: Double;
+      AziStol, ZenStol, MagAmp: Double;
     end;
     TInput = TArray<TInputRec>;
   private
@@ -1584,7 +1584,7 @@ begin
     dang := TMetrInclinMath.DeltaAngle(Azi - AziStol);
     f[i] := sqr(dang);
 
-    f[Length(Inp)+i] := sqr(1000 - TXMLScriptMath.Hypot3D(xi,yi,zi))*WeitAzi;
+    f[Length(Inp)+i] := sqr(MagAmp - TXMLScriptMath.Hypot3D(xi,yi,zi))*WeitAzi;
    end;
 end;
 

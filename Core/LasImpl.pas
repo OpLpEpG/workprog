@@ -15,7 +15,7 @@ type
   end;
 
 
-function NewLasDoc: ILasDoc;
+function NewLasDoc(EmptyCurve: Boolean = False): ILasDoc;
 function GetLasDoc(const FileName: string; Encoding: LasEncoding): ILasDoc;
 function GetLasEncoding(Encoding: LasEncoding): TEncoding;
 
@@ -169,13 +169,13 @@ type
     property DataCount: Integer read GetDataCount;
     property Item[const Mnem: string; Index: Integer]: Variant read GetItem write SetItem;
   public
-    constructor Create; reintroduce;
+    constructor Create(EmptyCurve: Boolean);
     destructor Destroy; override;
   end;
 
-function NewLasDoc: ILasDoc;
+function NewLasDoc(EmptyCurve: Boolean = False): ILasDoc;
 begin
-  Result := TLasDoc.Create;
+  Result := TLasDoc.Create(EmptyCurve);
 end;
 
 function GetLasEncoding(Encoding: LasEncoding): TEncoding;
@@ -452,10 +452,11 @@ end;
 
 { TLasDoc }
 
-constructor TLasDoc.Create;
+constructor TLasDoc.Create(EmptyCurve: Boolean);
  var
   s: TFSection;
 begin
+//  inherited Create;
   FEncoding := lsenANSI;
 
   s := TFSection.Create(Self, '~V', ['~Version Information']);
@@ -484,7 +485,7 @@ begin
   s := TCSection.Create(Self, '~C', ['~Curve Information Block',
                                '#MNEM.UNIT                                    Curve Description',
                                '#---------                               ----------------------------']);
-  s.Add(LAS_C_DEPT); { TODO : кривые должны добавл€тьс€ автоматом из Ѕƒ и метаданных XML диалога выбора параметров }
+  if not EmptyCurve then s.Add(LAS_C_DEPT); { TODO : кривые должны добавл€тьс€ автоматом из Ѕƒ и метаданных XML диалога выбора параметров }
   FSections[lsCurve] := s;
 
   FSections[lsPar] := TFSection.Create(Self,'~P', [

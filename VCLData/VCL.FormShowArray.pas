@@ -283,7 +283,7 @@ procedure TFormShowArray.UpdateLegend(Root: IXMLNode);
 begin
   if TryGetX(root, XMLPath, X) then ExecXTree(X, procedure (n: IXMLNode)
   begin
-    if n.HasAttribute(AT_ARRAY) then TZSeries.New(Self, GetPathXNode(n));
+    if n.HasAttribute(AT_ARRAY) then TZSeries.New(Self, GetPathXNode(n, True));
   end);
 end;
 

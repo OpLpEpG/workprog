@@ -61,7 +61,6 @@ object FormInclinCheck: TFormInclinCheck
       BorderWidth = 1
       Header.AutoSizeIndex = -1
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
-      Header.ParentFont = True
       TabOrder = 0
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
       TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
@@ -73,139 +72,145 @@ object FormInclinCheck: TFormInclinCheck
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 0
+          Text = #8470
           Width = 60
-          WideText = #8470
         end
         item
           Position = 1
+          Text = #1040#1079#1080'.'#1089#1090#1086#1083
           Width = 60
-          WideText = #1040#1079#1080'.'#1089#1090#1086#1083
         end
         item
           Position = 2
+          Text = #1040#1079#1080#1084#1091#1090
           Width = 60
-          WideText = #1040#1079#1080#1084#1091#1090
         end
         item
           Position = 3
+          Text = #1040#1079#1080#1084'.'#1086#1096
           Width = 60
-          WideText = #1040#1079#1080#1084'.'#1086#1096
         end
         item
           Position = 4
+          Text = #1047#1077#1085'.'#1089#1090#1086#1083
           Width = 60
-          WideText = #1047#1077#1085'.'#1089#1090#1086#1083
         end
         item
           Position = 5
+          Text = #1047#1077#1085#1080#1090
           Width = 60
-          WideText = #1047#1077#1085#1080#1090
         end
         item
           Position = 6
+          Text = #1047#1077#1085'.'#1086#1096
           Width = 60
-          WideText = #1047#1077#1085'.'#1086#1096
         end
         item
           Position = 7
+          Text = #1042#1080#1079#1080#1088
           Width = 60
-          WideText = #1042#1080#1079#1080#1088
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 8
+          Text = #1042#1080#1079#1080#1088' '#1084#1072#1075#1085#1080#1090#1085#1099#1081
           Width = 60
-          WideText = #1042#1080#1079#1080#1088' '#1084#1072#1075#1085#1080#1090#1085#1099#1081
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 9
+          Text = 'G'
           Width = 60
-          WideText = 'G'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 10
+          Text = 'H'
           Width = 60
-          WideText = 'H'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 11
+          Text = 'I'
           Width = 60
-          WideText = 'I'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 12
+          Text = 'Gx'
           Width = 60
-          WideText = 'Gx'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 13
+          Text = 'Gy'
           Width = 60
-          WideText = 'Gy'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 14
+          Text = 'Gz'
           Width = 60
-          WideText = 'Gz'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 15
+          Text = 'Hx'
           Width = 60
-          WideText = 'Hx'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 16
+          Text = 'Hy'
           Width = 60
-          WideText = 'Hy'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 17
+          Text = 'Hz'
           Width = 60
-          WideText = 'Hz'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 18
+          Text = 'Gx.'#1090#1072#1088#1080#1088'.'
           Width = 60
-          WideText = 'Gx.'#1090#1072#1088#1080#1088'.'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 19
+          Text = 'Gy.'#1090#1072#1088#1080#1088'.'
           Width = 60
-          WideText = 'Gy.'#1090#1072#1088#1080#1088'.'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 20
+          Text = 'Gz.'#1090#1072#1088#1080#1088'.'
           Width = 60
-          WideText = 'Gz.'#1090#1072#1088#1080#1088'.'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 21
+          Text = 'Hx.'#1090#1072#1088#1080#1088'.'
           Width = 60
-          WideText = 'Hx.'#1090#1072#1088#1080#1088'.'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 22
+          Text = 'Hy.'#1090#1072#1088#1080#1088'.'
           Width = 60
-          WideText = 'Hy.'#1090#1072#1088#1080#1088'.'
         end
         item
           Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
           Position = 23
+          Text = 'Hz.'#1090#1072#1088#1080#1088'.'
           Width = 271
-          WideText = 'Hz.'#1090#1072#1088#1080#1088'.'
+        end
+        item
+          Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
+          Position = 24
+          Text = 'H.'#1089#1090#1086#1083'.'
+          Width = 271
         end>
     end
   end
@@ -237,7 +242,6 @@ object FormInclinCheck: TFormInclinCheck
       BorderWidth = 1
       Header.AutoSizeIndex = -1
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
-      Header.ParentFont = True
       TabOrder = 0
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
       TreeOptions.MiscOptions = [toAcceptOLEDrop, toEditable, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning]
@@ -248,28 +252,28 @@ object FormInclinCheck: TFormInclinCheck
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 0
+          Text = 'G'
           Width = 24
-          WideText = 'G'
         end
         item
           Position = 1
+          Text = 'X'
           Width = 75
-          WideText = 'X'
         end
         item
           Position = 2
+          Text = 'Y'
           Width = 75
-          WideText = 'Y'
         end
         item
           Position = 3
+          Text = 'Z'
           Width = 75
-          WideText = 'Z'
         end
         item
           Position = 4
+          Text = 'D'
           Width = 66
-          WideText = 'D'
         end>
     end
     object TreeH: TVirtualStringTree
@@ -281,7 +285,6 @@ object FormInclinCheck: TFormInclinCheck
       BorderWidth = 1
       Header.AutoSizeIndex = -1
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
-      Header.ParentFont = True
       TabOrder = 1
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
       TreeOptions.PaintOptions = [toHotTrack, toShowButtons, toShowDropmark, toShowHorzGridLines, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages]
@@ -291,28 +294,28 @@ object FormInclinCheck: TFormInclinCheck
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
           Position = 0
+          Text = 'H'
           Width = 24
-          WideText = 'H'
         end
         item
           Position = 1
+          Text = 'X'
           Width = 75
-          WideText = 'X'
         end
         item
           Position = 2
+          Text = 'Y'
           Width = 75
-          WideText = 'Y'
         end
         item
           Position = 3
+          Text = 'Z'
           Width = 75
-          WideText = 'Z'
         end
         item
           Position = 4
+          Text = 'D'
           Width = 178
-          WideText = 'D'
         end>
     end
   end

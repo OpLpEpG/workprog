@@ -78,6 +78,7 @@ type
     FTen: array[0..2] of Integer;
     FS_TenUpdate: Integer;
     FIsTenPower: Boolean;
+    FMagnitAmp: Double;
     procedure SetS_AxisUpdate(const Value: Integer);
    type
     TCycleUAK = class(TCycle)
@@ -104,6 +105,9 @@ type
     function GetIsTenPower: Boolean;
     procedure SetIsTenPower(const Value: Boolean);
 
+    function GetMagnitAmp: Double;
+    procedure SetMagnitAmp(const Value: Double);
+
     procedure TermimateMoving; virtual;
 
     function GetAxisAziClass: TAxisClass; virtual;
@@ -126,6 +130,8 @@ type
     property IzTenPower: Boolean  read GetIsTenPower write SetIsTenPower;
     property S_AxisUpdate: Integer read FS_AxisUpdate write SetS_AxisUpdate;
     property S_TenUpdate: Integer read FS_TenUpdate write FS_TenUpdate;
+    property MagnitAmp: Double  read GetMagnitAmp write SetMagnitAmp;
+
 
   published
     property CyclePeriod;
@@ -154,6 +160,7 @@ begin
   FStatus := dsReady;
   FCyclePeriod := 500;
   FS_TenUpdate := Length(FTen);
+  FMagnitAmp := 1000;
 end;
 
 constructor TDevUaki.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
@@ -212,6 +219,11 @@ begin
   Result := FIsTenPower
 end;
 
+function TDevUaki.GetMagnitAmp: Double;
+begin
+  Result := FMagnitAmp;
+end;
+
 function TDevUaki.GetTemperature: TArray<Double>;
 begin
   Result := FTemp;
@@ -247,6 +259,11 @@ procedure TDevUaki.SetIsTenPower(const Value: Boolean);
 begin
   if FIsTenPower <> Value then
      if Value then TenStart else TenStop;
+end;
+
+procedure TDevUaki.SetMagnitAmp(const Value: Double);
+begin
+  FMagnitAmp := Value;
 end;
 
 procedure TDevUaki.SetS_AxisUpdate(const Value: Integer);

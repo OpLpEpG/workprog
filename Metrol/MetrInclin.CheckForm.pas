@@ -160,11 +160,13 @@ begin
    begin
     v.СТОЛ.азимут := Double(FAutomatMetrology.uaki.Azi.CurrentAngle);
     v.СТОЛ.зенит := Double(FAutomatMetrology.uaki.Zen.CurrentAngle);
+    v.СТОЛ.амплит_magnit := FAutomatMetrology.uaki.MagnitAmp;
    end
   else
    begin
     v.СТОЛ.азимут := StolAzimut;
     v.СТОЛ.зенит := StolZenit;
+//    v.СТОЛ.амплит_magnit := 1000;
    end;
   v.СТОЛ.err_азимут := TMetrInclinMath.DeltaAngle(v.азимут.CLC.VALUE - (v.СТОЛ.азимут + FAziCorr));
   crZenit := (v.СТОЛ.зенит + FZenCorr);
@@ -308,6 +310,7 @@ begin
    21: SetData('magnit.X.CLC',     AT_VALUE,     '%7.1f');
    22: SetData('magnit.Y.CLC',     AT_VALUE,     '%7.1f');
    23: SetData('magnit.Z.CLC',     AT_VALUE,     '%7.1f');
+   24: SetData('СТОЛ',             'амплит_magnit', '%7.1f');
    end;
 end;
 
@@ -342,6 +345,7 @@ begin
 //  Result.СТОЛ.визир := 0;
   Result.СТОЛ.err_азимут := 0;
   Result.СТОЛ.err_зенит := 0;
+  Result.СТОЛ.амплит_magnit := 1000;
   Inc(FStep.stp);
 end;
 

@@ -207,7 +207,7 @@ end;
 
 procedure TFormWrok.NShowClick(Sender: TObject);
 begin
-  TFormShowArray.Execute(DataDevice, GetPathXNode(FEditData.XMNode));
+  TFormShowArray.Execute(DataDevice, GetPathXNode(FEditData.XMNode, true));
 end;
 
 class procedure TFormWrok.DoCreateForm(Sender: IAction);

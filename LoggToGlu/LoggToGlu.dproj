@@ -1,9 +1,9 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
-        <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
+        <ProjectGuid>{1F4D5CC6-DE73-466C-A4E9-105CCEAB6120}</ProjectGuid>
         <ProjectVersion>18.8</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
-        <MainSource>Metrol.dpr</MainSource>
+        <MainSource>LoggToGlu.dpr</MainSource>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -41,54 +41,58 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <UsePackages>true</UsePackages>
+        <VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=2.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
+        <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <OutputExt>dlp</OutputExt>
-        <SanitizedProjectName>Metrol</SanitizedProjectName>
+        <UsePackages>true</UsePackages>
+        <SanitizedProjectName>LoggToGlu</SanitizedProjectName>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <GenDll>true</GenDll>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+        <DCC_E>false</DCC_E>
+        <DCC_N>false</DCC_N>
+        <DCC_S>false</DCC_S>
+        <DCC_F>false</DCC_F>
+        <DCC_K>false</DCC_K>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
+        <UsePackages>true</UsePackages>
         <OutputExt>dlp</OutputExt>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
-        <UsePackages>true</UsePackages>
-        <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
-        <DCC_DcuOutput>..\_unit\$(Config)</DCC_DcuOutput>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Locale>1033</VerInfo_Locale>
+        <DCC_DcuOutput>unit\$(Config)</DCC_DcuOutput>
         <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1)'!=''">
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
+        <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <DCC_Optimize>false</DCC_Optimize>
         <DCC_GenerateStackFrames>true</DCC_GenerateStackFrames>
         <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
         <DCC_RemoteDebug>true</DCC_RemoteDebug>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <VerInfo_MinorVer>2</VerInfo_MinorVer>
-        <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
-        <DCC_DebugDCUs>true</DCC_DebugDCUs>
-        <DCC_RangeChecking>true</DCC_RangeChecking>
-        <UsePackages>true</UsePackages>
-        <VerInfo_Keys>CompanyName=;FileVersion=3.2.0.11;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>13</VerInfo_Build>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
-        <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
-        <DCC_MapFile>3</DCC_MapFile>
         <VerInfo_DLL>true</VerInfo_DLL>
-        <VerInfo_Locale>1049</VerInfo_Locale>
-        <DCC_DcuOutput>..\_unit\$(Config)</DCC_DcuOutput>
+        <VerInfo_Release>1</VerInfo_Release>
+        <DCC_IntegerOverflowCheck>true</DCC_IntegerOverflowCheck>
+        <DCC_RangeChecking>true</DCC_RangeChecking>
+        <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
+        <UsePackages>true</UsePackages>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
-        <DCC_RemoteDebug>false</DCC_RemoteDebug>
-        <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
+        <DCC_DcuOutput>unit\$(Config)</DCC_DcuOutput>
+        <VerInfo_Keys>CompanyName=;FileVersion=3.0.1.13;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <DCC_MapFile>3</DCC_MapFile>
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
-        <VerInfo_Build>11</VerInfo_Build>
+        <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
         <DCC_UsePackage>DBXSqliteDriver;RESTComponents;DataSnapServerMidas;DBXDb2Driver;DBXInterBaseDriver;vclactnband;vclFireDAC;emsclientfiredac;DataSnapFireDAC;tethering;svnui;JvGlobus;FireDACADSDriver;JvPluginSystem;DBXMSSQLDriver;JvMM;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;vcltouch;JvBands;vcldb;bindcompfmx;svn;JvJans;DBXOracleDriver;JvNet;Core;inetdb;JvAppFrm;FmxTeeUI;emsedge;JvDotNetCtrls;FireDACIBDriver;fmx;fmxdae;vclib;JvWizards;FireDACDBXDriver;dbexpress;IndyCore;vclx;JvPageComps;dsnap;DataSnapCommon;emsclient;FireDACCommon;JvDB;RESTBackendComponents;DataSnapConnectors;VCLRESTComponents;soapserver;JclDeveloperTools;vclie;bindengine;DBXMySQLDriver;CloudService;FireDACOracleDriver;FireDACMySQLDriver;DBXFirebirdDriver;JvCmp;JvHMI;FireDACCommonODBC;FireDACCommonDriver;DataSnapClient;inet;bindcompdbx;IndyIPCommon;JvCustom;GR32_D;vcl;DBXSybaseASEDriver;IndyIPServer;JvXPCtrls;IndySystem;FireDACDb2Driver;dsnapcon;FireDACMSAccDriver;FireDACInfxDriver;fmxFireDAC;vclimg;TeeDB;FireDAC;Jcl;JvCore;emshosting;JvCrypt;FireDACSqliteDriver;FireDACPgDriver;ibmonitor;FireDACASADriver;DBXOdbcDriver;FireDACTDataDriver;FMXTee;soaprtl;DbxCommonDriver;JvDlgs;JvRuntimeDesign;ibxpress;Tee;JvManagedThreads;DataSnapServer;xmlrtl;DataSnapNativeClient;ibxbindings;fmxobj;FireDACDSDriver;soapmidas;rtl;emsserverresource;DbxClientDriver;vclwinx;DBXSybaseASADriver;JvTimeFramework;CustomIPTransport;vcldsnap;GR32_R;JvSystem;JvStdCtrls;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;bindcompvcl;TeeUI;JvDocking;dbxcds;VclSmp;JvPascalInterpreter;adortl;FireDACODBCDriver;JclVcl;DataSnapIndy10ServerTransport;DataSnapProviderClient;dsnapxml;dbrtl;FireDACMongoDBDriver;IndyProtocols;inetdbxpress;JvControls;JvPrintPreview;JclContainers;fmxase;CPortLibDXE;VirtualTreesR;$(DCC_UsePackage)</DCC_UsePackage>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -97,11 +101,13 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Build>1</VerInfo_Build>
-        <DCC_MapFile>3</DCC_MapFile>
+        <VerInfo_DLL>true</VerInfo_DLL>
+        <VerInfo_AutoIncVersion>false</VerInfo_AutoIncVersion>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <VerInfo_Keys>CompanyName=;FileVersion=3.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Release\WorkProg.exe</Debugger_HostApplication>
+        <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
     </PropertyGroup>
     <Import Project="..\..\_Defaul_pak.optset" Condition="'$(Cfg_1_Win32)'!='' And Exists('..\..\_Defaul_pak.optset')"/>
     <Import Project="..\_prg_set.optset" Condition="'$(Base)'!='' And Exists('..\_prg_set.optset')"/>
@@ -109,81 +115,10 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <RcCompile Include="SndMetrol.rc">
-            <Form>SndMetrol.res</Form>
-        </RcCompile>
-        <DCCReference Include="MetrInclin.pas">
-            <Form>FormInclin</Form>
+        <DCCReference Include="LoggForm.pas">
+            <Form>FormLogg</Form>
         </DCCReference>
-        <DCCReference Include="MetrForm.pas"/>
-        <DCCReference Include="MetrInclinSetup.pas">
-            <Form>FormInclSetup</Form>
-        </DCCReference>
-        <DCCReference Include="MetrBK.pas">
-            <Form>FormBK</Form>
-        </DCCReference>
-        <DCCReference Include="MetrGGKP.pas">
-            <Form>FormGGKP</Form>
-        </DCCReference>
-        <DCCReference Include="..\VTEditors.pas"/>
-        <DCCReference Include="MetrUAKI.pas">
-            <Form>FormUAKI</Form>
-        </DCCReference>
-        <DCCReference Include="UakiUI.pas">
-            <Form>FrameUakiUI</Form>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="AutoMetr.Inclin.pas"/>
-        <DCCReference Include="MetrInclinGraph.pas"/>
-        <DCCReference Include="FrameInclinGraph.pas">
-            <Form>FrmInclinGraph</Form>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="LuaInclin.Math.pas"/>
-        <DCCReference Include="MetrUAKI.ToleranceForm.pas">
-            <Form>FormUAKItolerance</Form>
-        </DCCReference>
-        <DCCReference Include="MetrAccel.CheckForm.pas">
-            <Form>FormAccelCheck</Form>
-        </DCCReference>
-        <DCCReference Include="MetrInclin.TrrAndP2.pas"/>
-        <DCCReference Include="MetrInclin.TrrAndP4.pas"/>
-        <DCCReference Include="AutoMetr.GK.pas"/>
-        <DCCReference Include="StolGKUI.pas">
-            <Form>FormStolGK</Form>
-        </DCCReference>
-        <DCCReference Include="UakiUI.Ten.pas">
-            <Form>FrameUakiTEN</Form>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="MetrInclin.T12.pas"/>
-        <DCCReference Include="MetrInclin.Math2.pas"/>
-        <DCCReference Include="MetrInclin.TrrAndP3.pas"/>
-        <DCCReference Include="MetrAGK.pas">
-            <Form>FormAGK</Form>
-        </DCCReference>
-        <DCCReference Include="MetrInclin.Temp.Form.pas">
-            <Form>FormMetrInclinT</Form>
-        </DCCReference>
-        <DCCReference Include="MetrInclin.CheckForm.pas">
-            <Form>FormInclinCheck</Form>
-        </DCCReference>
-        <DCCReference Include="MetrGK.pas">
-            <Form>FormGK</Form>
-        </DCCReference>
-        <DCCReference Include="MetrBKZ3.pas">
-            <Form>FormBKZ3</Form>
-        </DCCReference>
-        <DCCReference Include="MetrNNK2X.pas">
-            <Form>FormNNK2X</Form>
-        </DCCReference>
-        <DCCReference Include="MetrNNK.pas">
-            <Form>FormNNK</Form>
-        </DCCReference>
-        <DCCReference Include="MetrBKS.pas">
-            <Form>FormBKS</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
+        <DCCReference Include="Convertor.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -227,21 +162,27 @@
                     <VersionInfoKeys Name="ProductName"/>
                     <VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
                     <VersionInfoKeys Name="Comments"/>
+                    <VersionInfoKeys Name="CFBundleName"/>
+                    <VersionInfoKeys Name="CFBundleDisplayName"/>
+                    <VersionInfoKeys Name="CFBundleIdentifier"/>
+                    <VersionInfoKeys Name="CFBundleVersion"/>
+                    <VersionInfoKeys Name="CFBundlePackageType"/>
+                    <VersionInfoKeys Name="CFBundleSignature"/>
+                    <VersionInfoKeys Name="CFBundleAllowMixedLocalizations"/>
+                    <VersionInfoKeys Name="CFBundleExecutable"/>
                 </VersionInfoKeys>
+                <Source>
+                    <Source Name="MainSource">LoggToGlu.dpr</Source>
+                </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
-                <Source>
-                    <Source Name="MainSource">Metrol.dpr</Source>
-                </Source>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="..\_exe\Debug\Metrol.dlp" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="..\_exe\Release\Metrol.dlp" Configuration="Release" Class="ProjectOutput"/>
-                <DeployFile LocalName="..\_exe\Debug\Metrol.dlp" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\_exe\Debug\LoggToGlu.dlp" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>Metrol.dll</RemoteName>
+                        <RemoteName>LoggToGlu.dll</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -988,8 +929,8 @@
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
-                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX64" Name="$(PROJECTNAME)"/>
@@ -1002,7 +943,7 @@
         </BorlandProject>
         <ProjectFileVersion>12</ProjectFileVersion>
     </ProjectExtensions>
-    <Import Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')" Project="$(BDS)\Bin\CodeGear.Delphi.Targets"/>
-    <Import Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')" Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj"/>
+    <Import Project="$(BDS)\Bin\CodeGear.Delphi.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Delphi.Targets')"/>
+    <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
     <Import Project="$(MSBuildProjectName).deployproj" Condition="Exists('$(MSBuildProjectName).deployproj')"/>
 </Project>

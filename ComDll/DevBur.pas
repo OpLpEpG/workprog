@@ -130,9 +130,14 @@ begin
       ConnectIO.Send(d.Ptr, d.SizeOf, procedure(p: Pointer; n: integer)
       begin
         if FFlagTerminate then ev(nil, -1)
+        else if (n = -1) then ev(nil, -1) //timout
         else if ((len + d.SizeOfAC) = n) and D.CheckAC(p) then
           ev(@PbyteArray(p)[d.SizeOfAC], n-d.SizeOfAC)
-        else ev(nil, -1);
+        else
+         begin
+          // not sand event wait all pack
+          //ev(nil, -1);
+         end;
       end, WaitTime);
     end);
    except
@@ -185,7 +190,13 @@ begin
      var
       l: Integer;
     begin
-      if DataSize < 0 then Exit;
+      if DataSize < 0 then
+       begin
+        var st := ProcToEnd;
+        st.NRead := ErrCnt;
+        if Assigned(FReadRamEvent) then FReadRamEvent(carErrorSector, FAdr, st);
+        Exit;
+       end;
 //      Acquire;
 //      try
        l := Length(Fifo);
@@ -215,6 +226,26 @@ begin
       //FEvent.SetEvent;
       CloseAny;
     end;
+    procedure ResetConnection;
+    begin
+      Sleep(150);
+      Application.ProcessMessages;
+      try
+        FAbstractDevice.IConnect.Close;
+      except
+        on e: Exception do TDebug.DoException(e, False);
+      end;
+      Sleep(150);
+      Application.ProcessMessages;
+      try
+        FAbstractDevice.IConnect.Open;
+      except
+        on e: Exception do TDebug.DoException(e, False);
+      end;
+      Sleep(150);
+      Application.ProcessMessages;
+    end;
+
   begin
     if FFlagTerminate then
      begin
@@ -227,10 +258,17 @@ begin
      begin
       Inc(ErrCnt);
       if ErrCnt > MAX_BAD then EndWrite(carError)
-      else NextRead(carErrorSector);
+      else
+       begin
+        ResetConnection;
+        Tdebug.Log('ReserConn nextRead  %d',[ErrCnt]);
+        NextRead(carErrorSector);
+       end;
      end
     else
      begin
+//      if ErrCnt > 0 then LoSpeed := 1000
+//      else if LoSpeed > 0 then Dec(LoSpeed, 10);
       ErrCnt := 0;
       if TestFF(@PbyteArray(Data)[DataSize-256], 256) then
        begin
@@ -241,6 +279,10 @@ begin
       else NextRead(carOk);
      end;
   end;
+//  if LoSpeed > 0 then
+//   begin
+//    Sleep(LoSpeed);
+//   end;
   Read(DWord(FCurAdr), FPacketLen, FuncRead, wait); //начало рекурсии
 end;
 {$ENDREGION  TBurReadRam}
@@ -768,7 +810,7 @@ begin
          end;
         Send(D.Ptr, d.SizeOf, procedure(p: Pointer; n: integer)
          var
-          pb: PByte;
+          pb,pbs: PByte;
         begin
           pb := p;
           if (n > 0) and ((n-D.SizeOfAC) = siz) and D.CheckAC(pb) then
@@ -782,10 +824,11 @@ begin
              begin
               if StdOnly then
                begin
-                inc(pb,siz);
-                fillchar(pb^, Integer(root.Attributes[AT_SIZE])-siz, 0);
+                pbs := pb;
+                inc(pbs,siz);
+                fillchar(pbs^, Integer(root.Attributes[AT_SIZE])-siz, 0);
                end;
-              ev(adr, root, p, root.Attributes[AT_SIZE]);
+              ev(adr, root, pb, root.Attributes[AT_SIZE]);
              end;
            end
            else if n<=0 then raise EAsyncBurException.CreateFmt(RS_ErrReadData, [adr, n, siz, d.adr])

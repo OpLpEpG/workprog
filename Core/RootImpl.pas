@@ -443,7 +443,7 @@ type
     class property IsRemove: Boolean read FRemovin;
   end;
 
-  TStatisticCreate =class(TIObject, IStatistic)
+  TStatisticCreate = class(TIObject, IStatistic)
   private
     FCount: UInt64;
     FTimeBegin: TDateTime;

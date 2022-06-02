@@ -124,7 +124,8 @@ contains
   nduWinNT in 'WlanAPI\nduWinNT.pas',
   nduWlanAPI in 'WlanAPI\nduWlanAPI.pas',
   nduWlanTypes in 'WlanAPI\nduWlanTypes.pas',
-  SDcardToolsAsync in '..\SDcardToolsAsync.pas';
+  SDcardToolsAsync in '..\SDcardToolsAsync.pas',
+  MagniProTool in '..\MagniProTool.pas';
 
 end.
 

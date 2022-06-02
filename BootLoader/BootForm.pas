@@ -130,6 +130,7 @@ begin
   CArray.Add<TChip>(Chips, Tchip.Create(3, 128, $180, 1024, 'STM32F103CB',32,$08002000));
   CArray.Add<TChip>(Chips, Tchip.Create(4, 128, $7C, 256, 'ATMega664',8));
   CArray.Add<TChip>(Chips, Tchip.Create(5, 128, $400, 4096, 'STM32F401',32,$08004000));
+//  CArray.Add<TChip>(Chips, Tchip.Create(5, 128, $400, 4096, 'STM32F401-1',32,$08008000));
   CArray.Add<TChip>(Chips, Tchip.Create(6, 128, $F4, 1024, 'AVR128db48',32));
   SetAdr(-1);
   SetChip(-1);

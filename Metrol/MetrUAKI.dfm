@@ -3,7 +3,7 @@ object FormUAKI: TFormUAKI
   Top = 0
   Caption = #1059#1040#1050'-'#1057#1048'-'#1040#1047#1042'-'#1058
   ClientHeight = 121
-  ClientWidth = 483
+  ClientWidth = 516
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,7 +16,7 @@ object FormUAKI: TFormUAKI
   object Panel1: TPanel
     Left = 0
     Top = 91
-    Width = 483
+    Width = 516
     Height = 30
     Align = alBottom
     BevelOuter = bvLowered
@@ -27,6 +27,19 @@ object FormUAKI: TFormUAKI
       Width = 74
       Height = 13
       Caption = #1042#1080#1079#1080#1088' '#1087#1088#1080#1073#1086#1088#1072
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object Label2: TLabel
+      Left = 311
+      Top = 9
+      Width = 60
+      Height = 13
+      Caption = #1040#1084#1087'.'#1084#1072#1075'(nT)'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -78,6 +91,35 @@ object FormUAKI: TFormUAKI
       TabOrder = 2
       Text = '000.000'
       OnKeyPress = edDvisKeyPress
+    end
+    object edMag: TEdit
+      Left = 372
+      Top = 6
+      Width = 57
+      Height = 21
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 3
+      Text = '1000'
+    end
+    object btUpdateMag: TButton
+      Left = 435
+      Top = 5
+      Width = 66
+      Height = 23
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 4
+      OnClick = btUpdateMagClick
     end
   end
 end

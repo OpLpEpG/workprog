@@ -389,6 +389,18 @@ __interface Iwavelet : public ILastMathError
  end;
 
 
+// __interface Ispline : public ILastMathError
+{
+	SAFECALL buld(const double* x, const double* y, const ae_int_t n);
+	SAFECALL get(const double x, double& y);
+}
+
+ ISpline = interface(ILastMathError)
+    function buld(x,y: PDouble; n: Integer): HRESULT; stdcall;
+    function get(x: Double; out y: Double): HRESULT; stdcall;
+ end;
+
+
 {$WARN SYMBOL_PLATFORM OFF}
 procedure RbfFactory(out Rbf: IRbf); cdecl; external 'matlab.dll' delayed;
 procedure BaryCentricFactory(out BaryCentric: IBaryCentric); cdecl; external 'matlab.dll' delayed;
@@ -402,6 +414,7 @@ procedure WaveletFactory(out wavelet: Iwavelet); cdecl; external 'matlab.dll' de
 procedure EigFactory(out eig: Ieig); cdecl; external 'matlab.dll' delayed;
 procedure NoiseFactory(out Noise: INoise); cdecl; external 'matlab.dll' delayed;
 procedure ResampleFactory(out Resample: IResample); cdecl; external 'matlab.dll' delayed;
+procedure SplineFactory(out Spline: ISpline); cdecl; external 'matlab.dll' delayed;
 {$WARN SYMBOL_PLATFORM ON}
 
 procedure CheckMath(lme: ILastMathError; res: HRESULT);

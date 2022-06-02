@@ -18,7 +18,6 @@ object FrameSelectParam: TFrameSelectParam
     Header.AutoSizeIndex = 2
     Header.MainColumn = 2
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowImages, hoShowSortGlyphs, hoVisible, hoAutoSpring]
-    Header.ParentFont = True
     PopupMenu = ppM
     TabOrder = 0
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
@@ -35,21 +34,21 @@ object FrameSelectParam: TFrameSelectParam
         MinWidth = 24
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible]
         Position = 0
+        Text = 'D'
         Width = 24
-        WideText = 'D'
       end
       item
         MaxWidth = 24
         MinWidth = 24
         Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible]
         Position = 1
+        Text = 'C'
         Width = 24
-        WideText = 'C'
       end
       item
         Position = 2
-        Width = 397
-        WideText = #1048#1084#1103
+        Text = #1048#1084#1103
+        Width = 403
       end>
   end
   object ppM: TPopupActionBar
