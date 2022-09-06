@@ -3,13 +3,14 @@
   <SHEET1 SheetByIndex="0">
     <CELL A1="InclTem1.TIME_ATT" A2="InclTem1.NextDate" A3="InclTem1.Metrolog" />
     <RANGES>
-      <RANGE1 Cells="B11:B63 I11:I63 P11:P63 W11:W63 AD11:AD63" DataIndex="1:1:1:53 2:2:1:53 3:3:1:53 4:4:1:53 5:5:1:53" Source="InclTem1.STEP%1:d.Inclin%0:d.T.DEV.VALUE" />
-      <RANGE1 Cells="C11:C63 J11:J63 Q11:Q63 X11:X63 AE11:AE63" DataIndex="1:1:1:53 2:2:1:53 3:3:1:53 4:4:1:53 5:5:1:53" Source="InclTem1.STEP%1:d.Inclin%0:d.accel.X.DEV.VALUE" />
-      <RANGE1 Cells="D11:D63 K11:K63 R11:R63 Y11:Y63 AF11:AF63" DataIndex="1:1:1:53 2:2:1:53 3:3:1:53 4:4:1:53 5:5:1:53" Source="InclTem1.STEP%1:d.Inclin%0:d.accel.Y.DEV.VALUE" />
-      <RANGE1 Cells="E11:E63 L11:L63 S11:S63 Z11:Z63 AG11:AG63" DataIndex="1:1:1:53 2:2:1:53 3:3:1:53 4:4:1:53 5:5:1:53" Source="InclTem1.STEP%1:d.Inclin%0:d.accel.Z.DEV.VALUE" />
-      <RANGE1 Cells="F11:F63 M11:M63 T11:T63 AA11:AA63 AH11:AH63" DataIndex="1:1:1:53 2:2:1:53 3:3:1:53 4:4:1:53 5:5:1:53" Source="InclTem1.STEP%1:d.Inclin%0:d.magnit.X.DEV.VALUE" />
-      <RANGE1 Cells="G11:G63 N11:N63 U11:U63 AB11:AB63 AI11:AI63" DataIndex="1:1:1:53 2:2:1:53 3:3:1:53 4:4:1:53 5:5:1:53" Source="InclTem1.STEP%1:d.Inclin%0:d.magnit.Y.DEV.VALUE" />
-      <RANGE1 Cells="H11:H63 O11:O63 V11:V63 AC11:AC63 AJ11:AJ63" DataIndex="1:1:1:53 2:2:1:53 3:3:1:53 4:4:1:53 5:5:1:53" Source="InclTem1.STEP%1:d.Inclin%0:d.magnit.Z.DEV.VALUE" />
+      <RANGE1 Cells="B11:B63" DataIndex="0:0:1:53" Source="InclTem1.STEP%1:d.T.DEV.VALUE" />
+      <RANGE1 Cells="C11:C63" DataIndex="0:0:1:53" Source="InclTem1.STEP%1:d.accel.X.DEV.VALUE" />
+      <RANGE1 Cells="D11:D63" DataIndex="0:0:1:53" Source="InclTem1.STEP%1:d.accel.Y.DEV.VALUE" />
+      <RANGE1 Cells="E11:E63" DataIndex="0:0:1:53" Source="InclTem1.STEP%1:d.accel.Z.DEV.VALUE" />
+      <RANGE1 Cells="F11:F63" DataIndex="0:0:1:53" Source="InclTem1.STEP%1:d.magnit.X.DEV.VALUE" />
+      <RANGE1 Cells="G11:G63" DataIndex="0:0:1:53" Source="InclTem1.STEP%1:d.magnit.Y.DEV.VALUE" />
+      <RANGE1 Cells="H11:H63" DataIndex="0:0:1:53" Source="InclTem1.STEP%1:d.magnit.Z.DEV.VALUE" />
+      <RANGE1 Cells="I11:I63" DataIndex="0:0:1:53" Source="InclTem1.STEP%1:d.INFO" />
     </RANGES>
   </SHEET1>
 </CALC>

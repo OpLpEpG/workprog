@@ -48,7 +48,7 @@ type
     procedure Send(const Cmd: AnsiString; WaitTime1, WaitTime2: Integer;  Event: TStolRes); overload;
   public
     constructor Create(); override;
-    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); override;
+    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string); override;
 //    destructor Destroy; override;
     procedure CheckConnect(); override;
     property S_Actuator: Boolean read FS_Actuator write SetS_Actuator;
@@ -85,7 +85,7 @@ begin
     ///
 end;
 
-constructor TStolGK.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
+constructor TStolGK.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string);
 begin
   inherited;
   TRegister.AddType<TStolGK>.AddInstance(Name, Self as IInterface);

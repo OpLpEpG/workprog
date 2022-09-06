@@ -11,7 +11,10 @@ uses
   System.Classes,
   System.IOUtils,
   System.Types,
-  MetaData in 'MetaData.pas';
+  MetaData in 'MetaData.pas',
+  MetaData2.CParser in 'MetaData2.CParser.pas',
+  MetaData2.Classes in 'MetaData2.Classes.pas',
+  MetaData2.BParser in 'MetaData2.BParser.pas';
 
 function FileMayBeUTF8(const FileName: string): Boolean;
 var
@@ -110,7 +113,14 @@ begin
        end
      else ss.LoadFromFile(ParamStr(1));
 
-     a := TMetaData.Generate(ss);
+     TheaderFileParser.Parse(ss);
+     a := TheaderFileParser.GetMetaData;
+     TFile.WriteAllBytes(ParamStr(2), a);
+
+   //  TBinaryToXMLParser.Parse(a, nil);
+     exit;
+
+//     a := TMetaData.Generate(ss);
 
      if ParamCount = 2 then
       begin

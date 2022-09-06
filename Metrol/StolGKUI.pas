@@ -117,7 +117,7 @@ begin
     for d in de.Enum() do if Supports(d, IStolGK, Result) then Exit;
     SetLength(a, 1);
     a[0] := ADR_STOL_GK;
-    d := g.Device(a, 'STOL_GK');
+    d := g.Device(a, 'STOL_GK', 'STOL_GK');
     de.Add(d);
     FBinded := False;
     Result := d as IStolGK;

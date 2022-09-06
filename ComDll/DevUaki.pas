@@ -79,6 +79,7 @@ type
     FS_TenUpdate: Integer;
     FIsTenPower: Boolean;
     FMagnitAmp: Double;
+    FMaxTenPower: Integer;
     procedure SetS_AxisUpdate(const Value: Integer);
    type
     TCycleUAK = class(TCycle)
@@ -105,6 +106,9 @@ type
     function GetIsTenPower: Boolean;
     procedure SetIsTenPower(const Value: Boolean);
 
+    function GetMaxTenPower: Integer;
+    procedure SetMaxTenPower(const Value: Integer);
+
     function GetMagnitAmp: Double;
     procedure SetMagnitAmp(const Value: Double);
 
@@ -121,7 +125,7 @@ type
 
   public
     constructor Create(); override;
-    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); override;
+    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string); override;
     destructor Destroy; override;
     property Cycle: TCycleUAK read FCycle implements  ICycle;
     property Azi: TAxis read FAzi implements  IAxisAZI;
@@ -131,7 +135,7 @@ type
     property S_AxisUpdate: Integer read FS_AxisUpdate write SetS_AxisUpdate;
     property S_TenUpdate: Integer read FS_TenUpdate write FS_TenUpdate;
     property MagnitAmp: Double  read GetMagnitAmp write SetMagnitAmp;
-
+    property MaxTenPower: Integer read GetMaxTenPower write SetMaxTenPower;
 
   published
     property CyclePeriod;
@@ -161,9 +165,10 @@ begin
   FCyclePeriod := 500;
   FS_TenUpdate := Length(FTen);
   FMagnitAmp := 1000;
+  FMaxTenPower := 128;
 end;
 
-constructor TDevUaki.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
+constructor TDevUaki.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string);
 begin
   inherited;
   DoRegister;
@@ -224,6 +229,11 @@ begin
   Result := FMagnitAmp;
 end;
 
+function TDevUaki.GetMaxTenPower: Integer;
+begin
+  Result := FMaxTenPower;
+end;
+
 function TDevUaki.GetTemperature: TArray<Double>;
 begin
   Result := FTemp;
@@ -266,6 +276,12 @@ begin
   FMagnitAmp := Value;
 end;
 
+procedure TDevUaki.SetMaxTenPower(const Value: Integer);
+begin
+  FMaxTenPower := Value;
+  if FMaxTenPower > 128  then FMaxTenPower := 128
+end;
+
 procedure TDevUaki.SetS_AxisUpdate(const Value: Integer);
 begin
   FS_AxisUpdate := Value;
@@ -281,9 +297,11 @@ end;
 procedure TDevUaki.TenStart;
   function p2d(p: integer): Integer;
   begin
-    if p<0 then p := 0
-    else if p>100 then p := 100;
-    Result := Round(p*255/100);
+    if p>255 then p := 255;
+    if p<0 then p := 0;
+    Result := p;
+//    else if p>100 then p := 100;
+//    Result := Round(p*255/100);
   end;
 begin
   (IConnect as IUDPConnectIO).Send(Format('14p%d,%d,%d',[p2d(FTen[0]),p2d(FTen[1]),p2d(FTen[2])]));
@@ -315,7 +333,7 @@ begin
   if status >= 24 then
    begin
     a := Data.Trim.Replace('*', '').Split(['{', '[',' ', ',',']', '}'], TStringSplitOptions.ExcludeEmpty);
-    if Length(a) >= 4 then for I := 0 to 2 do Ften[i] := Round(a[i+1].Trim.ToInteger*100/255);
+    if Length(a) >= 4 then for I := 0 to 2 do Ften[i] := a[i+1].Trim.ToInteger; //Ften[i] := Round(a[i+1].Trim.ToInteger*100/255);
     if Length(a)-4 > 0 then
      begin
       SetLength(FTemp, Length(a)-4);

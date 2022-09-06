@@ -15,14 +15,22 @@ type
     procedure TreeAddToSelection(Sender: TBaseVirtualTree; Node: PVirtualNode);
   private
     FAutomatMetrology: TinclAuto;
+    FStolVizir: Double;
+    FStolAzimut: Double;
+    FStolZenit: Double;
   protected
    const
     NICON = 86;
     procedure Loaded; override;
     function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; override;
+    procedure DoStartAtt(AttNode: IXMLNode); override;
+    procedure DoStopAtt(AttNode: IXMLNode); override;
 //    function UserSetupAlg(alg: IXMLNode): Boolean; override;
     class function ClassIcon: Integer; override;
   public
+    property StolVizir: Double read FStolVizir;
+    property StolZenit: Double read FStolZenit;
+    property StolAzimut: Double read FStolAzimut;
     [StaticAction('Метрология Инкл. по Т', 'Метрология', NICON, '0:Метрология.Инклинометры:-1')]
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
@@ -53,6 +61,39 @@ begin
   inherited;
 end;
 
+procedure TFormMetrInclinT.DoStartAtt(AttNode: IXMLNode);
+ var
+  n: IXMLNode;
+begin
+  inherited;
+  if TryGetX(AttNode, 'TASK', n) then
+   begin
+    if n.HasAttribute('Vizir_Stol') then FStolVizir := Double(n.Attributes['Vizir_Stol']);
+    if n.HasAttribute('Azimut_Stol') then FStolAzimut := Double(n.Attributes['Azimut_Stol']);
+    if n.HasAttribute('Zenit_Stol') then FStolZenit := Double(n.Attributes['Zenit_Stol']);
+   end;
+end;
+
+procedure TFormMetrInclinT.DoStopAtt(AttNode: IXMLNode);
+ var
+  v: Variant;
+begin
+  v := XToVar(AttNode);
+  if FAutomatMetrology.UakiExists then
+   begin
+    v.СТОЛ.азимут := Double(FAutomatMetrology.uaki.Azi.CurrentAngle);
+    v.СТОЛ.зенит := Double(FAutomatMetrology.uaki.Zen.CurrentAngle);
+    v.СТОЛ.визир := Double(FAutomatMetrology.uaki.Viz.CurrentAngle);
+   end
+  else
+   begin
+    v.СТОЛ.азимут := StolAzimut;
+    v.СТОЛ.зенит := StolZenit;
+    v.СТОЛ.визир := StolVizir;
+   end;
+  inherited;
+end;
+
 procedure TFormMetrInclinT.Loaded;
 begin
   FlagNoUpdateFromEtalon := True;
@@ -64,7 +105,7 @@ end;
 
 class function TFormMetrInclinT.MetrolMame: string;
 begin
-  Result := 'InclinT'
+  Result := 'Inclin'
 end;
 
 class function TFormMetrInclinT.MetrolType: string;
@@ -87,7 +128,7 @@ procedure TFormMetrInclinT.TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualN
    var
     V: IXMLNode;
   begin
-    if TryGetX(p.XMNode, Format('Inclin%d.%s', [(Column-1) div 7 + 1, path]), V, attr) then
+    if TryGetX(p.XMNode, path, V, attr) then
          CellText := Format(fmt,[Double(V.NodeValue) + Correction])
     else
          CellText := ''
@@ -102,13 +143,16 @@ begin
        if r.HasAttribute('STEP') then CellText := r.Attributes['STEP']
        else CellText := 'STEP';
       end;
-   1, 8, 15, 22, 29: SetData('accel.X.DEV',      AT_VALUE,     '%7.0f');
-   2, 9, 16, 23, 30: SetData('accel.Y.DEV',      AT_VALUE,     '%7.0f');
-   3,10, 17, 24, 31: SetData('accel.Z.DEV',      AT_VALUE,     '%7.0f');
-   4,11, 18, 25, 32: SetData('magnit.X.DEV',     AT_VALUE,     '%7.0f');
-   5,12, 19, 26, 33: SetData('magnit.Y.DEV',     AT_VALUE,     '%7.0f');
-   6,13, 20, 27, 34: SetData('magnit.Z.DEV',     AT_VALUE,     '%7.0f');
-   7,14, 21, 28, 35: SetData('T.DEV',     AT_VALUE,     '%7.0f');
+   1: SetData('T.DEV',     AT_VALUE,     '%7.0f');
+   2: SetData('СТОЛ',      'зенит',     '%7.0f');
+   3: SetData('СТОЛ',      'азимут',     '%7.0f');
+   4: SetData('СТОЛ',      'визир',     '%7.0f');
+   5: SetData('accel.X.DEV',      AT_VALUE,     '%7.0f');
+   6: SetData('accel.Y.DEV',      AT_VALUE,     '%7.0f');
+   7: SetData('accel.Z.DEV',      AT_VALUE,     '%7.0f');
+   8: SetData('magnit.X.DEV',     AT_VALUE,     '%7.0f');
+   9: SetData('magnit.Y.DEV',     AT_VALUE,     '%7.0f');
+   10: SetData('magnit.Z.DEV',     AT_VALUE,     '%7.0f');
   end;
 end;
 

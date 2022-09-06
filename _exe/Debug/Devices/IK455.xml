@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+	<IK45_5 SIZE="0" ADDR="1115" INFO="ик45 5 зондов"><WRK SIZE="32" FLOW_TIMER_INTERVAL="1200" SP_HI_BYTE="0" FLOW_PROTOCOL="1">
+			<время METR="WT">
+				<DEV TYPE="48" INDEX="2"/>
+			</время>
+			<ГК SIZE="0" METR="GK1">
+				<гк>
+					<DEV TYPE="42" INDEX="8"/>
+				</гк>
+			</ГК>
+			<IK SIZE="0">
+				<ik03>
+					<DEV TYPE="42" INDEX="9"/>
+				</ik03>
+				<ik05>
+					<DEV TYPE="42" INDEX="3"/>
+				</ik05>
+				<ik07>
+					<DEV TYPE="42" INDEX="4"/>
+				</ik07>
+				<ik10>
+					<DEV TYPE="42" INDEX="5"/>
+				</ik10>
+				<ik14>
+					<DEV TYPE="42" INDEX="6"/>
+				</ik14>
+			</IK>
+			<T>
+				<DEV TYPE="42" INDEX="7"/>
+			</T>
+			<Ubat>
+				<DEV TYPE="42" INDEX="14"/>
+			</Ubat>
+			<tw><DEV TYPE="49" INDEX="15"/>
+			</tw></WRK>
+	</IK45_5></DEVICE>

@@ -134,7 +134,7 @@ begin
       end;
      if Supports(GlobalCore, IGetDevice, gd) then
       begin
-       FDevBK := gd.Device([2415], 'PULT_BK') as IPultBK;
+       FDevBK := gd.Device([2415], 'PULT_BK', 'PULT_BK') as IPultBK;
        de.Add(FDevBK);
        NetSetupConnection(FDevBK);
       end;

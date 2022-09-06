@@ -31,11 +31,14 @@ type
     edSerial: TEdit;
     Label4: TLabel;
     Label1: TLabel;
+    Label5: TLabel;
+    edSubAdr: TEdit;
+    Label6: TLabel;
     procedure rgClick(Sender: TObject);
   private
     { Private declarations }
   public
-   class function Execute(var adr, chip, serial: Integer; const Chips: TChips): Boolean;
+   class function Execute(var adr, subAdr, chip, serial: Integer; const Chips: TChips): Boolean;
   end;
 
 implementation
@@ -56,7 +59,7 @@ begin
 end;
 
 
-class function TDlgSetupAdr.Execute(var adr, chip, serial: Integer; const Chips: TChips): Boolean;
+class function TDlgSetupAdr.Execute(var adr, subAdr, chip, serial: Integer; const Chips: TChips): Boolean;
  var
   ch: TChip;
 begin
@@ -64,6 +67,7 @@ begin
    try
     edAdr.Text := IntToStr(adr);
     edSerial.Text := IntToStr(serial);
+    edSubAdr.Text := IntToHex(subAdr,2);
     for ch in Chips do
      if ch.Chip = chip then cb.ItemIndex := cb.Items.Add(ch.Info)
      else cb.Items.Add(ch.Info);
@@ -71,6 +75,7 @@ begin
      begin
       adr := StrToInt(edAdr.Text);
       serial := StrToInt(edSerial.Text);
+      subAdr := StrToInt('$'+edSubAdr.Text);
       if cb.ItemIndex >= 0 then chip := Chips[cb.ItemIndex].Chip
       else chip := -1;
       Result := True;

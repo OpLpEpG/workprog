@@ -35,11 +35,13 @@ uses  tools, System.IOUtils, RootIntf,
 //    function Update(Info: IXMLInfo; UpdateTimeSyncEvent: TRamEvent = nil): IRAMInfo; override;
 //  end;
 
+  TEepromSectionEventRef = reference to procedure (adr: Byte; siz, from: Integer; Err: Boolean);
   TNotifyInfoEventRef = reference to procedure (Exception: Integer; Adr: Integer; Data: PByte; n: Integer);
   TWorkEventRef = reference to procedure (DevAdr: Integer; Work: IXMLInfo; Data: PByte; n: Integer);
 
   EBurException = class(EDeviceException);
    EAsyncBurException = class(EAsyncDeviceException);
+   EEEpromSectionsException = class(ENeedDialogException);
 
   TDeviceBur = class(TAbstractDevice, IDevice, ILowLevelDeviceIO, IDataDevice,
                      IDelayDevice, ITurbo, ICycle, ICycleEx, IReadRamDevice, IEepromDevice, IGetActions)
@@ -55,8 +57,11 @@ uses  tools, System.IOUtils, RootIntf,
     function GetSerialQe: TProtocolBur;
     procedure InfoEvent(Res: TInfoEventRes);
     procedure ReadEepromAdrRef(root: IXMLNode; adr: Byte; ev: TEepromEventRef);
+    procedure ReadEepromAdrSection(adr: Byte; siz, from: Integer; output: PByte; Res: TEepromSectionEventRef);
+    procedure ReadEepromSectionsRef(eep: IXMLNode; adr: Byte; ev: TEepromEventRef);
 //    procedure InfoEvent2(Res: TInfoEventRes);
   protected
+    function PropertyReadRam: TReadRam; override;
     // ILowLevelDeviceIO
     procedure SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1); override;
     // ITurbo
@@ -72,12 +77,12 @@ uses  tools, System.IOUtils, RootIntf,
     property GetActions: TGetActionsImpl read FGetActions implements IGetActions;
   public
     constructor Create(); override;
-    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); override;
+    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string); override;
     destructor Destroy; override;
     procedure InitMetaData(ev: TInfoEvent);
     procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false);
     procedure ReadEeprom(ev: TEepromEventRef);
-    procedure WriteEeprom(Addr: Integer; ev: TResultEventRef);
+    procedure WriteEeprom(Addr: Integer; ev: TResultEventRef; section: Integer = -1);
     procedure SetDelay(StartTime: TDateTime; WorkTime: TTime; ResultEvent: TSetDelayEvent);
     procedure CheckConnect(); override;
     procedure ReadWorkRef(Info: IXMLNode; ev: TWorkEventRef; StdOnly: Boolean);
@@ -311,7 +316,7 @@ begin
   /////
 end;
 
-constructor TDeviceBur.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
+constructor TDeviceBur.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string);
 begin
   inherited;
   TRegister.AddType<TDeviceBur>.AddInstance(Name, Self as IInterface);
@@ -349,7 +354,8 @@ procedure TDeviceBur.InfoEvent(Res: TInfoEventRes);
 begin
   FTmpSender.Checked := False;
   try
-   if Length(Res.ErrAdr) > 0 then raise EAsyncBurException.CreateFmt('Метаданные устройств (%s) не считаны', [TAddressRec(Res.ErrAdr).ToNames]);
+   if Length(Res.ErrAdr) > 0 then raise EAsyncBurException.CreateFmt('Метаданные устройств (%s) не считаны',
+          [AddressArrayToNames(Res.ErrAdr)]);
   finally
    if Length(FAddressArray) > Length(Res.ErrAdr) then
     begin
@@ -409,6 +415,82 @@ end;
 //begin
 //  Result := TActionsDevBur;
 //end;
+
+procedure TDeviceBur.ReadEepromAdrSection(adr: Byte; siz, from: Integer; output: PByte; Res: TEepromSectionEventRef);
+begin
+  with SerialQe, ConnectIO do
+   begin
+     Add(procedure()
+       var
+        D: TStdRec;
+      begin
+        D := TStdRec.Create(adr, CMD_READ_EE, 3);
+        D.AssignEEPRead(from, siz);
+        Send(D.Ptr, D.SizeOf, procedure(p: Pointer; n: integer)
+         var
+          pb: PByte;
+        begin
+          if (n > 0) and (n-d.SizeOfAC = siz) and d.CheckAC(p) then
+           begin
+            pb := p;
+            Inc(Pb, d.SizeOfAC);
+            Move(pb^, output^, siz);
+            Res(adr, siz, from, False);
+           end
+           else Res(adr, siz, from, True);
+        end);
+      end);
+   end;
+end;
+
+procedure TDeviceBur.ReadEepromSectionsRef(eep: IXMLNode; adr: Byte; ev: TEepromEventRef);
+ var
+  GlobRes: TEepromEventRes;
+  sects: TArray<Byte>;
+  outAt, i,e: Integer;
+  recur: TEepromSectionEventRef;
+  strerr: string;
+begin
+  SetLength(sects, Integer(eep.Attributes[AT_SIZE]));
+  i := -1;
+  e := 0;
+  outAt := 0;
+  strerr := '';
+  recur := procedure (adr: Byte; siz, from: Integer; Err: Boolean)
+   var
+    sec: IXMLNode;
+  begin
+    if Err then
+     begin
+      strerr := strerr + Format('Адр.уст: %d, EEPROM размер: %d смещение: %d - ошибка чтения секции'#$D#$A, [adr, siz, from]);
+      inc(e);
+      eep.ChildNodes[i].Attributes[AT_READED] := False;
+     end;
+    Inc(i);
+    Inc(outAt, siz);
+    if i = eep.ChildNodes.Count then
+     begin
+       if i > e then
+         try
+          TPars.SetData(eep, @sects[0]);
+          FExeMetr.Execute(T_EEPROM, Adr);
+         finally
+          FeepromEventInfo.DevAdr := adr;
+          FeepromEventInfo.eep := eep;
+          if Assigned(ev) then ev(FeepromEventInfo);
+          Notify('S_EepromEventInfo');
+         end;
+       if strerr <> '' then raise EEEpromSectionsException.Create(strerr);
+       Exit;
+     end;
+    sec := eep.ChildNodes[i];
+    sec.Attributes[AT_READED] := True;
+    from := sec.Attributes[AT_FROM];
+    siz := sec.Attributes[AT_SIZE];
+    ReadEepromAdrSection(adr, siz, from, @sects[outAt], recur)
+  end;
+  recur(adr, 0, 0, False);
+end;
 
 function TDeviceBur.CreateReadRam: TReadRam;
 begin
@@ -525,6 +607,11 @@ begin
   DoData(FTmpSender);
 end;
 
+function TDeviceBur.PropertyReadRam: TReadRam;
+begin
+  Result := inherited;
+end;
+
 //type
 //  TTurbo = packed record
 //    CmdAdr: TCmdADR;
@@ -532,14 +619,15 @@ end;
 //  end;
 
 procedure TDeviceBur.Turbo(adr: Byte; speed: integer);
- const
+ const                         //default
   SPD: array[0..7]of Integer = (125000, 500000, 1000000, 2250000, 4500000, 8000000, 12000000, 100000000);
 begin
   with SerialQe, ConnectIO do
    begin
     if speed = 0 then
      begin
-      if ConnectIO is TComConnectIO then TComConnectIO(ConnectIO).Com.CustomBaudRate := SPD[speed];
+      if ConnectIO is TComConnectIO then
+       TComConnectIO(ConnectIO).Com.CustomBaudRate := TComConnectIO(ConnectIO).FDefaultSpeed;
       Exit;
      end;
     Add(procedure()
@@ -653,16 +741,60 @@ begin
    end;
 end;
 
-procedure TDeviceBur.WriteEeprom(Addr: Integer; ev: TResultEventRef);
+procedure TDeviceBur.WriteEeprom(Addr: Integer; ev: TResultEventRef; section: Integer = -1);
  var
   e: IXMLNode;
+  recur: TProc;
 begin
   CheckConnect;
   ConnectOpen;
   e := FindEeprom(FMetaDataInfo.Info, Addr);
   if not Assigned(e) then raise EBurException.CreateFmt('Метаданных EEPROM устройства с адресом %d нет', [Addr]);
-  with SerialQe, ConnectIO do
+  if e.ChildNodes.First.HasAttribute(AT_FROM) then // деление EEPROM на секции
    begin
+     var a: TPars.TOutArray;
+     var secind := 0;
+     var sect : IXMLNode;
+     var arrptr := 0;
+     TPars.GetData(e, a);
+     while (section <> -1) and (secind < section) do
+      begin
+       sect := e.ChildNodes[secInd];
+       Inc(secind);
+       Inc(arrptr, Integer(sect.Attributes[AT_SIZE]));
+      end;
+     recur := procedure()
+     begin
+      with SerialQe, ConnectIO do
+       begin
+        sect := e.ChildNodes[secInd];
+        sect.Attributes[AT_WRITED] := False;
+        Add(procedure
+           var
+            D: TStdRec;
+            From: Word;
+            Siz: Integer;
+          begin
+            From := sect.Attributes[AT_FROM];
+            Siz := sect.Attributes[AT_SIZE];
+            D := TStdRec.Create(Addr, CMD_WRITE_EE, Siz + 2);
+            D.AssignEEPWriteP(From, Siz, @a[arrptr]);
+            Send(D.Ptr, d.SizeOf, procedure(p: Pointer; n: integer)
+            begin;
+              if n = d.SizeOfAC then sect.Attributes[AT_WRITED] := True;
+              Inc(secind);
+              Inc(arrptr, Siz);
+              if (secind < e.ChildNodes.Count) and (section = -1) then recur()
+              else if Assigned(ev) then ev(True);
+            end, 2000);
+          end);
+       end;
+     end;
+    recur();
+   end
+  else
+   with SerialQe, ConnectIO do
+    begin
      Add(procedure()
        var
         a: TPars.TOutArray;
@@ -677,7 +809,7 @@ begin
           if Assigned(ev) then ev(n = d.SizeOfAC);
         end, 2000);
       end);
-   end;
+    end;
 end;
 
 procedure TDeviceBur.ReadEeprom(ev: TEepromEventRef);
@@ -685,9 +817,13 @@ begin
   CheckConnect;
   ConnectOpen;
   if not Assigned(FMetaDataInfo.Info) then raise EBurException.Create(RS_ErrNoInfo);
-  FindAllEeprom(FMetaDataInfo.Info, procedure(wrk: IXMLNode; Adr: Byte; const name: string)
+  FindAllEeprom(FMetaDataInfo.Info, procedure(eep: IXMLNode; Adr: integer; const name: string)
   begin
-    ReadEepromAdrRef(wrk, adr, procedure (Res: TEepromEventRes)
+    if eep.ChildNodes.First.HasAttribute(AT_FROM) then // деление EEPROM на секции
+     begin
+      ReadEepromSectionsRef(eep,Adr,ev);
+     end
+    else ReadEepromAdrRef(eep, adr, procedure (Res: TEepromEventRes)
     begin
      try
       FExeMetr.Execute(T_EEPROM, Adr);
@@ -726,7 +862,7 @@ end;
 procedure TDeviceBur.ReadWorkRef(Info: IXMLNode; ev: TWorkEventRef; StdOnly: Boolean);
 begin
   if not Assigned(Info) then raise EBurException.Create(RS_ErrNoInfo);
-  FindAllWorks(Info, procedure(wrk: IXMLNode; Adr: Byte; const name: string)
+  FindAllWorks(Info, procedure(wrk: IXMLNode; Adr: integer; const name: string)
   begin
     ReadWorkAdrRef(wrk, adr, StdOnly, ev);
   end);
@@ -735,9 +871,11 @@ end;
 procedure TDeviceBur.ReadEepromAdrRef(root: IXMLNode; adr: Byte; ev: TEepromEventRef);
  var
   siz: Integer;
+  from: Integer;
 begin
   siz := root.Attributes[AT_SIZE];
   if siz > 250 then raise EAsyncBurException.CreateFmt('Данная версия программы поддерживает длину EEPROM меньше 250 текущая: %d', [siz]);
+  if root.HasAttribute(AT_FROM) then from := root.Attributes[AT_FROM] else from := 0;
   with SerialQe, ConnectIO do
    begin
      Add(procedure()
@@ -745,7 +883,7 @@ begin
         D: TStdRec;
       begin
         D := TStdRec.Create(adr, CMD_READ_EE, 3);
-        D.AssignEEPRead(0, siz);
+        D.AssignEEPRead(from, siz);
         Send(D.Ptr, D.SizeOf, procedure(p: Pointer; n: integer)
          var
           pb: PByte;

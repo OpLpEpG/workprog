@@ -10,8 +10,6 @@ object FormMetrInclinT: TFormMetrInclinT
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
   TextHeight = 13
   object lbInfo: TLabel
     Left = 0
@@ -19,7 +17,6 @@ object FormMetrInclinT: TFormMetrInclinT
     Width = 872
     Height = 13
     Align = alBottom
-    Alignment = taCenter
     Caption = '--------------------'
     WordWrap = True
     ExplicitWidth = 80
@@ -31,9 +28,25 @@ object FormMetrInclinT: TFormMetrInclinT
     Height = 453
     Align = alClient
     BorderWidth = 1
+    Colors.BorderColor = 15987699
+    Colors.DisabledColor = clGray
+    Colors.DropMarkColor = 15385233
+    Colors.DropTargetColor = 15385233
+    Colors.DropTargetBorderColor = 15385233
+    Colors.FocusedSelectionColor = 15385233
+    Colors.FocusedSelectionBorderColor = 15385233
+    Colors.GridLineColor = 15987699
+    Colors.HeaderHotColor = clBlack
+    Colors.HotColor = clBlack
+    Colors.SelectionRectangleBlendColor = 15385233
+    Colors.SelectionRectangleBorderColor = 15385233
+    Colors.SelectionTextColor = clBlack
+    Colors.TreeLineColor = 9471874
+    Colors.UnfocusedColor = clGray
+    Colors.UnfocusedSelectionColor = 13421772
+    Colors.UnfocusedSelectionBorderColor = 13421772
     Header.AutoSizeIndex = -1
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
-    Header.ParentFont = True
     TabOrder = 0
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
     TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
@@ -45,179 +58,64 @@ object FormMetrInclinT: TFormMetrInclinT
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 0
+        Text = #8470
         Width = 40
-        WideText = #8470
       end
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 1
-        WideText = 'G1X'
+        Text = 'T'
       end
       item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 2
-        WideText = 'G1Y'
+        Text = #1047#1077#1085'.'#1057#1090
+        Width = 60
       end
       item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 3
-        WideText = 'G1Z'
+        Text = #1040#1079#1080'.'#1057#1090
+        Width = 60
       end
       item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 4
-        WideText = 'H1X'
+        Text = #1042#1080#1079'.'#1057#1090
+        Width = 60
       end
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 5
-        WideText = 'H1Y'
+        Text = 'Gx'
+        Width = 60
       end
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 6
-        WideText = 'H1Z'
+        Text = 'Gy'
+        Width = 60
       end
       item
+        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 7
-        WideText = 'T1'
+        Text = 'Gz'
+        Width = 60
       end
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 8
-        WideText = 'G2X'
+        Text = 'Hx'
+        Width = 60
       end
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 9
-        WideText = 'G2Y'
+        Text = 'Hy'
+        Width = 60
       end
       item
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 10
-        WideText = 'G2Z'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 11
-        WideText = 'H2X'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 12
-        WideText = 'H2Y'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 13
-        WideText = 'H2Z'
-      end
-      item
-        Position = 14
-        WideText = 'T2'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 15
-        WideText = 'G3X'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 16
-        WideText = 'G3Y'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 17
-        WideText = 'G3Z'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 18
-        WideText = 'H3X'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 19
-        WideText = 'H3Y'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 20
-        WideText = 'H3Z'
-      end
-      item
-        Position = 21
-        WideText = 'T3'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 22
-        WideText = 'G4X'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 23
-        WideText = 'G4Y'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 24
-        WideText = 'G4Z'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 25
-        WideText = 'H4X'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 26
-        WideText = 'H4Y'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 27
-        WideText = 'H4Z'
-      end
-      item
-        Position = 28
-        WideText = 'T4'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 29
-        WideText = 'G5X'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 30
-        WideText = 'G5Y'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 31
-        WideText = 'G5Z'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 32
-        WideText = 'H5X'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 33
-        WideText = 'H5Y'
-      end
-      item
-        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
-        Position = 34
-        WideText = 'H5Z'
-      end
-      item
-        Position = 35
-        Width = 10
-        WideText = 'T5'
+        Text = 'Hz'
+        Width = 296
       end>
   end
 end

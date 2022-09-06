@@ -750,7 +750,10 @@ begin
         if tst.NodeName <> etalon.NodeName then Exit(False);
         tst := tst.ParentNode;
         etalon := etalon.ParentNode;
-        if Assigned(tst) and Assigned(etalon) and (etalon.NodeName = rootEtalon) and (tst.NodeName = rootTst) then Exit(True);
+        if Assigned(tst) and Assigned(etalon) and (etalon.NodeName = rootEtalon) and
+        ((tst.NodeName = rootTst) or (tst.HasAttribute(AT_FROM)))
+        //(tst.NodeName = rootTst)
+         then Exit(True);
        end;
       Result := False;
     end;

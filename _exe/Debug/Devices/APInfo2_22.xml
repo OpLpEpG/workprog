@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <AP022 SIZE="0" ADDR="1102" INFO="ap 22 kadr">
+    <WRK SIZE="22" FLOW_TIMER_INTERVAL="1200" SP_HI_BYTE="0" FLOW_PROTOCOL="1">
+      <время METR="WT">
+        <DEV TYPE="48" INDEX="2" />
+      </время>
+      <ГК SIZE="0" METR="GK1">
+        <гк>
+          <DEV TYPE="46" INDEX="3" />
+        </гк>
+        <ГГКп_мз>
+          <DEV TYPE="42" INDEX="4" />
+        </ГГКп_мз>
+        <ГГКп_сз>
+          <DEV TYPE="42" INDEX="5" />
+        </ГГКп_сз>
+        <ГГКп_бз>
+          <DEV TYPE="42" INDEX="6" />
+        </ГГКп_бз>
+      </ГК>
+      <Viz>
+        <DEV TYPE="41" INDEX="7" />
+      </Viz>
+      <T>
+        <DEV TYPE="42" INDEX="8" />
+      </T>
+      <Ub>
+        <DEV TYPE="42" INDEX="9" />
+      </Ub>
+    </WRK>
+  </AP022>
+</DEVICE>

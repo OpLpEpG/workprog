@@ -566,7 +566,12 @@ begin
     if not (FEditData.Item as IDevice).CanClose then
     raise EFormControlException.Create('Необходимо завершить операцию обмена данными');
   try
-     (GlobalCore as IProjectDataFile).DeviceDataDelete(FEditData.Item as IDevice); // уже есть de.Remove(d as IDevice);
+     if not Supports(FEditData.Item, IDataDevice) then
+      begin
+        var de: IDeviceEnum;
+        if Supports(GlobalCore, IDeviceEnum, de) then de.Remove(FEditData.Item as IDevice);
+      end
+     else (GlobalCore as IProjectDataFile).DeviceDataDelete(FEditData.Item as IDevice); // уже есть de.Remove(d as IDevice);
   finally
    FEditData.Item := nil;
    (GlobalCore as IActionProvider).HideUnusedMenus;
@@ -896,7 +901,7 @@ begin
   ///  Ошибки инициализации
   if Length(m.ErrAdr) > 0 then
    begin
-    v := SData(Rt, nil, 'Не инициализированны', TAddressRec(m.ErrAdr).ToNames);
+    v := SData(Rt, nil, 'Не инициализированны', d.AddressArrayToNames(m.ErrAdr));
    end;
   if Assigned(m.Info) then for n in XEnum(m.Info) do
    begin

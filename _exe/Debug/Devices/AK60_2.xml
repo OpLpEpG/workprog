@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+	<AK60_2 SIZE="0" ADDR="1105" INFO="AK60 модуль 2" DELAY_DEVIDER="256" WORK_TIME_ENABLE="1"><WRK SIZE="2048" SP_HI_BYTE="128" FLOW_PROTOCOL="1" FLOW_TIMER_INTERVAL="2000">
+			<время METR="WT">
+				<DEV TYPE="48" INDEX="2"/>
+			</время>
+			<ННК SIZE="0" METR="NNK1"><нк1><DEV TYPE="46" INDEX="516"/>
+				</нк1><нк2><DEV TYPE="46" INDEX="517"/>
+				</нк2><нгк><DEV TYPE="46" INDEX="518"/>
+				</нгк></ННК><NNK SIZE="0"><нгк><DEV TYPE="46" INDEX="6"/>
+				</нгк><нк2><DEV TYPE="46" INDEX="5"/>
+				</нк2><нк1><DEV TYPE="46" INDEX="4"/>
+				</нк1></NNK><GR SIZE="0">
+				<гк><DEV TYPE="46" INDEX="3"/>
+				</гк></GR>
+			<ГК SIZE="0" METR="GK1">
+				<гк>
+					<DEV TYPE="46" INDEX="515"/>
+				</гк>
+			</ГК>
+			<U SIZE="0">
+				<опоры>
+					<DEV TYPE="46" INDEX="9"/>
+				</опоры>
+				<опоры_2>
+					<DEV TYPE="46" INDEX="521"/>
+				</опоры_2>
+				<давлен1>
+					<DEV TYPE="46" INDEX="10"/>
+				</давлен1>
+				<давлен1_2>
+					<DEV TYPE="46" INDEX="522"/>
+				</давлен1_2>
+				<давлен2>
+					<DEV TYPE="46" INDEX="11"/>
+				</давлен2>
+				<давлен2_2>
+					<DEV TYPE="46" INDEX="523"/>
+				</давлен2_2>
+				<темп>
+					<DEV TYPE="44" INDEX="12"/>
+				</темп>
+				<темп_2>
+					<DEV TYPE="44" INDEX="524"/>
+				</темп_2>
+			</U>
+			<Inclin SIZE="0" METR="DPSK">
+				<accel SIZE="0">
+					<X>
+						<DEV TYPE="45" INDEX="13"/>
+					</X>
+					<Y>
+						<DEV TYPE="45" INDEX="14"/>
+					</Y>
+					<Z>
+						<DEV TYPE="45" INDEX="15"/>
+					</Z>
+				</accel>
+				<magnit SIZE="0">
+					<X>
+						<DEV TYPE="45" INDEX="525"/>
+					</X>
+					<Y>
+						<DEV TYPE="45" INDEX="526"/>
+					</Y>
+					<Z>
+						<DEV TYPE="45" INDEX="527"/>
+					</Z>
+				</magnit>
+			</Inclin>
+			<ФКД1 ARRAY_SIZE="496">
+				<DEV TYPE="46" INDEX="16"/>
+			</ФКД1>
+			<ФКД2 ARRAY_SIZE="495">
+				<DEV TYPE="46" INDEX="528"/>
+			</ФКД2>
+		</WRK>
+	</AK60_2></DEVICE>

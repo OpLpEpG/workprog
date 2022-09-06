@@ -1212,8 +1212,12 @@ end;
 
 function TFormMetrolog.GetIsMedian: Boolean;
 begin
+  Result := False;
   try
-    Result := GetMetr([MetrolType], FileData).Attributes['IsMedian'];
+    var n := GetMetr([MetrolType], FileData);
+    if n.HasAttribute('IsMedian') then Result := n.Attributes['IsMedian'];
+
+//    Result := Boolean(GetMetr([MetrolType], FileData).Attributes['IsMedian']);
   except
     Result := False;
   end;

@@ -28,6 +28,7 @@ type
    var
     FSelectIO: IConnectIO;
     FDevice: IDevice;
+    FNamesArray: string;
    type
     ChekDevs = (cdNone, cdBur, cdPSK);
     function CheckState: ChekDevs;
@@ -107,7 +108,7 @@ begin
   end;
   if Supports(GlobalCore, IGetDevice, g) and Supports(GlobalCore, IDeviceEnum, de) then
    begin
-    FDevice := g.Device(Selected, edCaption.Text);
+    FDevice := g.Device(Selected, edCaption.Text, FNamesArray);
     FDevice.IConnect := FSelectIO;
     de.Add(FDevice);
     MainScreenChanged;
@@ -149,12 +150,12 @@ end;
 procedure TFormCreateDev.TreeChecked(Sender: TBaseVirtualTree; Node: PVirtualNode);
  var
   pv: PVirtualNode;
-  s: string;
 begin
-  s := '';
+  FNamesArray := '';
   for pv in Tree.LevelNodes(0) do
-    if pv.CheckState = csCheckedNormal then s := s + ' ' + TAddressRec.Devices[pv.Index].Name;
-  edCaption.Text := s.Trim;
+    if pv.CheckState = csCheckedNormal then FNamesArray := FNamesArray + ' ' + TAddressRec.Devices[pv.Index].Name;
+  FNamesArray := FNamesArray.Trim;
+  edCaption.Text := FNamesArray;
 end;
 
 procedure TFormCreateDev.TreeChecking(Sender: TBaseVirtualTree; Node: PVirtualNode; var NewState: TCheckState; var Allowed: Boolean);

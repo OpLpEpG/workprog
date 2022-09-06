@@ -5,7 +5,7 @@ interface
 uses Container, tools, XMLLua.EEPROM,  Xml.XMLDoc,  Math,
   RootIntf, DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, FileCachImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf, System.TypInfo,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, VirtualTrees;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, VirtualTrees, Vcl.Menus;
 
 type
   PNodeExData = ^TNodeExData;
@@ -30,6 +30,8 @@ type
     btExit: TButton;
     st: TStatusBar;
     Tree: TVirtualStringTree;
+    ppm: TPopupMenu;
+    EEPROM1: TMenuItem;
     procedure btExitClick(Sender: TObject);
     procedure btReadClick(Sender: TObject);
     procedure btWriteClick(Sender: TObject);
@@ -39,7 +41,11 @@ type
     procedure TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
     procedure TreeGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
+    procedure ppmPopup(Sender: TObject);
+    procedure EEPROM1Click(Sender: TObject);
   private
+    FEditData: PNodeExData;
+    FEditNode: PVirtualNode;
     FRes: TDialogResult;
     FModul, Feep, Fmetr: IXMLNode;
     FAddr: Integer;
@@ -217,6 +223,10 @@ function TNodeExData.AsColor(Col: Integer): TColor;
   e, m: IXMLNode;
 begin
   Result := clBlack;
+  if (col = 0) and Supports(ColumnValue[0], IXMLNode, e) then
+   begin
+    if e.HasAttribute(AT_FROM) then Exit(clBlue);    
+   end;
   if (Length(ColumnValue) < 4) and (col <> 1) then Exit;
   if not FReadedFlag then Result := clGray;
   if FEdited then Result := clWebBrown;
@@ -254,7 +264,10 @@ begin
        end;
      end
     else
+      begin
        Result := n.NodeName;
+       if n.HasAttribute(AT_FROM) then Result := Result + '['+n.Attributes[AT_FROM]+']';
+      end;
    end
 end;
 
@@ -286,6 +299,7 @@ begin
 end;
 
 { TFormDlgEeprom }
+
 
 function TFormDlgEeprom.Execute(Eep: IXMLNode; Res: TDialogResult): Boolean;
 begin
@@ -423,7 +437,8 @@ begin
     if tst.NodeName <> etalon.NodeName then Exit(False);
     tst := tst.ParentNode;
     etalon := etalon.ParentNode;
-    if Assigned(tst) and Assigned(etalon) and (etalon.NodeName = rootEtalon) and (tst.NodeName = rootTst) then Exit(True);
+    if Assigned(tst) and Assigned(etalon) and (etalon.NodeName = rootEtalon) and
+    ((tst.NodeName = rootTst) or (tst.HasAttribute(AT_FROM))) then Exit(True);
    end;
   Result := False;
 end;
@@ -471,6 +486,45 @@ begin
     if (Length(ColumnValue) > 2) and Supports(ColumnValue[1], IXMLNode, e) and (e.NodeType = ntAttribute)
     and Supports(ColumnValue[3], IXMLNode, m) and (m.NodeType = ntAttribute) then e.NodeValue := m.NodeValue;
   Tree.Repaint;
+end;
+
+procedure TFormDlgEeprom.ppmPopup(Sender: TObject);
+ var
+  e: IXMLNode;
+begin
+  FEditData := nil;
+  FEditNode := nil;
+  EEPROM1.Visible := False;
+  if not Assigned(Tree.HotNode) then Exit;
+  FEditNode := Tree.HotNode;
+  FEditData := Tree.GetNodeData(FEditNode);
+  if Supports(FEditData.ColumnValue[0], IXMLNode, e) and e.HasAttribute(AT_FROM) then
+   begin
+    EEPROM1.Visible := True;
+   end;
+end;
+
+procedure TFormDlgEeprom.EEPROM1Click(Sender: TObject);
+ var
+  e: IXMLNode;
+  section: Integer;
+begin
+  if Supports(FEditData.ColumnValue[0], IXMLNode, e) and e.HasAttribute(AT_FROM) then
+   begin
+    section := e.ParentNode.ChildNodes.IndexOf(e);
+    if FReadedFlag then
+    Dev.WriteEeprom(FAddr, procedure (Res: Boolean)
+    begin
+      if Res then
+       begin
+        st.Panels[0].Text := 'write GOOD';
+        for var pv in Tree.ChildNodes(FEditNode) do PNodeExData(Tree.GetNodeData(pv)).FEdited := False;
+        Tree.Repaint;
+       end
+      else st.Panels[0].Text := 'write BAD'
+    end, section)
+    else MessageDlg('Память EEPROM не считана предыдущие данные будут удалены!!!', mtError, [mbYes, mbCancel], 0)
+   end;
 end;
 
 procedure TFormDlgEeprom.SetC_MetrologyChange(const Value: string);

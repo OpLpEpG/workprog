@@ -3,20 +3,18 @@ object FormUAKI: TFormUAKI
   Top = 0
   Caption = #1059#1040#1050'-'#1057#1048'-'#1040#1047#1042'-'#1058
   ClientHeight = 121
-  ClientWidth = 516
+  ClientWidth = 694
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
     Top = 91
-    Width = 516
+    Width = 694
     Height = 30
     Align = alBottom
     BevelOuter = bvLowered

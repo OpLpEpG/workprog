@@ -11,7 +11,7 @@ typedef struct
 #pragma pack(pop)
 
 
-#	define LEN_MS 682
+#	define LEN_MS 682  // simple comment
 
 #pragma pack(push, 1)
 typedef struct
@@ -40,7 +40,7 @@ typedef struct
 #pragma pack(push, 1)
 typedef struct
 {
-	float T;  /// [varDigits=4; varPrecision=1]
+	float T;  ///[varDigits=4; varPrecision=1]
 	uint16_t AmpH;  /// потребление
 	gamma_t GR;     /// ГК|GK1
 	accel_t accel;  /// accel|CLA1

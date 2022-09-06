@@ -10,8 +10,6 @@ object FormBoot: TFormBoot
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
   TextHeight = 13
   object Panel: TPanel
     Left = 0
@@ -123,6 +121,9 @@ object FormBoot: TFormBoot
       end
       item
         Width = 100
+      end
+      item
+        Width = 50
       end>
   end
   object od: TOpenDialog

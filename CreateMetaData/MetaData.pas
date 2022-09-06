@@ -108,6 +108,7 @@ begin
   Reg('varExtNoPowerDataCount', TPars.varExtNoPowerDataCount, TMetaUserByte);
   Reg('varDigits', TPars.varDigits, TMetaUserByte);
   Reg('varPrecision', TPars.varPrecision, TMetaUserByte);
+  Reg('varFrom', TPars.varFrom, TMetaUserWord);
 end;
 
 class procedure TMetaType.Reg(const typ: string; vart: Integer; cls: TMetaTypeClass);

@@ -162,7 +162,7 @@ OUTPUT PARAMETERS:
      Copyright 18.10.2008 by Bochkanov Sergey
 *************************************************************************/}
 
-    function NoneLinear(const x_matrix, y, c : PDouble;
+    function NoneLinear(const x_matrix, y, c : PDouble;  //НЕРАБОТАЕТ !!! с начальное игнорируется
 		                    n, m, k: Integer;
                     		diffstep, epsx: Double; maxits: integer; // conditions
                         const cLow, cHi: PDouble; // bound nil, nil - if not use

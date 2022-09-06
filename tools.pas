@@ -80,6 +80,9 @@ const
   AT_INFO = 'INFO';
   AT_PSK_BYTE_ADDR = 'PSK_BYTE_ADDR';
   AT_SERIAL = 'SERIAL_NO';
+  AT_FROM = 'FROM';
+  AT_READED = 'READED';
+  AT_WRITED = 'WRITED';
   AT_SPEED = 'COMUNICATION_PROPERTY';   // BIT15:USB  BIT14:SSD BIT7:125Kbt BIT6:500Kbt
   AT_EXT_NP = 'AT_EXT_NP';      // count extra data
   AT_EXT_NP_LEN = 'AT_EXT_NP_LEN'; // len in bytes extra data
@@ -164,7 +167,7 @@ const
 //  const CASZ = SizeOf(TCmdADR);
 type
   TTestRef = reference to function(n: IXMLNode): boolean; // если да то прекратить рекурсию
-  TWorkDataRef = reference to procedure(wrk: IXMLNode; adr: Byte; const name: string);
+  TWorkDataRef = reference to procedure(wrk: IXMLNode; adr: integer; const name: string);
   THasXtreeRef = reference to procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode);
   TNotHasXtreeRef = reference to function(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode): boolean;
 //  TRamDataRef = TWorkDataRef;
@@ -456,7 +459,7 @@ type
   public
     Items: TAddressArray;
     function ToStr(): string;
-    function ToNames(): string;
+//    function ToNames(): string;
     class operator Implicit(const AdrArray: TAddressArray): TAddressRec;
     class operator Implicit(const AddressRec: TAddressRec): TAddressArray;
     class operator Explicit(const SetAdd: array of Integer): TAddressRec;
@@ -589,6 +592,7 @@ type
     procedure AssignAdvStdRead(ln: Byte; from: Word);
     procedure AssignEEPRead(from: Word; ln: Byte);
     procedure AssignEEPWrite(from: Word; const AData: array of byte);
+    procedure AssignEEPWriteP(from: Word;len: Integer; PData: Pointer);
     procedure AssignRamRead(RmAdr, len: integer);
     constructor Create(addr, command, DataLength: Integer); overload;
     constructor Create(buff: Pointer; Bt2: boolean; alen: Integer); overload;
@@ -703,6 +707,16 @@ begin
   p^ := from;
   inc(p);
   Move(AData, P^, Length(AData));
+end;
+
+procedure TStdRec.AssignEEPWriteP(from: Word; len: Integer; PData: Pointer);
+ var
+  P: Pword;
+begin
+  p := DataPtr;
+  p^ := from;
+  inc(p);
+  Move(PData^, P^, Len);
 end;
 
 procedure TStdRec.AssignInt(data: integer);
@@ -1531,26 +1545,26 @@ begin
   Result.Items := AdrArray;
 end;
 
-function TAddressRec.ToNames: string;
- var
-  a: Integer;
-  dr: TDevRec;
-  sadr: string;
-begin
-  Init();
-  Result := '';
-  for a in Items do
-   begin
-    sadr := IntToStr(a);
-    for dr in CFDevs do if a = dr.Adr then
-     begin
-      sadr := dr.Name;
-      Break;
-     end;
-    Result := Result + ' ' + sadr;
-   end;
-  Delete(Result, 1, 1);
-end;
+//function TAddressRec.ToNames: string;
+// var
+//  a: Integer;
+//  dr: TDevRec;
+//  sadr: string;
+//begin
+//  Init();
+//  Result := '';
+//  for a in Items do
+//   begin
+//    sadr := IntToStr(a);
+//    for dr in CFDevs do if a = dr.Adr then
+//     begin
+//      sadr := dr.Name;
+//      Break;
+//     end;
+//    Result := Result + ' ' + sadr;
+//   end;
+//  Delete(Result, 1, 1);
+//end;
 
 function TAddressRec.ToStr: string;
  var
@@ -1614,13 +1628,13 @@ procedure TCaseSensDispInv.DispInvoke(Dest: PVarData; [Ref] const Source: TVarDa
   VarParams : TVarDataArray;
   Strings: TStringRefList;
   Dummi: Variant;
+  PIdent: PByte;
 begin
-
+  // Grab the identifier
   LArgCount := CallDesc^.ArgCount;
-
-  LIdent := UTF8ToString(PAnsiChar(@CallDesc^.ArgTypes[LArgCount]));
-
-  Strings := default(TStringRefList); //   FillChar(Strings, SizeOf(Strings), 0);
+  PIdent := @CallDesc^.ArgTypes[LArgCount];
+  LIdent :=  UTF8ToString(MarshaledAString(PIdent)) ;
+  SetLength(Strings, LArgCount);
   VarParams := GetDispatchInvokeArgs(CallDesc, Params, Strings, true);
 
   case CallDesc^.CallType of

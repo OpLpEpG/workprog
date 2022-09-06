@@ -68,6 +68,7 @@ type
     function Locked(const User): Boolean;
     procedure Lock(const User);
     procedure Unlock(const User);
+    procedure SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1);
 
     function GetStatus: TSetConnectIOStatus;
 
@@ -78,6 +79,8 @@ type
     function GetIOEventString(): TIOEventString;
 
     procedure Loaded; override;
+
+    function LockIAm(const User): Boolean;
   public
     const
       MAX_BUF = $80000;
@@ -92,7 +95,6 @@ type
     constructor Create(); override;
     destructor Destroy; override;
     procedure CheckOpen; virtual;
-    function LockIAm(const User): Boolean;
     procedure DoEvent(ptr: Pointer; cnt: Integer);
     procedure Send(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1); virtual; abstract;
     class function Enum: TArray<string>; virtual; abstract;
@@ -292,6 +294,8 @@ type
     procedure SetConnect(AIConnectIO: IConnectIO); virtual;
     function GetStatus: TDeviceStatus;
     function CanClose: Boolean; virtual;
+    function GetNamesArray(Index: Integer): string;
+    function AddressArrayToNames(const Adrs: TAddressArray): string;
    // ICaption
     function GetDeviceName: string;
     procedure SetDeviceName(const Value: string);
@@ -303,8 +307,9 @@ type
     property CyclePeriod: Integer read FCyclePeriod write SetCyclePeriod default 2097;
   public
     FAddressArray: TAddressArray;
+    FNamesArray: string;
     constructor Create(); override;
-    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); virtual;
+    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string); virtual;
     procedure CheckConnect(); virtual;
     ///	<summary>
     ///	  возвращает значение до открытия
@@ -318,12 +323,14 @@ type
     procedure CheckStatus(const AvailSts: TSetDeviceStatus);
     function ConnectIO: TAbstractConnectIO; inline;
 
+    property NamesArray[Index: Integer]: string read GetNamesArray;
     property IConnect: IConnectIO read GetConnect;
 
     property C_BeforeRemoveConnectIO: string read FConnectIOName write SetBeforeRemoveConnectIO;
     property S_Status: TDeviceStatus read FStatus write SetLStatus;
   published
     property AddressArray: string read GetAddressArray write SetAddressArray;
+    property NamesArrayString: string read FNamesArray write FNamesArray;
     property S_ConnectIO: string read FConnectIOName write FConnectIOName;
     property S_Name: string read GetDeviceName write SetDeviceName;
   end;
@@ -356,7 +363,7 @@ type
 
     procedure LoadBeroreAdd();
     procedure BeforeRemove(); virtual;
-    function PropertyReadRam: TReadRam;
+    function PropertyReadRam: TReadRam; virtual;
     function CreateReadRam: TReadRam; virtual;
 //    procedure BeforeAdd(); virtual;
 //    procedure BeforeRemove(); virtual;
@@ -381,7 +388,7 @@ type
 //    function GetRamReadInfo(): IRamReadInfo; virtual; safecall;
 //    function GetReadDeviceRam(): IReadRamDevice; virtual; safecall;
 
-    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string); override;
+    constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string); override;
     constructor Create(); override;
     destructor Destroy; override;
 
@@ -476,8 +483,10 @@ type
     procedure Open; override;
     procedure Close; override;
     function IsOpen: Boolean; override;
+    function DefaultSpeed: Integer;
   public
     AsString: Boolean;
+    FDefaultSpeed: Integer;
     constructor Create(); override;
     destructor Destroy; override;
     procedure CheckOpen; override;
@@ -493,14 +502,13 @@ type
   EProtocolBurException = class(EBaseException);
 
   TProtocolBur = class(TAbstractProtocol)
-  private
+  protected
     type
       TQe = TQueue<TRunSerialQeRef>;
     var
       FQe: TQe;
       FOldCount: Integer;
       FCRC: Word;
-  protected
     procedure EventRxTimeOut(Sender: TAbstractConnectIO); override;
     procedure EventRxChar(Sender: TAbstractConnectIO); override;
     procedure TxChar(Sender: TAbstractConnectIO; Data: Pointer; var Cnt: Integer; maxsend: Integer = $200); override;
@@ -732,6 +740,11 @@ begin
   SetWait(Value);
 end;}
 
+procedure TAbstractConnectIO.SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef; WaitTime: Integer);
+begin
+  Send(Data, Cnt, Event, WaitTime);
+end;
+
 procedure TAbstractConnectIO.SetConnectInfo(const Value: string);
 begin
   if not SameText(FConnectInfo, Value) then
@@ -814,11 +827,12 @@ begin
   Bind('C_BeforeRemoveConnectIO', GContainer as IConnectIOEnum, ['S_BeforeRemove']);
 end;
 
-constructor TDevice.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
+constructor TDevice.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string);
 begin
   Create();
   FAddressArray := AddressArray;
   FDName := DeviceName;
+  FNamesArray := ModulesNames;
 end;
 
 procedure TDevice.Loaded;
@@ -859,9 +873,14 @@ end;
 function TDevice.GetDeviceName: string;
 begin
   if FDName = '' then
-    Result := TAddressRec(FAddressArray).ToNames
+    Result := AddressArrayToNames(FAddressArray)
   else
     Result := FDName;
+end;
+
+function TDevice.GetNamesArray(Index: Integer): string;
+begin
+  Result := FNamesArray.Split([' ',';'], TStringSplitOptions.ExcludeEmpty)[Index];
 end;
 
 procedure TDevice.SetDeviceName(const Value: string);
@@ -927,6 +946,15 @@ procedure TDevice.SetBeforeRemoveConnectIO(const Value: string);
 begin
   if FConnectIOName = Value then
     SetConnect(nil);
+end;
+
+function TDevice.AddressArrayToNames(const Adrs: TAddressArray): string;
+begin
+    Result := '';
+    for var e in Adrs do
+     for var i := 0 to High(FAddressArray) do
+      if e = FAddressArray[i] then  Result := Result + NamesArray[i] +' ';
+    Result := Result.Trim;
 end;
 
 function TDevice.CanClose: Boolean;
@@ -1016,7 +1044,7 @@ var
   f: TWorkDataRef;
 begin
   f :=
-    procedure(n: IXMLNode; adr: Byte; const name: string)
+    procedure(n: IXMLNode; adr: integer; const name: string)
     var
       i: IOwnIntfXMLNode;
     begin
@@ -1045,7 +1073,7 @@ begin
   Result := TReadRam.Create(Self);
 end;
 
-constructor TAbstractDevice.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName: string);
+constructor TAbstractDevice.CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string);
 begin
   inherited;
   FMetaDataInfo.ErrAdr := FAddressArray;
@@ -1082,7 +1110,7 @@ var
 begin
   if Supports(GlobalCore, IProjectDataFile, ix) and Assigned(FMetaDataInfo.Info) then
     FindAllWorks(FMetaDataInfo.Info,
-      procedure(wrk: IXMLNode; Adr: Byte; const name: string)
+      procedure(wrk: IXMLNode; Adr: integer; const name: string)
       begin
         ix.SaveEnd(wrk);
       end);
@@ -1241,6 +1269,11 @@ begin
   raise EComConnectIOException.Create(ComportMessage + ' [' + WinError.ToString + '] ' + WinMessage);
 end;
 
+function TComConnectIO.DefaultSpeed: Integer;
+begin
+  Result := FDefaultSpeed;
+end;
+
 destructor TComConnectIO.Destroy;
 begin
   TDebug.Log('----------TComConnectIO.Destroy;---------------');
@@ -1255,10 +1288,13 @@ var
   Ports: TStrings;
 begin
   Ports := TStringList.Create;
+  SetLength(Result, 0);
   try
     EnumComPorts(Ports);
     for s in Ports do
-      CArray.Add<string>(Result, s);
+     begin
+      CArray.Add<string>(Result, s.Split([#0])[0]);
+     end;
   finally
     Ports.Free;
   end;
@@ -1318,6 +1354,9 @@ begin
       Fcom.CustomBaudRate := a[1].ToInteger()
     else
       Fcom.CustomBaudRate := 125000;
+
+    FDefaultSpeed := Fcom.CustomBaudRate;
+
     if (Length(a) > 2) and (a[2] <> '') then
       Fcom.Parity.Bits := TParityBits(a[2].ToInteger())
     else
@@ -1326,7 +1365,8 @@ begin
       Fcom.StopBits := TStopBits(a[3].ToInteger())
     else
       Fcom.StopBits := sbOneStopBit;
-    inherited SetConnectInfo(Fcom.Port);
+//    inherited SetConnectInfo(Fcom.Port);
+    inherited SetConnectInfo(Value);
   end;
 end;
 
@@ -2077,7 +2117,8 @@ end;
 
 procedure TCycle.DoCycle;
 begin
-  (Controller as IDataDevice).ReadWork(nil, FStdOnly);
+  if not FlagNeedStop then
+    (Controller as IDataDevice).ReadWork(nil, FStdOnly);
 end;
 
 function TCycle.GetCycle: Boolean;
@@ -2148,7 +2189,12 @@ begin
       FlagNeedStop := True;
       S_Status := FOldStatus;
       ConnectUnlock;
-      FTimer.Interval := 1;
+   /// TEST
+  //    FTimer.Interval := 1;
+   /// TEST
+    FTimer.Enabled := False;
+    TDevice(Controller).ConnectClose;
+   /// TEST
     end;
 end;
 

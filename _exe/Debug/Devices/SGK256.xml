@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <SGK256 SIZE="0" ADDR="1107" INFO="СГК256">
+    <WRK SIZE="512" FLOW_TIMER_INTERVAL="1200" SP_HI_BYTE="0" FLOW_PROTOCOL="1">
+      <время METR="WT">
+        <DEV TYPE="48" INDEX="2" />
+      </время>
+      <ГК SIZE="0" METR="GK_SGK">
+        <гк>
+          <DEV TYPE="42" INDEX="5" />
+        </гк>
+        <СГК ARRAY_SIZE="249">
+          <DEV TYPE="42" INDEX="7" />
+        </СГК>
+      </ГК>
+      <T>
+        <DEV TYPE="42" INDEX="3" />
+      </T>
+      <Ubat>
+        <DEV TYPE="42" INDEX="6" />
+      </Ubat>
+      <Gz>
+        <DEV TYPE="42" INDEX="4" />
+      </Gz>
+    </WRK>
+  </SGK256>
+</DEVICE>

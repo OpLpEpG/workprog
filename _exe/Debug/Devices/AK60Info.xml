@@ -1,191 +1,183 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DEVICE SIZE="0">
-  <AK60 SIZE="0" ADDR="1105" INFO="AK60 проверка протокола" DELAY_DEVIDER="256" WORK_TIME_ENABLE="1">
-    <WRK SIZE="2048" SP_HI_BYTE="128" FLOW_PROTOCOL="1" FLOW_TIMER_INTERVAL="500">
-      <время METR="WT">
-        <DEV TYPE="48" INDEX="2" />
-      </время>
-      <РК SIZE="0">
-        <ГК>
-          <DEV TYPE="46" INDEX="3" />
-        </ГК>
-        <ГК_2>
-          <DEV TYPE="46" INDEX="515" />
-        </ГК_2>
-        <ННК1>
-          <DEV TYPE="46" INDEX="4" />
-        </ННК1>
-        <ННК1_2>
-          <DEV TYPE="46" INDEX="516" />
-        </ННК1_2>
-        <ННК2>
-          <DEV TYPE="46" INDEX="5" />
-        </ННК2>
-        <ННК2_2>
-          <DEV TYPE="46" INDEX="517" />
-        </ННК2_2>
-        <НГК>
-          <DEV TYPE="46" INDEX="6" />
-        </НГК>
-        <НГК_2>
-          <DEV TYPE="46" INDEX="518" />
-        </НГК_2>
-      </РК>
-      <U SIZE="0">
-        <опоры>
-          <DEV TYPE="46" INDEX="9" />
-        </опоры>
-        <опоры_2>
-          <DEV TYPE="46" INDEX="521" />
-        </опоры_2>
-        <давлен1>
-          <DEV TYPE="46" INDEX="10" />
-        </давлен1>
-        <давлен1_2>
-          <DEV TYPE="46" INDEX="522" />
-        </давлен1_2>
-        <давлен2>
-          <DEV TYPE="46" INDEX="11" />
-        </давлен2>
-        <давлен2_2>
-          <DEV TYPE="46" INDEX="523" />
-        </давлен2_2>
-        <темп>
-          <DEV TYPE="44" INDEX="12" />
-        </темп>
-        <темп_2>
-          <DEV TYPE="44" INDEX="524" />
-        </темп_2>
-      </U>
-      <Inclin SIZE="0">
-        <Accel SIZE="0">
-          <X>
-            <DEV TYPE="45" INDEX="13" />
-          </X>
-          <Y>
-            <DEV TYPE="45" INDEX="14" />
-          </Y>
-          <Z>
-            <DEV TYPE="45" INDEX="15" />
-          </Z>
-        </Accel>
-        <Magnit SIZE="0">
-          <X>
-            <DEV TYPE="45" INDEX="525" />
-          </X>
-          <Y>
-            <DEV TYPE="45" INDEX="526" />
-          </Y>
-          <Z>
-            <DEV TYPE="45" INDEX="527" />
-          </Z>
-        </Magnit>
-      </Inclin>
-      <ФКД1 ARRAY_SIZE="496">
-        <DEV TYPE="46" INDEX="16" />
-      </ФКД1>
-      <ФКД2 ARRAY_SIZE="495">
-        <DEV TYPE="46" INDEX="528" />
-      </ФКД2>
-    </WRK>
-    <RAM SIZE="4096" RAM_SIZE="1000" RAM_HI_SPEED_PROTOCOL="129" RAM_LO_SPEED_PROTOCOL="1" SP_HI_BYTE="128" FLOW_PROTOCOL="1" FLOW_TIMER_INTERVAL="400">
-      <время METR="WT">
-        <DEV TYPE="48" INDEX="2" />
-      </время>
-      <РК SIZE="0">
-        <ГК>
-          <DEV TYPE="46" INDEX="3" />
-        </ГК>
-        <ГК_2>
-          <DEV TYPE="46" INDEX="515" />
-        </ГК_2>
-        <ННК1>
-          <DEV TYPE="46" INDEX="4" />
-        </ННК1>
-        <ННК1_2>
-          <DEV TYPE="46" INDEX="516" />
-        </ННК1_2>
-        <ННК2>
-          <DEV TYPE="46" INDEX="5" />
-        </ННК2>
-        <ННК2_2>
-          <DEV TYPE="46" INDEX="517" />
-        </ННК2_2>
-        <НГК>
-          <DEV TYPE="46" INDEX="6" />
-        </НГК>
-        <НГК_2>
-          <DEV TYPE="46" INDEX="518" />
-        </НГК_2>
-      </РК>
-      <U SIZE="0">
-        <опоры>
-          <DEV TYPE="46" INDEX="9" />
-        </опоры>
-        <опоры_2>
-          <DEV TYPE="46" INDEX="521" />
-        </опоры_2>
-        <давлен1>
-          <DEV TYPE="46" INDEX="10" />
-        </давлен1>
-        <давлен1_2>
-          <DEV TYPE="46" INDEX="522" />
-        </давлен1_2>
-        <давлен2>
-          <DEV TYPE="46" INDEX="11" />
-        </давлен2>
-        <давлен2_2>
-          <DEV TYPE="46" INDEX="523" />
-        </давлен2_2>
-        <темп>
-          <DEV TYPE="44" INDEX="12" />
-        </темп>
-        <темп_2>
-          <DEV TYPE="44" INDEX="524" />
-        </темп_2>
-      </U>
-      <Inclin SIZE="0">
-        <Accel SIZE="0">
-          <X>
-            <DEV TYPE="45" INDEX="13" />
-          </X>
-          <Y>
-            <DEV TYPE="45" INDEX="14" />
-          </Y>
-          <Z>
-            <DEV TYPE="45" INDEX="15" />
-          </Z>
-        </Accel>
-        <Magnit SIZE="0">
-          <X>
-            <DEV TYPE="45" INDEX="525" />
-          </X>
-          <Y>
-            <DEV TYPE="45" INDEX="526" />
-          </Y>
-          <Z>
-            <DEV TYPE="45" INDEX="527" />
-          </Z>
-        </Magnit>
-      </Inclin>
-      <ФКД1 ARRAY_SIZE="496">
-        <DEV TYPE="46" INDEX="16" />
-      </ФКД1>
-      <ФКД2 ARRAY_SIZE="495">
-        <DEV TYPE="46" INDEX="528" />
-      </ФКД2>
-      <Ку_ш1>
-        <DEV TYPE="49" INDEX="1025" />
-      </Ку_ш1>
-      <Ку_ш2>
-        <DEV TYPE="49" INDEX="1537" />
-      </Ку_ш2>
-      <ШУМЫ1 ARRAY_SIZE="510">
-        <DEV TYPE="18" INDEX="1026" />
-      </ШУМЫ1>
-      <ШУМЫ2 ARRAY_SIZE="510">
-        <DEV TYPE="18" INDEX="1538" />
-      </ШУМЫ2>
-    </RAM>
-  </AK60>
-</DEVICE>
+	<AK60 SIZE="0" ADDR="1105" INFO="AK60 проверка протокола" DELAY_DEVIDER="256" WORK_TIME_ENABLE="1"><WRK SIZE="2048" SP_HI_BYTE="128" FLOW_PROTOCOL="1" FLOW_TIMER_INTERVAL="2000">
+			<время METR="WT">
+				<DEV TYPE="48" INDEX="2"/>
+			</время>
+			<ГК SIZE="0"><ГК1><DEV TYPE="46" INDEX="3"/>
+				</ГК1><гк><DEV TYPE="46" INDEX="515"/>
+				</гк><ННК1>
+					<DEV TYPE="46" INDEX="4"/>
+				</ННК1>
+				<ННК1_2>
+					<DEV TYPE="46" INDEX="516"/>
+				</ННК1_2>
+				<ННК2>
+					<DEV TYPE="46" INDEX="5"/>
+				</ННК2>
+				<ННК2_2>
+					<DEV TYPE="46" INDEX="517"/>
+				</ННК2_2>
+				<НГК>
+					<DEV TYPE="46" INDEX="6"/>
+				</НГК>
+				<НГК_2>
+					<DEV TYPE="46" INDEX="518"/>
+				</НГК_2>
+			</ГК><U SIZE="0">
+				<опоры>
+					<DEV TYPE="46" INDEX="9"/>
+				</опоры>
+				<опоры_2>
+					<DEV TYPE="46" INDEX="521"/>
+				</опоры_2>
+				<давлен1>
+					<DEV TYPE="46" INDEX="10"/>
+				</давлен1>
+				<давлен1_2>
+					<DEV TYPE="46" INDEX="522"/>
+				</давлен1_2>
+				<давлен2>
+					<DEV TYPE="46" INDEX="11"/>
+				</давлен2>
+				<давлен2_2>
+					<DEV TYPE="46" INDEX="523"/>
+				</давлен2_2>
+				<темп>
+					<DEV TYPE="44" INDEX="12"/>
+				</темп>
+				<темп_2>
+					<DEV TYPE="44" INDEX="524"/>
+				</темп_2>
+			</U>
+			<Inclin SIZE="0">
+				<Accel SIZE="0">
+					<X>
+						<DEV TYPE="45" INDEX="13"/>
+					</X>
+					<Y>
+						<DEV TYPE="45" INDEX="14"/>
+					</Y>
+					<Z>
+						<DEV TYPE="45" INDEX="15"/>
+					</Z>
+				</Accel>
+				<Magnit SIZE="0">
+					<X>
+						<DEV TYPE="45" INDEX="525"/>
+					</X>
+					<Y>
+						<DEV TYPE="45" INDEX="526"/>
+					</Y>
+					<Z>
+						<DEV TYPE="45" INDEX="527"/>
+					</Z>
+				</Magnit>
+			</Inclin>
+			<ФКД1 ARRAY_SIZE="496">
+				<DEV TYPE="46" INDEX="16"/>
+			</ФКД1>
+			<ФКД2 ARRAY_SIZE="495">
+				<DEV TYPE="46" INDEX="528"/>
+			</ФКД2>
+		</WRK>
+		<RAM SIZE="4096" RAM_SIZE="1000" RAM_HI_SPEED_PROTOCOL="129" RAM_LO_SPEED_PROTOCOL="1" SP_HI_BYTE="128" FLOW_PROTOCOL="1" FLOW_TIMER_INTERVAL="400">
+			<время METR="WT">
+				<DEV TYPE="48" INDEX="2"/>
+			</время>
+			<РК SIZE="0">
+				<ГК>
+					<DEV TYPE="46" INDEX="3"/>
+				</ГК>
+				<ГК_2>
+					<DEV TYPE="46" INDEX="515"/>
+				</ГК_2>
+				<ННК1>
+					<DEV TYPE="46" INDEX="4"/>
+				</ННК1>
+				<ННК1_2>
+					<DEV TYPE="46" INDEX="516"/>
+				</ННК1_2>
+				<ННК2>
+					<DEV TYPE="46" INDEX="5"/>
+				</ННК2>
+				<ННК2_2>
+					<DEV TYPE="46" INDEX="517"/>
+				</ННК2_2>
+				<НГК>
+					<DEV TYPE="46" INDEX="6"/>
+				</НГК>
+				<НГК_2>
+					<DEV TYPE="46" INDEX="518"/>
+				</НГК_2>
+			</РК>
+			<U SIZE="0">
+				<опоры>
+					<DEV TYPE="46" INDEX="9"/>
+				</опоры>
+				<опоры_2>
+					<DEV TYPE="46" INDEX="521"/>
+				</опоры_2>
+				<давлен1>
+					<DEV TYPE="46" INDEX="10"/>
+				</давлен1>
+				<давлен1_2>
+					<DEV TYPE="46" INDEX="522"/>
+				</давлен1_2>
+				<давлен2>
+					<DEV TYPE="46" INDEX="11"/>
+				</давлен2>
+				<давлен2_2>
+					<DEV TYPE="46" INDEX="523"/>
+				</давлен2_2>
+				<темп>
+					<DEV TYPE="44" INDEX="12"/>
+				</темп>
+				<темп_2>
+					<DEV TYPE="44" INDEX="524"/>
+				</темп_2>
+			</U>
+			<Inclin SIZE="0">
+				<Accel SIZE="0">
+					<X>
+						<DEV TYPE="45" INDEX="13"/>
+					</X>
+					<Y>
+						<DEV TYPE="45" INDEX="14"/>
+					</Y>
+					<Z>
+						<DEV TYPE="45" INDEX="15"/>
+					</Z>
+				</Accel>
+				<Magnit SIZE="0">
+					<X>
+						<DEV TYPE="45" INDEX="525"/>
+					</X>
+					<Y>
+						<DEV TYPE="45" INDEX="526"/>
+					</Y>
+					<Z>
+						<DEV TYPE="45" INDEX="527"/>
+					</Z>
+				</Magnit>
+			</Inclin>
+			<ФКД1 ARRAY_SIZE="496">
+				<DEV TYPE="46" INDEX="16"/>
+			</ФКД1>
+			<ФКД2 ARRAY_SIZE="495">
+				<DEV TYPE="46" INDEX="528"/>
+			</ФКД2>
+			<Ку_ш1>
+				<DEV TYPE="49" INDEX="1025"/>
+			</Ку_ш1>
+			<Ку_ш2>
+				<DEV TYPE="49" INDEX="1537"/>
+			</Ку_ш2>
+			<ШУМЫ1 ARRAY_SIZE="510">
+				<DEV TYPE="18" INDEX="1026"/>
+			</ШУМЫ1>
+			<ШУМЫ2 ARRAY_SIZE="510">
+				<DEV TYPE="18" INDEX="1538"/>
+			</ШУМЫ2>
+		</RAM>
+	</AK60></DEVICE>

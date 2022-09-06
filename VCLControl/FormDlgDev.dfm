@@ -11,13 +11,11 @@ object FormCreateDev: TFormCreateDev
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnShow = FormShow
   DesignSize = (
     392
     420)
-  PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 8
@@ -64,6 +62,23 @@ object FormCreateDev: TFormCreateDev
     Anchors = [akLeft, akTop, akRight, akBottom]
     BorderWidth = 1
     Color = clBtnHighlight
+    Colors.BorderColor = 15987699
+    Colors.DisabledColor = clGray
+    Colors.DropMarkColor = 15385233
+    Colors.DropTargetColor = 15385233
+    Colors.DropTargetBorderColor = 15385233
+    Colors.FocusedSelectionColor = 15385233
+    Colors.FocusedSelectionBorderColor = 15385233
+    Colors.GridLineColor = 15987699
+    Colors.HeaderHotColor = clBlack
+    Colors.HotColor = clBlack
+    Colors.SelectionRectangleBlendColor = 15385233
+    Colors.SelectionRectangleBorderColor = 15385233
+    Colors.SelectionTextColor = clBlack
+    Colors.TreeLineColor = 9471874
+    Colors.UnfocusedColor = clGray
+    Colors.UnfocusedSelectionColor = 13421772
+    Colors.UnfocusedSelectionBorderColor = 13421772
     Ctl3D = True
     DragMode = dmAutomatic
     DragType = dtVCL
@@ -90,7 +105,7 @@ object FormCreateDev: TFormCreateDev
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coDisableAnimatedResize]
         Position = 1
         Text = #1054#1087#1080#1089#1072#1085#1080#1077
-        Width = 207
+        Width = 213
       end
       item
         Position = 2

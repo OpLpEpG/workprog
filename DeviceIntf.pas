@@ -20,7 +20,8 @@ type
 //     Data: Pointer; DataSize: integer;
 //  end;
   TEepromEventRes = record
-    DevAdr: Integer; eep: IXMLInfo;
+    DevAdr: Integer;
+    eep: IXMLInfo;
   end;
   TWorkEvent = procedure (Res: TWorkEventRes) of object;
   TEepromEventRef = reference to procedure (Res: TEepromEventRes);
@@ -48,6 +49,7 @@ type
 //интерфейс устройство умеющее подключаться к IConnectIO
   IDevice = interface;
   TDeviceArray = TArray<IDevice>;
+  TReceiveDataRef = reference to procedure(Data: Pointer; DataSize: integer);
 
   TConnectIOStatus =(iosOpen, iosError, iosLock);
 
@@ -76,6 +78,9 @@ type
     procedure Lock(const User);
     procedure Unlock(const User);
 
+    procedure CheckOpen;
+    procedure SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1);
+
     function GetStatus: TSetConnectIOStatus;
 
     property ConnectInfo: string read GetConnectInfo write SetConnectInfo;
@@ -87,6 +92,7 @@ type
   ///	</summary>
   IComPortConnectIO = interface(IConnectIO)
   ['{617A30B1-F76F-4583-BAB5-80794947CEA2}']
+   function DefaultSpeed: Integer;
   end;
   ///	<summary>
   ///	  реализация IConnectIO для TCP
@@ -154,6 +160,8 @@ type
   ['{D4F8618E-42CE-4893-9EBB-75E178162038}']
     procedure SetConnect(AIConnectIO: IConnectIO);
     function GetConnect: IConnectIO;
+    function GetNamesArray(Index: Integer): string;
+    function AddressArrayToNames(const Addrs: TAddressArray): string;
 //    function GetDeviceName: string;
 //    procedure SetDeviceName(const Value: string);
 //  Функция по заданным адресам пытается получить IDevice;
@@ -163,6 +171,7 @@ type
     // Установка интерфейса связи с прибором
     property IConnect: IConnectIO read GetConnect write SetConnect;
     property Addrs: TAddressArray read GetAddrs;
+    property NamesArray[Index: Integer]: string read GetNamesArray;
     property Status: TDeviceStatus read GetStatus;
 //    property Name: string read GetDeviceName write SetDeviceName;
   end;
@@ -243,7 +252,7 @@ type
   IGetDevice = interface
   ['{01465AA3-D6F2-4A6D-941E-016B27BF2AB8}']
    procedure Enum(GetDevicesCB: TGetDevicesCB);
-   function  Device(const Addrs: TAddressArray; const DeviceName: string): IDevice;
+   function  Device(const Addrs: TAddressArray; const DeviceName, ModulesNames: string): IDevice;
  end;
 
   IGetConnectIO = interface
@@ -307,7 +316,7 @@ type
     ///	<remarks>
     ///	  запись для одного модуля
     ///	</remarks>
-    procedure WriteEeprom(Addr: Integer; ev: TResultEventRef);
+    procedure WriteEeprom(Addr: Integer; ev: TResultEventRef; section: Integer = -1);
   end;
 
   TSetDelayRes = record
@@ -436,8 +445,6 @@ type
 //  end;
 
 // Вспомогательные интерфейсы
-
-  TReceiveDataRef = reference to procedure(Data: Pointer; DataSize: integer);
 
   ILowLevelDeviceIO = interface(IDevice)
   ['{3754E9DF-B976-47D0-A25A-486041E7CCDB}']

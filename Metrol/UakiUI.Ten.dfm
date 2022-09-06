@@ -47,16 +47,16 @@ object FrameUakiTEN: TFrameUakiTEN
   object lbT: TLabel
     Left = 4
     Top = 73
-    Width = 20
-    Height = 13
+    Width = 25
+    Height = 15
     Caption = '-----'
   end
   object Label1: TLabel
     Left = 3
     Top = 8
-    Width = 101
+    Width = 118
     Height = 13
-    Caption = #1052#1086#1097#1085#1086#1089#1090#1100' '#1058#1069#1053#1086#1074' %'
+    Caption = #1052#1086#1097#1085#1086#1089#1090#1100' '#1058#1069#1053#1086#1074' 0-128'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11

@@ -238,7 +238,7 @@ begin
   if not Assigned(FMetaDataInfo.Info) then Exit;
   Tree.BeginUpdate;
   try
-   FindAllWorks(FMetaDataInfo.Info, procedure(wrk: IXMLNode; Adr: Byte; const name: string)
+   FindAllWorks(FMetaDataInfo.Info, procedure(wrk: IXMLNode; Adr: Integer; const name: string)
      procedure Add(Parent :PVirtualNode; u: IXMLNode);
       var
        chn: PVirtualNode;

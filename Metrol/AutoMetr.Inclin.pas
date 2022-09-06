@@ -96,9 +96,9 @@ uses math;
 { TGOTask }
 
 function TGOTask.CheckAngle(CurAndle: TAngle): Boolean;
-  function DeltaAngle(ang: Double): Double;
+  function DeltaAngle(a: Double): Double;
   begin
-    Result := DegNormalize(ang);
+    Result := DegNormalize(a);
     if Result > 180  then Result := Result - 360;
   end;
 begin

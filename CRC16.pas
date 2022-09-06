@@ -4,6 +4,9 @@ interface
 
 uses  System.SysUtils, Winapi.Windows;
 
+type
+ TrunCRC16 = function ( Data: Pbyte; First: word; Count: DWORD; var CRCLo, CRCHi: byte): word;
+
 function  runCRC16( Data: Pbyte; First: word; Count: Dword; var CRCLo, CRCHi: byte): word;
 
 procedure  SetCRC16(Data: Pbyte; Count, CRCFirst: word); overload;

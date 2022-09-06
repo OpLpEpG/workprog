@@ -34,7 +34,7 @@ type
     procedure btLoadClick(Sender: TObject);
     procedure btStopClick(Sender: TObject);
   private
-    adr, chip, serial: Integer;
+    adr, subAdr, chip, serial: Integer;
     FXml: IXMLNode;
     Chips: TChips;
     HackSN: THackData;
@@ -46,6 +46,7 @@ type
     procedure LoadFile(const Value: string);
     procedure ParsChip(PData: PByte);
     procedure SetAdr(Aadr: Integer);
+    procedure SetSubAdr(ASubadr: Integer);
     procedure SetChip(AChip: Integer);
     procedure SetSerial(ASerial: Integer);
     procedure WriteSerialToBuf(ASerial: Word);
@@ -87,7 +88,8 @@ const
  SBT_ADR = 0;
  SBT_SER = 1;
  SBT_CHIP = 2;
- SBT_FILE = 3;
+ SBT_SUB = 3;
+ SBT_FILE = 4;
 
 { THackData }
 
@@ -133,6 +135,7 @@ begin
 //  CArray.Add<TChip>(Chips, Tchip.Create(5, 128, $400, 4096, 'STM32F401-1',32,$08008000));
   CArray.Add<TChip>(Chips, Tchip.Create(6, 128, $F4, 1024, 'AVR128db48',32));
   SetAdr(-1);
+  SetSubAdr($78);
   SetChip(-1);
   SetSerial(-1);
 //  PInteger(9)^ := 1243;
@@ -183,6 +186,12 @@ begin
   else sb.Panels[SBT_SER].Text := 'не инициализ.'
 end;
 
+procedure TFormBoot.SetSubAdr(ASubadr: Integer);
+begin
+  subadr := ASubadr;
+  sb.Panels[SBT_SUB].Text := Format('sub:0x%s', [intToHex(subadr,2)])
+end;
+
 procedure TFormBoot.WriteSerialToBuf(ASerial: Word);
 begin
   if Assigned(HackSN.PData) then
@@ -207,6 +216,7 @@ begin
     FXml := GDoc.DocumentElement;
     FXml := GDoc.AddChild('DEVICE');
     SetAdr(-1);
+    SetSubAdr($78);
     SetChip(-1);
     SetSerial(-1);
     try
@@ -266,9 +276,10 @@ end;
 
 procedure TFormBoot.btHandleClick(Sender: TObject);
 begin
- if TDlgSetupAdr.Execute(adr, chip, serial, Chips) then
+ if TDlgSetupAdr.Execute(adr, subAdr, chip, serial, Chips) then
   begin
    SetAdr(adr);
+   SetSubAdr(subAdr);
    SetChip(chip);
    SetSerial(serial);
 //   WriteSerialToBuf(serial);
@@ -320,7 +331,7 @@ begin
   if adr = -1 then Exit;
 
   d := TStdRec.Create(adr, CMD_BOOT, 4);
-  d.AssignInt($12345678);
+  d.AssignInt($12345600 + subAdr);
 //  d := TbootInTest.Create(Adr);
   GetDevice.SendROW(d.Ptr, d.SizeOf, procedure(p: Pointer; n: integer)
   begin

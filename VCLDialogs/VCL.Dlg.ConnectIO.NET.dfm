@@ -1,11 +1,10 @@
 inherited FormSetupNet: TFormSetupNet
   Caption = #1059#1089#1090#1072#1085#1086#1074#1082#1080' '#1057#1077#1090#1080
   ClientHeight = 226
-  ExplicitHeight = 255
+  ExplicitHeight = 265
   DesignSize = (
     300
     226)
-  PixelsPerInch = 96
   TextHeight = 13
   inherited Label2: TLabel
     Top = 104

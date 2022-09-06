@@ -40,14 +40,15 @@ uses
   Dev.BK in 'Dev.BK.pas',
   Dev.TelesisRetr2 in 'Dev.TelesisRetr2.pas',
   MicroSDConn in 'MicroSDConn.pas',
-  NetConn in 'NetConn.pas';
+  NetConn in 'NetConn.pas',
+  DevHorizontM in 'DevHorizontM.pas';
 
 {$R *.res}
 
 type
  TComDevPlugin = class(TAbstractPlugin, IGetDevice, IGetConnectIO)
  protected
-   function  Device(const Addrs: TAddressArray; const DeviceName: string): IDevice;
+   function  Device(const Addrs: TAddressArray; const DeviceName, ModulesNames: string): IDevice;
    procedure EnmDevices(GetDevicesCB: TGetDevicesCB);
    procedure IGetDevice.Enum = EnmDevices;
    procedure IGetConnectIO.Enum = EnumConnect;
@@ -124,7 +125,7 @@ begin
   inherited;
 end;
 
-function TComDevPlugin.Device(const Addrs: TAddressArray; const DeviceName: string): IDevice;
+function TComDevPlugin.Device(const Addrs: TAddressArray; const DeviceName, ModulesNames: string): IDevice;
  var
   a: Integer;
   adr: TAddressArray;
@@ -135,20 +136,21 @@ begin
   if Length(Adr) > 1 then for a in Adr do if A > 250 then raise EDeviceException.Create('Устройство с адресом >250 может быть только одно');
   if Length(Adr) >= 1 then
    begin
-    if Adr[0] = 1100 then Result := TUso.CreateWithAddr(Adr, DeviceName) as IDevice
-    else if Adr[0] = 1101 then Result := TGlu.CreateWithAddr(Adr, DeviceName) as IDevice
-    else if Adr[0] = ADR_UAKI then Result := TDevUaki.CreateWithAddr(Adr, DeviceName) as IDevice
-    else if Adr[0] = ADR_UAKI2 then Result := TDevUaki2.CreateWithAddr(Adr, DeviceName) as IDevice
-    else if Adr[0] = ADR_STOL_GK then Result := TStolGK.CreateWithAddr(Adr, DeviceName) as IDevice
-    else if Adr[0] = ADR_PULT_BK then Result := TDevPultBK.CreateWithAddr(Adr, DeviceName) as IDevice
-    else if Adr[0] = 1111 then Result := TGluSonic.CreateWithAddr(Adr, DeviceName) as IDevice
-    else if (Adr[0] > 1101) and (adr[0] < 1200) then  Result := TPskStd.CreateWithAddr(Adr, DeviceName) as IDevice
-    else if (adr[0] = 1000) then Result := TTelesistem.CreateWithAddr(Adr, DeviceName) as IDevice
-    else if (adr[0] = 1001) then Result := TTelesisRetr.CreateWithAddr(Adr, DeviceName) as IDevice
-    else if (adr[0] = 1002) then Result := TTelesis1ware.CreateWithAddr(Adr, DeviceName) as IDevice
+    if Adr[0] = 1100 then Result := TUso.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if Adr[0] = 1101 then Result := TGlu.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if Adr[0] = ADR_UAKI then Result := TDevUaki.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if Adr[0] = ADR_UAKI2 then Result := TDevUaki2.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if Adr[0] = ADR_STOL_GK then Result := TStolGK.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if Adr[0] = ADR_PULT_BK then Result := TDevPultBK.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if Adr[0] = 1111 then Result := TGluSonic.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if (Adr[0] > 1101) and (adr[0] < 1200) then  Result := TPskStd.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if (Adr[0] > 1200) and (adr[0] < 1300) then  Result := TDeviceHM.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if (adr[0] = 1000) then Result := TTelesistem.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if (adr[0] = 1001) then Result := TTelesisRetr.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if (adr[0] = 1002) then Result := TTelesis1ware.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
     else if (adr[0] > 250) then raise EDeviceException.Create('Устройство с неверным адресом')
 
-    else Result := TDeviceBur.CreateWithAddr(Adr, DeviceName) as IDevice
+    else Result := TDeviceBur.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
    end
 //  else Result := TViewRamDevice.CreateWithAddr(nil, Adr);
 end;

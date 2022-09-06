@@ -3,7 +3,7 @@ object DlgSetupAdr: TDlgSetupAdr
   Top = 0
   BorderStyle = bsToolWindow
   Caption = #1042#1088#1091#1095#1085#1091#1102' '#1091#1089#1090#1072#1085#1086#1074#1082#1080
-  ClientHeight = 184
+  ClientHeight = 229
   ClientWidth = 291
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,9 +11,7 @@ object DlgSetupAdr: TDlgSetupAdr
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
-  PixelsPerInch = 96
   TextHeight = 13
   object Label2: TLabel
     Left = 24
@@ -43,9 +41,23 @@ object DlgSetupAdr: TDlgSetupAdr
     Height = 13
     Caption = #1048#1079#1084#1077#1085#1103#1102#1090' '#1090#1086#1083#1100#1082#1086' '#1088#1077#1078#1080#1084' '#1087#1088#1086#1075#1088#1072#1084#1084#1080#1088#1086#1074#1072#1085#1080#1103
   end
+  object Label5: TLabel
+    Left = 24
+    Top = 134
+    Width = 114
+    Height = 13
+    Caption = #1040#1076#1088#1077#1089' '#1087#1086#1076' '#1091#1089#1090#1088#1086#1081#1089#1090#1074#1072
+  end
+  object Label6: TLabel
+    Left = 24
+    Top = 153
+    Width = 12
+    Height = 13
+    Caption = '0x'
+  end
   object btOK: TButton
     Left = 24
-    Top = 139
+    Top = 187
     Width = 75
     Height = 25
     Caption = 'OK'
@@ -53,8 +65,8 @@ object DlgSetupAdr: TDlgSetupAdr
     TabOrder = 0
   end
   object btCancel: TButton
-    Left = 120
-    Top = 139
+    Left = 136
+    Top = 187
     Width = 75
     Height = 25
     Caption = #1054#1090#1084#1077#1085#1072
@@ -84,5 +96,13 @@ object DlgSetupAdr: TDlgSetupAdr
     Height = 21
     TabOrder = 4
     Text = '-1'
+  end
+  object edSubAdr: TEdit
+    Left = 38
+    Top = 150
+    Width = 83
+    Height = 21
+    TabOrder = 5
+    Text = 'nop'
   end
 end

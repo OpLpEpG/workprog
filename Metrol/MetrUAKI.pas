@@ -97,8 +97,10 @@ begin
   (u as ICycle).Cycle := False;
   while (u as ICycle).Cycle do
    begin
+    TThread.Yield;
 //    TDebug.Log('%s', ['--------------------------NOP---------------------']);
-    Application.ProcessMessages;
+
+//    Application.ProcessMessages;
    end;
 //  if  Supports(GlobalCore, IDeviceEnum, de) then
 //   begin
@@ -306,13 +308,14 @@ function TFormUAKI.GetUaki: IUaki;
   d: IDevice;
   a: TAddressArray;
 begin
+  Result := nil;
   try
   if Supports(GlobalCore, IGetDevice, g) and Supports(GlobalCore, IDeviceEnum, de) then
    begin
-    for d in de.Enum() do if Supports(d, IUaki, Result) then Exit;
+    for d in de.Enum() do if Supports(d, IUaki, Result) then Exit(d as IUaki);
     SetLength(a, 1);
     a[0] := AdressUaki;
-    d := g.Device(a, 'UAKI');
+    d := g.Device(a, 'UAKI', 'UAKI');
     de.Add(d);
     FBinded := False;
     Result := d as IUaki;

@@ -150,7 +150,7 @@ type
     procedure ScennaBegin();
     procedure ScennaRun(Event: TCmdByteRef; ErrEvent: Boolean = False);
     procedure CheckConnect(); override;
-    class function GetPSKInfo(Addr: Integer): IXMLNode;
+    class function GetPSKInfo(Addr: Integer; const name: string): IXMLNode;
 //    procedure ChLockLockOpen(const User; e: EPskExceptionClass);
 //    procedure UnLockClose(const User);
   end;
@@ -593,7 +593,7 @@ end;
 //  Result := TActionsDev;
 //end;
 
-class function TAbstractPsk.GetPSKInfo(Addr: Integer): IXMLNode;
+class function TAbstractPsk.GetPSKInfo(Addr: Integer; const name: string): IXMLNode;
  var
   SearchRec: TSearchRec;
   Found: integer;
@@ -605,7 +605,8 @@ begin
   while Found = 0 do
    begin
     GDoc.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Devices' +'\'+SearchRec.Name);
-    if Assigned(FindDev(GDoc.DocumentElement, Addr)) then Exit(GDoc.DocumentElement);
+    var n := FindDev(GDoc.DocumentElement, Addr);
+    if Assigned(n) and (n.NodeName = name) then Exit(GDoc.DocumentElement);
     Found := FindNext(SearchRec);
    end;
 end;
@@ -701,7 +702,7 @@ begin
    begin
     if Length(ErrAdr) = 0 then Exit;
     if Length(FAddressArray) <> 1 then raise EAbstractPskException.Create(RS_ZeroLenAdrArr);
-    Info := GetPSKInfo(FAddressArray[0]);
+    Info := GetPSKInfo(FAddressArray[0], NamesArray[0]);
     SetLength(ErrAdr, 0);
     if not Assigned(Info) then CArray.Add<Integer>(ErrAdr, FAddressArray[0])
     else

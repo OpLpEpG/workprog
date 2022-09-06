@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DEVICE SIZE="0">
+  <IK45_I SIZE="0" ADDR="1115" INFO="ик45 и">
+    <WRK SIZE="64" SP_HI_BYTE="0" FLOW_PROTOCOL="1" FLOW_TIMER_INTERVAL="1500">
+      <время METR="WT">
+        <DEV TYPE="47" INDEX="4" />
+      </время>
+      <ГК SIZE="0" METR="GK1">
+        <гк>
+          <DEV TYPE="42" INDEX="9" />
+        </гк>
+      </ГК>
+      <Inclin SIZE="0" METR="DPSK">
+        <accel SIZE="0">
+          <X>
+            <DEV TYPE="41" INDEX="10" />
+          </X>
+          <Y>
+            <DEV TYPE="41" INDEX="11" />
+          </Y>
+          <Z>
+            <DEV TYPE="41" INDEX="12" />
+          </Z>
+        </accel>
+        <magnit SIZE="0">
+          <X>
+            <DEV TYPE="41" INDEX="13" />
+          </X>
+          <Y>
+            <DEV TYPE="41" INDEX="14" />
+          </Y>
+          <Z>
+            <DEV TYPE="41" INDEX="15" />
+          </Z>
+        </magnit>
+        <T>
+          <DEV TYPE="41" INDEX="16" />
+        </T>
+      </Inclin>
+      <ИК SIZE="0">
+        <ik05>
+          <DEV TYPE="42" INDEX="4" />
+        </ik05>
+        <ik07>
+          <DEV TYPE="42" INDEX="5" />
+        </ik07>
+        <ik10>
+          <DEV TYPE="42" INDEX="6" />
+        </ik10>
+        <ik14>
+          <DEV TYPE="42" INDEX="7" />
+        </ik14>
+        <T>
+          <DEV TYPE="41" INDEX="8" />
+        </T>
+      </ИК>
+      <Nbat>
+        <DEV TYPE="41" INDEX="17" />
+      </Nbat>
+      <Ip>
+        <DEV TYPE="42" INDEX="18" />
+      </Ip>
+      <Ebat>
+        <DEV TYPE="42" INDEX="19" />
+      </Ebat>
+      <X1>
+        <DEV TYPE="42" INDEX="20" />
+      </X1>
+      <X2>
+        <DEV TYPE="42" INDEX="21" />
+      </X2>
+      <Y1>
+        <DEV TYPE="42" INDEX="22" />
+      </Y1>
+      <Y2>
+        <DEV TYPE="42" INDEX="23" />
+      </Y2>
+      <Ubat>
+        <DEV TYPE="42" INDEX="29" />
+      </Ubat>
+      <tw>
+        <DEV TYPE="42" INDEX="30" />
+      </tw>
+      <tsl>
+        <DEV TYPE="42" INDEX="31" />
+      </tsl>
+    </WRK>
+  </IK45_I>
+</DEVICE>

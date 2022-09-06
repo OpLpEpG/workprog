@@ -337,7 +337,8 @@ begin
   v := XToVar(Result);
   v.EXECUTED := False;
   v.STEP := Step;
-  v.INFO := Format('%d) %s',[step, Info]);
+//  s := Format('%d) %s',[Step, Info]);
+  v.INFO := Format('%d) %s',[Step, Info]);
   AddHG(Result, 'accel');
   AddHG(Result, 'magnit');
   TXMLScriptMath.AddXmlPath(Result, 'TASK');
@@ -351,7 +352,7 @@ begin
   v := XToVar(Result);
   v.EXECUTED := False;
   v.STEP := Step;
-  v.INFO := Format('%d) %s',[step, Info]);
+  v.INFO := Format('%d) %s',[Step, Info]);;
   TXMLScriptMath.AddXmlPath(Result, 'X.DEV');
   TXMLScriptMath.AddXmlPath(Result, 'X.CLC');
   TXMLScriptMath.AddXmlPath(Result, 'Y.DEV');

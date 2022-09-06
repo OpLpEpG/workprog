@@ -57,6 +57,7 @@ type
     varExtNoPowerDataCount  = varRecord+27; // byte
     varDigits  = varRecord+28; // byte
     varPrecision  = varRecord+29; // byte
+    varFrom  = varRecord+30; // word
 
    type
     TTypeDic = TDictionary<Integer, string>;
@@ -898,6 +899,8 @@ type
     function AddXRec(const s: string): IXMLNode;
     begin
       Result := AddMetr(s);
+      for var a in DataAttr do Result.Attributes[a.AttrName] := a.value;
+      SetLength(DataAttr,0);
       if (Result.NodeName = T_WRK) or (Result.NodeName = T_RAM) or (Result.NodeName = T_EEPROM) then CurIndex := 0;
     end;
     function AddXDat(const s: string; arr: Integer = 1): Integer;
@@ -972,6 +975,13 @@ type
           u.Attributes[AT_SERIAL] := PWord(@sp[1])^; // parse serial
           Inc(sp, 3); Dec(sn, 3);   // parse tip, serial
         end;
+        varFrom:
+        begin
+          if Assigned(hev) then hev(sp^, sp + 1);
+          AddDataAttr(AT_FROM, PWord(@sp[1])^);
+//          u.Attributes[AT_FROM] := PWord(@sp[1])^; // parse from addr
+          Inc(sp, 3); Dec(sn, 3);   // parse tip, from Addr
+        end;
         varSupportUartSpeed:
         begin
           if Assigned(hev) then hev(sp^, sp + 1);
@@ -1028,6 +1038,8 @@ begin
 //  SetLength(test, InfoLen);
 //  move(Info^,test[0],InfoLen);
 
+    NoPowerCnt := 0;
+    NoPowerLen := 0;
   CurIndex := 0;
 //  Dec(InfoLen, CASZ); Inc(Info, CASZ); // parse cmdadr
   Add(node, Info, InfoLen); // указывает на тип - структуру

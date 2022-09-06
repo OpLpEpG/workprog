@@ -10,12 +10,10 @@ object FormDlgEeprom: TFormDlgEeprom
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   DesignSize = (
     551
     498)
-  PixelsPerInch = 96
   TextHeight = 13
   object btRead: TButton
     Left = 21
@@ -65,9 +63,27 @@ object FormDlgEeprom: TFormDlgEeprom
     Height = 442
     Anchors = [akLeft, akTop, akRight, akBottom]
     BorderWidth = 1
+    Colors.BorderColor = 15987699
+    Colors.DisabledColor = clGray
+    Colors.DropMarkColor = 15385233
+    Colors.DropTargetColor = 15385233
+    Colors.DropTargetBorderColor = 15385233
+    Colors.FocusedSelectionColor = 15385233
+    Colors.FocusedSelectionBorderColor = 15385233
+    Colors.GridLineColor = 15987699
+    Colors.HeaderHotColor = clBlack
+    Colors.HotColor = clBlack
+    Colors.SelectionRectangleBlendColor = 15385233
+    Colors.SelectionRectangleBorderColor = 15385233
+    Colors.SelectionTextColor = clBlack
+    Colors.TreeLineColor = 9471874
+    Colors.UnfocusedColor = clGray
+    Colors.UnfocusedSelectionColor = 13421772
+    Colors.UnfocusedSelectionBorderColor = 13421772
     Header.AutoSizeIndex = 2
     Header.Height = 17
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring, hoHeaderClickAutoSort]
+    PopupMenu = ppm
     TabOrder = 4
     TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
     TreeOptions.MiscOptions = [toAcceptOLEDrop, toEditable, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
@@ -109,5 +125,14 @@ object FormDlgEeprom: TFormDlgEeprom
         Text = #1077#1076#1080#1085#1080#1094#1099
         Width = 60
       end>
+  end
+  object ppm: TPopupMenu
+    OnPopup = ppmPopup
+    Left = 248
+    Top = 176
+    object EEPROM1: TMenuItem
+      Caption = #1047#1072#1087#1080#1089#1072#1090#1100' '#1057#1077#1082#1094#1080#1102' EEPROM'
+      OnClick = EEPROM1Click
+    end
   end
 end

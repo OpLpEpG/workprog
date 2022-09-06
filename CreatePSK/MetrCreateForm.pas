@@ -12,7 +12,7 @@ uses RootIntf, PluginAPI, ExtendIntf, DockIForm, DeviceIntf, debug_except, Conta
   {$ELSE}
     JvExControls, JvEditorCommon, JvEditor, JvHLEditor,
   {$ENDIF}
-   RootImpl, IDETheme.ActnCtrls;
+   RootImpl;
 
 type
   PNodeExData = ^TNodeExData;
