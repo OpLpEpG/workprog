@@ -117,7 +117,9 @@ begin
      a := TheaderFileParser.GetMetaData;
      TFile.WriteAllBytes(ParamStr(2), a);
 
-   //  TBinaryToXMLParser.Parse(a, nil);
+     TBinaryToXMLParser.Parse(a);
+     TBinaryToXMLParser.AssignAndExpandArrayStructData;
+    // TBinaryToXMLParser.ExpandStructData;
      exit;
 
 //     a := TMetaData.Generate(ss);

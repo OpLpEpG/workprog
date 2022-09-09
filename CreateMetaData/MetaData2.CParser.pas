@@ -27,6 +27,7 @@ uses sysutils, Classes,  System.TypInfo, MetaData2.Classes,
    class function IsNoNamed(attr: TTypedArray): Boolean;
    class function IsStructName(attr: TTypedArray): Boolean;
    class function AddAttrArray(const tocs: Tarray<string>; var arrs: TTypedArray): Boolean;
+   // check defines
    class function GetValue(const s: string): string; static;
   public
    class procedure Parse(const ss: TStrings);
@@ -40,6 +41,19 @@ implementation
 
 { TheaderFileParser }
 
+class constructor TheaderFileParser.Create;
+begin
+  Index := 0;
+  FDefines := TDictionary<string, string>.Create();
+  FStructTypes := TDictionary<string, TStructTypedef>.Create();
+end;
+
+class destructor TheaderFileParser.Destroy;
+begin
+  FDefines.Free;
+  FStructTypes.Free;
+end;
+
 class function TheaderFileParser.AttrArrContains(attr: TTypedArray; item: TTypedClass): Boolean;
 begin
   Result := False;
@@ -52,21 +66,26 @@ begin
   for var a in attr do if a.ClassType = item then Exit(a);
 end;
 
-class function TheaderFileParser.AttrFactory(const tocs: array of string): TTyped;
+class function TheaderFileParser.IsNamed(attr: TTypedArray; var CName: string): Boolean;
 begin
-   for var a in ATR_TYPES do if a.Name = tocs[0] then
-   begin
-    Result := a.cls.Create(a.Tip, GetValue(tocs[2]));
-    Exit;
-   end;
-  raise Exception.Create('Error Message');
+  Result := not AttrArrContains(attr, TattrNoname);
+  if Result and AttrArrContains(attr, TattrName) then CName := TattrName(AttrArrGet(attr, TattrName)).SVal;
 end;
 
-class constructor TheaderFileParser.Create;
+class function TheaderFileParser.IsNamedStruct(attr: TTypedArray; var CName: string): Boolean;
 begin
-  Index := 0;
-  FDefines := TDictionary<string, string>.Create();
-  FStructTypes := TDictionary<string, TStructTypedef>.Create();
+  Result := AttrArrContains(attr, TattrName);
+  if Result then CName := TattrName(AttrArrGet(attr, TattrName)).SVal;
+end;
+
+class function TheaderFileParser.IsNoNamed(attr: TTypedArray): Boolean;
+begin
+  Result := AttrArrContains(attr, TattrNoname);
+end;
+
+class function TheaderFileParser.IsStructName(attr: TTypedArray): Boolean;
+begin
+  Result := AttrArrContains(attr, TattrStructName);
 end;
 
 class function TheaderFileParser.GetValue(const s: string): string;
@@ -96,26 +115,14 @@ begin
    end;
 end;
 
-class function TheaderFileParser.IsNamed(attr: TArray<TTyped>; var CName: string): Boolean;
+class function TheaderFileParser.AttrFactory(const tocs: array of string): TTyped;
 begin
-  Result := not AttrArrContains(attr, TattrNoname);
-  if Result and AttrArrContains(attr, TattrName) then CName := TattrName(AttrArrGet(attr, TattrName)).SVal;
-end;
-
-class function TheaderFileParser.IsNamedStruct(attr: TTypedArray; var CName: string): Boolean;
-begin
-  Result := AttrArrContains(attr, TattrName);
-  if Result then CName := TattrName(AttrArrGet(attr, TattrName)).SVal;
-end;
-
-class function TheaderFileParser.IsNoNamed(attr: TTypedArray): Boolean;
-begin
-  Result := AttrArrContains(attr, TattrNoname);
-end;
-
-class function TheaderFileParser.IsStructName(attr: TTypedArray): Boolean;
-begin
-  Result := AttrArrContains(attr, TattrStructName);
+   for var a in ATR_TYPES do if a.Name = tocs[0] then
+   begin
+    Result := a.cls.Create(a.Tip, GetValue(tocs[2]));
+    Exit;
+   end;
+  raise Exception.Create('Error Message');
 end;
 
 class function TheaderFileParser.DataTypeFactory(attr: TArray<TTyped>; Tip: TmetadataType;
@@ -160,12 +167,6 @@ begin
 end;
 
 
-class destructor TheaderFileParser.Destroy;
-begin
-  FDefines.Free;
-  FStructTypes.Free;
-end;
-
 class procedure TheaderFileParser.Parse(const ss: TStrings);
  var
   row, col: integer;
@@ -173,8 +174,8 @@ class procedure TheaderFileParser.Parse(const ss: TStrings);
   FlagStruct: Boolean;
   TokRow: TArray<string>;
   CurTok: array[0..100] of string;
-  CurrenTTyped: TTypedArray;
-  CurrenStrucTTyped: TTypedArray;
+  CurrenAttrs: TTypedArray;
+  CurrenStrucAttrs: TTypedArray;
   CurrenStructItems: TTypedArray;
   function CheckIncCol: boolean;
   begin
@@ -277,7 +278,7 @@ begin
        else if token = '//-' then
         begin
          GetTokens();
-         CurrenTTyped := CurrenTTyped + [AttrFactory(CurTok)];
+         CurrenAttrs := CurrenAttrs + [AttrFactory(CurTok)];
          Break;
         end
        // добавляем данные структуры
@@ -288,30 +289,30 @@ begin
        // создаем данные стандартного типа...
          for var a in STD_TYPES do if a.Name = token then
           begin
-            dt := DataTypeFactory(CurrenTTyped, a.Tip, ExtractTokens(';'));
+            dt := DataTypeFactory(CurrenAttrs, a.Tip, ExtractTokens(';'));
             break;
           end;
          var dct: TStructTypedef;
        // ...или создаем данные структурного типа
          if not Assigned(dt) and FStructTypes.TryGetValue(token, dct) then
           begin
-            dt := DataStructFactory(CurrenTTyped, dct, ExtractTokens(';'));
+            dt := DataStructFactory(CurrenAttrs, dct, ExtractTokens(';'));
           end;
        // добавляем данные структуры....
          if Assigned(dt) then
           begin
            CurrenStructItems := CurrenStructItems + [dt];
-           CurrenTTyped := [];
+           CurrenAttrs := [];
           end
        // ...или проверяем окончание структуры....
          else if token = '}' then
           begin
            GetTokens(1);
 
-           FStructTypes.Add(CurTok[0], StructFactory(CurrenStrucTTyped, CurrenStructItems));
-           CurrenStrucTTyped:= [];
+           FStructTypes.Add(CurTok[0], StructFactory(CurrenStrucAttrs, CurrenStructItems));
+           CurrenStrucAttrs:= [];
            CurrenStructItems:= [];
-           CurrenTTyped := [];
+           CurrenAttrs := [];
            FlagStruct := False;
           end
           else
@@ -327,8 +328,8 @@ begin
          if (CurTok[0] = 'struct') then
           begin
            ExtractTokens('{');
-           CurrenStrucTTyped := CurrenTTyped;
-           CurrenTTyped := [];
+           CurrenStrucAttrs := CurrenAttrs;
+           CurrenAttrs := [];
            FlagStruct := True;
           end;
         end
@@ -341,7 +342,6 @@ class function TheaderFileParser.GetMetaData: TBytes;
  var
   len : Integer;
 begin
- // var dd := TvalueAttr<Double>.Create(11,'112.34');
   Result := [0,0];
   len := 0;
   for var I := 0 to FStructTypes.Count-1 do

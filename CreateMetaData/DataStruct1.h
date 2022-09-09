@@ -4,6 +4,9 @@
 #pragma pack(push, 1)
 //-name=accel
 //-metr=CLA1
+//- RangeLo2 = -2000
+//- RangeHi2 =  2000
+//- eu = G
 typedef struct
 {
     int16_t X;
@@ -31,6 +34,21 @@ typedef struct
 } fkd_t;
 #pragma pack(pop)
 
+//-name=зонд
+//- metr=MZ1
+#pragma pack(push, 1)
+typedef struct
+{
+	int16_t i[7];
+	int16_t u[7];
+//-name=Бк
+//- RangeLof = -0.3
+//- RangeHif = 3.1
+	uint16_t uBk;
+} zond_t;
+#pragma pack(pop)
+
+
 //-name=ГК
 //- metr=GK1
 #pragma pack(push, 1)
@@ -47,15 +65,17 @@ typedef struct
 #pragma pack(push, 1)
 typedef struct
 {
-	//- varDigits=4
-	//- varPrecision=1
+	//- digits=4
+	//- precision=1
 	float T;
 	//- name=потребление
 	uint16_t AmpH;
 	//-structname
 	gamma_t GR;
 	//-structname
-	accel_t accel;
+	accel_t acc;
+	//-structname
+	zond_t z[3];
 	fkd_t fkd;
 } Caliper_t ;
 #pragma pack(pop)
@@ -86,20 +106,20 @@ typedef struct __attribute__((packed))
 #define ADR_PROC 7
 
 #pragma pack(push, 1)
-//- var_adr = ADR_PROC
-//- var_info = "__DATE__ __TIME__ Профилемер v3"
-//- varChip = 9
-//- varSerial = 529
-//- varExtNoPowerDataCount = 33
+//- adr = ADR_PROC
+//- info = "__DATE__ __TIME__ Профилемер v3"
+//- chip = 9
+//- serial = 529
+//- NoPowerDataCount = 33
 //- name = Calip3
-//- varSupportUartSpeed = 0xE0
+//- SupportUartSpeed = 0xE0
 //- export
 typedef struct
 {
  //- WRK
 //- noname
    DataStructW_t Wrk;
-   //- varRamSize =65000
+   //- RamSize =65000
    //- RAM
    //- noname
    DataStructR_t Ram;
