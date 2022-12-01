@@ -22,6 +22,8 @@ type
 
   TConnectIOs = class(TXMEnum<IConnectIO>, IConnectIOEnum)
   protected
+    procedure DoAfterAdd(mi: IManagItem); override;
+    procedure DoAfterAddIner(n: IXMLNode; mi: IManagItem); override;
     function Root: IXmlNode; override;
   end;
 
@@ -128,6 +130,24 @@ end;
 {$ENDREGION}
 
 { TConnectIOs }
+
+procedure TConnectIOs.DoAfterAdd(mi: IManagItem);
+ var
+  c: IconnectIO;
+begin
+  inherited;
+  c := mi as IconnectIO;
+  c.Status := c.Status - [icAdding];
+end;
+
+procedure TConnectIOs.DoAfterAddIner(n: IXMLNode; mi: IManagItem);
+ var
+  c: IconnectIO;
+begin
+  inherited;
+  c := mi as IconnectIO;
+  c.Status := c.Status + [icAdding];
+end;
 
 function TConnectIOs.Root: IXmlNode;
 begin

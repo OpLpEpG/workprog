@@ -47,9 +47,13 @@ object FrameUakiTEN: TFrameUakiTEN
   object lbT: TLabel
     Left = 4
     Top = 73
-    Width = 25
+    Width = 162
     Height = 15
+    AutoSize = False
     Caption = '-----'
+    Color = clWhite
+    ParentColor = False
+    Transparent = False
   end
   object Label1: TLabel
     Left = 3
@@ -182,5 +186,10 @@ object FrameUakiTEN: TFrameUakiTEN
     ParentFont = False
     TabOrder = 7
     Text = '0'
+  end
+  object Timer: TTimer
+    OnTimer = TimerTimer
+    Left = 280
+    Top = 24
   end
 end

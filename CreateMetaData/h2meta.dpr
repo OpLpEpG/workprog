@@ -10,11 +10,14 @@ uses
   System.SysUtils,
   System.Classes,
   System.IOUtils,
+  Xml.XMLIntf,
+  Xml.XMLDoc,
   System.Types,
   MetaData in 'MetaData.pas',
-  MetaData2.CParser in 'MetaData2.CParser.pas',
-  MetaData2.Classes in 'MetaData2.Classes.pas',
-  MetaData2.BParser in 'MetaData2.BParser.pas';
+  MetaData2.XClasses in 'MetaData2.XClasses.pas',
+  MetaData2.XCParser in 'MetaData2.XCParser.pas',
+  MetaData2.XBParser in 'MetaData2.XBParser.pas',
+  MetaData2.to1 in 'MetaData2.to1.pas';
 
 function FileMayBeUTF8(const FileName: string): Boolean;
 var
@@ -99,6 +102,7 @@ const
   end;
 begin
   try
+    if ParamCount < 2 then raise Exception.Create('ParamCount < 2');
     ss := TStringList.Create;
     try
      if FileMayBeUTF8(ParamStr(1)) then
@@ -113,16 +117,32 @@ begin
        end
      else ss.LoadFromFile(ParamStr(1));
 
-     TheaderFileParser.Parse(ss);
-     a := TheaderFileParser.GetMetaData;
-     TFile.WriteAllBytes(ParamStr(2), a);
+     if ParamCount >= 4 then
+      begin
+       TheaderFileXParser.Parse(ss);
+       a := TheaderFileXParser.GetMetaData;
+//       TFile.WriteAllBytes(ParamStr(2), a);
+//       exit;
+       ///// TEST
+       TheaderFileXParser.XDoc.SaveToFile(ParamStr(1)+'.xml');
 
-     TBinaryToXMLParser.Parse(a);
-     TBinaryToXMLParser.AssignAndExpandArrayStructData;
-    // TBinaryToXMLParser.ExpandStructData;
-     exit;
+       TBinaryXParser.Parse(a);
+//       TBinaryXParser.XDoc.SaveToFile('C:\XE\Projects\Device2\CreateMetaData\MetaDataB.xml');
+       var xd := XTypedDocument();
+       var ssd := xd.CreateNode('xml-stylesheet', ntProcessingInstr, 'type="text/xsl" href="meta.xsl"');
+       xd.Node.ChildNodes.Add(ssd);
 
-//     a := TMetaData.Generate(ss);
+       var root := xd.AddChild('PROJECT').AddChild('DEVICES');
+       var rez := TBinaryXParser.ExportTo(root);
+       xd.SaveToFile(ParamStr(2)+'.xml');
+
+//       var xdt := NewXMLDocument();
+//       var outp := xdt.AddChild('PROJECT').AddChild('DEVICES');
+//       MetaData2To1(rez,outp);
+//       xdt.SaveToFile('C:\XE\Projects\Device2\CreateMetaData\MetaDataPstd.xml');
+      end
+     else
+      a := TMetaData.Generate(ss);
 
      if ParamCount = 2 then
       begin

@@ -857,6 +857,7 @@ function TFormMain.IProjectNew(out ProjectName: string): Boolean;
   m: IManager;
   s: string;
   wf: IForm;
+  fd: IForm;
   CanClose: Boolean;
 begin
   SaveScreeDialog;
@@ -885,12 +886,21 @@ begin
       TFormExceptions.Init;
       DoFloatForm(TFormExceptions.This);
       wf := GContainer.CreateValuedInstance<string>('TFormControl', 'CreateUser', 'GlobalControlForm') as IForm;
+//      fd := GContainer.CreateValuedInstance<string>('TFormFindDev', 'CreateUser', 'GlobalFormFindDev') as IForm;
+//      if Assigned(fd) then
+//       begin
+//        (GContainer as IFormEnum).Add(fd);
+//        DoFloatForm(TForm(fd.GetComponent));
+////       (GContainer as ITabFormProvider).Dock(fd, 1);
+//        ShowDockForm(TForm(fd.GetComponent));
+//       end;//}
       if Assigned(wf) then
        begin
         (GContainer as IFormEnum).Add(wf);
         DoFloatForm(TForm(wf.GetComponent));
         (GContainer as ITabFormProvider).Dock(wf, 1);
         ShowDockForm(TForm(wf.GetComponent));
+//        if Assigned(fd) then TForm(fd.GetComponent).ManualDock(TForm(wf.GetComponent), nil, alClient);
        end;//}
       ShowDockForm(TFormExceptions.This);
       (GContainer as ITabFormProvider).Dock(TFormExceptions.This as IForm, 3);
@@ -1049,7 +1059,6 @@ procedure TFormMain.clear_dock_zones;
       Result := True;
      end;
   end;
-
 begin
 //  JvDockServer.EnableDock := False;
 //  JvDockServer.EnableDock := True;

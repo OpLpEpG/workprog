@@ -35,6 +35,7 @@ type
     function Selected: TAddressArray;
   public
     class function Execute(out d: IDevice): TModalResult;
+    class procedure AddDevises(Sel: TAddressArray; Title, Names: string; SelectIO: IConnectIO; crWin: boolean;  out dev: IDevice);
   end;
 
 implementation
@@ -83,6 +84,45 @@ begin
   ppConnection.Popup(btConnection.ClientOrigin.X, btConnection.ClientOrigin.Y+btConnection.Height)
 end;
 
+
+class procedure TFormCreateDev.AddDevises(Sel: TAddressArray; Title,Names: string; SelectIO: IConnectIO; crWin: boolean; out dev: IDevice);
+ var
+  g: IGetDevice;
+  de: IDeviceEnum;
+  pv: PVirtualNode;
+  wf: IForm;
+  function SetToEmptyWorkWindow: Boolean;
+   var
+    isd: ISetDevice;
+  begin
+    for isd in GContainer.Enum<ISetDevice> do if isd.DataDevice = '' then
+     begin
+       isd.DataDevice := Dev.IName;
+       Exit(True);
+     end;
+    Result := False;
+  end;
+begin
+  if Supports(GlobalCore, IGetDevice, g) and Supports(GlobalCore, IDeviceEnum, de) then
+   begin
+    Dev := g.Device(Sel, Title, Names);
+    Dev.IConnect := SelectIO;
+    de.Add(Dev);
+    MainScreenChanged;
+    if crWin and not SetToEmptyWorkWindow then
+     begin
+      wf := GContainer.CreateValuedInstance<string>('TFormWrok', 'CreateUser', '') as IForm;
+      (GContainer as IFormEnum).Add(wf);
+      (wf as ISetDevice).SetDataDevice(Dev.IName);
+      (GContainer as ITabFormProvider).Dock(wf, 0);
+      TForm(wf.GetComponent).Visible:= False; //      HIdeDockForm(TForm(wf.GetComponent));
+      ShowDockForm(TForm(wf.GetComponent));
+     end;
+    (GlobalCore as IActionProvider).SaveActionManager;
+    ((GlobalCore as IActionEnum) as IStorable).Save;
+   end;
+end;
+
 procedure TFormCreateDev.ButtonOKClick(Sender: TObject);
  var
   g: IGetDevice;
@@ -106,25 +146,28 @@ begin
    ModalResult := mrAbort;
    raise EBaseException.Create('Не выбраны устройства');
   end;
-  if Supports(GlobalCore, IGetDevice, g) and Supports(GlobalCore, IDeviceEnum, de) then
-   begin
-    FDevice := g.Device(Selected, edCaption.Text, FNamesArray);
-    FDevice.IConnect := FSelectIO;
-    de.Add(FDevice);
-    MainScreenChanged;
-    for pv in Tree.LevelNodes(0) do pv.CheckState := csUnCheckedNormal;
-    if cbTree.Checked and not SetToEmptyWorkWindow then
-     begin
-      wf := GContainer.CreateValuedInstance<string>('TFormWrok', 'CreateUser', '') as IForm;
-      (GContainer as IFormEnum).Add(wf);
-      (wf as ISetDevice).SetDataDevice(FDevice.IName);
-      (GContainer as ITabFormProvider).Dock(wf, 0);
-      TForm(wf.GetComponent).Visible:= False; //      HIdeDockForm(TForm(wf.GetComponent));
-      ShowDockForm(TForm(wf.GetComponent));
-     end;
-    (GlobalCore as IActionProvider).SaveActionManager;
-    ((GlobalCore as IActionEnum) as IStorable).Save;
-   end;
+  AddDevises(Selected, edCaption.Text, FNamesArray, FSelectIO, cbTree.Checked, FDevice);
+  for pv in Tree.LevelNodes(0) do pv.CheckState := csUnCheckedNormal;
+
+//  if Supports(GlobalCore, IGetDevice, g) and Supports(GlobalCore, IDeviceEnum, de) then
+//   begin
+//    FDevice := g.Device(Selected, edCaption.Text, FNamesArray);
+//    FDevice.IConnect := FSelectIO;
+//    de.Add(FDevice);
+//    MainScreenChanged;
+//    for pv in Tree.LevelNodes(0) do pv.CheckState := csUnCheckedNormal;
+//    if cbTree.Checked and not SetToEmptyWorkWindow then
+//     begin
+//      wf := GContainer.CreateValuedInstance<string>('TFormWrok', 'CreateUser', '') as IForm;
+//      (GContainer as IFormEnum).Add(wf);
+//      (wf as ISetDevice).SetDataDevice(FDevice.IName);
+//      (GContainer as ITabFormProvider).Dock(wf, 0);
+//      TForm(wf.GetComponent).Visible:= False; //      HIdeDockForm(TForm(wf.GetComponent));
+//      ShowDockForm(TForm(wf.GetComponent));
+//     end;
+//    (GlobalCore as IActionProvider).SaveActionManager;
+//    ((GlobalCore as IActionEnum) as IStorable).Save;
+//   end;
 end;
 
 procedure TFormCreateDev.FormShow(Sender: TObject);

@@ -82,7 +82,8 @@ implementation
 
 {$R *.dfm}
 
-uses tools;
+uses tools, MetaData2.to1, MetaData2.XBParser;
+
 
 const
  SBT_ADR = 0;
@@ -211,7 +212,7 @@ begin
   for ch in Chips do
    begin
     len := PWord(@PData[ch.InfoStart+1])^;
-    if not ((Buf[ch.InfoStart] = varRecord) and (len < 1024)) then Continue;
+    if not ((Buf[ch.InfoStart] = varRecord) and (len < 2048)) then Continue;
     GDoc := NewXMLDocument();
     FXml := GDoc.DocumentElement;
     FXml := GDoc.AddChild('DEVICE');
@@ -220,18 +221,31 @@ begin
     SetChip(-1);
     SetSerial(-1);
     try
-     TPars.SetInfo(FXml, @PData[ch.InfoStart], len, procedure(InternalVarType: Byte; AdrVar: Pointer)
-     begin
-       case InternalVarType of
-        TPars.var_adr: SetAdr(Pbyte(AdrVar)^);
-        TPars.varChip: SetChip(Pbyte(AdrVar)^);
-        TPars.varSerial:
-         begin
-          if PData = @Buf[0] then HackSN := THackData.Create(InternalVarType, AdrVar);
-          SetSerial(PWord(AdrVar)^);
+     if Pbyte(@PData[ch.InfoStart])^ = varRecord then
+      begin
+       TPars.SetInfo(FXml, @PData[ch.InfoStart], len, procedure(InternalVarType: Byte; AdrVar: Pointer)
+       begin
+         case InternalVarType of
+          TPars.var_adr: SetAdr(Pbyte(AdrVar)^);
+          TPars.varChip: SetChip(Pbyte(AdrVar)^);
+          TPars.varSerial:
+           begin
+            if PData = @Buf[0] then HackSN := THackData.Create(InternalVarType, AdrVar);
+            SetSerial(PWord(AdrVar)^);
+           end;
          end;
-       end;
-     end);
+       end);
+      end
+     else
+     if Pbyte(@PData[ch.InfoStart+2])^ in [1..4] then
+      begin
+       var dv := Tnewpars.SetInfo(FXml, @PData[ch.InfoStart], len);
+       HackSN := THackData.Create(TPars.varSerial, TBinaryXParser.HackAdr);
+       SetAdr(Byte(dv.Attributes[AT_ADDR]));
+       SetChip(Byte(dv.Attributes[AT_CHIP]));
+       SetSerial(Byte(dv.Attributes[AT_SERIAL]));
+      end
+     else Continue;
     except
      Continue;
     end;

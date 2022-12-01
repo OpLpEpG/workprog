@@ -41,7 +41,8 @@ uses
   Dev.TelesisRetr2 in 'Dev.TelesisRetr2.pas',
   MicroSDConn in 'MicroSDConn.pas',
   NetConn in 'NetConn.pas',
-  DevHorizontM in 'DevHorizontM.pas';
+  DevHorizontM in 'DevHorizontM.pas',
+  DevBurLowLevel in 'DevBurLowLevel.pas';
 
 {$R *.res}
 
@@ -136,7 +137,8 @@ begin
   if Length(Adr) > 1 then for a in Adr do if A > 250 then raise EDeviceException.Create('Устройство с адресом >250 может быть только одно');
   if Length(Adr) >= 1 then
    begin
-    if Adr[0] = 1100 then Result := TUso.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    if Adr[0] = $FFFF then Result := TDeviceBurLow.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
+    else if Adr[0] = 1100 then Result := TUso.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
     else if Adr[0] = 1101 then Result := TGlu.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
     else if Adr[0] = ADR_UAKI then Result := TDevUaki.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
     else if Adr[0] = ADR_UAKI2 then Result := TDevUaki2.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice

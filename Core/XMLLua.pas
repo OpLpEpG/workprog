@@ -243,7 +243,7 @@ end;
 constructor TXMLLua.Create;
 begin
   inherited;
-  LibraryPath := IncludeTrailingPathDelimiter(TPath.GetLibraryPath) + LUA_LIBRARY;
+  LibraryPath :=IncludeTrailingPathDelimiter(TPath.GetLibraryPath) + LUA_LIBRARY;
 //  FilePath := TPath.GetDocumentsPath + PathDelim; Dofile
   FLines := TStringList.Create;
 //  Open;
@@ -489,7 +489,7 @@ begin
    LUA_TBOOLEAN: Node.Attributes[name] := Boolean(lua_toboolean(L, 3));
    LUA_TNUMBER: Node.Attributes[name] := lua_tonumber(L, 3);
    LUA_TSTRING: Node.Attributes[name] := string(lua_tostring(L, 3));
-   else raise ELuaException.Createfmt('Error Message %s',[string(lua_typename(L, 3))]);
+   else raise ELuaException.Createfmt('Error Message %s[%s] %s %d',[node.NodeName,name,string(lua_typename(L, 3)), lua_type(L, 3)]);
   end;
   lua_settop(L, 0);
   Result := 0;

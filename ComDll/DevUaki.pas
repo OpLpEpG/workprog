@@ -545,8 +545,9 @@ end;
 procedure TAxis.GotoAngle(Angle: TAngle; MaxSpeed: Integer);
 begin
   FMotor := 'G';
-  if Freper <> 'M' then ((Controller as IDevice).IConnect as IUDPConnectIO).Send(Fadr.ToString + 'g' + Round(Angle.Angle*1000).ToString + ','+ MaxSpeed.ToString, OnCurrentData)
-  else ((Controller as IDevice).IConnect as IUDPConnectIO).Send(Fadr.ToString + 'g' + Round(Double(Angle-FDeltaAngle)*1000).ToString + ','+ MaxSpeed.ToString, OnCurrentData);
+  if Freper <> 'M' then
+        ((Controller as IDevice).IConnect as IUDPConnectIO).Send(Fadr.ToString + 'g' + Round(Angle.Angle*1000).ToString + ','+ MaxSpeed.ToString, OnCurrentData)
+  else  ((Controller as IDevice).IConnect as IUDPConnectIO).Send(Fadr.ToString + 'g' + Round(Double(Angle-FDeltaAngle)*1000).ToString + ','+ MaxSpeed.ToString, OnCurrentData);
 end;
 
 procedure TAxis.OnCurrentData(const Data: string; status: integer);

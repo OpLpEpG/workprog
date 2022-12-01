@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, UakiIntf,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls;
 
 type
   TFuncUaki = function: IUaki of object;
@@ -22,9 +22,11 @@ type
     cbauto: TCheckBox;
     btSart: TButton;
     edOn: TEdit;
+    Timer: TTimer;
     procedure edKeyPress(Sender: TObject; var Key: Char);
     procedure btStopClick(Sender: TObject);
     procedure btSartClick(Sender: TObject);
+    procedure TimerTimer(Sender: TObject);
   private
     { Private declarations }
   public
@@ -57,13 +59,21 @@ begin
    end;
 end;
 
+procedure TFrameUakiTEN.TimerTimer(Sender: TObject);
+begin
+   lbT.Color := RGB(255,192,192);
+end;
+
 procedure TFrameUakiTEN.UpdateScreen(TenLen: Integer; uaki: IUaki);
  var
   a, amax: Double;
 begin
+  Timer.Enabled := False;
+  Timer.Enabled := True;
   lb1.Caption := uaki.TenPower[0].ToString;
   lb2.Caption := uaki.TenPower[1].ToString;
   lb3.Caption := uaki.TenPower[2].ToString;
+  lbT.Color := clWhite;
   lbT.Caption := '';
   amax := 0;
   for a in uaki.Temperature do

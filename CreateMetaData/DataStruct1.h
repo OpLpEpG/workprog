@@ -4,24 +4,27 @@
 #pragma pack(push, 1)
 //-name=accel
 //-metr=CLA1
-//- RangeLo2 = -2000
-//- RangeHi2 =  2000
+//- RangeLo = -2000
+//- RangeHi =  2000
 //- eu = G
 typedef struct
 {
-    int16_t X;
-    int16_t Y;
-    int16_t Z;
+	int16_t X;
+	int16_t Y;
+//- RangeLo = -4000
+//- RangeHi =  4000
+	int16_t Z;
 } accel_t;
 #pragma pack(pop)
 
 
 #	define LEN_MS 682  // simple comment
 #	define LEN_MS1 0x2A7  // simple comment
-
+//- arrayShowLen = 30
 #pragma pack(push, 1)
 typedef struct
 {
+   //- noname
 	int16_t d0[LEN_MS1];
 	int16_t d1[LEN_MS];
 	int16_t d2[LEN_MS];
@@ -36,14 +39,15 @@ typedef struct
 
 //-name=зонд
 //- metr=MZ1
+//- arrayShowLen=6
 #pragma pack(push, 1)
 typedef struct
 {
 	int16_t i[7];
 	int16_t u[7];
 //-name=Бк
-//- RangeLof = -0.3
-//- RangeHif = 3.1
+//- RangeLo = -0.3
+//- RangeHi = 3.1
 	uint16_t uBk;
 } zond_t;
 #pragma pack(pop)
@@ -51,6 +55,7 @@ typedef struct
 
 //-name=ГК
 //- metr=GK1
+//-	eu=мкР
 #pragma pack(push, 1)
 typedef struct
 {
@@ -67,6 +72,7 @@ typedef struct
 {
 	//- digits=4
 	//- precision=1
+	// color=0x00FF30FF
 	float T;
 	//- name=потребление
 	uint16_t AmpH;
@@ -75,6 +81,7 @@ typedef struct
 	//-structname
 	accel_t acc;
 	//-structname
+	//- info = "данные зондов"
 	zond_t z[3];
 	fkd_t fkd;
 } Caliper_t ;

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <DEVICE SIZE="0">
   <AP SIZE="0" ADDR="1102" INFO="Акустический профилемер, проверка протокола">
-    <WRK SIZE="20" FLOW_TIMER_INTERVAL="1200" SP_HI_BYTE="0" FLOW_PROTOCOL="1">
+    <WRK SIZE="20" FLOW_TIMER_INTERVAL="1800" SP_HI_BYTE="0" FLOW_PROTOCOL="1">
       <время METR="WT">
         <DEV TYPE="48" INDEX="2" />
       </время>

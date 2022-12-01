@@ -51,7 +51,7 @@ type
   TDeviceArray = TArray<IDevice>;
   TReceiveDataRef = reference to procedure(Data: Pointer; DataSize: integer);
 
-  TConnectIOStatus =(iosOpen, iosError, iosLock);
+  TConnectIOStatus =(iosOpen, iosError, iosLock, icAdding, icUserAdding);
 
   TSetConnectIOStatus = set of TConnectIOStatus;
   ///	<summary>
@@ -82,10 +82,11 @@ type
     procedure SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1);
 
     function GetStatus: TSetConnectIOStatus;
+    procedure SetStatus(Value: TSetConnectIOStatus);
 
     property ConnectInfo: string read GetConnectInfo write SetConnectInfo;
     property Wait: integer read GetWait write SetWait;
-    property Status: TSetConnectIOStatus read GetStatus;
+    property Status: TSetConnectIOStatus read GetStatus write SetStatus;
   end;
   ///	<summary>
   ///	  реализация IConnectIO для КОМПОРТА

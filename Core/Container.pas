@@ -177,14 +177,14 @@ type
   TComponentModel = class
   private
     fClassType: PTypeInfo;
+    //  именные объекты
+    fInst: TInstancesDict;
     fInstanceType: TRttiInstanceType;
 
     fLiveTime: TLiveTime;
 
     fSingleton: IInterface;
     fModelPriority: Integer;
-    //  именные объекты
-    fInst: TInstancesDict;
     //  ссылки на дочерние объекты класса или создадут (factory) Singleton Transient и выполнят задачу
     //  например IAction создающие экземпляр класса (factory), авто конструкторы
     //  class vars class procedures constructors
@@ -396,6 +396,8 @@ type
 {$ENDREGION}
 
  var
+//  LastModelInst: TInstancesDict;
+//  LastModel: TComponentModel;
   GlobalCore: IInterface;
   function GContainer: TContainer; inline;
 
@@ -516,6 +518,7 @@ constructor TComponentModel.Create(ClassType: PTypeInfo);
 begin
   fClassType := ClassType;
   fModelPriority := 1000;
+  fInst := TInstancesDict.Create(10);
   fInstanceType := TContainer.RttiContext.GetType(ClassType).AsInstance;
   for m in fInstanceType.GetDeclaredMethods do for a in m.GetAttributes do
    if (a is TInjectionAttribute) and GContainer.TryGetAttrInjection(a, aij) then
@@ -546,12 +549,17 @@ end;
 
 function TComponentModel.CreateTInstance(const Name: string): TInstance;
 begin
-  if not Assigned(fInst) then fInst := TInstancesDict.Create();
+  if not Assigned(fInst) then
+   begin
+     fInst := TInstancesDict.Create();
+     //Tdebug.Log('TInstancesDict.Create %s',[fClassType.Name])
+   end;
   Assert(fLiveTime in [ltSingletonNamed, ltTransientNamed], 'Необходимо инициализировать fLiveTime!!!');
   if not fInst.TryGetValue(Name, Result) then
    begin
     Result := TInstance.Create;
     fInst.Add(Name, Result);
+   // Tdebug.Log('fInst.Add %s %x',[Name, LastModelInst.Count])
    end;
 end;
 
@@ -911,10 +919,15 @@ function TContainer.TryGetInstKnownServ(serv: ServiceType; const InstanceName: s
   ms: TModels;
 begin
   Result := False;
-  if FServices.TryGetValue(Serv, ms) then for m in ms do
+  if FServices.TryGetValue(Serv, ms) then
    begin
-    Obj := m.GetInstance(InstanceName, Initialize);
-    if Assigned(Obj) then Exit(True);
+//   LastModel := ms[0];
+    for m in ms do
+     begin
+    //  Tdebug.Log('fInst.Add %s %x %x',[m.fClassType.Name, Integer(@m), Integer(@m.fInst)]);
+      Obj := m.GetInstance(InstanceName, Initialize);
+      if Assigned(Obj) then Exit(True);
+     end;
    end;
 end;
 
@@ -995,7 +1008,7 @@ begin
    ss.Add('  Singleton: ' + IntfToString(m.Value.fSingleton));
    if Assigned(m.Value.fInst) then
     for ip in m.Value.fInst do
-     ss.Add(Format('  -----  InstName: %-30s Intf: %-30s TXT: %s', [ip.Key , IntfToString(ip.Value.fValue), {ip.Value.fText}Copy(ip.Value.fText, 1, 10)]));
+     ss.Add(Format('  -----  InstName: %-30s Intf: %-30s TXT: %s', [ip.Key , IntfToString(ip.Value.fValue), {ip.Value.fText}Copy(ip.Value.fText, 1, 20)]));
    AddDepend('CLASS', m.Value.fClsDependencies);
    AddDepend('INST_', m.Value.fInstDependencies);
    for ai in m.Value.fInstInject do

@@ -267,9 +267,12 @@ end;
 function TXMLDataSet.TryGetX(const FullName: string; out X: IXMLNode): Boolean;
   function RemoveRoot(const s: string): string;
   begin
-   if s.Contains('.') then Result := s.Remove(0, s.IndexOf('.')+1)
-   else Result := s;
-  end;
+     if s.Contains(FXMLSection.NodeName) then
+      begin
+       Result := s.Remove(0, s.IndexOf(FXMLSection.NodeName)+ length(FXMLSection.NodeName))
+      end
+      else Result := s;
+    end;
 begin
   Result := tools.TryGetX(FXMLSection, RemoveRoot(FullName), X);
 end;

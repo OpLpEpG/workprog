@@ -4,7 +4,7 @@ interface
 
 //{$D1}
 
-uses DeviceIntf, DockIForm, debug_except, ExtendIntf, RootImpl, PluginAPI, RootIntf,
+uses DeviceIntf, DockIForm, debug_except, ExtendIntf, RootImpl, PluginAPI, RootIntf,  Actns, FrameDelayDev,
      System.Variants, Container, System.TypInfo, System.SysUtils, System.Classes, System.DateUtils,
      Winapi.Windows, Winapi.Messages, Vcl.Graphics, Vcl.Menus, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
      Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.ComCtrls, Vcl.Mask;
@@ -23,15 +23,19 @@ type
     Memo: TMemo;
     btDelay: TButton;
     Timer: TTimer;
+    pnCtatus: TPanel;
+    TimerErr: TTimer;
     procedure btCloseClick(Sender: TObject);
     procedure EditsChange(Sender: TObject);
     procedure btApplyClick(Sender: TObject);
     procedure btDelayClick(Sender: TObject);
     procedure TimerTimer(Sender: TObject);
+    procedure TimerErrTimer(Sender: TObject);
   private
     // внутренний буфер данных БД
     FDBTimeStart: TDateTime;
     FDBIntervalWork: TTime;
+
     // Applied
     FApplStartTime: TDateTime;
     FApplIntervalDelay: TTime;
@@ -41,6 +45,11 @@ type
     DelayDevice: IDelayDevice;
     IsDelayIntervalMenu: TMenuItem;
     ResetDelayMenu: TMenuItem;
+
+    FBindWorkRes: TWorkEventRes;
+    FMetaDataInfo: TInfoEventRes;
+
+    FFrameDelayInfos: Tarray<TFrameDelayInfo>;
     procedure CheckStartTime(TimeStart: TDateTime);
     procedure WriteToBD(TimeStart: TDateTime; IntervalWork: TTime);
     procedure OnSetDelay(Res: TSetDelayRes);
@@ -50,11 +59,15 @@ type
     procedure AnyUserAction(Apply, Delay: Boolean);
     procedure UpdateDelayed;
     procedure UpdateDelayControls(ToDelay: Boolean);
+    procedure SetBindWorkRes(const Value: TWorkEventRes);
   protected
+    procedure InitDevInfo;
     procedure Loaded; override;
     function GetInfo: PTypeInfo; override;
     function Execute(InputData: IDelayDevice): Boolean;
     class function ClassIcon: Integer; override;
+  public
+    property C_BindWorkRes: TWorkEventRes read FBindWorkRes write SetBindWorkRes;
   end;
 
 
@@ -79,6 +92,11 @@ end;
 
 procedure TDialogDelay.btCloseClick(Sender: TObject);
 begin
+  var DoStd := (GContainer as IActionEnum).Get((DelayDevice as IDevice).IName + '_DoStd');
+  var DoData := (GContainer as IActionEnum).Get((DelayDevice as IDevice).IName + '_DoData');
+  if DoData.Checked then (DoData.GetComponent as TICustRTTIAction).Execute;
+  if DoStd.Checked then (DoStd.GetComponent as TICustRTTIAction).Execute;
+
   RegisterDialog.UnInitialize<Dialog_SetDeviceDelay>;
 end;
 
@@ -94,8 +112,16 @@ begin
   UpdateDelayed;
   IsDelayIntervalMenuClick(nil);
   btDelay.Enabled := Delayed;
-  if Delayed then TimerTimer(nil);  
+  if Delayed then TimerTimer(nil);
   IShow;
+  InitDevInfo;
+
+  var DoStd := (GContainer as IActionEnum).Get((DelayDevice as IDevice).IName + '_DoStd');
+  var DoData := (GContainer as IActionEnum).Get((DelayDevice as IDevice).IName + '_DoData');
+  if not DoStd.Checked then (DoStd.GetComponent as TICustRTTIAction).Execute;
+  if not DoData.Checked then (DoData.GetComponent as TICustRTTIAction).Execute;
+
+  Bind('C_BindWorkRes',InputData, ['S_WorkEventInfo']);
 end;
 
 procedure TDialogDelay.Loaded;
@@ -148,6 +174,11 @@ end;
 class function TDialogDelay.ClassIcon: Integer;
 begin
   Result := 142;
+end;
+
+procedure TDialogDelay.TimerErrTimer(Sender: TObject);
+begin
+ for var f  in FFrameDelayInfos do if secondsbetween(now, f.LastUpdate) > 3 then f.UpdateTimout;
 end;
 
 procedure TDialogDelay.TimerTimer(Sender: TObject);
@@ -258,6 +289,25 @@ begin
    end;
 end;
 
+procedure TDialogDelay.SetBindWorkRes(const Value: TWorkEventRes);
+begin
+  FBindWorkRes := Value;
+  for var d in FFrameDelayInfos do  if FBindWorkRes.DevAdr = d.Adr then
+   begin
+     d.UpdateData;
+     Break;
+   end;
+end;
+
+procedure TDialogDelay.InitDevInfo;
+begin
+  FMetaDataInfo := (DelayDevice as IDataDevice).GetMetaData();
+  var dvs := FindDevs(FMetaDataInfo.Info);
+  for var d in dvs do FFrameDelayInfos := FFrameDelayInfos +[TFrameDelayInfo.GetNew(d.Attributes[AT_ADDR], d, pnCtatus)];
+  for var d in FMetaDataInfo.ErrAdr do FFrameDelayInfos := FFrameDelayInfos +[TFrameDelayInfo.GetNew(d, nil, pnCtatus)];
+  pnCtatus.ClientHeight := Length(FFrameDelayInfos)*FFrameDelayInfos[0].Height;
+end;
+
 procedure TDialogDelay.IsDelayIntervalMenuClick(Sender: TObject);
 begin
   medDelay.EditMask :=  TMSK_SETDELAY[IsDelayIntervalMenu.Checked];
@@ -284,6 +334,7 @@ begin
   TimerTimer(Sender);
   btApply.Enabled := False;
   btDelay.Enabled := True;
+  btDelay.Click;
 end;
 
 procedure TDialogDelay.UpdateDelayControls(ToDelay: Boolean);

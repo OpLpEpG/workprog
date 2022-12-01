@@ -19,7 +19,6 @@ uses
   MetrInclin in 'MetrInclin.pas' {FormInclin},
   MetrForm in 'MetrForm.pas',
   MetrInclinSetup in 'MetrInclinSetup.pas' {FormInclSetup},
-  MetrBK in 'MetrBK.pas' {FormBK},
   MetrGGKP in 'MetrGGKP.pas' {FormGGKP},
   VTEditors in '..\VTEditors.pas',
   MetrUAKI in 'MetrUAKI.pas' {FormUAKI},
@@ -48,7 +47,8 @@ uses
   MetrBKS in 'MetrBKS.pas' {FormBKS},
   MetrInclin.Temp.Form in 'MetrInclin.Temp.Form.pas' {FormMetrInclinT},
   PID in 'PID.pas',
-  Metr.UAKI.Ten.PID in 'Metr.UAKI.Ten.PID.pas' {FormPIDsetup};
+  Metr.UAKI.Ten.PID in 'Metr.UAKI.Ten.PID.pas' {FormPIDsetup},
+  MetrRes in 'MetrRes.pas' {FormRes};
 
 {$R *.res}
 

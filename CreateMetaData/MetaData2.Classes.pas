@@ -3,7 +3,7 @@ unit MetaData2.Classes;
 interface
 
 uses
-  sysutils, Classes, TypInfo, RTTI, Generics.Collections;
+  sysutils, Classes, TypInfo, RTTI, Generics.Collections, Xml.XMLIntf;
 
    // АТРИБУТЫ
 
@@ -66,13 +66,20 @@ const
   REC_DAT_NAM = 8;
   REC_DAT_SNAM = 9;
 
-  ATTR_WRK = ATTR + LEN_0 + 1;
-  ATTR_RAM =  ATTR + LEN_0 + 2;
-  ATTR_EEP =  ATTR + LEN_0 + 3;
+  ATTR_WRK =     ATTR + LEN_0 + 1;
+  ATTR_RAM =     ATTR + LEN_0 + 2;
+  ATTR_EEP =     ATTR + LEN_0 + 3;
   ATTR_export =  ATTR + LEN_0 + 4;
+  ATTR_HideArray =  ATTR + LEN_0 + 5;
+  ATTR_ShowHex =    ATTR + LEN_0 + 6;
 
+  ATTR_digits  =    ATTR + LEN_1 + 3;
+  ATTR_precision =  ATTR + LEN_1 + 4;
 
-
+  ATTR_info =  ATTR + TP_STR + 0;
+  ATTR_metr =  ATTR + TP_STR + 1;
+  ATTR_eu =    ATTR + TP_STR + 2;
+  ATTR_title = ATTR + TP_STR + 3;
 
   NAM_1 = 0;
   NAM_2 = 2;
@@ -93,6 +100,7 @@ const
   ATTR_IDX_ARRAY = $F;
   ATTR_IDX_RANGE_HI = $E;
   ATTR_IDX_RANGE_LO = $D;
+  ATTR_IDX_DEFAULT_VALUE = $C;
 //  ATTR_IDX_SECTION = 6;
 
 {$REGION 'hide class defs'}
@@ -107,9 +115,10 @@ type
     function isAttr: Boolean;
 //    function isIDX(idx: Byte): Boolean;
     function isData: Boolean;
+    function isStruct: Boolean;
     function isStructTypedef: Boolean;
     function isStructData: Boolean;
-    function isNamedData: Boolean;
+    function isNamed: Boolean;
     function isString: Boolean;
     function Length: Integer;
   end;
@@ -132,19 +141,65 @@ type
     Tip: TmetadataType;
     Name: string;
     TypeName: string;
+    RootAttr: Boolean;
     SVal: string;
     Attr: TTypedArray;
     SubData: TTypedArray;
+
+    // переменные для данных
+    parent: TTyped;
+    // смещение в WRK RAM EEP
+    dataOffset: Integer;
+    // смещение в родительской структуре
+    localOffset: Integer;
+    // длина данных в байтах
+    dataSize: Integer;
+
+    //  для быстроты дублируют стандартные атрибуты
+    // атрибуты: текстовое отображение
+    // при инициализации извлекаются из атрибутов
+    digits, precision: Integer;// from attr
+    AsHex: Boolean; // from attr ATTR_ShowHex
+    // array Support
+    // атрибуты:
+    ArrayLength: Integer; // from attr
+    // текстовое отображение
+    HideArray: Boolean;   // from attr
+    // hints, help
+    info: string; // from attr
+    // текстовый не ole заголоок
+    title: string; // from attr
+    // единицы измерения
+    eu: string; // from attr
+
     property TVal: TValue read GetTval write SetTval;
-    //tools
+
+    // tools
+
+    // для данных: атрибуты массива, текстового представления(hex, digits, precision), hints, help,
+    // единицы измерения
+    // при инициализации извлекаются из атрибутов
+    procedure InitStandartDataAttr;
+    procedure InitParentDataAttr;
     function GetAttr(tst: byte; mack: byte = $FF): TTyped;
+    function GetAttrAs<T>(def: T; tst: byte; mack: byte = $FF): T;
+//    function IsArray: Boolean;
     function AttrContains(ATip: TmetadataType): Boolean;
     procedure Remove(item: TTyped; IsSubData: Boolean = False);
+    // для данных
+    procedure UpdateValue(ptr: Pointer); virtual;
     //
     function ToBytes(): TBytes; virtual;
+    // metaData
     function SizeOf(): Integer; virtual;
+    // для данных
+    function DataSizeOf(): Integer; virtual;
+    // для данных
+    function ValAsStr(showEu: Boolean = True): string; virtual;
     constructor Create(aTip: TmetadataType; const StrVal: string = ''); overload; virtual;
     constructor Create(aTip: TmetadataType; const PtrVal: Pointer); overload; virtual;
+    //(XML) конструктор для данных
+    constructor Create(root: IXMLNode); overload; virtual;
     destructor Destroy; override;
   end;
 
@@ -160,9 +215,18 @@ type
       ptrT = ^T;
     var
       Value: T;
+      PValue: ptrT;
+
+    function ValAsStr(showEu: Boolean = True): string; override;
+    procedure UpdateValue(ptr: Pointer); override;
+    //(Си) конструктор для атрибутов
     constructor Create(aTip: TmetadataType; const StrVal: string = ''); override;
+    //(Бин) конструктор для атрибутов
     constructor Create(aTip: TmetadataType; const PtrVal: Pointer);  override;
     constructor CreateT(aTip: TmetadataType; const Val: T);
+    //(XML) конструктор для данных
+//    constructor CreateXML(root: IXMLNode);  override;
+
     class function PtrToStr(ptr: Pointer): string;
   end;
 
@@ -238,12 +302,15 @@ type
     Name: string;
     Tip: TmetadataType;
     cls: TTypedClass;
+    // данные получают атрибут (если его нет) из родительской структуры
+    // root Attribute
+    ra: Boolean;
   end;
 
 {$ENDREGION}
 
 const
-  ATR_TYPES: array[0..35] of CStringToTip =(
+  ATR_TYPES: array[0..39] of CStringToTip =(
 
    // атрибуты виртуальные
     (   Name: 'name';           Tip: 0;    cls: TattrName  ),
@@ -252,51 +319,61 @@ const
     (    Name: 'structname';    Tip: 0;    cls: TattrStructName  ),
 
    // атрибуты реальные
-    (    Name: 'info';        Tip: ATTR + TP_STR + 0;    cls: TStr  ),
-    (    Name: 'metr';        Tip: ATTR + TP_STR + 1;    cls: TStr  ),
-    (    Name: 'eu';          Tip: ATTR + TP_STR + 2;    cls: TStr  ),
-    (    Name: 'title';       Tip: ATTR + TP_STR + 3;    cls: TStr  ),
-
-    (    Name: 'WRK';    Tip: ATTR_WRK;    cls: TNone  ),
-    (    Name: 'RAM';    Tip: ATTR_RAM;    cls: TNone  ),
-    (    Name: 'EEP';    Tip: ATTR_EEP;    cls: TNone  ),
-    (    Name: 'export'; Tip: ATTR_export;    cls: TNone  ),
-
+   // STR
+    (    Name: 'info';        Tip: ATTR_info;    cls: TStr; ra:True ),
+    (    Name: 'metr';        Tip: ATTR_metr;    cls: TStr  ),
+    (    Name: 'eu';          Tip: ATTR_eu;      cls: TStr; ra:True ),
+    // diagram
+    (    Name: 'title';       Tip: ATTR_title;    cls: TStr  ),
+   // len=0
+    (    Name: 'WRK';         Tip: ATTR_WRK;          cls: TNone  ),
+    (    Name: 'RAM';         Tip: ATTR_RAM;          cls: TNone  ),
+    (    Name: 'EEP';         Tip: ATTR_EEP;          cls: TNone  ),
+    (    Name: 'export';      Tip: ATTR_export;       cls: TNone  ),
+    (    Name: 'HideArray';   Tip: ATTR_HideArray;    cls: TNone; ra:True   ),
+    (    Name: 'ShowHex';     Tip: ATTR_ShowHex;      cls: TNone; ra:True   ),
+   // len=1
     (    Name: 'adr';             Tip: ATTR + LEN_1 + 0;    cls: TUint8  ),
     (    Name: 'chip';            Tip: ATTR + LEN_1 + 1;    cls: TUint8  ),
     (    Name: 'NoPowerDataCount';Tip: ATTR + LEN_1 + 2;    cls: TUint8  ),
-    (    Name: 'digits';          Tip: ATTR + LEN_1 + 3;    cls: TUint8  ),
-    (    Name: 'precision';       Tip: ATTR + LEN_1 + 4;    cls: TUint8  ),
-  // avriable len
-  // array (int)
+    (    Name: 'digits';          Tip: ATTR_digits;    cls: TUint8; ra:True   ),
+    (    Name: 'precision';       Tip: ATTR_precision;    cls: TUint8; ra:True   ),
+    // diagram
+    (    Name: 'style';           Tip: ATTR + LEN_1 + 5;    cls: TUint8; ra:True   ),
+    // diagram
+    (    Name: 'width';           Tip: ATTR + LEN_1 + 6;    cls: TUint8; ra:True   ),
+   // len=2
+    (    Name: 'serial';              Tip: ATTR+ LEN_2 + 0;    cls: TUint16  ),
+    (    Name: 'RamSize';             Tip: ATTR+ LEN_2 + 1;    cls: TUint16  ),
+    (    Name: 'SupportUartSpeed';    Tip: ATTR+ LEN_2 + 2;    cls: TUint16  ),
+    (    Name: 'from';                Tip: ATTR+ LEN_2 + 3;    cls: TUint16  ),
+   // len=4
+    // diagram
+    (    Name: 'color';               Tip: ATTR+ + LEN_4 + 0;    cls: TUint32; ra:True   ),
+    (    Name: 'SSDSize';             Tip: ATTR+ + LEN_4 + 1;    cls: TUint32  ),
+   // avriable len
+   // array (int)
     (    Name: 'array';     Tip: ATTR+ LEN_1 + ATTR_IDX_ARRAY;    cls: TUint8  ),
     (    Name: 'array';     Tip: ATTR+ LEN_2 + ATTR_IDX_ARRAY;    cls: TUint16  ),
      // range (int, float)
      // чтобы не усложнять программу и иметь одну константу ATR_TYPES на все
      // Bin Find By TIP
      // BIN -> TType ->XML
-    (Name: 'RangeLo'; Tip: ATTR + LEN_1 + ATTR_IDX_RANGE_LO; cls: Tint8),
-    (Name: 'RangeLo'; Tip: ATTR + LEN_2 + ATTR_IDX_RANGE_LO; cls: Tint16),
-    (Name: 'RangeLo'; Tip: ATTR + LEN_4 + ATTR_IDX_RANGE_LO; cls: Tfloat),
-    (Name: 'RangeHi'; Tip: ATTR + LEN_1 + ATTR_IDX_RANGE_HI; cls: Tint8),
-    (Name: 'RangeHi'; Tip: ATTR + LEN_2 + ATTR_IDX_RANGE_HI; cls: Tint16),
-    (Name: 'RangeHi'; Tip: ATTR + LEN_4 + ATTR_IDX_RANGE_HI; cls: Tfloat),
+    (Name: 'RangeLo'; Tip: ATTR + LEN_1 + ATTR_IDX_RANGE_LO; cls: Tint8; ra:True ),
+    (Name: 'RangeLo'; Tip: ATTR + LEN_2 + ATTR_IDX_RANGE_LO; cls: Tint16; ra:True ),
+    (Name: 'RangeLo'; Tip: ATTR + LEN_4 + ATTR_IDX_RANGE_LO; cls: Tfloat; ra:True ),
+    (Name: 'RangeHi'; Tip: ATTR + LEN_1 + ATTR_IDX_RANGE_HI; cls: Tint8; ra:True ),
+    (Name: 'RangeHi'; Tip: ATTR + LEN_2 + ATTR_IDX_RANGE_HI; cls: Tint16; ra:True ),
+    (Name: 'RangeHi'; Tip: ATTR + LEN_4 + ATTR_IDX_RANGE_HI; cls: Tfloat; ra:True ),
      // чтобы не усложнять программу и иметь одну константу ATR_TYPES на все
      // C header define -> BIN
-    (Name: 'RangeLo1'; Tip: ATTR + LEN_1 + ATTR_IDX_RANGE_LO; cls: Tint8),
-    (Name: 'RangeLo2'; Tip: ATTR + LEN_2 + ATTR_IDX_RANGE_LO; cls: Tint16),
-    (Name: 'RangeLof'; Tip: ATTR + LEN_4 + ATTR_IDX_RANGE_LO; cls: Tfloat),
-    (Name: 'RangeHi1'; Tip: ATTR + LEN_1 + ATTR_IDX_RANGE_HI; cls: Tint8),
-    (Name: 'RangeHi2'; Tip: ATTR + LEN_2 + ATTR_IDX_RANGE_HI; cls: Tint16),
-    (Name: 'RangeHif'; Tip: ATTR + LEN_4 + ATTR_IDX_RANGE_HI; cls: Tfloat),
-
-    (    Name: 'serial';              Tip: ATTR+ LEN_2 + 0;    cls: TUint16  ),
-    (    Name: 'RamSize';             Tip: ATTR+ LEN_2 + 1;    cls: TUint16  ),
-    (    Name: 'SupportUartSpeed';    Tip: ATTR+ LEN_2 + 2;    cls: TUint16  ),
-    (    Name: 'from';                Tip: ATTR+ + LEN_2 + 3;    cls: TUint16  ),
-
-    (    Name: 'color';               Tip: ATTR+ + LEN_4 + 0;    cls: TUint32  ),
-    (    Name: 'SSDSize';             Tip: ATTR+ + LEN_4 + 1;    cls: TUint32  ));
+    (Name: 'RangeLo1'; Tip: ATTR + LEN_1 + ATTR_IDX_RANGE_LO; cls: Tint8; ra:True ),
+    (Name: 'RangeLo2'; Tip: ATTR + LEN_2 + ATTR_IDX_RANGE_LO; cls: Tint16; ra:True ),
+    (Name: 'RangeLof'; Tip: ATTR + LEN_4 + ATTR_IDX_RANGE_LO; cls: Tfloat; ra:True ),
+    (Name: 'RangeHi1'; Tip: ATTR + LEN_1 + ATTR_IDX_RANGE_HI; cls: Tint8; ra:True ),
+    (Name: 'RangeHi2'; Tip: ATTR + LEN_2 + ATTR_IDX_RANGE_HI; cls: Tint16; ra:True ),
+    (Name: 'RangeHif'; Tip: ATTR + LEN_4 + ATTR_IDX_RANGE_HI; cls: Tfloat; ra:True )
+);
 
 
   STD_TYPES: array[0..9] of CStringToTip =(
@@ -317,8 +394,18 @@ const
 
 function StrToAnsiBytes(const val: string): TBytes;
 function StrAsInt(val: string): Integer;
+function StrAsInt64(val: string): Int64;
 
 implementation
+
+function StrAsInt64(val: string): Int64;
+begin
+  // default
+  if val = '' then Exit(0);
+  if val.StartsWith('0x', True) then
+    val := val.Replace('0x', '$', [rfIgnoreCase]);
+  Result := val.ToInt64();
+end;
 
 function StrAsInt(val: string): Integer;
 begin
@@ -355,7 +442,7 @@ end;
 
 function TmetadataTypeHelp.isData: Boolean;
 begin
-  Result := not isAttr;
+  Result := (Self <= $6F) and (Self >= $10);
 end;
 
 //function TmetadataTypeHelp.isIDX(idx: Byte): Boolean;
@@ -363,9 +450,14 @@ end;
 //  Result := (Self and $F) = idx;
 //end;
 
-function TmetadataTypeHelp.isNamedData: Boolean;
+function TmetadataTypeHelp.isNamed: Boolean;
 begin
-  Result := isData and ((Self and 1) = 0)
+  Result := not isAttr and ((Self and 1) = 0)
+end;
+
+function TmetadataTypeHelp.isStruct: Boolean;
+begin
+  Result := (Self <= 9) and (Self > 0)
 end;
 
 function TmetadataTypeHelp.isStructData: Boolean;
@@ -394,7 +486,7 @@ begin
   else if isStructTypedef then
   begin
     lenPw := Self;
-    if isNamedData then
+    if isNamed then
       Dec(lenPw);
   end
   else if isStructData then
@@ -407,6 +499,7 @@ begin
     Result := 1 shl (lenPw - 1);
 end;
 
+ { TTYped}
 
 constructor TTyped.Create(aTip: TmetadataType; const StrVal: string);
 begin
@@ -424,6 +517,26 @@ constructor TTyped.Create(aTip: TmetadataType; const PtrVal: Pointer);
 begin
   tip := aTip;
   if Assigned(PtrVal) then SVal := string(PAnsiChar(PtrVal));
+end;
+
+constructor TTyped.Create(root: IXMLNode);
+begin
+
+end;
+
+function TTyped.DataSizeOf: Integer;
+begin
+  if tip.isData then
+   begin
+    Result := tip.Length;
+    if ArrayLength > 0 then Result := Result*ArrayLength;
+   end
+  else if tip.isStruct then
+   begin
+    Result := 0;
+    for var d in SubData do Result := Result + d.DataSizeOf;      
+   end
+  else raise Exception.Create('not data');
 end;
 
 destructor TTyped.Destroy;
@@ -474,12 +587,65 @@ begin
   Result := GetTip + GetSizeOrValue + GetName + InerToBytes(Attr) + InerToBytes(SubData);
 end;
 
+procedure TTyped.UpdateValue(ptr: Pointer);
+ var
+  PtrVal: PByte;
+begin
+  if Assigned(Ptr) then
+   begin
+    PtrVal := ptr;
+    Inc(PtrVal, DataOffset);
+    SVal := string(PAnsiChar(PtrVal));
+   end;
+end;
+
+function TTyped.ValAsStr(showEu: Boolean): string;
+begin
+  if showEu and (eu <> '') then Result := SVal + ' ' + eu
+  else Result := SVal;
+end;
+
 function TTyped.InerToBytes(a: TTypedArray): TBytes;
 begin
   SetLength(Result, 0);
   for var ai in a do Result := Result + ai.ToBytes;
 end;
 
+
+procedure TTyped.InitParentDataAttr;
+ label Exsz;
+begin
+  if self.Tip.isData then
+   begin
+    var al := High(Attr);
+    for var a in parent.Attr do if a.RootAttr then
+     begin
+      for var i := 0 to al do if Attr[i].Tip = a.Tip then goto Exsz;
+      Attr := Attr + [a];
+      Exsz:
+     end;
+   end;
+end;
+
+procedure TTyped.InitStandartDataAttr;
+begin
+  if self.Tip.isData then
+   begin
+    ArrayLength :=    GetAttrAs<Integer>(0, ATTR_IDX_ARRAY, $F);
+    digits  :=        GetAttrAs<Integer>(0, ATTR_digits);
+    precision :=      GetAttrAs<Integer>(0, ATTR_precision);
+    AsHex :=     Assigned(GetAttr(ATTR_ShowHex));
+    HideArray := Assigned(GetAttr(ATTR_HideArray));
+    info :=           GetAttrAs<string>('',ATTR_info);
+    title :=          GetAttrAs<string>('',ATTR_title);
+    eu :=             GetAttrAs<string>('',ATTR_eu);
+   end;
+end;
+
+//function TTyped.IsArray: Boolean;
+//begin
+//  Result := Assigned(GetAttr(ATTR_IDX_ARRAY,$F))
+//end;
 
 procedure TTyped.Remove(item: TTyped; IsSubData: Boolean);
  var
@@ -498,7 +664,14 @@ end;
 function TTyped.GetAttr(tst: byte; mack: byte): TTyped;
 begin
   Result := nil;
-  for var a in Attr do if (a.Tip and mack) = tst then Exit(a)
+  for var a in Attr do if (a.Tip and mack) = tst then Exit(a);
+end;
+
+function TTyped.GetAttrAs<T>(def: T; tst: byte; mack: byte = $FF): T;
+begin
+  Result := def;
+  var a := GetAttr(tst, mack);
+  if Assigned(a) then Result := a.TVal.AsType<T>;
 end;
 
 constructor TTypedValue<T>.Create(aTip: TmetadataType; const StrVal: string);
@@ -517,7 +690,7 @@ begin
       end;
     tkInt64:
       begin
-        var i := StrToInt64Def(StrVal, 0);
+        var i := StrAsInt64(StrVal);
         move(i, Value, System.SizeOf(T));
       end;
     tkFloat:
@@ -550,9 +723,10 @@ constructor TTypedValue<T>.Create(aTip: TmetadataType; const PtrVal: Pointer);
 begin
   Tip := aTip;
   if not Assigned(PtrVal) then Exit;
+  PValue := PtrVal;
   if GetTypeKind(T) in [tkInteger, tkInt64,tkFloat] then
    begin
-    move(PtrVal^, Value, System.SizeOf(T));
+    Value := PValue^;
     SVal := TVal.ToString;
    end
   else
@@ -560,6 +734,34 @@ begin
     SVal := string(PAnsiChar(PtrVal));
     PString(@Value)^ := SVal;
    end;
+end;
+
+procedure TTypedValue<T>.UpdateValue(ptr: Pointer);
+ var
+  PtrVal: PByte;
+begin
+  // if not Assigned(Ptr) then Exit;
+  PtrVal := ptr;
+  Inc(PtrVal, DataOffset);
+  PValue := ptrT(PtrVal);
+  if ArrayLength > 0 then Exit;
+
+  if GetTypeKind(T) in [tkInteger, tkInt64,tkFloat] then
+   begin
+    Value := PValue^;
+//    SVal := TVal.ToString;
+   end
+  else
+   begin
+//    SVal := string(PAnsiChar(PtrVal));
+//    PString(@Value)^ := SVal;
+    PString(@Value)^ := string(PAnsiChar(PtrVal));
+   end;
+end;
+
+function TTypedValue<T>.ValAsStr(showEu: Boolean): string;
+begin
+
 end;
 
 constructor TTypedValue<T>.CreateT(aTip: TmetadataType; const Val: T);
@@ -632,11 +834,11 @@ end;
 
 function TDataStruct.Clone(idx: Integer): TDataStruct;
 begin
-  Result := TDataStruct.Create(tip);
-  Result.Attr := Copy(Attr);
-  Result.SubData := Copy(SubData);
-  Result.Index := Index;
-  Result.Name := Name + idx.ToString;
+  Result          := TDataStruct.Create(tip);
+  Result.Attr     := Copy(Attr);
+  Result.SubData  := Copy(SubData);
+  Result.Index    := Index;
+  Result.Name     := Name + idx.ToString;
 end;
 
 procedure TDataStruct.ExpandArray(parent: TTyped);

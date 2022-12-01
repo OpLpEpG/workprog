@@ -9,26 +9,39 @@ uses sysutils, Classes,  System.TypInfo, MetaData2.Classes,
  type
   TheaderFileParser = class
   private
+   class var row, col: integer;
+   class var token: string;
+   class var FlagStruct: Boolean;
+   class var TokRow: TArray<string>;
+   class var CurTok: array[0..100] of string;
+
    class var Index: Byte;
    class var FDefines: TDictionary<string, string>;
    class var FStructTypes: TDictionary<string, TStructTypedef>;
    class var tokens: TArray<TArray<string>>;
    class constructor Create;
    class destructor Destroy;
-   class function AttrArrContains(attr: TTypedArray; item: TTypedClass): Boolean;
-   class function AttrArrGet(attr: TTypedArray; item: TTypedClass): TTyped;
+   // factorys
    class function AttrFactory(const tocs: array of string): TTyped;
    class function DataTypeFactory(attr: TTypedArray; Tip: TmetadataType; const tocs: Tarray<string>): TTyped;
    class function DataStructFactory(attr: TTypedArray; const tip :TStructTypedef; const tocs: Tarray<string>): TDataStruct;
    class function StructFactory(attr: TTypedArray; const data: TTypedArray): TStructTypedef;
+   // tools
+   class function AttrArrContains(attr: TTypedArray; item: TTypedClass): Boolean;
+   class function AttrArrGet(attr: TTypedArray; item: TTypedClass): TTyped;
     // если не структура!!!
+   // not TattrNoname and TattrName
    class function IsNamed(attr: TTypedArray; var CName: string): Boolean;
+   // TattrName
    class function IsNamedStruct(attr: TTypedArray; var CName: string): Boolean;
+   // TattrNoname
    class function IsNoNamed(attr: TTypedArray): Boolean;
+   // TattrStructName
    class function IsStructName(attr: TTypedArray): Boolean;
    class function AddAttrArray(const tocs: Tarray<string>; var arrs: TTypedArray): Boolean;
    // check defines
    class function GetValue(const s: string): string; static;
+   class procedure RaiseException(const message: string);
   public
    class procedure Parse(const ss: TStrings);
    class function GetMetaData: TBytes;
@@ -122,7 +135,7 @@ begin
     Result := a.cls.Create(a.Tip, GetValue(tocs[2]));
     Exit;
    end;
-  raise Exception.Create('Error Message');
+  RaiseException(Format('атрибут с именем(%s) не найден', [tocs[0]]));
 end;
 
 class function TheaderFileParser.DataTypeFactory(attr: TArray<TTyped>; Tip: TmetadataType;
@@ -169,11 +182,6 @@ end;
 
 class procedure TheaderFileParser.Parse(const ss: TStrings);
  var
-  row, col: integer;
-  token: string;
-  FlagStruct: Boolean;
-  TokRow: TArray<string>;
-  CurTok: array[0..100] of string;
   CurrenAttrs: TTypedArray;
   CurrenStrucAttrs: TTypedArray;
   CurrenStructItems: TTypedArray;
@@ -318,7 +326,7 @@ begin
           else
        // ...или ошибка структуры
           begin
-            raise Exception.Create('Error  CurrenStructItems');
+            RaiseException('ошибка структуры');
           end;
         end
        // начинаем добавлять структурy
@@ -337,6 +345,12 @@ begin
     end;
 end;
 
+
+class procedure TheaderFileParser.RaiseException(const message: string);
+begin
+  raise Exception.Createfmt('%s'+#$D#$A+'tok:%d row:%d toc: %s %s %s %s %s %s', [message,col,row,
+  token, CurTok[0], CurTok[1], CurTok[2], CurTok[3], CurTok[4]]);
+end;
 
 class function TheaderFileParser.GetMetaData: TBytes;
  var

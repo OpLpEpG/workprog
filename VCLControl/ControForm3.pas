@@ -1060,7 +1060,13 @@ procedure TFormControl.TreeUpdate;
     d: IDevice;
   begin
     Result := nil;
-    for d in de.Enum do if d.IConnect = c then Exit(AddControl(c, nil));
+    if (icAdding in c.Status) then Exit;
+    if (icUserAdding in c.Status) then Exit;
+    for d in de.Enum do
+     if d.IConnect = c then
+      begin
+       Exit(AddControl(c, nil));
+      end;
     if Assigned(ce) then ce.Remove(c);
   end;
  var

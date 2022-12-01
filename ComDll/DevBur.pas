@@ -110,7 +110,7 @@ uses  tools, System.IOUtils, RootIntf,
 
 implementation
 
-uses  Parser;
+uses  Parser, MetaData2.to1;
 
 const
   RS_ErrReadData = 'Ошибка чтения данных устройства с адресом: %d SZ=%d[%d] CA=0x%x';
@@ -558,7 +558,10 @@ begin
     begin
       if Exc = 0 then
        begin
-        TPars.SetInfo(FMetaDataInfo.Info, Data, n); // parse all data for device
+        if Data^ = varRecord then
+         TPars.SetInfo(FMetaDataInfo.Info, Data, n) // parse all data for device
+        else
+         TnewPars.SetInfo(FMetaDataInfo.Info, Data, n);
 
   //      TDebug.Log('Root2: %s %d', [FMetaDataInfo.Info.NodeName, FMetaDataInfo.Info.ChildNodes.Count]);проблемма записи ресинк
 //        FMetaDataInfo.Info.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'DevBur_SetInfo.xml');проблемма записи ресинк
@@ -655,6 +658,10 @@ type
    varType: Byte;
    Length: Word;
   end;
+  PNewInfoDataHeader=^TNewInfoDataHeader;
+  TNewInfoDataHeader=packed record
+   Length: Word;
+  end;
   const DIHLEN = SizeOf(TInfoDataHeader);
 begin
   with SerialQe, ConnectIO do
@@ -682,7 +689,10 @@ begin
             begin
               Dn := TStdRec.Create(p1, adr>15, DIHLEN);
            //  tst := PInfoDataHeader(p1)^;
-             savelen := PInfoDataHeader(Dn.DataPtr).Length;
+             if PInfoDataHeader(Dn.DataPtr).varType = varRecord then
+              savelen := PInfoDataHeader(Dn.DataPtr).Length
+             else
+              savelen := PNewInfoDataHeader(Dn.DataPtr).Length;
             // Tdebug.Log('%d', [savelen]);
              from := 0;
              bads := 0;

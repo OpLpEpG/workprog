@@ -87,8 +87,8 @@
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <BT_BuildType>Debug</BT_BuildType>
-        <VerInfo_Build>8</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.1.0.8;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=2.1.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>16</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.1.0.16;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=2.1.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <VerInfo_Locale>1049</VerInfo_Locale>
@@ -140,7 +140,7 @@
         <None Include="..\Help\Moduls.htm"/>
         <None Include="..\Help\Project\Progect.htm"/>
         <None Include="..\Help\Project\ReadRam.htm"/>
-        <None Include="..\Help\Devices\IO.htm"/>
+        <None Include="..\..\IO.htm"/>
         <None Include="..\Help\Devices\Devices.htm"/>
         <None Include="..\Help\Metrol\Metrology.GK.htm"/>
         <None Include="..\Help\Metrol\Metrology.NNK.htm"/>

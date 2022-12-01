@@ -815,8 +815,11 @@ begin
       FProjecDoc.LoadFromFile(FProjectFile);
       Froot := FProjecDoc.DocumentElement;
       FConnect := Froot.ChildNodes.FindNode(T_CON);
+      if not Assigned(FConnect) then FConnect := Froot.AddChild(T_CON);
       FDevices := Froot.ChildNodes.FindNode(T_DEV);
+      if not Assigned(FDevices) then  FDevices := Froot.AddChild(T_DEV);
       Foptions := Froot.ChildNodes.FindNode(T_OPT);
+      if not Assigned(Foptions) then Foptions := Froot.AddChild(T_OPT);
 //      FFiles := Froot.ChildNodes.FindNode(T_FILES);
 
       if Assigned(AfterCreateProject) then AfterCreateProject();

@@ -4,7 +4,7 @@ object DialogDelay: TDialogDelay
   HelpType = htKeyword
   HelpKeyword = #1047#1072#1076#1077#1088#1078#1082#1072
   Caption = 'DialogDelay'
-  ClientHeight = 323
+  ClientHeight = 474
   ClientWidth = 439
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,9 +12,7 @@ object DialogDelay: TDialogDelay
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
-  PixelsPerInch = 96
   TextHeight = 13
   object pnEdit: TPanel
     Left = 0
@@ -76,11 +74,11 @@ object DialogDelay: TDialogDelay
       OnChange = EditsChange
     end
     object btApply: TButton
-      Left = 326
+      Left = 226
       Top = 71
-      Width = 89
+      Width = 189
       Height = 25
-      Caption = #1055#1088#1080#1084#1077#1085#1080#1090#1100
+      Caption = #1055#1086#1089#1090#1072#1074#1080#1090#1100' '#1085#1072' '#1079#1072#1076#1077#1088#1078#1082#1091
       Enabled = False
       TabOrder = 0
       OnClick = btApplyClick
@@ -88,7 +86,7 @@ object DialogDelay: TDialogDelay
   end
   object pnShow: TPanel
     Left = 0
-    Top = 269
+    Top = 420
     Width = 439
     Height = 54
     Align = alBottom
@@ -122,9 +120,9 @@ object DialogDelay: TDialogDelay
   end
   object Memo: TMemo
     Left = 0
-    Top = 113
+    Top = 226
     Width = 439
-    Height = 156
+    Height = 194
     TabStop = False
     Align = alClient
     Font.Charset = RUSSIAN_CHARSET
@@ -141,10 +139,26 @@ object DialogDelay: TDialogDelay
     ShowHint = False
     TabOrder = 0
   end
+  object pnCtatus: TPanel
+    Left = 0
+    Top = 113
+    Width = 439
+    Height = 113
+    Align = alTop
+    Caption = 'pnEdit'
+    ShowCaption = False
+    TabOrder = 3
+  end
   object Timer: TTimer
     Enabled = False
     OnTimer = TimerTimer
     Left = 16
-    Top = 160
+    Top = 264
+  end
+  object TimerErr: TTimer
+    Interval = 3000
+    OnTimer = TimerErrTimer
+    Left = 72
+    Top = 264
   end
 end

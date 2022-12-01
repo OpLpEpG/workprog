@@ -71,6 +71,8 @@ type
     procedure SendROW(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef = nil; WaitTime: Integer = -1);
 
     function GetStatus: TSetConnectIOStatus;
+    procedure SetStatus(Value: TSetConnectIOStatus);
+
 
     //IDebugIO
     procedure SetIOEvent(const AIOEvent: TIOEvent);
@@ -705,6 +707,11 @@ begin
   Result := iosOpen in FStatus;
 end;
 
+procedure TAbstractConnectIO.SetStatus(Value: TSetConnectIOStatus);
+begin
+  SetS_Status(Value);
+end;
+
 procedure TAbstractConnectIO.SetS_Status(const Value: TSetConnectIOStatus);
 begin
   if Value <> FStatus then
@@ -1223,7 +1230,6 @@ end;   }
 {$REGION  'TComConnectIO - все процедуры и функции'}
 constructor TComConnectIO.Create();
 begin
-  TDebug.Log('----------TComConnectIO.Create();---------------');
   inherited Create;
   FConnectInfo := 'COM1';
   FCom := TComPort.Create(nil);
@@ -1238,6 +1244,7 @@ begin
   Fcom.Port := FConnectInfo;
   FCom.OnException := ComPortException;
 //  Fcom.Timeouts.ReadInterval := 200;
+  TDebug.Log('----------TComConnectIO.Create(%s);---------------',[Name]);
 end;
 
 procedure TComConnectIO.InnerClose;

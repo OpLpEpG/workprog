@@ -30,9 +30,6 @@
         <Projects Include="CreatePSK\CreateData.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="VCL_Telesis\VCLTelesis.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="BootLoader\bootLoader.dproj">
             <Dependencies/>
         </Projects>
@@ -46,12 +43,6 @@
             <Dependencies/>
         </Projects>
         <Projects Include="CreateMetaData\h2meta.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\Delphi11\ProjectD11.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="..\..\Libs\ComPort\Source\CPortLibDXE.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -143,15 +134,6 @@
     <Target Name="CreateData:Make">
         <MSBuild Projects="CreatePSK\CreateData.dproj" Targets="Make"/>
     </Target>
-    <Target Name="VCLTelesis">
-        <MSBuild Projects="VCL_Telesis\VCLTelesis.dproj"/>
-    </Target>
-    <Target Name="VCLTelesis:Clean">
-        <MSBuild Projects="VCL_Telesis\VCLTelesis.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="VCLTelesis:Make">
-        <MSBuild Projects="VCL_Telesis\VCLTelesis.dproj" Targets="Make"/>
-    </Target>
     <Target Name="bootLoader">
         <MSBuild Projects="BootLoader\bootLoader.dproj"/>
     </Target>
@@ -197,32 +179,14 @@
     <Target Name="h2meta:Make">
         <MSBuild Projects="CreateMetaData\h2meta.dproj" Targets="Make"/>
     </Target>
-    <Target Name="ProjectD11">
-        <MSBuild Projects="..\Delphi11\ProjectD11.dproj"/>
-    </Target>
-    <Target Name="ProjectD11:Clean">
-        <MSBuild Projects="..\Delphi11\ProjectD11.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="ProjectD11:Make">
-        <MSBuild Projects="..\Delphi11\ProjectD11.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="CPortLibDXE">
-        <MSBuild Projects="..\..\Libs\ComPort\Source\CPortLibDXE.dproj"/>
-    </Target>
-    <Target Name="CPortLibDXE:Clean">
-        <MSBuild Projects="..\..\Libs\ComPort\Source\CPortLibDXE.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="CPortLibDXE:Make">
-        <MSBuild Projects="..\..\Libs\ComPort\Source\CPortLibDXE.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;VCLControl3;ProjectManager3;ComDev;Monitor;VCLData;VCLDialogs;WorkProg;CreateData;VCLTelesis;bootLoader;Metrol;VCLeeprom;LoggToGlu;h2meta;ProjectD11;CPortLibDXE"/>
+        <CallTarget Targets="Core;VCLControl3;ProjectManager3;ComDev;Monitor;VCLData;VCLDialogs;WorkProg;CreateData;bootLoader;Metrol;VCLeeprom;LoggToGlu;h2meta"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;VCLControl3:Clean;ProjectManager3:Clean;ComDev:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;WorkProg:Clean;CreateData:Clean;VCLTelesis:Clean;bootLoader:Clean;Metrol:Clean;VCLeeprom:Clean;LoggToGlu:Clean;h2meta:Clean;ProjectD11:Clean;CPortLibDXE:Clean"/>
+        <CallTarget Targets="Core:Clean;VCLControl3:Clean;ProjectManager3:Clean;ComDev:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;WorkProg:Clean;CreateData:Clean;bootLoader:Clean;Metrol:Clean;VCLeeprom:Clean;LoggToGlu:Clean;h2meta:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;VCLControl3:Make;ProjectManager3:Make;ComDev:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;WorkProg:Make;CreateData:Make;VCLTelesis:Make;bootLoader:Make;Metrol:Make;VCLeeprom:Make;LoggToGlu:Make;h2meta:Make;ProjectD11:Make;CPortLibDXE:Make"/>
+        <CallTarget Targets="Core:Make;VCLControl3:Make;ProjectManager3:Make;ComDev:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;WorkProg:Make;CreateData:Make;bootLoader:Make;Metrol:Make;VCLeeprom:Make;LoggToGlu:Make;h2meta:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
     <ItemGroup Condition="'$(BuildGroup)'=='RELEA'">
@@ -268,21 +232,9 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\ComPort\Source\CPortLibDXE.dproj">
-            <ProjectGuid>{EF4E3696-2BE3-48F6-A9BC-78670706555E}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="CreateMetaData\h2meta.dproj">
             <ProjectGuid>{995F12A9-5950-4DAF-A341-B67BAA503DE5}</ProjectGuid>
             <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\Delphi11\ProjectD11.dproj">
-            <ProjectGuid>{B8D1B1F3-500B-44CA-B597-3241B9500EF5}</ProjectGuid>
-            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
@@ -294,12 +246,6 @@
         </BuildGroupProject>
         <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
             <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
-            <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
@@ -372,23 +318,11 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\ComPort\Source\CPortLibDXE.dproj">
-            <ProjectGuid>{EF4E3696-2BE3-48F6-A9BC-78670706555E}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
             <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\Delphi11\ProjectD11.dproj">
-            <ProjectGuid>{B8D1B1F3-500B-44CA-B597-3241B9500EF5}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCLData\VCLData.dproj">
             <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
@@ -401,12 +335,6 @@
             <Configurations/>
             <Platforms/>
             <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
-            <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="MainExe\WorkProg.dproj">
             <ProjectGuid>{4858CC7A-7A81-48B7-9BAD-D77D360297D0}</ProjectGuid>
@@ -476,23 +404,11 @@
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="..\..\Libs\ComPort\Source\CPortLibDXE.dproj">
-            <ProjectGuid>{EF4E3696-2BE3-48F6-A9BC-78670706555E}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
         <BuildGroupProject Include="CreateMetaData\h2meta.dproj">
             <ProjectGuid>{995F12A9-5950-4DAF-A341-B67BAA503DE5}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="..\Delphi11\ProjectD11.dproj">
-            <ProjectGuid>{B8D1B1F3-500B-44CA-B597-3241B9500EF5}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCLData\VCLData.dproj">
             <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
@@ -504,12 +420,6 @@
             <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
             <Configurations/>
             <Platforms/>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCL_Telesis\VCLTelesis.dproj">
-            <ProjectGuid>{CBFC4375-5B98-495A-85DA-A01D9349A216}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="MainExe\WorkProg.dproj">

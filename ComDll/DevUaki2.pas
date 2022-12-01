@@ -132,7 +132,7 @@ begin
 
     if n >= $80 then
      begin
-      a := string(TST_STR{LastAns}).Split([' ', '=', #$D], TStringSplitOptions.ExcludeEmpty);
+      a := string({TST_STR}LastAns).Split([' ', '=', #$D], TStringSplitOptions.ExcludeEmpty);
       Azi.FCurrentAngle := a[POS_A].ToDouble();
       Zen.FCurrentAngle := a[POS_Z].ToDouble();
       Viz.FCurrentAngle := a[POS_V].ToDouble();

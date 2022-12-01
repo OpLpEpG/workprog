@@ -150,6 +150,20 @@
             <Form>FormSetupProject</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="FindDevices.pas">
+            <Form>FormFindDev</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="FrameFindDevs2.pas">
+            <Form>FrameFindDev</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="FrameDelayDev.pas">
+            <Form>FrameDelayInfo</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -204,7 +218,12 @@
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="..\_exe\Debug\VCLControl3.dlp" Configuration="Debug" Class="ProjectOutput"/>
-                <DeployFile LocalName="..\_exe\Debug\VCLControl3.rsm" Configuration="Debug" Class="DebugSymbols"/>
+                <DeployFile LocalName="..\_exe\Debug\VCLControl3.dlp" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>VCLControl3.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">
                         <Operation>1</Operation>

@@ -224,13 +224,14 @@ begin
     else
       Msg := lua_pushfstring(L, '(error object is a %s value)',
                                [luaL_typename(L, 1)]);
-
   luaL_traceback(L, L, Msg, 1);  //* append a standard traceback */
   Result := 1; //* return the traceback */
 end;
 
-//
-// This function is called by Lua, it extracts the object by
+
+//
+
+// This function is called by Lua, it extracts the object by
 // pointer to the objects method by name, which is then called.
 //
 // @param       Lua_State   L   Pointer to Lua instance
@@ -794,14 +795,12 @@ end;
 ** Dynamic library manipulation
 *)
 
-
 function GetAddress(Name: String): Pointer;
 begin
   Result := GetProcAddress(LibraryHandle, PWideChar(Name));
   if not Assigned(Result) then
     raise ELuaLibraryMethodNotFound.Create('Entry point "' + QuotedStr(Name) + '" not found');
 end;
-
 
 function TVerySimpleLua.LoadFile(Filename: String): Integer;
 var
@@ -817,30 +816,24 @@ var
   LoadPath: String;
 begin
   FreeLuaLibrary;
-
   if LibraryPath = '' then
     LoadPath := LUA_LIBRARY
   else
     LoadPath := LibraryPath;
-
 {$IFNDEF STATICLIBRARY}
-
   // check if Library exists
   if not FileExists(LoadPath) then
     raise ELuaLibraryNotFound.Create('Lua library "' + QuotedStr(LoadPath) + '" not found');
-
   // try to load the library
   LibraryHandle := LoadLibrary(PChar(LoadPath));
   if LibraryHandle = 0 then
     raise ELuaLibraryLoadError.Create('Failed to load Lua library "' + QuotedStr(LoadPath) + '"'
       {$IF defined(POSIX)} + (String(dlerror)){$ENDIF});
-
   lua_newstate := GetAddress('lua_newstate');
   lua_close := GetAddress('lua_close');
   lua_newthread := GetAddress('lua_newthread');
   lua_atpanic := GetAddress('lua_atpanic');
   lua_version := GetAddress('lua_version');
-
   lua_absindex := GetAddress('lua_absindex');
   lua_gettop := GetAddress('lua_gettop');
   lua_settop := GetAddress('lua_settop');
@@ -849,7 +842,6 @@ begin
   lua_copy := GetAddress('lua_copy');
   lua_checkstack := GetAddress('lua_checkstack');
   lua_xmove  := GetAddress('lua_xmove');
-
   lua_isnumber := GetAddress('lua_isnumber');
   lua_isstring := GetAddress('lua_isstring');
   lua_iscfunction := GetAddress('lua_iscfunction');
@@ -857,7 +849,6 @@ begin
   lua_isuserdata := GetAddress('lua_isuserdata');
   lua_type  := GetAddress('lua_type');
   lua_typename := GetAddress('lua_typename');
-
   lua_tonumberx := GetAddress('lua_tonumberx');
   lua_tointegerx := GetAddress('lua_tointegerx');
   lua_toboolean := GetAddress('lua_toboolean');
@@ -867,11 +858,9 @@ begin
   lua_touserdata := GetAddress('lua_touserdata');
   lua_tothread := GetAddress('lua_tothread');
   lua_topointer := GetAddress('lua_topointer');
-
   lua_arith := GetAddress('lua_arith');
   lua_rawequal := GetAddress('lua_rawequal');
   lua_compare := GetAddress('lua_compare');
-
   lua_pushnil := GetAddress('lua_pushnil');
   lua_pushnumber := GetAddress('lua_pushnumber');
   lua_pushinteger := GetAddress('lua_pushinteger');
@@ -883,7 +872,6 @@ begin
   lua_pushboolean := GetAddress('lua_pushboolean');
   lua_pushlightuserdata := GetAddress('lua_pushlightuserdata');
   lua_pushthread := GetAddress('lua_pushthread');
-
   lua_getglobal := GetAddress('lua_getglobal');
   lua_gettable := GetAddress('lua_gettable');
   lua_getfield := GetAddress('lua_getfield');
@@ -891,12 +879,10 @@ begin
   lua_rawget := GetAddress('lua_rawget');
   lua_rawgeti := GetAddress('lua_rawgeti');
   lua_rawgetp := GetAddress('lua_rawgetp');
-
   lua_createtable := GetAddress('lua_createtable');
   lua_newuserdata := GetAddress('lua_newuserdata');
   lua_getmetatable := GetAddress('lua_getmetatable');
   lua_getuservalue := GetAddress('lua_getuservalue');
-
   lua_setglobal := GetAddress('lua_setglobal');
   lua_settable := GetAddress('lua_settable');
   lua_setfield := GetAddress('lua_setfield');
@@ -906,28 +892,22 @@ begin
   lua_rawsetp := GetAddress('lua_rawsetp');
   lua_setmetatable := GetAddress('lua_setmetatable');
   lua_setuservalue := GetAddress('lua_setuservalue');
-
   lua_callk := GetAddress('lua_callk');
   lua_pcallk := GetAddress('lua_pcallk');
   lua_load := GetAddress('lua_load');
   lua_dump := GetAddress('lua_dump');
-
   lua_yieldk := GetAddress('lua_yieldk');
   lua_resume := GetAddress('lua_resume');
   lua_status := GetAddress('lua_status');
   lua_isyieldable := GetAddress('lua_isyieldable');
-
   lua_gc := GetAddress('lua_gc');
-
   lua_error := GetAddress('lua_error');
   lua_next := GetAddress('lua_next');
   lua_concat := GetAddress('lua_concat');
   lua_len := GetAddress('lua_len');
-
   lua_stringtonumber := GetAddress('lua_stringtonumber');
   lua_getallocf := GetAddress('lua_getallocf');
   lua_setallocf := GetAddress('lua_setallocf');
-
   lua_getstack := GetAddress('lua_getstack');
   lua_getinfo := GetAddress('lua_getinfo');
   lua_getlocal := GetAddress('lua_getlocal');
@@ -936,12 +916,10 @@ begin
   lua_setupvalue := GetAddress('lua_setupvalue');
   lua_upvalueid := GetAddress('lua_upvalueid');
   lua_upvaluejoin := GetAddress('lua_upvaluejoin');
-
   lua_sethook := GetAddress('lua_sethook');
   lua_gethook := GetAddress('lua_gethook');
   lua_gethookmask := GetAddress('lua_gethookmask');
   lua_gethookcount := GetAddress('lua_gethookcount');
-
   luaopen_base := GetAddress('luaopen_base');
   luaopen_coroutine := GetAddress('luaopen_coroutine');
   luaopen_table := GetAddress('luaopen_table');
@@ -953,9 +931,7 @@ begin
   luaopen_math := GetAddress('luaopen_math');
   luaopen_debug := GetAddress('luaopen_debug');
   luaopen_package := GetAddress('luaopen_package');
-
   luaL_openlibs := GetAddress('luaL_openlibs');
-
   luaL_checkversion_ := GetAddress('luaL_checkversion_');
   luaL_getmetafield := GetAddress('luaL_getmetafield');
   luaL_callmeta := GetAddress('luaL_callmeta');
@@ -967,39 +943,30 @@ begin
   luaL_optnumber := GetAddress('luaL_optnumber');
   luaL_checkinteger := GetAddress('luaL_checkinteger');
   luaL_optinteger := GetAddress('luaL_optinteger');
-
   luaL_checkstack := GetAddress('luaL_checkstack');
   luaL_checktype := GetAddress('luaL_checktype');
   luaL_checkany := GetAddress('luaL_checkany');
-
   luaL_newmetatable := GetAddress('luaL_newmetatable');
   luaL_setmetatable := GetAddress('luaL_setmetatable');
   luaL_testudata := GetAddress('luaL_testudata');
   luaL_checkudata := GetAddress('luaL_checkudata');
-
   luaL_where := GetAddress('luaL_where');
   luaL_error := GetAddress('luaL_error');
-
   luaL_checkoption := GetAddress('luaL_checkoption');
   luaL_fileresult := GetAddress('luaL_fileresult');
   luaL_execresult := GetAddress('luaL_execresult');
-
   luaL_ref := GetAddress('luaL_ref');
   luaL_unref := GetAddress('luaL_unref');
-
   luaL_loadfilex := GetAddress('luaL_loadfilex');
   luaL_loadbufferx := GetAddress('luaL_loadbufferx');
   luaL_loadstring := GetAddress('luaL_loadstring');
   luaL_newstate := GetAddress('luaL_newstate');
   luaL_len := GetAddress('luaL_len');
-
   luaL_gsub := GetAddress('luaL_gsub');
   luaL_setfuncs := GetAddress('luaL_setfuncs');
-
   luaL_getsubtable := GetAddress('luaL_getsubtable');
   luaL_traceback := GetAddress('luaL_traceback');
   luaL_requiref := GetAddress('luaL_requiref');
-
   luaL_buffinit := GetAddress('luaL_buffinit');
   luaL_prepbuffsize := GetAddress('luaL_prepbuffsize');
   luaL_addlstring := GetAddress('luaL_addlstring');
@@ -1010,7 +977,6 @@ begin
   luaL_buffinitsize := GetAddress('luaL_buffinitsize');
 {$ENDIF}
 end;
-
 function TVerySimpleLua.LoadString(Value: String): Integer;
 var
   Marshall: TMarshaller;
@@ -1056,8 +1022,10 @@ begin
 end;
 
 
-function TVerySimpleLua.Print(L: Lua_State): Integer;
-var
+
+function TVerySimpleLua.Print(L: Lua_State): Integer;
+
+var
   N, I: Integer;
   S: MarshaledAString;
   Sz: size_t;
@@ -1078,18 +1046,16 @@ begin
       Result := luaL_error(L, '"tostring" must return a string to "print"',[]);
       Exit;
     end;
-
     if I > 1 then
       Msg := Msg + #9;
     Msg := Msg + String(S);
     lua_pop(L, 1);  //* pop result */
   end;
   Result := 0;
-
   DoPrint(Msg);
 end;
 
-
+
 
 { TLuaChunkStream }
 

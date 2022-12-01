@@ -1,0 +1,157 @@
+unit MetaData2.to1;
+
+interface
+
+uses sysutils, Classes, MetaData2.XClasses, Xml.XMLIntf, Xml.XMLDoc, debug_except, tools;
+
+function MetaData2To1(inp, outp: IXMLNode):IXMLNode;
+
+type TnewPars =class
+ public
+    class function SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer): IXMLNode;
+end;
+
+
+implementation
+
+uses MetaData2.XBParser;
+
+type ConvAttr = record
+ new: string;
+ old: string;
+end;
+
+const ConvAttrs: array [0..22] of ConvAttr = (
+(new:  'adr';               old: AT_ADDR),
+(new:  'chip';              old: AT_CHIP),
+(new:  'from';              old: AT_FROM),
+(new:  'info';              old: AT_INFO),
+(new:  'serial';            old: AT_SERIAL),
+(new:  'SupportUartSpeed';  old: AT_SPEED),
+(new:  'NoPowerDataCount';  old: AT_EXT_NP),
+(new:  'size';              old: AT_SIZE),
+(new:  'array';             old: AT_ARRAY),
+(new:  'metr';              old: AT_METR),
+(new:  'global';            old: AT_INDEX),
+(new:  'tip';               old: AT_TIP),
+(new:  'eu';                old: AT_EU),
+(new:  'RangeLo';           old: AT_RLO),
+(new:  'RangeHi';           old: AT_RHI),
+(new:  'digits';            old: AT_DIGITS),
+(new:  'precision';         old: AT_AQURICY),
+(new:  'color';             old: AT_COLOR),
+(new:  'width';             old: AT_WIDTH),
+(new:  'style';             old: AT_DASH),
+(new:  'title';             old: AT_TITLE),
+(new:  'RamSize';           old: AT_RAMSIZE),
+(new:  'SSDSize';           old: AT_SSD)
+);
+
+type ConvType = record
+ Name: string;
+ tip: Integer;
+end;
+const ConvTypes: array [0..9] of ConvType = (
+ (    Name: 'uint8_t';    Tip: varByte ),
+ (    Name: 'int8_t';     Tip: varShortInt ),
+
+ (    Name: 'uint16_t';    Tip: varWord ),
+ (    Name: 'int16_t';     Tip: varSmallint ),
+
+ (    Name: 'uint32_t';    Tip: varUInt32 ),
+ (    Name: 'int32_t';     Tip: varInteger ),
+ (    Name: 'float';       Tip: varSingle ),
+
+ (    Name: 'uint64_t';   Tip: varUInt64 ),
+ (    Name: 'int64_t';    Tip: varInt64 ),
+ (    Name: 'double';     Tip: varDouble )
+);
+
+ function GetTip(const inp: string{; tip: TmetadataType}): Integer;
+ begin
+   for var stdt in ConvTypes do if stdt.Name = inp then Exit(stdt.tip);
+   { TODO : decode from tip as default type}
+   raise Exception.CreateFmt(' function GetTip(inp: IXMLNode): Integer Error type %s',[inp]);
+ end;
+
+ function GetAttrName(inp: IXMLNode): string;
+ begin
+   for var stdn in ConvAttrs do if stdn.new = inp.NodeName then Exit(stdn.old);
+   Result := inp.NodeName;
+ end;
+
+var
+ nonamecount: Integer = 1;
+ function GetNodeName(inp: IXMLNode): string;
+ begin
+   if inp.HasAttribute('name') then
+    begin
+     Result := inp.Attributes['name'];
+     { TODO : generate ole name }
+    end
+   else if inp.HasAttribute('WRK') then Result := 'WRK'
+   else if inp.HasAttribute('RAM') then Result := 'RAM'
+   else if inp.HasAttribute('EEP') then Result := 'EEP'
+   else
+    begin
+     Result := 'noname'+nonamecount.ToString;
+     Inc(nonamecount);
+    end;
+ end;
+
+procedure ExecX(inp, outp: IXMLNode; proc: TFunc<IXMLNode,IXMLNode,IXMLNode>);
+  procedure rec(r,parent: IXMLNode);
+  begin
+    var orn := proc(r, parent);
+    for var n in XEnum(r) do if n.NodeType = ntElement then rec(n,orn)
+  end;
+begin
+  rec(inp, outp);
+end;
+
+
+function MetaData2To1(inp, outp: IXMLNode):IXMLNode;
+begin
+  ExecX(inp, outp, function (ip, op: IXMLNode): IXMLNode
+   var
+    node: IXMLNode;
+   procedure MoveAttr(root, dev: IXMLNode; const name: string);
+   begin
+     if dev.HasAttribute(name) then
+      begin
+       root.Attributes[name] := dev.Attributes[name];
+       dev.AttributeNodes.Delete(name);
+      end;
+   end;
+  begin
+    Result := op.AddChild(GetNodeName(ip));
+    if ip.HasAttribute('tip') then node := Result.AddChild(T_DEV)
+    else node := Result;
+    for var i := 0 to ip.AttributeNodes.Count-1 do
+     begin
+      var at := ip.AttributeNodes[i];
+      if (at.NodeName <> 'WRK')and(at.NodeName <> 'RAM')and(at.NodeName <> 'EEP')and(at.NodeName <> 'name') then
+         node.Attributes[GetAttrName(at)] := at.NodeValue;
+     end;
+    if node.HasAttribute(AT_SIZE) then Result.AttributeNodes.Delete(AT_INDEX);
+    if node.HasAttribute(AT_INDEX) then
+     begin
+      MoveAttr(Result,node, 'name');
+      MoveAttr(Result,node, AT_METR);
+      MoveAttr(Result,node, AT_ARRAY);
+      MoveAttr(Result,node, 'arrayShowLen');
+      node.Attributes[AT_TIP] := GetTip(ip.NodeName);
+     end;
+  end);
+  Result := outp.ChildNodes.FindNode(inp.NodeName);
+end;
+
+{ TnewPars }
+
+class function TnewPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer): IXMLNode;
+begin
+  TBinaryXParser.Parse(Info);
+  Result := MetaData2To1(TBinaryXParser.ExportTo(NewXMLDocument().AddChild('root')), node);
+end;
+
+end.

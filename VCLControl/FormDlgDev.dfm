@@ -105,7 +105,7 @@ object FormCreateDev: TFormCreateDev
         Options = [coAllowClick, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus, coDisableAnimatedResize]
         Position = 1
         Text = #1054#1087#1080#1089#1072#1085#1080#1077
-        Width = 213
+        Width = 207
       end
       item
         Position = 2

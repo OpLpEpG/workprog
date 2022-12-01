@@ -31,7 +31,10 @@ uses
   VCL.Dlg.Clc in 'VCL.Dlg.Clc.pas' {FormDlgClc},
   VCL.Frame.RangeSelect in 'VCL.Frame.RangeSelect.pas' {FrameRangeSelect: TFrame},
   VCL.Dlg.ExportLAS in 'VCL.Dlg.ExportLAS.pas' {FormExportLASP3},
-  FormDlgSetupProject in 'FormDlgSetupProject.pas' {FormSetupProject};
+  FormDlgSetupProject in 'FormDlgSetupProject.pas' {FormSetupProject},
+  FindDevices in 'FindDevices.pas' {FormFindDev},
+  FrameFindDevs2 in 'FrameFindDevs2.pas' {FrameFindDev: TFrame},
+  FrameDelayDev in 'FrameDelayDev.pas' {FrameDelayInfo: TFrame};
 
 {$R *.res}
 

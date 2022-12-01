@@ -741,7 +741,7 @@ end;
 destructor TIComponent.Destroy;
 begin
   TBindHelper.RemoveExpressions(Self);
-//  TDebug.Log('  TIComponent.Destroy  %s  ', [Name]);
+  TDebug.Log('  TIComponent.Destroy  %s  ', [Name]);
   inherited;
 end;
 

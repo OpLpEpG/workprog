@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CALC>
+  <SHEET1 SheetByIndex="0">
+    <CELL D3="TR1.DevName" F3="/./.SERIAL_NO" E4="TR1.TIME_ATT" D39="TR1.Ready" D41="TR1.Metrolog" E5="TR1.UsedStol" F40="TR1.NextDate" />
+    <RANGES>
+      <RANGE1 Cells="D15:D19" DataIndex="0:0:1:5" Source="TR1.STEP%1:d.U.DEV.VALUE" />
+      <RANGE1 Cells="C15:C19" DataIndex="0:0:1:5" Source="TR1.STEP%1:d.I.DEV.VALUE" />
+      <RANGE1 Cells="E15:E19" DataIndex="0:0:1:5" Source="TR1.STEP%1:d.Y" />
+      <RANGE1 Cells="F15:F19" DataIndex="0:0:1:5" Source="TR1.STEP%1:d.Ytrr" />
+      <RANGE1 Cells="B15:B19" DataIndex="0:0:1:5" Source="TR1.STEP%1:d.INP_Y" />
+      <RANGE1 Cells="A23:A23" DataIndex="0:0:1:1" Source="TR1.STEP%1:d.k3"></RANGE1>
+      <RANGE1 Cells="B23:B23" DataIndex="0:0:1:1" Source="TR1.STEP%1:d.k2"></RANGE1>
+      <RANGE1 Cells="C23:C23" DataIndex="0:0:1:1" Source="TR1.STEP%1:d.k1"></RANGE1>
+      <RANGE1 Cells="D23:D23" DataIndex="0:0:1:1" Source="TR1.STEP%1:d.k0"></RANGE1>
+    </RANGES>
+  </SHEET1>
+</CALC>

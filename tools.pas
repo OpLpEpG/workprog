@@ -1286,7 +1286,7 @@ function ExecXTree(root: IXMLNode; func: TTestRef): IXMLNode;
     n: IXMLNode;
   begin
     if func(r) then res := r
-    else for n in XEnum(r) do rec(n)
+    else for n in XEnum(r) do if n.NodeType = ntElement then rec(n)
   end;
 begin
   if not Assigned(root) then Exit(nil);
@@ -1301,8 +1301,11 @@ procedure ExecXTree(root: IXMLNode; func: Tproc<IXMLNode>; Dec: Boolean = False)
     n: IXMLNode;
   begin
     func(r);
-    if Dec then for n in XEnumDec(r) do rec(n)
-    else for n in XEnum(r) do rec(n)
+    if Dec then for n in XEnumDec(r) do
+     begin
+      if n.NodeType = ntElement then rec(n)
+     end
+    else for n in XEnum(r) do if n.NodeType = ntElement then rec(n)
   end;
 begin
   if Assigned(root) then rec(root);

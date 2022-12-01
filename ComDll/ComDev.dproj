@@ -81,9 +81,9 @@
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>14</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.1.0.14;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=2.1.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <DCC_UnitSearchPath>..</DCC_UnitSearchPath>
+        <VerInfo_Build>19</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.1.0.19;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=2.1.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <DCC_UnitSearchPath>..;..\CreateMetaData</DCC_UnitSearchPath>
         <DCC_UsePackage>VirtualTreesR;$(DCC_UsePackage)</DCC_UsePackage>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <CfgDependentOn>..\..\_Defaul_pak1.optset</CfgDependentOn>
@@ -130,6 +130,7 @@
         <DCCReference Include="MicroSDConn.pas"/>
         <DCCReference Include="NetConn.pas"/>
         <DCCReference Include="DevHorizontM.pas"/>
+        <DCCReference Include="DevBurLowLevel.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

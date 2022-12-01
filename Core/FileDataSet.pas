@@ -82,7 +82,6 @@ type
   end;
 
 
-
 implementation
 
 function ToDBDisplayFormat(Precision: Integer): string;
@@ -197,7 +196,6 @@ begin
    end;
   Result := True;
 end;
-
 function TFileDataSet.GetFieldDefsClass: TFieldDefsClass;
 begin
   Result := TFileFieldDefs;
