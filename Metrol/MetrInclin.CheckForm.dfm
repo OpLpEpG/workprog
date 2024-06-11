@@ -11,8 +11,6 @@ object FormInclinCheck: TFormInclinCheck
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
   TextHeight = 13
   object Splitter: TSplitter
     Left = 0
@@ -59,6 +57,23 @@ object FormInclinCheck: TFormInclinCheck
       Height = 214
       Align = alClient
       BorderWidth = 1
+      Colors.BorderColor = 15987699
+      Colors.DisabledColor = clGray
+      Colors.DropMarkColor = 15385233
+      Colors.DropTargetColor = 15385233
+      Colors.DropTargetBorderColor = 15385233
+      Colors.FocusedSelectionColor = 15385233
+      Colors.FocusedSelectionBorderColor = 15385233
+      Colors.GridLineColor = 15987699
+      Colors.HeaderHotColor = clBlack
+      Colors.HotColor = clBlack
+      Colors.SelectionRectangleBlendColor = 15385233
+      Colors.SelectionRectangleBorderColor = 15385233
+      Colors.SelectionTextColor = clBlack
+      Colors.TreeLineColor = 9471874
+      Colors.UnfocusedColor = clGray
+      Colors.UnfocusedSelectionColor = 13421772
+      Colors.UnfocusedSelectionBorderColor = 13421772
       Header.AutoSizeIndex = -1
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
       TabOrder = 0
@@ -211,6 +226,12 @@ object FormInclinCheck: TFormInclinCheck
           Position = 24
           Text = 'H.'#1089#1090#1086#1083'.'
           Width = 271
+        end
+        item
+          Options = [coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coAllowFocus]
+          Position = 25
+          Text = 'T'
+          Width = 271
         end>
     end
   end
@@ -240,6 +261,23 @@ object FormInclinCheck: TFormInclinCheck
       Height = 84
       Align = alLeft
       BorderWidth = 1
+      Colors.BorderColor = 15987699
+      Colors.DisabledColor = clGray
+      Colors.DropMarkColor = 15385233
+      Colors.DropTargetColor = 15385233
+      Colors.DropTargetBorderColor = 15385233
+      Colors.FocusedSelectionColor = 15385233
+      Colors.FocusedSelectionBorderColor = 15385233
+      Colors.GridLineColor = 15987699
+      Colors.HeaderHotColor = clBlack
+      Colors.HotColor = clBlack
+      Colors.SelectionRectangleBlendColor = 15385233
+      Colors.SelectionRectangleBorderColor = 15385233
+      Colors.SelectionTextColor = clBlack
+      Colors.TreeLineColor = 9471874
+      Colors.UnfocusedColor = clGray
+      Colors.UnfocusedSelectionColor = 13421772
+      Colors.UnfocusedSelectionBorderColor = 13421772
       Header.AutoSizeIndex = -1
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
       TabOrder = 0
@@ -283,6 +321,23 @@ object FormInclinCheck: TFormInclinCheck
       Height = 84
       Align = alClient
       BorderWidth = 1
+      Colors.BorderColor = 15987699
+      Colors.DisabledColor = clGray
+      Colors.DropMarkColor = 15385233
+      Colors.DropTargetColor = 15385233
+      Colors.DropTargetBorderColor = 15385233
+      Colors.FocusedSelectionColor = 15385233
+      Colors.FocusedSelectionBorderColor = 15385233
+      Colors.GridLineColor = 15987699
+      Colors.HeaderHotColor = clBlack
+      Colors.HotColor = clBlack
+      Colors.SelectionRectangleBlendColor = 15385233
+      Colors.SelectionRectangleBorderColor = 15385233
+      Colors.SelectionTextColor = clBlack
+      Colors.TreeLineColor = 9471874
+      Colors.UnfocusedColor = clGray
+      Colors.UnfocusedSelectionColor = 13421772
+      Colors.UnfocusedSelectionBorderColor = 13421772
       Header.AutoSizeIndex = -1
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
       TabOrder = 1

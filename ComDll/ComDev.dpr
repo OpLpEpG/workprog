@@ -7,6 +7,8 @@
 {$ENDIF}
 library ComDev;
 
+{$INCLUDE global.inc}
+
 uses
   System.TypInfo,
   Winapi.Windows,
@@ -27,7 +29,7 @@ uses
   DevBur in 'DevBur.pas',
   RestConn in 'RestConn.pas',
   WlanConn in 'WlanConn.pas',
-  UDPConn in 'UDPConn.pas',
+  UDPBinConn in 'UDPBinConn.pas',
   DevUaki in 'DevUaki.pas',
   Dev.Telesistem in 'Dev.Telesistem.pas',
   SubDevImpl in 'SubDevImpl.pas',
@@ -42,9 +44,19 @@ uses
   MicroSDConn in 'MicroSDConn.pas',
   NetConn in 'NetConn.pas',
   DevHorizontM in 'DevHorizontM.pas',
-  DevBurLowLevel in 'DevBurLowLevel.pas';
+  DevBurLowLevel in 'DevBurLowLevel.pas',
+  UDPConn in 'UDPConn.pas';
 
 {$R *.res}
+resourcestring
+  RS_COM_connection = 'Соединение по Ком Порту';
+  RS_UDP_connection='Соединение по UDP';
+  RS_HTTP_connection='Соединение по HTTP';
+  RS_UT_connection='Соединение по UDP (текстовое UAKI)';
+  RS_WF_connection= 'Соединение по WiFi';
+  RS_ETH_connection='Соединение по Ethernet';
+  RS_Eadr='Устройство с адресом >250 может быть только одно';
+  RS_BADadr='Устройство с неверным адресом';
 
 type
  TComDevPlugin = class(TAbstractPlugin, IGetDevice, IGetConnectIO)
@@ -69,21 +81,27 @@ type
 
 procedure TComDevPlugin.EnumConnect(GetConnectIOCB: TGetConnectIOCB);
 begin
-  GetConnectIOCB(1, 'ComPort', 'Соединение по Ком Порту');
-  GetConnectIOCB(2, 'NetPort', 'Соединение по Ethernet');
-  GetConnectIOCB(3, 'WlanPort', 'Соединение по WiFi');
-  GetConnectIOCB(4, 'UDP', 'Соединение по UDP');
-  GetConnectIOCB(5, 'Rest', 'Соединение по HTTP');
+  GetConnectIOCB(1, 'ComPort', RS_COM_connection);
+  {$IFNDEF ENG_VERSION}
+  GetConnectIOCB(2, 'NetPort', RS_ETH_connection);
+  GetConnectIOCB(3, 'WlanPort',RS_WF_connection);
+  GetConnectIOCB(4, 'UDP', RS_UT_connection);
+  GetConnectIOCB(5, 'Rest', RS_HTTP_connection);
+  {$ENDIF}
+  GetConnectIOCB(6, 'UDPPort', RS_UDP_connection);
  // GetConnectIOCB(5, 'MicroSD', 'Чтение памяти с SD карты');
 end;
 
 function TComDevPlugin.ConnectIO(ConnectID: Integer): IConnectIO;
 begin
   case ConnectID of
+  {$IFNDEF ENG_VERSION}
    2:  Result := TNetConnectIO.Create();
    3:  Result := TWlanConnectIO.Create();
    4:  Result := TUDPConnectIO.Create();
    5:  Result := TRestConnectIO.Create();
+  {$ENDIF}
+   6:  Result := TUDPBinConnectIO.Create();
  //  5:  Result := TMicroSDConnectIO.Create();
   else Result := TComConnectIO.Create();
   end;
@@ -97,17 +115,20 @@ end;
 function TComDevPlugin.GetConnectInfo(ConnectID: Integer): TArray<string>;
 begin
   case ConnectID of
+  {$IFNDEF ENG_VERSION}
    2:  Result := TNetConnectIO.Enum();
    3:  Result := TWlanConnectIO.Enum();
    4:  Result := TUDPConnectIO.Enum();
    5:  Result := TRestConnectIO.Enum();
+  {$ENDIF}
+   6:  Result := TUDPBinConnectIO.Enum();
   else Result := TComConnectIO.Enum();
   end;
 end;
 
 function TComDevPlugin.IsManualCreate(ConnectID: Integer): Boolean;
 begin
-  Result := ConnectID in [2,3,4,5];
+  Result := ConnectID in [2,3,4,5,6];
 end;
 
 class function TComDevPlugin.GetHInstance: THandle;
@@ -134,7 +155,7 @@ begin
   Result := nil;
   adr := Addrs;
   TArray.Sort<Integer>(adr);
-  if Length(Adr) > 1 then for a in Adr do if A > 250 then raise EDeviceException.Create('Устройство с адресом >250 может быть только одно');
+  if Length(Adr) > 1 then for a in Adr do if A > 250 then raise EDeviceException.Create(RS_Eadr);
   if Length(Adr) >= 1 then
    begin
     if Adr[0] = $FFFF then Result := TDeviceBurLow.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
@@ -150,7 +171,7 @@ begin
     else if (adr[0] = 1000) then Result := TTelesistem.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
     else if (adr[0] = 1001) then Result := TTelesisRetr.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
     else if (adr[0] = 1002) then Result := TTelesis1ware.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
-    else if (adr[0] > 250) then raise EDeviceException.Create('Устройство с неверным адресом')
+    else if (adr[0] > 250) then raise EDeviceException.Create(RS_BADadr)
 
     else Result := TDeviceBur.CreateWithAddr(Adr, DeviceName, ModulesNames) as IDevice
    end

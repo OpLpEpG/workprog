@@ -13,6 +13,7 @@ type
   TXMLScriptReport = class
   private
     class procedure ExportToNNK(const TrrFile: string; XNewTrr: IXMLNode); overload; static;
+    class procedure ExportToNNK128(const TrrFile: string; XNewTrr: IXMLNode); overload; static;
     class procedure ExportToCalc(const ReportShablon, ReportXML, ReportFile: string; Data: IXMLNode); overload; static;
     class constructor Create;
     class destructor Destroy;
@@ -20,6 +21,7 @@ type
 //    class function CallMeth(Instance: TObject; ClassType: TClass; const MethodName: String; var Params: Variant): Variant;
     class function ExportToCalc(L: lua_State): Integer; overload; cdecl; static;
     class function ExportToNNK(L: lua_State): Integer; overload; cdecl; static;
+    class function ExportToNNK128(L: lua_State): Integer; overload; cdecl; static;
   end;
 
 
@@ -130,6 +132,79 @@ class function TXMLScriptReport.ExportToNNK(L: lua_State): Integer;
 begin
   ExportToNNK(string(lua_tostring(L, 1)), TXMLLua.XNode(L, 2));
   Result := 0;
+end;
+
+class function TXMLScriptReport.ExportToNNK128(L: lua_State): Integer;
+begin
+  ExportToNNK128(string(lua_tostring(L, 1)), TXMLLua.XNode(L, 2));
+  Result := 0;
+end;
+
+class procedure TXMLScriptReport.ExportToNNK128(const TrrFile: string; XNewTrr: IXMLNode);
+// preambula
+ const STR0 = '%-43sНаименование прибора';
+ const STR1 = '%-43sДата калибровки';
+ const STR2 = '%-43sИсточник';
+ const STR3 = 'Дскв,мм  Кп,%	  МЗ        БЗ      НГК';
+// ambula
+ const STRA: array of string =
+ [
+'124      100      %-9s %-9s %-6s Вода',
+'124      0.6      %-9s %-9s %-6s',
+'124      16.5     %-9s %-9s %-6s',
+'124      34.0     %-9s %-9s %-6s',
+'156      100      %-9s %-9s %-6s Вода',
+'156      0.7      %-9s %-9s %-6s',
+'156      14.8     %-9s %-9s %-6s',
+'156      34.0     %-9s %-9s %-6s',
+'216      100      %-9s %-9s %-6s Вода',
+'216      0.7      %-9s %-9s %-6s',
+'216      16.5     %-9s %-9s %-6s',
+'216      34.0     %-9s %-9s %-6s',
+'295      100      %-9s %-9s %-6s Вода',
+'295      0.7      %-9s %-9s %-6s',
+'295      16.5     %-9s %-9s %-6s',
+'295      34.0     %-9s %-9s %-6s'
+ ];
+ const STEPA: array of integer =
+ [
+  1,  2,  3,  4,
+  1,  5,  6,  7,
+  11, 8,  9,  10,
+  11, 12, 13, 14
+ ];
+ var
+  sernom: Integer;
+  s: string;
+  NewTrr: Variant;
+begin
+  NewTrr := XToVar(XNewTrr);
+  with  TstringList.Create do
+   try
+    sernom := TVxmlData(NewTrr).Node.ParentNode.ParentNode.Attributes[AT_SERIAL];
+    s := NewTrr.TNNK128.DevName + ' ' + sernom.ToString;
+    Add(Format(STR0,[s]));
+    s := NewTrr.TNNK128.TIME_ATT;
+    Add(Format(STR1,[s]));
+    s := NewTrr.TNNK128.ISTOCHNIK;
+    Add(Format(STR2,[s]));
+    Add(STR3);
+    for var i := 0 to High(STRA) do
+     begin
+      var vi := XToVar(GetXNode(XNewTrr, Format('TNNK128.STEP%d',[STEPA[i]])));
+      var snk1 := RoundTo(double(vi.мз.DEV.VALUE), -3).ToString;
+      if vi.мз.DEV.VALUE = '0' then snk1 := '1';
+      var snk2 := RoundTo(double(vi.бз.DEV.VALUE), -3).ToString;;
+      if vi.бз.DEV.VALUE = '0' then snk2 := '1';
+//      var sngk := RoundTo(double(vi.нгк.DEV.VALUE), -3).ToString;
+//      if vi.нгк.DEV.VALUE = '0' then sngk := '1';
+      Add(Format(STRA[i],[snk1, snk2, '1']));
+     end;
+
+    SaveToFile(TrrFile);
+   finally
+    Free;
+   end;
 end;
 
 //только имя файла       файла и путь    %DEV%.Метрология.%modul%     //

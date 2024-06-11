@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\_exe\Debug\ComDev.drc" source-language="ru-RU" target-language="en-US" datatype="cpp" tool="ETM v10.0" ts="C:\XE\Projects\Device2\_exe\Debug\ComDev.drc">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45029.5812731481</prop>
+        <prop prop-type="OrigDateTime">45029.5812962963</prop>
+        <prop prop-type="XlatDateTime">45029.4224768519</prop>
+        <prop prop-type="Translated">11</prop>
+        <prop prop-type="UnTranslated">15</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="AbstractDev_RS_SetIO" resname="AbstractDev_RS_SetIO">
+        <source>"(Lock) Невозможно сменить Порт т.к. прибор занят"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"(Lock) Unable to change Port because device busy"</target>
+      </trans-unit>
+      <trans-unit id="AbstractDev_RS_Locked" resname="AbstractDev_RS_Locked">
+        <source>"(Lock) Порт уже занят"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"(Lock) Serial Port busy"</target>
+      </trans-unit>
+      <trans-unit id="AbstractDev_RS_DevBusy" resname="AbstractDev_RS_DevBusy">
+        <source>"Прибор занят"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Device busy"</target>
+      </trans-unit>
+      <trans-unit id="AbstractDev_RS_UnLock" resname="AbstractDev_RS_UnLock">
+        <source>"(Unlock) Невозможно освободить Порт занятый другим устройством"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"(Unlock) Unable to release Port occupied by another device"</target>
+      </trans-unit>
+      <trans-unit id="AbstractDev_RS_ErrNoInfo" resname="AbstractDev_RS_ErrNoInfo">
+        <source>"Не инициализирована информация об устройствах"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Device information not initialized"</target>
+      </trans-unit>
+      <trans-unit id="AbstractDev_RS_NeedClosePort" resname="AbstractDev_RS_NeedClosePort">
+        <source>"Необходимо закрыть порт %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Port %s needs to be closed"</target>
+      </trans-unit>
+      <trans-unit id="AbstractDev_RS_NeedCloseNet" resname="AbstractDev_RS_NeedCloseNet">
+        <source>"Необходимо закрыть соединение %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Connection %s needs to be closed"</target>
+      </trans-unit>
+      <trans-unit id="AbstractDev_RS_SendData" resname="AbstractDev_RS_SendData">
+        <source>"Нет протокола для передачи данных"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"No protocol for data transfer"</target>
+      </trans-unit>
+      <trans-unit id="AbstractDev_RS_NoConnect" resname="AbstractDev_RS_NoConnect">
+        <source>"Устройство не подключено к Порту"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Device not connected to Port"</target>
+      </trans-unit>
+      <trans-unit id="AbstractDev_RS_NoRamMeta" resname="AbstractDev_RS_NoRamMeta">
+        <source>"Информация устройства с адресом %d о структуре RAM: отсутствует,невозножно считать память"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Information of device with address %d in RAM structure: missing, unable to read memory"</target>
+      </trans-unit>
+      <trans-unit id="AbstractDev_RS_NoRamMetaRecSize" resname="AbstractDev_RS_NoRamMetaRecSize">
+        <source>"Информация устройства с адресом %d о структуре RAM: длина записи 0"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.4224850463</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Device address %d information about RAM structure: record length 0"</target>
+      </trans-unit>
+      <trans-unit id="DevBur_RS_NO_eepmeta" resname="DevBur_RS_NO_eepmeta">
+        <source>"Метаданных EEPROM устройства с адресом %d нет"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="DevBur_RS_ERR_eepLen" resname="DevBur_RS_ERR_eepLen">
+        <source>"Данная версия программы поддерживает длину EEPROM меньше 250 текущая: %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="UDPBinConn_RS_UDPData_NotInit" resname="UDPBinConn_RS_UDPData_NotInit">
+        <source>"Данные не инициализированны"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="UDPBinConn_RS_UDP_Connclose" resname="UDPBinConn_RS_UDP_Connclose">
+        <source>"Соединение закрыто %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="ComDev_RS_COM_connection" resname="ComDev_RS_COM_connection">
+        <source>"Соединение по Ком Порту"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="ComDev_RS_UDP_connection" resname="ComDev_RS_UDP_connection">
+        <source>"Соединение по UDP"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="ComDev_RS_HTTP_connection" resname="ComDev_RS_HTTP_connection">
+        <source>"Соединение по HTTP"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="ComDev_RS_UT_connection" resname="ComDev_RS_UT_connection">
+        <source>"Соединение по UDP (текстовое UAKI)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="ComDev_RS_WF_connection" resname="ComDev_RS_WF_connection">
+        <source>"Соединение по WiFi"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="ComDev_RS_ETH_connection" resname="ComDev_RS_ETH_connection">
+        <source>"Соединение по Ethernet"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="DevBur_RS_ErrReadData" resname="DevBur_RS_ErrReadData">
+        <source>"Ошибка чтения данных устройства с адресом: %d SZ=%d[%d] CA=0x%x"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="DevBur_RS_ErrNoInfo" resname="DevBur_RS_ErrNoInfo">
+        <source>"Не инициализирована информация об устройствах"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="DevBur_RS_MetadataERR" resname="DevBur_RS_MetadataERR">
+        <source>"Метаданные устройств (%s) не считаны"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="DevBur_RS_SleapDLG" resname="DevBur_RS_SleapDLG">
+        <source>"Перевести приборы в спящий режим?"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="DevBur_RS_ERR_eep" resname="DevBur_RS_ERR_eep">
+        <source>"Адр.уст: %d, EEPROM размер: %d смещение: %d - ошибка чтения секции\r\n"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45029.5812781366</prop>
+          <prop prop-type="Status">0</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

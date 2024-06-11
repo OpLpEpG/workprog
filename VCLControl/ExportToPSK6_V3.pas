@@ -2,10 +2,24 @@ unit ExportToPSK6_V3;
 
 interface
 
+{$INCLUDE global.inc}
+
 uses DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, RootIntf, debug_except, Actns, Container, tools,
   Xml.XMLIntf, DataSetIntf, XMLDataSet,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Data.DB, System.IOUtils,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Mask, JvExMask, JvToolEdit, VCL.Frame.RangeSelect;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Mask, JvExMask, JvToolEdit, VCLFrameRangeSelect;
+
+{$IFDEF ENG_VERSION}
+  const
+   C_CaptMBKForm ='-MBK...';
+   C_Memu_Export1='Export';
+   C_Memu_Export2='0:File.Export|1:2';
+{$ELSE}
+  const
+   C_CaptMBKForm ='-МБК...';
+   C_Memu_Export1='Экспорт';
+   C_Memu_Export2='0:Файл.Экспорт|1:2';
+{$ENDIF}
 
 const
   MBKPB_END_IF:PAnsiChar = '#1#14  ';
@@ -70,9 +84,19 @@ type
     procedure Open;
     procedure RecNo(Kadr: Integer);
   public
-   [StaticAction('-МБК...', 'Экспорт', 226, '0:Файл.Экспорт|1:2')]
+   [StaticAction(C_CaptMBKForm, C_Memu_Export1, 226, C_Memu_Export2)]
    class procedure DoExportPSK6(Sender: IAction);
   end;
+
+  resourcestring
+        RS_EmptyFileName='пустое имя файла';
+        RS_Run='работа';
+        RS_terminate='прервано';
+        RS_end='конец';
+        RS_Err='ошибка';
+        RS_ErrDataStruct='Неверная структура данных';
+        RS_MameIdFrame='Ммя: %s ID: %d КадрID: %d';
+        RS_Mbk_None='Какие-либо данные для экспорта в МБК отсутствуют !!!';
 
 
 implementation
@@ -335,14 +359,14 @@ begin
       else
        begin
         UpdateControls(True);
-        UpdateSb4('пустое имя файла');
+        UpdateSb4(RS_EmptyFileName);
         Exit;
        end;
        try
           Open;
           try
            FIStat := TStatisticCreate.Create((umax-umin)*SizeOf(d));
-           UpdateSb4('работа');
+           UpdateSb4(RS_Run);
            for frm := umin to umax do
             begin
                RecNo(frm);
@@ -372,7 +396,7 @@ begin
 
                if Fterminate then
                 begin
-                 UpdateSb4('прервано');
+                 UpdateSb4(RS_terminate);
                  Exit;
                 end;
 
@@ -386,7 +410,7 @@ begin
             end;
             f.Write(Fserials[1], Length(Fserials));
             f.Write(MBKPB_END_IF[0], 7);
-            UpdateSb4('конец');
+            UpdateSb4(RS_end);
           finally
            Close;
           end;
@@ -397,7 +421,7 @@ begin
      except
       on E: Exception do
        begin
-        UpdateSb4('ошибка');
+        UpdateSb4(RS_Err);
         TDebug.DoException(E);
        end;
      end;
@@ -422,8 +446,8 @@ procedure TFormExportToPSK6_V3.FormCreate(Sender: TObject);
    if kdr <> kdrid then
     begin
      Result := False;
-     if Assigned(TDebug.ExeptionEvent) then TDebug.ExeptionEvent('Неверная структура данных',
-        Format('Ммя: %s ID: %d КадрID: %d', [acr[i].IdName, kdrid, kdr]), '');
+     if Assigned(TDebug.ExeptionEvent) then TDebug.ExeptionEvent(RS_ErrDataStruct,
+        Format(RS_MameIdFrame, [acr[i].IdName, kdrid, kdr]), '');
     end
    else Result := True;
  end;
@@ -461,7 +485,7 @@ begin
    begin
 //    RangeSelect.Init(1, 0, 1, (GContainer as IProjectOptions).DelayStart);
     FbadData := True;
-    raise ENeedDialogException.Create('Какие-либо данные для экспорта в МБК отсутствуют !!!');
+    raise ENeedDialogException.Create(RS_Mbk_None);
    end;
   RangeSelect.Init(1, fc, lc, (GContainer as IProjectOptions).DelayStart);
 end;

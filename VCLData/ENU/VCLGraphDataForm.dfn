@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLData\VCLGraphDataForm.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLData\VCLGraphDataForm.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45034.596875</prop>
+        <prop prop-type="OrigDateTime">45030.378125</prop>
+        <prop prop-type="XlatDateTime">45030.378125</prop>
+        <prop prop-type="Translated">0</prop>
+        <prop prop-type="UnTranslated">25</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:GraphDataForm.Left" resname="O:GraphDataForm.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">0</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.Top" resname="O:GraphDataForm.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">1</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.Caption" resname="O:GraphDataForm.Caption">
+        <source>'GraphDataForm'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">2</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.ClientHeight" resname="O:GraphDataForm.ClientHeight">
+        <source>289</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">3</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.ClientWidth" resname="O:GraphDataForm.ClientWidth">
+        <source>554</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">4</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.Color" resname="O:GraphDataForm.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">5</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.Font.Charset" resname="O:GraphDataForm.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">6</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.Font.Color" resname="O:GraphDataForm.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">7</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.Font.Height" resname="O:GraphDataForm.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">8</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.Font.Name" resname="O:GraphDataForm.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">9</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.Font.Style" resname="O:GraphDataForm.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">10</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.OnShow" resname="O:GraphDataForm.OnShow">
+        <source>FormShow</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">11</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.TextHeight" resname="O:GraphDataForm.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.5968806134</prop><prop prop-type="Status">0</prop><prop prop-type="Order">12</prop><prop prop-type="Type">TGraphDataForm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.Left" resname="O:GraphDataForm.O:Graph.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">13</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.Top" resname="O:GraphDataForm.O:Graph.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">14</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.Width" resname="O:GraphDataForm.O:Graph.Width">
+        <source>554</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">15</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.Height" resname="O:GraphDataForm.O:Graph.Height">
+        <source>289</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">16</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.YLastAvail" resname="O:GraphDataForm.O:Graph.YLastAvail">
+        <source>1000</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">17</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.YMirror" resname="O:GraphDataForm.O:Graph.YMirror">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">18</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.YScale" resname="O:GraphDataForm.O:Graph.YScale">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">19</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.OnParamsAdded" resname="O:GraphDataForm.O:Graph.OnParamsAdded">
+        <source>GraphParamsAdded</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">20</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.Align" resname="O:GraphDataForm.O:Graph.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">21</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.Parent" resname="O:GraphDataForm.O:Graph.Parent">
+        <source>Owner</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">22</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.GraphRows" resname="O:GraphDataForm.O:Graph.GraphRows">
+        <source>&lt;&gt;</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">23</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:GraphDataForm.O:Graph.GraphColumns" resname="O:GraphDataForm.O:Graph.GraphColumns">
+        <source>&lt;&gt;</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.596880625</prop><prop prop-type="Status">0</prop><prop prop-type="Order">24</prop><prop prop-type="Type">TGraph</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

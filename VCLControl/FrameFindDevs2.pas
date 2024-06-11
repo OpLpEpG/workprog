@@ -30,6 +30,13 @@ type
     procedure Rec(onEnd: Tproc<TFrameFindDev>);
   end;
 
+  resourcestring
+     RS_findDevs= 'поиск приборов';
+     RS_findModules= 'Поиск модулей на: ';
+     RS_FindResult= '  Порт %s - найдено устройство: %s ';
+     RS_FindEnd= '3. работа окончена';
+     RS_PortErr= 'Ошибка порта %s %s';
+
 implementation
 
 uses FormDlgDev;
@@ -45,13 +52,14 @@ begin
   Self.ComPort := ComPort;
   FExecuted := False;
   Fconnect := nil;
-  for var cn in (GlobalCore as IConnectIOEnum) do if cn.ConnectInfo = ComPort then
+  for var cn in (GlobalCore as IConnectIOEnum) do
+    if cn.ConnectInfo = ComPort then
    begin
     Fconnect := cn;
     FConnectCreated := False;
     Break;
    end;
-  if not Assigned(Fconnect) then
+  if not Assigned(Fconnect) and ComPort.Contains('COM') then
    begin
     Fconnect := (GlobalCore as IGetConnectIO).ConnectIO(1);
     Fconnect.ConnectInfo := ComPort;
@@ -59,10 +67,10 @@ begin
     (GlobalCore as IConnectIOEnum).Add(Fconnect);
     FConnectCreated := True;
    end;
-  FTmpDev := (GlobalCore as IGetDevice).Device([$FFFF],'поиск приборов'+devCnt.ToString,'m1');
+  FTmpDev := (GlobalCore as IGetDevice).Device([$FFFF],RS_findDevs+devCnt.ToString,'m1');
   inc(devCnt);
   FTmpDev.IConnect := Fconnect;
-  Memo.Lines.Add('Поиск модулей на: '+ FTmpDev.IConnect.ConnectInfo);
+  Memo.Lines.Add(RS_findModules+ FTmpDev.IConnect.ConnectInfo);
   inx := 1;
   found := 0;
   //// Для красоты
@@ -127,7 +135,7 @@ begin
        cbx.AddItem(s, TObject(Pointer(inx)));
        cbx.Checked[cbx.Count-1] := True;
        inc(found);
-       memo.Lines.add(Format('  Порт %s - найдено устройство: %s ',[Fconnect.ConnectInfo,s]));
+       memo.Lines.add(Format(RS_FindResult,[Fconnect.ConnectInfo,s]));
       end;
      if inx = 14 then
       begin
@@ -135,10 +143,10 @@ begin
         begin
          btAdd.Enabled := True;
          edName.Enabled := True;
-         edName.Text := 'сборка'+found.ToString+ '_'+devCnt.ToString;
+         edName.Text := 'Tool'+found.ToString+ '_'+devCnt.ToString;
          Inc(devCnt);
         end;
-       Memo.Lines.Add('3. работа окончена');
+       Memo.Lines.Add(RS_FindEnd);
        Fconnect.Status := Fconnect.Status - [iosOpen];
        ClearDC(onEnd);
        Exit;
@@ -151,7 +159,7 @@ begin
     begin
      TDebug.DoException(E, False);
      lbCon.Color := clRed;
-     Memo.Lines.Add(Format('Ошибка порта %s %s',[ComPort, e.Message]));
+     Memo.Lines.Add(Format(RS_PortErr,[ComPort, e.Message]));
      ClearDC(onEnd);
     end;
   end;

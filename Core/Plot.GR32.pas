@@ -2,6 +2,9 @@ unit Plot.GR32;
 
 interface
 
+{$INCLUDE global.inc}
+
+
 uses
   System.SysUtils, System.Classes, System.Types, System.UITypes, ExtendIntf, Vcl.Forms,
   Plot.DataLink, Vcl.Graphics, Vcl.Themes, Winapi.Windows, Winapi.Messages,
@@ -183,12 +186,15 @@ type
     property Bitmap: TBitmap32 read FBitmap;
     property C_PropertyChanged: string read FPropertyChanged write SetPropertyChanged;
   published
-    [ShowProp('Метки оси Y')]
+    [ShowProp('Labels axis Y')]
     property ShowYlegend: boolean read FShowYlegend write SetShowYlegend default True;
   end;
 {$ENDREGION 'Отрисовка данных'}
 
 function RandomColor: TAlphaColor;
+
+ resourcestring
+ RS_Grath= 'Graphic column';// 'Графическая колонка';
 
 implementation
 
@@ -415,7 +421,7 @@ end;
 
 function TGR32GraphicCollumn.GetCaption: string;
 begin
-  Result := 'Графическая колонка GR32'
+  Result := RS_Grath+' GR32'
 end;
 
 procedure TGR32GraphicCollumn.SetCaption(const Value: string);
@@ -448,7 +454,11 @@ end;
 
 function TGR32GraphicLegend.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Legend GR32'
+{$ELSE}
   Result := 'Легенда GR32'
+{$ENDIF}
 end;
 
 function TGR32GraphicLegend.GetCheckBoxRect(Par: TXScalableParam; nX: Integer = 0): TRect;
@@ -923,7 +933,11 @@ end;
 
 function TGR32GraphicData.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Diagramas GR32'
+{$ELSE}
   Result := 'Графики GR32'
+{$ENDIF}
 end;
 
 function TGR32GraphicData.GetCursor: Integer;
@@ -1263,7 +1277,7 @@ begin
 end;
 
 initialization
-  TGR32GraphicCollumn.ColClsRegister(TGR32GraphicCollumn, 'Графическая колонка');
+  TGR32GraphicCollumn.ColClsRegister(TGR32GraphicCollumn, RS_Grath);
   TGraphRegion.RegClsRegister(TGR32GraphicLegend, TGR32LegendRow, TGR32GraphicCollumn);
   TGraphRegion.RegClsRegister(TGR32GraphicData, TCustomGraphDataRow, TGR32GraphicCollumn);
   RegisterClasses([TGR32GraphicCollumn, TGR32GraphicLegend, TGR32GraphicData, TGR32LegendRow]);

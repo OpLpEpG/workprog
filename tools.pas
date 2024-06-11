@@ -5,44 +5,40 @@ interface
 {$INCLUDE global.inc}
 
 uses
-      debug_except,
-      System.SyncObjs, System.Math,
-      SysUtils, Xml.XMLIntf, Xml.XMLDoc, Xml.xmldom,
-      System.Generics.Collections,
-      System.Generics.Defaults,
-      System.Classes,
-      Data.DB, RTTI, System.Variants, Winapi.ActiveX;
+  debug_except, System.SyncObjs, System.Math, SysUtils, Xml.XMLIntf, Xml.XMLDoc,
+  Xml.xmldom, System.Generics.Collections, System.Generics.Defaults,
+  System.Classes, Data.DB, RTTI, System.Variants, Winapi.ActiveX;
 
 type
   IXMLInfo = IXMLNode;
   // функция обратного вызова при вызове функции построения списка доступных устройств байтного протокола
-  TGetDevicesCB = procedure (DevAdr: Integer; const DevNodeName, DevInfo: WideString);
+
+  TGetDevicesCB = procedure(DevAdr: Integer; const DevNodeName, DevInfo: WideString);
+
   TAddressArray = TArray<Integer>;
   // событие считывания информаци об устройствах (создается новый XML документ Info: IXMLInfo)
   // addr: TAddressArray - считанные или нет адреса, Exception: TAddressArray- сответствующая адресу ошибка 0-считан -1 - нет
+
   TDeviceMetaData = record
     ErrAdr: TAddressArray;
     Info: IXMLInfo;
   end;
-const
 
+const
   PRG_TIP_VARIANT = 0;
-  PRG_TIP_INT  = 1;
+  PRG_TIP_INT = 1;
   PRG_TIP_REAL = 2;
   PRG_TIP_DATE_TIME = 3;
   PRG_TIP_DATE = 4;
   PRG_TIP_TIME = 5;
   PRG_TIP_BOOL = 6;
-
   CMD_BOOT = 8;
   CMD_EXIT = $E;
   CMD_WRITE = $F;
   CMD_READ = $D;
-
   CMD_READ_EE = 5;
 // запись EEPROM памяти
   CMD_WRITE_EE = 6;
-
   CMD_WORK = 7;
   CMD_INFO = 2;
   CMD_READ_RAM = 1;
@@ -55,23 +51,16 @@ const
   AT_OBJ = 'ObjData';
 //   Атрибуты
 //   Основные ветви метаданных
-  T_WRK   = 'WRK';
-  T_RAM    = 'RAM';
+  T_WRK = 'WRK';
+  T_RAM = 'RAM';
   T_EEPROM = 'EEP';
   T_GLU = 'GLU';
   ARR_META: array[0..3] of string = (T_WRK, T_RAM, T_GLU, T_EEPROM);
   // ветви где есть данные DataSet
   ARR_META_RECS: array[0..2] of string = (T_WRK, T_RAM, T_GLU);
-
   T_MTR = 'Метрология';
-
-  ATTESTAT_ATTR: array[0..12] of string = ('DevName','Maker','UsedStol','Category','Room','Metrolog', 'kalibrov',
-                                          'TIME_ATT','NextDate','Ready','ErrZU','ErrAZ','ErrAZ5');
-  ATTESTAT_CAPTION: array[0..12] of string = ('Прибор','Производитель','Оборудование','Категория','Помещение','Метролог', 'Калибровал',
-                                          'Время аттестации','Следующая аттестация','Готов','Ошибка ЗУ',
-                                          'Ошибка Азим','Ошибка Азим ЗУ<5');
-
-
+  ATTESTAT_ATTR: array[0..12] of string = ('DevName', 'Maker', 'UsedStol', 'Category', 'Room', 'Metrolog', 'kalibrov', 'TIME_ATT', 'NextDate', 'Ready', 'ErrZU', 'ErrAZ', 'ErrAZ5');
+  ATTESTAT_CAPTION: array[0..12] of string = ('Прибор', 'Производитель', 'Оборудование', 'Категория', 'Помещение', 'Метролог', 'Калибровал', 'Время аттестации', 'Следующая аттестация', 'Готов', 'Ошибка ЗУ', 'Ошибка Азим', 'Ошибка Азим ЗУ<5');
   AT_FILE_NAME = 'FILE_NAME';
   AT_FILE_CLC = 'FILE_NAME_CLC';
 //  свойства прибора
@@ -96,7 +85,7 @@ const
 //  ветви метаданных
   AT_SIZE = 'SIZE';
 // добавка по глубине
-  AT_ZND   = 'ZND';
+  AT_ZND = 'ZND';
 //  дополнительные свойства (для метрологии, форматирования) модуля, данных
   AT_METR = 'METR';
   ME_ANGLE = 'ANGLE'; // метрология угол
@@ -114,20 +103,20 @@ const
 // атрибуты
   AT_INDEX = 'INDEX'; // для DEV указатель в массиве сырых данных с устройства
 // данные по типу
-  AT_TIP   = 'TYPE';
+  AT_TIP = 'TYPE';
 // данные извлеченные по AT_INDEX или рассчитанные или указатель на массив
-  AT_VALUE   = 'VALUE';
+  AT_VALUE = 'VALUE';
 // данные с форматированием TRR необязательные атрибуты
 //  AT_FMT   = 'VIEW_FMT'; // точность после запятой
-  AT_EU    = 'EU';  // единицы
-  AT_TITLE    = 'TITLE'; // единицы
+  AT_EU = 'EU';  // единицы
+  AT_TITLE = 'TITLE'; // единицы
   AT_RLO = 'RANGE_LO'; // диапазон
   AT_RHI = 'RANGE_HI'; // диапазон
-  AT_DIGITS   = 'DIGITS'; // длинна
-  AT_AQURICY   = 'AQURICY'; // тoчность
-  AT_COLOR   = 'COLOR'; //
-  AT_WIDTH   = 'WIDTH'; //
-  AT_DASH   = 'DASH'; //
+  AT_DIGITS = 'DIGITS'; // длинна
+  AT_AQURICY = 'AQURICY'; // тoчность
+  AT_COLOR = 'COLOR'; //
+  AT_WIDTH = 'WIDTH'; //
+  AT_DASH = 'DASH'; //
 //  AR_TRR_FMT: array [0..3] of string = (AT_FMT, AT_RLO, AT_RHI, AT_EU);
 
 // фильтры для ветвей T_WRK T_RAM таблиц БД по времени кадрам
@@ -165,37 +154,53 @@ const
 //  {$ENDIF}
 //  PCmdADR = ^TCmdADR;
 //  const CASZ = SizeOf(TCmdADR);
+
 type
   TTestRef = reference to function(n: IXMLNode): boolean; // если да то прекратить рекурсию
+
   TWorkDataRef = reference to procedure(wrk: IXMLNode; adr: integer; const name: string);
+
   THasXtreeRef = reference to procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode);
+
   TNotHasXtreeRef = reference to function(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode): boolean;
 //  TRamDataRef = TWorkDataRef;
 
 function TryValX(Root: IXMLNode; const Path: string; var v: Variant): Boolean;
+
 function TryGetX(Root: IXMLNode; const Path: string; out X: IXMLNode; const AttrName: string = ''): Boolean;
+
 function GetPathXNode(Node: IXMLNode; NoMeta: boolean = false): string;
+
 function GetXNode(Root: IXMLNode; const Path: string; CreatePathNotExists: Boolean = False): IXMLNode;
 // проверяет содержит ли Test Etalon структуру и атрибуты
 // для каждого атрибута вызывается действие
 // прiменяется для копирования только данных
-function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True; BadTree: TNotHasXtreeRef =nil): Boolean;
+
+function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True; BadTree: TNotHasXtreeRef = nil): Boolean;
+
 function ExecXTree(root: IXMLNode; func: TTestRef): IXMLNode; overload; //возвращает первое совпадение
+
 procedure ExecXTree(root: IXMLNode; func: Tproc<IXMLNode>; Dec: Boolean = False); overload;
 
 procedure FindAllWorks(root: IXMLNode; func: TWorkDataRef);
+
 procedure FindAllRam(root: IXMLNode; func: TWorkDataRef);
+
 procedure FindAllEeprom(root: IXMLNode; func: TWorkDataRef);
 
 function FindDev(root: IXMLNode; adr: Integer): IXMLNode;
+
 function FindWork(root: IXMLNode; adr: Integer): IXMLNode;
+
 function FindRam(root: IXMLNode; adr: Integer): IXMLNode;
+
 function FindEeprom(root: IXMLNode; adr: Integer): IXMLNode;
 
 
 // Рекурсивный поиск Dev root  может быть секцией ALL_META_DATA или DEVICES (проект 3)
 function FindDevs(root: IXMLNode): TArray<IXMLNode>;
 // аналог FindAllWorks FindAllRam FindAllEeprom
+
 function GetDevsSections(Devs: TArray<IXMLNode>; const Section: string): TArray<IXMLNode>;
 
 //function MyTimeToStr(t: TTime): string;
@@ -208,21 +213,29 @@ function AdrToTime(adr: Integer; KoefTime: Double; RecSize: Integer; TimeStart: 
 // время абсолютное эталонное
 // результат - адрес RAM во время time.  при KoefTime=1 и  time=delay RAM=0
 // адрес может быть отрицательный если time=delay и KoefTime<1 !!!
+
 function TimeToAdr(time: TDateTime; KoefTime: Double; RecSize: Integer; TimeStart: TDateTime; Delay: TTime): Integer;
 
 //function GetIActionName(ManagOwner: IInterface; Event: TIActionEvent): string;
 procedure EnumDevices(GetDevicesCB: TGetDevicesCB);
 //function ToAdrCmd(a, cmd: Byte): TCmdADR;
+
 function XToVar(ANode: IXMLNode): Variant;
+
 function QToVar(DataSet: TDataSet; AutoClearDataSet: Boolean = True): Variant;
+
 function RenameXMLNode(Src: IXMLNode; const NewName: string): IXMLNode;
+
 procedure RemoveXMLAttr(Node: IXMLNode; const AttrName: string);
+
 function NewXDocument(Version: DOMString = '1.0'): IXMLDocument;
+
 function XSupport(const Instance: IXMLNode; const IID: TGUID; out Intf): Boolean;
 
 function FindXmlNode(root: IXMLNode; const Section, NodeName: string; var Node: IXMLNode): Boolean;
 
 function DevNode(DataNode: IXMLNode): IXMLNode;
+
 function CalcNode(DataNode: IXMLNode): IXMLNode;
 
 /// <summary>
@@ -234,15 +247,12 @@ function StrIn(const Item: string; const InArr: array of string): Boolean;
 //function IsData(Node: IXMLNode): Boolean;
 //function IsWrkRam(Node: IXMLNode): Boolean;
 
-
-
-
 type
   CNode = class
-   type
-    TDirType = (dtWrk, dtRam, dtEEprom);
-   const
-    STR_DIR_TYPE: array [TDirType] of string=(T_WRK, T_RAM, T_EEPROM);
+    type
+      TDirType = (dtWrk, dtRam, dtEEprom);
+    const
+      STR_DIR_TYPE: array[TDirType] of string = (T_WRK, T_RAM, T_EEPROM);
 
     class function GetDev(DataNode: IXMLNode): IXMLNode; static;
     class function GetCalc(DataNode: IXMLNode): IXMLNode; static;
@@ -253,9 +263,9 @@ type
   end;
 
   CTime = class
-   const
-    TIME_TO_KADR = 24*3600/2.097152;
-    KADR_TO_TIME = 2.097152/24/3600;
+    const
+      TIME_TO_KADR = 24 * 3600 / 2.097152;
+      KADR_TO_TIME = 2.097152 / 24 / 3600;
     ///	<returns>
     ///	  d hh:nn:ss строка
     ///	</returns>
@@ -297,10 +307,11 @@ type
   EFifoBuffer = class(EBaseException);
 
   TFifoRec<T> = record
-   type PointerT = ^T;
-   var
-    First: LongWord;
-    Data: TArray<T>;
+    type
+      PointerT = ^T;
+    var
+      First: LongWord;
+      Data: TArray<T>;
     function Count: Integer; inline;
     function Last: LongWord; inline;
     procedure Add(const pData: PointerT; Len: integer);
@@ -308,6 +319,7 @@ type
   end;
 
   PFifoDouble = ^TFifoDouble;
+
   TFifoDouble = TFifoRec<Double>;
 
   ///	<summary>
@@ -375,13 +387,15 @@ type
   ///	</summary>
   TQeueThread<T> = class(TThread)
   public
-    type TCompareTaskFunc = reference to function (ToQeTask, InQeTask: T): Boolean;
+    type
+      TCompareTaskFunc = reference to function(ToQeTask, InQeTask: T): Boolean;
   private
 //    FLockExec: TCriticalSection;
     FEvent: TEvent;
     FQe: TList<T>;
     DbgName: string;
-    class var NoCopy: Integer;
+    class var
+      NoCopy: Integer;
   protected
   ///	<summary>
   ///	  обновление очереди
@@ -423,13 +437,13 @@ type
   end;}
 
   IOwnIntfXMLNode = interface
-  ['{67CDEB59-A805-435B-9445-5094D12E3D15}']
+    ['{67CDEB59-A805-435B-9445-5094D12E3D15}']
     procedure SetOwnIntf(const Value: IInterface);
     function GetOwnIntf: IInterface;
     property Intf: IInterface read GetOwnIntf write SetOwnIntf;
   end;
 
-  TOwnIntfXMLNode = class (TXMLNode, IOwnIntfXMLNode)
+  TOwnIntfXMLNode = class(TXMLNode, IOwnIntfXMLNode)
   private
     FOwnIntf: IInterface;
   protected
@@ -446,15 +460,19 @@ type
 
   TAddressRec = record
   public
-    type TDevRec = record
-      Adr: Integer;
-      Name, Info: string;
-      constructor Create(DevAdr: Integer; const DevNodeName, DevInfo: WideString);
-    end;
-    TArrayDevRec = Tarray<TDevRec>;
+    type
+      TDevRec = record
+        Adr: Integer;
+        Name, Info: string;
+        constructor Create(DevAdr: Integer; const DevNodeName, DevInfo: WideString);
+      end;
+
+      TArrayDevRec = Tarray<TDevRec>;
   private
-    class var CFDevs: TArrayDevRec;
-    class var IsInit: Boolean;
+    class var
+      CFDevs: TArrayDevRec;
+    class var
+      IsInit: Boolean;
     class procedure Init; static;
   public
     Items: TAddressArray;
@@ -483,7 +501,6 @@ type
 
   // только для одной таблицы
   IHelperXMLtoDB = interface
-
     function FieldTypes: TArray<TFieldType>;
     function FieldTxtTypes: TArray<string>;
     function FieldValues: TArray<variant>;
@@ -531,12 +548,12 @@ type
     constructor Create(Root: IXMLNode; CheckedOnly: Boolean = False);
   end;}
 
-   TVxmlData = packed record
+  TVxmlData = packed record
     VType: TVarType;
     Reserved1, Reserved2, Reserved3: Word;
     Node: IXMLNode;
     Reserved4: LongInt;
-   end;
+  end;
 
   TXMLNodeEnumerator = record
   private
@@ -592,15 +609,16 @@ type
     procedure AssignAdvStdRead(ln: Byte; from: Word);
     procedure AssignEEPRead(from: Word; ln: Byte);
     procedure AssignEEPWrite(from: Word; const AData: array of byte);
-    procedure AssignEEPWriteP(from: Word;len: Integer; PData: Pointer);
+    procedure AssignEEPWriteP(from: Word; len: Integer; PData: Pointer);
     procedure AssignRamRead(RmAdr, len: integer);
     constructor Create(addr, command, DataLength: Integer); overload;
     constructor Create(buff: Pointer; Bt2: boolean; alen: Integer); overload;
   end;
 
-
 function XEnumDec(ANode: IXMLNode): TXMLNodeEnumeratorDec;
+
 function XEnum(ANode: IXMLNode): TXMLNodeEnumerator;
+
 function XEnumAttr(ANode: IXMLNode): TXMLNodeEnumerator;
 
 var
@@ -669,19 +687,20 @@ implementation
 //  CmdAdr := ToAdrCmd(addr, command);
 //  ln := ReadLength;
 //end;
+
 procedure TStdRec.Assign(data: Pointer);
 begin
-  Move(Data^, DataPtr^, len);
+  Move(data^, DataPtr^, len);
 end;
 
 procedure TStdRec.AssignAdvStdRead(ln: Byte; from: Word);
- var
+var
   P: PByte;
 begin
-  p := DataPtr;
-  p^ := ln;
-  inc(p);
-  Pword(p)^ := from;
+  P := DataPtr;
+  P^ := ln;
+  inc(P);
+  Pword(P)^ := from;
 end;
 
 procedure TStdRec.AssignByte(data: integer);
@@ -690,33 +709,33 @@ begin
 end;
 
 procedure TStdRec.AssignEEPRead(from: Word; ln: Byte);
- var
+var
   P: Pword;
 begin
-  p := DataPtr;
-  p^ := from;
-  inc(p);
-  Pbyte(p)^ := ln;
+  P := DataPtr;
+  P^ := from;
+  inc(P);
+  Pbyte(P)^ := ln;
 end;
 
 procedure TStdRec.AssignEEPWrite(from: Word; const AData: array of byte);
- var
+var
   P: Pword;
 begin
-  p := DataPtr;
-  p^ := from;
-  inc(p);
+  P := DataPtr;
+  P^ := from;
+  inc(P);
   Move(AData, P^, Length(AData));
 end;
 
 procedure TStdRec.AssignEEPWriteP(from: Word; len: Integer; PData: Pointer);
- var
+var
   P: Pword;
 begin
-  p := DataPtr;
-  p^ := from;
-  inc(p);
-  Move(PData^, P^, Len);
+  P := DataPtr;
+  P^ := from;
+  inc(P);
+  Move(PData^, P^, len);
 end;
 
 procedure TStdRec.AssignInt(data: integer);
@@ -725,13 +744,13 @@ begin
 end;
 
 procedure TStdRec.AssignRamRead(RmAdr, len: integer);
- var
+var
   P: Pinteger;
 begin
-  p := DataPtr;
-  p^ := RmAdr;
-  inc(p);
-  p^ := len;
+  P := DataPtr;
+  P^ := RmAdr;
+  inc(P);
+  P^ := len;
 end;
 
 procedure TStdRec.AssignWord(data: integer);
@@ -744,23 +763,23 @@ begin
   if adr > 15 then
     Result := PWORD(pBuf)^ = PWORD(p)^
   else
-   Result := pBuf[0] = Pbyte(P)^
+    Result := pBuf[0] = Pbyte(p)^
 end;
 
 constructor TStdRec.Create(buff: Pointer; Bt2: boolean; alen: Integer);
 begin
   len := alen;
   pBuf := buff;
-  if bt2 then
-   begin
+  if Bt2 then
+  begin
     adr := pBuf[0];
     cmd := pBuf[1];
-   end
+  end
   else
-   begin
+  begin
     adr := pBuf[0] shr 4;
     cmd := pBuf[1] and $0F;
-   end;
+  end;
 end;
 
 constructor TStdRec.Create(addr, command, DataLength: Integer);
@@ -769,30 +788,34 @@ begin
   cmd := command;
   len := DataLength;
   if adr > 15 then
-   begin
-    SetLength(Buffer, 2+len);
+  begin
+    SetLength(Buffer, 2 + len);
     Buffer[0] := adr;
     Buffer[1] := cmd;
-   end
+  end
   else
-   begin
-    SetLength(Buffer, 1+len);
-    Buffer[0] := (adr shl 4) or cmd;;
-   end;
+  begin
+    SetLength(Buffer, 1 + len);
+    Buffer[0] := (adr shl 4) or cmd;
+    ;
+  end;
   pBuf := @Buffer[0];
 end;
 
 function TStdRec.DataAsType<T>: T;
- var
+var
   res: T;
 begin
-   res := T(DataPtr^);
-   Result := res;
+  res := T(DataPtr^);
+  Result := res;
 end;
 
 function TStdRec.DataPtr: Pointer;
 begin
-  if adr > 15 then Result := @pBuf[2] else Result := @pBuf[1]
+  if adr > 15 then
+    Result := @pBuf[2]
+  else
+    Result := @pBuf[1]
 end;
 
 function TStdRec.Ptr: Pointer;
@@ -807,7 +830,10 @@ end;
 
 function TStdRec.SizeOfAC: Integer;
 begin
-  if adr > 15 then Result := 2 else Result := 1
+  if adr > 15 then
+    Result := 2
+  else
+    Result := 1
 end;
 
 { TStdReadLong }
@@ -858,36 +884,37 @@ end;
 //end;
 
 const
- K_DEVTIME_TO_TIME = 2.097152/3600/24;
-
-
+  K_DEVTIME_TO_TIME = 2.097152 / 3600 / 24;
 
 function TFifoRec<T>.Count: Integer;
 begin
-  Result := Length(Data);
+  Result := Length(data);
 end;
 
 function TFifoRec<T>.Last: LongWord;
 begin
-  Result := First + Length(Data);
+  Result := First + Length(data);
 end;
 
 procedure TFifoRec<T>.Add(const pData: PointerT; Len: integer);
- var
+var
   n: Integer;
 begin
-  n := Length(Data);
-  SetLength(Data, n+len);
-  Move(pData^, Data[n], len*SizeOf(T));
+  n := Length(data);
+  SetLength(data, n + Len);
+  Move(pData^, data[n], Len * SizeOf(T));
 end;
 
 function TFifoRec<T>.Delete(Len: Integer{; From: Integer = 0}): Integer;
 // var
 //  n: Integer;
 begin
-  if Length(Data) - Len < 0 then Result := Length(Data) else Result := Len;
+  if Length(data) - Len < 0 then
+    Result := Length(data)
+  else
+    Result := Len;
   Inc(First, Result);
-  System.Delete(Data, 0, Result);
+  System.Delete(data, 0, Result);
 
 {  n := Length(Data) - (From + Len);
   if n > 0 then
@@ -906,22 +933,24 @@ begin
   Node := Node.ParentNode;
   while not IsWrkRam(Node) do
   begin
-   Result := Node.NodeName + '.' + Result;
-   Node := Node.ParentNode;
+    Result := Node.NodeName + '.' + Result;
+    Node := Node.ParentNode;
   end;
-  Result := Node.ParentNode.NodeName +'.' + Result;
+  Result := Node.ParentNode.NodeName + '.' + Result;
 end;
 
 class function CNode.GetCalc(DataNode: IXMLNode): IXMLNode;
 begin
   Result := DataNode.ChildNodes.FindNode(T_CLC);
-  if not Assigned(Result) then Exit(DataNode.AddChild(T_CLC));
+  if not Assigned(Result) then
+    Exit(DataNode.AddChild(T_CLC));
 end;
 
 class function CNode.GetDev(DataNode: IXMLNode): IXMLNode;
 begin
   Result := DataNode.ChildNodes.FindNode(T_DEV);
-  if not Assigned(Result) then Exit(DataNode.AddChild(T_DEV));
+  if not Assigned(Result) then
+    Exit(DataNode.AddChild(T_DEV));
 end;
 
 class function CNode.IsData(Node: IXMLNode): Boolean;
@@ -973,18 +1002,22 @@ end;
 
 class function CTime.AsString(t: TTime): string;
 begin
-  if t > 365  then Exit('99 00:00:00');
+  if t > 365 then
+    Exit('99 00:00:00');
   Result := TimeToStr(t);
-  if Abs(Double(t)) >= 1 then Result := Format('%2d %8s',[Trunc(Abs(t)), Result])
+  if Abs(Double(t)) >= 1 then
+    Result := Format('%2d %8s', [Trunc(Abs(t)), Result])
 end;
 
 class function CTime.FromString(const s: string): TTime;
- var
+var
   a: TArray<string>;
 begin
   a := Trim(s).Split([' '], TStringSplitOptions.ExcludeEmpty);
-  if Length(a) = 1 then Result := StrToTime(a[0])
-  else Result := a[0].ToInteger + StrToTime(a[1]);
+  if Length(a) = 1 then
+    Result := StrToTime(a[0])
+  else
+    Result := a[0].ToInteger + StrToTime(a[1]);
 end;
 
 {$ENDREGION}
@@ -993,30 +1026,35 @@ end;
 function GetIDeviceMeta(Doc: IXMLDocument; const Iname: string): IXMLNode;
 begin
   if Doc.DocumentElement.NodeName = 'PROJECT' then
-       Result := Doc.DocumentElement.ChildNodes.FindNode('DEVICES').ChildNodes.FindNode(IName)
-  else Result := Doc.DocumentElement.ChildNodes.FindNode(IName);
+    Result := Doc.DocumentElement.ChildNodes.FindNode('DEVICES').ChildNodes.FindNode(Iname)
+  else
+    Result := Doc.DocumentElement.ChildNodes.FindNode(Iname);
 end;
+
 function CalcNode(DataNode: IXMLNode): IXMLNode;
 begin
   Result := DataNode.ChildNodes.FindNode(T_CLC);
-  if not Assigned(Result) then Exit(DataNode.AddChild(T_CLC));
+  if not Assigned(Result) then
+    Exit(DataNode.AddChild(T_CLC));
 end;
 
 function DevNode(DataNode: IXMLNode): IXMLNode;
 begin
   Result := DataNode.ChildNodes.FindNode(T_DEV);
-  if not Assigned(Result) then Exit(DataNode.AddChild(T_DEV));
+  if not Assigned(Result) then
+    Exit(DataNode.AddChild(T_DEV));
 end;
 
 function NewXDocument(Version: DOMString = '1.0'): IXMLDocument;
 begin
   Result := TXDocument.Create(nil);
   Result.Active := True;
-  if Version <> '' then Result.Version := Version;
+  if Version <> '' then
+    Result.Version := Version;
 end;
 
 function XSupport(const Instance: IXMLNode; const IID: TGUID; out Intf): Boolean;
- var
+var
   i: IOwnIntfXMLNode;
 begin
   Result := Supports(Instance, IOwnIntfXMLNode, i) and Supports(i.Intf, IID, Intf);
@@ -1044,11 +1082,12 @@ begin
 end;
 
 procedure RemoveXMLAttr(Node: IXMLNode; const AttrName: string);
- var
+var
   atr: IXMLNode;
 begin
   atr := Node.AttributeNodes.FindNode(AttrName);
-  if Assigned(atr) then Node.AttributeNodes.Remove(atr);
+  if Assigned(atr) then
+    Node.AttributeNodes.Remove(atr);
 end;
 
 function RenameXMLNode(Src: IXMLNode; const NewName: string): IXMLNode;
@@ -1058,26 +1097,27 @@ var
   s: string;
 begin
   Parent := Src.ParentNode;
-  NewNode:= Parent.OwnerDocument.CreateNode(NewName);
+  NewNode := Parent.OwnerDocument.CreateNode(NewName);
   // Copy the value
-  if (NewNode.NodeType <> ntElement) then NewNode.NodeValue:= Src.NodeValue;
+  if (NewNode.NodeType <> ntElement) then
+    NewNode.NodeValue := Src.NodeValue;
   // Copy Attributes
-  for i :=0 to Src.AttributeNodes.Count-1 do
-   begin
+  for i := 0 to Src.AttributeNodes.Count - 1 do
+  begin
     s := Src.AttributeNodes.Get(i).NodeName;
     NewNode.Attributes[s] := Src.Attributes[s];
-   end;
+  end;
   // Copy the Children
   while (Src.HasChildNodes) do
-   begin
-    MoveNode:= Src.ChildNodes.First;
+  begin
+    MoveNode := Src.ChildNodes.First;
     Src.ChildNodes.Remove(MoveNode);
     NewNode.ChildNodes.Add(MoveNode);
-   end;
+  end;
   // Replace the node
   Parent.ChildNodes.ReplaceNode(Src, NewNode);
   // Set the result
-  Result:= NewNode;
+  Result := NewNode;
 end;
 
 { XEnum }
@@ -1152,30 +1192,34 @@ begin
 end;}
 
 procedure EnumDevices(GetDevicesCB: TGetDevicesCB);
- var
+var
   SearchRec: TSearchRec;
   Found: integer;
   GDoc: IXMLDocument;
   u: IXMLNode;
   s: string;
 begin
-  if not Assigned(GetDevicesCB) then Exit;
+  if not Assigned(GetDevicesCB) then
+    Exit;
   GDoc := NewXMLDocument();
-  Found := FindFirst(ExtractFilePath(ParamStr(0)) + 'Devices' +'\*.xml', faAnyFile, SearchRec);
+  Found := FindFirst(ExtractFilePath(ParamStr(0)) + 'Devices' + '\*.xml', faAnyFile, SearchRec);
   while Found = 0 do
-   begin
-    GDoc.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Devices' +'\'+SearchRec.Name);
-    for u in XEnum(GDoc.DocumentElement) do if u.HasAttribute(AT_ADDR) then
-     begin
-      if u.HasAttribute(AT_INFO) then s := u.Attributes[AT_INFO]
-      else s := '';
-      GetDevicesCB(u.Attributes[AT_ADDR], u.NodeName, s)
-     end;
+  begin
+    GDoc.LoadFromFile(ExtractFilePath(ParamStr(0)) + 'Devices' + '\' + SearchRec.Name);
+    for u in XEnum(GDoc.DocumentElement) do
+      if u.HasAttribute(AT_ADDR) then
+      begin
+        if u.HasAttribute(AT_INFO) then
+          s := u.Attributes[AT_INFO]
+        else
+          s := '';
+        GetDevicesCB(u.Attributes[AT_ADDR], u.NodeName, s)
+      end;
     Found := FindNext(SearchRec);
-   end;
+  end;
 end;
 
-class procedure CArray.Add<T>(var Values: TArray<T>; const Value: T);
+class procedure CArray.Add<t>(var Values: TArray<t>; const Value: t);
 begin
   SetLength(Values, Length(Values) + 1);
   Values[High(Values)] := Value;
@@ -1183,12 +1227,12 @@ end;
 
 function TimeToAdr(time: TDateTime; KoefTime: Double; RecSize: Integer; TimeStart: TDateTime; Delay: TTime): Integer;
 begin
-  Result := Round(((time-TimeStart)/KoefTime - Delay)/K_DEVTIME_TO_TIME)*RecSize;
+  Result := Round(((time - TimeStart) / KoefTime - Delay) / K_DEVTIME_TO_TIME) * RecSize;
 end;
 
 function AdrToTime(adr: Integer; KoefTime: Double; RecSize: Integer; TimeStart: TDateTime; Delay: TTime): TDateTime;
 begin
-  Result := (adr*K_DEVTIME_TO_TIME/RecSize + Delay) * KoefTime + TimeStart;
+  Result := (adr * K_DEVTIME_TO_TIME / RecSize + Delay) * KoefTime + TimeStart;
 end;
 
 {function MyStrToTime(s: string): TTime;
@@ -1224,131 +1268,169 @@ begin
   Result := Node.NodeName;
   Node := Node.ParentNode;
   repeat
-   if NoMeta and StrIn(Node.NodeName, ARR_META) then Exit;
-   Result := Node.NodeName +'.'+ Result;
-   Node := Node.ParentNode;
+    if NoMeta and StrIn(Node.NodeName, ARR_META) then
+      Exit;
+    Result := Node.NodeName + '.' + Result;
+    Node := Node.ParentNode;
   until not Assigned(Node);
 end;
 
 function TryValX(Root: IXMLNode; const Path: string; var v: Variant): Boolean;
- var
+var
   attr, pth: string;
   X: IXMLNode;
 begin
   pth := Path.Remove(Path.LastIndexOf('.'));
-  attr := Path.Remove(0, Path.LastIndexOf('.')+1);
-  Result := TryGetX(Root, Pth, X, Attr);
-  if Result then v := x.NodeValue;
+  attr := Path.Remove(0, Path.LastIndexOf('.') + 1);
+  Result := TryGetX(Root, pth, X, attr);
+  if Result then
+    v := X.NodeValue;
 end;
 
 function TryGetX(Root: IXMLNode; const Path: string; out X: IXMLNode; const AttrName: string = ''): Boolean;
- var
+var
   s: string;
 begin
   Result := True;
-  if not Assigned(Root) then Exit(False);
-  for s in path.Split(['.'], TStringSplitOptions.ExcludeEmpty) do
-   begin
-    if s = '/' then Root := Root.ParentNode
-    else Root := Root.ChildNodes.FindNode(s);
-    if not Assigned(Root) then Exit(False);
-   end;
+  if not Assigned(Root) then
+    Exit(False);
+  for s in Path.Split(['.'], TStringSplitOptions.ExcludeEmpty) do
+  begin
+    if s = '/' then
+      Root := Root.ParentNode
+    else
+      Root := Root.ChildNodes.FindNode(s);
+    if not Assigned(Root) then
+      Exit(False);
+  end;
   if AttrName <> '' then
-   begin
+  begin
     X := Root.AttributeNodes.FindNode(AttrName);
     Result := Assigned(X);
-   end
-  else X := Root;
+  end
+  else
+    X := Root;
 end;
 
 function GetXNode(Root: IXMLNode; const Path: string; CreatePathNotExists: Boolean = False): IXMLNode;
- var
+var
   s: string;
 begin
-  if not Assigned(Root) then Exit(nil);
-  for s in path.Split(['.'], TStringSplitOptions.ExcludeEmpty) do
-   begin
+  if not Assigned(Root) then
+    Exit(nil);
+  for s in Path.Split(['.'], TStringSplitOptions.ExcludeEmpty) do
+  begin
     Result := Root;
-    if s = '/' then Root := Root.ParentNode
-    else Root := Root.ChildNodes.FindNode(s);
-    if Assigned(Root) then Continue;
-    if not CreatePathNotExists then Break;
+    if s = '/' then
+      Root := Root.ParentNode
+    else
+      Root := Root.ChildNodes.FindNode(s);
+    if Assigned(Root) then
+      Continue;
+    if not CreatePathNotExists then
+      Break;
     Root := Result.AddChild(s);
-   end;
+  end;
   Result := Root;
 end;
 
 function ExecXTree(root: IXMLNode; func: TTestRef): IXMLNode;
- var
+var
   res: IXMLNode;
+
   procedure rec(r: IXMLNode);
-   var
+  var
     n: IXMLNode;
   begin
-    if func(r) then res := r
-    else for n in XEnum(r) do if n.NodeType = ntElement then rec(n)
+    if func(r) then
+      res := r
+    else
+      for n in XEnum(r) do
+        if n.NodeType = ntElement then
+          rec(n)
   end;
+
 begin
-  if not Assigned(root) then Exit(nil);
+  if not Assigned(root) then
+    Exit(nil);
   res := nil;
   rec(root);
   Result := res;
 end;
 
 procedure ExecXTree(root: IXMLNode; func: Tproc<IXMLNode>; Dec: Boolean = False); overload;
+
   procedure rec(r: IXMLNode);
-   var
+  var
     n: IXMLNode;
   begin
     func(r);
-    if Dec then for n in XEnumDec(r) do
-     begin
-      if n.NodeType = ntElement then rec(n)
-     end
-    else for n in XEnum(r) do if n.NodeType = ntElement then rec(n)
+    if Dec then
+      for n in XEnumDec(r) do
+      begin
+        if n.NodeType = ntElement then
+          rec(n)
+      end
+    else
+      for n in XEnum(r) do
+        if n.NodeType = ntElement then
+          rec(n)
   end;
+
 begin
-  if Assigned(root) then rec(root);
+  if Assigned(root) then
+    rec(root);
 end;
 
-function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True; BadTree: TNotHasXtreeRef =nil): Boolean;
+function HasXTree(Etalon, Test: IXMLNode; Action: THasXtreeRef = nil; CheckRootAttr: Boolean = True; BadTree: TNotHasXtreeRef = nil): Boolean;
+
   procedure rec(e, t: IXMLNode);
-   var
+  var
     ie, it: IXMLNode;
   begin
-    if not CheckRootAttr then CheckRootAttr := True
-    else for ie in XEnumAttr(e) do
-     begin
-      it := t.AttributeNodes.FindNode(ie.NodeName);
-      if not Assigned(it) then
-       begin
-        if Assigned(BadTree) then Result := Result and BadTree(e, ie, t, it)
-        else Result := False;
+    if not CheckRootAttr then
+      CheckRootAttr := True
+    else
+      for ie in XEnumAttr(e) do
+      begin
+        it := t.AttributeNodes.FindNode(ie.NodeName);
+        if not Assigned(it) then
+        begin
+          if Assigned(BadTree) then
+            Result := Result and BadTree(e, ie, t, it)
+          else
+            Result := False;
         //OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'ie.xml');
        // TDebug.Log(ie.NodeName);
-       end
-      else if Assigned(Action) then Action(e, ie, t, it)
-     end;
+        end
+        else if Assigned(Action) then
+          Action(e, ie, t, it)
+      end;
     for ie in XEnum(e) do
-     begin
+    begin
       it := t.ChildNodes.FindNode(ie.NodeName);
       if not Assigned(it) then
-       begin
-        if Assigned(BadTree) then Result := Result and BadTree(e, ie, t, it)
-        else Result := False;
+      begin
+        if Assigned(BadTree) then
+          Result := Result and BadTree(e, ie, t, it)
+        else
+          Result := False;
        // TDebug.Log(ie.NodeName);
-       end
-      else rec(ie, it)
-     end;
+      end
+      else
+        rec(ie, it)
+    end;
   end;
+
 begin
-  if not (Assigned(Etalon) and Assigned(Test)) then Exit(False);
+  if not (Assigned(Etalon) and Assigned(Test)) then
+    Exit(False);
   Result := True;
   rec(Etalon, Test);
 end;
 
 function FindDev(root: IXMLNode; adr: Integer): IXMLNode;
- var
+var
   u: IXMLNode;
 begin
   Result := nil;
@@ -1356,7 +1438,7 @@ begin
 
   for u in XEnum(root) do
     if u.HasAttribute(AT_ADDR) and (u.Attributes[AT_ADDR] = adr) then
-     Exit(u);
+      Exit(u);
 
 /// подходит для проекта версии 3
 //  Result := ExecXTree(root, function(n: IXMLNode): boolean
@@ -1367,114 +1449,131 @@ begin
 end;
 
 function FindDevs(root: IXMLNode): TArray<IXMLNode>;
- var
+var
   Res: TArray<IXMLNode>;
 begin
-  ExecXTree(root, procedure(n: IXMLNode)
-  begin
-    if n.HasAttribute(AT_ADDR) then Carray.Add<IXMLNode>(Res, n);
-  end);
+  ExecXTree(root,
+    procedure(n: IXMLNode)
+    begin
+      if n.HasAttribute(AT_ADDR) then
+        Carray.Add<IXMLNode>(Res, n);
+    end);
   Result := Res;
 end;
 
 function GetDevsSections(Devs: TArray<IXMLNode>; const Section: string): TArray<IXMLNode>;
- var
+var
   n, s: IXMLNode;
 begin
   for n in Devs do
-   begin
+  begin
     s := n.ChildNodes.FindNode(Section);
-    if Assigned(s) then Carray.Add<IXMLNode>(Result, s);
-   end;
+    if Assigned(s) then
+      Carray.Add<IXMLNode>(Result, s);
+  end;
 end;
 
 function FindWork(root: IXMLNode; adr: Integer): IXMLNode;
 begin
   Result := FindDev(root, adr);
   if Assigned(Result) then
-   begin
+  begin
     Result := Result.ChildNodes.FindNode(T_WRK);
-    if not Assigned(Result) or not Result.HasAttribute(AT_SIZE) then Exit(nil);
-   end;
+    if not Assigned(Result) or not Result.HasAttribute(AT_SIZE) then
+      Exit(nil);
+  end;
 end;
 
 function FindRam(root: IXMLNode; adr: Integer): IXMLNode;
 begin
   Result := FindDev(root, adr);
   if Assigned(Result) then
-   begin
+  begin
     Result := Result.ChildNodes.FindNode(T_RAM);
-    if not Assigned(Result) or not Result.HasAttribute(AT_SIZE) then Exit(nil);
-   end;
+    if not Assigned(Result) or not Result.HasAttribute(AT_SIZE) then
+      Exit(nil);
+  end;
 end;
 
 function FindEeprom(root: IXMLNode; adr: Integer): IXMLNode;
 begin
   Result := FindDev(root, adr);
   if Assigned(Result) then
-   begin
+  begin
     Result := Result.ChildNodes.FindNode(T_EEPROM);
-    if not Assigned(Result) or not Result.HasAttribute(AT_SIZE) then Exit(nil);
-   end;
+    if not Assigned(Result) or not Result.HasAttribute(AT_SIZE) then
+      Exit(nil);
+  end;
 end;
 
 procedure FindAllRam(root: IXMLNode; func: TWorkDataRef);
- var
+var
   u, w: IXMLNode;
 begin
-  for u in XEnum(root) do if u.HasAttribute(AT_ADDR) then
-   begin
-    W := u.ChildNodes.FindNode(T_RAM);
-    if Assigned(w) then func(w, u.Attributes[AT_ADDR], u.NodeName);
-   end;
+  for u in XEnum(root) do
+    if u.HasAttribute(AT_ADDR) then
+    begin
+      w := u.ChildNodes.FindNode(T_RAM);
+      if Assigned(w) then
+        func(w, u.Attributes[AT_ADDR], u.NodeName);
+    end;
 end;
 
 procedure FindAllWorks(root: IXMLNode; func: TWorkDataRef);
- var
+var
   u, w: IXMLNode;
 begin
 //  Root.OwnerDocument.SaveToFile(ExtractFilePath(ParamStr(0))+'FindAllWorks.xml');
 //  TDebug.Log('Root: %s %d', [Root.NodeName, Root.ChildNodes.Count]);
-  for u in XEnum(root) do if u.HasAttribute(AT_ADDR) then
-   begin
+  for u in XEnum(root) do
+    if u.HasAttribute(AT_ADDR) then
+    begin
 //    TDebug.Log('Root__:'+u.NodeName);
-    W := u.ChildNodes.FindNode(T_WRK);
-    if Assigned(w) then func(w, u.Attributes[AT_ADDR], u.NodeName);
-   end;
+      w := u.ChildNodes.FindNode(T_WRK);
+      if Assigned(w) then
+        func(w, u.Attributes[AT_ADDR], u.NodeName);
+    end;
 end;
 
 procedure FindAllEeprom(root: IXMLNode; func: TWorkDataRef);
- var
+var
   u, w: IXMLNode;
 begin
-  for u in XEnum(root) do if u.HasAttribute(AT_ADDR) then
-   begin
-    W := u.ChildNodes.FindNode(T_EEPROM);
-    if Assigned(w) then func(w, u.Attributes[AT_ADDR], u.NodeName);
-   end;
+  for u in XEnum(root) do
+    if u.HasAttribute(AT_ADDR) then
+    begin
+      w := u.ChildNodes.FindNode(T_EEPROM);
+      if Assigned(w) then
+        func(w, u.Attributes[AT_ADDR], u.NodeName);
+    end;
 end;
 
 function FindXmlNode(root: IXMLNode; const Section, NodeName: string; var Node: IXMLNode): Boolean;
- var
+var
   u, w, res: IXMLNode;
 begin
-  Res := nil;
-  for u in XEnum(root) do if u.HasAttribute(AT_ADDR) then
-   begin
-    W := u.ChildNodes.FindNode(Section);
-    if Assigned(w) then ExecXTree(w, function(n: IXMLNode): boolean
-     begin
-       if n.NodeName = NodeName then
-        begin
-         Res := n;
-         Result := True;
-        end
-       else Result := False;
-     end);
-    if Assigned(Res) then Break;
-   end;
-  Node := Res;
-  Result := Assigned(Res);
+  res := nil;
+  for u in XEnum(root) do
+    if u.HasAttribute(AT_ADDR) then
+    begin
+      w := u.ChildNodes.FindNode(Section);
+      if Assigned(w) then
+        ExecXTree(w,
+          function(n: IXMLNode): boolean
+          begin
+            if n.NodeName = NodeName then
+            begin
+              res := n;
+              Result := True;
+            end
+            else
+              Result := False;
+          end);
+      if Assigned(res) then
+        Break;
+    end;
+  Node := res;
+  Result := Assigned(res);
 end;
 {$ENDREGION}
 
@@ -1488,19 +1587,21 @@ begin
 end;
 
 class operator TAddressRec.Explicit(const SetAdd: array of Integer): TAddressRec;
- var
+var
   i: integer;
 begin
   SetLength(Result.Items, Length(SetAdd));
-  for i := 0 to Length(SetAdd)-1 do Result.Items[i] := SetAdd[i];
+  for i := 0 to Length(SetAdd) - 1 do
+    Result.Items[i] := SetAdd[i];
 end;
 
 class operator TAddressRec.Explicit(const StrAdr: string): TAddressRec;
- var
+var
   s: string;
 begin
   SetLength(Result.Items, 0);
-  for s in StrAdr.Split([';'], TStringSplitOptions.ExcludeEmpty) do CArray.Add<Integer>(Result.Items, s.Trim.ToInteger);
+  for s in StrAdr.Split([';'], TStringSplitOptions.ExcludeEmpty) do
+    CArray.Add<Integer>(Result.Items, s.Trim.ToInteger);
 { s := StrAdr;
 while s <> '' do
    begin
@@ -1528,14 +1629,15 @@ end;
 class procedure TAddressRec.Init;
 begin
   if not IsInit then
-   begin
+  begin
     EnumDevices(DevicesCB);
     IsInit := True;
-    TArray.Sort<TDevRec>(CFDevs, TComparer<TDevRec>.Construct(function(const Left, Right: TDevRec): Integer
-    begin
-      Result := Left.Adr - Right.Adr;
-    end));
-   end;
+    TArray.Sort<TDevRec>(CFDevs, TComparer<TDevRec>.Construct(
+      function(const Left, Right: TDevRec): Integer
+      begin
+        Result := Left.Adr - Right.Adr;
+      end));
+  end;
 end;
 
 class operator TAddressRec.Implicit(const AddressRec: TAddressRec): TAddressArray;
@@ -1570,22 +1672,24 @@ end;
 //end;
 
 function TAddressRec.ToStr: string;
- var
+var
   adr: Integer;
 begin
   Result := '';
-  for adr in Items do Result := Result + IntToStr(adr) + ';';
+  for adr in Items do
+    Result := Result + IntToStr(adr) + ';';
 end;
 
 constructor TAddressRec.TDevRec.Create(DevAdr: Integer; const DevNodeName, DevInfo: WideString);
 begin
-  Adr := DevAdr;
+  adr := DevAdr;
   Name := DevNodeName;
   Info := DevInfo;
 end;
 {$ENDREGION}
 
 {$REGION 'TCaseSensDispInv Variant'}
+
 type
   TCaseSensDispInv = class(TInvokeableVariantType)
   private
@@ -1594,7 +1698,7 @@ type
   protected
     procedure DispInvoke(Dest: PVarData; [Ref] const Source: TVarData; CallDesc: PCallDesc; Params: Pointer); override;
   public
-    procedure Clear(var V: TVarData); override;
+    procedure Clear(var v: TVarData); override;
     procedure Copy(var Dest: TVarData; const Source: TVarData; const Indirect: Boolean); override;
   end;
 
@@ -1621,14 +1725,14 @@ end;
 //end;
 
 procedure TCaseSensDispInv.DispInvoke(Dest: PVarData; [Ref] const Source: TVarData; CallDesc: PCallDesc; Params: Pointer);
- const
-  CDoMethod    = $01;
+const
+  CDoMethod = $01;
   CPropertyGet = $02;
   CPropertySet = $04;
- var
+var
   LArgCount: Integer;
   LIdent: string;
-  VarParams : TVarDataArray;
+  VarParams: TVarDataArray;
   Strings: TStringRefList;
   Dummi: Variant;
   PIdent: PByte;
@@ -1636,22 +1740,23 @@ begin
   // Grab the identifier
   LArgCount := CallDesc^.ArgCount;
   PIdent := @CallDesc^.ArgTypes[LArgCount];
-  LIdent :=  UTF8ToString(MarshaledAString(PIdent)) ;
+  LIdent := UTF8ToString(MarshaledAString(PIdent));
   SetLength(Strings, LArgCount);
   VarParams := GetDispatchInvokeArgs(CallDesc, Params, Strings, true);
 
   case CallDesc^.CallType of
     CDoMethod, CPropertyGet:
-      if (LArgCount <> 0) then RaiseDispError
+      if (LArgCount <> 0) then
+        RaiseDispError
       else if (Dest <> nil) then
-       begin
-        if not GetProperty(Dest^, Source, LIdent) then RaiseDispError
-       end
-      else if not GetProperty(TVarData(Dummi), Source, LIdent) then RaiseDispError;
+      begin
+        if not GetProperty(Dest^, Source, LIdent) then
+          RaiseDispError
+      end
+      else if not GetProperty(TVarData(Dummi), Source, LIdent) then
+        RaiseDispError;
     CPropertySet:
-      if not ((Dest = nil) and
-              (LArgCount = 1) and
-              SetProperty(Source, LIdent, VarParams[0])) then
+      if not ((Dest = nil) and (LArgCount = 1) and SetProperty(Source, LIdent, VarParams[0])) then
         RaiseDispError;
   else
     RaiseDispError;
@@ -1660,13 +1765,15 @@ end;
 {$ENDREGION}
 
 {$REGION 'XML Variant'}
+
 type
   TVxml = class(TCaseSensDispInv)
   private
-    class var This: TVxml;
+    class var
+      This: TVxml;
   public
-    function GetProperty(var Dest: TVarData; const V: TVarData; const Name: string): Boolean; override;
-    function SetProperty(const V: TVarData; const Name: string; const Value: TVarData): Boolean; override;
+    function GetProperty(var Dest: TVarData; const v: TVarData; const Name: string): Boolean; override;
+    function SetProperty(const v: TVarData; const Name: string; const Value: TVarData): Boolean; override;
   end;
 
 function XToVar(ANode: IXMLNode): Variant;
@@ -1679,28 +1786,33 @@ end;
 { TVxml }
 
 function TVxml.GetProperty(var Dest: TVarData; const V: TVarData; const Name: string): Boolean;
- var
+var
   n, ch: IXMLNode;
 begin
   n := TVxmlData(V).Node;
-  if not Assigned(n) then Exit(False);
+  if not Assigned(n) then
+    Exit(False);
   Result := True;
 //  TDebug.Log(n.ParentNode.ParentNode.NodeName+'.'+n.ParentNode.NodeName+'.'+n.NodeName+'  '+ Name+'  ');
-  if n.HasAttribute(Name) then Variant(Dest) := n.Attributes[Name]
+  if n.HasAttribute(Name) then
+    Variant(Dest) := n.Attributes[Name]
   else
-   begin
+  begin
     ch := n.ChildNodes.FindNode(Name);
-    if Assigned(ch) then Variant(Dest) := XToVar(ch)
-    else Result := False;
-   end;
+    if Assigned(ch) then
+      Variant(Dest) := XToVar(ch)
+    else
+      Result := False;
+  end;
 end;
 
 function TVxml.SetProperty(const V: TVarData; const Name: string; const Value: TVarData): Boolean;
- var
+var
   n: IXMLNode;
 begin
   n := TVxmlData(V).Node;
-  if not Assigned(n) then Exit(False);
+  if not Assigned(n) then
+    Exit(False);
 //  TDebug.Log(n.ParentNode.ParentNode.NodeName+'.'+n.ParentNode.NodeName+'.'+n.NodeName+'  '+ Name+'  ');
   Result := True;
   n.Attributes[Name] := Variant(Value);
@@ -1708,28 +1820,31 @@ end;
 {$ENDREGION}
 
 {$REGION 'SQL Variant'}
+
 type
   TVsql = class(TCaseSensDispInv)
   private
     type
-     TVsqlData = packed record
-      VType: TVarType;
-      Reserved1, Reserved2, Reserved3: Word;
-      DataSet: TDataSet;
-      Reserved4: LongInt;
-     end;
-    class var This: TVsql;
+      TVsqlData = packed record
+        VType: TVarType;
+        Reserved1, Reserved2, Reserved3: Word;
+        DataSet: TDataSet;
+        Reserved4: LongInt;
+      end;
+    class var
+      This: TVsql;
   public
     class function ToVar(DataSet: TDataSet): Variant; inline;
-    function GetProperty(var Dest: TVarData; const V: TVarData; const Name: string): Boolean; override;
-    function SetProperty(const V: TVarData; const Name: string; const Value: TVarData): Boolean; override;
+    function GetProperty(var Dest: TVarData; const v: TVarData; const Name: string): Boolean; override;
+    function SetProperty(const v: TVarData; const Name: string; const Value: TVarData): Boolean; override;
   end;
 
   TVsqlAutoClear = class(TVsql)
   private
-    class var This: TVsqlAutoClear;
+    class var
+      This: TVsqlAutoClear;
   public
-    procedure Clear(var V: TVarData); override;
+    procedure Clear(var v: TVarData); override;
   end;
 { TVsqlAutoClear }
 
@@ -1743,37 +1858,38 @@ function QToVar(DataSet: TDataSet; AutoClearDataSet: Boolean = True): Variant;
 begin
   VarClear(result);
   if AutoClearDataSet then
-   begin
+  begin
     TVsqlAutoClear.TVsqlData(result).VType := TVsqlAutoClear.This.VarType;
     TVsqlAutoClear.TVsqlData(result).DataSet := DataSet;
-   end
+  end
   else
-   begin
+  begin
     TVsql.TVsqlData(result).VType := TVsql.This.VarType;
     TVsql.TVsqlData(result).DataSet := DataSet;
-   end;
+  end;
 end;
 { TVsql }
 
 function TVsql.GetProperty(var Dest: TVarData; const V: TVarData; const Name: string): Boolean;
- var
+var
   fld: TField;
 begin
   { Find a field with the property's name. If there is one, return its current value. }
-  fld := TVsqlData(V).DataSet.FindField(Name.Replace('_','.'));
+  fld := TVsqlData(V).DataSet.FindField(Name.Replace('_', '.'));
   result := fld <> nil;
-  if result then Variant(dest) := fld.Value;
+  if result then
+    Variant(Dest) := fld.Value;
 end;
 
 function TVsql.SetProperty(const V: TVarData; const Name: string; const Value: TVarData): Boolean;
- var
+var
   fld: TField;
 begin
   { Find a field with the property's name. If there is one, set its value. }
-  fld := TVsqlData(V).DataSet.FindField(Name.Replace('_','.'));
+  fld := TVsqlData(V).DataSet.FindField(Name.Replace('_', '.'));
   result := fld <> nil;
   if result then
-   begin
+  begin
     { Well, we have to be in Edit mode to do this, don't we? }
 //    TVsqlData(V).DataSet.Edit;
 //    fld.AsVariant := Variant(Value);
@@ -1782,8 +1898,8 @@ begin
 //    if fld is TNumericField then
 //      TNumericField(fld).AsFloat := Variant(Value)
 //    else
-     fld.Value := Variant(Value);
-   end;
+    fld.Value := Variant(Value);
+  end;
 end;
 
 class function TVsql.ToVar(DataSet: TDataSet): Variant;
@@ -1797,7 +1913,7 @@ end;
 
 function TDataSetHelper.GetEnumerator: TDataSetEnumerator;
 begin
-  Result.FCurrent :=  TVsql.ToVar(Self);
+  Result.FCurrent := TVsql.ToVar(Self);
   Result.FDataSet := Self;
   Result.FFirst := True;
   First;
@@ -1807,8 +1923,10 @@ end;
 
 function TDataSetEnumerator.MoveNext: Boolean;
 begin
-  if FFirst then FFirst := False
-  else FDataSet.Next;
+  if FFirst then
+    FFirst := False
+  else
+    FDataSet.Next;
   Result := not FDataSet.Eof;
 end;
 {$ENDREGION}
@@ -2015,18 +2133,18 @@ end;       }
 
 { TQeueThread<T> }
 
-constructor TQeueThread<T>.Create(CreateSuspended: Boolean; const DebugName: string);
+constructor TQeueThread<t>.Create(CreateSuspended: Boolean; const DebugName: string);
 begin
   Inc(NoCopy);
-  DbgName := DebugName +'_' + NoCopy.ToString();
+  DbgName := DebugName + '_' + NoCopy.ToString();
   FLock := TCriticalSection.Create;
 //  FLockExec := TCriticalSection.Create;
   FEvent := TEvent.Create;
-  FQe := TList<T>.Create;
+  FQe := TList<t>.Create;
   inherited Create(CreateSuspended);
 end;
 
-destructor TQeueThread<T>.Destroy;
+destructor TQeueThread<t>.Destroy;
 begin
   FQe.Free;
   FEvent.Free;
@@ -2035,18 +2153,22 @@ begin
   inherited;
 end;
 
-procedure TQeueThread<T>.Enqueue(task: T; Cmpfunc: TCompareTaskFunc);
- var
+procedure TQeueThread<t>.Enqueue(task: t; Cmpfunc: TCompareTaskFunc);
+var
   i: integer;
 begin
-  if Terminated then Exit;
+  if Terminated then
+    Exit;
   FLock.Acquire;
   try
-   if Assigned(Cmpfunc) then for i := FQe.Count-1 downto 0 do if Cmpfunc(task, FQe[i]) then FQe.Delete(i);
-   FQe.Add(task);
-   FEvent.SetEvent;
+    if Assigned(Cmpfunc) then
+      for i := FQe.Count - 1 downto 0 do
+        if Cmpfunc(task, FQe[i]) then
+          FQe.Delete(i);
+    FQe.Add(task);
+    FEvent.SetEvent;
   finally
-   FLock.Release;
+    FLock.Release;
   end;
 end;
 
@@ -2060,55 +2182,58 @@ begin
   end;
 end;}
 
-procedure TQeueThread<T>.TerminatedSet;
+procedure TQeueThread<t>.TerminatedSet;
 begin
   inherited;
   FLock.Acquire;
   try
-   Fqe.Clear;
+    Fqe.Clear;
   finally
-   FLock.Release;
+    FLock.Release;
   end;
   FEvent.SetEvent;
 end;
 
-procedure TQeueThread<T>.Execute;
- var
-  d: T;
+procedure TQeueThread<t>.Execute;
+var
+  d: t;
 begin
   NameThreadForDebugging(DbgName);
   CoInitialize(nil);
   try
-  repeat
-   Fevent.WaitFor();
-   Fevent.ResetEvent;
-   while not Terminated do
-    try
-     FLock.Acquire;
-     try
-      if Fqe.Count = 0 then Break;
-      d := Fqe.First;
-      Fqe.Delete(0);
-     finally
-      FLock.Release;
-     end;
+    repeat
+      Fevent.WaitFor();
+      Fevent.ResetEvent;
+      while not Terminated do
+      try
+        FLock.Acquire;
+        try
+          if Fqe.Count = 0 then
+            Break;
+          d := Fqe.First;
+          Fqe.Delete(0);
+        finally
+          FLock.Release;
+        end;
      // !!!!! FLockExec.Acquire; !!!! // нельзя !!! т.к.  в Exec(d); может выть и скореевсего вудет Synchronize
                                       // Synchronize будет ждать основной поток который может быть в FLockExec.Acquire
                                       // получится deadlock
-     try
-      if Terminated then Exit;
-      Exec(d);
-     finally
-      Finalize(d);
+        try
+          if Terminated then
+            Exit;
+          Exec(d);
+        finally
+          Finalize(d);
 //      FillChar(d, SizeOf(d), 0);
      // !!!!! FLockExec.Release; !!!!!
-     end;
-    except
-     on E: Exception do TDebug.DoException(E, False);
-    end;
-  until Terminated;
+        end;
+      except
+        on e: Exception do
+          TDebug.DoException(e, False);
+      end;
+    until Terminated;
   finally
-   CoUninitialize();
+    CoUninitialize();
   end;
 end;
 
@@ -2314,14 +2439,16 @@ end;
 
 class function TAngle.Cra(ang: Double): Double;
 begin
-  while ang > 360 do ang := ang - 360;
-  while ang <0 do ang := ang + 360;
+  while ang > 360 do
+    ang := ang - 360;
+  while ang < 0 do
+    ang := ang + 360;
   Result := ang;
 end;
 
 class operator TAngle.Implicit(Ang: Double): TAngle;
 begin
-  Result.Angle := Ang;// Cra(Ang);
+  Result.Angle := Ang; // Cra(Ang);
 end;
 
 function TAngle.ToRad: Double;
@@ -2336,14 +2463,16 @@ end;
 
 function TAngle.ToStringUAKI: string;
 begin
-  Result := Format('%1.1f',[Angle])
+  Result := Format('%1.1f', [Angle])
 end;
 
 function StrIn(const Item: string; const InArr: array of string): Boolean;
- var
+var
   s: string;
 begin
-  for s in InArr do if Item = s then Exit(True);
+  for s in InArr do
+    if Item = s then
+      Exit(True);
   Result := False;
 end;
 
@@ -2355,6 +2484,7 @@ initialization
 //  TVxml.Init(TCaseSensDispInv(TVxml.This));
 //  TVsql.Init(TCaseSensDispInv(TVsql.This));
 //  TVsqlAutoClear.Init(TCaseSensDispInv(TVsqlAutoClear.This));
+
 finalization
   TVxml.This.Free;
   TVsql.This.Free;
@@ -2362,5 +2492,6 @@ finalization
 //  TVxml.DeInit(TCaseSensDispInv(TVxml.This));
 //  TVsql.DeInit(TCaseSensDispInv(TVsql.This));
 //  TVsqlAutoClear.DeInit(TCaseSensDispInv(TVsqlAutoClear.This));
+
 end.
 

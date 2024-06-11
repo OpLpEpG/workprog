@@ -2,9 +2,30 @@ unit DockIForm;
 
 interface
 
+{$INCLUDE global.inc}
+
 uses System.SysUtils, Vcl.Controls, debug_except, Winapi.Windows, Vcl.Graphics, Container, Actns, System.TypInfo, Vcl.Forms,
      DeviceIntf, ExtendIntf, RootImpl,JvDockGlobals, JvDockControlForm, JvDockVSNetStyle, Vcl.ActnPopup, Vcl.Menus, System.Classes,
       Vcl.Dialogs, Vcl.ComCtrls;
+
+const
+ {$IFDEF ENG_VERSION}
+      RS_DocformClose	='Close window';
+      RS_DocformTab	='Tab';
+      RS_DocformZak	='Docked';
+      RS_Hiddenwindows	='Hidden windows';
+      RS_MSG_Close	='close window ';
+      RS_MSG_hide	=' ? (No - close)';
+      RS_celectFont	='Select font';
+ {$ELSE}
+      RS_DocformClose='Закрыть Окно';
+      RS_DocformTab='Вкладка';
+      RS_DocformZak='Закрепляемое';
+      RS_Hiddenwindows='Скрытые окна';
+      RS_MSG_Close='Закрыть окно ';
+      RS_MSG_hide=' ? (No - скрыть)';
+      RS_celectFont='Выбрать шрифт';
+ {$ENDIF}
 
 type
   ShowNCMenu = set of (sncClose, sncTab, sncDock);
@@ -118,10 +139,10 @@ begin
   FDockClient.OnFormHide := OnFormHide;
   FDockClient.NCPopupMenu := CreateUnLoad<TPopupActionBar>;
   FDockClient.NCPopupMenu.OnPopup := NCPopup;
-  NClose := AddToNCMenu('Закрыть Окно', Close_ItemClick);
+  NClose := AddToNCMenu(RS_DocformClose, Close_ItemClick);
   AddToNCMenu('-');
-  NTab := AddToNCMenu('Вкладка', Tab_ItemClick);
-  NDock := AddToNCMenu('Закрепляемое', Dock_ItemClick);
+  NTab := AddToNCMenu(RS_DocformTab, Tab_ItemClick);
+  NDock := AddToNCMenu(RS_DocformZak, Dock_ItemClick);
   AddToNCMenu('-');
   Icon := ClassIcon;
   NCanClose := True;
@@ -162,14 +183,14 @@ procedure TDockIForm.OnFormHide(Sender: TObject);
 begin
   ///
   if FEnableCloseDialog and not (HostDockSite is TJvDockTabPageControl)
-     and (MessageDlg('Закрыть окно '+Caption+' ? (No - скрыть)', mtWarning, [mbYes, mbNo], 0) = mrYes) then
+     and (MessageDlg(RS_MSG_Close+Caption+RS_MSG_hide, mtWarning, [mbYes, mbNo], 0) = mrYes) then
     Close_ItemClick(Sender)
   ///
   else
    begin
     s:= Format('%s_%s',[Name, 'OnShowAction']);
     GContainer.RemoveInstance(TypeInfo(TIDynamicAction), s);
-    da := TIDynamicAction.CreateUser(Caption, 'Скрытые окна', Icon);
+    da := TIDynamicAction.CreateUser(Caption, RS_Hiddenwindows, Icon);
     da.Name := s;
     da.InstanceName := Name;
     da.ActionComponentClass := ClassName;
@@ -177,7 +198,7 @@ begin
   //  da.AddToActionManager('Окна', Caption, ClassIcon, 0);
     TRegister.AddType<TIDynamicAction>.AddInstance(s, da as IInterface);
     (GlobalCore as IActionProvider).RegisterAction(da);
-    (GlobalCore as IActionProvider).ShowInBar(0, 'Скрытые окна', da as IAction);
+    (GlobalCore as IActionProvider).ShowInBar(0, RS_Hiddenwindows, da as IAction);
   //  AfteActionManagerLoad;
    end;
 end;
@@ -352,7 +373,7 @@ end;
 procedure TCustomFontIForm.InitializeNewForm;
 begin
   inherited;
-  NFont := AddToNCMenu('Выбрать шрифт', NFontClick);
+  NFont := AddToNCMenu(RS_celectFont, NFontClick);
 end;
 
 procedure TCustomFontIForm.DoSetFont(const AFont: TFont);

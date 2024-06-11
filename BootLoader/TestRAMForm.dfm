@@ -10,8 +10,6 @@ object FormRamTest: TFormRamTest
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
   TextHeight = 13
   object sb: TStatusBar
     Left = 0
@@ -243,6 +241,15 @@ object FormRamTest: TFormRamTest
       Caption = 'SetMX'
       TabOrder = 15
       OnClick = SetMXClick
+    end
+    object btFormat: TButton
+      Left = 5
+      Top = 440
+      Width = 110
+      Height = 25
+      Caption = 'FRAM FORMAT'
+      TabOrder = 16
+      OnClick = btFormatClick
     end
   end
   object elLenWrite: TEdit

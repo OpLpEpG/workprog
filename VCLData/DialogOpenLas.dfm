@@ -9,12 +9,10 @@ object DlgOpenLAS: TDlgOpenLAS
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   DesignSize = (
     664
     377)
-  PixelsPerInch = 96
   TextHeight = 13
   object DriveCombo: TJvDriveCombo
     Left = 8
@@ -30,7 +28,7 @@ object DlgOpenLAS: TDlgOpenLAS
     Top = 36
     Width = 145
     Height = 334
-    Directory = 'C:\Gorizont'
+    Directory = 'C:\XE\Projects\Device2\ComDll'
     FileList = FileList
     DriveCombo = DriveCombo
     ItemHeight = 17
@@ -61,10 +59,6 @@ object DlgOpenLAS: TDlgOpenLAS
     TabPosition = tpBottom
     object tshLAS: TTabSheet
       Caption = 'LAS'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Inspector: TJvInspector
         Left = 0
         Top = 0

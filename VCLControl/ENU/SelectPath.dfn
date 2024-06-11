@@ -1,0 +1,481 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLControl\SelectPath.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLControl\SelectPath.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45033.6387268519</prop>
+        <prop prop-type="OrigDateTime">45033.5826851852</prop>
+        <prop prop-type="XlatDateTime">45033.5826851852</prop>
+        <prop prop-type="Translated">1</prop>
+        <prop prop-type="UnTranslated">44</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:SelectPathFrm.Left" resname="O:SelectPathFrm.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TSelectPathFrm</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.Top" resname="O:SelectPathFrm.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TSelectPathFrm</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.Width" resname="O:SelectPathFrm.Width">
+        <source>451</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TSelectPathFrm</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.Height" resname="O:SelectPathFrm.Height">
+        <source>305</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TSelectPathFrm</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.Align" resname="O:SelectPathFrm.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TSelectPathFrm</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.TabOrder" resname="O:SelectPathFrm.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TSelectPathFrm</prop>
+          <prop prop-type="Localize">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Left" resname="O:SelectPathFrm.O:Tree.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Top" resname="O:SelectPathFrm.O:Tree.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Width" resname="O:SelectPathFrm.O:Tree.Width">
+        <source>451</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Height" resname="O:SelectPathFrm.O:Tree.Height">
+        <source>305</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Align" resname="O:SelectPathFrm.O:Tree.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.BorderWidth" resname="O:SelectPathFrm.O:Tree.BorderWidth">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Color" resname="O:SelectPathFrm.O:Tree.Color">
+        <source>clBtnHighlight</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.BorderColor" resname="O:SelectPathFrm.O:Tree.Colors.BorderColor">
+        <source>15987699</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.DisabledColor" resname="O:SelectPathFrm.O:Tree.Colors.DisabledColor">
+        <source>clGray</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.DropMarkColor" resname="O:SelectPathFrm.O:Tree.Colors.DropMarkColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.DropTargetColor" resname="O:SelectPathFrm.O:Tree.Colors.DropTargetColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.DropTargetBorderColor" resname="O:SelectPathFrm.O:Tree.Colors.DropTargetBorderColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.FocusedSelectionColor" resname="O:SelectPathFrm.O:Tree.Colors.FocusedSelectionColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.FocusedSelectionBorderColor" resname="O:SelectPathFrm.O:Tree.Colors.FocusedSelectionBorderColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.GridLineColor" resname="O:SelectPathFrm.O:Tree.Colors.GridLineColor">
+        <source>15987699</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">20</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.HeaderHotColor" resname="O:SelectPathFrm.O:Tree.Colors.HeaderHotColor">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">21</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.HotColor" resname="O:SelectPathFrm.O:Tree.Colors.HotColor">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">22</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.SelectionRectangleBlendColor" resname="O:SelectPathFrm.O:Tree.Colors.SelectionRectangleBlendColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">23</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.SelectionRectangleBorderColor" resname="O:SelectPathFrm.O:Tree.Colors.SelectionRectangleBorderColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">24</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.SelectionTextColor" resname="O:SelectPathFrm.O:Tree.Colors.SelectionTextColor">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">25</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.TreeLineColor" resname="O:SelectPathFrm.O:Tree.Colors.TreeLineColor">
+        <source>9471874</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">26</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.UnfocusedColor" resname="O:SelectPathFrm.O:Tree.Colors.UnfocusedColor">
+        <source>clGray</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">27</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.UnfocusedSelectionColor" resname="O:SelectPathFrm.O:Tree.Colors.UnfocusedSelectionColor">
+        <source>13421772</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">28</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Colors.UnfocusedSelectionBorderColor" resname="O:SelectPathFrm.O:Tree.Colors.UnfocusedSelectionBorderColor">
+        <source>13421772</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">29</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.DragMode" resname="O:SelectPathFrm.O:Tree.DragMode">
+        <source>dmAutomatic</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">30</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.DragType" resname="O:SelectPathFrm.O:Tree.DragType">
+        <source>dtVCL</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">31</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Header.AutoSizeIndex" resname="O:SelectPathFrm.O:Tree.Header.AutoSizeIndex">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">32</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Header.Options" resname="O:SelectPathFrm.O:Tree.Header.Options">
+        <source>[hoAutoResize, hoColumnResize, hoDrag, hoShowImages, hoShowSortGlyphs, hoVisible, hoAutoSpring]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">33</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.TabOrder" resname="O:SelectPathFrm.O:Tree.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">34</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.TreeOptions.AutoOptions" resname="O:SelectPathFrm.O:Tree.TreeOptions.AutoOptions">
+        <source>[toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">35</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.TreeOptions.MiscOptions" resname="O:SelectPathFrm.O:Tree.TreeOptions.MiscOptions">
+        <source>[toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">36</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.TreeOptions.PaintOptions" resname="O:SelectPathFrm.O:Tree.TreeOptions.PaintOptions">
+        <source>[toHideFocusRect, toHideSelection, toHotTrack, toShowButtons, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">37</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.TreeOptions.SelectionOptions" resname="O:SelectPathFrm.O:Tree.TreeOptions.SelectionOptions">
+        <source>[toDisableDrawSelection, toExtendedFocus, toMultiSelect, toSimpleDrawSelection]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">38</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.OnChecked" resname="O:SelectPathFrm.O:Tree.OnChecked">
+        <source>TreeChecked</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">39</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.OnGetText" resname="O:SelectPathFrm.O:Tree.OnGetText">
+        <source>TreeGetText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">40</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.OnGetNodeDataSize" resname="O:SelectPathFrm.O:Tree.OnGetNodeDataSize">
+        <source>TreeGetNodeDataSize</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">41</prop>
+          <prop prop-type="Type">TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Columns[0].Position" resname="O:SelectPathFrm.O:Tree.Columns[0].Position">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">42</prop>
+          <prop prop-type="Type">C:TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">&lt;item</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Columns[0].Style" resname="O:SelectPathFrm.O:Tree.Columns[0].Style">
+        <source>vsOwnerDraw</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">43</prop>
+          <prop prop-type="Type">C:TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Columns[0].Text" resname="O:SelectPathFrm.O:Tree.Columns[0].Text">
+        <source>'Путь'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">44</prop>
+          <prop prop-type="Type">C:TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Path'</target>
+      </trans-unit>
+      <trans-unit id="O:SelectPathFrm.O:Tree.Columns[0].Width" resname="O:SelectPathFrm.O:Tree.Columns[0].Width">
+        <source>451</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.6181844329</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">45</prop>
+          <prop prop-type="Type">C:TVirtualStringTree</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Close">end&gt;</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

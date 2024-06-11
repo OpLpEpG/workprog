@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLData\DlgFromToGlu.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLData\DlgFromToGlu.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45030.3876851852</prop>
+        <prop prop-type="OrigDateTime">41635.3221990741</prop>
+        <prop prop-type="XlatDateTime">41635.3221990741</prop>
+        <prop prop-type="Translated">0</prop>
+        <prop prop-type="UnTranslated">71</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FormDlgGluFilter.Left" resname="O:FormDlgGluFilter.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055671</prop><prop prop-type="Status">0</prop><prop prop-type="Order">0</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.Top" resname="O:FormDlgGluFilter.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055671</prop><prop prop-type="Status">0</prop><prop prop-type="Order">1</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.BorderStyle" resname="O:FormDlgGluFilter.BorderStyle">
+        <source>bsDialog</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055671</prop><prop prop-type="Status">0</prop><prop prop-type="Order">2</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.Caption" resname="O:FormDlgGluFilter.Caption">
+        <source>'Фильтр по глубине'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055671</prop><prop prop-type="Status">0</prop><prop prop-type="Order">3</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.ClientHeight" resname="O:FormDlgGluFilter.ClientHeight">
+        <source>144</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055671</prop><prop prop-type="Status">0</prop><prop prop-type="Order">4</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.ClientWidth" resname="O:FormDlgGluFilter.ClientWidth">
+        <source>480</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055671</prop><prop prop-type="Status">0</prop><prop prop-type="Order">5</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.Color" resname="O:FormDlgGluFilter.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">6</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.Font.Charset" resname="O:FormDlgGluFilter.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">7</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.Font.Color" resname="O:FormDlgGluFilter.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">8</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.Font.Height" resname="O:FormDlgGluFilter.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">9</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.Font.Name" resname="O:FormDlgGluFilter.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">10</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.Font.Style" resname="O:FormDlgGluFilter.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">11</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.OldCreateOrder" resname="O:FormDlgGluFilter.OldCreateOrder">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">12</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.PixelsPerInch" resname="O:FormDlgGluFilter.PixelsPerInch">
+        <source>96</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">13</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.TextHeight" resname="O:FormDlgGluFilter.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">14</prop><prop prop-type="Type">TFormDlgGluFilter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:lbWork.Left" resname="O:FormDlgGluFilter.O:lbWork.Left">
+        <source>26</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">15</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:lbWork.Top" resname="O:FormDlgGluFilter.O:lbWork.Top">
+        <source>17</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">16</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:lbWork.Width" resname="O:FormDlgGluFilter.O:lbWork.Width">
+        <source>189</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">17</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:lbWork.Height" resname="O:FormDlgGluFilter.O:lbWork.Height">
+        <source>26</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">18</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:lbWork.AutoSize" resname="O:FormDlgGluFilter.O:lbWork.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">19</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:lbWork.Caption" resname="O:FormDlgGluFilter.O:lbWork.Caption">
+        <source>'С кадра'#13#10'(0-не установлен)'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">20</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:lbWork.WordWrap" resname="O:FormDlgGluFilter.O:lbWork.WordWrap">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">21</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:Label1.Left" resname="O:FormDlgGluFilter.O:Label1.Left">
+        <source>266</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">22</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:Label1.Top" resname="O:FormDlgGluFilter.O:Label1.Top">
+        <source>17</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">23</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:Label1.Width" resname="O:FormDlgGluFilter.O:Label1.Width">
+        <source>189</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">24</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:Label1.Height" resname="O:FormDlgGluFilter.O:Label1.Height">
+        <source>26</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">25</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:Label1.AutoSize" resname="O:FormDlgGluFilter.O:Label1.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">26</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:Label1.Caption" resname="O:FormDlgGluFilter.O:Label1.Caption">
+        <source>'По кадр'#13#10'(0-не установлен)'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">27</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:Label1.WordWrap" resname="O:FormDlgGluFilter.O:Label1.WordWrap">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">28</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.Left" resname="O:FormDlgGluFilter.O:medFrom.Left">
+        <source>26</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">29</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.Top" resname="O:FormDlgGluFilter.O:medFrom.Top">
+        <source>49</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">30</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.Width" resname="O:FormDlgGluFilter.O:medFrom.Width">
+        <source>187</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">31</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.Height" resname="O:FormDlgGluFilter.O:medFrom.Height">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">32</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.EditMask" resname="O:FormDlgGluFilter.O:medFrom.EditMask">
+        <source>'!99999;1;_'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">33</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.Font.Charset" resname="O:FormDlgGluFilter.O:medFrom.Font.Charset">
+        <source>RUSSIAN_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">34</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.Font.Color" resname="O:FormDlgGluFilter.O:medFrom.Font.Color">
+        <source>clBlue</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">35</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.Font.Height" resname="O:FormDlgGluFilter.O:medFrom.Font.Height">
+        <source>-16</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">36</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.Font.Name" resname="O:FormDlgGluFilter.O:medFrom.Font.Name">
+        <source>'Courier'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">37</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.Font.Style" resname="O:FormDlgGluFilter.O:medFrom.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">38</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.MaxLength" resname="O:FormDlgGluFilter.O:medFrom.MaxLength">
+        <source>5</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">39</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.ParentFont" resname="O:FormDlgGluFilter.O:medFrom.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">40</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.TabOrder" resname="O:FormDlgGluFilter.O:medFrom.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">41</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medFrom.Text" resname="O:FormDlgGluFilter.O:medFrom.Text">
+        <source>'     '</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">42</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.Left" resname="O:FormDlgGluFilter.O:medTo.Left">
+        <source>266</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">43</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.Top" resname="O:FormDlgGluFilter.O:medTo.Top">
+        <source>49</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">44</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.Width" resname="O:FormDlgGluFilter.O:medTo.Width">
+        <source>187</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">45</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.Height" resname="O:FormDlgGluFilter.O:medTo.Height">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">46</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.EditMask" resname="O:FormDlgGluFilter.O:medTo.EditMask">
+        <source>'!99999;1;_'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">47</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.Font.Charset" resname="O:FormDlgGluFilter.O:medTo.Font.Charset">
+        <source>RUSSIAN_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">48</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.Font.Color" resname="O:FormDlgGluFilter.O:medTo.Font.Color">
+        <source>clBlue</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">49</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.Font.Height" resname="O:FormDlgGluFilter.O:medTo.Font.Height">
+        <source>-16</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">50</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.Font.Name" resname="O:FormDlgGluFilter.O:medTo.Font.Name">
+        <source>'Courier'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">51</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.Font.Style" resname="O:FormDlgGluFilter.O:medTo.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">52</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.MaxLength" resname="O:FormDlgGluFilter.O:medTo.MaxLength">
+        <source>5</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">53</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.ParentFont" resname="O:FormDlgGluFilter.O:medTo.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">54</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.TabOrder" resname="O:FormDlgGluFilter.O:medTo.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">55</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:medTo.Text" resname="O:FormDlgGluFilter.O:medTo.Text">
+        <source>'     '</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">56</prop><prop prop-type="Type">TMaskEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btApply.Left" resname="O:FormDlgGluFilter.O:btApply.Left">
+        <source>26</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">57</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btApply.Top" resname="O:FormDlgGluFilter.O:btApply.Top">
+        <source>96</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">58</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btApply.Width" resname="O:FormDlgGluFilter.O:btApply.Width">
+        <source>111</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">59</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btApply.Height" resname="O:FormDlgGluFilter.O:btApply.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">60</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btApply.Caption" resname="O:FormDlgGluFilter.O:btApply.Caption">
+        <source>'Применить'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">61</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btApply.TabOrder" resname="O:FormDlgGluFilter.O:btApply.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">62</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btApply.OnClick" resname="O:FormDlgGluFilter.O:btApply.OnClick">
+        <source>btApplyClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">63</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btClose.Left" resname="O:FormDlgGluFilter.O:btClose.Left">
+        <source>266</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">64</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btClose.Top" resname="O:FormDlgGluFilter.O:btClose.Top">
+        <source>96</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">65</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btClose.Width" resname="O:FormDlgGluFilter.O:btClose.Width">
+        <source>111</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">66</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btClose.Height" resname="O:FormDlgGluFilter.O:btClose.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">67</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btClose.Caption" resname="O:FormDlgGluFilter.O:btClose.Caption">
+        <source>'Выход'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">68</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btClose.ModalResult" resname="O:FormDlgGluFilter.O:btClose.ModalResult">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">69</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormDlgGluFilter.O:btClose.TabOrder" resname="O:FormDlgGluFilter.O:btClose.TabOrder">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45030.3877055787</prop><prop prop-type="Status">0</prop><prop prop-type="Order">70</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

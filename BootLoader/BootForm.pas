@@ -132,7 +132,7 @@ begin
   CArray.Add<TChip>(Chips, Tchip.Create(2, 128, $7C, 128, 'ATMega164',8));
   CArray.Add<TChip>(Chips, Tchip.Create(3, 128, $180, 1024, 'STM32F103CB',32,$08002000));
   CArray.Add<TChip>(Chips, Tchip.Create(4, 128, $7C, 256, 'ATMega664',8));
-  CArray.Add<TChip>(Chips, Tchip.Create(5, 128, $400, 4096, 'STM32F401',32,$08004000));
+  CArray.Add<TChip>(Chips, Tchip.Create(5, 128, $188, 4096, 'STM32F401',32,$08004000));
 //  CArray.Add<TChip>(Chips, Tchip.Create(5, 128, $400, 4096, 'STM32F401-1',32,$08008000));
   CArray.Add<TChip>(Chips, Tchip.Create(6, 128, $F4, 1024, 'AVR128db48',32));
   SetAdr(-1);
@@ -208,11 +208,20 @@ procedure TFormBoot.ParsChip(PData: PByte);
   ch: TChip;
   len: Word;
   GDoc: IXMLDocument;
+  function CheckOldType: Boolean;
+  begin
+    Result := ((PData[ch.InfoStart] = varRecord) and (len < 2048))
+  end;
+  function CheckNewType: Boolean;
+  begin
+    Result := (Pbyte(@PData[ch.InfoStart+2])^ in [1..4]) and
+              (PWord(@PData[ch.InfoStart])^ <= 2048);
+  end;
 begin
   for ch in Chips do
    begin
     len := PWord(@PData[ch.InfoStart+1])^;
-    if not ((Buf[ch.InfoStart] = varRecord) and (len < 2048)) then Continue;
+    if not CheckOldType and not CheckNewType  then Continue;
     GDoc := NewXMLDocument();
     FXml := GDoc.DocumentElement;
     FXml := GDoc.AddChild('DEVICE');
@@ -239,6 +248,7 @@ begin
      else
      if Pbyte(@PData[ch.InfoStart+2])^ in [1..4] then
       begin
+       len := PWord(@PData[ch.InfoStart])^;
        var dv := Tnewpars.SetInfo(FXml, @PData[ch.InfoStart], len);
        HackSN := THackData.Create(TPars.varSerial, TBinaryXParser.HackAdr);
        SetAdr(Byte(dv.Attributes[AT_ADDR]));
@@ -296,7 +306,7 @@ begin
    SetSubAdr(subAdr);
    SetChip(chip);
    SetSerial(serial);
-//   WriteSerialToBuf(serial);
+   if Serial > 0 then  WriteSerialToBuf(serial);
   end;
 end;
 

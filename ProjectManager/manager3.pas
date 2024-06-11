@@ -132,9 +132,18 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
     property S_TableUpdate: string read FC_TableUpdate write SetTableUpdate;
   end;
 
+  resourcestring
+    RS_NoFile='Нет файла %s';
+    RS_BadStructFile='В импортируемом файле несовметимая метрология %s';
+    RS_BadDev='Текущий файл тарировки прибора %s а выбран прибор %s';
+    RS_BadSerial='Текущий файл тарировки прибора с номером %s а выбран прибор с номером %s';
+    RS_NoMetr='В импортируемом файле метрологии %s нет';
+    RS_BadTest='Мерологии файа и проекта отличаютя';
+    RS_GoodTest='Мерологии файа и проекта идеинтичны';
+
 implementation
 
-uses FileCachImpl;//, PrjTool;
+uses FileCachImpl, ExportMetaData;//, PrjTool;
 
 const
   IFORMS_INI_DIR = 'IFormObjs';
@@ -247,7 +256,7 @@ end;
 
 function TManager.GetProjectFilter: string;
 begin
-  Result := 'Файл проекта (*.XMLPrj)|*.XMLPrj';
+  Result := 'Project file (*.XMLPrj)|*.XMLPrj';
 end;
 
 function TManager.DelayStart: TDateTime;
@@ -300,7 +309,7 @@ procedure TManager.CheckMetrol(MetrolName: IXMLInfo; const MetrolFile: string; c
   DevMtr, DevPrg: IXMLNode;
 begin
   d := NewXDocument();
-  if not TFile.Exists(MetrolFile) then raise EManagerexception.CreateFmt('Нет файла %s', [MetrolFile]);
+  if not TFile.Exists(MetrolFile) then raise EManagerexception.CreateFmt(RS_NoFile, [MetrolFile]);
   d.LoadFromFile(MetrolFile);
   for n in XEnum(d.DocumentElement) do
    begin
@@ -320,22 +329,22 @@ begin
           Result := EtalonAttr.NodeName = s;
           if Result then break;
          end;
-      end) then raise EManagerexception.CreateFmt('В импортируемом файле несовметимая метрология %s',[MetrolName.NodeName]);
+      end) then raise EManagerexception.CreateFmt(RS_BadStructFile,[MetrolName.NodeName]);
       DevMtr := Metr.ParentNode.ParentNode;
       DevPrg := MetrolName.ParentNode.ParentNode;
     // проверка без исключения
      if (DevMtr.NodeName <> 'ANY_DEVICE') and (DevPrg.NodeName <> DevMtr.NodeName)  then
-          MessageDlg(Format('Текущий файл тарировки прибора %s а выбран прибор %s',[DevMtr.NodeName, DevPrg.NodeName]),
+          MessageDlg(Format(RS_BadDev,[DevMtr.NodeName, DevPrg.NodeName]),
           TMsgDlgType.mtWarning, [mbOK], 0)
      else if DevPrg.HasAttribute(AT_SERIAL) and DevMtr.HasAttribute(AT_SERIAL)
           and (DevMtr.Attributes[AT_SERIAL] <> DevPrg.Attributes[AT_SERIAL]) then
-          MessageDlg(Format('Текущий файл тарировки прибора с номером %s а выбран прибор с номером %s',
+          MessageDlg(Format(RS_BadSerial,
           [DevMtr.Attributes[AT_SERIAL], DevPrg.Attributes[AT_SERIAL]]),
           TMsgDlgType.mtWarning, [mbOK], 0);
       exit;
      end;
    end;
-  raise EManagerexception.CreateFmt('В импортируемом файле метрологии %s нет',[MetrolName.NodeName]);
+  raise EManagerexception.CreateFmt(RS_NoMetr,[MetrolName.NodeName]);
 end;
 
 procedure TManager.IMetrologyCheck(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: TArray<string>; out Metr: IXMLInfo);
@@ -349,9 +358,9 @@ begin
     if EtalonAttr.NodeValue <> TestAttr.NodeValue then BadFlag := True;
   end);
   if BadFlag then
-    MessageDlg('Мерологии файа и проекта отличаютя', TMsgDlgType.mtWarning, [mbOK], 0)
+    MessageDlg(RS_BadTest, TMsgDlgType.mtWarning, [mbOK], 0)
   else
-    MessageDlg('Мерологии файа и проекта идеинтичны', TMsgDlgType.mtInformation, [mbOK], 0)
+    MessageDlg(RS_GoodTest, TMsgDlgType.mtInformation, [mbOK], 0)
 end;
 
 procedure TManager.IMetrologySetup(MetrolName: IXMLInfo; const MetrolFile: string; const NotInTreeAttr: TArray<string>; out Metr: IXMLInfo);
@@ -581,6 +590,7 @@ begin
    begin
     f := GFileDataFactory.Factory(TFileData, Data);
     (Data as IOwnIntfXMLNode).Intf := f;
+    ExportMetaDataToTxt(TPath.ChangeExtension(f.FileName,'txt'), Data, DelayStart);
    end;
   f.Write(RowLen, Row);
   Data.Attributes[AT_TO_ADR] := CurAdr;

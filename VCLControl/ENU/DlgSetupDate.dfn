@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLControl\DlgSetupDate.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLControl\DlgSetupDate.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45033.4359027778</prop>
+        <prop prop-type="OrigDateTime">41519.6327083333</prop>
+        <prop prop-type="XlatDateTime">41519.6327083333</prop>
+        <prop prop-type="Translated">1</prop>
+        <prop prop-type="UnTranslated">30</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FormCalendar.Left" resname="O:FormCalendar.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.Top" resname="O:FormCalendar.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.BorderStyle" resname="O:FormCalendar.BorderStyle">
+        <source>bsNone</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.Caption" resname="O:FormCalendar.Caption">
+        <source>'Установка даты'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Date setup'</target>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.ClientHeight" resname="O:FormCalendar.ClientHeight">
+        <source>162</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.ClientWidth" resname="O:FormCalendar.ClientWidth">
+        <source>162</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.Color" resname="O:FormCalendar.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.Font.Charset" resname="O:FormCalendar.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.Font.Color" resname="O:FormCalendar.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.Font.Height" resname="O:FormCalendar.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.Font.Name" resname="O:FormCalendar.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.Font.Style" resname="O:FormCalendar.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.OldCreateOrder" resname="O:FormCalendar.OldCreateOrder">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.OnMouseEnter" resname="O:FormCalendar.OnMouseEnter">
+        <source>FormMouseEnter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.OnMouseLeave" resname="O:FormCalendar.OnMouseLeave">
+        <source>FormMouseLeave</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.PixelsPerInch" resname="O:FormCalendar.PixelsPerInch">
+        <source>96</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.TextHeight" resname="O:FormCalendar.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TFormCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:MonthCalendar.Left" resname="O:FormCalendar.O:MonthCalendar.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TMonthCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:MonthCalendar.Top" resname="O:FormCalendar.O:MonthCalendar.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TMonthCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:MonthCalendar.Width" resname="O:FormCalendar.O:MonthCalendar.Width">
+        <source>162</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TMonthCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:MonthCalendar.Height" resname="O:FormCalendar.O:MonthCalendar.Height">
+        <source>160</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">20</prop>
+          <prop prop-type="Type">TMonthCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:MonthCalendar.Date" resname="O:FormCalendar.O:MonthCalendar.Date">
+        <source>41400.6969751389</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">21</prop>
+          <prop prop-type="Type">TMonthCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:MonthCalendar.TabOrder" resname="O:FormCalendar.O:MonthCalendar.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">22</prop>
+          <prop prop-type="Type">TMonthCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:MonthCalendar.OnClick" resname="O:FormCalendar.O:MonthCalendar.OnClick">
+        <source>MonthCalendarClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">23</prop>
+          <prop prop-type="Type">TMonthCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:MonthCalendar.OnMouseEnter" resname="O:FormCalendar.O:MonthCalendar.OnMouseEnter">
+        <source>FormMouseEnter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">24</prop>
+          <prop prop-type="Type">TMonthCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:MonthCalendar.OnMouseLeave" resname="O:FormCalendar.O:MonthCalendar.OnMouseLeave">
+        <source>FormMouseLeave</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">25</prop>
+          <prop prop-type="Type">TMonthCalendar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:Timer1.Enabled" resname="O:FormCalendar.O:Timer1.Enabled">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">26</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:Timer1.Interval" resname="O:FormCalendar.O:Timer1.Interval">
+        <source>100</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">27</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:Timer1.OnTimer" resname="O:FormCalendar.O:Timer1.OnTimer">
+        <source>Timer1Timer</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">28</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:Timer1.Left" resname="O:FormCalendar.O:Timer1.Left">
+        <source>40</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">29</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormCalendar.O:Timer1.Top" resname="O:FormCalendar.O:Timer1.Top">
+        <source>40</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634041435</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">30</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

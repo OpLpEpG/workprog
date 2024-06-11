@@ -1,0 +1,1195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLControl\VCLDlgExportLAS.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLControl\VCLDlgExportLAS.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45033.6573842593</prop>
+        <prop prop-type="OrigDateTime">45033.6504166667</prop>
+        <prop prop-type="XlatDateTime">45033.6173148148</prop>
+        <prop prop-type="Translated">12</prop>
+        <prop prop-type="UnTranslated">221</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FormExportLASP3.Left" resname="O:FormExportLASP3.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">0</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.Top" resname="O:FormExportLASP3.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">1</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.ClientHeight" resname="O:FormExportLASP3.ClientHeight">
+        <source>465</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">2</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.ClientWidth" resname="O:FormExportLASP3.ClientWidth">
+        <source>340</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">3</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.Color" resname="O:FormExportLASP3.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">4</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.Font.Charset" resname="O:FormExportLASP3.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">5</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.Font.Color" resname="O:FormExportLASP3.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">6</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.Font.Height" resname="O:FormExportLASP3.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">7</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.Font.Name" resname="O:FormExportLASP3.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">8</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.Font.Style" resname="O:FormExportLASP3.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">9</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.DesignSize[0]" resname="O:FormExportLASP3.DesignSize[0]">
+        <source>340</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">10</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">(</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.DesignSize[1]" resname="O:FormExportLASP3.DesignSize[1]">
+        <source>465</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">11</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">)</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.TextHeight" resname="O:FormExportLASP3.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">12</prop><prop prop-type="Type">TFormExportLASP3</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.Left" resname="O:FormExportLASP3.O:pc.Left">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">13</prop><prop prop-type="Type">TPageControl</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.Top" resname="O:FormExportLASP3.O:pc.Top">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">14</prop><prop prop-type="Type">TPageControl</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.Width" resname="O:FormExportLASP3.O:pc.Width">
+        <source>324</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">15</prop><prop prop-type="Type">TPageControl</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.Height" resname="O:FormExportLASP3.O:pc.Height">
+        <source>393</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">16</prop><prop prop-type="Type">TPageControl</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.ActivePage" resname="O:FormExportLASP3.O:pc.ActivePage">
+        <source>tshSelDir</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">17</prop><prop prop-type="Type">TPageControl</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.Anchors" resname="O:FormExportLASP3.O:pc.Anchors">
+        <source>[akLeft, akTop, akRight, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">18</prop><prop prop-type="Type">TPageControl</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.TabOrder" resname="O:FormExportLASP3.O:pc.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">19</prop><prop prop-type="Type">TPageControl</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.TabPosition" resname="O:FormExportLASP3.O:pc.TabPosition">
+        <source>tpBottom</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">20</prop><prop prop-type="Type">TPageControl</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.Caption" resname="O:FormExportLASP3.O:pc.O:tshSelDir.Caption">
+        <source>'Путь'</source>
+        <target>'Path'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">1</prop><prop prop-type="Order">21</prop><prop prop-type="Type">TTabSheet</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.ImageIndex" resname="O:FormExportLASP3.O:pc.O:tshSelDir.ImageIndex">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">22</prop><prop prop-type="Type">TTabSheet</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.Left" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">23</prop><prop prop-type="Type">TSelectPathFrm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.Top" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">24</prop><prop prop-type="Type">TSelectPathFrm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.Width" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.Width">
+        <source>316</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">25</prop><prop prop-type="Type">TSelectPathFrm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.Height" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.Height">
+        <source>367</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">26</prop><prop prop-type="Type">TSelectPathFrm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.Align" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">27</prop><prop prop-type="Type">TSelectPathFrm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">28</prop><prop prop-type="Type">TSelectPathFrm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.ExplicitWidth">
+        <source>316</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">29</prop><prop prop-type="Type">TSelectPathFrm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.ExplicitHeight">
+        <source>367</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">30</prop><prop prop-type="Type">TSelectPathFrm</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Width" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Width">
+        <source>316</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">31</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Height" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Height">
+        <source>367</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">32</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.ExplicitWidth">
+        <source>316</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">33</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.ExplicitHeight">
+        <source>367</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">34</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Columns[0].Position" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Columns[0].Position">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">35</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">&lt;item</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Columns[0].Style" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Columns[0].Style">
+        <source>vsOwnerDraw</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">36</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Columns[0].Text" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Columns[0].Text">
+        <source>'Путь'</source>
+        <target>'Path'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">1</prop><prop prop-type="Order">37</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Columns[0].Width" resname="O:FormExportLASP3.O:pc.O:tshSelDir.L:FrameSelectPath.I:Tree.Columns[0].Width">
+        <source>310</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">38</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">end&gt;</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.Caption" resname="O:FormExportLASP3.O:pc.O:tshSelParam.Caption">
+        <source>'Параметры'</source>
+        <target>'Parameters'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">1</prop><prop prop-type="Order">39</prop><prop prop-type="Type">TTabSheet</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.Left" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">40</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.Top" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">41</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.Width" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.Width">
+        <source>316</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">42</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.Height" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.Height">
+        <source>367</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">43</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.Align" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">44</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">45</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.ExplicitWidth">
+        <source>316</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">46</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.ExplicitHeight">
+        <source>367</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">47</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Width" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Width">
+        <source>316</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">48</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Height" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Height">
+        <source>367</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">49</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.ExplicitWidth">
+        <source>316</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">50</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.ExplicitHeight">
+        <source>367</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">51</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].MaxWidth" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].MaxWidth">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">52</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">&lt;item</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].MinWidth" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].MinWidth">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">53</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].Options" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].Options">
+        <source>[coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">54</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].Position" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].Position">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">55</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].Text" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].Text">
+        <source>'D'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">56</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].Width" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[0].Width">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">57</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">end</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].MaxWidth" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].MaxWidth">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">58</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">item</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].MinWidth" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].MinWidth">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">59</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].Options" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].Options">
+        <source>[coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">60</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].Position" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].Position">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">61</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].Text" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].Text">
+        <source>'C'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">62</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].Width" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[1].Width">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">63</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">end</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[2].Position" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[2].Position">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">64</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">item</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[2].Text" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[2].Text">
+        <source>'Имя'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">65</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[2].Width" resname="O:FormExportLASP3.O:pc.O:tshSelParam.L:FrameSelectParam.I:Tree.Columns[2].Width">
+        <source>262</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.6573959722</prop><prop prop-type="Status">0</prop><prop prop-type="Order">66</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">end&gt;</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.Caption" resname="O:FormExportLASP3.O:pc.O:tshData.Caption">
+        <source>'Смотреть данные'</source>
+        <target>'View data'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">1</prop><prop prop-type="Order">67</prop><prop prop-type="Type">TTabSheet</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.ImageIndex" resname="O:FormExportLASP3.O:pc.O:tshData.ImageIndex">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">68</prop><prop prop-type="Type">TTabSheet</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.Left" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">69</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.Top" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">70</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.Width" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.Width">
+        <source>316</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">71</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.Height" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.Height">
+        <source>367</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">72</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.Align" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">73</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.DataSource" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.DataSource">
+        <source>ds</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">74</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">75</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TitleFont.Charset" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TitleFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">76</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TitleFont.Color" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TitleFont.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">77</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TitleFont.Height" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TitleFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">78</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TitleFont.Name" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TitleFont.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060417</prop><prop prop-type="Status">0</prop><prop prop-type="Order">79</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TitleFont.Style" resname="O:FormExportLASP3.O:pc.O:tshData.O:DBGrid1.TitleFont.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">80</prop><prop prop-type="Type">TDBGrid</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.Caption" resname="O:FormExportLASP3.O:pc.O:tshLas.Caption">
+        <source>'Свойства '</source>
+        <target>'Properties '</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">1</prop><prop prop-type="Order">81</prop><prop prop-type="Type">TTabSheet</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.ImageIndex" resname="O:FormExportLASP3.O:pc.O:tshLas.ImageIndex">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">82</prop><prop prop-type="Type">TTabSheet</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.OnShow" resname="O:FormExportLASP3.O:pc.O:tshLas.OnShow">
+        <source>tshLasShow</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">83</prop><prop prop-type="Type">TTabSheet</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.DesignSize[0]" resname="O:FormExportLASP3.O:pc.O:tshLas.DesignSize[0]">
+        <source>316</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">84</prop><prop prop-type="Type">TTabSheet</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">(</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.DesignSize[1]" resname="O:FormExportLASP3.O:pc.O:tshLas.DesignSize[1]">
+        <source>367</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">85</prop><prop prop-type="Type">TTabSheet</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">)</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label4.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label4.Left">
+        <source>7</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">86</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label4.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label4.Top">
+        <source>56</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">87</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label4.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label4.Width">
+        <source>56</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">88</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label4.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label4.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">89</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label4.Caption" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label4.Caption">
+        <source>'Кодировка'</source>
+        <target>'Encoding'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">1</prop><prop prop-type="Order">90</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label1.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label1.Left">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">91</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label1.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label1.Top">
+        <source>7</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">92</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label1.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label1.Width">
+        <source>26</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">93</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label1.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label1.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">94</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label1.Caption" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label1.Caption">
+        <source>'Файл'</source>
+        <target>'File'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">1</prop><prop prop-type="Order">95</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label2.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label2.Left">
+        <source>134</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">96</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label2.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label2.Top">
+        <source>56</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">97</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label2.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label2.Width">
+        <source>122</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">98</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label2.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label2.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">99</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Label2.Caption" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Label2.Caption">
+        <source>'Точность по умолчанию'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">100</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Left">
+        <source>7</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">101</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Top">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">102</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Width">
+        <source>121</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">103</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Height">
+        <source>22</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">104</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Style" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Style">
+        <source>csOwnerDrawFixed</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">105</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.ItemIndex" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.ItemIndex">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">106</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">107</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Text" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Text">
+        <source>'ANSI'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">108</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Items.Strings[0]" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Items.Strings[0]">
+        <source>'ANSI'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">109</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">(</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Items.Strings[1]" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Items.Strings[1]">
+        <source>'DOS'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">110</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Items.Strings[2]" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cb.Items.Strings[2]">
+        <source>'UTF8'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">111</prop><prop prop-type="Type">TComboBox</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">)</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.Left">
+        <source>7</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">112</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.Top">
+        <source>26</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">113</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.Width">
+        <source>296</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">114</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.Height">
+        <source>21</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">115</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.OnBeforeDialog" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.OnBeforeDialog">
+        <source>odBeforeDialog</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">116</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.DialogKind" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.DialogKind">
+        <source>dkSave</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">117</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.DefaultExt" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.DefaultExt">
+        <source>'bin'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">118</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.Filter" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.Filter">
+        <source>'LAS файл (*.LAS)|*.LAS'</source>
+        <target>'LAS file (*.LAS)|*.LAS'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">1</prop><prop prop-type="Order">119</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.DialogOptions" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.DialogOptions">
+        <source>[ofOverwritePrompt, ofHideReadOnly, ofPathMustExist]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">120</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.DirectInput" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.DirectInput">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">121</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.Anchors" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.Anchors">
+        <source>[akLeft, akTop, akRight]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">122</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">123</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:od.Text" resname="O:FormExportLASP3.O:pc.O:tshLas.O:od.Text">
+        <source>''</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">124</prop><prop prop-type="Type">TJvFilenameEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.Left">
+        <source>7</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">125</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.Top">
+        <source>255</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">126</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.Width">
+        <source>296</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">127</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.Height">
+        <source>111</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">128</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.Anchors" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.Anchors">
+        <source>[akLeft, akTop, akRight, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">129</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.ScrollBars" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.ScrollBars">
+        <source>ssVertical</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">130</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshLas.O:Memo.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">131</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.Left">
+        <source>7</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">132</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.Top">
+        <source>103</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">133</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.Width">
+        <source>292</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">134</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.Height">
+        <source>122</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">135</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.Anchors" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.Anchors">
+        <source>[akLeft, akTop, akRight]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">136</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.AutoSize" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.AutoSize">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">137</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.TabOrder">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">138</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.ExplicitLeft" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.ExplicitLeft">
+        <source>7</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">139</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.ExplicitTop" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.ExplicitTop">
+        <source>103</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">140</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.ExplicitWidth">
+        <source>292</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">141</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.ExplicitHeight">
+        <source>122</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">142</prop><prop prop-type="Type">TFrameRangeSelect</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbBegin.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbBegin.Width">
+        <source>37</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">143</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbBegin.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbBegin.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">144</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbBegin.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbBegin.ExplicitWidth">
+        <source>37</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">145</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbBegin.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbBegin.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">146</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbEnd.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbEnd.Width">
+        <source>31</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">147</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbEnd.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbEnd.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">148</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbEnd.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbEnd.ExplicitWidth">
+        <source>31</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">149</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbEnd.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbEnd.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">150</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbCnt.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbCnt.Width">
+        <source>35</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">151</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbCnt.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbCnt.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">152</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbCnt.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbCnt.ExplicitWidth">
+        <source>35</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">153</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbCnt.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbCnt.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">154</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaBegin.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaBegin.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">155</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaBegin.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaBegin.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">156</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaCnt.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaCnt.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">157</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaCnt.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaCnt.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">158</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaEnd.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaEnd.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">159</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaEnd.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:lbKaEnd.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">160</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label1.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label1.Width">
+        <source>70</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">161</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label1.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label1.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">162</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label1.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label1.ExplicitWidth">
+        <source>70</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">163</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label1.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label1.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">164</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label2.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label2.Width">
+        <source>58</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">165</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label2.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label2.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">166</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label2.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label2.ExplicitWidth">
+        <source>58</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">167</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label2.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label2.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">168</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label3.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label3.Width">
+        <source>33</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">169</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label3.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label3.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">170</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label3.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label3.ExplicitWidth">
+        <source>33</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">171</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label3.ExplicitHeight" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Label3.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060532</prop><prop prop-type="Status">0</prop><prop prop-type="Order">172</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Range.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Range.Width">
+        <source>292</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">173</prop><prop prop-type="Type">TRangeSelector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Range.ExplicitWidth" resname="O:FormExportLASP3.O:pc.O:tshLas.L:RangeSelect.I:Range.ExplicitWidth">
+        <source>292</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">174</prop><prop prop-type="Type">TRangeSelector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.Left">
+        <source>195</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">175</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.Top">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">176</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.Width">
+        <source>61</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">177</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.Height">
+        <source>21</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">178</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.TabOrder">
+        <source>4</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">179</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.Text" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.Text">
+        <source>'2'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">180</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.OnExit" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbAq.OnExit">
+        <source>cbUnqClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">181</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.Left">
+        <source>134</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">182</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.Top">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">183</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.Width">
+        <source>60</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">184</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.Height">
+        <source>21</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">185</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.TabOrder">
+        <source>5</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">186</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.Text" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.Text">
+        <source>'10'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">187</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.OnExit" resname="O:FormExportLASP3.O:pc.O:tshLas.O:lbDg.OnExit">
+        <source>cbUnqClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">188</prop><prop prop-type="Type">TEdit</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Left">
+        <source>7</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">189</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Top">
+        <source>232</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">190</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Width">
+        <source>208</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">191</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Height">
+        <source>17</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">192</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Caption" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Caption">
+        <source>'Убирать только одинаковые пути'</source>
+        <target>'Remove only identical paths'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">1</prop><prop prop-type="Order">193</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Checked" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.Checked">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">194</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.State" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.State">
+        <source>cbChecked</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">195</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.TabOrder">
+        <source>6</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">196</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.OnClick" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbUnq.OnClick">
+        <source>cbUnqClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">197</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Left" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Left">
+        <source>221</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">198</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Top" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Top">
+        <source>232</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">199</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Width" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Width">
+        <source>48</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">200</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Height" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Height">
+        <source>17</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">201</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Caption" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Caption">
+        <source>'по ID'</source>
+        <target>'by ID'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">1</prop><prop prop-type="Order">202</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.TabOrder" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.TabOrder">
+        <source>7</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">203</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Visible" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.Visible">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">204</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.OnClick" resname="O:FormExportLASP3.O:pc.O:tshLas.O:cbKadr.OnClick">
+        <source>cbUnqClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">205</prop><prop prop-type="Type">TCheckBox</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btCancel.Left" resname="O:FormExportLASP3.O:btCancel.Left">
+        <source>257</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">206</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btCancel.Top" resname="O:FormExportLASP3.O:btCancel.Top">
+        <source>414</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">207</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btCancel.Width" resname="O:FormExportLASP3.O:btCancel.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">208</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btCancel.Height" resname="O:FormExportLASP3.O:btCancel.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">209</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btCancel.Anchors" resname="O:FormExportLASP3.O:btCancel.Anchors">
+        <source>[akRight, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">210</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btCancel.Caption" resname="O:FormExportLASP3.O:btCancel.Caption">
+        <source>'Закрыть'</source>
+        <target>'Close'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">1</prop><prop prop-type="Order">211</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btCancel.TabOrder" resname="O:FormExportLASP3.O:btCancel.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">212</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btCancel.OnClick" resname="O:FormExportLASP3.O:btCancel.OnClick">
+        <source>btCancelClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">213</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btOK.Left" resname="O:FormExportLASP3.O:btOK.Left">
+        <source>152</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">214</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btOK.Top" resname="O:FormExportLASP3.O:btOK.Top">
+        <source>414</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">215</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btOK.Width" resname="O:FormExportLASP3.O:btOK.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">216</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btOK.Height" resname="O:FormExportLASP3.O:btOK.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">217</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btOK.Anchors" resname="O:FormExportLASP3.O:btOK.Anchors">
+        <source>[akRight, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">218</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btOK.Caption" resname="O:FormExportLASP3.O:btOK.Caption">
+        <source>'Создать'</source>
+        <target>'Create'</target>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">1</prop><prop prop-type="Order">219</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btOK.TabOrder" resname="O:FormExportLASP3.O:btOK.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">220</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:btOK.OnClick" resname="O:FormExportLASP3.O:btOK.OnClick">
+        <source>btOKClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">221</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:sb.Left" resname="O:FormExportLASP3.O:sb.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">222</prop><prop prop-type="Type">TStatusBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:sb.Top" resname="O:FormExportLASP3.O:sb.Top">
+        <source>446</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">223</prop><prop prop-type="Type">TStatusBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:sb.Width" resname="O:FormExportLASP3.O:sb.Width">
+        <source>340</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">224</prop><prop prop-type="Type">TStatusBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:sb.Height" resname="O:FormExportLASP3.O:sb.Height">
+        <source>19</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">225</prop><prop prop-type="Type">TStatusBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:sb.Panels[0].Width" resname="O:FormExportLASP3.O:sb.Panels[0].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">226</prop><prop prop-type="Type">C:TStatusBar</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">&lt;item</prop><prop prop-type="Close">end</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:sb.Panels[1].Width" resname="O:FormExportLASP3.O:sb.Panels[1].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">227</prop><prop prop-type="Type">C:TStatusBar</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">item</prop><prop prop-type="Close">end</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:sb.Panels[2].Width" resname="O:FormExportLASP3.O:sb.Panels[2].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">228</prop><prop prop-type="Type">C:TStatusBar</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">item</prop><prop prop-type="Close">end</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:sb.Panels[3].Width" resname="O:FormExportLASP3.O:sb.Panels[3].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">229</prop><prop prop-type="Type">C:TStatusBar</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">item</prop><prop prop-type="Close">end</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:sb.Panels[4].Width" resname="O:FormExportLASP3.O:sb.Panels[4].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">230</prop><prop prop-type="Type">C:TStatusBar</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">item</prop><prop prop-type="Close">end&gt;</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:ds.Left" resname="O:FormExportLASP3.O:ds.Left">
+        <source>266</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">231</prop><prop prop-type="Type">TDataSource</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportLASP3.O:ds.Top" resname="O:FormExportLASP3.O:ds.Top">
+        <source>492</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45033.3634060648</prop><prop prop-type="Status">0</prop><prop prop-type="Order">232</prop><prop prop-type="Type">TDataSource</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

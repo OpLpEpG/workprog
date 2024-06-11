@@ -1,0 +1,1375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLControl\FormDelay2.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLControl\FormDelay2.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45033.4381018519</prop>
+        <prop prop-type="OrigDateTime">44893.4366435185</prop>
+        <prop prop-type="XlatDateTime">44893.4366435185</prop>
+        <prop prop-type="Translated">5</prop>
+        <prop prop-type="UnTranslated">130</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:DialogDelay.Left" resname="O:DialogDelay.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.Top" resname="O:DialogDelay.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.HelpType" resname="O:DialogDelay.HelpType">
+        <source>htKeyword</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.HelpKeyword" resname="O:DialogDelay.HelpKeyword">
+        <source>'Задержка'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Delay'</target>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.Caption" resname="O:DialogDelay.Caption">
+        <source>'DialogDelay'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.ClientHeight" resname="O:DialogDelay.ClientHeight">
+        <source>474</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.ClientWidth" resname="O:DialogDelay.ClientWidth">
+        <source>439</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.Color" resname="O:DialogDelay.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.Font.Charset" resname="O:DialogDelay.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.Font.Color" resname="O:DialogDelay.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.Font.Height" resname="O:DialogDelay.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.Font.Name" resname="O:DialogDelay.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.Font.Style" resname="O:DialogDelay.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.Position" resname="O:DialogDelay.Position">
+        <source>poScreenCenter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.TextHeight" resname="O:DialogDelay.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TDialogDelay</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.Left" resname="O:DialogDelay.O:pnEdit.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.Top" resname="O:DialogDelay.O:pnEdit.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.Width" resname="O:DialogDelay.O:pnEdit.Width">
+        <source>439</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.Height" resname="O:DialogDelay.O:pnEdit.Height">
+        <source>113</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.Align" resname="O:DialogDelay.O:pnEdit.Align">
+        <source>alTop</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.Caption" resname="O:DialogDelay.O:pnEdit.Caption">
+        <source>'pnEdit'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">20</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.ShowCaption" resname="O:DialogDelay.O:pnEdit.ShowCaption">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">21</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.TabOrder" resname="O:DialogDelay.O:pnEdit.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">22</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbSetDelay.Left" resname="O:DialogDelay.O:pnEdit.O:lbSetDelay.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">23</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbSetDelay.Top" resname="O:DialogDelay.O:pnEdit.O:lbSetDelay.Top">
+        <source>9</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">24</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbSetDelay.Width" resname="O:DialogDelay.O:pnEdit.O:lbSetDelay.Width">
+        <source>51</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">25</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbSetDelay.Height" resname="O:DialogDelay.O:pnEdit.O:lbSetDelay.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">26</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbSetDelay.Caption" resname="O:DialogDelay.O:pnEdit.O:lbSetDelay.Caption">
+        <source>'lbSetDelay'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">27</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbWork.Left" resname="O:DialogDelay.O:pnEdit.O:lbWork.Left">
+        <source>226</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">28</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbWork.Top" resname="O:DialogDelay.O:pnEdit.O:lbWork.Top">
+        <source>9</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">29</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbWork.Width" resname="O:DialogDelay.O:pnEdit.O:lbWork.Width">
+        <source>189</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">30</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbWork.Height" resname="O:DialogDelay.O:pnEdit.O:lbWork.Height">
+        <source>26</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">31</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbWork.AutoSize" resname="O:DialogDelay.O:pnEdit.O:lbWork.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">32</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbWork.Caption" resname="O:DialogDelay.O:pnEdit.O:lbWork.Caption">
+        <source>'Интервал работы '#13#10'(0 00:00:00-не установлен)'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">33</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Operation interval '#13#10'(0 00:00:00 - not set)'</target>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:lbWork.WordWrap" resname="O:DialogDelay.O:pnEdit.O:lbWork.WordWrap">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">34</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.Left" resname="O:DialogDelay.O:pnEdit.O:medDelay.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">35</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.Top" resname="O:DialogDelay.O:pnEdit.O:medDelay.Top">
+        <source>41</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">36</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.Width" resname="O:DialogDelay.O:pnEdit.O:medDelay.Width">
+        <source>190</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">37</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.Height" resname="O:DialogDelay.O:pnEdit.O:medDelay.Height">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">38</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.EditMask" resname="O:DialogDelay.O:pnEdit.O:medDelay.EditMask">
+        <source>'00/00/0000 00:00:00;1;_'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">39</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.Font.Charset" resname="O:DialogDelay.O:pnEdit.O:medDelay.Font.Charset">
+        <source>RUSSIAN_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">40</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.Font.Color" resname="O:DialogDelay.O:pnEdit.O:medDelay.Font.Color">
+        <source>clBlue</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">41</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.Font.Height" resname="O:DialogDelay.O:pnEdit.O:medDelay.Font.Height">
+        <source>-16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">42</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.Font.Name" resname="O:DialogDelay.O:pnEdit.O:medDelay.Font.Name">
+        <source>'Courier'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045718</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">43</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.Font.Style" resname="O:DialogDelay.O:pnEdit.O:medDelay.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">44</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.MaxLength" resname="O:DialogDelay.O:pnEdit.O:medDelay.MaxLength">
+        <source>19</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">45</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.ParentFont" resname="O:DialogDelay.O:pnEdit.O:medDelay.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">46</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.TabOrder" resname="O:DialogDelay.O:pnEdit.O:medDelay.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">47</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.Text" resname="O:DialogDelay.O:pnEdit.O:medDelay.Text">
+        <source>'  .  .       :  :  '</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">48</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medDelay.OnChange" resname="O:DialogDelay.O:pnEdit.O:medDelay.OnChange">
+        <source>EditsChange</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">49</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.Left" resname="O:DialogDelay.O:pnEdit.O:medWork.Left">
+        <source>226</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">50</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.Top" resname="O:DialogDelay.O:pnEdit.O:medWork.Top">
+        <source>41</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">51</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.Width" resname="O:DialogDelay.O:pnEdit.O:medWork.Width">
+        <source>189</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">52</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.Height" resname="O:DialogDelay.O:pnEdit.O:medWork.Height">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">53</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.EditMask" resname="O:DialogDelay.O:pnEdit.O:medWork.EditMask">
+        <source>'!9 00:00:00;1;_'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">54</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.Font.Charset" resname="O:DialogDelay.O:pnEdit.O:medWork.Font.Charset">
+        <source>RUSSIAN_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">55</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.Font.Color" resname="O:DialogDelay.O:pnEdit.O:medWork.Font.Color">
+        <source>clBlue</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">56</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.Font.Height" resname="O:DialogDelay.O:pnEdit.O:medWork.Font.Height">
+        <source>-16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">57</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.Font.Name" resname="O:DialogDelay.O:pnEdit.O:medWork.Font.Name">
+        <source>'Courier'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">58</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.Font.Style" resname="O:DialogDelay.O:pnEdit.O:medWork.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">59</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.MaxLength" resname="O:DialogDelay.O:pnEdit.O:medWork.MaxLength">
+        <source>10</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">60</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.ParentFont" resname="O:DialogDelay.O:pnEdit.O:medWork.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">61</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.TabOrder" resname="O:DialogDelay.O:pnEdit.O:medWork.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">62</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.Text" resname="O:DialogDelay.O:pnEdit.O:medWork.Text">
+        <source>'0 00:00:00'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">63</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:medWork.OnChange" resname="O:DialogDelay.O:pnEdit.O:medWork.OnChange">
+        <source>EditsChange</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">64</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:btApply.Left" resname="O:DialogDelay.O:pnEdit.O:btApply.Left">
+        <source>226</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">65</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:btApply.Top" resname="O:DialogDelay.O:pnEdit.O:btApply.Top">
+        <source>71</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">66</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:btApply.Width" resname="O:DialogDelay.O:pnEdit.O:btApply.Width">
+        <source>189</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">67</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:btApply.Height" resname="O:DialogDelay.O:pnEdit.O:btApply.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">68</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:btApply.Caption" resname="O:DialogDelay.O:pnEdit.O:btApply.Caption">
+        <source>'Поставить на задержку'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">69</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Setup Delay'</target>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:btApply.Enabled" resname="O:DialogDelay.O:pnEdit.O:btApply.Enabled">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">70</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:btApply.TabOrder" resname="O:DialogDelay.O:pnEdit.O:btApply.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">71</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnEdit.O:btApply.OnClick" resname="O:DialogDelay.O:pnEdit.O:btApply.OnClick">
+        <source>btApplyClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">72</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.Left" resname="O:DialogDelay.O:pnShow.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">73</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.Top" resname="O:DialogDelay.O:pnShow.Top">
+        <source>420</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">74</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.Width" resname="O:DialogDelay.O:pnShow.Width">
+        <source>439</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">75</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.Height" resname="O:DialogDelay.O:pnShow.Height">
+        <source>54</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">76</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.Align" resname="O:DialogDelay.O:pnShow.Align">
+        <source>alBottom</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">77</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.Caption" resname="O:DialogDelay.O:pnShow.Caption">
+        <source>'pnShow'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">78</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.ShowCaption" resname="O:DialogDelay.O:pnShow.ShowCaption">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">79</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.TabOrder" resname="O:DialogDelay.O:pnShow.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">80</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btClose.Left" resname="O:DialogDelay.O:pnShow.O:btClose.Left">
+        <source>326</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">81</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btClose.Top" resname="O:DialogDelay.O:pnShow.O:btClose.Top">
+        <source>14</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">82</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btClose.Width" resname="O:DialogDelay.O:pnShow.O:btClose.Width">
+        <source>89</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">83</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btClose.Height" resname="O:DialogDelay.O:pnShow.O:btClose.Height">
+        <source>27</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">84</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btClose.HelpContext" resname="O:DialogDelay.O:pnShow.O:btClose.HelpContext">
+        <source>20</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">85</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btClose.Cancel" resname="O:DialogDelay.O:pnShow.O:btClose.Cancel">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">86</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btClose.Caption" resname="O:DialogDelay.O:pnShow.O:btClose.Caption">
+        <source>'Закрыть окно'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">87</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Close window'</target>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btClose.TabOrder" resname="O:DialogDelay.O:pnShow.O:btClose.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">88</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btClose.OnClick" resname="O:DialogDelay.O:pnShow.O:btClose.OnClick">
+        <source>btCloseClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">89</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.Left" resname="O:DialogDelay.O:pnShow.O:btDelay.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">90</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.Top" resname="O:DialogDelay.O:pnShow.O:btDelay.Top">
+        <source>14</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">91</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.Width" resname="O:DialogDelay.O:pnShow.O:btDelay.Width">
+        <source>190</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">92</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.Height" resname="O:DialogDelay.O:pnShow.O:btDelay.Height">
+        <source>27</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">93</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.HelpKeyword" resname="O:DialogDelay.O:pnShow.O:btDelay.HelpKeyword">
+        <source>'BUTTONHELP'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">94</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.HelpContext" resname="O:DialogDelay.O:pnShow.O:btDelay.HelpContext">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">95</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.Cancel" resname="O:DialogDelay.O:pnShow.O:btDelay.Cancel">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">96</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.Caption" resname="O:DialogDelay.O:pnShow.O:btDelay.Caption">
+        <source>'delay'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">97</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.Enabled" resname="O:DialogDelay.O:pnShow.O:btDelay.Enabled">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">98</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.TabOrder" resname="O:DialogDelay.O:pnShow.O:btDelay.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">99</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnShow.O:btDelay.OnClick" resname="O:DialogDelay.O:pnShow.O:btDelay.OnClick">
+        <source>btDelayClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">100</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Left" resname="O:DialogDelay.O:Memo.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">101</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Top" resname="O:DialogDelay.O:Memo.Top">
+        <source>226</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">102</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Width" resname="O:DialogDelay.O:Memo.Width">
+        <source>439</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">103</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Height" resname="O:DialogDelay.O:Memo.Height">
+        <source>194</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">104</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.TabStop" resname="O:DialogDelay.O:Memo.TabStop">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">105</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Align" resname="O:DialogDelay.O:Memo.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">106</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Font.Charset" resname="O:DialogDelay.O:Memo.Font.Charset">
+        <source>RUSSIAN_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">107</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Font.Color" resname="O:DialogDelay.O:Memo.Font.Color">
+        <source>clBlue</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">108</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Font.Height" resname="O:DialogDelay.O:Memo.Font.Height">
+        <source>-16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">109</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Font.Name" resname="O:DialogDelay.O:Memo.Font.Name">
+        <source>'Courier'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">110</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Font.Style" resname="O:DialogDelay.O:Memo.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">111</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.Lines.Strings[0]" resname="O:DialogDelay.O:Memo.Lines.Strings[0]">
+        <source>'*****   Статус задержки   *****'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">112</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">(</prop>
+          <prop prop-type="Close">)</prop>
+        </prop-group>
+        <target>'*****   Delay Status   *****'</target>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.ParentColor" resname="O:DialogDelay.O:Memo.ParentColor">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">113</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.ParentFont" resname="O:DialogDelay.O:Memo.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">114</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.ParentShowHint" resname="O:DialogDelay.O:Memo.ParentShowHint">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">115</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.ReadOnly" resname="O:DialogDelay.O:Memo.ReadOnly">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">116</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.ShowHint" resname="O:DialogDelay.O:Memo.ShowHint">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">117</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Memo.TabOrder" resname="O:DialogDelay.O:Memo.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">118</prop>
+          <prop prop-type="Type">TMemo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnCtatus.Left" resname="O:DialogDelay.O:pnCtatus.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">119</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnCtatus.Top" resname="O:DialogDelay.O:pnCtatus.Top">
+        <source>113</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">120</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnCtatus.Width" resname="O:DialogDelay.O:pnCtatus.Width">
+        <source>439</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">121</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnCtatus.Height" resname="O:DialogDelay.O:pnCtatus.Height">
+        <source>113</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">122</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnCtatus.Align" resname="O:DialogDelay.O:pnCtatus.Align">
+        <source>alTop</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">123</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnCtatus.Caption" resname="O:DialogDelay.O:pnCtatus.Caption">
+        <source>'pnEdit'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">124</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnCtatus.ShowCaption" resname="O:DialogDelay.O:pnCtatus.ShowCaption">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">125</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:pnCtatus.TabOrder" resname="O:DialogDelay.O:pnCtatus.TabOrder">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">126</prop>
+          <prop prop-type="Type">TPanel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Timer.Enabled" resname="O:DialogDelay.O:Timer.Enabled">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">127</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Timer.OnTimer" resname="O:DialogDelay.O:Timer.OnTimer">
+        <source>TimerTimer</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">128</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Timer.Left" resname="O:DialogDelay.O:Timer.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">129</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:Timer.Top" resname="O:DialogDelay.O:Timer.Top">
+        <source>264</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">130</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:TimerErr.Interval" resname="O:DialogDelay.O:TimerErr.Interval">
+        <source>3000</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">131</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:TimerErr.OnTimer" resname="O:DialogDelay.O:TimerErr.OnTimer">
+        <source>TimerErrTimer</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">132</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:TimerErr.Left" resname="O:DialogDelay.O:TimerErr.Left">
+        <source>72</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">133</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DialogDelay.O:TimerErr.Top" resname="O:DialogDelay.O:TimerErr.Top">
+        <source>264</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634045833</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">134</prop>
+          <prop prop-type="Type">TTimer</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

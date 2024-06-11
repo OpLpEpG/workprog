@@ -2,11 +2,24 @@ unit ControForm3;
 
 interface
 
+{$INCLUDE global.inc}
+
+
 uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RootIntf, Container, Actns,
   Winapi.Windows, Winapi.Messages, Xml.XMLIntf, System.UITypes,  System.IOUtils,
   System.SysUtils, Vcl.Graphics, VirtualTrees, System.Bindings.Expression, Vcl.Forms, Vcl.Dialogs, JvDockControlForm,
   Vcl.ImgList, Vcl.Controls, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, System.Classes, Vcl.StdCtrls,
   ActnCtrls;
+
+{$IFDEF ENG_VERSION}
+  const
+   C_CaptComtrolForm ='Device management window';
+   C_Memu_Show='Show';
+{$ELSE}
+  const
+   C_CaptComtrolForm ='Окно управления устройствами';
+   C_Memu_Show='Показать';
+{$ENDIF}
 
 type
   PNodeExData = ^TNodeExData;
@@ -118,8 +131,9 @@ type
     class function ClassIcon: Integer; override;
     procedure Loaded; override;
   public
+
     //Capt, Categ: string; AImageIndex: Integer; APaths: string; AHint: string; AAutoCheck AChecked AGroupIndex AEnabled
-    [StaticAction('Окно управления устройствами', 'Показать', NICON, '0:Показать:2')]
+    [StaticAction(C_CaptComtrolForm, C_Memu_Show, NICON, '0:'+C_Memu_Show+':2')]
     class procedure DoCreateForm(Sender: IAction); override;
     destructor Destroy; override;
     property C_ConnectIO: string read FDummi write IOChange;
@@ -129,6 +143,39 @@ type
     property C_AddCon: string read FAddCon write SetAddCon;
     property C_TableUpdate: string read FC_TableUpdate write SetC_TableUpdate;
   end;
+  resourcestring
+   RS_ADR = 'Адрес';
+   RS_Info='Инфо';
+   RS_SerialNo='Серийный номер';
+   RS_Chip= 'Чип';
+   Rs_SerialMask= 'Маска скорости порта';
+   MAX_T = 'Макс.Вр.Раб.(Сут)';
+   RS_Mode_Info='Режим информации';
+   RS_Mode_Ram='Чтение памяти';
+   RS_Mode_Glu='Данные по глубине';
+   RS_Mode_Metr='Метрология';
+   RS_NOReady='не инициализирован';
+   RS_PartReaty= 'готов частично';
+   RS_Reaty='готов';
+   RS_Mode_Delay ='постановка на задержку';
+   RS_Busy ='занят';
+   RS_Error ='ошибка';
+   RS_IB_NewTDays='Новое время заполнения памяти модуля в сутках';
+   RS_Msg_TrrNEeep='Текущие файлы тарировки прибора НЕ совпадают с EEPROM'#$D#$A;
+   RS_Msg_TrrEQeep='Текущие файлы тарировки прибора совпадают с EEPROM';
+   RS_Fltrr='Файл тарировки';
+   RS_Fl='Файл';
+   RS_Err_DataEx='Необходимо завершить операцию обмена данными';
+   RS_NewCon='Новое соединение...';
+   Rs_Attest='Аттестовал';
+   Rs_FromF='с кадра';
+   Rs_toF='по кадр';
+   Rs_FromT='со времени';
+   Rs_ToT='до времени';
+   Rs_FromAdr='с адреса';
+   Rs_Toadr='по адрес';
+   Rs_End='окончено';
+
 
 implementation
 
@@ -138,13 +185,12 @@ uses AbstractPlugin, tools, FormDlgDev;
 
 const
   AVAIL_ATTR: array[0..4] of string = (AT_ADDR, AT_INFO, AT_SERIAL, AT_CHIP, AT_SPEED);//, AT_RAMSIZE);
-  AVAIL_ATTR_Caption: array[0..4] of string = ('Адрес', 'Инфо', 'Серийный номер', 'Чип', 'Маска скорости порта');//, 'Память Мб');
+  AVAIL_ATTR_Caption: array[0..4] of string = (RS_ADR, RS_Info, RS_SerialNo, RS_Chip, Rs_SerialMask);//, 'Память Мб');
   AVAIL_T: array[0..4] of string = (T_WRK, T_RAM, T_EEPROM, T_GLU, T_MTR);
-  AVAIL_T_Caption: array[0..4] of string = ('Режим информации', 'Чтение памяти', 'EEPROM', 'Данные по глубине', 'Метрология');
+  AVAIL_T_Caption: array[0..4] of string = (RS_Mode_Info, RS_Mode_Ram, 'EEPROM', RS_Mode_Glu, RS_Mode_Metr);
   //AVAIL_T_Func: array[0..4] of TRunMetrFunc = (TFormControl.ViewWrkData, TFormControl.ViewRamData, nil, nil, TFormControl.ViewMetrData);
   IMG_ATTR = 306;
   CLR_ATTR = TColors.Brown;
-  MAX_T = 'Макс.Вр.Раб.(Сут)';
 
 {$REGION 'TEditor'}
 
@@ -200,7 +246,7 @@ end;
 class function TEditor.GetTextNode(xd: PNodeExData; Column: Integer): string;
  const
   DSTA_TO_STR: array [Low(TDeviceStatus)..High(TDeviceStatus)] of string =
-                     ('не инициализирован','готов частично', 'готов', 'режим информации', 'постановка на задержку', 'чтение памяти');
+                     (RS_NOReady,RS_PartReaty, RS_Reaty, RS_Mode_Info, RS_Mode_Delay, RS_Mode_Ram);
  var
   d: IDevice;
   c: IConnectIO;
@@ -231,8 +277,8 @@ begin
   else if Supports(xd.Item, IConnectIO, c) then
     case Column of
      0: Result := c.ConnectInfo;
-     1: if iosLock in c.Status then Result := 'занят'
-        else if iosError in c.Status then Result := 'ошибка'
+     1: if iosLock in c.Status then Result := RS_Busy
+        else if iosError in c.Status then Result := RS_Error
         else Result := '';
      2: Result := c.Wait.ToString;
     end
@@ -418,7 +464,7 @@ procedure TFormControl.NRamSizeClick(Sender: TObject);
 begin
   n := FEditData.Item as IXMLNode;
   c := n.ParentNode.ChildNodes.FindNode(T_WRK).Attributes[AT_SIZE];
-  s := InputBox('Новое время заполнения памяти модуля в сутках', MAX_T, '10');
+  s := InputBox(RS_IB_NewTDays, MAX_T, '10');
   n.Attributes[AT_RAMSIZE] := Round(Int64(CTime.ToKadr(s.ToDouble))*c/1024/1024);
   TreeUpdate;
 end;
@@ -477,27 +523,29 @@ end;
 procedure TFormControl.NeepCmpClick(Sender: TObject);
  var
   dev: PNodeExData;
+  eep: IXMLNode;
+  addr: Integer;
 begin
   EBaseException.NeedShowDialog();
+  eep := (FEditData.Item as IXMLNode);
+  addr := eep.ParentNode.Attributes[AT_ADDR];
   dev := Tree.GetNodeData(FEditNode.Parent.Parent);
-  (dev.Item as IEepromDevice).ReadEeprom(procedure (Res: TEepromEventRes)
+  (dev.Item as IEepromDevice).ReadEeprom(addr, procedure (Res: TEepromEventRes)
    var
     ErrList: TEEPerrors;
-    eep: IXMLNode;
     e: EepErr;
     s: string;
   begin
-    eep := (FEditData.Item as IXMLNode);
     //TDebug.Log(eep.NodeName);
-    if eep.ParentNode.Attributes[AT_ADDR] = Res.DevAdr then
+    if addr = Res.DevAdr then
      begin
       if not (GlobalCore as IMetrology).TestEeprom(eep, ErrList) then
       begin
        s := '';
        for e in ErrList do s := s + Format('%s = [%1.4f, %1.4f]'#$D#$A, [e.name, e.ValEep, e.ValMetr]);
-       MessageDlg('Текущие файлы тарировки прибора НЕ совпадают с EEPROM'#$D#$A+s, TMsgDlgType.mtError, [mbOK], 0)
+       MessageDlg(RS_Msg_TrrNEeep+s, TMsgDlgType.mtError, [mbOK], 0)
        end
-      else MessageDlg(Format('Текущие файлы тарировки прибора совпадают с EEPROM',['','' ]), TMsgDlgType.mtConfirmation, [mbOK], 0)
+      else MessageDlg(Format(RS_Msg_TrrEQeep,['','' ]), TMsgDlgType.mtConfirmation, [mbOK], 0)
      end;
   end);
 end;
@@ -523,7 +571,7 @@ begin
    InitialDir := ExtractFilePath(ParamStr(0)) + T_MTR;
    Options := Options + [ofPathMustExist, ofFileMustExist];
    DefaultExt := 'XMLMtr';
-   Filter := 'Файл тарировки (*.XMLMtr)|*.XMLMtr|Файл xml (*.xml)|*.xml';
+   Filter := RS_Fltrr+' (*.XMLMtr)|*.XMLMtr|'+RS_Fl+' xml (*.xml)|*.xml';
    if Execute(Handle) and Supports(FEditData.Item, IXMLNode, x) then
      (GlobalCore as IMetrology).Check(x, filename,[AT_METR,AT_FILE_NAME, AT_TIMEATT, AT_METROLOG], mtr);
   finally
@@ -541,7 +589,7 @@ begin
    InitialDir := ExtractFilePath(ParamStr(0)) + T_MTR;
    Options := Options + [ofPathMustExist, ofFileMustExist];
    DefaultExt := 'XMLMtr';
-   Filter := 'Файл тарировки (*.XMLMtr)|*.XMLMtr|Файл xml (*.xml)|*.xml';
+   Filter := RS_Fltrr+' (*.XMLMtr)|*.XMLMtr|'+RS_Fl+' xml (*.xml)|*.xml';;
    if Execute(Handle) and Supports(FEditData.Item, IXMLNode, x) then
     begin
      (GlobalCore as IMetrology).Setup(x, filename,[AT_METR,AT_FILE_NAME, AT_TIMEATT, AT_METROLOG], mtr);
@@ -564,7 +612,7 @@ procedure TFormControl.NRemoveClick(Sender: TObject);
 begin
   if not ((FEditData.Item as IDevice).Status in [dsNoInit, dsPartReady, dsReady]) then
     if not (FEditData.Item as IDevice).CanClose then
-    raise EFormControlException.Create('Необходимо завершить операцию обмена данными');
+    raise EFormControlException.Create(RS_Err_DataEx);
   try
      if not Supports(FEditData.Item, IDataDevice) then
       begin
@@ -626,7 +674,7 @@ begin
     end;
     procedure AddCreateNew(root: TMenuItem);
     begin
-      AddMenu(root, 'Новое соединение...', AddNewClick);
+      AddMenu(root, RS_NewCon, AddNewClick);
       AddMenu(root, '-', nil);
     end;
    var
@@ -901,7 +949,7 @@ begin
   ///  Ошибки инициализации
   if Length(m.ErrAdr) > 0 then
    begin
-    v := SData(Rt, nil, 'Не инициализированны', d.AddressArrayToNames(m.ErrAdr));
+    v := SData(Rt, nil, RS_NOReady, d.AddressArrayToNames(m.ErrAdr));
    end;
   if Assigned(m.Info) then for n in XEnum(m.Info) do
    begin
@@ -983,11 +1031,11 @@ begin
     if n.HasAttribute(AT_FILE_NAME) then
      begin
       a := n.AttributeNodes.FindNode(AT_FILE_NAME);
-      SData(v, a, 'Файл','', '', UpdateTextFunc_Metr_File);
+      SData(v, a, RS_Fl,'', '', UpdateTextFunc_Metr_File);
      end;
     if n.HasAttribute(AT_TIMEATT)or n.HasAttribute(AT_METROLOG) then
      begin
-      SData(v, n, 'Аттестовал','', '', UpdateTextFunc_Metr_MetrData);
+      SData(v, n, Rs_Attest,'', '', UpdateTextFunc_Metr_MetrData);
      end;
    end;
 end;
@@ -1018,14 +1066,15 @@ begin
      e.UpdateTextFunc := UpdateTextFunc_SetRamSize;
      e.Item := node;
    end;
-  SData('Файл', AT_FILE_NAME);
-  SData('с кадра', AT_FROM_KADR);
-  SData('по кадр', AT_TO_KADR);
-  SData('со времени', AT_FROM_TIME);
-  SData('до времени', AT_TO_TIME);
-  SData('с адреса', AT_FROM_ADR);
-  SData('по адрес', AT_TO_ADR);
-  SData('окончено', AT_END_REASON);
+
+  SData(RS_Fl, AT_FILE_NAME);
+  SData(Rs_FromF, AT_FROM_KADR);
+  SData(Rs_toF, AT_TO_KADR);
+  SData(Rs_FromT, AT_FROM_TIME);
+  SData(Rs_ToT, AT_TO_TIME);
+  SData(Rs_FromAdr, AT_FROM_ADR);
+  SData(Rs_Toadr, AT_TO_ADR);
+  SData(Rs_End, AT_END_REASON);
 end;
 
 procedure TFormControl.ViewWrkData(Root: PVirtualNode; node: IXMLNode);
@@ -1046,7 +1095,7 @@ procedure TFormControl.ViewWrkData(Root: PVirtualNode; node: IXMLNode);
      end;
   end;
 begin
-  SData('Файл', AT_FILE_NAME);
+  SData(RS_Fl, AT_FILE_NAME);
 end;
 
 

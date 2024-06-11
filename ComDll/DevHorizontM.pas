@@ -7,6 +7,18 @@ uses  tools, System.IOUtils, RootIntf, Parser,
   Generics.Collections,  Vcl.Forms, Vcl.Dialogs,Vcl.Controls, Actns,
   DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl;
 
+{$IFDEF ENG_VERSION}
+ const
+   RS_Info1='<I> Информация';
+   RS_Info2='0:Управление|3.<I>;2:';
+   RS_Info3='Выход/Вход в режим чтения информации';
+{$ELSE}
+ const
+   RS_Info1='<I> Информация';
+   RS_Info2='0:Управление|3.<I>;2:';
+   RS_Info3='Выход/Вход в режим чтения информации';
+{$ENDIF}
+
 type
   EHMException = class(EDeviceException);
    EAsyncHMException = class(EAsyncDeviceException);
@@ -39,7 +51,7 @@ type
   //  property Cycle: TCycleEx read FCycle implements  ICycle, ICycleEx;
 // actions
     //Capt, Categ: string; AImageIndex: Integer; APaths: string; AHint: string; AAutoCheck AChecked AGroupIndex AEnabled
-    [DynamicAction('<I> Информация', '<I>', 52, '0:Управление|3.<I>;2:', 'Выход/Вход в режим чтения информации')]
+    [DynamicAction(RS_Info1, '<I>', 52, RS_Info2, RS_Info3)]
     procedure DoData(Sender: IAction);
 //    [DynamicAction('Выключить прибор', '<I>', 71, '0:Управление|3.<I>.Дополнительно|0', 'Перевести приборы в спящий режим')]
     procedure DoIdle(Sender: IAction);

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<PersonalityInfo>
+		<Option>
+			<Option Name="Personality">W32ResourceDLL.Personality</Option>
+			<Option Name="ProjectType">ResourceDLL</Option>
+			<Option Name="Version">1.0</Option>
+			<Option Name="GUID">{E3FA6EA5-DA37-4D0A-A9F0-8001660127F2}</Option>
+		</Option>
+	</PersonalityInfo>
+	<W32ResourceDLL.Personality>
+		<Source>
+			<Source Name="MainSource">WorkProg.dpr</Source>
+		</Source>
+		<Options>
+			<Options Name="BaseLang">1049</Options>
+			<Options Name="TargetName">..\_exe\Debug\WorkProg.ENU</Options>
+			<Options Name="BRCC_IncludePath"></Options>
+			<Options Name="Company"></Options>
+			<Options Name="Configuration"></Options>
+			<Options Name="Copyright"></Options>
+			<Options Name="Description"></Options>
+			<Options Name="Trademark"></Options>
+			<Options Name="Product"></Options>
+			<Options Name="ProductVersion"></Options>
+			<Options Name="Title"></Options>
+			<Options Name="FileVersion"></Options>
+			<Options Name="Evidence"></Options>
+			<Options Name="KeyFile"></Options>
+			<Options Name="KeyName"></Options>
+		</Options>  <FileList>
+      <File FileName="MainExe\ExceptionForm.dfm" ContainerId="W32Form" ModuleName="ExceptionForm.dfm"/>
+      <File FileName="MainExe\FirstForm.dfm" ContainerId="W32Form" ModuleName="FirstForm.dfm"/>
+      <File FileName="MainExe\MainForm.dfm" ContainerId="W32Form" ModuleName="MainForm.dfm"/>
+      <File FileName="MainExe\PluginSetupForm.dfm" ContainerId="W32Form" ModuleName="PluginSetupForm.dfm"/>
+      <File FileName="_exe\Debug\WorkProg_DRC.rc" ContainerId="W32RC" ModuleName="WorkProg_DRC.rc"/>
+    </FileList>
+  </W32ResourceDLL.Personality>
+</BorlandProject>

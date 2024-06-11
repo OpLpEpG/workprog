@@ -2,9 +2,12 @@ unit IDataSets;
 
 interface
 
+{$INCLUDE global.inc}
+
 uses
      sysutils, Classes, Controls, Data.DB, debug_except, Container, RootImpl, RootIntf, ExtendIntf, DataSetIntf, System.Math,
      System.Bindings.Helper;
+
 
 type
   // для сериализации  TIDataSet
@@ -155,13 +158,23 @@ implementation
 
 procedure TDataSetEnum.Load;
 begin
+{$IFDEF ENG_VERSION}
+  raise Exception.Create('save is not supported !!! WeekContainerReference = yes' );
+{$ELSE}
   raise Exception.Create('сохранение не поддерживается !!! WeekContainerReference = yes' );
+{$ENDIF}
+
   //(TRegistryStorable<IDataSet>.Create(Self, PATH) as IStorable).Load;
 end;
 
 procedure TDataSetEnum.Save;
 begin
+{$IFDEF ENG_VERSION}
+  raise Exception.Create('save is not supported !!! WeekContainerReference = yes' );
+{$ELSE}
   raise Exception.Create('сохранение не поддерживается !!!WeekContainerReference = yes');
+{$ENDIF}
+
   //(TRegistryStorable<IDataSet>.Create(Self, PATH) as IStorable).Save;
 end;
 
@@ -537,7 +550,11 @@ end;
 
 function TIDataSetDef.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Data Source'
+{$ELSE}
   Result := 'Данные'
+{$ENDIF}
 end;
 
 procedure TIDataSetDef.SetCaption(const Value: string);

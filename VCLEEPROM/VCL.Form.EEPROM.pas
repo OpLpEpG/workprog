@@ -2,7 +2,7 @@ unit VCL.Form.EEPROM;
 
 interface
 
-uses Container, tools, XMLLua.EEPROM,  Xml.XMLDoc,  Math,
+uses Container, tools, XMLLua.EEPROM,  Xml.XMLDoc,  Math, Parser,
   RootIntf, DeviceIntf, PluginAPI, DockIForm, ExtendIntf, RootImpl, debug_except, FileCachImpl,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Xml.XMLIntf, System.TypInfo,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, VirtualTrees, Vcl.Menus;
@@ -32,6 +32,8 @@ type
     Tree: TVirtualStringTree;
     ppm: TPopupMenu;
     EEPROM1: TMenuItem;
+    File1: TMenuItem;
+    Load1: TMenuItem;
     procedure btExitClick(Sender: TObject);
     procedure btReadClick(Sender: TObject);
     procedure btWriteClick(Sender: TObject);
@@ -43,6 +45,8 @@ type
     procedure TreeGetNodeDataSize(Sender: TBaseVirtualTree; var NodeDataSize: Integer);
     procedure ppmPopup(Sender: TObject);
     procedure EEPROM1Click(Sender: TObject);
+    procedure File1Click(Sender: TObject);
+    procedure Load1Click(Sender: TObject);
   private
     FEditData: PNodeExData;
     FEditNode: PVirtualNode;
@@ -240,11 +244,20 @@ begin
      if not SameText(e.NodeValue, m.NodeValue) then Result := clRed
      end;
    end;
+  if ((Result = clGray) or (Result = clBlack)) and Supports(ColumnNode[col], IXMLNode, e) and e.HasAttribute(AT_COLOR) then
+   begin
+     Result := Integer(e.Attributes[AT_COLOR]);
+   end;
 end;
 
 function TNodeExData.AsText(Col: Integer): string;
  var
   n,r: IXMLNode;
+  function Trim0(const a: string):string;
+  begin
+    Result := IntToHex(StrToUInt(a)).TrimLeft(['0']);
+    if Result = '' then Result := '0';    
+  end;
 begin
   Result := '';
   if Col >= Length(ColumnValue) then Exit;
@@ -255,13 +268,22 @@ begin
      begin
       Result := n.NodeValue;
       Result := Result.Trim;
-      if (Result <> '') and (n.NodeName = AT_VALUE) and
-         Supports(ColumnNode[Col], IXMLNode, r) and
-         r.HasAttribute(AT_DIGITS) and
-         r.HasAttribute(AT_AQURICY) then
-       begin
+      if (Result <> '') and (n.NodeName = AT_VALUE) and Supports(ColumnNode[Col], IXMLNode, r) then
+       if r.HasAttribute(AT_DIGITS) and r.HasAttribute(AT_AQURICY) then
+        begin
          Result := FloatToStrF(StrToFloatDef(Result,0), ffFixed, r.Attributes[AT_DIGITS], r.Attributes[AT_AQURICY])
-       end;
+        end
+       else if r.HasAttribute('ShowHex') then
+        begin
+         if r.ParentNode.HasAttribute(AT_ARRAY) then
+          begin
+           var a := Result.Split([' ']);
+           for var i := 0 to  High(a) do
+            a[i] := Trim0(a[i]);
+           Result := string.Join(' ', a);
+          end
+         else Result := Trim0(Result);
+        end;
      end
     else
       begin
@@ -274,12 +296,16 @@ end;
 function TNodeExData.Editable(Col: Integer): boolean;
  var
   n: IXMLNode;
+  readonly: Boolean;
 begin
   Result := False;
+  readonly := False;
   if Col >= Length(ColumnValue) then Exit;
+  if Supports(ColumnNode[Col], IXMLNode, n) then
+     readonly := n.HasAttribute('readonly');
   if Supports(ColumnValue[Col], IXMLNode, n) then
    begin
-    if (n.NodeType = ntAttribute) and FReadedFlag then Result := true;
+    if (n.NodeType = ntAttribute) and FReadedFlag and not readonly then Result := true;
    end
 end;
 
@@ -314,6 +340,62 @@ begin
   InitTree;
 end;
 
+procedure TFormDlgEeprom.Load1Click(Sender: TObject);
+ var
+  e: IXMLNode;
+  f: TFileStream;
+  a: array [0..4095]of Byte;
+begin
+  if Supports(FEditData.ColumnValue[0], IXMLNode, e) and e.HasAttribute(AT_FROM) then
+  with TOpenDialog.Create(nil) do
+  try
+   InitialDir := ExtractFilePath(ParamStr(0));
+   Options := Options + [ofPathMustExist, ofFileMustExist];
+   DefaultExt := 'bin';
+   Filter := ' bin (*.bin)|*.bin';
+   if Execute(Handle) then
+    begin
+     f := TFileStream.Create(FileName, fmOpenRead);
+     f.Read(a[0], Length(a));
+     f.Free;
+     TPars.LocalSetData(e, @a[0]);
+    end;
+  finally
+    Free;
+  end;
+end;
+
+procedure TFormDlgEeprom.File1Click(Sender: TObject);
+ var
+  e: IXMLNode;
+ // section: Integer;
+  a: TPars.TOutArray;
+  s : TStream;
+begin
+  if Supports(FEditData.ColumnValue[0], IXMLNode, e) and e.HasAttribute(AT_FROM) then
+   begin
+   // section := e.ParentNode.ChildNodes.IndexOf(e);
+    if FReadedFlag then
+      with TSaveDialog.Create(nil) do
+      try
+       InitialDir := ExtractFilePath(ParamStr(0));
+       DefaultExt := 'bin';
+       Options := Options + [ofOverwritePrompt, ofPathMustExist];
+       Filter := 'File (*.bin)|*.bin';
+       if Execute(Handle) then
+        begin
+          TPars.LocalGetData(e, a);
+          s := TFileStream.Create(FileName, fmCreate);
+          s.Write(a[0], Length(a));
+          s.Free;
+        end;
+      finally
+       Free;
+      end;
+    end
+  //  else MessageDlg('Память EEPROM не считана предыдущие данные будут удалены!!!', mtError, [mbYes, mbCancel], 0)
+end;
+
 function TFormDlgEeprom.GetDevice: IEepromDevice;
  var
   d: IDevice;
@@ -338,7 +420,7 @@ procedure TFormDlgEeprom.btReadClick(Sender: TObject);
 begin
   FReadedFlag := False;
   st.Panels[0].Text := 'Read BAD';
-  Dev.ReadEeprom(procedure (Res: TEepromEventRes)
+  Dev.ReadEeprom(FAddr, procedure (Res: TEepromEventRes)
   begin
     if Res.DevAdr <> FAddr then Exit;
     st.Panels[0].Text := 'Read GOOD';
@@ -563,7 +645,7 @@ procedure TFormDlgEeprom.TreePaintText(Sender: TBaseVirtualTree; const TargetCan
   TextType: TVSTTextType);
 begin
   if Column < 0 then Exit;
-  TargetCanvas.Font.Color := PNodeExData(Sender.GetNodeData(Node)).AsColor(Column)
+  TargetCanvas.Font.Color := PNodeExData(Sender.GetNodeData(Node)).AsColor(Column) and $00FFFFFF;
 end;
 
 initialization

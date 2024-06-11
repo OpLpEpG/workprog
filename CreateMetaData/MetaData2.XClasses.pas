@@ -25,7 +25,7 @@ uses
    // TIPS
    // 0 -нет типа
 
-   // обявление новых типов (структур)
+   // объявление новых типов (структур)
    // 1,3,5-безымянные структуры 1,2,4 bt len
    // 2,4,6-структуры с именем 1,2,4 bt len
 
@@ -71,8 +71,9 @@ const
   ATTR_RAM =     ATTR + LEN_0 + 2;
   ATTR_EEP =     ATTR + LEN_0 + 3;
   ATTR_export =  ATTR + LEN_0 + 4;
-  ATTR_HideArray =  ATTR + LEN_0 + 5;
+//  ATTR_HideArray =  ATTR + LEN_0 + 5;
   ATTR_ShowHex =    ATTR + LEN_0 + 6;
+  ATTR_ReadOnly =    ATTR + LEN_0 + 5;
 
   ATTR_digits  =    ATTR + LEN_1 + 3;
   ATTR_precision =  ATTR + LEN_1 + 4;
@@ -137,6 +138,7 @@ type
     // данные получают атрибут (если его нет) из родительской структуры
     // root Attribute
     ra: Boolean;
+    // тип зависит от величины данных
     ct: TCorrectType;
   end;
   //  интерфейсы с типом от IXMLNode
@@ -235,6 +237,7 @@ type
   // 1
   TUint8 = class(TXTypedValue<Byte>); //default
   TInt8 = class(TXTypedValue<ShortInt>);
+  TChar = class(TXTypedValue<AnsiChar>);
   // 2
   TUint16 = class(TXTypedValue<Word>); //default
   TInt16 = class(TXTypedValue<SmallInt>);
@@ -367,7 +370,7 @@ const
  ATR_ERR: TypedInfo = ();
  ATR_name: TypedInfo = (   Name: 'name'; Tip: ATTR; cls: TattrName );
 
-  ATR_TYPES: array[0..35] of TypedInfo =(
+  ATR_TYPES: array[0..36] of TypedInfo =(
 
    // атрибуты виртуальные  TAttrVirtual
     (   Name: 'name';           Tip: ATTR;    cls: TattrName  ),
@@ -376,40 +379,43 @@ const
 
    // атрибуты реальные TXAttr
    // STR
-    (    Name: 'info';        Tip: ATTR_info;    cls: TStr ),
-    (    Name: 'metr';        Tip: ATTR_metr;    cls: TStr  ),
-    (    Name: 'eu';          Tip: ATTR_eu;      cls: TStr; ra:True ),
+    (    Name: 'info';        Tip: ATTR_info;    cls: TStr ), //f0
+    (    Name: 'metr';        Tip: ATTR_metr;    cls: TStr  ), //f1
+    (    Name: 'eu';          Tip: ATTR_eu;      cls: TStr; ra:True ), //f2
     // diagram
     (    Name: 'title';       Tip: ATTR_title;   cls: TStr  ),
     (    Name: 'hint';        Tip: ATTR_hint;    cls: TStr; ra:True ),
    // len=0
-    (    Name: 'WRK';         Tip: ATTR_WRK;          cls: TNone  ),
-    (    Name: 'RAM';         Tip: ATTR_RAM;          cls: TNone  ),
-    (    Name: 'EEP';         Tip: ATTR_EEP;          cls: TNone  ),
-    (    Name: 'export';      Tip: ATTR_export;       cls: TNone  ),
-    (    Name: 'ShowHex';     Tip: ATTR_ShowHex;      cls: TNone; ra:True   ),
+    (    Name: 'WRK';         Tip: ATTR_WRK;          cls: TNone  ),//0x81
+    (    Name: 'RAM';         Tip: ATTR_RAM;          cls: TNone  ),//0x82
+    (    Name: 'EEP';         Tip: ATTR_EEP;          cls: TNone  ),//0x83
+    (    Name: 'export';      Tip: ATTR_export;       cls: TNone  ),//0x84
+    (    Name: 'ShowHex';     Tip: ATTR_ShowHex;      cls: TNone; ra:True   ), //85
+    (    Name: 'readonly';     Tip: ATTR_ReadOnly;      cls: TNone; ra:True   ), //86
    // len=1
-    (    Name: 'adr';             Tip: ATTR + LEN_1 + 0;    cls: TUint8  ),
-    (    Name: 'chip';            Tip: ATTR + LEN_1 + 1;    cls: TUint8  ),
-    (    Name: 'NoPowerDataCount';Tip: ATTR + LEN_1 + 2;    cls: TUint8  ),
-    (    Name: 'digits';          Tip: ATTR_digits;    cls: TUint8; ra:True   ),
+    (    Name: 'adr';             Tip: ATTR + LEN_1 + 0;    cls: TUint8 {,ct AdrCorrectTupe}), //0x90
+    //TODO: adr word
+    //(    Name: 'adr';             Tip: $A4;    cls: TUint16 {,ct AdrCorrectTupe} ), //0x90
+    (    Name: 'chip';            Tip: ATTR + LEN_1 + 1;    cls: TUint8  ), //0x91
+    (    Name: 'NoPowerDataCount';Tip: ATTR + LEN_1 + 2;    cls: TUint8  ), //0x92
+    (    Name: 'digits';          Tip: ATTR_digits;    cls: TUint8; ra:True   ), //0x93
     (    Name: 'precision';       Tip: ATTR_precision;    cls: TUint8; ra:True   ),
     // diagram
-    (    Name: 'style';           Tip: ATTR + LEN_1 + 5;    cls: TUint8; ra:True   ),
+    (    Name: 'style';           Tip: ATTR + LEN_1 + 5;    cls: TUint8; ra:True   ), //0x94
     // diagram
-    (    Name: 'width';           Tip: ATTR + LEN_1 + 6;    cls: TUint8; ra:True   ),
+    (    Name: 'width';           Tip: ATTR + LEN_1 + 6;    cls: TUint8; ra:True   ), //0x95
    // len=2
-    (    Name: 'serial';              Tip: ATTR+ LEN_2 + 0;    cls: TUint16  ),
-    (    Name: 'RamSize';             Tip: ATTR+ LEN_2 + 1;    cls: TUint16  ),
-    (    Name: 'SupportUartSpeed';    Tip: ATTR+ LEN_2 + 2;    cls: TUint16  ),
-    (    Name: 'from';                Tip: ATTR+ LEN_2 + 3;    cls: TUint16  ),
+    (    Name: 'serial';              Tip: ATTR+ LEN_2 + 0;    cls: TUint16  ), //0xA0
+    (    Name: 'RamSize';             Tip: ATTR+ LEN_2 + 1;    cls: TUint16  ), //0xA1
+    (    Name: 'SupportUartSpeed';    Tip: ATTR+ LEN_2 + 2;    cls: TUint16  ), //0xA2
+    (    Name: 'from';                Tip: ATTR+ LEN_2 + 3;    cls: TUint16  ), //0xA3
    // len=4
     // diagram
-    (    Name: 'color';               Tip: ATTR+ + LEN_4 + 0;    cls: TUint32; ra:True ),
-    (    Name: 'SSDSize';             Tip: ATTR+ + LEN_4 + 1;    cls: TUint32  ),
+    (    Name: 'color';               Tip: ATTR+ + LEN_4 + 0;    cls: TUint32; ra:True ), //0xB0
+    (    Name: 'SSDSize';             Tip: ATTR+ + LEN_4 + 1;    cls: TUint32  ),        //0xB1
    // array (int) avilable len 1,2
-    (    Name: 'array';     Tip: ATTR+ LEN_1 + ATTR_IDX_ARRAY;    cls: TUint8;   ct: ArrayCorrectType ),
-    (    Name: 'array';     Tip: ATTR+ LEN_2 + ATTR_IDX_ARRAY;    cls: TUint16;  ct: ArrayCorrectType ),
+    (    Name: 'array';     Tip: ATTR+ LEN_1 + ATTR_IDX_ARRAY;    cls: TUint8;   ct: ArrayCorrectType ),// 0x9F
+    (    Name: 'array';     Tip: ATTR+ LEN_2 + ATTR_IDX_ARRAY;    cls: TUint16;  ct: ArrayCorrectType ),// 0xAF
    // Show array (int) avilable len 1,2
    //    (    Name: 'HideArray';   Tip: ATTR_HideArray;    cls: TNone; ra:True   ),
 //    (    Name: 'arrayShowLen'; Tip: ATTR+ LEN_0 + ATTR_IDX_ARRAY_SHOW; cls: TNone;  ra:True; ct: ArrayCorrectType ),
@@ -425,21 +431,23 @@ const
 );
 
 
-  STD_TYPES: array[0..9] of TypedInfo =(
+  STD_TYPES: array[0..10] of TypedInfo =(
   // простые типы данных
-    (    Name: 'uint8_t';    Tip: LEN_1 + NAM_1;    cls: TUint8 ),
-    (    Name: 'int8_t';     Tip: LEN_1 + NAM_2;    cls: Tint8  ),
+    (    Name: 'uint8_t';    Tip: LEN_1 + NAM_1;    cls: TUint8 ), //0x10 0x11
+    (    Name: 'int8_t';     Tip: LEN_1 + NAM_2;    cls: Tint8  ), //0x12 0x13
+    (    Name: 'char';       Tip: LEN_1 + NAM_3;    cls: TChar  ),
 
-    (    Name: 'uint16_t';    Tip: LEN_2 + NAM_1;    cls: TUint16  ),
-    (    Name: 'int16_t';     Tip: LEN_2 + NAM_2;    cls: Tint16  ),
+    (    Name: 'uint16_t';    Tip: LEN_2 + NAM_1;    cls: TUint16  ), //0x20 0x21
+    (    Name: 'int16_t';     Tip: LEN_2 + NAM_2;    cls: Tint16  ),  //0x22 0x23
 
     (    Name: 'uint32_t';    Tip: LEN_4 + NAM_1;    cls: TUint32  ),
     (    Name: 'int32_t';     Tip: LEN_4 + NAM_2;    cls: Tint32  ),
-    (    Name: 'float';       Tip: LEN_4 + NAM_3;    cls: TFloat  ),
+    (    Name: 'float';       Tip: LEN_4 + NAM_3;    cls: TFloat  ), //0x34 0x35
 
     (    Name: 'uint64_t';   Tip: LEN_8 + NAM_1;    cls: TUint64  ),
     (    Name: 'int64_t';    Tip: LEN_8 + NAM_2;    cls: Tint64  ),
-    (    Name: 'double';     Tip: LEN_8 + NAM_3;    cls: TDouble  ));
+    (    Name: 'double';     Tip: LEN_8 + NAM_3;    cls: TDouble  )
+    );
 
   STD_TYPES_UNK: array[0..3] of TypedInfo =(
   // простые типы данных по умолчанию
@@ -455,17 +463,17 @@ const
 
     STR_TYPES_DEF: array[0..3] of TypedInfo =(
 
-    (    Name: 'struct_t';    Tip: REC1_NONAM;    cls: TStuctDefValue),
-    (    Name: 'struct_t';    Tip: REC1_NAM;    cls: TStuctDefValue),
-    (    Name: 'struct_t';    Tip: REC2_NONAM;    cls: TStuctDefValue),
-    (    Name: 'struct_t';    Tip: REC2_NAM;    cls: TStuctDefValue)
+    (    Name: 'struct_t';    Tip: REC1_NONAM;    cls: TStuctDefValue),    //1  L:1 metalen
+    (    Name: 'struct_t';    Tip: REC1_NAM;    cls: TStuctDefValue),      //2  L:1
+    (    Name: 'struct_t';    Tip: REC2_NONAM;    cls: TStuctDefValue),    //3  L:2
+    (    Name: 'struct_t';    Tip: REC2_NAM;    cls: TStuctDefValue)       //4  L:2
     );
 
     STR_TYPES_DAT: array[0..2] of TypedInfo =(
 
-    (    Name: 'struct';      Tip: REC_DAT_NONAM;    cls: TStuctDataValue),
-    (    Name: 'struct';      Tip: REC_DAT_NAM;    cls: TStuctDataValue),
-    (    Name: 'struct';      Tip: REC_DAT_SNAM;    cls: TStuctDataValue)
+    (    Name: 'struct';      Tip: REC_DAT_NONAM;    cls: TStuctDataValue), //7 L:1 index
+    (    Name: 'struct';      Tip: REC_DAT_NAM;    cls: TStuctDataValue),   //8 L:1 + name
+    (    Name: 'struct';      Tip: REC_DAT_SNAM;    cls: TStuctDataValue)   //9 L:1
     );
 
     STR_TYPES: array[0..6] of TypedInfo = (
@@ -535,12 +543,19 @@ begin
 end;
 
 function StrAsInt(val: string): Integer;
+// var
+  //c: Cardinal;
 begin
   // default
   if val = '' then Exit(0);
   if val.StartsWith('0x', True) then
     val := val.Replace('0x', '$', [rfIgnoreCase]);
-  Result := val.ToInteger();
+//  try
+   Result := StrToInt(val);//.ToInteger();
+  //except
+//   c := StrToUInt(val);
+  // Result := PInteger(@c)^;//.ToInteger();  4278190335
+//  end;
 end;
 
 function StrToAnsiBytes(const val: string): TBytes;

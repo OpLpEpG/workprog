@@ -2,6 +2,8 @@
 
 interface
 
+{$INCLUDE global.inc}
+
 uses
   RootImpl, RootIntf, tools, debug_except, ExtendIntf, FileCachImpl, JDtools, Container,
   Data.DB, DataSetIntf, IDataSets, System.Bindings.Helper, System.IOUtils,
@@ -53,7 +55,11 @@ type
   TParamFilters = class;
   //TDialogAddParamsResult:
 
+{$IFDEF ENG_VERSION}
+  [EnumCaptions('ID, frame, Depth(m.), time')]
+{$ELSE}
   [EnumCaptions('ID, Кадр, Глубина(м.), Время')]
+{$ENDIF}
   TAxisY = (axyID, axyKadr, axyDept, axyTime);
 
   {$REGION 'всякие коллекции сохраняемые'}
@@ -160,7 +166,11 @@ type
     function GetCaption: string; virtual;
     procedure SetCaption(const Value: string);
   published
+{$IFDEF ENG_VERSION}
+    [ShowProp('Row height')]
+{$ELSE}
     [ShowProp('Высота строки')]
+{$ENDIF}
     property Height: Integer read FLen write SetHeight;
   end;
 
@@ -184,7 +194,11 @@ type
   protected
     function GetCaption: string; override;
   published
+{$IFDEF ENG_VERSION}
+    [ShowProp('Show legend')]
+{$ELSE}
     [ShowProp('Показать легенду')]
+{$ENDIF}
     property Visible;
   end;
 
@@ -192,7 +206,11 @@ type
   protected
     function GetCaption: string; override;
   published
+{$IFDEF ENG_VERSION}
+    [ShowProp('Show information')]
+{$ELSE}
     [ShowProp('Показать информацию')]
+{$ENDIF}
     property Visible;
   end;
 
@@ -246,9 +264,17 @@ type
     [ShowProp('Params')]
     property Params: TGraphParams read FParams;
   published
+{$IFDEF ENG_VERSION}
+    [ShowProp('Show column')]
+{$ELSE}
     [ShowProp('Показать колонку')]
+{$ENDIF}
     property Visible;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Column width')]
+{$ELSE}
     [ShowProp('Ширина колонки')]
+{$ENDIF}
     property Width: Integer read FLen write SetWidth;
     property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
   end;
@@ -413,7 +439,11 @@ type
     property C_Write: Integer read FBindWrite write SetBindWriteFile;
   published
    // property DataSetDefClass: string read GetDataSetClass write SetDataSetClass;
+{$IFDEF ENG_VERSION}
+    [ShowProp('DataBase', True)]
+{$ELSE}
     [ShowProp('База данных', True)]
+{$ENDIF}
     property DataSetDef;//: TIDataSetDef read FStored write SetROOT;
     [ShowProp('X', True)]
     property XParamPath: string read FXParamPath write FXParamPath;
@@ -468,22 +498,50 @@ type
     //property DashOffset: Double read FDashOffset write FDashOffset;
     property FixedParam: boolean read FFixedParam write FFixedParam;
     property HideInLegend: boolean read FHideInLegend write SetHideInLegend;
+{$IFDEF ENG_VERSION}
+    [ShowProp('History of changes')]
+{$ELSE}
     [ShowProp('История изменений')]
+{$ENDIF}
     property Filters: TParamFilters read FFilters;
 //    property DataSet: TDataSet read FDataSet write SetDataSet;
   published
     property LinkClass: string read GetLinkClass write SetLinkClass;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Source', True)]
+{$ELSE}
     [ShowProp('Источник', True)]
+{$ENDIF}
     property Link: TCustomDataLink read FLink write SetLink;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Name')]
+{$ELSE}
     [ShowProp('Имя')]
+{$ENDIF}
     property Title: string read FTitle write SetTitle;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Show')]
+{$ELSE}
     [ShowProp('Показать')]
+{$ENDIF}
     property Visible: Boolean read FVisible write SetVisible default True;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Select')]
+{$ELSE}
     [ShowProp('Выбрать')]
+{$ENDIF}
     property Selected: Boolean read FSelected write SetSelected;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Offset X')]
+{$ELSE}
     [ShowProp('Смещение X')]
+{$ENDIF}
     property DeltaX: Double read FDeltaX write SetDeltaX;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Offset Y')]
+{$ELSE}
     [ShowProp('Смещение Y')]
+{$ENDIF}
     property DeltaY: Double read FDeltaY write SetDeltaY;
 //    [ShowProp('Масштаб')]        property Scale        : Double read FScale write SetScale;
     property OnContextPopup: TContextPopupEvent read FOnContextPopup write FOnContextPopup;
@@ -495,7 +553,11 @@ type
     procedure Notify(Item: TCollectionItem; Action: TCollectionNotification); override;
   end;
 
+{$IFDEF ENG_VERSION}
+  [EnumCaptions('solid, dot, dash, dot dash, dot dot dash')]
+{$ELSE}
   [EnumCaptions('сплошная, точка, тире, точка тире, точка точка тире')]
+{$ENDIF}
   TLineDashStyle = (ldsSolid, ldsDot, ldsDash, ldsDashDot, ldsDashDotDot);
 
   TXScalableParam = class(TGraphPar)
@@ -510,25 +572,57 @@ type
     constructor Create(Collection: TCollection); override;
     procedure SetRange(L, R: Double);
   published
+{$IFDEF ENG_VERSION}
+    [ShowProp('Color')]
+{$ELSE}
     [ShowProp('Цвет')]
+{$ENDIF}
     property Color;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Line width')]
+{$ELSE}
     [ShowProp('Ширина линии')]
+{$ENDIF}
     property Width: Integer read FWidth write SetWidth default 1;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Stroke style')]
+{$ELSE}
     [ShowProp('Стиль штрихов')]
+{$ENDIF}
     property DashStyle: TLineDashStyle read FDashStyle write SetDashStyle default ldsSolid;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Scale')]
+{$ELSE}
     [ShowProp('Масштаб')]
+{$ENDIF}
     property ScaleX: Double read FScaleX write SetScale;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Units')]
+{$ELSE}
     [ShowProp('Единицы измерения')]
+{$ENDIF}
     property EUnit;
   end;
 
   TLineParam = class(TXScalableParam)
   published
+{$IFDEF ENG_VERSION}
+    [ShowProp('Freeze')]
+{$ELSE}
     [ShowProp('Заморозить')]
+{$ENDIF}
     property FixedParam;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Hide legend')]
+{$ELSE}
     [ShowProp('Скрыть легенду')]
+{$ENDIF}
     property HideInLegend;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Precision(digits after decimal point)')]
+{$ELSE}
     [ShowProp('Точность(цифр после запятой)')]
+{$ENDIF}
     property Presizion;
   end;
 
@@ -536,7 +630,11 @@ type
 
   TGammaProp = type string;
 
+{$IFDEF ENG_VERSION}
+  [EnumCaptions('intensity, amplitude, VAC')]
+{$ELSE}
   [EnumCaptions('интенсивность, амплитуда, ВАК')]
+{$ENDIF}
   TWaveStyle = (wsGamma, wsColor, wsBAK);
 
   TWaveParam = class(TXScalableParam)
@@ -555,19 +653,39 @@ type
     constructor Create(Collection: TCollection); override;
     property Gamma: TGamma read FGamma write SetGamma;
   published
+{$IFDEF ENG_VERSION}
+    [ShowProp('Palette')]
+{$ELSE}
     [ShowProp('Палитра')]
+{$ENDIF}
     property GammaStr: TGammaProp read GetGammaStr write SetGammaStr;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Render type')]
+{$ELSE}
     [ShowProp('Тип отриствки')]
+{$ENDIF}
     property WaveStyle: TWaveStyle read FWaveStyle write SetWaveStyle default wsGamma;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Amplitude K')]
+{$ELSE}
     [ShowProp('Амплитудный Кф')]
+{$ENDIF}
     property KoeffGamma: Double read FKoefGamma write SetKoefGamma;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Zero Offset')]
+{$ELSE}
     [ShowProp('Смещение Нуля')]
+{$ENDIF}
     property ZeroGamma: Double read FZeroGamma write SetZeroGamma;
   end;
 
   TStringParam = class(TGraphPar)
   published
+{$IFDEF ENG_VERSION}
+    [ShowProp('Color')]
+{$ELSE}
     [ShowProp('Цвет')]
+{$ENDIF}
     property Color;
   end;
 
@@ -603,9 +721,17 @@ type
     procedure SetCaption(const Value: string);
     property FileData: IFileData read GetIData implements IFileData;
   published
+{$IFDEF ENG_VERSION}
+    [ShowProp('Active')]
+{$ELSE}
     [ShowProp('Активный')]
+{$ENDIF}
     property Activ: Boolean read FActiv write SetActiv default False;
+{$IFDEF ENG_VERSION}
+    [ShowProp('File name', True)]
+{$ELSE}
     [ShowProp('Название файла', True)]
+{$ENDIF}
     property SourceFile: string read FSourceFile write SetSourceFile;
   end;
 
@@ -621,7 +747,11 @@ type
   protected
     function GetCaption: string; override;
   published
+{$IFDEF ENG_VERSION}
+    [ShowProp('Setup')]
+{$ELSE}
     [ShowProp('Настройка')]
+{$ENDIF}
     property DisplayName: string read FDisplayName write FDisplayName;
   end;
       {$ENDREGION}
@@ -809,12 +939,24 @@ type
     property YButtomScreen: Double read FYButtomScreen;
     [ShowProp('ActiveData', true)]
     property ActiveData: boolean read GetActiveData;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Rows')]
+{$ELSE}
     [ShowProp('Ряды')]
+{$ENDIF}
     property Rows: TGraphRows read FRows;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Columns')]
+{$ELSE}
     [ShowProp('Колонки')]
+{$ENDIF}
     property Columns: TGraphColumns read FColumns;
     /// ID , кадр, глубина
+{$IFDEF ENG_VERSION}
+    [ShowProp('Default Y-Axis', True)]
+{$ELSE}
     [ShowProp('Ось Y по умолчанию', True)]
+{$ENDIF}
     property DefaultYAxis: TAxisY read GetDefaultYAxis;
     property S_PropertyChanged: string read FPropertyChanged write SetPropertyChanged;
   published
@@ -822,17 +964,41 @@ type
     property YFirstAvail: Double read FYFirstAvail write FYFirstAvail;
     [ShowProp('max Y', true)]
     property YLastAvail: Double read FYLastAvail write FYLastAvail;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Mirror Y')]
+{$ELSE}
     [ShowProp('Инвертировать Y')]
+{$ENDIF}
     property YMirror: Boolean read FMirror write SetMirror;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Y range')]
+{$ELSE}
     [ShowProp('Диапазон по Y')]
+{$ENDIF}
     property YFromType: TYFrom read FYFromType write SetYFromType default yfmALL;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Start Y with')]
+{$ELSE}
     [ShowProp('Начать Y с')]
+{$ENDIF}
     property YFromData: Double read FYFrom write SetYFrom;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Y range')]
+{$ELSE}
     [ShowProp('Диапазон Y')]
+{$ENDIF}
     property YRangeData: Double read FYRange write SetYRange;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Y position')]
+{$ELSE}
     [ShowProp('Позиция Y')]
+{$ENDIF}
     property YPosition: Double read FYPosition write SetYPosition;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Y Scale')]
+{$ELSE}
     [ShowProp('Масштаб по Y')]
+{$ENDIF}
     property YScale: Double read FYScale write SetYScale;
     property OnParamsAdded: TParamsAddedEvent read FOnParamsAdded write FOnParamsAdded;
   end;
@@ -1100,7 +1266,11 @@ end;
 
 function TGraphRows.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Rows'
+{$ELSE}
   Result := 'Ряды'
+{$ENDIF}
 end;
 
 { TGraphRow }
@@ -1116,7 +1286,11 @@ end;
 
 function TGraphRow.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Row'
+{$ELSE}
   Result := 'Ряд'
+{$ENDIF}
 end;
 
 function TGraphRow.GetItem(Index: Integer): TGraphRegion;
@@ -1124,11 +1298,19 @@ var
   r: TGraphRegion;
 begin
   if (Index < 0) or (Index >= FGraph.Columns.Count) then
+{$IFDEF ENG_VERSION}
+    raise EGraphException.CreateFmt('Invalid Region Index I:%d L:%d', [Index, FGraph.Columns.Count]);
+{$ELSE}
     raise EGraphException.CreateFmt('Неверный индекс Региона I:%d L:%d', [Index, FGraph.Columns.Count]);
+{$ENDIF}
   for r in FGraph.Columns[Index].FRegions do
     if r.Row = Self then
       Exit(r);
+{$IFDEF ENG_VERSION}
+  raise EGraphException.CreateFmt('Region %s not found', [ClassName]);
+{$ELSE}
   raise EGraphException.CreateFmt('Регион %s не найлен', [ClassName]);
+{$ENDIF}
 end;
 
 function TGraphRow.GetRegionsCount: Integer;
@@ -1278,7 +1460,11 @@ end;
 function TGraphColmn.GetItem(Index: Integer): TGraphRegion;
 begin
   if (Index < 0) or (Index >= FRegions.Count) then
+{$IFDEF ENG_VERSION}
+    raise EGraphException.CreateFmt('Invalid Region Index I:%d L:%d', [Index, FRegions.Count]);
+{$ELSE}
     raise EGraphException.CreateFmt('Неверный индекс Региона I:%d L:%d', [Index, FRegions.Count]);
+{$ENDIF}
   Result := FRegions[Index];
 end;
 
@@ -1305,7 +1491,11 @@ end;
 
 function TGraphColumns.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Columns'
+{$ELSE}
   Result := 'Колонки'
+{$ENDIF}
 end;
 
 { TColumnCollection<T> }
@@ -1486,7 +1676,11 @@ end;
 
 function TGraphPar.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Parameter ' + ClassName
+{$ELSE}
   Result := 'Параметр ' + ClassName
+{$ENDIF}
 end;
 
 function TGraphPar.GetLinkClass: string;
@@ -1610,7 +1804,11 @@ end;
 
 function TCustomDataLink.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Parameter data source'
+{$ELSE}
   Result := 'Источник данных параметра'
+{$ENDIF}
 end;
 
 {function TCustomDataLink.GetDataSet: TDataSet;
@@ -1636,7 +1834,11 @@ begin
     if SameText(DataSet.FieldList[i].Fullname, Fullname) then
       Exit(DataSet.FieldList[i]);
   end;
+{$IFDEF ENG_VERSION}
+  raise Exception.CreateFmt('Field %s not found in %s', [Fullname, DataSet.Name]);
+{$ELSE}
   raise Exception.CreateFmt('Поле %s ненайдено в %s', [Fullname, DataSet.Name]);
+{$ENDIF}
 end;
 
 function TCustomDataLink.GetXField: TField;
@@ -1804,7 +2006,11 @@ end;
 
 function TGraphParams.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Paramerers'
+{$ELSE}
   Result := 'Параметры'
+{$ENDIF}
 end;
 
 procedure TGraphParams.Notify(Item: TCollectionItem; Action: TCollectionNotification);
@@ -1969,9 +2175,17 @@ end;
 procedure TParamFilter.SetSourceFile(const Value: string);
 begin
   if FSourceFile <> '' then
+{$IFDEF ENG_VERSION}
+    raise EParamFilter.CreateFmt('file %s cannot be replaced with %s', [FSourceFile, Value]);
+{$ELSE}
     raise EParamFilter.CreateFmt('файл %s нельзя заменить на %s', [FSourceFile, Value]);
+{$ENDIF}
   if not TFile.Exists(Value) then
+{$IFDEF ENG_VERSION}
+    raise EParamFilter.CreateFmt('file %s not found', [Value]);
+{$ELSE}
     raise EParamFilter.CreateFmt('файл %s не найден', [Value]);
+{$ENDIF}
   FSourceFile := Value;
 end;
 
@@ -1979,7 +2193,11 @@ end;
 
 function TParamFilters.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Filters'
+{$ELSE}
   Result := 'Фильтры'
+{$ENDIF}
 end;
 
 procedure TParamFilters.SetCaption(const Value: string);
@@ -1990,7 +2208,11 @@ end;
 
 function TWaveletFilter.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Wavelet'
+{$ELSE}
   Result := 'Вейвлет'
+{$ENDIF}
 end;
      {$ENDREGION}
    {$ENDREGION}
@@ -3058,28 +3280,44 @@ end;
 
 function TCustomGraphLegendRow.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Legend'
+{$ELSE}
   Result := 'Легенда'
+{$ENDIF}
 end;
 
 { TCustomGraphInfoRow }
 
 function TCustomGraphInfoRow.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Information'
+{$ELSE}
   Result := 'Информация'
+{$ENDIF}
 end;
 
 { TCustomGraphDataRow }
 
 function TCustomGraphDataRow.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Diagram'
+{$ELSE}
   Result := 'Графики'
+{$ENDIF}
 end;
 
 { TGraphRegions }
 
 function TGraphRegions.GetCaption: string;
 begin
+{$IFDEF ENG_VERSION}
+  Result := 'Areas Columns'
+{$ELSE}
   Result := 'Области Колонки'
+{$ENDIF}
 end;
 
 initialization

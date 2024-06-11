@@ -3,7 +3,7 @@ unit TestRAMForm;
 interface
 
 uses RootIntf, ExtendIntf, DockIForm, debug_except, DeviceIntf, DlgSetupForm, Parser, Container, Actns,
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, tools,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls;
 {// чтение внешней памяти
 #define CMD_ERAM 0x1 | ADDRESS
@@ -39,6 +39,7 @@ type
     Page: DWord;
     constructor Create(addr: Byte; Apg: DWord);
   end;
+
 
   TGetBadPage = packed record
     CmdAdr: Byte;
@@ -114,6 +115,7 @@ type
     AdrHex: TLabel;
     edChip: TEdit;
     SetMX: TButton;
+    btFormat: TButton;
     procedure btSetBaseClick(Sender: TObject);
     procedure btWriteClick(Sender: TObject);
     procedure btReadClick(Sender: TObject);
@@ -122,6 +124,7 @@ type
     procedure btReadRamClick(Sender: TObject);
     procedure btReadBadsClick(Sender: TObject);
     procedure SetMXClick(Sender: TObject);
+    procedure btFormatClick(Sender: TObject);
   private
     function GetDevice(adr: Integer): ILowLevelDeviceIO;
     { Private declarations }
@@ -324,6 +327,24 @@ begin
   Result := (a shl 4) or cmd;
 end;
 
+procedure TFormRamTest.btFormatClick(Sender: TObject);
+var
+  lld: ILowLevelDeviceIO;
+  d: TStdRec;
+  adr: Integer;
+  addr: DWORD;
+begin
+  adr := StrToInt(edADR.Text);
+  d := TStdRec.Create(adr, CMD_ERAM_CLEAR, 4);
+  d.AssignInt($12345678);
+  lld := GetDevice(adr);
+  lld.SendROW(d.Ptr, d.SizeOf, procedure(p: Pointer; n: integer)
+  begin
+    if (D.SizeOf = n) and CompareMem(d.Ptr, p, n) then memo.Lines.Insert(0, '!!! NAND Formated !!!')
+    else memo.Lines.Insert(0, 'com ERROR')
+    end, 5000);
+end;
+
 procedure TFormRamTest.btReadBadsClick(Sender: TObject);
   type
    PDwordArray = ^Tda;
@@ -487,6 +508,7 @@ begin
   CmdAdr := ToAdrCmd(addr, CMD_ERAM_SET_BASE);
   Page := Apg;
 end;
+
 
 initialization
   RegisterClass(TFormRamTest);

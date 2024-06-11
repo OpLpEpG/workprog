@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLDialogs\VCLDlgConnectIONET.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLDialogs\VCLDlgConnectIONET.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45034.6669907407</prop>
+        <prop prop-type="OrigDateTime">44739.6343518519</prop>
+        <prop prop-type="XlatDateTime">44739.6343518519</prop>
+        <prop prop-type="Translated">3</prop>
+        <prop prop-type="UnTranslated">45</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="I:FormSetupNet.Caption" resname="I:FormSetupNet.Caption">
+        <source>'Установки Сети'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TFormSetupNet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Network settings'</target>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.ClientHeight" resname="I:FormSetupNet.ClientHeight">
+        <source>226</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TFormSetupNet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.ExplicitHeight" resname="I:FormSetupNet.ExplicitHeight">
+        <source>265</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TFormSetupNet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.DesignSize[0]" resname="I:FormSetupNet.DesignSize[0]">
+        <source>300</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TFormSetupNet</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">(</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.DesignSize[1]" resname="I:FormSetupNet.DesignSize[1]">
+        <source>226</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TFormSetupNet</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Close">)</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.TextHeight" resname="I:FormSetupNet.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TFormSetupNet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:Label2.Top" resname="I:FormSetupNet.I:Label2.Top">
+        <source>104</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:Label2.ExplicitTop" resname="I:FormSetupNet.I:Label2.ExplicitTop">
+        <source>104</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label1.Left" resname="I:FormSetupNet.O:Label1.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TLabel [1]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label1.Top" resname="I:FormSetupNet.O:Label1.Top">
+        <source>11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TLabel [1]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label1.Width" resname="I:FormSetupNet.O:Label1.Width">
+        <source>54</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TLabel [1]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label1.Height" resname="I:FormSetupNet.O:Label1.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TLabel [1]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label1.Anchors" resname="I:FormSetupNet.O:Label1.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TLabel [1]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label1.Caption" resname="I:FormSetupNet.O:Label1.Caption">
+        <source>'IP сервера'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TLabel [1]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'server IP'</target>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label3.Left" resname="I:FormSetupNet.O:Label3.Left">
+        <source>208</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TLabel [2]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label3.Top" resname="I:FormSetupNet.O:Label3.Top">
+        <source>12</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TLabel [2]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label3.Width" resname="I:FormSetupNet.O:Label3.Width">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TLabel [2]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label3.Height" resname="I:FormSetupNet.O:Label3.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TLabel [2]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label3.Anchors" resname="I:FormSetupNet.O:Label3.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TLabel [2]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:Label3.Caption" resname="I:FormSetupNet.O:Label3.Caption">
+        <source>'порт'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TLabel [2]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'port'</target>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:sb.Top" resname="I:FormSetupNet.I:sb.Top">
+        <source>207</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">20</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:sb.ExplicitTop" resname="I:FormSetupNet.I:sb.ExplicitTop">
+        <source>207</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">21</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:ButtonOK.Top" resname="I:FormSetupNet.I:ButtonOK.Top">
+        <source>167</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">22</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:ButtonOK.ExplicitTop" resname="I:FormSetupNet.I:ButtonOK.ExplicitTop">
+        <source>167</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">23</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:btTest.Top" resname="I:FormSetupNet.I:btTest.Top">
+        <source>166</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">24</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:btTest.ExplicitTop" resname="I:FormSetupNet.I:btTest.ExplicitTop">
+        <source>166</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">25</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:EdWait.Top" resname="I:FormSetupNet.I:EdWait.Top">
+        <source>123</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">26</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:EdWait.ExplicitTop" resname="I:FormSetupNet.I:EdWait.ExplicitTop">
+        <source>123</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">27</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:Button1.Top" resname="I:FormSetupNet.I:Button1.Top">
+        <source>167</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">28</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:Button1.ExplicitTop" resname="I:FormSetupNet.I:Button1.ExplicitTop">
+        <source>167</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">29</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:btClose.Top" resname="I:FormSetupNet.I:btClose.Top">
+        <source>117</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">30</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:btClose.ExplicitTop" resname="I:FormSetupNet.I:btClose.ExplicitTop">
+        <source>117</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">31</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:btOpen.Top" resname="I:FormSetupNet.I:btOpen.Top">
+        <source>69</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">32</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.I:btOpen.ExplicitTop" resname="I:FormSetupNet.I:btOpen.ExplicitTop">
+        <source>69</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">33</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edHost.Left" resname="I:FormSetupNet.O:edHost.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">34</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edHost.Top" resname="I:FormSetupNet.O:edHost.Top">
+        <source>31</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">35</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edHost.Width" resname="I:FormSetupNet.O:edHost.Width">
+        <source>171</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">36</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edHost.Height" resname="I:FormSetupNet.O:edHost.Height">
+        <source>21</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">37</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edHost.Anchors" resname="I:FormSetupNet.O:edHost.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">38</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edHost.TabOrder" resname="I:FormSetupNet.O:edHost.TabOrder">
+        <source>7</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">39</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edHost.Text" resname="I:FormSetupNet.O:edHost.Text">
+        <source>'192.168.43.5'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">40</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edPort.Left" resname="I:FormSetupNet.O:edPort.Left">
+        <source>208</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">41</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edPort.Top" resname="I:FormSetupNet.O:edPort.Top">
+        <source>31</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">42</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edPort.Width" resname="I:FormSetupNet.O:edPort.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">43</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edPort.Height" resname="I:FormSetupNet.O:edPort.Height">
+        <source>21</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">44</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edPort.Anchors" resname="I:FormSetupNet.O:edPort.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697662</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">45</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edPort.TabOrder" resname="I:FormSetupNet.O:edPort.TabOrder">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916976736</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">46</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupNet.O:edPort.Text" resname="I:FormSetupNet.O:edPort.Text">
+        <source>'5000'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916976736</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">47</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -122,7 +122,7 @@ begin
        TheaderFileXParser.Parse(ss);
        a := TheaderFileXParser.GetMetaData;
 //       TFile.WriteAllBytes(ParamStr(2), a);
-//       exit;
+       //exit;
        ///// TEST
        TheaderFileXParser.XDoc.SaveToFile(ParamStr(1)+'.xml');
 
@@ -136,10 +136,10 @@ begin
        var rez := TBinaryXParser.ExportTo(root);
        xd.SaveToFile(ParamStr(2)+'.xml');
 
-//       var xdt := NewXMLDocument();
-//       var outp := xdt.AddChild('PROJECT').AddChild('DEVICES');
-//       MetaData2To1(rez,outp);
-//       xdt.SaveToFile('C:\XE\Projects\Device2\CreateMetaData\MetaDataPstd.xml');
+       var xdt := NewXMLDocument();
+       var outp := xdt.AddChild('PROJECT').AddChild('DEVICES');
+       MetaData2To1(rez,outp);
+       xdt.SaveToFile(ParamStr(2)+'Std' +'.xml');
       end
      else
       a := TMetaData.Generate(ss);

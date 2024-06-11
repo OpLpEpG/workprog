@@ -61,15 +61,15 @@ procedure TFormExceptions.InitializeNewForm;
 begin
   inherited;
   AddToNCMenu('-');
-  AddToNCMenu('Очистить', NClearClick);
+  AddToNCMenu('Clear', NClearClick);
   AddToNCMenu('-');
-  NDialog := AddToNCMenu('Показывать диалог', NDialogClick, -1, 0);
+  NDialog := AddToNCMenu('Show Dialog', NDialogClick, -1, 0);
 //  NDialog.AutoCheck := True;
-  NShowDebug := AddToNCMenu('Показывать отладочную информацию', nil, -1, 1);
+  NShowDebug := AddToNCMenu('Show stack', nil, -1, 1);
 //  NShowDebug.AutoCheck := True;
 //  NShowDebug.Checked := True;
   AddToNCMenu('-');
-  AddToNCMenu('Сохранить в файл...', NSaveAsClick);
+  AddToNCMenu('Save to file...', NSaveAsClick);
   FDockClient.OnFormShow := nil;
   FDockClient.OnFormHide := nil;
 end;
@@ -120,7 +120,7 @@ begin
    InitialDir := ExtractFilePath(ParamStr(0));
    DefaultExt := 'txt';
    Options := Options + [ofOverwritePrompt, ofPathMustExist];
-   Filter := 'Файл (*.txt)|*.txt';
+   Filter := 'File (*.txt)|*.txt';
    if Execute(Handle) then Memo.Lines.SaveToFile(FileName);
   finally
    Free;

@@ -14,8 +14,8 @@ type
     function TryGet(out ids: IDataSet): Boolean; override;
     function CreateNew(out ids: IDataSet; UniDirectional: Boolean = True): Boolean; override;
   published
-   [ShowProp('Кодировка')] property Encoding: LasEncoding read FEncoding write FEncoding;
-   [ShowProp('LAS файл', True)] property LasFile: string read FLasFile write FLasFile;
+   [ShowProp('Encoding')] property Encoding: LasEncoding read FEncoding write FEncoding;
+   [ShowProp('LAS file', True)] property LasFile: string read FLasFile write FLasFile;
   end;
 
   TLasDataSet = class(TRLDataSet)

@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\_exe\Debug\VCLControl3.drc" source-language="ru-RU" target-language="en-US" datatype="cpp" tool="ETM v10.0" ts="C:\XE\Projects\Device2\_exe\Debug\VCLControl3.drc">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45034.5567824074</prop>
+        <prop prop-type="OrigDateTime">45034.5555787037</prop>
+        <prop prop-type="XlatDateTime">45033.6431481481</prop>
+        <prop prop-type="Translated">112</prop>
+        <prop prop-type="UnTranslated">0</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="FrameFindDevs2_RS_findModules" resname="FrameFindDevs2_RS_findModules">
+        <source>"Поиск модулей на: "</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Search modules on: "</target>
+      </trans-unit>
+      <trans-unit id="FrameFindDevs2_RS_FindResult" resname="FrameFindDevs2_RS_FindResult">
+        <source>"  Порт %s - найдено устройство: %s "</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"  Port %s - device found: %s "</target>
+      </trans-unit>
+      <trans-unit id="FrameFindDevs2_RS_FindEnd" resname="FrameFindDevs2_RS_FindEnd">
+        <source>"3. работа окончена"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"3. work finished"</target>
+      </trans-unit>
+      <trans-unit id="FrameFindDevs2_RS_PortErr" resname="FrameFindDevs2_RS_PortErr">
+        <source>"Ошибка порта %s %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Error on port %s %s"</target>
+      </trans-unit>
+      <trans-unit id="FindDevices_RS_Terminate" resname="FindDevices_RS_Terminate">
+        <source>"----Прервано---"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"----Aborted---"</target>
+      </trans-unit>
+      <trans-unit id="FindDevices_RS_Connect" resname="FindDevices_RS_Connect">
+        <source>"Подключить"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"connect"</target>
+      </trans-unit>
+      <trans-unit id="FindDevices_RS_Begin" resname="FindDevices_RS_Begin">
+        <source>"---начало работы ----"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"---begin ----"</target>
+      </trans-unit>
+      <trans-unit id="FindDevices_RS_BusyDevs" resname="FindDevices_RS_BusyDevs">
+        <source>"1. проверка занятых приборов"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"1. Checking busy devices"</target>
+      </trans-unit>
+      <trans-unit id="FindDevices_RS_FindCon" resname="FindDevices_RS_FindCon">
+        <source>"2. поиск соединений"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"2. find connections"</target>
+      </trans-unit>
+      <trans-unit id="FindDevices_RS_findMod" resname="FindDevices_RS_findMod">
+        <source>"3. поиск модулей"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"3. finf modules"</target>
+      </trans-unit>
+      <trans-unit id="FindDevices_RE_Err_DevRun1" resname="FindDevices_RE_Err_DevRun1">
+        <source>" ERR:  Прибор [%s] в работе"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>" ERR: Device [%s] in operation"</target>
+      </trans-unit>
+      <trans-unit id="FindDevices_RE_Err_DevRun2" resname="FindDevices_RE_Err_DevRun2">
+        <source>"Прибор [%s] в работе. Необходимо завершить операцию обмена данными"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Device [%s] is in operation. Communication operation needs to be completed"</target>
+      </trans-unit>
+      <trans-unit id="FindDevices_RS_No_Conn" resname="FindDevices_RS_No_Conn">
+        <source>"ERR нет соединений(COM портов или Сеть)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"ERR no connections (COM ports or Network)"</target>
+      </trans-unit>
+      <trans-unit id="ExportToPSK6_V3_RS_Mbk_None" resname="ExportToPSK6_V3_RS_Mbk_None">
+        <source>"Какие-либо данные для экспорта в МБК отсутствуют !!!"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"There is no data for export to MBK!!!"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgExportCaliper_RS_EmptyFileName" resname="VCLDlgExportCaliper_RS_EmptyFileName">
+        <source>"пустое имя файла"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"empty filename"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgExportCaliper_RS_run" resname="VCLDlgExportCaliper_RS_run">
+        <source>"работа"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"running"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgExportCaliper_RS_terminated" resname="VCLDlgExportCaliper_RS_terminated">
+        <source>"прервано"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"terminated"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgExportCaliper_RS_End" resname="VCLDlgExportCaliper_RS_End">
+        <source>"конец"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"end"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgExportCaliper_RS_NoModule" resname="VCLDlgExportCaliper_RS_NoModule">
+        <source>"Нет считанных данных или модуля профилемера!!!"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"No read data or Caliper module!!!"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgExportCaliper_RS_No_bd_Calip" resname="VCLDlgExportCaliper_RS_No_bd_Calip">
+        <source>"Нет базы данных профилемера!!!"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"No Caliper database!!!"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgClc_RS_Metr_Rewrite" resname="VCLDlgClc_RS_Metr_Rewrite">
+        <source>"Перезапись метрологии"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Rewriting metrology"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgClc_CARSTR1" resname="VCLDlgClc_CARSTR1">
+        <source>"Чтение"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Reading"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgClc_CARSTR2" resname="VCLDlgClc_CARSTR2">
+        <source>"Пустая память"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Empty memory"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgClc_CARSTR4" resname="VCLDlgClc_CARSTR4">
+        <source>"Прервано"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Terminated"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgClc_CARSTR5" resname="VCLDlgClc_CARSTR5">
+        <source>"Ошибка"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Error"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgClc_CARSTR6" resname="VCLDlgClc_CARSTR6">
+        <source>"Пакет.Ош."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Frame.Ere."</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgExportLAS_RS_ERR_SelectData" resname="VCLDlgExportLAS_RS_ERR_SelectData">
+        <source>"Не выбраны параметры"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"No perameters selected"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgExportLAS_RS_ERR_SelectFile" resname="VCLDlgExportLAS_RS_ERR_SelectFile">
+        <source>"Не выбран файл"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"No file selected"</target>
+      </trans-unit>
+      <trans-unit id="FrameFindDevs2_RS_findDevs" resname="FrameFindDevs2_RS_findDevs">
+        <source>"поиск приборов"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"find devices"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSM_fizMoReal" resname="VCLDlgRam_RSM_fizMoReal">
+        <source>"Физический объем диска больше указанного в метаданных, выбрать его ?"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073843</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"The physical size of the disk is larger than the one specified in the metadata, do you want to select it?"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSE_SelectSpeed" resname="VCLDlgRam_RSE_SelectSpeed">
+        <source>"Не выбран диск или скорость UART"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"No drive or UART speed selected"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSE_MetaRAMnot" resname="VCLDlgRam_RSE_MetaRAMnot">
+        <source>"Метаданные RAM %s не найдены"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"RAM metadata %s not found"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSE_ModuleRunning" resname="VCLDlgRam_RSE_ModuleRunning">
+        <source>"Модуль %s не выключен !!! Находится в состоянии [%s]."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Module %s is not disabled !!! It is in state [%s]."</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSE_ReadRAM" resname="VCLDlgRam_RSE_ReadRAM">
+        <source>"Чтение памяти"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Memory Reading"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSE_DevNotFound" resname="VCLDlgRam_RSE_DevNotFound">
+        <source>"Устройство %s не найдено"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Device %s not found"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSE_DevNoRAMt" resname="VCLDlgRam_RSE_DevNoRAMt">
+        <source>"Устройство %s без памяти"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Device %s have not RAM"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSE_NoMetaRAM" resname="VCLDlgRam_RSE_NoMetaRAM">
+        <source>"Метаданные RAM %s не найдены"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"RAM metadata %s not found"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSE_RAMReaded" resname="VCLDlgRam_RSE_RAMReaded">
+        <source>"Память уже считана предыдущие данные будут удалены!!!"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Memory has already been read. Previous data will be deleted!!!"</target>
+      </trans-unit>
+      <trans-unit id="ExportToPSK6_V3_RS_EmptyFileName" resname="ExportToPSK6_V3_RS_EmptyFileName">
+        <source>"пустое имя файла"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"empty filename"</target>
+      </trans-unit>
+      <trans-unit id="ExportToPSK6_V3_RS_Run" resname="ExportToPSK6_V3_RS_Run">
+        <source>"работа"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"running"</target>
+      </trans-unit>
+      <trans-unit id="ExportToPSK6_V3_RS_terminate" resname="ExportToPSK6_V3_RS_terminate">
+        <source>"прервано"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"terminated"</target>
+      </trans-unit>
+      <trans-unit id="ExportToPSK6_V3_RS_end" resname="ExportToPSK6_V3_RS_end">
+        <source>"конец"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"end"</target>
+      </trans-unit>
+      <trans-unit id="ExportToPSK6_V3_RS_Err" resname="ExportToPSK6_V3_RS_Err">
+        <source>"ошибка"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"error"</target>
+      </trans-unit>
+      <trans-unit id="ExportToPSK6_V3_RS_ErrDataStruct" resname="ExportToPSK6_V3_RS_ErrDataStruct">
+        <source>"Неверная структура данных"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Invalid data structure"</target>
+      </trans-unit>
+      <trans-unit id="ExportToPSK6_V3_RS_MameIdFrame" resname="ExportToPSK6_V3_RS_MameIdFrame">
+        <source>"Ммя: %s ID: %d КадрID: %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Name: %s ID: %d frame: %d"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_Run" resname="FormDelay2_RS_Msg_Run">
+        <source>"Работает:          %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Running:          %s"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_OffCP" resname="FormDelay2_RS_Msg_OffCP">
+        <source>"Выключение СП:     %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"SP Shutdown: %s"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_TimeOff" resname="FormDelay2_RS_Msg_TimeOff">
+        <source>"До выключения:     %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Before Shutdown: %s"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_Offed" resname="FormDelay2_RS_Msg_Offed">
+        <source>"Включился в:       %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Switchet on:       %s"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_Runned" resname="FormDelay2_RS_Msg_Runned">
+        <source>"Отработал:         %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Worked: %s"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_OffedCP" resname="FormDelay2_RS_Msg_OffedCP">
+        <source>"СП Выключился:     %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"SP Shut Down: %s"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_OffedNow" resname="FormDelay2_RS_Msg_OffedNow">
+        <source>"Выключен:          %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Disabled: %s"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_MSG_All_DElayDat" resname="FormDelay2_RS_MSG_All_DElayDat">
+        <source>"Поставлен:  %s\r\nЗадержка:                        %s\r\nВключение:  %s\r\n\r\nВыключение: %s\r\nВык.интерв: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"On: %s\r\nDelay: %s\r\nOn: %s\r\n\r\nOff: %s\r\nOff Interval: %s"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_CARSTR1" resname="VCLDlgRam_CARSTR1">
+        <source>"Чтение"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Reading"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_CARSTR2" resname="VCLDlgRam_CARSTR2">
+        <source>"Пустая память"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Empty memory"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_CARSTR3" resname="VCLDlgRam_CARSTR3">
+        <source>"Конец"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"End"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_CARSTR4" resname="VCLDlgRam_CARSTR4">
+        <source>"Прервано"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Aborted"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_CARSTR5" resname="VCLDlgRam_CARSTR5">
+        <source>"Ошибка"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Error"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_CARSTR6" resname="VCLDlgRam_CARSTR6">
+        <source>"Пакет.Ош."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Frame.Err."</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSE_notImp" resname="VCLDlgRam_RSE_notImp">
+        <source>"Устройство %s неподдерживает импорт из файла"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Device %s does not support import from file"</target>
+      </trans-unit>
+      <trans-unit id="VCLDlgRam_RSE_RAMLower" resname="VCLDlgRam_RSE_RAMLower">
+        <source>"Размер физической памяти %1.2f GB меньше выбранного %1.2f GB \r\nУстановлен соответствующий физической памяти!"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Physical memory size %1.2f GB is less than the selected %1.2f GB \r\nInstalled to match physical memory!"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_Rs_Toadr" resname="ControForm3_Rs_Toadr">
+        <source>"по адрес"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"to address"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_Rs_End" resname="ControForm3_Rs_End">
+        <source>"окончено"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"end"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_TBL_SETDELAY1" resname="FormDelay2_TBL_SETDELAY1">
+        <source>"Время включения"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"On time"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Int_Delay" resname="FormDelay2_RS_Int_Delay">
+        <source>"Интервал задержки"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Delay interval"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_T_CAPTION1" resname="FormDelay2_T_CAPTION1">
+        <source>"Постановка на задержку"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Delay"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_T_CAPTION2" resname="FormDelay2_T_CAPTION2">
+        <source>"Cинхронизация задержки"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Delay sync"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_T_BUTTON1" resname="FormDelay2_T_BUTTON1">
+        <source>"Поставить на задержку"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Put on Delay"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_T_BUTTON2" resname="FormDelay2_T_BUTTON2">
+        <source>"Cинхронизировать задержку"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Sync Delay"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Reset_Delay" resname="FormDelay2_RS_Reset_Delay">
+        <source>"Сбросить задержку(время включения, интервал работы)..."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Reset delay(on time, interval)..."</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Err_TimeDelay" resname="FormDelay2_RS_Err_TimeDelay">
+        <source>"Время постановки на задержку, включения прибора, прошло:%s сейчас:%s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Time to delay, turn on the device, elapsed:%s now:%s"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Err_TimeOn" resname="FormDelay2_RS_Err_TimeOn">
+        <source>"Время включения прибора %1.1f суток"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Device switch-on time %1.1f days"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Dlg_ResetDelay" resname="FormDelay2_RS_Dlg_ResetDelay">
+        <source>"Сбросить время включения, интервал работы для проекта?"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Reset turn-on time, work interval for the project?"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_OnCP" resname="FormDelay2_RS_Msg_OnCP">
+        <source>"Включение СП:      %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Enable SP: %s"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_IntDelay" resname="FormDelay2_RS_Msg_IntDelay">
+        <source>"Интервал задержки: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Delay interval: %s"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_Frame" resname="FormDelay2_RS_Msg_Frame">
+        <source>"Кадр: %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Frame: %d"</target>
+      </trans-unit>
+      <trans-unit id="FormDelay2_RS_Msg_OnnedCP" resname="FormDelay2_RS_Msg_OnnedCP">
+        <source>"СП Включился в:    %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"SP Joined in: %s"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Mode_Delay" resname="ControForm3_RS_Mode_Delay">
+        <source>"постановка на задержку"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"delay setting"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Busy" resname="ControForm3_RS_Busy">
+        <source>"занят"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"busy"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Error" resname="ControForm3_RS_Error">
+        <source>"ошибка"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"error"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_IB_NewTDays" resname="ControForm3_RS_IB_NewTDays">
+        <source>"Новое время заполнения памяти модуля в сутках"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"New module memory filling time in days"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Msg_TrrNEeep" resname="ControForm3_RS_Msg_TrrNEeep">
+        <source>"Текущие файлы тарировки прибора НЕ совпадают с EEPROM\r\n"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Current instrument calibration files do NOT match EEPROM\r\n"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Msg_TrrEQeep" resname="ControForm3_RS_Msg_TrrEQeep">
+        <source>"Текущие файлы тарировки прибора совпадают с EEPROM"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Current instrument calibration files are the same as EEPROM"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Fltrr" resname="ControForm3_RS_Fltrr">
+        <source>"Файл тарировки"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Calibration file"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Fl" resname="ControForm3_RS_Fl">
+        <source>"Файл"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"File"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Err_DataEx" resname="ControForm3_RS_Err_DataEx">
+        <source>"Необходимо завершить операцию обмена данными"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"You need to complete the communication operation"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_NewCon" resname="ControForm3_RS_NewCon">
+        <source>"Новое соединение..."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"New Connection..."</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_Rs_Attest" resname="ControForm3_Rs_Attest">
+        <source>"Аттестовал"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Certified"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_Rs_FromF" resname="ControForm3_Rs_FromF">
+        <source>"с кадра"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"from frame"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_Rs_toF" resname="ControForm3_Rs_toF">
+        <source>"по кадр"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"to frame"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_Rs_FromT" resname="ControForm3_Rs_FromT">
+        <source>"со времени"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"from time"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_Rs_ToT" resname="ControForm3_Rs_ToT">
+        <source>"до времени"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"to time"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_Rs_FromAdr" resname="ControForm3_Rs_FromAdr">
+        <source>"с адреса"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"from adr"</target>
+      </trans-unit>
+      <trans-unit id="ConnectDeviceHelper_RS_New_conn" resname="ConnectDeviceHelper_RS_New_conn">
+        <source>"Новое соединение..."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"New Connection..."</target>
+      </trans-unit>
+      <trans-unit id="FormDlgDev_RS_Dev_Connect" resname="FormDlgDev_RS_Dev_Connect">
+        <source>"Подключить"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Connect"</target>
+      </trans-unit>
+      <trans-unit id="FormDlgDev_RS_Dev_Not_Celect" resname="FormDlgDev_RS_Dev_Not_Celect">
+        <source>"Не выбраны устройства"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"No devices selected"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_ADR" resname="ControForm3_RS_ADR">
+        <source>"Адрес"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Addr"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Info" resname="ControForm3_RS_Info">
+        <source>"Инфо"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Info"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_SerialNo" resname="ControForm3_RS_SerialNo">
+        <source>"Серийный номер"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Serial number"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Chip" resname="ControForm3_RS_Chip">
+        <source>"Чип"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Chip"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_Rs_SerialMask" resname="ControForm3_Rs_SerialMask">
+        <source>"Маска скорости порта"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Port speed mask"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_MAX_T" resname="ControForm3_MAX_T">
+        <source>"Макс.Вр.Раб.(Сут)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Max.Tm.Run.(Days)"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Mode_Info" resname="ControForm3_RS_Mode_Info">
+        <source>"Режим информации"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Information mode"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Mode_Ram" resname="ControForm3_RS_Mode_Ram">
+        <source>"Чтение памяти"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Memory Reading"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Mode_Glu" resname="ControForm3_RS_Mode_Glu">
+        <source>"Данные по глубине"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Depth Data"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Mode_Metr" resname="ControForm3_RS_Mode_Metr">
+        <source>"Метрология"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Metrology"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_NOReady" resname="ControForm3_RS_NOReady">
+        <source>"не инициализирован"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"not init"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_PartReaty" resname="ControForm3_RS_PartReaty">
+        <source>"готов частично"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"partially ready"</target>
+      </trans-unit>
+      <trans-unit id="ControForm3_RS_Reaty" resname="ControForm3_RS_Reaty">
+        <source>"готов"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634073958</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"ready"</target>
+      </trans-unit>
+      <trans-unit id="SelectPath_RS_HistInfo" resname="SelectPath_RS_HistInfo">
+        <source>"история данных информации"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5555661227</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"data history information"</target>
+      </trans-unit>
+      <trans-unit id="SelectPath_RS_HistFrame" resname="SelectPath_RS_HistFrame">
+        <source>"память по кадрам"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5555661227</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"frame memory"</target>
+      </trans-unit>
+      <trans-unit id="SelectPath_RS_HistDpt" resname="SelectPath_RS_HistDpt">
+        <source>"память по глубине"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5555661227</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"memory in depth"</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

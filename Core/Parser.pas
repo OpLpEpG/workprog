@@ -89,6 +89,8 @@ type
     class procedure FromVar(const Data: Variant; vt: Integer; pOutData: Pointer); overload;
     class procedure FromVar(const DataArr: string; vt, arr_len: Integer; pOutData: Pointer); overload;
     class function GetAsTypeFunction(vt: Integer): TAsTypeFunction<Integer>; //overload;
+    class procedure LocalGetData(root: IXMLNode; var Data: TOutArray); static;
+    class procedure LocalSetData(root: IXMLNode; const Data: PByte); static;
 //    class function GetAsTypeFunction(vt: Integer): TAsTypeFunction<Double>; overload;
   private
   //  const
@@ -153,11 +155,11 @@ class procedure TPars.FromVar(const DataArr: string; vt, arr_len: Integer; pOutD
   p: PByte;
 begin
   a := DataArr.Split([' '], TStringSplitOptions.ExcludeEmpty);
-  if Length(a) <> arr_len then
+  if Length(a) > arr_len then
   {$IFNDEF UNUSE_debug_except}
-    raise EBaseException.Create('ошибка преобразования массива Length(a) <> arr_len');
+    raise EBaseException.Create('ошибка преобразования массива Length(a) > arr_len');
   {$ELSE}
-    raise Exception.Create('ошибка преобразования массива Length(a) <> arr_len');
+    raise Exception.Create('ошибка преобразования массива Length(a) > arr_len');
   {$ENDIF}
   p := pOutData;
   n := VarTypeToLength(vt);
@@ -336,7 +338,7 @@ end;
 class function TPars.VarTypeToDBField(vt: Integer): TFieldType;
 begin
   case vt of
-    varOleStr  :Result := ftString;
+    varOleStr  :Result := ftFixedChar;
     varString  :Result := ftString;
     varUString :Result := ftString;
     varSmallint:Result := ftSmallint; { vt_i2           2 }
@@ -385,6 +387,7 @@ begin
     varCurrency:Result := SizeOf(Currency); { vt_cy           6 }
     varDate    :Result := SizeOf(TDateTime); { vt_date         7 }
     varShortInt:Result := SizeOf(ShortInt); { vt_i1          16 }
+    varOleStr  :  Result := SizeOf(Byte); { vt_ui1         17 }
     varByte    :Result := SizeOf(Byte); { vt_ui1         17 }
     varWord    :Result := SizeOf(Word); { vt_ui2         18 }
     varLongWord:Result := SizeOf(LongWord); { vt_ui4         19 }
@@ -446,6 +449,7 @@ class procedure TPars.FromVar(const Data: Variant; vt: Integer; pOutData: Pointe
 begin                                   // Data - Ole string XML only string;
   case vt of
     varByte        : PByte(pOutData)^ := Byte(Data);
+    varOleStr      : PAnsiChar(pOutData)^ := AnsiString(string(Data))[1];
     varShortInt    : PByte(pOutData)^ := Byte(Data);
     varWord        : PWord(pOutData)^ := Word(Data);
     varSmallint    : PSmallint(pOutData)^ := Smallint(Data);
@@ -759,6 +763,7 @@ begin
       if sn.SpecialType in [fsInf, fsNInf, fsNaN] then Result := 0
       else Result := sn;
      end;
+    varOleStr:  Result := PAnsiChar(Data)^;
     varDouble  :Result := PDouble(Data)^; { vt_r8           5 }
     varCurrency:Result := PCurrency(Data)^; { vt_cy           6 }
    // varDate    :Result := SizeOf(TDateTime); { vt_date         7 }
@@ -1128,6 +1133,28 @@ begin
   end;
 end;}
 
+class procedure TPars.LocalGetData(root: IXMLNode; var Data: TOutArray);
+ var
+  d: TOutArray;
+  offset:Integer;
+begin
+   SetLength(d, Integer(root.Attributes[AT_SIZE]));
+   offset := root.Attributes['offset'];
+   ExecXTree(root, procedure(n: IXMLNode)
+   begin
+     if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) and n.HasAttribute(AT_VALUE)
+       and (n.NodeName = T_DEV) then
+      if n.ParentNode.HasAttribute(AT_ARRAY) then
+           FromVar(n.Attributes[AT_VALUE],
+           Integer(n.Attributes[AT_TIP]),
+           n.ParentNode.Attributes[AT_ARRAY],
+           @d[Integer(n.Attributes[AT_INDEX])-offset])
+      else FromVar(n.Attributes[AT_VALUE], Integer(n.Attributes[AT_TIP]),
+           @d[Integer(n.Attributes[AT_INDEX])-offset]);
+   end);
+   Data := d;
+end;
+
 class procedure TPars.GetData(root: IXMLNode; var Data: TOutArray);
  var
   d: TOutArray;
@@ -1142,6 +1169,24 @@ begin
       else FromVar(n.Attributes[AT_VALUE], Integer(n.Attributes[AT_TIP]), @d[Integer(n.Attributes[AT_INDEX])]);
    end);
    Data := d;
+end;
+
+class procedure TPars.LocalSetData(root: IXMLNode; const Data: PByte);
+ var
+  offset:Integer;
+begin
+   offset := root.Attributes['offset'];
+   ExecXTree(root, function(n: IXMLNode): boolean
+   begin
+     if n.HasAttribute(AT_TIP) and n.HasAttribute(AT_INDEX) then
+      begin
+       var dind := Integer(n.Attributes[AT_INDEX])-offset;
+      if n.ParentNode.HasAttribute(AT_ARRAY) then
+        n.Attributes[AT_VALUE] := ArrayToString(Data + dind, n.ParentNode.Attributes[AT_ARRAY], n.Attributes[AT_TIP])
+      else
+        n.Attributes[AT_VALUE] := ToVar(Data + dind, n.Attributes[AT_TIP]);
+      end;
+   end);
 end;
 
 class procedure TPars.SetData(root: IXMLNode; const Data: PByte; ParsArray: Boolean = True; CntStd: Integer = -1);

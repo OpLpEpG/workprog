@@ -531,10 +531,10 @@ type
   end;
 {$ENDREGION}
 
-const
+resourcestring
   RS_SetIO = '(Lock) Невозможно сменить Порт т.к. прибор занят';
-  RS_Flow = '(Flow) Невозможно освободить Порт занятый чтением информации';
-  RS_IsCycle = '(Cycle) Порт занят';
+ // RS_Flow = '(Flow) Невозможно освободить Порт занятый чтением информации';
+ // RS_IsCycle = '(Cycle) Порт занят';
   RS_Locked = '(Lock) Порт уже занят';
   RS_DevBusy = 'Прибор занят';
   RS_UnLock = '(Unlock) Невозможно освободить Порт занятый другим устройством';
@@ -542,22 +542,23 @@ const
   RS_NeedClosePort = 'Необходимо закрыть порт %s';
   RS_NeedCloseNet = 'Необходимо закрыть соединение %s';
   RS_SendData = 'Нет протокола для передачи данных';
-  RS_NoDir = 'Директория %s отсутствует';
-  RS_EmptyDir = 'Директория для чтения памяти не задана';
+ // RS_NoDir = 'Директория %s отсутствует';
+ // RS_EmptyDir = 'Директория для чтения памяти не задана';
   RS_NoConnect = 'Устройство не подключено к Порту';
-  RS_NoRamInfo = 'Информация устройства с адресом %d о структуре RAM: отсутствует,невозножно считать память';
-  RS_NoRamAttr = 'Невозможно счтать память Адрес: %d, отсутствуют атрибуты %s %s %s %s %s';
-  RS_NoRamFile = 'Невозможно счтать память Адрес: %d нет вайла %s';
-  RS_NoAdr = 'Невозможно получить адрес устройства для чтения памяти';
-  RS_NoXml = 'Невозможно получить xml информацию для чтения памяти';
-  RS_NoRamMetaTime = 'Информация устройства с адресом %d о постановке на задержку отсутствует';
+ // RS_NoRamInfo = 'Информация устройства с адресом %d о структуре RAM: отсутствует,невозножно считать память';
+  //RS_NoRamAttr = 'Невозможно счтать память Адрес: %d, отсутствуют атрибуты %s %s %s %s %s';
+ // RS_NoRamFile = 'Невозможно счтать память Адрес: %d нет вайла %s';
+//  RS_NoAdr = 'Невозможно получить адрес устройства для чтения памяти';
+//  RS_NoXml = 'Невозможно получить xml информацию для чтения памяти';
+//  RS_NoRamMetaTime = 'Информация устройства с адресом %d о постановке на задержку отсутствует';
   RS_NoRamMeta = 'Информация устройства с адресом %d о структуре RAM: отсутствует,невозножно считать память';
   RS_NoRamMetaRecSize = 'Информация устройства с адресом %d о структуре RAM: длина записи 0';
-  RS_NoRamMetaK = 'Информация устройства с адресом %d о поправочном коэффициенте отсутствует,невозножно считать память';
-  RS_NoRamMetaBadK = 'Информация устройства с адресом %d о структуре RAM: неверный коэффициент  %1.5f';
-  RS_BadFromToTime = 'Hевозножно считать память устройства с адресом %d время старта %s задержка %s с %s[%d] по %s[%d]';
-  RS_NoRamSize = 'Невозможно получить xml информацию для чтения памяти о размере памяти';
-  RS_NotAvalFromToTime = 'Устройство с адресом %d неподдерживает выборочное чтение памяти';
+ // RS_NoRamMetaK = 'Информация устройства с адресом %d о поправочном коэффициенте отсутствует,невозножно считать память';
+ // RS_NoRamMetaBadK = 'Информация устройства с адресом %d о структуре RAM: неверный коэффициент  %1.5f';
+ // RS_BadFromToTime = 'Hевозножно считать память устройства с адресом %d время старта %s задержка %s с %s[%d] по %s[%d]';
+ // RS_NoRamSize = 'Невозможно получить xml информацию для чтения памяти о размере памяти';
+  //RS_NotAvalFromToTime = 'Устройство с адресом %d неподдерживает выборочное чтение памяти';
+  RS_ConClosed='Соединение закрыто';
 
 
 implementation
@@ -569,7 +570,7 @@ implementation
 procedure TAbstractConnectIO.CheckOpen;
 begin
   if not (iosOpen in FStatus) then
-    raise EConnectIOException.Create('Соединение закрыто');
+    raise EConnectIOException.Create(RS_ConClosed);
 end;
 
 procedure TAbstractConnectIO.Close;
@@ -1238,7 +1239,7 @@ begin
   Fcom.Buffer.InputSize := MAX_BUF;
   Fcom.Buffer.OutputSize := $200;
   Fcom.Events := [evRxChar];
-  Fcom.SyncMethod := smWindowSync; // smNone;//smThreadSync;//smWindowSync;
+  Fcom.SyncMethod := smWindowSync;// smWindowSync; // smNone;//smThreadSync;//smWindowSync;
   Fcom.TriggersOnRxChar := True;
   Fcom.OnRxChar := ComRxChar;
   Fcom.Port := FConnectInfo;
@@ -1247,6 +1248,7 @@ begin
   TDebug.Log('----------TComConnectIO.Create(%s);---------------',[Name]);
 end;
 
+//var _ggg: Integer;
 procedure TComConnectIO.InnerClose;
 begin
  // FCom.OnRxChar := nil;
@@ -1256,12 +1258,30 @@ begin
 //    on e: Exception do
 //      TDebug.DoException(e, False);
 //  end;
-  FCom.OnException := ComPortCloseException;
-  FCloseErrNessage := '';
-  FCom.Close;
+//  InterlockedIncrement(_ggg);
+//  if TThread.Current.ThreadID = System.MainThreadID then
+//   TDebug.Log('TThread.Current.ThreadID = System.MainThreadID %d ',[_ggg])
+//   else TDebug.Log('!!!!!!!!!!!!!!   TThread.Current.ThreadID <> System.MainThreadID  !!!!!!!!!!!!!!!');
+//   if _ggg >= 2 then
+//    begin
+//      TDebug.Log('====================== Thread ERROR %d ==========================',[_ggg]);
+//      _ggg := 0;
+//      Exit;
+//    end;
 
-  FCom.OnException := ComPortException;
-  inherited Close;
+  if Fcom.Connected then
+   begin
+    FCom.OnException := ComPortCloseException;
+    FCloseErrNessage := '';
+    FCom.Close;
+//    TDebug.Log('[1] TComConnectIO.InnerClose %s  %d',[Fcom.Port, Fcom.CustomBaudRate]);
+    FCom.OnException := ComPortException;
+//    TDebug.Log('[2] TComConnectIO.InnerClose %s  %d',[Fcom.Port, Fcom.CustomBaudRate]);
+    inherited Close;
+//    TDebug.Log('[3] TComConnectIO.InnerClose %s  %d',[Fcom.Port, Fcom.CustomBaudRate]);
+   end
+   else TDebug.Log('!!!!!!!!!!!!!!   DUIBLE CLOSE  !!!!!!!!!!!!!!!');
+//   _ggg := 0;
 end;
 
 procedure TComConnectIO.ComPortCloseException(Sender: TObject; TComException: TComExceptions; ComportMessage: string; WinError: Int64; WinMessage: string);
@@ -1421,6 +1441,7 @@ begin
 //   end;
 //  FreeAndNil(FCloseTimer);
   InnerClose();
+  //Tdebug.Log('[1] procedure TComConnectIO.Close;');
   if FCloseErrNessage <> '' then
     raise EComConnectIOException.Create(FCloseErrNessage);
 end;
@@ -1433,7 +1454,7 @@ begin
   if Assigned(FProtocol) then
   begin
     if not Assigned(Data) then
-      raise EComConnectIOException.Create('Данные не инициализированны');
+      raise EComConnectIOException.Create('Data not init');
 //    _tst := 1;
 //    TDebug.Log('SetE %x %d', [Integer(@Event), _tst]);
     FEventReceiveData := Event;
@@ -1511,7 +1532,7 @@ end;
 procedure TProtocolBur.TxChar(Sender: TAbstractConnectIO; Data: Pointer; var Cnt: Integer; maxsend: Integer);
 begin
   if Cnt > 253 then
-    raise EProtocolBurException.CreateFmt('Данных для передачи %d больше 253', [Cnt]);
+    raise EProtocolBurException.CreateFmt('Data count for read %d more than 253', [Cnt]);
   SetCRC16(Data, Cnt);
   Sender.FICount := 0;
   Inc(Cnt, 2);
@@ -1976,7 +1997,8 @@ begin
   cnt := FToAdr - FFromAdr;
   Result.NRead := FCurAdr - FFromAdr;
   Result.TimeFromBegin := Now - FBeginTime;
-  Result.ProcRun := Result.NRead / cnt * 100;
+  if cnt > 0 then
+    Result.ProcRun := Result.NRead / cnt * 100;
   // speed
   Spd := Result.NRead / Result.TimeFromBegin;
   Result.Speed := Spd / 1024 / 1024 / 24 / 3600; // MB/sec
@@ -2016,21 +2038,22 @@ const
 var
   cnt: Integer; // Length(Fifo) mod FRecSize * FRecSize
 begin
-  while Length(Fifo) >= FRecSize {Fifo.pop(ptr, FRecSize)} do
-  try
-    cnt := Length(Fifo) div FRecSize;
-    DoSetData(@Fifo[0], cnt); /// восстановить
-    Delete(Fifo, 0, cnt * FRecSize);
-    if ((GetTickCount - t) > 1000) then
-    begin
-      t := GetTickCount;
-      if Assigned(FReadRamEvent) then
-        FReadRamEvent(carOk, FAdr, ProcToEnd);
-    end;
-  except
-    on e: Exception do
-      TDebug.DoException(e, False);
-  end;
+  if FRecSize > 0 then
+    while Length(Fifo) >= FRecSize {Fifo.pop(ptr, FRecSize)} do
+      try
+        cnt := Length(Fifo) div FRecSize;
+        DoSetData(@Fifo[0], cnt); /// восстановить
+        Delete(Fifo, 0, cnt * FRecSize);
+        if ((GetTickCount - t) > 1000) then
+        begin
+          t := GetTickCount;
+          if Assigned(FReadRamEvent) then
+            FReadRamEvent(carOk, FAdr, ProcToEnd);
+        end;
+      except
+        on e: Exception do
+          TDebug.DoException(e, False);
+      end;
   if FFlagEndRead then
   begin
     FFlagEndRead := False;
@@ -2046,7 +2069,7 @@ begin
   //Fevent.SetEvent;
   WriteToBD;
   if Assigned(Res) then
-    Res(True);
+      Res(True);
 end;
 
 {$ENDREGION  TAbstractReadRam}

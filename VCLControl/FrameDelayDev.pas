@@ -124,9 +124,9 @@ begin
   lbCon.Color := clRed;
   if Assigned(Dev) then
    begin
-    lbKadr.Caption := 'нет ответа';
+    lbKadr.Caption := 'not Response';
     lbKadr.Color := clRed;
-    lbStatus.Caption := 'нет ответа';
+    lbStatus.Caption := 'not Response';
     lbStatus.Color := clRed;
     lbNStat.Caption := '';
     lbNStat.Color := clRed;

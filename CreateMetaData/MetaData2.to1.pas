@@ -2,7 +2,7 @@ unit MetaData2.to1;
 
 interface
 
-uses sysutils, Classes, MetaData2.XClasses, Xml.XMLIntf, Xml.XMLDoc, debug_except, tools;
+uses sysutils, Variants, Classes, MetaData2.XClasses, Xml.XMLIntf, Xml.XMLDoc, debug_except, tools;
 
 function MetaData2To1(inp, outp: IXMLNode):IXMLNode;
 
@@ -51,8 +51,9 @@ type ConvType = record
  Name: string;
  tip: Integer;
 end;
-const ConvTypes: array [0..9] of ConvType = (
+const ConvTypes: array [0..10] of ConvType = (
  (    Name: 'uint8_t';    Tip: varByte ),
+ (    Name: 'char';       Tip: varOleStr ),
  (    Name: 'int8_t';     Tip: varShortInt ),
 
  (    Name: 'uint16_t';    Tip: varWord ),
@@ -87,6 +88,7 @@ var
    if inp.HasAttribute('name') then
     begin
      Result := inp.Attributes['name'];
+     if inp.HasAttribute('arrayIdx') then  Result := Result + inp.Attributes['arrayIdx'];
      { TODO : generate ole name }
     end
    else if inp.HasAttribute('WRK') then Result := 'WRK'
@@ -111,7 +113,14 @@ end;
 
 
 function MetaData2To1(inp, outp: IXMLNode):IXMLNode;
+ var
+  ExtNpDataCount: Integer;
+  ExtNpDataLen: Integer;
+  rootNode: IXMLNode;
 begin
+  ExtNpDataCount := 0;
+  ExtNpDataLen := 0;
+
   ExecX(inp, outp, function (ip, op: IXMLNode): IXMLNode
    var
     node: IXMLNode;
@@ -123,15 +132,33 @@ begin
        dev.AttributeNodes.Delete(name);
       end;
    end;
+   var
+   sname: string;
   begin
-    Result := op.AddChild(GetNodeName(ip));
+     sname := GetNodeName(ip);
+    try
+     Result := op.AddChild(sname);
+    except
+     raise Exception.Createfmt('Error GetNodeName [%s, %s]', [sname, ip.NodeName]);
+    end;
     if ip.HasAttribute('tip') then node := Result.AddChild(T_DEV)
     else node := Result;
     for var i := 0 to ip.AttributeNodes.Count-1 do
      begin
       var at := ip.AttributeNodes[i];
       if (at.NodeName <> 'WRK')and(at.NodeName <> 'RAM')and(at.NodeName <> 'EEP')and(at.NodeName <> 'name') then
-         node.Attributes[GetAttrName(at)] := at.NodeValue;
+       begin
+        var an := GetAttrName(at);
+        if VarIsNull(at.NodeValue) then
+           node.Attributes[an] := True
+        else
+           node.Attributes[an] := at.NodeValue;
+        if an = AT_EXT_NP then
+         begin
+           ExtNpDataCount := at.NodeValue;
+           rootNode := node;
+         end;
+       end;
      end;
     if node.HasAttribute(AT_SIZE) then Result.AttributeNodes.Delete(AT_INDEX);
     if node.HasAttribute(AT_INDEX) then
@@ -140,18 +167,40 @@ begin
       MoveAttr(Result,node, AT_METR);
       MoveAttr(Result,node, AT_ARRAY);
       MoveAttr(Result,node, 'arrayShowLen');
-      node.Attributes[AT_TIP] := GetTip(ip.NodeName);
+      var t := GetTip(ip.NodeName);
+      node.Attributes[AT_TIP] := t;
+      if ExtNpDataCount > 0 then
+      begin
+        // array not sypport
+        if t in [varByte,varOleStr, varShortInt] then Inc(ExtNpDataLen)
+        else if t in [varWord,varSmallint] then Inc(ExtNpDataLen,2)
+        else if t in [varUInt32,varInteger,varSingle] then Inc(ExtNpDataLen,4)
+        else if t in [varUInt64,varInt64,varDouble] then Inc(ExtNpDataLen,8);
+        Dec(ExtNpDataCount);
+        if ExtNpDataCount = 0 then
+        begin
+         rootNode.Attributes[AT_EXT_NP_LEN] := ExtNpDataLen;
+        end;
+      end;
      end;
   end);
-  Result := outp.ChildNodes.FindNode(inp.NodeName);
+  Result := outp.ChildNodes.FindNode(GetNodeName(inp));
 end;
 
 { TnewPars }
 
 class function TnewPars.SetInfo(node: IXMLNode; Info: PByte; InfoLen: integer): IXMLNode;
 begin
-  TBinaryXParser.Parse(Info);
-  Result := MetaData2To1(TBinaryXParser.ExportTo(NewXMLDocument().AddChild('root')), node);
+       TBinaryXParser.Parse(Info);
+
+       var xd := XTypedDocument();
+//       var ssd := xd.CreateNode('xml-stylesheet', ntProcessingInstr, 'type="text/xsl" href="meta.xsl"');
+//       xd.Node.ChildNodes.Add(ssd);
+       var root := xd.AddChild('PROJECT').AddChild('DEVICES');
+       var rez := TBinaryXParser.ExportTo(root);
+    //   xd.SaveToFile('C:\AVR\Inc356GK_avr128\_I\First.xml');
+    Result := MetaData2To1(rez,node);
+    //   node.OwnerDocument.SaveToFile('C:\AVR\Inc356GK_avr128\_I\Second.xml');
 end;
 
 end.

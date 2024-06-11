@@ -134,5 +134,13 @@ object FormDlgEeprom: TFormDlgEeprom
       Caption = #1047#1072#1087#1080#1089#1072#1090#1100' '#1057#1077#1082#1094#1080#1102' EEPROM'
       OnClick = EEPROM1Click
     end
+    object File1: TMenuItem
+      Caption = #1047#1072#1087#1080#1089#1072#1090#1100' '#1089#1077#1082#1094#1080#1102' '#1074' '#1092#1072#1081#1083'...'
+      OnClick = File1Click
+    end
+    object Load1: TMenuItem
+      Caption = #1047#1072#1075#1088#1091#1079#1080#1090#1100' '#1089#1077#1082#1094#1080#1102' '#1080#1079' '#1092#1072#1081#1083#1072'...'
+      OnClick = Load1Click
+    end
   end
 end

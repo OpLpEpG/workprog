@@ -48,6 +48,7 @@
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
@@ -81,14 +82,14 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
         <DCC_UnitSearchPath>..</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Locale>1049</VerInfo_Locale>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <BT_BuildType>Debug</BT_BuildType>
-        <VerInfo_Build>16</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.1.0.16;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=2.1.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>58</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.1.0.58;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=2.1.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <VerInfo_Locale>1049</VerInfo_Locale>
@@ -199,6 +200,26 @@
                 <Source>
                     <Source Name="MainSource">WorkProg.dpr</Source>
                 </Source>
+                <Language>
+                    <Language Name="ProjectLang">$00000419</Language>
+                    <Language Name="RootDir">C:\XE\Projects\Device2\MainExe\</Language>
+                    <Language Name="ActiveLang">ENU</Language>
+                </Language>
+                <Resource_DLL_Projects>
+                    <Resource_DLL_Projects Name="Item0">Английский (США)*$00000409*ENU*ENU</Resource_DLL_Projects>
+                </Resource_DLL_Projects>
+                <RDP_Source_Files>
+                    <RDP_Source_Files Name="Item0">MainExe\MainForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item1">MainExe\PluginSetupForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item2">MainExe\ExceptionForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item3">MainExe\FirstForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item4">_exe\Debug\WorkProg.drc</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item5">MainForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item6">PluginSetupForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item7">ExceptionForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item8">FirstForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item9">..\_exe\Debug\WorkProg.drc</RDP_Source_Files>
+                </RDP_Source_Files>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="..\Help\Devices\Devices.htm" Configuration="Debug" Class="ProjectFile"/>

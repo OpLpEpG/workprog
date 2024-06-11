@@ -41,14 +41,16 @@ uses
   MetrInclin4.Temp.Form in 'MetrInclin4.Temp.Form.pas' {FormMetrInclin4T},
   MetrInclin.CheckForm in 'MetrInclin.CheckForm.pas' {FormInclinCheck},
   MetrGK in 'MetrGK.pas' {FormGK},
-  MetrBKZ3 in 'MetrBKZ3.pas' {FormBKZ3},
+  MetrInd in 'MetrInd.pas' {FormInd},
   MetrNNK2X in 'MetrNNK2X.pas' {FormNNK2X},
-  MetrNNK in 'MetrNNK.pas' {FormNNK},
+  MetrNNK128 in 'MetrNNK128.pas' {FormNNK128},
   MetrBKS in 'MetrBKS.pas' {FormBKS},
   MetrInclin.Temp.Form in 'MetrInclin.Temp.Form.pas' {FormMetrInclinT},
   PID in 'PID.pas',
   Metr.UAKI.Ten.PID in 'Metr.UAKI.Ten.PID.pas' {FormPIDsetup},
-  MetrRes in 'MetrRes.pas' {FormRes};
+  MetrRes in 'MetrRes.pas' {FormRes},
+  MetrNNK in 'MetrNNK.pas' {FormNNK},
+  MetrBKZ3 in 'MetrBKZ3.pas' {FormBKZ3};
 
 {$R *.res}
 

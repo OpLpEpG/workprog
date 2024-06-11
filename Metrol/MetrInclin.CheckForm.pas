@@ -311,6 +311,7 @@ begin
    22: SetData('magnit.Y.CLC',     AT_VALUE,     '%7.1f');
    23: SetData('magnit.Z.CLC',     AT_VALUE,     '%7.1f');
    24: SetData('СТОЛ',             'амплит_magnit', '%7.1f');
+   25: SetData('T.DEV',            AT_VALUE, '%7.1f');
    end;
 end;
 
@@ -327,7 +328,9 @@ begin
   TXMLScriptMath.AddXmlPath(r, 'амплит_magnit.CLC');
   TXMLScriptMath.AddXmlPath(r, 'маг_наклон.CLC');
   TXMLScriptMath.AddXmlPath(r, 'СТОЛ');
+  TXMLScriptMath.AddXmlPath(r, 'T.DEV');
   Result := XToVar(r);
+  Result.T.DEV.VALUE := 0;
   Result.зенит.CLC.VALUE := 0;
   Result.зенит.METR := ME_ANGLE;
   Result.азимут.CLC.VALUE := 0;

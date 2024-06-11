@@ -2,6 +2,8 @@ unit SDcardToolsAsync;
 
 interface
 
+{$INCLUDE global.inc}
+
 uses RootIntf, debug_except,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, System.Threading,
   System.IOUtils, JclFileUtils, JclBase;
@@ -55,7 +57,7 @@ type
    const
     GIG = 1024*1024*512;
     M32 = 32*1024*1024;
-    ZPOROG = 512;
+    ZPOROG = 4096;
   private
     FStrmFile: TFileStream;
     FOffset, FCount: Int64;
@@ -90,6 +92,14 @@ type
     destructor Destroy; override;
     class procedure Terminate;
   end;
+  const
+ {$IFDEF ENG_VERSION}
+  RSM_SecAdr='E:%d Sector: %x Adr: %x';
+  RSEV_Sec='Error sector';
+ {$ELSE}
+  RSM_SecAdr='E:%d Сектор: %x Адрес: %x';
+  RSEV_Sec='Ошибочный сектор';
+ {$ENDIF}
 
 implementation
 
@@ -489,8 +499,8 @@ end;
 procedure TAsyncCopy.CheckData;
 begin
   // проверка на диапазон
-  if FOffset mod FStrmSD.SectorSize <> 0 then raise Exception.Create('Offset mod SectorSize <> 0');
-  if FCount mod FStrmSD.SectorSize <> 0 then raise Exception.Create('Count mod SectorSize <> 0');
+  if FOffset mod FStrmSD.SectorSize <> 0 then raise Exception.CreateFmt('Offset[%d] mod SectorSize[%d] <> 0',[FOffset,FStrmSD.SectorSize]);
+  if FCount mod FStrmSD.SectorSize <> 0 then raise Exception.CreateFmt('Count[%d] mod SectorSize[%d] <> 0',[FCount,FStrmSD.SectorSize]);
   if FOffset >= FStrmSD.Size then raise Exception.Create('Offset >= SD Size');
   if FOffset + FCount > FStrmSD.Size then raise Exception.Create('Offset+Count > SD Size');
 end;
@@ -662,9 +672,9 @@ begin
      wres := WaitForMultipleObjects(cntev, @ev, True, timout);
      if wres >= DWORD(WAIT_OBJECT_0+cntev) then
       begin
-       var s := Format('E:%d Сектор: %x Адрес: %x', [wres, (ssdFrom+Res.NumLoad) div FStrmSD.FSectorSize, ssdFrom+Res.NumLoad]);
+       var s := Format(RSM_SecAdr, [wres, (ssdFrom+Res.NumLoad) div FStrmSD.FSectorSize, ssdFrom+Res.NumLoad]);
        for var erSec in CheckErrorSectors() do s := s + ' '+ erSec.ToString;
-       if Assigned(TDebug.ExeptionEvent) then TDebug.ExeptionEvent('Ошибочный сектор', s, '');
+       if Assigned(TDebug.ExeptionEvent) then TDebug.ExeptionEvent(RSEV_Sec, s, '');
       end;
     finally
      DestroyRead

@@ -70,6 +70,37 @@ type
     property C_BindWorkRes: TWorkEventRes read FBindWorkRes write SetBindWorkRes;
   end;
 
+ resourcestring
+   TBL_SETDELAY1= 'Время включения';
+   RS_Int_Delay= 'Интервал задержки';
+   T_CAPTION1='Постановка на задержку';
+   T_CAPTION2= 'Cинхронизация задержки';
+   T_BUTTON1='Поставить на задержку';
+   T_BUTTON2='Cинхронизировать задержку';
+   RS_Reset_Delay='Сбросить задержку(время включения, интервал работы)...';
+   RS_Err_TimeDelay='Время постановки на задержку, включения прибора, прошло:%s сейчас:%s';
+   RS_Err_TimeOn='Время включения прибора %1.1f суток';
+   RS_Dlg_ResetDelay='Сбросить время включения, интервал работы для проекта?';
+   RS_Msg_OnCP='Включение СП:      %s';
+   RS_Msg_IntDelay='Интервал задержки: %s';
+   RS_Msg_Frame='Кадр: %d';
+   RS_Msg_OnnedCP='СП Включился в:    %s';
+   RS_Msg_Run='Работает:          %s';
+   RS_Msg_OffCP='Выключение СП:     %s';
+   RS_Msg_TimeOff='До выключения:     %s';
+   RS_Msg_Offed='Включился в:       %s';
+   RS_Msg_Runned='Отработал:         %s';
+   RS_Msg_OffedCP='СП Выключился:     %s';
+   RS_Msg_OffedNow='Выключен:          %s';
+  RS_MSG_All_DElayDat = 'Поставлен:  %s'+#$D#$A+
+       'Задержка:                        %s'+#$D#$A+
+       'Включение:  %s'+#$D#$A+
+       #$D#$A+
+       'Выключение: %s'+#$D#$A+
+       'Вык.интерв: %s';
+
+
+
 
 implementation
 
@@ -78,10 +109,10 @@ implementation
 uses tools;
 
 const
- TLBL_SETDELAY: array[Boolean] of string = ('Время включения', 'Интервал задержки');
+ TLBL_SETDELAY: array[Boolean] of string = (TBL_SETDELAY1, RS_Int_Delay);
  TMSK_SETDELAY: array[Boolean] of string = ('90/00/0000 00:00:00', '9 00:00:00');
- T_CAPTION: array[Boolean] of string = ('Постановка на задержку', 'Cинхронизация задержки');
- T_BUTTON: array[Boolean] of string = ('Поставить на задержку', 'Cинхронизировать задержку');
+ T_CAPTION: array[Boolean] of string = (T_CAPTION1, T_CAPTION2);
+ T_BUTTON: array[Boolean] of string = (T_BUTTON1, T_BUTTON2);
 
 { TDialogDelay }
 
@@ -95,7 +126,7 @@ begin
   var DoStd := (GContainer as IActionEnum).Get((DelayDevice as IDevice).IName + '_DoStd');
   var DoData := (GContainer as IActionEnum).Get((DelayDevice as IDevice).IName + '_DoData');
   if DoData.Checked then (DoData.GetComponent as TICustRTTIAction).Execute;
-  if DoStd.Checked then (DoStd.GetComponent as TICustRTTIAction).Execute;
+  //if DoStd.Checked then (DoStd.GetComponent as TICustRTTIAction).Execute;
 
   RegisterDialog.UnInitialize<Dialog_SetDeviceDelay>;
 end;
@@ -134,10 +165,10 @@ begin
     FDBTimeStart := opt.DelayStart;
     FDBIntervalWork := opt.IntervalWork;
    end;
-  IsDelayIntervalMenu := AddToNCMenu('Интервал задержки', IsDelayIntervalMenuClick);
+  IsDelayIntervalMenu := AddToNCMenu(RS_Int_Delay, IsDelayIntervalMenuClick);
   IsDelayIntervalMenu.AutoCheck := True;
   AddToNCMenu('-');
-  ResetDelayMenu := AddToNCMenu('Сбросить задержку(время включения, интервал работы)...', ResetDelayMenuClick);
+  ResetDelayMenu := AddToNCMenu(RS_Reset_Delay, ResetDelayMenuClick);
 end;
 
 procedure TDialogDelay.UpdateDelayed;
@@ -165,10 +196,10 @@ end;
 procedure TDialogDelay.CheckStartTime(TimeStart: TDateTime);
 begin
   if TimeStart < Now then
-    raise EDialogDelayException.CreateFmt('Время постановки на задержку, включения прибора, прошло:%s сейчас:%s',
+    raise EDialogDelayException.CreateFmt(RS_Err_TimeDelay,
           [DateTimeToStr(TimeStart), DateTimeToStr(Now)]);
   if TimeStart - Now > 20 then
-    raise EDialogDelayException.CreateFmt('Время включения прибора %1.1f суток', [TimeStart - Now]);
+    raise EDialogDelayException.CreateFmt(RS_Err_TimeOn, [TimeStart - Now]);
 end;
 
 class function TDialogDelay.ClassIcon: Integer;
@@ -187,32 +218,32 @@ procedure TDialogDelay.TimerTimer(Sender: TObject);
   iDelay: TTime;
   procedure DelayPlus;
   begin
-    Memo.Lines.Add(Format('Включение СП:      %s', [DateTimeToStr(tStart)]));
-    Memo.Lines.Add(Format('Интервал задержки: %s', [Ctime.AsString(iDelay)]));
-    Memo.Lines.Add(Format('Кадр: %d', [Ctime.RoundToKadr(iDelay)]));
+    Memo.Lines.Add(Format(RS_Msg_OnCP, [DateTimeToStr(tStart)]));
+    Memo.Lines.Add(Format(RS_Msg_IntDelay, [Ctime.AsString(iDelay)]));
+    Memo.Lines.Add(Format(RS_Msg_Frame, [Ctime.RoundToKadr(iDelay)]));
   end;
   procedure DelayMinus;
   begin
-    Memo.Lines.Add(Format('СП Включился в:    %s', [DateTimeToStr(FDBTimeStart)]));
-    Memo.Lines.Add(Format('Работает:          %s', [Ctime.AsString(-iDelay)]));
-    Memo.Lines.Add(Format('Кадр: %d', [Ctime.RoundToKadr(-iDelay)]));
+    Memo.Lines.Add(Format(RS_Msg_OnnedCP, [DateTimeToStr(FDBTimeStart)]));
+    Memo.Lines.Add(Format(RS_Msg_Run, [Ctime.AsString(-iDelay)]));
+    Memo.Lines.Add(Format(RS_Msg_Frame, [Ctime.RoundToKadr(-iDelay)]));
   end;
   procedure WorkDelayPlus(w: TTime);
   begin
     if w <> 0 then
      begin
       Memo.Lines.Add('');
-      Memo.Lines.Add(Format('Выключение СП:     %s', [DateTimeToStr(Ctime.Round(tStart + w))]));
-      Memo.Lines.Add(Format('До выключения:     %s', [Ctime.AsString(Ctime.Round(iDelay + w))]));
+      Memo.Lines.Add(Format(RS_Msg_OffCP, [DateTimeToStr(Ctime.Round(tStart + w))]));
+      Memo.Lines.Add(Format(RS_Msg_TimeOff, [Ctime.AsString(Ctime.Round(iDelay + w))]));
      end;
   end;
   procedure WorkOff;
   begin
-    Memo.Lines.Add(Format('Включился в:       %s', [DateTimeToStr(FDBTimeStart)]));
-    Memo.Lines.Add(Format('Отработал:         %s', [Ctime.AsString(FDBIntervalWork)]));
+    Memo.Lines.Add(Format(RS_Msg_Offed, [DateTimeToStr(FDBTimeStart)]));
+    Memo.Lines.Add(Format(RS_Msg_Runned, [Ctime.AsString(FDBIntervalWork)]));
     Memo.Lines.Add('');
-    Memo.Lines.Add(Format('СП Выключился:     %s', [DateTimeToStr(toff)]));
-    Memo.Lines.Add(Format('Выключен:          %s', [Ctime.AsString(Ctime.Round(Now-toff))]));
+    Memo.Lines.Add(Format(RS_Msg_OffedCP, [DateTimeToStr(toff)]));
+    Memo.Lines.Add(Format(RS_Msg_OffedNow, [Ctime.AsString(Ctime.Round(Now-toff))]));
   end;
 begin
   Timer.Enabled := False;
@@ -281,7 +312,7 @@ end;
 
 procedure TDialogDelay.ResetDelayMenuClick(Sender: TObject);
 begin
-  if MessageDlg('Сбросить время включения, интервал работы для проекта?', TMsgDlgType.mtError,[mbOK, mbCancel],1) = mrOk then
+  if MessageDlg(RS_Dlg_ResetDelay, TMsgDlgType.mtError,[mbOK, mbCancel],1) = mrOk then
    begin
     WriteToBD(0, 0);
     UpdateDelayed;
@@ -358,13 +389,6 @@ begin
 end;
 
 procedure TDialogDelay.OnSetDelay(Res: TSetDelayRes);
- const
-  ST = 'Поставлен:  %s'+#$D#$A+
-       'Задержка:                        %s'+#$D#$A+
-       'Включение:  %s'+#$D#$A+
-       #$D#$A+
-       'Выключение: %s'+#$D#$A+
-       'Вык.интерв: %s';
  var
   tst, td, ton, tw, toff: string;
 begin
@@ -396,7 +420,7 @@ begin
       DateTimeToString(tw, 'hh:nn:ss:zzz', Res.WorkTime);
       DateTimeToString(toff, 'dd.mm.yyyy hh:nn:ss:zzz', Res.SetTime + Res.Delay + Res.WorkTime);
      end;
-    MessageDlg(Format(ST, [tst,td,ton,toff,tw]), mtConfirmation, [mbOk], 0);
+    MessageDlg(Format(RS_MSG_All_DElayDat, [tst,td,ton,toff,tw]), mtConfirmation, [mbOk], 0);
    end;
 end;
 

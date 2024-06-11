@@ -1,6 +1,7 @@
 object FormMetrInclinT: TFormMetrInclinT
   Left = 0
   Top = 0
+  ActiveControl = Tree
   Caption = 'FormMetrInclinT'
   ClientHeight = 466
   ClientWidth = 872
@@ -26,6 +27,7 @@ object FormMetrInclinT: TFormMetrInclinT
     Top = 0
     Width = 872
     Height = 453
+    AccessibleName = 'AHz'
     Align = alClient
     BorderWidth = 1
     Colors.BorderColor = 15987699
@@ -115,7 +117,31 @@ object FormMetrInclinT: TFormMetrInclinT
         Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
         Position = 10
         Text = 'Hz'
-        Width = 296
+        Width = 60
+      end
+      item
+        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
+        Position = 11
+        Text = 'G '#1080#1083#1080' H'
+        Width = 60
+      end
+      item
+        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
+        Position = 12
+        Text = #1054#1089#1100
+        Width = 60
+      end
+      item
+        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
+        Position = 13
+        Text = #1040#1084#1087
+        Width = 60
+      end
+      item
+        Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus]
+        Position = 14
+        Text = #1057#1084#1077#1097#1077#1085#1080#1077
+        Width = 56
       end>
   end
 end

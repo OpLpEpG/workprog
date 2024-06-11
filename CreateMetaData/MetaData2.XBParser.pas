@@ -2,7 +2,7 @@ unit MetaData2.XBParser;
 
 interface
 
-uses sysutils, Classes, Rtti, MetaData2.XClasses, Xml.XMLIntf, Xml.XMLDoc,Xml.xmldom, debug_except, tools;
+uses sysutils, Classes, Rtti, MetaData2.XClasses, Xml.XMLIntf, Xml.XMLDoc,Xml.xmldom, debug_except, tools, System.Variants;
 
 type
 // ThackAttr = record
@@ -80,6 +80,18 @@ begin
          n.AttributeNodes.Delete('tip');
          if n.HasAttribute('WRK') or n.HasAttribute('RAM') or n.HasAttribute('EEP') then globalOffset := 0;
          if n.HasAttribute('size') then n.Attributes['global'] := globalOffset;
+         // expand struct ra attributtes
+         for var i := 0 to n.AttributeNodes.Count-1 do
+          begin
+           var at := n.AttributeNodes[i];
+           for var a in ATR_TYPES do if a.ra and (at.NodeName = a.Name) then
+             for var j := 0 to n.ChildNodes.Count-1 do
+               begin
+                var dev := n.ChildNodes[j];
+                if at.NodeValue = System.Variants.Null then dev.Attributes[at.NodeName] := True
+                else dev.Attributes[at.NodeName] := at.NodeValue;
+               end;
+          end;
         end
        else if Supports(n, IXData ,d) then
         begin
@@ -87,6 +99,7 @@ begin
          inc(globalOffset, d.DataSizeOf);
         end;
       end);
+
       Exit;
      end;
    end;
@@ -129,11 +142,11 @@ begin
       end);
       Xd.SaveToFile(FileName);
       //////
-      var xdt := NewXMLDocument();
-      var outp := xdt.AddChild('PROJECT').AddChild('DEVICES');
-      MetaData2To1(xd.DocumentElement,outp);
-      xdt.SaveToFile('C:\XE\Projects\Device2\CreateMetaData\MetaDataPstd.xml');
-      ////
+//      var xdt := NewXMLDocument();
+//      var outp := xdt.AddChild('PROJECT').AddChild('DEVICES');
+//      MetaData2To1(xd.DocumentElement,outp);
+//      xdt.SaveToFile('C:\XE\Projects\Device2\CreateMetaData\MetaDataPstd.xml');
+     ////
       Exit;
      end;
    end;

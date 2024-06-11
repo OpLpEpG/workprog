@@ -30,10 +30,10 @@ uses
   DlgViewParam in 'DlgViewParam.pas',
   DlgFromToGlu in 'DlgFromToGlu.pas' {FormDlgGluFilter},
   DialogOpenLas in 'DialogOpenLas.pas' {DlgOpenLAS},
-  VCL.FormShowArray in 'VCL.FormShowArray.pas' {FormShowArray},
+  VCLFormShowArray in 'VCLFormShowArray.pas' {FormShowArray},
   VCL.CustomDataForm in 'VCL.CustomDataForm.pas',
-  VCL.GraphDataForm in 'VCL.GraphDataForm.pas' {GraphDataForm},
-  VCL.TableDataForm in 'VCL.TableDataForm.pas' {TableDataForm},
+  VCLGraphDataForm in 'VCLGraphDataForm.pas' {GraphDataForm},
+  VCLTableDataForm in 'VCLTableDataForm.pas' {TableDataForm},
   DlgEditParam in 'DlgEditParam.pas' {FormEditParam};
 
 {$R *.res}

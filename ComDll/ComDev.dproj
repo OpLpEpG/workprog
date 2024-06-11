@@ -51,6 +51,7 @@
         <DCC_DcuOutput>..\_unit\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>..\_exe\$(Config)</DCC_ExeOutput>
         <UsePackages>true</UsePackages>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -81,8 +82,8 @@
         <VerInfo_MajorVer>2</VerInfo_MajorVer>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>19</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.1.0.19;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=2.1.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>64</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.1.0.64;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=2.1.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <DCC_UnitSearchPath>..;..\CreateMetaData</DCC_UnitSearchPath>
         <DCC_UsePackage>VirtualTreesR;$(DCC_UsePackage)</DCC_UsePackage>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
@@ -115,7 +116,7 @@
         <DCCReference Include="DevBur.pas"/>
         <DCCReference Include="RestConn.pas"/>
         <DCCReference Include="WlanConn.pas"/>
-        <DCCReference Include="UDPConn.pas"/>
+        <DCCReference Include="UDPBinConn.pas"/>
         <DCCReference Include="DevUaki.pas"/>
         <DCCReference Include="Dev.Telesistem.pas"/>
         <DCCReference Include="SubDevImpl.pas"/>
@@ -131,6 +132,7 @@
         <DCCReference Include="NetConn.pas"/>
         <DCCReference Include="DevHorizontM.pas"/>
         <DCCReference Include="DevBurLowLevel.pas"/>
+        <DCCReference Include="UDPConn.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -182,6 +184,18 @@
                 <Source>
                     <Source Name="MainSource">ComDev.dpr</Source>
                 </Source>
+                <Language>
+                    <Language Name="ProjectLang">$00000419</Language>
+                    <Language Name="RootDir">C:\XE\Projects\Device2\ComDll\</Language>
+                    <Language Name="ActiveLang">ENU</Language>
+                </Language>
+                <Resource_DLL_Projects>
+                    <Resource_DLL_Projects Name="Item0">Английский (США)*$00000409*ENU*ENU</Resource_DLL_Projects>
+                </Resource_DLL_Projects>
+                <RDP_Source_Files>
+                    <RDP_Source_Files Name="Item0">_exe\Debug\ComDev.drc</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item1">..\_exe\Debug\ComDev.drc</RDP_Source_Files>
+                </RDP_Source_Files>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="..\_exe\Debug\ComDev.dlp" Configuration="Debug" Class="ProjectOutput"/>

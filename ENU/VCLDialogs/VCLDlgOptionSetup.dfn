@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLDialogs\VCLDlgOptionSetup.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLDialogs\VCLDlgOptionSetup.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45033.4745601852</prop>
+        <prop prop-type="OrigDateTime">45030.3890740741</prop>
+        <prop prop-type="XlatDateTime">45030.3890740741</prop>
+        <prop prop-type="Translated">2</prop>
+        <prop prop-type="UnTranslated">59</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FormOptionSetup.Left" resname="O:FormOptionSetup.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.Top" resname="O:FormOptionSetup.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.Caption" resname="O:FormOptionSetup.Caption">
+        <source>'Параметры поверки'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Verification parameters'</target>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.ClientHeight" resname="O:FormOptionSetup.ClientHeight">
+        <source>344</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.ClientWidth" resname="O:FormOptionSetup.ClientWidth">
+        <source>593</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.Color" resname="O:FormOptionSetup.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.Font.Charset" resname="O:FormOptionSetup.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.Font.Color" resname="O:FormOptionSetup.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.Font.Height" resname="O:FormOptionSetup.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.Font.Name" resname="O:FormOptionSetup.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.Font.Style" resname="O:FormOptionSetup.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.DesignSize[0]" resname="O:FormOptionSetup.DesignSize[0]">
+        <source>593</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">(</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.DesignSize[1]" resname="O:FormOptionSetup.DesignSize[1]">
+        <source>344</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Close">)</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.TextHeight" resname="O:FormOptionSetup.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TFormOptionSetup</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.Left" resname="O:FormOptionSetup.O:insp.Left">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.Top" resname="O:FormOptionSetup.O:insp.Top">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.Width" resname="O:FormOptionSetup.O:insp.Width">
+        <source>577</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.Height" resname="O:FormOptionSetup.O:insp.Height">
+        <source>289</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.Style" resname="O:FormOptionSetup.O:insp.Style">
+        <source>isItemPainter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.Anchors" resname="O:FormOptionSetup.O:insp.Anchors">
+        <source>[akLeft, akTop, akRight, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.Divider" resname="O:FormOptionSetup.O:insp.Divider">
+        <source>300</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">20</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.ItemHeight" resname="O:FormOptionSetup.O:insp.ItemHeight">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">21</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.Painter" resname="O:FormOptionSetup.O:insp.Painter">
+        <source>InspectorBorlandPainter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">22</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.TabStop" resname="O:FormOptionSetup.O:insp.TabStop">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">23</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:insp.TabOrder" resname="O:FormOptionSetup.O:insp.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">24</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btOK.Left" resname="O:FormOptionSetup.O:btOK.Left">
+        <source>160</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">25</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btOK.Top" resname="O:FormOptionSetup.O:btOK.Top">
+        <source>311</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">26</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btOK.Width" resname="O:FormOptionSetup.O:btOK.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">27</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btOK.Height" resname="O:FormOptionSetup.O:btOK.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">28</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btOK.Anchors" resname="O:FormOptionSetup.O:btOK.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">29</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btOK.Caption" resname="O:FormOptionSetup.O:btOK.Caption">
+        <source>'OK'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">30</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btOK.ModalResult" resname="O:FormOptionSetup.O:btOK.ModalResult">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">31</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btOK.TabOrder" resname="O:FormOptionSetup.O:btOK.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">32</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btOK.OnClick" resname="O:FormOptionSetup.O:btOK.OnClick">
+        <source>btOKClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">33</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btCancel.Left" resname="O:FormOptionSetup.O:btCancel.Left">
+        <source>241</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">34</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btCancel.Top" resname="O:FormOptionSetup.O:btCancel.Top">
+        <source>311</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">35</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btCancel.Width" resname="O:FormOptionSetup.O:btCancel.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">36</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btCancel.Height" resname="O:FormOptionSetup.O:btCancel.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">37</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btCancel.Anchors" resname="O:FormOptionSetup.O:btCancel.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">38</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btCancel.Caption" resname="O:FormOptionSetup.O:btCancel.Caption">
+        <source>'Отмена'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">39</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Cancel'</target>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btCancel.ModalResult" resname="O:FormOptionSetup.O:btCancel.ModalResult">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">40</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btCancel.TabOrder" resname="O:FormOptionSetup.O:btCancel.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">41</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:btCancel.OnClick" resname="O:FormOptionSetup.O:btCancel.OnClick">
+        <source>btCancelClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">42</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.CategoryFont.Charset" resname="O:FormOptionSetup.O:InspectorBorlandPainter.CategoryFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">43</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.CategoryFont.Color" resname="O:FormOptionSetup.O:InspectorBorlandPainter.CategoryFont.Color">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">44</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.CategoryFont.Height" resname="O:FormOptionSetup.O:InspectorBorlandPainter.CategoryFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">45</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.CategoryFont.Name" resname="O:FormOptionSetup.O:InspectorBorlandPainter.CategoryFont.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">46</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.CategoryFont.Style" resname="O:FormOptionSetup.O:InspectorBorlandPainter.CategoryFont.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">47</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.NameFont.Charset" resname="O:FormOptionSetup.O:InspectorBorlandPainter.NameFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">48</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.NameFont.Color" resname="O:FormOptionSetup.O:InspectorBorlandPainter.NameFont.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">49</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.NameFont.Height" resname="O:FormOptionSetup.O:InspectorBorlandPainter.NameFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">50</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.NameFont.Name" resname="O:FormOptionSetup.O:InspectorBorlandPainter.NameFont.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">51</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.NameFont.Style" resname="O:FormOptionSetup.O:InspectorBorlandPainter.NameFont.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">52</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.ValueFont.Charset" resname="O:FormOptionSetup.O:InspectorBorlandPainter.ValueFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">53</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.ValueFont.Color" resname="O:FormOptionSetup.O:InspectorBorlandPainter.ValueFont.Color">
+        <source>clNavy</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">54</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.ValueFont.Height" resname="O:FormOptionSetup.O:InspectorBorlandPainter.ValueFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">55</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.ValueFont.Name" resname="O:FormOptionSetup.O:InspectorBorlandPainter.ValueFont.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">56</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.ValueFont.Style" resname="O:FormOptionSetup.O:InspectorBorlandPainter.ValueFont.Style">
+        <source>[fsBold]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">57</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.DrawNameEndEllipsis" resname="O:FormOptionSetup.O:InspectorBorlandPainter.DrawNameEndEllipsis">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">58</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.Left" resname="O:FormOptionSetup.O:InspectorBorlandPainter.Left">
+        <source>272</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">59</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormOptionSetup.O:InspectorBorlandPainter.Top" resname="O:FormOptionSetup.O:InspectorBorlandPainter.Top">
+        <source>32</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916986458</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">60</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

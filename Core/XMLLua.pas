@@ -24,8 +24,9 @@ type
        RunFunc: string;
        RunPath: string;
        RunAdr: Integer;
+       metr: string;
        //V: Variant;
-      constructor Create(TrRoot, RnRoot: IXMLNode; const RnPath, RnFuncName: string; Aadr: Integer);
+      constructor Create(TrRoot, RnRoot: IXMLNode; const RnPath, RnFuncName: string; Aadr: Integer; metr: string = '');
      end;
    var
     FRunScript: TArray<TRunScriptRec>;
@@ -164,7 +165,8 @@ begin
   PushXmlToTable(LuaState, rr.TrrRoot);
   lua_pushstring(LuaState, m.AsAnsi(rr.RunPath).ToPointer);
   lua_pushinteger(LuaState, rr.RunAdr);
-  if Report(LuaState, DoCall(LuaState, 4, 0)) <> LUA_OK then
+  lua_pushstring(LuaState, m.AsAnsi(rr.metr).ToPointer);
+  if Report(LuaState, DoCall(LuaState, 5, 0)) <> LUA_OK then
    begin
     raise ELuaException.Create(FLastError);
    end;
@@ -300,9 +302,9 @@ end;
 procedure TXMLLua.AddXML(Aadr: Integer; const RnPath: string; TrRoot, RnRoot, Script: IXMLNode; const ScriptAtr, RootPrefix: string);
  const
   NL = #$D#$A;
-  FUNC_FMT = 'function %s(v, t, run_path, run_address)'; //'procedure %s(v, t: variant);';
+  FUNC_FMT = 'function %s(v, t, run_path, run_address, metr)'; //'procedure %s(v, t: variant);';
  var
-  fs, fn: string;
+  fs, fn, mtr: string;
   function fnd(): Boolean;
    var
     s: string;
@@ -328,8 +330,10 @@ begin
    begin
     FLines.Text := FLines.Text + NL + fn + NL + Script.Attributes[ScriptAtr]+ NL + 'end'+NL +NL;
    end;
-  //TDebug.Log('TrRoot.NodeName %s, RnRoot.NodeName %s',[GetPathXNode(TrRoot), GetPathXNode(RnRoot)]);
-  FRunScript := FRunScript + [TRunScriptRec.Create(TrRoot, RnRoot, RnPath, fs, AAdr)];
+ //TDebug.Log('TrRoot.NodeName %s, RnRoot.NodeName %s',[GetPathXNode(TrRoot), GetPathXNode(RnRoot)]);
+  mtr := '';
+  if RnRoot.HasAttribute(AT_METR) then mtr := RnRoot.Attributes[AT_METR];
+  FRunScript := FRunScript + [TRunScriptRec.Create(TrRoot, RnRoot, RnPath, fs, AAdr, mtr)];
 end;
 
 procedure TXMLLua.InnerAddAll(dev, Mtr: IXMLNode; adr: Integer; const ExePath: string; ExeSc, SetupDev: IXmlScript);
@@ -647,13 +651,14 @@ end;
 
 { TXMLLua.TRunScriptRec }
 
-constructor TXMLLua.TRunScriptRec.Create(TrRoot, RnRoot: IXMLNode; const RnPath, RnFuncName: string; Aadr: Integer);
+constructor TXMLLua.TRunScriptRec.Create(TrRoot, RnRoot: IXMLNode; const RnPath, RnFuncName: string; Aadr: Integer; metr: string);
 begin
   TrrRoot := TrRoot;
   RunRoot := RnRoot;
   RunPath := RnPath;
   RunFunc := RnFuncName;
   RunAdr := Aadr;
+  Self.metr := metr;
 end;
 
 initialization

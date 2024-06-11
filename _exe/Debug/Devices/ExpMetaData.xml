@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<mnems>
+  <!--формат доп. информации: key=data пример: INFO=01.07.2019 Профилемер v3   SERIAL_NO=11 -->
+  <!--pазделитель, начало метаданных: ### -->
+  <!--формат метаданных: mnem,type,ofset,array_size,uom,title,digits,presi,Rlo,Rhi,color,width,dash -->
+  <!--стандартные мнемоники -->
+  <KADR>время</KADR>
+  <RHX>magnit.X</RHX>
+  <RHY>magnit.Y</RHY>
+  <RHZ>magnit.Z</RHZ>
+  <RAX>accel.X</RAX>
+  <RAY>accel.Y</RAY>
+  <RAZ>accel.Z</RAZ>
+  <AX>accel_m.X</AX>
+  <AY>accel_m.Y</AY>
+  <AZ>accel_m.Z</AZ>
+  <HX>magnit_m.X</HX>
+  <HY>magnit_m.Y</HY>
+  <HZ>magnit_m.Z</HZ>
+  <AZI>Inclin.азимут</AZI>
+  <ZEN>Inclin.зенит</ZEN>
+  <ZEN>accel.зенит</ZEN>
+  <VIZ>Inclin.отклонитель</VIZ>
+  <VIZ>accel.отклонитель</VIZ>
+  <MVIZ>Inclin.маг_отклон</MVIZ>
+  <BN>Inclin.маг_наклон</BN>
+  <HTOT>Inclin.амплит_magnit</HTOT>
+  <GTOT>Inclin.амплит_accel</GTOT>
+  <GTOT>accel.амплит_accel</GTOT>
+  <T_INC>Inclin.T</T_INC>
+  <T_CLP>Caliper.T</T_CLP>
+  <RGR>ГК.гк</RGR>
+  <GR>gk_m</GR>
+  <FKD0>fkd.d0</FKD0>
+  <FKD1>fkd.d1</FKD1>
+  <FKD2>fkd.d2</FKD2>
+  <FKD3>fkd.d3</FKD3>
+  <FKD4>fkd.d4</FKD4>
+  <FKD5>fkd.d5</FKD5>
+  <FKD6>fkd.d6</FKD6>
+  <FKD7>fkd.d7</FKD7>
+  <FKD8>fkd.d8</FKD8>
+</mnems>

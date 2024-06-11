@@ -52,6 +52,7 @@
         <GenDll>true</GenDll>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
@@ -73,13 +74,13 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>70</VerInfo_Build>
+        <VerInfo_Build>158</VerInfo_Build>
         <VerInfo_Release>1</VerInfo_Release>
         <DCC_CBuilderOutput>None</DCC_CBuilderOutput>
         <DCC_Description>Core 3.0.0 Корневые классы и утилиты</DCC_Description>
         <DCC_DebugDCUs>true</DCC_DebugDCUs>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
-        <VerInfo_Keys>CompanyName=;FileVersion=3.0.1.70;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileVersion=3.2.1.158;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=3.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <DCC_DUPLICATE_CTOR_DTOR>false</DCC_DUPLICATE_CTOR_DTOR>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
@@ -89,6 +90,8 @@
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
         <DCC_Optimize>true</DCC_Optimize>
         <DCC_UnitSearchPath>..</DCC_UnitSearchPath>
+        <VerInfo_MinorVer>2</VerInfo_MinorVer>
+        <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -98,9 +101,9 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
-        <VerInfo_Build>61</VerInfo_Build>
+        <VerInfo_Build>68</VerInfo_Build>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.61;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=;FileVersion=1.0.0.68;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
     </PropertyGroup>
@@ -150,7 +153,7 @@
         <DCCReference Include="..\StolGKIntf.pas"/>
         <DCCReference Include="Math.Telesistem.pas"/>
         <DCCReference Include="FileCachImpl.pas"/>
-        <DCCReference Include="OtklonitelPaintClass.pas"/>
+        <DCCReference Include="OtklonitelPaintClass.dcr"/>
         <DCCReference Include="AVRtypes.pas"/>
         <DCCReference Include="IDataSets.pas"/>
         <DCCReference Include="..\DataSetIntf.pas"/>
@@ -196,6 +199,7 @@
         <DCCReference Include="WlanAPI\nduWlanTypes.pas"/>
         <DCCReference Include="..\SDcardToolsAsync.pas"/>
         <DCCReference Include="..\MagniProTool.pas"/>
+        <DCCReference Include="ExportMetaData.pas"/>
         <None Include="..\Script.inc"/>
         <None Include="..\global.inc"/>
         <BuildConfiguration Include="Base">
@@ -246,9 +250,19 @@
                     <VersionInfoKeys Name="Comments"/>
                 </VersionInfoKeys>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
+                <Language>
+                    <Language Name="ProjectLang">$00000419</Language>
+                    <Language Name="RootDir">C:\XE\Projects\Device2\Core\</Language>
+                    <Language Name="ActiveLang">ENU</Language>
+                </Language>
+                <RDP_Source_Files>
+                    <RDP_Source_Files Name="Item0">..\_exe\Release\Core.drc</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item1">_exe\Debug\Core.drc</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item2">..\_exe\Debug\Core.drc</RDP_Source_Files>
+                </RDP_Source_Files>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="..\_exe\Debug\Core.bpl" Configuration="Debug" Class="ProjectOutput"/>

@@ -5,6 +5,8 @@ interface
 uses RootImpl, ExtendIntf, DockIForm, debug_except, DeviceIntf, PluginAPI, RootIntf, Container, Actns,
      System.SysUtils, Vcl.Menus, System.Classes;
 
+resourcestring
+ RS_New_conn='Новое соединение...';
 
 type
   TSelectConnectIO = reference to procedure( c: IConnectIO);
@@ -50,7 +52,7 @@ begin
       end;
       procedure AddCreateNew(root: TMenuItem);
       begin
-        AddMenu(root, 'Новое соединение...', OnNewClick);
+        AddMenu(root, RS_New_conn, OnNewClick);
         AddMenu(root, '-', nil);
       end;
      var

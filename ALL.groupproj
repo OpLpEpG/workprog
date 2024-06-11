@@ -45,6 +45,27 @@
         <Projects Include="CreateMetaData\h2meta.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="ToGL\ToGL.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ComDll\ENU\ComDev_ENU.bdsproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ProjectManager\ENU\ProjectManager3_ENU.bdsproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="VCLData\ENU\VCLData_ENU.bdsproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="MainExe\ENU\WorkProg_ENU.bdsproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ENU\VCLControl3_ENU.bdsproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="ENU\VCLDialogs_ENU.bdsproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -179,40 +200,109 @@
     <Target Name="h2meta:Make">
         <MSBuild Projects="CreateMetaData\h2meta.dproj" Targets="Make"/>
     </Target>
+    <Target Name="ToGL">
+        <MSBuild Projects="ToGL\ToGL.dproj"/>
+    </Target>
+    <Target Name="ToGL:Clean">
+        <MSBuild Projects="ToGL\ToGL.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ToGL:Make">
+        <MSBuild Projects="ToGL\ToGL.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ComDev_ENU">
+        <MSBuild Projects="ComDll\ENU\ComDev_ENU.bdsproj"/>
+    </Target>
+    <Target Name="ComDev_ENU:Clean">
+        <MSBuild Projects="ComDll\ENU\ComDev_ENU.bdsproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ComDev_ENU:Make">
+        <MSBuild Projects="ComDll\ENU\ComDev_ENU.bdsproj" Targets="Make"/>
+    </Target>
+    <Target Name="ProjectManager3_ENU">
+        <MSBuild Projects="ProjectManager\ENU\ProjectManager3_ENU.bdsproj"/>
+    </Target>
+    <Target Name="ProjectManager3_ENU:Clean">
+        <MSBuild Projects="ProjectManager\ENU\ProjectManager3_ENU.bdsproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProjectManager3_ENU:Make">
+        <MSBuild Projects="ProjectManager\ENU\ProjectManager3_ENU.bdsproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLData_ENU">
+        <MSBuild Projects="VCLData\ENU\VCLData_ENU.bdsproj"/>
+    </Target>
+    <Target Name="VCLData_ENU:Clean">
+        <MSBuild Projects="VCLData\ENU\VCLData_ENU.bdsproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLData_ENU:Make">
+        <MSBuild Projects="VCLData\ENU\VCLData_ENU.bdsproj" Targets="Make"/>
+    </Target>
+    <Target Name="WorkProg_ENU">
+        <MSBuild Projects="MainExe\ENU\WorkProg_ENU.bdsproj"/>
+    </Target>
+    <Target Name="WorkProg_ENU:Clean">
+        <MSBuild Projects="MainExe\ENU\WorkProg_ENU.bdsproj" Targets="Clean"/>
+    </Target>
+    <Target Name="WorkProg_ENU:Make">
+        <MSBuild Projects="MainExe\ENU\WorkProg_ENU.bdsproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLControl3_ENU">
+        <MSBuild Projects="ENU\VCLControl3_ENU.bdsproj"/>
+    </Target>
+    <Target Name="VCLControl3_ENU:Clean">
+        <MSBuild Projects="ENU\VCLControl3_ENU.bdsproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLControl3_ENU:Make">
+        <MSBuild Projects="ENU\VCLControl3_ENU.bdsproj" Targets="Make"/>
+    </Target>
+    <Target Name="VCLDialogs_ENU">
+        <MSBuild Projects="ENU\VCLDialogs_ENU.bdsproj"/>
+    </Target>
+    <Target Name="VCLDialogs_ENU:Clean">
+        <MSBuild Projects="ENU\VCLDialogs_ENU.bdsproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VCLDialogs_ENU:Make">
+        <MSBuild Projects="ENU\VCLDialogs_ENU.bdsproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Core;VCLControl3;ProjectManager3;ComDev;Monitor;VCLData;VCLDialogs;WorkProg;CreateData;bootLoader;Metrol;VCLeeprom;LoggToGlu;h2meta"/>
+        <CallTarget Targets="Core;VCLControl3;ProjectManager3;ComDev;Monitor;VCLData;VCLDialogs;WorkProg;CreateData;bootLoader;Metrol;VCLeeprom;LoggToGlu;h2meta;ToGL;ComDev_ENU;ProjectManager3_ENU;VCLData_ENU;WorkProg_ENU;VCLControl3_ENU;VCLDialogs_ENU"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Core:Clean;VCLControl3:Clean;ProjectManager3:Clean;ComDev:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;WorkProg:Clean;CreateData:Clean;bootLoader:Clean;Metrol:Clean;VCLeeprom:Clean;LoggToGlu:Clean;h2meta:Clean"/>
+        <CallTarget Targets="Core:Clean;VCLControl3:Clean;ProjectManager3:Clean;ComDev:Clean;Monitor:Clean;VCLData:Clean;VCLDialogs:Clean;WorkProg:Clean;CreateData:Clean;bootLoader:Clean;Metrol:Clean;VCLeeprom:Clean;LoggToGlu:Clean;h2meta:Clean;ToGL:Clean;ComDev_ENU:Clean;ProjectManager3_ENU:Clean;VCLData_ENU:Clean;WorkProg_ENU:Clean;VCLControl3_ENU:Clean;VCLDialogs_ENU:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Core:Make;VCLControl3:Make;ProjectManager3:Make;ComDev:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;WorkProg:Make;CreateData:Make;bootLoader:Make;Metrol:Make;VCLeeprom:Make;LoggToGlu:Make;h2meta:Make"/>
+        <CallTarget Targets="Core:Make;VCLControl3:Make;ProjectManager3:Make;ComDev:Make;Monitor:Make;VCLData:Make;VCLDialogs:Make;WorkProg:Make;CreateData:Make;bootLoader:Make;Metrol:Make;VCLeeprom:Make;LoggToGlu:Make;h2meta:Make;ToGL:Make;ComDev_ENU:Make;ProjectManager3_ENU:Make;VCLData_ENU:Make;WorkProg_ENU:Make;VCLControl3_ENU:Make;VCLDialogs_ENU:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
-    <ItemGroup Condition="'$(BuildGroup)'=='RELEA'">
+    <ItemGroup Condition="'$(BuildGroup)'=='Main'">
         <BuildGroupProject Include="VCLEEPROM\VCLeeprom.dproj">
             <ProjectGuid>{56F0A71C-1450-497A-98B7-BFA1C4C3FA12}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ENU\VCLControl3_ENU.bdsproj">
+            <ProjectGuid>{CFD0A807-0D69-4CA6-9140-6A61F311830F}</ProjectGuid>
             <Configurations/>
             <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="Monitor\Monitor.dproj">
             <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
-            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
-            <Configurations>Debug</Configurations>
+            <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="Core\Core.dproj">
             <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
-            <Configurations>Debug</Configurations>
+            <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
+            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="LoggToGlu\LoggToGlu.dproj">
             <ProjectGuid>{1F4D5CC6-DE73-466C-A4E9-105CCEAB6120}</ProjectGuid>
@@ -222,13 +312,31 @@
         </BuildGroupProject>
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
             <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
-            <Configurations>Debug</Configurations>
+            <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Metrol\Metrol.dproj">
-            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
+        <BuildGroupProject Include="VCLData\ENU\VCLData_ENU.bdsproj">
+            <ProjectGuid>{D7C4215F-F75F-4617-AED4-A63CE03F01FF}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ENU\VCLDialogs_ENU.bdsproj">
+            <ProjectGuid>{91BFB6F8-98C6-4F89-87F8-A897DA4894EB}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ToGL\ToGL.dproj">
+            <ProjectGuid>{15425E96-EC75-498B-83BF-4DA477E64F3E}</ProjectGuid>
             <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLData\VCLData.dproj">
+            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
@@ -236,43 +344,61 @@
             <ProjectGuid>{995F12A9-5950-4DAF-A341-B67BAA503DE5}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ENU\ProjectManager3_ENU.bdsproj">
+            <ProjectGuid>{9144B9D4-6DE3-45EC-BD55-76BDFCFD7341}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLData\VCLData.dproj">
-            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
-            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="MainExe\WorkProg.dproj">
-            <ProjectGuid>{4858CC7A-7A81-48B7-9BAD-D77D360297D0}</ProjectGuid>
-            <Configurations>Debug</Configurations>
+        <BuildGroupProject Include="Metrol\Metrol.dproj">
+            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
+            <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="MainExe\WorkProg.dproj">
+            <ProjectGuid>{4858CC7A-7A81-48B7-9BAD-D77D360297D0}</ProjectGuid>
+            <Configurations>Debug;Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="MainExe\ENU\WorkProg_ENU.bdsproj">
+            <ProjectGuid>{C9EA3C46-4520-4B7A-BC2B-D9D3A8547C75}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ComDll\ENU\ComDev_ENU.bdsproj">
+            <ProjectGuid>{098AE5D7-85BA-4B35-8D24-9BEBC3FB52F9}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
             <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
-            <Configurations>Debug</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="BootLoader\bootLoader.dproj">
             <ProjectGuid>{6A5832E5-091D-4003-992D-36A2C2F3F43D}</ProjectGuid>
-            <Configurations>Debug</Configurations>
+            <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="ComDll\ComDev.dproj">
             <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
-            <Configurations>Debug</Configurations>
+            <Configurations>Debug;Release</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>False</Enabled>
+            <Enabled>True</Enabled>
         </BuildGroupProject>
     </ItemGroup>
     <ItemGroup Condition="'$(BuildGroup)'=='D1'">
@@ -282,14 +408,14 @@
             <Platforms/>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="ENU\VCLControl3_ENU.bdsproj">
+            <ProjectGuid>{CFD0A807-0D69-4CA6-9140-6A61F311830F}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="Monitor\Monitor.dproj">
             <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
-            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
@@ -300,17 +426,17 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
+            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="LoggToGlu\LoggToGlu.dproj">
             <ProjectGuid>{1F4D5CC6-DE73-466C-A4E9-105CCEAB6120}</ProjectGuid>
             <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="Metrol\Metrol.dproj">
-            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
-            <Configurations>Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="CreateMetaData\h2meta.dproj">
             <ProjectGuid>{995F12A9-5950-4DAF-A341-B67BAA503DE5}</ProjectGuid>
@@ -318,14 +444,44 @@
             <Platforms>Win32</Platforms>
             <Enabled>False</Enabled>
         </BuildGroupProject>
+        <BuildGroupProject Include="VCLData\ENU\VCLData_ENU.bdsproj">
+            <ProjectGuid>{D7C4215F-F75F-4617-AED4-A63CE03F01FF}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ENU\VCLDialogs_ENU.bdsproj">
+            <ProjectGuid>{91BFB6F8-98C6-4F89-87F8-A897DA4894EB}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ToGL\ToGL.dproj">
+            <ProjectGuid>{15425E96-EC75-498B-83BF-4DA477E64F3E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLData\VCLData.dproj">
+            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
             <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLData\VCLData.dproj">
-            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
+        <BuildGroupProject Include="ProjectManager\ENU\ProjectManager3_ENU.bdsproj">
+            <ProjectGuid>{9144B9D4-6DE3-45EC-BD55-76BDFCFD7341}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Metrol\Metrol.dproj">
+            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
@@ -341,6 +497,18 @@
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="MainExe\ENU\WorkProg_ENU.bdsproj">
+            <ProjectGuid>{C9EA3C46-4520-4B7A-BC2B-D9D3A8547C75}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ComDll\ENU\ComDev_ENU.bdsproj">
+            <ProjectGuid>{098AE5D7-85BA-4B35-8D24-9BEBC3FB52F9}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
             <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
@@ -361,28 +529,34 @@
             <Enabled>True</Enabled>
         </BuildGroupProject>
     </ItemGroup>
-    <ItemGroup Condition="'$(BuildGroup)'=='Main'">
+    <ItemGroup Condition="'$(BuildGroup)'=='RELEA'">
         <BuildGroupProject Include="VCLEEPROM\VCLeeprom.dproj">
             <ProjectGuid>{56F0A71C-1450-497A-98B7-BFA1C4C3FA12}</ProjectGuid>
             <Configurations/>
             <Platforms/>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ENU\VCLControl3_ENU.bdsproj">
+            <ProjectGuid>{CFD0A807-0D69-4CA6-9140-6A61F311830F}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="Monitor\Monitor.dproj">
             <ProjectGuid>{835A8D87-3D56-4F0D-B300-86DE4BB8FF32}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
-        </BuildGroupProject>
-        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
-            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
-            <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="Core\Core.dproj">
             <ProjectGuid>{CEA679DF-C5B1-45CD-B292-484719BC7A20}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="CreatePSK\CreateData.dproj">
+            <ProjectGuid>{6DEE576F-BEE7-47D3-A90B-C2393D54F264}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
@@ -394,57 +568,93 @@
         </BuildGroupProject>
         <BuildGroupProject Include="VCLDialogs\VCLDialogs.dproj">
             <ProjectGuid>{2446954F-14D0-43F6-A6D6-6A4BF21D727E}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="Metrol\Metrol.dproj">
-            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+        <BuildGroupProject Include="VCLData\ENU\VCLData_ENU.bdsproj">
+            <ProjectGuid>{D7C4215F-F75F-4617-AED4-A63CE03F01FF}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ENU\VCLDialogs_ENU.bdsproj">
+            <ProjectGuid>{91BFB6F8-98C6-4F89-87F8-A897DA4894EB}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ToGL\ToGL.dproj">
+            <ProjectGuid>{15425E96-EC75-498B-83BF-4DA477E64F3E}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="VCLData\VCLData.dproj">
+            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="CreateMetaData\h2meta.dproj">
             <ProjectGuid>{995F12A9-5950-4DAF-A341-B67BAA503DE5}</ProjectGuid>
             <Configurations>Release</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="VCLData\VCLData.dproj">
-            <ProjectGuid>{F49D4F1F-005D-45EC-B1DC-A0F841914A89}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+        <BuildGroupProject Include="ProjectManager\ENU\ProjectManager3_ENU.bdsproj">
+            <ProjectGuid>{9144B9D4-6DE3-45EC-BD55-76BDFCFD7341}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Metrol\Metrol.dproj">
+            <ProjectGuid>{BBEB907B-FDB2-40BF-8DC1-DAE1237C41CB}</ProjectGuid>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="VCLControl\VCLControl3.dproj">
             <ProjectGuid>{D978F5DD-A844-42D8-BCF1-49F4D956FA3C}</ProjectGuid>
-            <Configurations/>
-            <Platforms/>
-            <Enabled>True</Enabled>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="MainExe\WorkProg.dproj">
             <ProjectGuid>{4858CC7A-7A81-48B7-9BAD-D77D360297D0}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
-        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
-            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+        <BuildGroupProject Include="MainExe\ENU\WorkProg_ENU.bdsproj">
+            <ProjectGuid>{C9EA3C46-4520-4B7A-BC2B-D9D3A8547C75}</ProjectGuid>
             <Configurations/>
             <Platforms/>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ComDll\ENU\ComDev_ENU.bdsproj">
+            <ProjectGuid>{098AE5D7-85BA-4B35-8D24-9BEBC3FB52F9}</ProjectGuid>
+            <Configurations/>
+            <Platforms/>
+            <Enabled>False</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="ProjectManager\ProjectManager3.dproj">
+            <ProjectGuid>{FBBE4659-6954-4E02-9306-E032C4C16276}</ProjectGuid>
+            <Configurations>Debug</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="BootLoader\bootLoader.dproj">
             <ProjectGuid>{6A5832E5-091D-4003-992D-36A2C2F3F43D}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
             <Enabled>True</Enabled>
         </BuildGroupProject>
         <BuildGroupProject Include="ComDll\ComDev.dproj">
             <ProjectGuid>{6CD4FAC8-3A86-48BB-A02D-69AF3AB1C5B9}</ProjectGuid>
-            <Configurations>Debug;Release</Configurations>
+            <Configurations>Debug</Configurations>
             <Platforms>Win32</Platforms>
-            <Enabled>True</Enabled>
+            <Enabled>False</Enabled>
         </BuildGroupProject>
     </ItemGroup>
 </Project>

@@ -80,7 +80,7 @@ contains
   StolGKIntf in '..\StolGKIntf.pas',
   Math.Telesistem in 'Math.Telesistem.pas',
   FileCachImpl in 'FileCachImpl.pas',
-  OtklonitelPaintClass in 'OtklonitelPaintClass.pas',
+  OtklonitelPaintClass,
   AVRtypes in 'AVRtypes.pas',
   IDataSets in 'IDataSets.pas',
   DataSetIntf in '..\DataSetIntf.pas',
@@ -125,10 +125,8 @@ contains
   nduWlanAPI in 'WlanAPI\nduWlanAPI.pas',
   nduWlanTypes in 'WlanAPI\nduWlanTypes.pas',
   SDcardToolsAsync in '..\SDcardToolsAsync.pas',
-  MagniProTool in '..\MagniProTool.pas';
+  MagniProTool in '..\MagniProTool.pas',
+  ExportMetaData in 'ExportMetaData.pas';
 
 end.
-
-
-
 

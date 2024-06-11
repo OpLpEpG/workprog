@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<PersonalityInfo>
+		<Option>
+			<Option Name="Personality">W32ResourceDLL.Personality</Option>
+			<Option Name="ProjectType">ResourceDLL</Option>
+			<Option Name="Version">1.0</Option>
+			<Option Name="GUID">{F427649D-7FE6-433F-904C-D877637B68A6}</Option>
+		</Option>
+	</PersonalityInfo>
+	<W32ResourceDLL.Personality>
+		<Source>
+			<Source Name="MainSource">VCLControl3.dpr</Source>
+		</Source>
+		<Options>
+			<Options Name="BaseLang">1049</Options>
+			<Options Name="TargetName">..\..\_exe\Debug\VCLControl3.ENU</Options>
+			<Options Name="BRCC_IncludePath"></Options>
+			<Options Name="Company"></Options>
+			<Options Name="Configuration"></Options>
+			<Options Name="Copyright"></Options>
+			<Options Name="Description"></Options>
+			<Options Name="Trademark"></Options>
+			<Options Name="Product"></Options>
+			<Options Name="ProductVersion"></Options>
+			<Options Name="Title"></Options>
+			<Options Name="FileVersion"></Options>
+			<Options Name="Evidence"></Options>
+			<Options Name="KeyFile"></Options>
+			<Options Name="KeyName"></Options>
+		</Options>
+		<FileList><File FileName="ControForm3.dfm" ContainerId="W32Form" ModuleName="ControForm3.dfm"/><File FileName="DlgSetupDate.dfm" ContainerId="W32Form" ModuleName="DlgSetupDate.dfm"/><File FileName="ExportToPSK6_V3.dfm" ContainerId="W32Form" ModuleName="ExportToPSK6_V3.dfm"/><File FileName="FindDevices.dfm" ContainerId="W32Form" ModuleName="FindDevices.dfm"/><File FileName="FormDelay2.dfm" ContainerId="W32Form" ModuleName="FormDelay2.dfm"/><File FileName="FormDlgDev.dfm" ContainerId="W32Form" ModuleName="FormDlgDev.dfm"/><File FileName="FormDlgSetupProject.dfm" ContainerId="W32Form" ModuleName="FormDlgSetupProject.dfm"/><File FileName="FrameDelayDev.dfm" ContainerId="W32Form" ModuleName="FrameDelayDev.dfm"/><File FileName="FrameFindDevs2.dfm" ContainerId="W32Form" ModuleName="FrameFindDevs2.dfm"/><File FileName="SelectPath.dfm" ContainerId="W32Form" ModuleName="SelectPath.dfm"/><File FileName="VCLDlgClc.dfm" ContainerId="W32Form" ModuleName="VCLDlgClc.dfm"/><File FileName="VCLDlgExportCaliper.dfm" ContainerId="W32Form" ModuleName="VCLDlgExportCaliper.dfm"/><File FileName="VCLDlgExportLAS.dfm" ContainerId="W32Form" ModuleName="VCLDlgExportLAS.dfm"/><File FileName="VCLDlgRam.dfm" ContainerId="W32Form" ModuleName="VCLDlgRam.dfm"/><File FileName="VCLFrameRangeSelect.dfm" ContainerId="W32Form" ModuleName="VCLFrameRangeSelect.dfm"/><File FileName="VCLFrmSeltPar.dfm" ContainerId="W32Form" ModuleName="VCLFrmSeltPar.dfm"/><File FileName="C\XE\Projects\Device2\_exe\Debug\VCLControl3_DRC.rc" ContainerId="W32RC" ModuleName="VCLControl3_DRC.rc"/></FileList></W32ResourceDLL.Personality>
+</BorlandProject>

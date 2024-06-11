@@ -131,6 +131,7 @@ end;
 
 procedure TFormUAKI.btUpdateMagClick(Sender: TObject);
 begin
+  Uaki.MagnitAmp := StrToFloat(edMag.Text);
   Uaki.MagnitAmp := MagniProGetLastAmp;
   edMag.Text := FloatToStr(Uaki.MagnitAmp);
 end;

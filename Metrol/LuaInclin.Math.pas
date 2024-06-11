@@ -163,6 +163,7 @@ type
   end;}
 
    TInclPoint = record
+    T: double;
     G, H: TVector3;// TInclinVector;
     class operator Implicit(V: Variant): TInclPoint;
    end;
@@ -1065,7 +1066,12 @@ class procedure TMetrInclinMath.FindAzim(incl, trr: Variant);
   os,oc,zs,zc,
   a, zu, o, mo, b,
   x,y,z, Hx, Hy, Hz: Double;
+
+  t,v:IXMLNode;
 begin
+  t := TVxmlData(trr).Node;
+  v := TVxmlData(incl).Node;
+
   o := DegToRad(incl.отклонитель.CLC.VALUE);
   zu := DegToRad(incl.зенит.CLC.VALUE);
 
@@ -1074,7 +1080,8 @@ begin
   zs := sin(zu);
   zc := cos(zu);
 
-  TXMLScriptMath.TrrVect3D(TVxmlData(trr.magnit.m3x4).Node, TVxmlData(incl.magnit).Node, x,y,z);//, 1000);
+  TXMLScriptMath.TrrVect3D3T(t,v,'magnit', x,y,z);
+//  TXMLScriptMath.TrrVect3D(TVxmlData(trr.magnit.m3x4).Node, TVxmlData(incl.magnit).Node, x,y,z);//, 1000);
 //  x := incl.magnit.X.CLC.VALUE;
 //  y := incl.magnit.Y.CLC.VALUE;
 //  z := incl.magnit.Z.CLC.VALUE;
@@ -1151,8 +1158,12 @@ end;
 class procedure TMetrInclinMath.FindZenViz(incl, trr: Variant);
  var
   o, zu, x,y,z: Double;
+  t,v:IXMLNode;
 begin
-  TXMLScriptMath.TrrVect3D(TVxmlData(trr.accel.m3x4).Node, TVxmlData(incl.accel).Node, x, y, z);//, 1000);
+  t := TVxmlData(trr).Node;
+  v := TVxmlData(incl).Node;
+  TXMLScriptMath.TrrVect3D3T(t,v,'accel',x,y,z);
+  //TXMLScriptMath.TrrVect3D(TVxmlData(trr.accel.m3x4).Node, TVxmlData(incl.accel).Node, x, y, z);//, 1000);
 //  x := incl.accel.X.CLC.VALUE;
 //  y := incl.accel.Y.CLC.VALUE;
 //  z := incl.accel.Z.CLC.VALUE;
@@ -1785,6 +1796,11 @@ begin
   Result.h.x := v.magnit.X.DEV.VALUE;
   Result.h.y := v.magnit.Y.DEV.VALUE;
   Result.h.z := v.magnit.Z.DEV.VALUE;
+  try
+   Result.T := v.T.DEV.VALUE;
+  except
+   Result.T := 32;
+  end;
 end;
 
 end.

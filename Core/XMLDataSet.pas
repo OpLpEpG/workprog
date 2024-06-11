@@ -3,6 +3,8 @@ unit XMLDataSet;
 interface
 
 //{$DEFINE USE_VTARRAY}
+{$INCLUDE global.inc}
+
 
 uses ExtendIntf, DataSetIntf, Container, debug_except, Parser,  JDtools, FileCachImpl,
      Xml.XMLIntf,  System.IOUtils,
@@ -27,15 +29,31 @@ type
     destructor Destroy; override;
     function TryGet(out ids: IDataSet): Boolean; override;
     function CreateNew(out ids: IDataSet; UniDirectional: Boolean = True): Boolean; override;
+{$IFDEF ENG_VERSION}
+    [ShowProp('Path', True)] property Path: string read GetPath;
+{$ELSE}
     [ShowProp('Путь', True)] property Path: string read GetPath;
+{$ENDIF}
+{$IFDEF ENG_VERSION}
+    [ShowProp('BIN file', True)] property BINFileName: string read GetBinFileName;
+{$ELSE}
     [ShowProp('BIN файл', True)] property BINFileName: string read GetBinFileName;
+{$ENDIF}
   published
     property Device: string read FDevice write FDevice;
     property ModulAdress: Integer read FModul write FModul;
     property ModulName: string read FModulName write FModulName;
     property Section: string read FSection write FSection;
+{$IFDEF ENG_VERSION}
+    [ShowProp('XML file', True)] property XMLFileName: string read FXMLFileName write FXMLFileName;
+{$ELSE}
     [ShowProp('XML файл', True)] property XMLFileName: string read FXMLFileName write FXMLFileName;
+{$ENDIF}
+{$IFDEF ENG_VERSION}
+    [ShowProp('Object Fields')] property ObjectFields: Boolean read FObjectFields write SetObjectFields;
+{$ELSE}
     [ShowProp('Объектные поля')] property ObjectFields: Boolean read FObjectFields write SetObjectFields;
+{$ENDIF}
   end;
 
   TXMLDataSet = class(TFileDataSet{, IXMLDataSet})
@@ -265,16 +283,23 @@ begin
 end;
 
 function TXMLDataSet.TryGetX(const FullName: string; out X: IXMLNode): Boolean;
+  var
+   sk: IXMLNode;
   function RemoveRoot(const s: string): string;
   begin
-     if s.Contains(FXMLSection.NodeName) then
+     if s.Contains(sk.NodeName) then
       begin
-       Result := s.Remove(0, s.IndexOf(FXMLSection.NodeName)+ length(FXMLSection.NodeName))
+       Result := s.Remove(0, s.IndexOf(sk.NodeName)+ length(sk.NodeName))
       end
-      else Result := s;
+      else Result := s.Remove(0, s.IndexOf('.')+1);
     end;
 begin
-  Result := tools.TryGetX(FXMLSection, RemoveRoot(FullName), X);
+  sk := FXMLSection;
+  if not Assigned(sk) then
+   begin
+     Exit(False);
+   end;
+  Result := tools.TryGetX(sk, RemoveRoot(FullName), X);
 end;
 
 procedure TXMLDataSet.CreateFieldDefs(AXMLSection: IXMLNode; AObjectFields: Boolean);

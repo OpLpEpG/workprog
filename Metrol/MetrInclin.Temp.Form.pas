@@ -22,7 +22,7 @@ type
    const
     NICON = 86;
     procedure Loaded; override;
-    function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; override;
+//    function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; override;
     procedure DoStartAtt(AttNode: IXMLNode); override;
     procedure DoStopAtt(AttNode: IXMLNode); override;
 //    function UserSetupAlg(alg: IXMLNode): Boolean; override;
@@ -35,6 +35,7 @@ type
     class procedure DoCreateForm(Sender: IAction); override;
     class function MetrolMame: string; override;
     class function MetrolType: string; override;
+    class function MetrolAttrName: string; override;
     destructor Destroy; override;
     property AutomatMetrology: TinclAuto read FAutomatMetrology implements IAutomatMetrology;
   end;
@@ -103,6 +104,11 @@ begin
   AttestatPanel.Align := alBottom;
 end;
 
+class function TFormMetrInclinT.MetrolAttrName: string;
+begin
+  Result := 'INKLGK1'
+end;
+
 class function TFormMetrInclinT.MetrolMame: string;
 begin
   Result := 'Inclin'
@@ -129,7 +135,10 @@ procedure TFormMetrInclinT.TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualN
     V: IXMLNode;
   begin
     if TryGetX(p.XMNode, path, V, attr) then
-         CellText := Format(fmt,[Double(V.NodeValue) + Correction])
+      if fmt ='%s' then
+        CellText := V.NodeValue
+      else
+        CellText := Format(fmt,[Double(V.NodeValue) + Correction])
     else
          CellText := ''
   end;
@@ -143,23 +152,27 @@ begin
        if r.HasAttribute('STEP') then CellText := r.Attributes['STEP']
        else CellText := 'STEP';
       end;
-   1: SetData('T.DEV',     AT_VALUE,     '%7.0f');
-   2: SetData('СТОЛ',      'зенит',     '%7.0f');
-   3: SetData('СТОЛ',      'азимут',     '%7.0f');
-   4: SetData('СТОЛ',      'визир',     '%7.0f');
-   5: SetData('accel.X.DEV',      AT_VALUE,     '%7.0f');
-   6: SetData('accel.Y.DEV',      AT_VALUE,     '%7.0f');
-   7: SetData('accel.Z.DEV',      AT_VALUE,     '%7.0f');
-   8: SetData('magnit.X.DEV',     AT_VALUE,     '%7.0f');
-   9: SetData('magnit.Y.DEV',     AT_VALUE,     '%7.0f');
-   10: SetData('magnit.Z.DEV',     AT_VALUE,     '%7.0f');
+   1: SetData('T.DEV',     AT_VALUE,     '%7.2f');
+   2: SetData('СТОЛ',      'зенит',     '%7.2f');
+   3: SetData('СТОЛ',      'азимут',     '%7.1f');
+   4: SetData('СТОЛ',      'визир',     '%7.1f');
+   5: SetData('accel.X.DEV',      AT_VALUE,     '%7.1f');
+   6: SetData('accel.Y.DEV',      AT_VALUE,     '%7.1f');
+   7: SetData('accel.Z.DEV',      AT_VALUE,     '%7.1f');
+   8: SetData('magnit.X.DEV',     AT_VALUE,     '%7.1f');
+   9: SetData('magnit.Y.DEV',     AT_VALUE,     '%7.1f');
+   10: SetData('magnit.Z.DEV',     AT_VALUE,    '%7.1f');
+   11: SetData('',     'Sensor',     '%s');
+   12: SetData('',     'Axis',     '%s');
+   13: SetData('',     'Amp',     '%7.1f');
+   14: SetData('',     'Dz',     '%7.1f');
   end;
 end;
 
-function TFormMetrInclinT.UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean;
-begin
-  Result := True;
-end;
+//function TFormMetrInclinT.UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean;
+//begin
+//  Result := True;
+//end;
 
 {function TFormMetrInclinT.UserSetupAlg(alg: IXMLNode): Boolean;
   function AddHG(stp: IXMLNode; const Root: string):Variant;

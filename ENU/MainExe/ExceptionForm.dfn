@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\MainExe\ExceptionForm.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\MainExe\ExceptionForm.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45029.5695601852</prop>
+        <prop prop-type="OrigDateTime">45029.4582407407</prop>
+        <prop prop-type="XlatDateTime">42131.6151157407</prop>
+        <prop prop-type="Translated">0</prop>
+        <prop prop-type="UnTranslated">27</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FormExceptions.Left" resname="O:FormExceptions.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225564931</prop><prop prop-type="Status">0</prop><prop prop-type="Order">0</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.Top" resname="O:FormExceptions.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225564931</prop><prop prop-type="Status">0</prop><prop prop-type="Order">1</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.Caption" resname="O:FormExceptions.Caption">
+        <source>'Exceptions'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225564931</prop><prop prop-type="Status">0</prop><prop prop-type="Order">2</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      <alt-trans>  <source>'Исключения'</source>
+          <target>'Exceptions'</target>
+          <prop-group name="ITEFieldProp">
+          <prop prop-type="Modified">45029.3612426157</prop></prop-group>
+        </alt-trans></trans-unit>
+      <trans-unit id="O:FormExceptions.ClientHeight" resname="O:FormExceptions.ClientHeight">
+        <source>301</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225564931</prop><prop prop-type="Status">0</prop><prop prop-type="Order">3</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.ClientWidth" resname="O:FormExceptions.ClientWidth">
+        <source>562</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225564931</prop><prop prop-type="Status">0</prop><prop prop-type="Order">4</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.Color" resname="O:FormExceptions.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225564931</prop><prop prop-type="Status">0</prop><prop prop-type="Order">5</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.Font.Charset" resname="O:FormExceptions.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225564931</prop><prop prop-type="Status">0</prop><prop prop-type="Order">6</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.Font.Color" resname="O:FormExceptions.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225564931</prop><prop prop-type="Status">0</prop><prop prop-type="Order">7</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.Font.Height" resname="O:FormExceptions.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">8</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.Font.Name" resname="O:FormExceptions.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">9</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.Font.Style" resname="O:FormExceptions.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">10</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.OnShow" resname="O:FormExceptions.OnShow">
+        <source>FormShow</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">11</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.TextHeight" resname="O:FormExceptions.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">12</prop><prop prop-type="Type">TFormExceptions</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.Left" resname="O:FormExceptions.O:Memo.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">13</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.Top" resname="O:FormExceptions.O:Memo.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">14</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.Width" resname="O:FormExceptions.O:Memo.Width">
+        <source>562</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">15</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.Height" resname="O:FormExceptions.O:Memo.Height">
+        <source>301</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">16</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.Align" resname="O:FormExceptions.O:Memo.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">17</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.Font.Charset" resname="O:FormExceptions.O:Memo.Font.Charset">
+        <source>RUSSIAN_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">18</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.Font.Color" resname="O:FormExceptions.O:Memo.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">19</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.Font.Height" resname="O:FormExceptions.O:Memo.Font.Height">
+        <source>-13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">20</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.Font.Name" resname="O:FormExceptions.O:Memo.Font.Name">
+        <source>'Courier New'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">21</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.Font.Style" resname="O:FormExceptions.O:Memo.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">22</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.ParentFont" resname="O:FormExceptions.O:Memo.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">23</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.ReadOnly" resname="O:FormExceptions.O:Memo.ReadOnly">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">24</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.ScrollBars" resname="O:FormExceptions.O:Memo.ScrollBars">
+        <source>ssBoth</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">25</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExceptions.O:Memo.TabOrder" resname="O:FormExceptions.O:Memo.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45029.4225565046</prop><prop prop-type="Status">0</prop><prop prop-type="Order">26</prop><prop prop-type="Type">TMemo</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

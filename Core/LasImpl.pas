@@ -126,8 +126,16 @@ type
 
   TDSection = class(TSection, ILasDataSection)
   private
+   RowData: TArray<Variant>;
+   CurrIndex: Integer;
+   sNul: Double;
+  //sNul := Double(FOwner.Well.Items['NULL'].Value);
+  //sd := line.Split([' '], TStringSplitOptions.ExcludeEmpty);
+  //SetLength(v, Length(sd));
+
     FData: TArray<TArray<Variant>>;
     function RowToString(Index : Integer): string;
+    function GetDataLength: integer;
   protected
     procedure ClearBufers(); override;
     function CheckData(const Data: array of Variant): Boolean;
@@ -135,6 +143,7 @@ type
     procedure Clear;
     function GetData: TArray<TArray<Variant>>;
     procedure AddLine(const line: String); override;
+    property DataLength: integer read GetDataLength;
   public
     procedure ToStrings(ss: TStrings); override;
     destructor Destroy; override;
@@ -373,26 +382,26 @@ procedure TDSection.AddLine(const line: String);
  var
   sd: TArray<string>;
   s: string;
-  v: TArray<Variant>;
   i: Integer;
-  sNul, d: Double;
+  d: Double;
 begin
-  sNul := Double(FOwner.Well.Items['NULL'].Value);
   sd := line.Split([' '], TStringSplitOptions.ExcludeEmpty);
-  SetLength(v, Length(sd));
-  for  i := 0 to Length(v)-1 do
+  for  i := 0 to Length(sd)-1 do
    begin
     s := Trim(sd[i]);
     if TryStrToFloat(s, d) then
      begin
-      if d = sNul then v[i] := Null
-      else v[i] := d
+      if d = sNul then RowData[CurrIndex] := Null
+      else RowData[CurrIndex] := d
      end
-    else v[i] := s;
-    //v[i] := Trim(sd[i]).ToDouble;
-    //if v[i] = sNul then v[i] := Null;
+    else RowData[CurrIndex] := s;
+    Inc(CurrIndex);
    end;
-  AddData(v);
+  if CurrIndex = Length(RowData) then
+   begin
+     AddData(RowData);
+     CurrIndex := 0;
+   end;
 end;
 
 function TDSection.CheckData(const Data: array of Variant): Boolean;
@@ -408,6 +417,8 @@ end;
 procedure TDSection.ClearBufers;
 begin
   inherited;
+  sNul := Double(FOwner.Well.Items['NULL'].Value);
+  SetLength(RowData, DataLength);
   Clear;
 end;
 
@@ -420,6 +431,11 @@ end;
 function TDSection.GetData: TArray<TArray<Variant>>;
 begin
   Result := FData;
+end;
+
+function TDSection.GetDataLength: integer;
+begin
+  Exit(Length(FOwner.Curve.Mnems));
 end;
 
 function TDSection.RowToString(Index: Integer): string;

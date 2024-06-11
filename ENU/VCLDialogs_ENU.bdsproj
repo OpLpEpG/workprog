@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<PersonalityInfo>
+		<Option>
+			<Option Name="Personality">W32ResourceDLL.Personality</Option>
+			<Option Name="ProjectType">ResourceDLL</Option>
+			<Option Name="Version">1.0</Option>
+			<Option Name="GUID">{91BFB6F8-98C6-4F89-87F8-A897DA4894EB}</Option>
+		</Option>
+	</PersonalityInfo>
+	<W32ResourceDLL.Personality>
+		<Source>
+			<Source Name="MainSource">VCLDialogs.dpr</Source>
+		</Source>
+		<Options>
+			<Options Name="BaseLang">1049</Options>
+			<Options Name="TargetName">..\_exe\Debug\VCLDialogs.ENU</Options>
+			<Options Name="BRCC_IncludePath"></Options>
+			<Options Name="Company"></Options>
+			<Options Name="Configuration"></Options>
+			<Options Name="Copyright"></Options>
+			<Options Name="Description"></Options>
+			<Options Name="Trademark"></Options>
+			<Options Name="Product"></Options>
+			<Options Name="ProductVersion"></Options>
+			<Options Name="Title"></Options>
+			<Options Name="FileVersion"></Options>
+			<Options Name="Evidence"></Options>
+			<Options Name="KeyFile"></Options>
+			<Options Name="KeyName"></Options>
+		</Options>  <FileList>
+      <File FileName="VCLDialogs\VCLDlgConnectIO.dfm" ContainerId="W32Form" ModuleName="VCLDlgConnectIO.dfm"/>
+      <File FileName="VCLDialogs\VCLDlgConnectIOCOM.dfm" ContainerId="W32Form" ModuleName="VCLDlgConnectIOCOM.dfm"/>
+      <File FileName="VCLDialogs\VCLDlgConnectIONET.dfm" ContainerId="W32Form" ModuleName="VCLDlgConnectIONET.dfm"/>
+      <File FileName="VCLDialogs\VCLDlgConnectIOWLAN.dfm" ContainerId="W32Form" ModuleName="VCLDlgConnectIOWLAN.dfm"/>
+      <File FileName="VCLDialogs\VCLDlgDevice.dfm" ContainerId="W32Form" ModuleName="VCLDlgDevice.dfm"/>
+      <File FileName="VCLDialogs\VCLDlgOpenLas.dfm" ContainerId="W32Form" ModuleName="VCLDlgOpenLas.dfm"/>
+      <File FileName="VCLDialogs\VCLDlgOpenP3XML.dfm" ContainerId="W32Form" ModuleName="VCLDlgOpenP3XML.dfm"/>
+      <File FileName="VCLDialogs\VCLDlgOptionSetup.dfm" ContainerId="W32Form" ModuleName="VCLDlgOptionSetup.dfm"/>
+      <File FileName="VCLDialogs\VCLDlgRootDevice.dfm" ContainerId="W32Form" ModuleName="VCLDlgRootDevice.dfm"/>
+      <File FileName="VCLDialogs\VCLFrameSelectParam.dfm" ContainerId="W32Form" ModuleName="VCLFrameSelectParam.dfm"/>
+      <File FileName="VCLDialogs\VCLFrameSelectPath.dfm" ContainerId="W32Form" ModuleName="VCLFrameSelectPath.dfm"/>
+      <File FileName="VCLDialogs\VCLFrameTGamma.dfm" ContainerId="W32Form" ModuleName="VCLFrameTGamma.dfm"/>
+      <File FileName="VCLDialogs\VCLJDtypeAlphaClolor.dfm" ContainerId="W32Form" ModuleName="VCLJDtypeAlphaClolor.dfm"/>
+      <File FileName="VCLDialogs\VCLJDtypeClolor.dfm" ContainerId="W32Form" ModuleName="VCLJDtypeClolor.dfm"/>
+      <File FileName="VCLDialogs\VCLJDTypeTGamma.dfm" ContainerId="W32Form" ModuleName="VCLJDTypeTGamma.dfm"/>
+      <File FileName="_exe\Debug\VCLDialogs_DRC.rc" ContainerId="W32RC" ModuleName="VCLDialogs_DRC.rc"/>
+    </FileList>
+  </W32ResourceDLL.Personality>
+</BorlandProject>

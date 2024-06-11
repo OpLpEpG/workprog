@@ -37,6 +37,9 @@ type
     class function Execute(out d: IDevice): TModalResult;
     class procedure AddDevises(Sel: TAddressArray; Title, Names: string; SelectIO: IConnectIO; crWin: boolean;  out dev: IDevice);
   end;
+  resourcestring
+    RS_Dev_Connect= 'Подключить';
+    RS_Dev_Not_Celect='Не выбраны устройства';
 
 implementation
 
@@ -67,7 +70,7 @@ end;
 
 procedure TFormCreateDev.btConnectionClick(Sender: TObject);
 begin
-  btConnection.Caption := 'Подключить';
+  btConnection.Caption := RS_Dev_Connect;
   FSelectIO := nil;
   TMenuConnectIO.Apply(ppConnection.Items,
     procedure(c: IConnectIO)
@@ -144,7 +147,7 @@ begin
   if CheckState = cdNone then
   begin
    ModalResult := mrAbort;
-   raise EBaseException.Create('Не выбраны устройства');
+   raise EBaseException.Create(RS_Dev_Not_Celect);
   end;
   AddDevises(Selected, edCaption.Text, FNamesArray, FSelectIO, cbTree.Checked, FDevice);
   for pv in Tree.LevelNodes(0) do pv.CheckState := csUnCheckedNormal;

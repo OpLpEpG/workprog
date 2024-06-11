@@ -1,0 +1,878 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLDialogs\VCLDlgConnectIO.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLDialogs\VCLDlgConnectIO.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45033.4710185185</prop>
+        <prop prop-type="OrigDateTime">45030.3884259259</prop>
+        <prop prop-type="XlatDateTime">45030.3884259259</prop>
+        <prop prop-type="Translated">6</prop>
+        <prop prop-type="UnTranslated">79</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FormSetupConnect.Left" resname="O:FormSetupConnect.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.Top" resname="O:FormSetupConnect.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.BorderStyle" resname="O:FormSetupConnect.BorderStyle">
+        <source>bsToolWindow</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.Caption" resname="O:FormSetupConnect.Caption">
+        <source>'Установки COM порта'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'COM port settings'</target>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.ClientHeight" resname="O:FormSetupConnect.ClientHeight">
+        <source>174</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.ClientWidth" resname="O:FormSetupConnect.ClientWidth">
+        <source>300</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.Color" resname="O:FormSetupConnect.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.Font.Charset" resname="O:FormSetupConnect.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.Font.Color" resname="O:FormSetupConnect.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.Font.Height" resname="O:FormSetupConnect.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.Font.Name" resname="O:FormSetupConnect.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.Font.Style" resname="O:FormSetupConnect.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.Position" resname="O:FormSetupConnect.Position">
+        <source>poMainFormCenter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.OnShow" resname="O:FormSetupConnect.OnShow">
+        <source>FormShow</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.DesignSize[0]" resname="O:FormSetupConnect.DesignSize[0]">
+        <source>300</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">(</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.DesignSize[1]" resname="O:FormSetupConnect.DesignSize[1]">
+        <source>174</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Close">)</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.TextHeight" resname="O:FormSetupConnect.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TFormSetupConnect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Label2.Left" resname="O:FormSetupConnect.O:Label2.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Label2.Top" resname="O:FormSetupConnect.O:Label2.Top">
+        <source>52</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Label2.Width" resname="O:FormSetupConnect.O:Label2.Width">
+        <source>145</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Label2.Height" resname="O:FormSetupConnect.O:Label2.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">20</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Label2.Anchors" resname="O:FormSetupConnect.O:Label2.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">21</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Label2.Caption" resname="O:FormSetupConnect.O:Label2.Caption">
+        <source>'Время ожидания ответа (мс)'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">22</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Response timeout (ms)'</target>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Label2.ExplicitTop" resname="O:FormSetupConnect.O:Label2.ExplicitTop">
+        <source>125</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">23</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:sb.Left" resname="O:FormSetupConnect.O:sb.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">24</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:sb.Top" resname="O:FormSetupConnect.O:sb.Top">
+        <source>155</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">25</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:sb.Width" resname="O:FormSetupConnect.O:sb.Width">
+        <source>300</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">26</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:sb.Height" resname="O:FormSetupConnect.O:sb.Height">
+        <source>19</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">27</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:sb.Panels[0].Width" resname="O:FormSetupConnect.O:sb.Panels[0].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">28</prop>
+          <prop prop-type="Type">C:TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">&lt;item</prop>
+          <prop prop-type="Close">end&gt;</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:sb.ExplicitTop" resname="O:FormSetupConnect.O:sb.ExplicitTop">
+        <source>173</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">29</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:sb.ExplicitWidth" resname="O:FormSetupConnect.O:sb.ExplicitWidth">
+        <source>305</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">30</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:ButtonOK.Left" resname="O:FormSetupConnect.O:ButtonOK.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">31</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:ButtonOK.Top" resname="O:FormSetupConnect.O:ButtonOK.Top">
+        <source>115</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">32</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:ButtonOK.Width" resname="O:FormSetupConnect.O:ButtonOK.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">33</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:ButtonOK.Height" resname="O:FormSetupConnect.O:ButtonOK.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">34</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:ButtonOK.Anchors" resname="O:FormSetupConnect.O:ButtonOK.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">35</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:ButtonOK.Caption" resname="O:FormSetupConnect.O:ButtonOK.Caption">
+        <source>'OK'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">36</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:ButtonOK.ModalResult" resname="O:FormSetupConnect.O:ButtonOK.ModalResult">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">37</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:ButtonOK.TabOrder" resname="O:FormSetupConnect.O:ButtonOK.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">38</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:ButtonOK.OnClick" resname="O:FormSetupConnect.O:ButtonOK.OnClick">
+        <source>ButtonOKClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">39</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:ButtonOK.ExplicitTop" resname="O:FormSetupConnect.O:ButtonOK.ExplicitTop">
+        <source>136</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">40</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btTest.Left" resname="O:FormSetupConnect.O:btTest.Left">
+        <source>208</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">41</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btTest.Top" resname="O:FormSetupConnect.O:btTest.Top">
+        <source>114</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">42</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btTest.Width" resname="O:FormSetupConnect.O:btTest.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">43</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btTest.Height" resname="O:FormSetupConnect.O:btTest.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">44</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btTest.Anchors" resname="O:FormSetupConnect.O:btTest.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">45</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btTest.Caption" resname="O:FormSetupConnect.O:btTest.Caption">
+        <source>'Применить'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">46</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Apply'</target>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btTest.TabOrder" resname="O:FormSetupConnect.O:btTest.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">47</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btTest.OnClick" resname="O:FormSetupConnect.O:btTest.OnClick">
+        <source>btTestClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">48</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btTest.ExplicitTop" resname="O:FormSetupConnect.O:btTest.ExplicitTop">
+        <source>135</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">49</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:EdWait.Left" resname="O:FormSetupConnect.O:EdWait.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">50</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:EdWait.Top" resname="O:FormSetupConnect.O:EdWait.Top">
+        <source>71</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">51</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:EdWait.Width" resname="O:FormSetupConnect.O:EdWait.Width">
+        <source>171</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">52</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:EdWait.Height" resname="O:FormSetupConnect.O:EdWait.Height">
+        <source>21</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.391697419</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">53</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:EdWait.Anchors" resname="O:FormSetupConnect.O:EdWait.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">54</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:EdWait.TabOrder" resname="O:FormSetupConnect.O:EdWait.TabOrder">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">55</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:EdWait.Text" resname="O:FormSetupConnect.O:EdWait.Text">
+        <source>'1000'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">56</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:EdWait.ExplicitTop" resname="O:FormSetupConnect.O:EdWait.ExplicitTop">
+        <source>144</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">57</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Button1.Left" resname="O:FormSetupConnect.O:Button1.Left">
+        <source>112</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">58</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Button1.Top" resname="O:FormSetupConnect.O:Button1.Top">
+        <source>115</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">59</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Button1.Width" resname="O:FormSetupConnect.O:Button1.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">60</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Button1.Height" resname="O:FormSetupConnect.O:Button1.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">61</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Button1.Anchors" resname="O:FormSetupConnect.O:Button1.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">62</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Button1.Caption" resname="O:FormSetupConnect.O:Button1.Caption">
+        <source>'Отмена'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">63</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Cancel'</target>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Button1.ModalResult" resname="O:FormSetupConnect.O:Button1.ModalResult">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">64</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Button1.TabOrder" resname="O:FormSetupConnect.O:Button1.TabOrder">
+        <source>4</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">65</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:Button1.ExplicitTop" resname="O:FormSetupConnect.O:Button1.ExplicitTop">
+        <source>136</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">66</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btClose.Left" resname="O:FormSetupConnect.O:btClose.Left">
+        <source>208</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">67</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btClose.Top" resname="O:FormSetupConnect.O:btClose.Top">
+        <source>65</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">68</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btClose.Width" resname="O:FormSetupConnect.O:btClose.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">69</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btClose.Height" resname="O:FormSetupConnect.O:btClose.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">70</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btClose.Anchors" resname="O:FormSetupConnect.O:btClose.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">71</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btClose.Caption" resname="O:FormSetupConnect.O:btClose.Caption">
+        <source>'Закрыть'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">72</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Close'</target>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btClose.TabOrder" resname="O:FormSetupConnect.O:btClose.TabOrder">
+        <source>5</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">73</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btClose.OnClick" resname="O:FormSetupConnect.O:btClose.OnClick">
+        <source>btCloseClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">74</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btClose.ExplicitTop" resname="O:FormSetupConnect.O:btClose.ExplicitTop">
+        <source>161</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">75</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btOpen.Left" resname="O:FormSetupConnect.O:btOpen.Left">
+        <source>208</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">76</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btOpen.Top" resname="O:FormSetupConnect.O:btOpen.Top">
+        <source>17</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">77</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btOpen.Width" resname="O:FormSetupConnect.O:btOpen.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">78</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btOpen.Height" resname="O:FormSetupConnect.O:btOpen.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">79</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btOpen.Anchors" resname="O:FormSetupConnect.O:btOpen.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">80</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btOpen.Caption" resname="O:FormSetupConnect.O:btOpen.Caption">
+        <source>'Открыть'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">81</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Open'</target>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btOpen.TabOrder" resname="O:FormSetupConnect.O:btOpen.TabOrder">
+        <source>6</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">82</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btOpen.OnClick" resname="O:FormSetupConnect.O:btOpen.OnClick">
+        <source>btOpenClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">83</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupConnect.O:btOpen.ExplicitTop" resname="O:FormSetupConnect.O:btOpen.ExplicitTop">
+        <source>113</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916974306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">84</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

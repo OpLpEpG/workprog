@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLDialogs\VCLJDTypeTGamma.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLDialogs\VCLJDTypeTGamma.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45034.6681712963</prop>
+        <prop prop-type="OrigDateTime">45030.3897916667</prop>
+        <prop prop-type="XlatDateTime">45030.3897916667</prop>
+        <prop prop-type="Translated">0</prop>
+        <prop prop-type="UnTranslated">75</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:JDTypeFormGamma.Left" resname="O:JDTypeFormGamma.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942361</prop><prop prop-type="Status">0</prop><prop prop-type="Order">0</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.Top" resname="O:JDTypeFormGamma.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942361</prop><prop prop-type="Status">0</prop><prop prop-type="Order">1</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.BorderStyle" resname="O:JDTypeFormGamma.BorderStyle">
+        <source>bsNone</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942361</prop><prop prop-type="Status">0</prop><prop prop-type="Order">2</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.Caption" resname="O:JDTypeFormGamma.Caption">
+        <source>'JDTypeFormGamma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942361</prop><prop prop-type="Status">0</prop><prop prop-type="Order">3</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.ClientHeight" resname="O:JDTypeFormGamma.ClientHeight">
+        <source>256</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942361</prop><prop prop-type="Status">0</prop><prop prop-type="Order">4</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.ClientWidth" resname="O:JDTypeFormGamma.ClientWidth">
+        <source>206</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942361</prop><prop prop-type="Status">0</prop><prop prop-type="Order">5</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.Color" resname="O:JDTypeFormGamma.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">6</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.Font.Charset" resname="O:JDTypeFormGamma.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">7</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.Font.Color" resname="O:JDTypeFormGamma.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">8</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.Font.Height" resname="O:JDTypeFormGamma.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">9</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.Font.Name" resname="O:JDTypeFormGamma.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">10</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.Font.Style" resname="O:JDTypeFormGamma.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">11</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.TextHeight" resname="O:JDTypeFormGamma.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">12</prop><prop prop-type="Type">TJDTypeFormGamma</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:Bevel1.Left" resname="O:JDTypeFormGamma.O:Bevel1.Left">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">13</prop><prop prop-type="Type">TBevel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:Bevel1.Top" resname="O:JDTypeFormGamma.O:Bevel1.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">14</prop><prop prop-type="Type">TBevel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:Bevel1.Width" resname="O:JDTypeFormGamma.O:Bevel1.Width">
+        <source>131</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">15</prop><prop prop-type="Type">TBevel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:Bevel1.Height" resname="O:JDTypeFormGamma.O:Bevel1.Height">
+        <source>256</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">16</prop><prop prop-type="Type">TBevel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:Bevel1.Align" resname="O:JDTypeFormGamma.O:Bevel1.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">17</prop><prop prop-type="Type">TBevel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:Bevel1.Style" resname="O:JDTypeFormGamma.O:Bevel1.Style">
+        <source>bsRaised</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">18</prop><prop prop-type="Type">TBevel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:Bevel1.ExplicitLeft" resname="O:JDTypeFormGamma.O:Bevel1.ExplicitLeft">
+        <source>168</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">19</prop><prop prop-type="Type">TBevel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:Bevel1.ExplicitTop" resname="O:JDTypeFormGamma.O:Bevel1.ExplicitTop">
+        <source>120</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">20</prop><prop prop-type="Type">TBevel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:Bevel1.ExplicitWidth" resname="O:JDTypeFormGamma.O:Bevel1.ExplicitWidth">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">21</prop><prop prop-type="Type">TBevel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:Bevel1.ExplicitHeight" resname="O:JDTypeFormGamma.O:Bevel1.ExplicitHeight">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">22</prop><prop prop-type="Type">TBevel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.Left" resname="O:JDTypeFormGamma.O:tbPlus.Left">
+        <source>81</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">23</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.Top" resname="O:JDTypeFormGamma.O:tbPlus.Top">
+        <source>130</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">24</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.Width" resname="O:JDTypeFormGamma.O:tbPlus.Width">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">25</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.Height" resname="O:JDTypeFormGamma.O:tbPlus.Height">
+        <source>120</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">26</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.Max" resname="O:JDTypeFormGamma.O:tbPlus.Max">
+        <source>255</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">27</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.Orientation" resname="O:JDTypeFormGamma.O:tbPlus.Orientation">
+        <source>trVertical</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">28</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.Frequency" resname="O:JDTypeFormGamma.O:tbPlus.Frequency">
+        <source>10</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">29</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.Position" resname="O:JDTypeFormGamma.O:tbPlus.Position">
+        <source>255</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">30</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.TabOrder" resname="O:JDTypeFormGamma.O:tbPlus.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">31</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.TabStop" resname="O:JDTypeFormGamma.O:tbPlus.TabStop">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">32</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.TickStyle" resname="O:JDTypeFormGamma.O:tbPlus.TickStyle">
+        <source>tsNone</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">33</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbPlus.OnChange" resname="O:JDTypeFormGamma.O:tbPlus.OnChange">
+        <source>AllChange</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">34</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.Left" resname="O:JDTypeFormGamma.O:tbMinus.Left">
+        <source>81</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">35</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.Top" resname="O:JDTypeFormGamma.O:tbMinus.Top">
+        <source>4</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">36</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.Width" resname="O:JDTypeFormGamma.O:tbMinus.Width">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">37</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.Height" resname="O:JDTypeFormGamma.O:tbMinus.Height">
+        <source>120</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">38</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.Max" resname="O:JDTypeFormGamma.O:tbMinus.Max">
+        <source>255</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">39</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.Orientation" resname="O:JDTypeFormGamma.O:tbMinus.Orientation">
+        <source>trVertical</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">40</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.Frequency" resname="O:JDTypeFormGamma.O:tbMinus.Frequency">
+        <source>10</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">41</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.TabOrder" resname="O:JDTypeFormGamma.O:tbMinus.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">42</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.TabStop" resname="O:JDTypeFormGamma.O:tbMinus.TabStop">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">43</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.TickStyle" resname="O:JDTypeFormGamma.O:tbMinus.TickStyle">
+        <source>tsNone</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">44</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:tbMinus.OnChange" resname="O:JDTypeFormGamma.O:tbMinus.OnChange">
+        <source>AllChange</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">45</prop><prop prop-type="Type">TTrackBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.Left" resname="O:JDTypeFormGamma.O:clTop.Left">
+        <source>111</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">46</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.Top" resname="O:JDTypeFormGamma.O:clTop.Top">
+        <source>152</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">47</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.Width" resname="O:JDTypeFormGamma.O:clTop.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">48</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.Height" resname="O:JDTypeFormGamma.O:clTop.Height">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">49</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.Hue" resname="O:JDTypeFormGamma.O:clTop.Hue">
+        <source>0.0171568635851145</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">50</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.ParentBackground" resname="O:JDTypeFormGamma.O:clTop.ParentBackground">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">51</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.Saturation" resname="O:JDTypeFormGamma.O:clTop.Saturation">
+        <source>0.544000029563904</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">52</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.SelectedColor" resname="O:JDTypeFormGamma.O:clTop.SelectedColor">
+        <source>-360334</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">53</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.TabOrder" resname="O:JDTypeFormGamma.O:clTop.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">54</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.Value" resname="O:JDTypeFormGamma.O:clTop.Value">
+        <source>0.980392158031464</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">55</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clTop.OnChanged" resname="O:JDTypeFormGamma.O:clTop.OnChanged">
+        <source>AllChange</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">56</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.Left" resname="O:JDTypeFormGamma.O:clBot.Left">
+        <source>111</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">57</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.Top" resname="O:JDTypeFormGamma.O:clBot.Top">
+        <source>26</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">58</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.Width" resname="O:JDTypeFormGamma.O:clBot.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">59</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.Height" resname="O:JDTypeFormGamma.O:clBot.Height">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">60</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.Hue" resname="O:JDTypeFormGamma.O:clBot.Hue">
+        <source>0.0171568635851145</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">61</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.ParentBackground" resname="O:JDTypeFormGamma.O:clBot.ParentBackground">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">62</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.Saturation" resname="O:JDTypeFormGamma.O:clBot.Saturation">
+        <source>0.544000029563904</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">63</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.SelectedColor" resname="O:JDTypeFormGamma.O:clBot.SelectedColor">
+        <source>-360334</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">64</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.TabOrder" resname="O:JDTypeFormGamma.O:clBot.TabOrder">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">65</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.Value" resname="O:JDTypeFormGamma.O:clBot.Value">
+        <source>0.980392158031464</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">66</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:clBot.OnChanged" resname="O:JDTypeFormGamma.O:clBot.OnChanged">
+        <source>AllChange</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">67</prop><prop prop-type="Type">TColorPickerGTK</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:pb.Left" resname="O:JDTypeFormGamma.O:pb.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">68</prop><prop prop-type="Type">TPaintBox32</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:pb.Top" resname="O:JDTypeFormGamma.O:pb.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">69</prop><prop prop-type="Type">TPaintBox32</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:pb.Width" resname="O:JDTypeFormGamma.O:pb.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">70</prop><prop prop-type="Type">TPaintBox32</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:pb.Height" resname="O:JDTypeFormGamma.O:pb.Height">
+        <source>256</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">71</prop><prop prop-type="Type">TPaintBox32</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:pb.Align" resname="O:JDTypeFormGamma.O:pb.Align">
+        <source>alLeft</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">72</prop><prop prop-type="Type">TPaintBox32</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:pb.TabOrder" resname="O:JDTypeFormGamma.O:pb.TabOrder">
+        <source>4</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">73</prop><prop prop-type="Type">TPaintBox32</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:JDTypeFormGamma.O:pb.OnPaintBuffer" resname="O:JDTypeFormGamma.O:pb.OnPaintBuffer">
+        <source>pbPaintBuffer</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681942477</prop><prop prop-type="Status">0</prop><prop prop-type="Order">74</prop><prop prop-type="Type">TPaintBox32</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

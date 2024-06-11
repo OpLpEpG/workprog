@@ -83,7 +83,7 @@ procedure TRestConnectIO.Send(Data: Pointer; Cnt: Integer; Event: TReceiveDataRe
 begin
   if Assigned(FProtocol) then
    begin
-    if not Assigned(Data) then raise ENetConnectIOException.Create('Данные не инициализированны');
+    if not Assigned(Data) then raise ENetConnectIOException.Create('Data not initialized');
     FEventReceiveData := Event;
     if WaitTime >= 0 then FTimerRxTimeOut.Interval := WaitTime
     else FTimerRxTimeOut.Interval := FComWait;
@@ -153,7 +153,7 @@ begin
       FRequest.Timeout := 1000;
       FRequest.Execute;
       if FResponse.Content = 'OK' then inherited Close
-      else raise ENetConnectIOException.Create('Ошибка закрытия порта :'+ FResponse.Content);
+      else raise ENetConnectIOException.Create('Error close port  :'+ FResponse.Content);
     except
      S_Status := S_Status + [iosError];
      raise
@@ -188,7 +188,7 @@ begin
       TDebug.Log('rest open ' + FRequest.GetFullRequestURL);
       FRequest.Execute;
       if FResponse.Content = 'OK' then inherited Open
-      else raise ENetConnectIOException.Create('Ошибка открытия порта :'+ FResponse.Content);
+      else raise ENetConnectIOException.Create('Error open port :'+ FResponse.Content);
     except
      S_Status := S_Status + [iosError];
      raise

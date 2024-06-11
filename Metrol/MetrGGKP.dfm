@@ -11,8 +11,6 @@ object FormGGKP: TFormGGKP
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
-  PixelsPerInch = 96
   TextHeight = 13
   object PanelM: TPanel
     Left = 0
@@ -48,9 +46,25 @@ object FormGGKP: TFormGGKP
       Height = 334
       Align = alLeft
       BorderWidth = 1
+      Colors.BorderColor = 15987699
+      Colors.DisabledColor = clGray
+      Colors.DropMarkColor = 15385233
+      Colors.DropTargetColor = 15385233
+      Colors.DropTargetBorderColor = 15385233
+      Colors.FocusedSelectionColor = 15385233
+      Colors.FocusedSelectionBorderColor = 15385233
+      Colors.GridLineColor = 15987699
+      Colors.HeaderHotColor = clBlack
+      Colors.HotColor = clBlack
+      Colors.SelectionRectangleBlendColor = 15385233
+      Colors.SelectionRectangleBorderColor = 15385233
+      Colors.SelectionTextColor = clBlack
+      Colors.TreeLineColor = 9471874
+      Colors.UnfocusedColor = clGray
+      Colors.UnfocusedSelectionColor = 13421772
+      Colors.UnfocusedSelectionBorderColor = 13421772
       Header.AutoSizeIndex = -1
       Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible, hoAutoSpring]
-      Header.ParentFont = True
       TabOrder = 0
       TreeOptions.AutoOptions = [toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]
       TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toGridExtensions, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]
@@ -62,32 +76,32 @@ object FormGGKP: TFormGGKP
         item
           Options = [coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coAllowFocus, coEditable]
           Position = 0
-          WideText = #8470','#1076#1080#1072#1084#1077#1090#1088
+          Text = #8470','#1076#1080#1072#1084#1077#1090#1088
         end
         item
           Position = 1
-          WideText = #1055','#1075'/'#1089#1084'3'
+          Text = #1055','#1075'/'#1089#1084'3'
         end
         item
           Position = 2
-          WideText = #1052#1047
+          Text = #1052#1047
         end
         item
           Position = 3
-          WideText = #1041#1047
+          Text = #1041#1047
         end
         item
           Position = 4
-          WideText = #1040'1'
+          Text = #1040'1'
         end
         item
           Position = 5
-          WideText = #1055#1083#1040'1'
+          Text = #1055#1083#1040'1'
         end
         item
           Position = 6
+          Text = #1054#1090#1085'.'#1087#1086#1075' %'
           Width = 55
-          WideText = #1054#1090#1085'.'#1087#1086#1075' %'
         end>
     end
     object Chart: TChart
@@ -126,6 +140,7 @@ object FormGGKP: TFormGGKP
         8)
       ColorPaletteIndex = 8
       object Series1: TLineSeries
+        HoverElement = [heCurrent]
         ColorEachLine = False
         SeriesColor = clBlue
         Brush.BackColor = clDefault
@@ -139,6 +154,7 @@ object FormGGKP: TFormGGKP
         YValues.Order = loNone
       end
       object Series2: TLineSeries
+        HoverElement = [heCurrent]
         ColorEachLine = False
         Brush.BackColor = clDefault
         Dark3D = False
@@ -151,6 +167,7 @@ object FormGGKP: TFormGGKP
         YValues.Order = loNone
       end
       object Series3: TLineSeries
+        HoverElement = [heCurrent]
         ColorEachLine = False
         SeriesColor = clOlive
         Brush.BackColor = clDefault

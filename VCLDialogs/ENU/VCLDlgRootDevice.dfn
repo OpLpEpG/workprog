@@ -1,0 +1,678 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLDialogs\VCLDlgRootDevice.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLDialogs\VCLDlgRootDevice.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45034.6681712963</prop>
+        <prop prop-type="OrigDateTime">45034.6642592593</prop>
+        <prop prop-type="XlatDateTime">45034.6642592593</prop>
+        <prop prop-type="Translated">0</prop>
+        <prop prop-type="UnTranslated">132</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FormSetupRootDevice.Left" resname="O:FormSetupRootDevice.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">0</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.Top" resname="O:FormSetupRootDevice.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">1</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.ClientHeight" resname="O:FormSetupRootDevice.ClientHeight">
+        <source>444</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">2</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.ClientWidth" resname="O:FormSetupRootDevice.ClientWidth">
+        <source>614</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">3</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.Color" resname="O:FormSetupRootDevice.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">4</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.Font.Charset" resname="O:FormSetupRootDevice.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">5</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.Font.Color" resname="O:FormSetupRootDevice.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">6</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.Font.Height" resname="O:FormSetupRootDevice.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">7</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.Font.Name" resname="O:FormSetupRootDevice.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">8</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.Font.Style" resname="O:FormSetupRootDevice.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">9</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.Position" resname="O:FormSetupRootDevice.Position">
+        <source>poMainFormCenter</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">10</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.OnCreate" resname="O:FormSetupRootDevice.OnCreate">
+        <source>FormCreate</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">11</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.TextHeight" resname="O:FormSetupRootDevice.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">12</prop><prop prop-type="Type">TFormSetupRootDevice</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Splitter.Left" resname="O:FormSetupRootDevice.O:Splitter.Left">
+        <source>169</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">13</prop><prop prop-type="Type">TSplitter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Splitter.Top" resname="O:FormSetupRootDevice.O:Splitter.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">14</prop><prop prop-type="Type">TSplitter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Splitter.Height" resname="O:FormSetupRootDevice.O:Splitter.Height">
+        <source>444</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">15</prop><prop prop-type="Type">TSplitter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Splitter.ExplicitLeft" resname="O:FormSetupRootDevice.O:Splitter.ExplicitLeft">
+        <source>152</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">16</prop><prop prop-type="Type">TSplitter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Splitter.ExplicitTop" resname="O:FormSetupRootDevice.O:Splitter.ExplicitTop">
+        <source>136</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">17</prop><prop prop-type="Type">TSplitter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Splitter.ExplicitHeight" resname="O:FormSetupRootDevice.O:Splitter.ExplicitHeight">
+        <source>100</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">18</prop><prop prop-type="Type">TSplitter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.Left" resname="O:FormSetupRootDevice.O:PanelRoot.Left">
+        <source>172</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">19</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.Top" resname="O:FormSetupRootDevice.O:PanelRoot.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">20</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.Width" resname="O:FormSetupRootDevice.O:PanelRoot.Width">
+        <source>442</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">21</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.Height" resname="O:FormSetupRootDevice.O:PanelRoot.Height">
+        <source>444</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">22</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.Align" resname="O:FormSetupRootDevice.O:PanelRoot.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">23</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.BevelOuter" resname="O:FormSetupRootDevice.O:PanelRoot.BevelOuter">
+        <source>bvNone</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">24</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.ShowCaption" resname="O:FormSetupRootDevice.O:PanelRoot.ShowCaption">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">25</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.TabOrder" resname="O:FormSetupRootDevice.O:PanelRoot.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">26</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.Left" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">27</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.Top" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.Top">
+        <source>403</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">28</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.Width" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.Width">
+        <source>442</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">29</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.Height" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.Height">
+        <source>41</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">30</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.Align" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.Align">
+        <source>alBottom</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">31</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.BevelOuter" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.BevelOuter">
+        <source>bvNone</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">32</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.ShowCaption" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.ShowCaption">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">33</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.TabOrder" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">34</prop><prop prop-type="Type">TPanel</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Left" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Left">
+        <source>9</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">35</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Top" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Top">
+        <source>6</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">36</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Width" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Width">
+        <source>89</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">37</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Height" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Height">
+        <source>27</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">38</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.HelpContext" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.HelpContext">
+        <source>20</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">39</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Cancel" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Cancel">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933333</prop><prop prop-type="Status">0</prop><prop prop-type="Order">40</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Caption" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.Caption">
+        <source>'Закрыть окно'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">41</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.TabOrder" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">42</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.OnClick" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btClose.OnClick">
+        <source>btCloseClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">43</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Left" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Left">
+        <source>104</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">44</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Top" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Top">
+        <source>6</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">45</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Width" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Width">
+        <source>89</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">46</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Height" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Height">
+        <source>27</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">47</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.HelpContext" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.HelpContext">
+        <source>20</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">48</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Cancel" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Cancel">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">49</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Caption" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.Caption">
+        <source>'Обновлять'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">50</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.TabOrder" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">51</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.OnClick" resname="O:FormSetupRootDevice.O:PanelRoot.O:PanelBoot.O:btUpdate.OnClick">
+        <source>btUpdateClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">52</prop><prop prop-type="Type">TButton</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.Left" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">53</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.Top" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">54</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.Width" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.Width">
+        <source>442</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">55</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.Height" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.Height">
+        <source>403</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">56</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.Style" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.Style">
+        <source>isItemPainter</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">57</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.Align" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">58</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.Divider" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.Divider">
+        <source>200</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">59</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.ItemHeight" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.ItemHeight">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">60</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.Painter" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.Painter">
+        <source>InspectorBorlandPainter</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">61</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.TabStop" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.TabStop">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">62</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.TabOrder" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">63</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.OnDataValueChanged" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.OnDataValueChanged">
+        <source>inspDataValueChanged</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">64</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:PanelRoot.O:insp.OnEditorKeyDown" resname="O:FormSetupRootDevice.O:PanelRoot.O:insp.OnEditorKeyDown">
+        <source>inspEditorKeyDown</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">65</prop><prop prop-type="Type">TJvInspector</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Left" resname="O:FormSetupRootDevice.O:Tree.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">66</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Top" resname="O:FormSetupRootDevice.O:Tree.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">67</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Width" resname="O:FormSetupRootDevice.O:Tree.Width">
+        <source>169</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">68</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Height" resname="O:FormSetupRootDevice.O:Tree.Height">
+        <source>444</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">69</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Align" resname="O:FormSetupRootDevice.O:Tree.Align">
+        <source>alLeft</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">70</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.BorderColor" resname="O:FormSetupRootDevice.O:Tree.Colors.BorderColor">
+        <source>15987699</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">71</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.DisabledColor" resname="O:FormSetupRootDevice.O:Tree.Colors.DisabledColor">
+        <source>clGray</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">72</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.DropMarkColor" resname="O:FormSetupRootDevice.O:Tree.Colors.DropMarkColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">73</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.DropTargetColor" resname="O:FormSetupRootDevice.O:Tree.Colors.DropTargetColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">74</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.DropTargetBorderColor" resname="O:FormSetupRootDevice.O:Tree.Colors.DropTargetBorderColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">75</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.FocusedSelectionColor" resname="O:FormSetupRootDevice.O:Tree.Colors.FocusedSelectionColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">76</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.FocusedSelectionBorderColor" resname="O:FormSetupRootDevice.O:Tree.Colors.FocusedSelectionBorderColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">77</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.GridLineColor" resname="O:FormSetupRootDevice.O:Tree.Colors.GridLineColor">
+        <source>15987699</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">78</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.HeaderHotColor" resname="O:FormSetupRootDevice.O:Tree.Colors.HeaderHotColor">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">79</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.HotColor" resname="O:FormSetupRootDevice.O:Tree.Colors.HotColor">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">80</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.SelectionRectangleBlendColor" resname="O:FormSetupRootDevice.O:Tree.Colors.SelectionRectangleBlendColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">81</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.SelectionRectangleBorderColor" resname="O:FormSetupRootDevice.O:Tree.Colors.SelectionRectangleBorderColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">82</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.SelectionTextColor" resname="O:FormSetupRootDevice.O:Tree.Colors.SelectionTextColor">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">83</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.TreeLineColor" resname="O:FormSetupRootDevice.O:Tree.Colors.TreeLineColor">
+        <source>9471874</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">84</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.UnfocusedColor" resname="O:FormSetupRootDevice.O:Tree.Colors.UnfocusedColor">
+        <source>clGray</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">85</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.UnfocusedSelectionColor" resname="O:FormSetupRootDevice.O:Tree.Colors.UnfocusedSelectionColor">
+        <source>13421772</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">86</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Colors.UnfocusedSelectionBorderColor" resname="O:FormSetupRootDevice.O:Tree.Colors.UnfocusedSelectionBorderColor">
+        <source>13421772</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">87</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Header.AutoSizeIndex" resname="O:FormSetupRootDevice.O:Tree.Header.AutoSizeIndex">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">88</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Header.Options" resname="O:FormSetupRootDevice.O:Tree.Header.Options">
+        <source>[hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs, hoAutoSpring]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">89</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.PopupMenu" resname="O:FormSetupRootDevice.O:Tree.PopupMenu">
+        <source>ppM</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">90</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.TabOrder" resname="O:FormSetupRootDevice.O:Tree.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">91</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.TreeOptions.MiscOptions" resname="O:FormSetupRootDevice.O:Tree.TreeOptions.MiscOptions">
+        <source>[toAcceptOLEDrop, toCheckSupport, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toEditOnClick]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">92</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.OnAddToSelection" resname="O:FormSetupRootDevice.O:Tree.OnAddToSelection">
+        <source>TreeAddToSelection</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">93</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.OnGetText" resname="O:FormSetupRootDevice.O:Tree.OnGetText">
+        <source>TreeGetText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">94</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Columns[0].Options" resname="O:FormSetupRootDevice.O:Tree.Columns[0].Options">
+        <source>[coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible, coSmartResize, coAllowFocus]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">95</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">&lt;item</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Columns[0].Position" resname="O:FormSetupRootDevice.O:Tree.Columns[0].Position">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">96</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Columns[0].Text" resname="O:FormSetupRootDevice.O:Tree.Columns[0].Text">
+        <source>'Устройство'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">97</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Tree.Columns[0].Width" resname="O:FormSetupRootDevice.O:Tree.Columns[0].Width">
+        <source>165</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">98</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">end&gt;</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.OnPopup" resname="O:FormSetupRootDevice.O:ppM.OnPopup">
+        <source>ppMPopup</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">99</prop><prop prop-type="Type">TPopupActionBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.Left" resname="O:FormSetupRootDevice.O:ppM.Left">
+        <source>88</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">100</prop><prop prop-type="Type">TPopupActionBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.Top" resname="O:FormSetupRootDevice.O:ppM.Top">
+        <source>40</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">101</prop><prop prop-type="Type">TPopupActionBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.O:NConnect.Caption" resname="O:FormSetupRootDevice.O:ppM.O:NConnect.Caption">
+        <source>'Подключить (Добавить) '</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">102</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.O:N1.Caption" resname="O:FormSetupRootDevice.O:ppM.O:N1.Caption">
+        <source>'-'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">103</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.O:NRemove.Caption" resname="O:FormSetupRootDevice.O:ppM.O:NRemove.Caption">
+        <source>'Удалить'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">104</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.O:NRemove.OnClick" resname="O:FormSetupRootDevice.O:ppM.O:NRemove.OnClick">
+        <source>NRemoveClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">105</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.O:N2.Caption" resname="O:FormSetupRootDevice.O:ppM.O:N2.Caption">
+        <source>'-'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">106</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.O:NUp.Caption" resname="O:FormSetupRootDevice.O:ppM.O:NUp.Caption">
+        <source>'Вверх'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">107</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.O:NUp.OnClick" resname="O:FormSetupRootDevice.O:ppM.O:NUp.OnClick">
+        <source>NUpClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">108</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.O:NDown.Caption" resname="O:FormSetupRootDevice.O:ppM.O:NDown.Caption">
+        <source>'Вниз'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">109</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:ppM.O:NDown.OnClick" resname="O:FormSetupRootDevice.O:ppM.O:NDown.OnClick">
+        <source>NDownClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">110</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.CategoryFont.Charset" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.CategoryFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">111</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.CategoryFont.Color" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.CategoryFont.Color">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">112</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.CategoryFont.Height" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.CategoryFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">113</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.CategoryFont.Name" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.CategoryFont.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">114</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.CategoryFont.Style" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.CategoryFont.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">115</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.NameFont.Charset" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.NameFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">116</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.NameFont.Color" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.NameFont.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">117</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.NameFont.Height" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.NameFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">118</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.NameFont.Name" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.NameFont.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">119</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.NameFont.Style" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.NameFont.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">120</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.ValueFont.Charset" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.ValueFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">121</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.ValueFont.Color" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.ValueFont.Color">
+        <source>clNavy</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">122</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.ValueFont.Height" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.ValueFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">123</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.ValueFont.Name" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.ValueFont.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">124</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.ValueFont.Style" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.ValueFont.Style">
+        <source>[fsBold]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">125</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.DrawNameEndEllipsis" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.DrawNameEndEllipsis">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">126</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.Left" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.Left">
+        <source>120</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">127</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:InspectorBorlandPainter.Top" resname="O:FormSetupRootDevice.O:InspectorBorlandPainter.Top">
+        <source>40</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">128</prop><prop prop-type="Type">TJvInspectorBorlandPainter</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Timer1.OnTimer" resname="O:FormSetupRootDevice.O:Timer1.OnTimer">
+        <source>Timer1Timer</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">129</prop><prop prop-type="Type">TTimer</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Timer1.Left" resname="O:FormSetupRootDevice.O:Timer1.Left">
+        <source>48</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933449</prop><prop prop-type="Status">0</prop><prop prop-type="Order">130</prop><prop prop-type="Type">TTimer</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormSetupRootDevice.O:Timer1.Top" resname="O:FormSetupRootDevice.O:Timer1.Top">
+        <source>32</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681933565</prop><prop prop-type="Status">0</prop><prop prop-type="Order">131</prop><prop prop-type="Type">TTimer</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

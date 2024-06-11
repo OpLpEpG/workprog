@@ -23,7 +23,7 @@ implementation
 procedure TCustomFormData.Loaded;
 begin
   inherited;
-  AddToNCMenu('Добавить данные...', NAddDataClick);
+  AddToNCMenu('Add Data...', NAddDataClick);
 end;
 
 procedure TCustomFormData.NAddDataClick(Sender: TObject);

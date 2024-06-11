@@ -105,6 +105,12 @@ type
   ['{C31C36BB-C528-496B-9DB5-FE3DFF6F2404}']
   end;
   ///	<summary>
+  ///	  реализация IConnectIO для UDP
+  ///	</summary>
+  IUDPBinConnectIO=interface(IConnectIO)
+  ['{229C0035-2B30-42C8-ADD1-E9FDB93B812C}']
+  end;
+  ///	<summary>
   ///	  реализация IConnectIO для чтения памяти с microSD Диска
   ///	</summary>
   ImicroSDConnectIO = interface(IConnectIO)
@@ -116,6 +122,9 @@ type
 
   TReceiveUDPRef = reference to procedure(const Data: string; status: integer);
 
+  ///	<summary>
+  ///	  реализация IConnectIO для UAKI
+  ///	</summary>
   IUDPConnectIO = interface(IConnectIO)
   ['{0F0AC653-2AC1-47EB-8214-7806F7376666}']
     procedure Send(const cmd: string; ev: TReceiveUDPRef = nil; TimeOut: Integer = -1);
@@ -313,7 +322,7 @@ type
     ///	<remarks>
     ///	  считывание EEPROM
     ///	</remarks>
-    procedure ReadEeprom(ev: TEepromEventRef);
+    procedure ReadEeprom(Addr: Integer; ev: TEepromEventRef);
     ///	<remarks>
     ///	  запись для одного модуля
     ///	</remarks>

@@ -10,11 +10,9 @@ object FormSetupProject: TFormSetupProject
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   DesignSize = (
     630
     411)
-  PixelsPerInch = 96
   TextHeight = 13
   object PageControl1: TPageControl
     Left = 0
@@ -58,10 +56,6 @@ object FormSetupProject: TFormSetupProject
     object TabSheet2: TTabSheet
       Caption = #1057#1084#1077#1097#1077#1085#1080#1077' '#1075#1083#1091#1073#1080#1085#1099
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object InspZ: TJvInspector
         AlignWithMargins = True
         Left = 0

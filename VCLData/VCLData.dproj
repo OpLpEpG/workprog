@@ -54,6 +54,7 @@
         <GenDll>true</GenDll>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
@@ -87,8 +88,8 @@
         <UsePackages>true</UsePackages>
         <VerInfo_MinorVer>1</VerInfo_MinorVer>
         <VerInfo_DLL>true</VerInfo_DLL>
-        <VerInfo_Keys>CompanyName=;FileVersion=2.1.0.250;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
-        <VerInfo_Build>250</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileVersion=2.1.0.284;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductVersion=1.0.0.0;Comments=;ProgramID=com.embarcadero.$(MSBuildProjectName);FileDescription=$(MSBuildProjectName);ProductName=$(MSBuildProjectName)</VerInfo_Keys>
+        <VerInfo_Build>284</VerInfo_Build>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -125,16 +126,16 @@
             <Form>DlgOpenLAS</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="VCL.FormShowArray.pas">
+        <DCCReference Include="VCLFormShowArray.pas">
             <Form>FormShowArray</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="VCL.CustomDataForm.pas"/>
-        <DCCReference Include="VCL.GraphDataForm.pas">
+        <DCCReference Include="VCLGraphDataForm.pas">
             <Form>GraphDataForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="VCL.TableDataForm.pas">
+        <DCCReference Include="VCLTableDataForm.pas">
             <Form>TableDataForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -193,9 +194,46 @@
                 <Source>
                     <Source Name="MainSource">VCLData.dpr</Source>
                 </Source>
+                <Language>
+                    <Language Name="ProjectLang">$00000419</Language>
+                    <Language Name="RootDir">C:\XE\Projects\Device2\VCLData\</Language>
+                    <Language Name="ActiveLang">ENU</Language>
+                </Language>
+                <Resource_DLL_Projects>
+                    <Resource_DLL_Projects Name="Item0">Английский (США)*$00000409*ENU*ENU</Resource_DLL_Projects>
+                </Resource_DLL_Projects>
+                <RDP_Source_Files>
+                    <RDP_Source_Files Name="Item0">VCLData\VCL.FormShowArray.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item1">VCLData\VCL.GraphDataForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item2">VCLData\VCL.TableDataForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item3">VCLData\FormWork.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item4">VCLData\AbstractDlgParams.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item5">VCLData\DlgFromToGlu.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item6">VCLData\DialogOpenLas.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item7">VCLData\VCLFormShowArray.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item8">VCLData\VCLGraphDataForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item9">VCLData\VCLTableDataForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item10">VCLData\DlgEditParam.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item11">_exe\Debug\VCLData.drc</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item12">FormWork.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item13">AbstractDlgParams.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item14">DlgFromToGlu.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item15">DialogOpenLas.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item16">VCLFormShowArray.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item17">VCLGraphDataForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item18">VCLTableDataForm.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item19">DlgEditParam.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item20">..\_exe\Debug\VCLData.drc</RDP_Source_Files>
+                </RDP_Source_Files>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="..\_exe\Debug\VCLData.dlp" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\_exe\Debug\VCLData.dlp" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>VCLData.dll</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployClass Name="AdditionalDebugSymbols">
                     <Platform Name="OSX32">
                         <Operation>1</Operation>

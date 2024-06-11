@@ -13,6 +13,11 @@ uses DeviceIntf, ExtendIntf, RootIntf, IndexBuffer, Container, JvDockGlobals,
   System.Generics.Defaults,  JvDockSupportControl,
   JvDockVSNetStyle, JvDockTree, Vcl.ToolWin, Vcl.PlatformDefaultStyleActnCtrls, System.ImageList, JvAppXMLStorage;
 
+resourcestring
+  RS_DevWork='Прибор [%s] в работе. Необходимо завершить операцию обмена данными';
+  RS_delayInt='Интервал задержки: %s';
+  RS_InWprk='Работает: %s, кадр %d';
+  RS_idle='Не поставлен на задержку';
 const
   DEF_SCREEN = 'ScreenDefault';
   REG_PATH = 'Software\AMKGorizont\WorkProg';
@@ -705,13 +710,13 @@ begin
      begin
       iDelay := Ctime.Round(FDBTimeStart - Now);
       if iDelay > 0 then
-         sb.Panels[0].Text := Format('Интервал задержки: %s', [Ctime.AsString(iDelay)])
+         sb.Panels[0].Text := Format(RS_delayInt, [Ctime.AsString(iDelay)])
       else
-         sb.Panels[0].Text := Format('Работает: %s, кадр %d', [Ctime.AsString(-iDelay), Ctime.RoundToKadr(-iDelay)]);
+         sb.Panels[0].Text := Format(RS_InWprk, [Ctime.AsString(-iDelay), Ctime.RoundToKadr(-iDelay)]);
      end
-    else sb.Panels[0].Text := 'Не поставлен на задержку'
+    else sb.Panels[0].Text := RS_idle
    end
-   else  sb.Panels[0].Text := 'Не поставлен на задержку'
+   else  sb.Panels[0].Text := RS_idle
 end;
 
 procedure TFormMain.SetActiveTab(const Form: IForm);
@@ -973,7 +978,7 @@ begin
    else
     begin
      DefaultExt := 'db';
-     Filter := 'Файл проекта (*.db)|*.db';
+     Filter := 'Project file (*.db)|*.db';
      InitialDir := ExtractFilePath(ParamStr(0))+ '\Projects';
     end;
    Options := [ofReadOnly,ofHideReadOnly,ofPathMustExist,ofFileMustExist,ofEnableSizing];
@@ -1099,7 +1104,7 @@ begin
    for d in de do
     if not (d.Status in [dsNoInit, dsPartReady, dsReady]) and not d.CanClose then
    begin
-    MessageDlg(Format('Прибор [%s] в работе. Необходимо завершить операцию обмена данными', [(d as ICaption).Text]),
+    MessageDlg(Format(RS_DevWork, [(d as ICaption).Text]),
                mtWarning, [mbOk], 0);
     Exit(True);
    end;

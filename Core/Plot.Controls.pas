@@ -1,6 +1,9 @@
 unit Plot.Controls;
 
+
 interface
+
+{$INCLUDE global.inc}
 
 uses
   RootImpl, PluginAPI, RootIntf, tools, debug_except, ExtendIntf, FileCachImpl,
@@ -41,6 +44,43 @@ type
   published
     property FirstMenuIndex: Integer read FFirstMenuIndex write SetFirstMenuIndex;
   end;
+
+
+ {$IFDEF ENG_VERSION}
+ const
+	RSME_EditSels	='Edit Selected...';
+	RSME_ShowPar	='Show parameter';
+	RSME_AddData	='add data...';
+	RSME_DelPar	='Delete parameter [%s]';
+	RSME_EditPar	='Edit parameter [%s] ...';
+	RSM_DelCol	='Delete Column?';
+	RSME_UpdateScreen	='Update Screen';
+	RSME_EditGR	='Edit plot...';
+	RSME_AddCol	='Add column';
+	RSME_ShowLeg	='Show legend';
+	RSME_ShowInf	='Show info';
+	RSME_EditCol	='Edit column...';
+	RSME_Delcol	='Delete column...';
+	RSME_Params	='Parameters';
+	RSME_SelAll	='Select Al=';
+{$ELSE}
+ const
+    RSME_UpdateScreen='Обновить экран';
+    RSME_EditGR='Редактировать график...';
+    RSME_AddCol='Добавить колонку';
+    RSME_ShowLeg='Показывать легенду';
+    RSME_ShowInf='Показывать Информацию';
+    RSME_EditCol='Редактировать колонку...';
+    RSME_Delcol='Удалить колонку...';
+    RSME_Params='Параметры';
+    RSME_SelAll='Выбрать все';
+    RSME_EditSels='Редактировать выбранные...';
+    RSME_ShowPar='Показывать параметр';
+    RSME_AddData='Добавить данные...';
+    RSME_DelPar='Удалить параметр [%s]';
+    RSME_EditPar='Редактировать параметр [%s] ...';
+    RSM_DelCol='Удалить колонку?';
+{$ENDIF}
 
 implementation
 
@@ -97,23 +137,23 @@ begin
         FGraph := TCustomGraph(AObject);
         if not Assigned(FNRootAddColumn) then
         begin
-          FNUpdateDataGraph := AddToMenu('Обновить экран', UpdateGraphClick, FGraph, MousePos);
-          FNRootEditGraph := AddToMenu('Редактировать график...', EditGraphClick, FGraph, MousePos);
-          FNRootAddColumn := AddToMenu('Добавить колонку', nil, FGraph, MousePos);
+          FNUpdateDataGraph := AddToMenu(RSME_UpdateScreen, UpdateGraphClick, FGraph, MousePos);
+          FNRootEditGraph := AddToMenu(RSME_EditGR, EditGraphClick, FGraph, MousePos);
+          FNRootAddColumn := AddToMenu(RSME_AddCol, nil, FGraph, MousePos);
           for ccd in TGraphColmn.ColClassItems do
             AddToMenu(ccd.DisplayName, AddColumnClick, TObject(ccd.ColCls), MousePos, FNRootAddColumn);
         end;
         AddToMenu('-', nil, FGraph, MousePos);
-        AddToMenu('Показывать легенду', LegendRowVisblChahgeClick, FGraph, MousePos, nil, ToAutoCheck(TCustomGraphLegendRow));
-        AddToMenu('Показывать Информацию', InfoRowVisblChahgeClick, FGraph, MousePos, nil, ToAutoCheck(TCustomGraphInfoRow));
+        AddToMenu(RSME_ShowLeg, LegendRowVisblChahgeClick, FGraph, MousePos, nil, ToAutoCheck(TCustomGraphLegendRow));
+        AddToMenu(RSME_ShowInf, InfoRowVisblChahgeClick, FGraph, MousePos, nil, ToAutoCheck(TCustomGraphInfoRow));
         AddToMenu('-', nil, FGraph, MousePos);
       end;
     ppeColumn:
       begin
         FColumn := TGraphColmn(AObject);
         AddToMenu('-', nil, FColumn, MousePos);
-        AddToMenu('Редактировать колонку...', EditColumnClick, FColumn, MousePos);
-        AddToMenu('Удалить колонку...', DeleteColumnClick, FColumn, MousePos);
+        AddToMenu(RSME_EditCol, EditColumnClick, FColumn, MousePos);
+        AddToMenu(RSME_Delcol, DeleteColumnClick, FColumn, MousePos);
         AddToMenu('-', nil, FColumn, MousePos);
       end;
     ppeRegion:
@@ -121,19 +161,19 @@ begin
         FRegion := TGraphRegion(AObject);
         if FRegion.Row is TCustomGraphLegendRow then
         begin
-          m := AddToMenu('Параметры', nil, FRegion, MousePos);
-          AddToMenu('Выбрать все', SelectAllParamsClick, FRegion, MousePos, m);
-          AddToMenu('Редактировать выбранные...', EditSelParamsClick, FRegion, MousePos, m);
+          m := AddToMenu(RSME_Params, nil, FRegion, MousePos);
+          AddToMenu(RSME_SelAll, SelectAllParamsClick, FRegion, MousePos, m);
+          AddToMenu(RSME_EditSels, EditSelParamsClick, FRegion, MousePos, m);
         end
         else if FRegion.Row is TCustomGraphInfoRow then
         begin
-          m := AddToMenu('Показывать параметр', nil, FRegion, MousePos);
+          m := AddToMenu(RSME_ShowPar, nil, FRegion, MousePos);
           for p in FColumn.Params do
             AddToMenu(p.Title, InfoParamClick, p, MousePos, m);
         end
         else if FRegion.Row is TCustomGraphDataRow then
         begin
-          m := AddToMenu('Добавить данные...', nil, FRegion, MousePos);
+          m := AddToMenu(RSME_AddData, nil, FRegion, MousePos);
           for s in RegisterDialog.CategoryDescriptions(IMPORT_DB_DIALOG_CATEGORY) do
             AddToMenu(s, AddParamsClick, FRegion, MousePos, m);
         end
@@ -141,8 +181,8 @@ begin
     ppeParam:
       begin
         FParam := TGraphPar(AObject);
-        AddToMenu(Format('Удалить параметр [%s]', [FParam.Title]), DeleteParamClick, FParam, MousePos);
-        AddToMenu(Format('Редактировать параметр [%s] ...', [FParam.Title]), EditParamClick, FParam, MousePos);
+        AddToMenu(Format(RSME_DelPar, [FParam.Title]), DeleteParamClick, FParam, MousePos);
+        AddToMenu(Format(RSME_EditPar, [FParam.Title]), EditParamClick, FParam, MousePos);
       end;
   end;
 end;
@@ -172,7 +212,7 @@ end;
 
 procedure TPlotMenu.DeleteColumnClick(Sender: TObject);
 begin
-  if MessageDlg('Удалить колонку?', TMsgDlgType.mtWarning, [mbOK, mbCancel], 1) = mrOk then
+  if MessageDlg(RSM_DelCol, TMsgDlgType.mtWarning, [mbOK, mbCancel], 1) = mrOk then
   begin
     FGraph.Frost;
     try

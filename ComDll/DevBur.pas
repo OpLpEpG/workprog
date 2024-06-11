@@ -2,10 +2,52 @@ unit DevBur;
 
 interface
 
+{$INCLUDE global.inc}
+
 uses  tools, System.IOUtils, RootIntf,
   Winapi.Windows, System.SysUtils, System.Classes, CPort, CRC16, Vcl.ExtCtrls, System.Variants, Xml.XMLIntf, Xml.XMLDoc,
   Generics.Collections,  Vcl.Forms, Vcl.Dialogs,Vcl.Controls, Actns,
   DeviceIntf, AbstractDev, debug_except, ExtendIntf, Container, PluginAPI, RootImpl;
+
+{$IFDEF ENG_VERSION}
+ const
+   RS_DElay = '<I> Delay...';
+   RS_Control= '0:Control|3.<I>:-1';
+   RS_WindowDelay= 'Delay window';
+   RS_Info1='<I> Information';
+   RS_Info2='0:Control|3.<I>;2:';
+   RS_Info3='Exit/Enter information reading mode';
+   RS_Cont1='(only time)';
+   RS_Cont2='0:Control|3.<I>.Additionally|0';
+   RS_Cont3= 'Reduced power consumption of the device in the mode of no information, obtaining only the time and state of the device';
+   RS_Device1='Switch off the device';
+   RS_Device2='0:Control|3.<I>.Additionally|0';
+   RS_Device3='Put devices into sleep mode';
+{$ELSE}
+ const
+   RS_DElay = '<I> Задержка...';
+   RS_Control= '0:Управление|3.<I>:-1';
+   RS_WindowDelay= 'Окно постановки на задержку';
+   RS_Info1='<I> Информация';
+   RS_Info2='0:Управление|3.<I>;2:';
+   RS_Info3='Выход/Вход в режим чтения информации';
+   RS_Cont1='(только время)';
+   RS_Cont2='0:Управление|3.<I>.Дополнительно|0';
+   RS_Cont3= 'Пониженное энергопотребление прибора режимне информации, получение только времени и состояния прибора';
+   RS_Device1='Выключить прибор';
+   RS_Device2='0:Управление|3.<I>.Дополнительно|0';
+   RS_Device3='Перевести приборы в спящий режим';
+{$ENDIF}
+
+resourcestring
+  RS_ErrReadData = 'Ошибка чтения данных устройства с адресом: %d SZ=%d[%d] CA=0x%x';
+  RS_ErrNoInfo = 'Не инициализирована информация об устройствах';
+  RS_MetadataERR='Метаданные устройств (%s) не считаны';
+  RS_SleapDLG='Перевести приборы в спящий режим?';
+  RS_ERR_eep='Адр.уст: %d, EEPROM размер: %d смещение: %d - ошибка чтения секции'#$D#$A;
+  RS_ERR_eepwr='Адр.уст: %d, EEPROM размер: %d смещение: %d - ошибка записи секции'#$D#$A;
+  RS_NO_eepmeta='Метаданных EEPROM устройства с адресом %d нет';
+  RS_ERR_eepLen='Данная версия программы поддерживает длину EEPROM меньше 250 текущая: %d';
 
 
   const
@@ -81,7 +123,7 @@ uses  tools, System.IOUtils, RootIntf,
     destructor Destroy; override;
     procedure InitMetaData(ev: TInfoEvent);
     procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false);
-    procedure ReadEeprom(ev: TEepromEventRef);
+    procedure ReadEeprom(Addr: Integer; ev: TEepromEventRef);
     procedure WriteEeprom(Addr: Integer; ev: TResultEventRef; section: Integer = -1);
     procedure SetDelay(StartTime: TDateTime; WorkTime: TTime; ResultEvent: TSetDelayEvent);
     procedure CheckConnect(); override;
@@ -92,17 +134,16 @@ uses  tools, System.IOUtils, RootIntf,
     property Cycle: TCycleEx read FCycle implements  ICycle, ICycleEx;
 // actions
     //Capt, Categ: string; AImageIndex: Integer; APaths: string; AHint: string; AAutoCheck AChecked AGroupIndex AEnabled
-    [DynamicAction('<I> Задержка...', '<I>', 142, '0:Управление|3.<I>:-1', 'Окно постановки на задержку')]
+    [DynamicAction(RS_DElay, '<I>', 142, RS_Control, RS_WindowDelay)]
     procedure DoDelay(Sender: IAction);
 //    [DynamicAction('<I> Коррекция часов...', '<I>', Dialog_SyncDelay_ICON, '0:Управление|3.<I>', 'Окно коррекции часов модулей. Вызывается перед чтением памяти,в режиме информации.')]
 //    procedure DoSync(Sender: IAction);
-    [DynamicAction('<I> Информация', '<I>', 52, '0:Управление|3.<I>;2:', 'Выход/Вход в режим чтения информации')]
+    [DynamicAction(RS_Info1, '<I>', 52, RS_Info2, RS_Info3)]
     procedure DoData(Sender: IAction);
 //    procedure DoInfo(Sender: IAction);
-    [DynamicAction('(только время)', '<I>', 69, '0:Управление|3.<I>.Дополнительно|0',
-    'Пониженное энергопотребление прибора режимне информации, получение только времени и состояния прибора')]
+    [DynamicAction(RS_Cont1, '<I>', 69, RS_Cont2, RS_Cont3)]
     procedure DoStd(Sender: IAction);
-    [DynamicAction('Выключить прибор', '<I>', 71, '0:Управление|3.<I>.Дополнительно|0', 'Перевести приборы в спящий режим')]
+    [DynamicAction(RS_Device1, '<I>', 71, RS_Device2, RS_Device3)]
     procedure DoIdle(Sender: IAction);
   published
     property CyclePeriod;
@@ -111,10 +152,6 @@ uses  tools, System.IOUtils, RootIntf,
 implementation
 
 uses  Parser, MetaData2.to1;
-
-const
-  RS_ErrReadData = 'Ошибка чтения данных устройства с адресом: %d SZ=%d[%d] CA=0x%x';
-  RS_ErrNoInfo = 'Не инициализирована информация об устройствах';
 
 
 {$REGION  'TBurReadRam - все процедуры и функции'}
@@ -254,9 +291,10 @@ begin
   begin
     if FFlagTerminate then
      begin
-      FFlagEndRead := True;
-      WriteToBD;
-      CloseAny;
+      //TDebug.Log('------FFlagTerminate-----');
+//      FFlagEndRead := True;
+      //WriteToBD;
+      //CloseAny;
       Exit;
      end;
     if DataSize < 0 then
@@ -354,8 +392,7 @@ procedure TDeviceBur.InfoEvent(Res: TInfoEventRes);
 begin
   FTmpSender.Checked := False;
   try
-   if Length(Res.ErrAdr) > 0 then raise EAsyncBurException.CreateFmt('Метаданные устройств (%s) не считаны',
-          [AddressArrayToNames(Res.ErrAdr)]);
+   if Length(Res.ErrAdr) > 0 then raise EAsyncBurException.CreateFmt(RS_MetadataERR, [AddressArrayToNames(Res.ErrAdr)]);
   finally
    if Length(FAddressArray) > Length(Res.ErrAdr) then
     begin
@@ -377,7 +414,7 @@ end;
 
 procedure TDeviceBur.DoIdle(Sender: IAction);
 begin
-  if MessageDlg('Перевести приборы в спящий режим?', mtWarning, [mbYes, mbNo, mbCancel], 0) <> mrYes then Exit;
+  if MessageDlg(RS_SleapDLG, mtWarning, [mbYes, mbNo, mbCancel], 0) <> mrYes then Exit;
   SetDelay(0, 0, nil);
 end;
 
@@ -462,7 +499,7 @@ begin
   begin
     if Err then
      begin
-      strerr := strerr + Format('Адр.уст: %d, EEPROM размер: %d смещение: %d - ошибка чтения секции'#$D#$A, [adr, siz, from]);
+      strerr := strerr + Format(RS_ERR_eep, [adr, siz, from]);
       inc(e);
       eep.ChildNodes[i].Attributes[AT_READED] := False;
      end;
@@ -622,29 +659,30 @@ end;
 //  end;
 
 procedure TDeviceBur.Turbo(adr: Byte; speed: integer);
- const                         //default
-  SPD: array[0..7]of Integer = (125000, 500000, 1000000, 2250000, 4500000, 8000000, 12000000, 100000000);
+ const                         //default 125000          2250000
+  SPD: array[0..10]of Integer = (125000, 500000, 1000000, 1500000, 2000000, 2250000, 3000000, 4500000, 8000000, 12000000, 100000000);
 begin
   with SerialQe, ConnectIO do
    begin
-    if speed = 0 then
-     begin
-      if ConnectIO is TComConnectIO then
-       TComConnectIO(ConnectIO).Com.CustomBaudRate := TComConnectIO(ConnectIO).FDefaultSpeed;
-      Exit;
-     end;
     Add(procedure()
      var
       d: TStdRec;
+      oldOpen: Boolean;
     begin
       if adr > 16 then d := TStdRec.Create($FF, $FD, 1)
       else d := TStdRec.Create($F, $D, 1);
       d.AssignByte(speed);
-//      d.CmdAdr := ToAdrCmd($FF,$FD);
-//      d.speed := speed;
+      CheckConnect;
+      oldOpen := ConnectOpen;
       Send(D.Ptr, D.SizeOf, procedure(p: Pointer; n: integer)
       begin
-        if ConnectIO is TComConnectIO then TComConnectIO(ConnectIO).Com.CustomBaudRate := SPD[speed];
+          if speed = 0 then
+           begin
+            if ConnectIO is TComConnectIO then
+            TComConnectIO(ConnectIO).Com.CustomBaudRate := TComConnectIO(ConnectIO).FDefaultSpeed;
+//      Exit;
+        end else if ConnectIO is TComConnectIO then TComConnectIO(ConnectIO).Com.CustomBaudRate := SPD[speed];
+        if not oldOpen then ConnectClose;
       end, 300);
     end);
    end;
@@ -759,13 +797,15 @@ begin
   CheckConnect;
   ConnectOpen;
   e := FindEeprom(FMetaDataInfo.Info, Addr);
-  if not Assigned(e) then raise EBurException.CreateFmt('Метаданных EEPROM устройства с адресом %d нет', [Addr]);
+  if not Assigned(e) then raise EBurException.CreateFmt(RS_NO_eepmeta, [Addr]);
   if e.ChildNodes.First.HasAttribute(AT_FROM) then // деление EEPROM на секции
    begin
      var a: TPars.TOutArray;
      var secind := 0;
      var sect : IXMLNode;
      var arrptr := 0;
+     var GoodFlag := true;
+     var errStr := '';
      TPars.GetData(e, a);
      while (section <> -1) and (secind < section) do
       begin
@@ -791,11 +831,20 @@ begin
             D.AssignEEPWriteP(From, Siz, @a[arrptr]);
             Send(D.Ptr, d.SizeOf, procedure(p: Pointer; n: integer)
             begin;
-              if n = d.SizeOfAC then sect.Attributes[AT_WRITED] := True;
+              if n = d.SizeOfAC then sect.Attributes[AT_WRITED] := True
+              else
+               begin
+                GoodFlag := False;
+                errStr := errStr + Format(RS_ERR_eepwr,[addr, siz, from]);
+               end;
               Inc(secind);
               Inc(arrptr, Siz);
               if (secind < e.ChildNodes.Count) and (section = -1) then recur()
-              else if Assigned(ev) then ev(True);
+              else if Assigned(ev) then
+               begin
+                ev(GoodFlag);
+                if errStr <> '' then raise EEEpromSectionsException.Create(errStr);
+              end;
             end, 2000);
           end);
        end;
@@ -822,25 +871,28 @@ begin
     end;
 end;
 
-procedure TDeviceBur.ReadEeprom(ev: TEepromEventRef);
+procedure TDeviceBur.ReadEeprom(Addr: Integer; ev: TEepromEventRef);
 begin
   CheckConnect;
   ConnectOpen;
   if not Assigned(FMetaDataInfo.Info) then raise EBurException.Create(RS_ErrNoInfo);
   FindAllEeprom(FMetaDataInfo.Info, procedure(eep: IXMLNode; Adr: integer; const name: string)
   begin
-    if eep.ChildNodes.First.HasAttribute(AT_FROM) then // деление EEPROM на секции
-     begin
-      ReadEepromSectionsRef(eep,Adr,ev);
-     end
-    else ReadEepromAdrRef(eep, adr, procedure (Res: TEepromEventRes)
+  if Addr = Adr then
     begin
-     try
-      FExeMetr.Execute(T_EEPROM, Adr);
-     finally
-      if Assigned(ev) then ev(res);
-     end;
-    end);
+      if eep.ChildNodes.First.HasAttribute(AT_FROM) then // деление EEPROM на секции
+       begin
+        ReadEepromSectionsRef(eep,Adr,ev);
+       end
+      else ReadEepromAdrRef(eep, adr, procedure (Res: TEepromEventRes)
+      begin
+       try
+        FExeMetr.Execute(T_EEPROM, Adr);
+       finally
+        if Assigned(ev) then ev(res);
+       end;
+      end);
+    end;
   end);
 end;
 
@@ -884,7 +936,7 @@ procedure TDeviceBur.ReadEepromAdrRef(root: IXMLNode; adr: Byte; ev: TEepromEven
   from: Integer;
 begin
   siz := root.Attributes[AT_SIZE];
-  if siz > 250 then raise EAsyncBurException.CreateFmt('Данная версия программы поддерживает длину EEPROM меньше 250 текущая: %d', [siz]);
+  if siz > 250 then raise EAsyncBurException.CreateFmt(RS_ERR_eepLen, [siz]);
   if root.HasAttribute(AT_FROM) then from := root.Attributes[AT_FROM] else from := 0;
   with SerialQe, ConnectIO do
    begin

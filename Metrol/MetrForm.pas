@@ -132,6 +132,9 @@ type
     procedure NCPopup(Sender: TObject); override;
     function UserExecStep(Step: Integer; alg, trr: IXMLNode): Boolean; virtual;
     function UserSetupAlg(alg: IXMLNode): Boolean; virtual;
+    function UserSummKadr(summ, KadrData: IXMLNode): Boolean; virtual;
+    function UserShowCurrentSumm(show, summ: IXMLNode; AttN, AttCnt: Integer): Boolean; virtual;
+
     procedure TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: TImageIndex); virtual;
     procedure TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType); virtual;
     procedure TreeClear;
@@ -150,6 +153,7 @@ type
     procedure SetupEditor(Allow: TAllowEditNode; GetText: TGetTextNode; SetText: TSetTextNode);
     class function MetrolMame: string; virtual;
     class function MetrolType: string; virtual;
+    class function MetrolAttrName: string; virtual;
     property StatusBar: TStatusBar read FStatusBar;
     property AttestatPanel: TPanel read FPanel;
     property AttestatLabel: TLabel read FLabel;
@@ -592,6 +596,11 @@ end;
 
 { TFormMetrolog }
 
+class function TFormMetrolog.MetrolAttrName: string;
+begin
+  Result := '';
+end;
+
 class function TFormMetrolog.MetrolMame: string;
 begin
   raise EFormMetrolog.Create('Не задано имя метрологии');
@@ -684,6 +693,7 @@ begin
 
   Doc := NewXDocument();
   FEtalonData := Doc.AddChild(MetrolMame);
+  if MetrolAttrName <> '' then FEtalonData.Attributes[AT_METR] := MetrolAttrName;
   (GContainer as IXMLScriptFactory).ScriptExec(FEtalonData, FEtalonData, MetrolMame, '', 'SETUP_METR');
   DoUpdateEtalonData(FEtalonData);
 
@@ -1053,6 +1063,16 @@ begin
 end;
 
 function TFormMetrolog.UserSetupAlg(alg: IXMLNode): Boolean;
+begin
+  Result := False;
+end;
+
+function TFormMetrolog.UserShowCurrentSumm(show, summ: IXMLNode; AttN, AttCnt: Integer): Boolean;
+begin
+  Result := False;
+end;
+
+function TFormMetrolog.UserSummKadr(summ, KadrData: IXMLNode): Boolean;
 begin
   Result := False;
 end;
@@ -1463,6 +1483,7 @@ begin
     (Self as IAutomatMetrology).KadrEvent();
   if FAttCnt <= 0 then
     Exit;
+  if not UserSummKadr(FAttSum, d) then
   HasXTree(FAttSum, d,
     procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
     begin
@@ -1480,6 +1501,7 @@ begin
     end);
   cur := GetCurrentNode;
   Dec(FAttCnt);
+  if not UserShowCurrentSumm(cur, FAttSum, FAttN, FAttCnt) then
   HasXTree(cur, FAttSum,
     procedure(EtalonRoot, EtalonAttr, TestRoot, TestAttr: IXMLNode)
     begin

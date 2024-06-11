@@ -1,0 +1,1253 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLData\DialogOpenLas.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLData\DialogOpenLas.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45034.6052083333</prop>
+        <prop prop-type="OrigDateTime">45034.5877083333</prop>
+        <prop prop-type="XlatDateTime">45034.5877083333</prop>
+        <prop prop-type="Translated">3</prop>
+        <prop prop-type="UnTranslated">120</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:DlgOpenLAS.Left" resname="O:DlgOpenLAS.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.Top" resname="O:DlgOpenLAS.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.ClientHeight" resname="O:DlgOpenLAS.ClientHeight">
+        <source>377</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.ClientWidth" resname="O:DlgOpenLAS.ClientWidth">
+        <source>664</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.Color" resname="O:DlgOpenLAS.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.Font.Charset" resname="O:DlgOpenLAS.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.Font.Color" resname="O:DlgOpenLAS.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.Font.Height" resname="O:DlgOpenLAS.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.Font.Name" resname="O:DlgOpenLAS.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.Font.Style" resname="O:DlgOpenLAS.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.Position" resname="O:DlgOpenLAS.Position">
+        <source>poScreenCenter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.DesignSize[0]" resname="O:DlgOpenLAS.DesignSize[0]">
+        <source>664</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">(</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.DesignSize[1]" resname="O:DlgOpenLAS.DesignSize[1]">
+        <source>377</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Close">)</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.TextHeight" resname="O:DlgOpenLAS.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TDlgOpenLAS</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DriveCombo.Left" resname="O:DlgOpenLAS.O:DriveCombo.Left">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TJvDriveCombo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DriveCombo.Top" resname="O:DlgOpenLAS.O:DriveCombo.Top">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TJvDriveCombo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DriveCombo.Width" resname="O:DlgOpenLAS.O:DriveCombo.Width">
+        <source>296</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TJvDriveCombo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DriveCombo.Height" resname="O:DlgOpenLAS.O:DriveCombo.Height">
+        <source>22</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TJvDriveCombo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DriveCombo.DriveTypes" resname="O:DlgOpenLAS.O:DriveCombo.DriveTypes">
+        <source>[dtFixed, dtRemote, dtCDROM]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TJvDriveCombo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DriveCombo.Offset" resname="O:DlgOpenLAS.O:DriveCombo.Offset">
+        <source>4</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TJvDriveCombo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DriveCombo.TabOrder" resname="O:DlgOpenLAS.O:DriveCombo.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">20</prop>
+          <prop prop-type="Type">TJvDriveCombo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.Left" resname="O:DlgOpenLAS.O:DirectoryList.Left">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">21</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.Top" resname="O:DlgOpenLAS.O:DirectoryList.Top">
+        <source>36</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">22</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.Width" resname="O:DlgOpenLAS.O:DirectoryList.Width">
+        <source>145</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">23</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.Height" resname="O:DlgOpenLAS.O:DirectoryList.Height">
+        <source>334</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">24</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.Directory" resname="O:DlgOpenLAS.O:DirectoryList.Directory">
+        <source>'C:\XE\Projects\Device2\ComDll'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">25</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.FileList" resname="O:DlgOpenLAS.O:DirectoryList.FileList">
+        <source>FileList</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">26</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.DriveCombo" resname="O:DlgOpenLAS.O:DirectoryList.DriveCombo">
+        <source>DriveCombo</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">27</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.ItemHeight" resname="O:DlgOpenLAS.O:DirectoryList.ItemHeight">
+        <source>17</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">28</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.ScrollBars" resname="O:DlgOpenLAS.O:DirectoryList.ScrollBars">
+        <source>ssVertical</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">29</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.TabOrder" resname="O:DlgOpenLAS.O:DirectoryList.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">30</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:DirectoryList.Anchors" resname="O:DlgOpenLAS.O:DirectoryList.Anchors">
+        <source>[akLeft, akTop, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">31</prop>
+          <prop prop-type="Type">TJvDirectoryListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:FileList.Left" resname="O:DlgOpenLAS.O:FileList.Left">
+        <source>159</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">32</prop>
+          <prop prop-type="Type">TJvFileListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:FileList.Top" resname="O:DlgOpenLAS.O:FileList.Top">
+        <source>36</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">33</prop>
+          <prop prop-type="Type">TJvFileListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:FileList.Width" resname="O:DlgOpenLAS.O:FileList.Width">
+        <source>145</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">34</prop>
+          <prop prop-type="Type">TJvFileListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:FileList.Height" resname="O:DlgOpenLAS.O:FileList.Height">
+        <source>334</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">35</prop>
+          <prop prop-type="Type">TJvFileListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:FileList.Anchors" resname="O:DlgOpenLAS.O:FileList.Anchors">
+        <source>[akLeft, akTop, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">36</prop>
+          <prop prop-type="Type">TJvFileListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:FileList.ItemHeight" resname="O:DlgOpenLAS.O:FileList.ItemHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">37</prop>
+          <prop prop-type="Type">TJvFileListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:FileList.Mask" resname="O:DlgOpenLAS.O:FileList.Mask">
+        <source>'*.las'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">38</prop>
+          <prop prop-type="Type">TJvFileListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:FileList.TabOrder" resname="O:DlgOpenLAS.O:FileList.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">39</prop>
+          <prop prop-type="Type">TJvFileListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:FileList.OnChange" resname="O:DlgOpenLAS.O:FileList.OnChange">
+        <source>FileListChange</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">40</prop>
+          <prop prop-type="Type">TJvFileListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:FileList.ForceFileExtensions" resname="O:DlgOpenLAS.O:FileList.ForceFileExtensions">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">41</prop>
+          <prop prop-type="Type">TJvFileListBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.Left" resname="O:DlgOpenLAS.O:pc.Left">
+        <source>310</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">42</prop>
+          <prop prop-type="Type">TPageControl</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.Top" resname="O:DlgOpenLAS.O:pc.Top">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">43</prop>
+          <prop prop-type="Type">TPageControl</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.Width" resname="O:DlgOpenLAS.O:pc.Width">
+        <source>350</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">44</prop>
+          <prop prop-type="Type">TPageControl</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.Height" resname="O:DlgOpenLAS.O:pc.Height">
+        <source>345</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">45</prop>
+          <prop prop-type="Type">TPageControl</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.ActivePage" resname="O:DlgOpenLAS.O:pc.ActivePage">
+        <source>tshData</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">46</prop>
+          <prop prop-type="Type">TPageControl</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.Anchors" resname="O:DlgOpenLAS.O:pc.Anchors">
+        <source>[akLeft, akTop, akRight, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">47</prop>
+          <prop prop-type="Type">TPageControl</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.TabOrder" resname="O:DlgOpenLAS.O:pc.TabOrder">
+        <source>5</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">48</prop>
+          <prop prop-type="Type">TPageControl</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.TabPosition" resname="O:DlgOpenLAS.O:pc.TabPosition">
+        <source>tpBottom</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">49</prop>
+          <prop prop-type="Type">TPageControl</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.Caption" resname="O:DlgOpenLAS.O:pc.O:tshLAS.Caption">
+        <source>'LAS'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">50</prop>
+          <prop prop-type="Type">TTabSheet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Left" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">51</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Top" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">52</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Width" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Width">
+        <source>342</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">53</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Height" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Height">
+        <source>319</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">54</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Style" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Style">
+        <source>isItemPainter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">55</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Align" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">56</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.BevelOuter" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.BevelOuter">
+        <source>bvNone</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">57</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Divider" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Divider">
+        <source>254</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">58</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Font.Charset" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">59</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Font.Color" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">60</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Font.Height" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">61</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Font.Name" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Font.Name">
+        <source>'Courier'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">62</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Font.Style" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">63</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.ItemHeight" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.ItemHeight">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">64</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Painter" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.Painter">
+        <source>BorlandPainter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">65</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.TabStop" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.TabStop">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">66</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.TabOrder" resname="O:DlgOpenLAS.O:pc.O:tshLAS.O:Inspector.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">67</prop>
+          <prop prop-type="Type">TJvInspector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.Caption" resname="O:DlgOpenLAS.O:pc.O:tshData.Caption">
+        <source>'Данные'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">68</prop>
+          <prop prop-type="Type">TTabSheet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Data'</target>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.ImageIndex" resname="O:DlgOpenLAS.O:pc.O:tshData.ImageIndex">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">69</prop>
+          <prop prop-type="Type">TTabSheet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.Left" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">70</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.Top" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">71</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.Width" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.Width">
+        <source>342</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">72</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.Height" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.Height">
+        <source>319</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">73</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.Align" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">74</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.DataSource" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.DataSource">
+        <source>ds</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">75</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TabOrder" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">76</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TitleFont.Charset" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TitleFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">77</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TitleFont.Color" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TitleFont.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">78</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TitleFont.Height" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TitleFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">79</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TitleFont.Name" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TitleFont.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">80</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TitleFont.Style" resname="O:DlgOpenLAS.O:pc.O:tshData.O:DBGrid1.TitleFont.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">81</prop>
+          <prop prop-type="Type">TDBGrid</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btCancel.Left" resname="O:DlgOpenLAS.O:btCancel.Left">
+        <source>581</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">82</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btCancel.Top" resname="O:DlgOpenLAS.O:btCancel.Top">
+        <source>344</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">83</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btCancel.Width" resname="O:DlgOpenLAS.O:btCancel.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.596879919</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">84</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btCancel.Height" resname="O:DlgOpenLAS.O:btCancel.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">85</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btCancel.Anchors" resname="O:DlgOpenLAS.O:btCancel.Anchors">
+        <source>[akRight, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">86</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btCancel.Caption" resname="O:DlgOpenLAS.O:btCancel.Caption">
+        <source>'Отмена'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">87</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Cancel'</target>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btCancel.ModalResult" resname="O:DlgOpenLAS.O:btCancel.ModalResult">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">88</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btCancel.TabOrder" resname="O:DlgOpenLAS.O:btCancel.TabOrder">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">89</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btOK.Left" resname="O:DlgOpenLAS.O:btOK.Left">
+        <source>492</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">90</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btOK.Top" resname="O:DlgOpenLAS.O:btOK.Top">
+        <source>344</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">91</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btOK.Width" resname="O:DlgOpenLAS.O:btOK.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">92</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btOK.Height" resname="O:DlgOpenLAS.O:btOK.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">93</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btOK.Anchors" resname="O:DlgOpenLAS.O:btOK.Anchors">
+        <source>[akRight, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">94</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btOK.Caption" resname="O:DlgOpenLAS.O:btOK.Caption">
+        <source>'Выбрать'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">95</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Select'</target>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btOK.ModalResult" resname="O:DlgOpenLAS.O:btOK.ModalResult">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">96</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:btOK.TabOrder" resname="O:DlgOpenLAS.O:btOK.TabOrder">
+        <source>4</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">97</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.CategoryFont.Charset" resname="O:DlgOpenLAS.O:BorlandPainter.CategoryFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">98</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.CategoryFont.Color" resname="O:DlgOpenLAS.O:BorlandPainter.CategoryFont.Color">
+        <source>clBtnText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">99</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.CategoryFont.Height" resname="O:DlgOpenLAS.O:BorlandPainter.CategoryFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">100</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.CategoryFont.Name" resname="O:DlgOpenLAS.O:BorlandPainter.CategoryFont.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">101</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.CategoryFont.Style" resname="O:DlgOpenLAS.O:BorlandPainter.CategoryFont.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">102</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.NameFont.Charset" resname="O:DlgOpenLAS.O:BorlandPainter.NameFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">103</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.NameFont.Color" resname="O:DlgOpenLAS.O:BorlandPainter.NameFont.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">104</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.NameFont.Height" resname="O:DlgOpenLAS.O:BorlandPainter.NameFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">105</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.NameFont.Name" resname="O:DlgOpenLAS.O:BorlandPainter.NameFont.Name">
+        <source>'Courier'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">106</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.NameFont.Style" resname="O:DlgOpenLAS.O:BorlandPainter.NameFont.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">107</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.ValueFont.Charset" resname="O:DlgOpenLAS.O:BorlandPainter.ValueFont.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">108</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.ValueFont.Color" resname="O:DlgOpenLAS.O:BorlandPainter.ValueFont.Color">
+        <source>clNavy</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">109</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.ValueFont.Height" resname="O:DlgOpenLAS.O:BorlandPainter.ValueFont.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">110</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.ValueFont.Name" resname="O:DlgOpenLAS.O:BorlandPainter.ValueFont.Name">
+        <source>'Courier'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">111</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.ValueFont.Style" resname="O:DlgOpenLAS.O:BorlandPainter.ValueFont.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">112</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.DrawNameEndEllipsis" resname="O:DlgOpenLAS.O:BorlandPainter.DrawNameEndEllipsis">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">113</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.Left" resname="O:DlgOpenLAS.O:BorlandPainter.Left">
+        <source>80</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">114</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:BorlandPainter.Top" resname="O:DlgOpenLAS.O:BorlandPainter.Top">
+        <source>192</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">115</prop>
+          <prop prop-type="Type">TJvInspectorBorlandPainter</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:ds.DataSet" resname="O:DlgOpenLAS.O:ds.DataSet">
+        <source>ClientDataSet</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">116</prop>
+          <prop prop-type="Type">TDataSource</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:ds.Left" resname="O:DlgOpenLAS.O:ds.Left">
+        <source>482</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">117</prop>
+          <prop prop-type="Type">TDataSource</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:ds.Top" resname="O:DlgOpenLAS.O:ds.Top">
+        <source>108</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">118</prop>
+          <prop prop-type="Type">TDataSource</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:ClientDataSet.Aggregates" resname="O:DlgOpenLAS.O:ClientDataSet.Aggregates">
+        <source>&lt;&gt;</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">119</prop>
+          <prop prop-type="Type">TClientDataSet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:ClientDataSet.Params" resname="O:DlgOpenLAS.O:ClientDataSet.Params">
+        <source>&lt;&gt;</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">120</prop>
+          <prop prop-type="Type">TClientDataSet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:ClientDataSet.Left" resname="O:DlgOpenLAS.O:ClientDataSet.Left">
+        <source>490</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">121</prop>
+          <prop prop-type="Type">TClientDataSet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:DlgOpenLAS.O:ClientDataSet.Top" resname="O:DlgOpenLAS.O:ClientDataSet.Top">
+        <source>188</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45034.5968799306</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">122</prop>
+          <prop prop-type="Type">TClientDataSet</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -52,6 +52,7 @@
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <Manifest_File>None</Manifest_File>
@@ -72,7 +73,7 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_Namespace>Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <Debugger_CWD>C:\XE\Projects\Device2\CreateMetaData\Win32\Debug</Debugger_CWD>
-        <Debugger_RunParams>c:\XE\Projects\Device2\CreateMetaData\DataStruct1.h  c:\XE\Projects\Device2\CreateMetaData\MetaData.h c:\XE\Projects\Device2\CreateMetaData\Patern.h  newFormat</Debugger_RunParams>
+        <Debugger_RunParams>C:\AVR\nnk_avr128\_I\Data.h   C:\AVR\nnk_avr128\_I\MetaData.h C:\AVR\nnk_avr128\_I\Patern.h  newFormat</Debugger_RunParams>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_UnitSearchPath>..\;..\core;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -88,7 +89,7 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <Debugger_RunParams>c:\XE\Projects\Device2\CreateMetaData\DataStruct.h  MetaData.c</Debugger_RunParams>
+        <Debugger_RunParams>c:\XE\Projects\Device2\CreateMetaData\DataStruct1.h  c:\XE\Projects\Device2\CreateMetaData\XMetaData.h C:\AVR\nnk_avr128\_I\Patern.h  newFormat</Debugger_RunParams>
         <DCC_Define>UNUSE_debug_except;$(DCC_Define)</DCC_Define>
         <DCC_Namespace>Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>1033</VerInfo_Locale>
@@ -106,6 +107,8 @@
         <None Include="DataStruct1.h"/>
         <None Include="Patern.h"/>
         <None Include="meta.xsl"/>
+        <None Include="DataV2.h"/>
+        <None Include="caliper.h"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

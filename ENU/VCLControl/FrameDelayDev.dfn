@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLControl\FrameDelayDev.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLControl\FrameDelayDev.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45033.4521064815</prop>
+        <prop prop-type="OrigDateTime">44890.6175694444</prop>
+        <prop prop-type="XlatDateTime">44890.6175694444</prop>
+        <prop prop-type="Translated">2</prop>
+        <prop prop-type="UnTranslated">87</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FrameDelayInfo.Left" resname="O:FrameDelayInfo.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TFrameDelayInfo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.Top" resname="O:FrameDelayInfo.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TFrameDelayInfo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.Width" resname="O:FrameDelayInfo.Width">
+        <source>380</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TFrameDelayInfo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.Height" resname="O:FrameDelayInfo.Height">
+        <source>60</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TFrameDelayInfo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.Align" resname="O:FrameDelayInfo.Align">
+        <source>alTop</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TFrameDelayInfo</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.TabOrder" resname="O:FrameDelayInfo.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TFrameDelayInfo</prop>
+          <prop prop-type="Localize">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.DesignSize[0]" resname="O:FrameDelayInfo.DesignSize[0]">
+        <source>380</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TFrameDelayInfo</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">(</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.DesignSize[1]" resname="O:FrameDelayInfo.DesignSize[1]">
+        <source>60</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TFrameDelayInfo</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Close">)</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Left" resname="O:FrameDelayInfo.O:lbCon.Left">
+        <source>36</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Top" resname="O:FrameDelayInfo.O:lbCon.Top">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Width" resname="O:FrameDelayInfo.O:lbCon.Width">
+        <source>102</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Height" resname="O:FrameDelayInfo.O:lbCon.Height">
+        <source>23</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.AutoSize" resname="O:FrameDelayInfo.O:lbCon.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Caption" resname="O:FrameDelayInfo.O:lbCon.Caption">
+        <source>'Имя'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Name'</target>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Color" resname="O:FrameDelayInfo.O:lbCon.Color">
+        <source>clCream</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Font.Charset" resname="O:FrameDelayInfo.O:lbCon.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Font.Color" resname="O:FrameDelayInfo.O:lbCon.Font.Color">
+        <source>clHighlight</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Font.Height" resname="O:FrameDelayInfo.O:lbCon.Font.Height">
+        <source>-12</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Font.Name" resname="O:FrameDelayInfo.O:lbCon.Font.Name">
+        <source>'Segoe UI'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Font.Style" resname="O:FrameDelayInfo.O:lbCon.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.ParentColor" resname="O:FrameDelayInfo.O:lbCon.ParentColor">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">20</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.ParentFont" resname="O:FrameDelayInfo.O:lbCon.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">21</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.Transparent" resname="O:FrameDelayInfo.O:lbCon.Transparent">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">22</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbCon.StyleElements" resname="O:FrameDelayInfo.O:lbCon.StyleElements">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">23</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Left" resname="O:FrameDelayInfo.O:lbStatus.Left">
+        <source>36</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">24</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Top" resname="O:FrameDelayInfo.O:lbStatus.Top">
+        <source>32</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">25</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Width" resname="O:FrameDelayInfo.O:lbStatus.Width">
+        <source>333</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">26</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Height" resname="O:FrameDelayInfo.O:lbStatus.Height">
+        <source>21</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">27</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Anchors" resname="O:FrameDelayInfo.O:lbStatus.Anchors">
+        <source>[akLeft, akTop, akRight, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">28</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.AutoSize" resname="O:FrameDelayInfo.O:lbStatus.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">29</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Color" resname="O:FrameDelayInfo.O:lbStatus.Color">
+        <source>clCream</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">30</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Font.Charset" resname="O:FrameDelayInfo.O:lbStatus.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">31</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Font.Color" resname="O:FrameDelayInfo.O:lbStatus.Font.Color">
+        <source>clHighlight</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">32</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Font.Height" resname="O:FrameDelayInfo.O:lbStatus.Font.Height">
+        <source>-12</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">33</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Font.Name" resname="O:FrameDelayInfo.O:lbStatus.Font.Name">
+        <source>'Segoe UI'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">34</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Font.Style" resname="O:FrameDelayInfo.O:lbStatus.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">35</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.ParentColor" resname="O:FrameDelayInfo.O:lbStatus.ParentColor">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">36</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.ParentFont" resname="O:FrameDelayInfo.O:lbStatus.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">37</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.Transparent" resname="O:FrameDelayInfo.O:lbStatus.Transparent">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">38</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbStatus.StyleElements" resname="O:FrameDelayInfo.O:lbStatus.StyleElements">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">39</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Left" resname="O:FrameDelayInfo.O:lbNStat.Left">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">40</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Top" resname="O:FrameDelayInfo.O:lbNStat.Top">
+        <source>32</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">41</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Width" resname="O:FrameDelayInfo.O:lbNStat.Width">
+        <source>27</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">42</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Height" resname="O:FrameDelayInfo.O:lbNStat.Height">
+        <source>23</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">43</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Alignment" resname="O:FrameDelayInfo.O:lbNStat.Alignment">
+        <source>taCenter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">44</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.AutoSize" resname="O:FrameDelayInfo.O:lbNStat.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">45</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Color" resname="O:FrameDelayInfo.O:lbNStat.Color">
+        <source>clCream</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">46</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Font.Charset" resname="O:FrameDelayInfo.O:lbNStat.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">47</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Font.Color" resname="O:FrameDelayInfo.O:lbNStat.Font.Color">
+        <source>clHighlight</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">48</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Font.Height" resname="O:FrameDelayInfo.O:lbNStat.Font.Height">
+        <source>-14</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">49</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Font.Name" resname="O:FrameDelayInfo.O:lbNStat.Font.Name">
+        <source>'Segoe UI'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">50</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Font.Style" resname="O:FrameDelayInfo.O:lbNStat.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">51</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.ParentColor" resname="O:FrameDelayInfo.O:lbNStat.ParentColor">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">52</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.ParentFont" resname="O:FrameDelayInfo.O:lbNStat.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">53</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.Transparent" resname="O:FrameDelayInfo.O:lbNStat.Transparent">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">54</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbNStat.StyleElements" resname="O:FrameDelayInfo.O:lbNStat.StyleElements">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">55</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Left" resname="O:FrameDelayInfo.O:lbKadr.Left">
+        <source>144</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">56</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Top" resname="O:FrameDelayInfo.O:lbKadr.Top">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">57</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Width" resname="O:FrameDelayInfo.O:lbKadr.Width">
+        <source>225</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053588</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">58</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Height" resname="O:FrameDelayInfo.O:lbKadr.Height">
+        <source>21</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">59</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Anchors" resname="O:FrameDelayInfo.O:lbKadr.Anchors">
+        <source>[akLeft, akTop, akRight, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">60</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.AutoSize" resname="O:FrameDelayInfo.O:lbKadr.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">61</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Caption" resname="O:FrameDelayInfo.O:lbKadr.Caption">
+        <source>'кадры'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">62</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'frames'</target>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Color" resname="O:FrameDelayInfo.O:lbKadr.Color">
+        <source>clCream</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">63</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Font.Charset" resname="O:FrameDelayInfo.O:lbKadr.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">64</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Font.Color" resname="O:FrameDelayInfo.O:lbKadr.Font.Color">
+        <source>clHighlight</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">65</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Font.Height" resname="O:FrameDelayInfo.O:lbKadr.Font.Height">
+        <source>-12</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">66</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Font.Name" resname="O:FrameDelayInfo.O:lbKadr.Font.Name">
+        <source>'Segoe UI'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">67</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Font.Style" resname="O:FrameDelayInfo.O:lbKadr.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">68</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.ParentColor" resname="O:FrameDelayInfo.O:lbKadr.ParentColor">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">69</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.ParentFont" resname="O:FrameDelayInfo.O:lbKadr.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">70</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.Transparent" resname="O:FrameDelayInfo.O:lbKadr.Transparent">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">71</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbKadr.StyleElements" resname="O:FrameDelayInfo.O:lbKadr.StyleElements">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">72</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Left" resname="O:FrameDelayInfo.O:lbAdr.Left">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">73</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Top" resname="O:FrameDelayInfo.O:lbAdr.Top">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">74</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Width" resname="O:FrameDelayInfo.O:lbAdr.Width">
+        <source>27</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">75</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Height" resname="O:FrameDelayInfo.O:lbAdr.Height">
+        <source>23</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">76</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Alignment" resname="O:FrameDelayInfo.O:lbAdr.Alignment">
+        <source>taCenter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">77</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.AutoSize" resname="O:FrameDelayInfo.O:lbAdr.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">78</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Caption" resname="O:FrameDelayInfo.O:lbAdr.Caption">
+        <source>'0'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">79</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Color" resname="O:FrameDelayInfo.O:lbAdr.Color">
+        <source>clCream</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">80</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Font.Charset" resname="O:FrameDelayInfo.O:lbAdr.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">81</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Font.Color" resname="O:FrameDelayInfo.O:lbAdr.Font.Color">
+        <source>clHighlight</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">82</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Font.Height" resname="O:FrameDelayInfo.O:lbAdr.Font.Height">
+        <source>-14</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">83</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Font.Name" resname="O:FrameDelayInfo.O:lbAdr.Font.Name">
+        <source>'Segoe UI'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">84</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Font.Style" resname="O:FrameDelayInfo.O:lbAdr.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">85</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.ParentColor" resname="O:FrameDelayInfo.O:lbAdr.ParentColor">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">86</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.ParentFont" resname="O:FrameDelayInfo.O:lbAdr.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">87</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.Transparent" resname="O:FrameDelayInfo.O:lbAdr.Transparent">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">88</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameDelayInfo.O:lbAdr.StyleElements" resname="O:FrameDelayInfo.O:lbAdr.StyleElements">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634053704</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">89</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

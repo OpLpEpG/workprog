@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLDialogs\VCLDlgConnectIOWLAN.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLDialogs\VCLDlgConnectIOWLAN.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45033.4720833333</prop>
+        <prop prop-type="OrigDateTime">45030.3885416667</prop>
+        <prop prop-type="XlatDateTime">45030.3885416667</prop>
+        <prop prop-type="Translated">1</prop>
+        <prop prop-type="UnTranslated">19</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="I:FormSetupWlan.Caption" resname="I:FormSetupWlan.Caption">
+        <source>'Установки WiFi'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TFormSetupWlan</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'WiFi setup'</target>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.TextHeight" resname="I:FormSetupWlan.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TFormSetupWlan</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.I:Label2.Top" resname="I:FormSetupWlan.I:Label2.Top">
+        <source>102</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.I:Label2.ExplicitTop" resname="I:FormSetupWlan.I:Label2.ExplicitTop">
+        <source>102</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:Label4.Left" resname="I:FormSetupWlan.O:Label4.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TLabel [3]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:Label4.Top" resname="I:FormSetupWlan.O:Label4.Top">
+        <source>53</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TLabel [3]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:Label4.Width" resname="I:FormSetupWlan.O:Label4.Width">
+        <source>23</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TLabel [3]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:Label4.Height" resname="I:FormSetupWlan.O:Label4.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TLabel [3]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:Label4.Anchors" resname="I:FormSetupWlan.O:Label4.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TLabel [3]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:Label4.Caption" resname="I:FormSetupWlan.O:Label4.Caption">
+        <source>'SSID'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TLabel [3]</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.I:sb.ExplicitWidth" resname="I:FormSetupWlan.I:sb.ExplicitWidth">
+        <source>300</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.I:EdWait.Top" resname="I:FormSetupWlan.I:EdWait.Top">
+        <source>121</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.I:EdWait.ExplicitTop" resname="I:FormSetupWlan.I:EdWait.ExplicitTop">
+        <source>121</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:edSSID.Left" resname="I:FormSetupWlan.O:edSSID.Left">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:edSSID.Top" resname="I:FormSetupWlan.O:edSSID.Top">
+        <source>72</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:edSSID.Width" resname="I:FormSetupWlan.O:edSSID.Width">
+        <source>171</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:edSSID.Height" resname="I:FormSetupWlan.O:edSSID.Height">
+        <source>21</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:edSSID.Anchors" resname="I:FormSetupWlan.O:edSSID.Anchors">
+        <source>[akLeft, akBottom]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:edSSID.TabOrder" resname="I:FormSetupWlan.O:edSSID.TabOrder">
+        <source>9</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="I:FormSetupWlan.O:edSSID.Text" resname="I:FormSetupWlan.O:edSSID.Text">
+        <source>'AMKGorizontWiFiUSO'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45030.3916977546</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

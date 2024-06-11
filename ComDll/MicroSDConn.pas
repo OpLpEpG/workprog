@@ -45,7 +45,7 @@ procedure TMicroSDConnectIO.Send(Data: Pointer; Cnt: Integer; Event: TReceiveDat
 begin
   if Assigned(FProtocol) then
    begin
-    if not Assigned(Data) then raise EMicroSDConnectIOException.Create('Данные не инициализированны');
+    if not Assigned(Data) then raise EMicroSDConnectIOException.Create('Data not initialized');
     FEventReceiveData := Event;
     if WaitTime >= 0 then FTimerRxTimeOut.Interval := WaitTime
     else FTimerRxTimeOut.Interval := FComWait;

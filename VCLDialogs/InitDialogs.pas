@@ -30,7 +30,7 @@ type
 
 implementation
 
-uses VCL.Dlg.ConnectIO.COM, VCL.Dlg.ConnectIO.NET, VCL.Dlg.ConnectIO.WLAN, VCL.Dlg.Device;
+uses VCLDlgConnectIOCOM, VCLDlgConnectIONET, VCLDlgConnectIOWLAN, VCLDlgDevice;
 
 { TDialogConnectIO }
 
@@ -53,6 +53,7 @@ begin
   else if Supports(FConect, IWlanConnectIO) then FRes := TFormSetupWlan.Execute(FConect)
   else if Supports(FConect, INetConnectIO)
        or Supports(FConect, IUDPConnectIO)
+       or Supports(FConect, IUDPBinConnectIO)
        or Supports(FConect, IRestConnectIO) then FRes := TFormSetupNet.Execute(FConect)
   else FRes := mrCancel
 end;

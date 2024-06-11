@@ -2,8 +2,8 @@ object FormFindDev: TFormFindDev
   Left = 0
   Top = 0
   Caption = #1055#1086#1080#1089#1082' '#1087#1088#1080#1073#1086#1088#1086#1074' '
-  ClientHeight = 639
-  ClientWidth = 605
+  ClientHeight = 567
+  ClientWidth = 448
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,8 +13,8 @@ object FormFindDev: TFormFindDev
   TextHeight = 15
   object Splitter1: TSplitter
     Left = 0
-    Top = 245
-    Width = 605
+    Top = 173
+    Width = 448
     Height = 3
     Cursor = crVSplit
     Align = alBottom
@@ -24,7 +24,7 @@ object FormFindDev: TFormFindDev
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 605
+    Width = 448
     Height = 57
     Align = alTop
     Caption = 'Panel1'
@@ -40,7 +40,7 @@ object FormFindDev: TFormFindDev
       OnClick = btStartClick
     end
     object btCansel: TButton
-      Left = 112
+      Left = 97
       Top = 17
       Width = 75
       Height = 25
@@ -50,7 +50,7 @@ object FormFindDev: TFormFindDev
       OnClick = btCanselClick
     end
     object btExit: TButton
-      Left = 208
+      Left = 178
       Top = 17
       Width = 75
       Height = 25
@@ -58,12 +58,21 @@ object FormFindDev: TFormFindDev
       TabOrder = 2
       OnClick = btExitClick
     end
+    object btConnection: TButton
+      Left = 289
+      Top = 17
+      Width = 152
+      Height = 25
+      Caption = #1042#1099#1073#1088#1072#1090#1100' '#1057#1077#1090#1100
+      TabOrder = 3
+      OnClick = btConnectionClick
+    end
   end
   object Panel2: TPanel
     Left = 0
     Top = 57
-    Width = 605
-    Height = 188
+    Width = 448
+    Height = 116
     Align = alClient
     Caption = 'Panel2'
     ShowCaption = False
@@ -71,13 +80,17 @@ object FormFindDev: TFormFindDev
   end
   object Memo: TMemo
     Left = 0
-    Top = 248
-    Width = 605
+    Top = 176
+    Width = 448
     Height = 391
     TabStop = False
     Align = alBottom
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 0
+  end
+  object ppConnection: TPopupMenu
+    Left = 376
+    Top = 88
   end
 end

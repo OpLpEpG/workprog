@@ -145,7 +145,7 @@ end;
 
 function TRangeSelector.LogicalToScreen(const LogicalPos: real): real;
 begin
-  result := FThumbSize.cx + BarWidth * (LogicalPos - FMin) / (FMax - FMin)
+  result := FThumbSize.cx + BarWidth * (LogicalPos - FMin) / Math.Max( FMax - FMin, 1);
 end;
 
 procedure TRangeSelector.DblClick;

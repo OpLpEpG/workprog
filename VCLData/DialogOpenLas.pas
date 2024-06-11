@@ -30,6 +30,9 @@ type
     class function Execute(var LasFile: string; var SelMnems: TArray<string>; const InitialDir: string =''): boolean;
   end;
 
+  resourcestring
+   RE_Wrap='WRAP=%s Перенос строк не поддерживается';
+
 implementation
 
 uses tools;
@@ -164,7 +167,7 @@ begin
     Caption := FileList.FileName;
     il := NewLasDoc();
     il.LoadFromFile(Caption);
-    with il.Version.Items['WRAP']^ do if Data <> 'NO' then raise Exception.CreateFmt('WRAP=%s Перенос строк не поддерживается', [Data]);
+    with il.Version.Items['WRAP']^ do if Data <> 'NO' then raise Exception.CreateFmt(RE_Wrap, [Data]);
     CreateCurve(il.Curve);
     CeateCat(il.Well);
     CeateCat(il.Params);
@@ -172,7 +175,7 @@ begin
     ClientDataSet.CreateDataSet;
     CreateRows(il.Data);
    end
-  else Caption := 'Импорт LAS';
+  else Caption := 'Import LAS';
 end;
 
 end.

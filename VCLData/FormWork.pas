@@ -2,10 +2,27 @@ unit FormWork;
 
 interface
 
+
+{$INCLUDE global.inc}
+
+
 uses DeviceIntf, PluginAPI, ExtendIntf, RootImpl, debug_except, DockIForm, RootIntf, Container, Actns,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, System.Bindings.Expression, Xml.XMLIntf,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, VirtualTrees, Vcl.Menus, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnPopup, Vcl.ImgList,
   ActnCtrls;
+
+{$IFDEF ENG_VERSION}
+  const
+   C_CaptWorkForm ='New tree';
+   C_MenuView ='Visualization windows';
+   C_Memu_Show='Show';
+{$ELSE}
+  const
+   C_CaptWorkForm ='Новое дерево';
+   C_MenuView ='Окна визуализации';
+   C_Memu_Show='Показать';
+{$ENDIF}
+
 
 type
   TNodeKind = (xkData, xkRoot, xkArray);
@@ -23,6 +40,8 @@ type
     procedure TreeGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean; var ImageIndex: Integer);
     procedure ppMPopup(Sender: TObject);
     procedure NShowClick(Sender: TObject);
+    procedure TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode;
+      Column: TColumnIndex; TextType: TVSTTextType);
   private
     FDataDevice: string;
     FMetaDataInfo: TInfoEventRes;
@@ -50,7 +69,7 @@ type
     procedure Loaded; override;
   public
     //Capt, Categ: string; AImageIndex: Integer; APaths: string; AHint: string; AAutoCheck AChecked AGroupIndex AEnabled
-    [StaticAction('Новое дерево', 'Окна визуализации', NICON, '0:Показать.Окна визуализации')]
+    [StaticAction(C_CaptWorkForm, C_MenuView, NICON, '0:'+C_Memu_Show+'.'+C_MenuView)]
     class procedure DoCreateForm(Sender: IAction); override;
 
     destructor Destroy; override;
@@ -62,11 +81,15 @@ type
     property DataDevice: string read GetDataDevice write SetDataDevice;
   end;
 
+  resourcestring
+   RS_connDEv='Подключить к устройству';
+   RS_NoConn='Устройство не подключено';
+
 implementation
 
 {$R *.dfm}
 
-uses AbstractPlugin, tools, VCL.FormShowArray;
+uses AbstractPlugin, tools, VCLFormShowArray;
 
 
 { TFormWork }
@@ -85,7 +108,7 @@ begin
   inherited;
   Tree.NodeDataSize := SizeOf(TNodeExData);
   if Supports(GlobalCore, IImagProvider, ip) then Tree.Images := ip.GetImagList;
-  NConnect := AddToNCMenu('Подключить к устройству');
+  NConnect := AddToNCMenu(RS_connDEv);
   if Supports(GlobalCore, IDeviceEnum, de) then
    begin
     Bind('C_RemoveDevice', de, ['S_BeforeRemove']);// (de as IBind).CreateManagedBinding(Self, 'LRemoveDevice', ['S_BeforeRemove']);
@@ -142,7 +165,7 @@ begin
     else FDataDevice := '';
    end
   else ConnectToAllDevices;
-  Caption := 'Устройство не подключено';
+  Caption := RS_NoConn;
 end;
 
 procedure TFormWrok.SetRemoveDevice(const Value: string);
@@ -207,7 +230,10 @@ end;
 
 procedure TFormWrok.NShowClick(Sender: TObject);
 begin
-  TFormShowArray.Execute(DataDevice, GetPathXNode(FEditData.XMNode, true));
+  var n := FEditData.XMNode;
+  while not n.HasAttribute(AT_ADDR) do  n := n.ParentNode;
+
+  TFormShowArray.Execute(n.Attributes[AT_ADDR], DataDevice, GetPathXNode(FEditData.XMNode, true));
 end;
 
 class procedure TFormWrok.DoCreateForm(Sender: IAction);
@@ -320,9 +346,28 @@ procedure TFormWrok.TreeGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Co
     if n.HasAttribute(AT_VALUE) then V := n.Attributes[AT_VALUE];
     if not VarIsNull(V) then
      if n.HasAttribute(AT_DIGITS) then
-       CellText := FloatToStrF(Double(V), ffFixed, n.Attributes[AT_DIGITS], n.Attributes[AT_AQURICY])
+     begin
+       if n.ParentNode.HasAttribute(AT_ARRAY) then
+       begin
+        var a := string(V).Split([' '], TStringSplitOptions.ExcludeEmpty);
+        var s: TArray<string>;
+        SetLength(s, Length(a));
+        for var I := 0 to High(a) do
+         begin
+          s[i] := FloatToStrF(StrToFloat(a[i]), ffFixed, n.Attributes[AT_DIGITS], n.Attributes[AT_AQURICY])
+         end;
+        CellText := string.Join(' ', s);
+       end
+       else CellText := FloatToStrF(Double(V), ffFixed, n.Attributes[AT_DIGITS], n.Attributes[AT_AQURICY])
+     end
      else
        CellText := V;
+     if n.HasAttribute(AT_EU) then CellText := CellText+' '+ n.Attributes[AT_EU];
+  end;
+  procedure SetEU(n: IXMLNode);
+  begin
+    if not Assigned(n) then Exit;
+    if n.HasAttribute(AT_EU) then CellText := n.Attributes[AT_EU];
   end;
 begin
   p := Sender.GetNodeData(Node);
@@ -336,8 +381,35 @@ begin
    end
 //  else
 //   case Column of
-//    2: SetData(AT_EU);
+//    1: SetEU(p.XMNode.ChildNodes.FindNode(T_DEV));
+//    2: SetEU(p.XMNode.ChildNodes.FindNode(T_CLC));
 //   end
+end;
+
+procedure TFormWrok.TreePaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode;
+  Column: TColumnIndex; TextType: TVSTTextType);
+ var
+  p: PNodeExData;
+  procedure SetData(n: IXMLNode);
+   var
+    V: Variant;
+  begin
+    if not Assigned(n) then Exit;
+    if n.HasAttribute(AT_COLOR) then
+     begin
+      TargetCanvas.Font.Color := n.Attributes[AT_COLOR] and $00FFFFFF;
+     end
+    else TargetCanvas.Font.Color := clBlack;
+  end;
+begin
+  p := Sender.GetNodeData(Node);
+  if not Assigned(p.XMNode) then Exit;
+  if TextType = ttNormal then
+   case Column of
+    0: SetData(p.XMNode);
+    1: SetData(p.XMNode.ChildNodes.FindNode(T_DEV));
+    2: SetData(p.XMNode.ChildNodes.FindNode(T_CLC));
+   end
 end;
 
 { TFormWrokUser }

@@ -1,0 +1,35 @@
+ADDR=6
+INFO=01.07.2022 ай Z4 mnk
+CHIP_INDEX=4
+SERIAL_NO=1
+COMUNICATION_PROPERTY=192
+TIME_START=18.03.2023 2:00:00
+###
+KADR;int32_t;0;;;;;;;;;;
+RAX;float;4;;mG;ax;10;4;-2000;2000;808F0000;1;0
+RAY;float;8;;mG;ay;10;4;-2000;2000;80008F00;1;0
+RAZ;float;12;;mG;az;10;4;-2000;2000;8000008F;1;0
+ай_zond_S_I0;float;16;;;;;;;;;;
+ай_zond_S_I;float;20;;;;;;;;;;
+ай_zond_S_Umn;float;24;;;;;;;;;;
+ай_zond_S_I0a;float;28;;;;;;;;;;
+ай_zond_S_Phase;float;32;;;;;;;;;;
+ай_zond_M_I0;float;36;;;;;;;;;;
+ай_zond_M_I;float;40;;;;;;;;;;
+ай_zond_M_Umn;float;44;;;;;;;;;;
+ай_zond_M_I0a;float;48;;;;;;;;;;
+ай_zond_M_Phase;float;52;;;;;;;;;;
+ай_zond_L_I0;float;56;;;;;;;;;;
+ай_zond_L_I;float;60;;;;;;;;;;
+ай_zond_L_Umn;float;64;;;;;;;;;;
+ай_zond_L_I0a;float;68;;;;;;;;;;
+ай_zond_L_Phase;float;72;;;;;;;;;;
+ай_zond_SML_I0;float;76;;;;;;;;;;
+ай_zond_SML_I;float;80;;;;;;;;;;
+ай_zond_SML_Umn;float;84;;;;;;;;;;
+ай_zond_SML_I0a;float;88;;;;;;;;;;
+ай_zond_SML_Phase;float;92;;;;;;;;;;
+ай_append_PSw;float;96;;;;;;;;;;
+ай_append_PSn;float;100;;;;;;;;;;
+ай_append_Ureal;float;104;;;;;;;;;;
+ай_append_Ilimit;float;108;;;;;;;;;;

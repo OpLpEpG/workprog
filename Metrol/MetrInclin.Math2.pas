@@ -9,6 +9,27 @@ uses  Vector, System.Math.Vectors, LuaInclin.Math,
 
 type
 
+koeff_t = record
+  k,d,d0: Single;
+end;
+
+sensorTrrT_t = record
+  X,Y,Z: koeff_t;
+end;
+
+TrrT_t = record
+  t0,t1: Single;
+  accel, magnit: sensorTrrT_t;
+end;
+
+TTrrT = class
+ class var root: IXMLNode;
+ class var TrrTemp:  array [0..1] of TrrT_t;
+ class procedure FindTrrTemp(root: IXMLNode);
+ class function Find(dat: TVector3; T: Double; IsAccel: Boolean):TVector3;
+ end;
+
+type
   TTrrML = class
    type
     TCovar = record
@@ -722,8 +743,8 @@ begin
 
   for i := 0 to High(InclData) do
    begin
-    TrrIncl[i].G := TrrAcc * InclData[i].G; // тарированные Асс
-    TrrIncl[i].H := TrrML * InclData[i].H; // тарированные MAG
+    TrrIncl[i].G := TrrAcc * TTrrT.Find(InclData[i].G, InclData[i].T, True); // тарированные Асс
+    TrrIncl[i].H := TrrML * TTrrT.Find(InclData[i].H, InclData[i].T, False); // тарированные MAG
    end;
   RealIncl := InclData;
 
@@ -887,6 +908,67 @@ begin
   Result.m21 := c.m21; Result.m22 := c.m22; Result.m23 := c.m23; Result.m24 := c.m24;
   Result.m31 := c.m31; Result.m32 := c.m32; Result.m33 := c.m33; Result.m34 := c.m34;
 //  Result.Incl := 0;
+end;
+
+{ TTrrT }
+
+//class function TTrrT.FindAcc(xyz: IXMLNode, t): TVector3;
+//begin
+//  Result.X := xyz.ChildNodes.FindNode('X').ChildNodes.FindNode(T_DEV).Attributes[AT_VALUE];
+//  Result.Y := xyz.ChildNodes.FindNode('Y').ChildNodes.FindNode(T_DEV).Attributes[AT_VALUE];
+//  Result.Z := xyz.ChildNodes.FindNode('Z').ChildNodes.FindNode(T_DEV).Attributes[AT_VALUE];
+//  if Assigned(root) then
+//  Result.X :=(
+//
+//end;
+
+//class function TTrrT.FindMag(xyz: IXMLNode): TVector3;
+//begin
+//
+//end;
+
+class function TTrrT.Find(dat: TVector3; T: Double; IsAccel: Boolean): TVector3;
+ var
+  tdat: sensorTrrT_t;
+begin
+  //Exit(dat);
+  if not Assigned(root) then Exit(dat);
+  for var d in TrrTemp do if T < d.t1 then
+   begin
+    if IsAccel then  tdat := d.accel else tdat := d.magnit;
+    var tc := T-d.t0;
+    Result.X := (dat.X + tdat.X.d0 + tdat.X.d*tc) * (1 + tdat.X.k*tc);
+    Result.Y := (dat.Y + tdat.Y.d0 + tdat.Y.d*tc) * (1 + tdat.Y.k*tc);
+    Result.Z := (dat.Z + tdat.Z.d0 + tdat.Z.d*tc) * (1 + tdat.Z.k*tc);
+    Break;
+   end;
+end;
+//
+class procedure TTrrT.FindTrrTemp(root: IXMLNode);
+ procedure AssignK(p: IXMLNode; var v:koeff_t);
+ begin
+   v.k := p.Attributes['k'];
+   v.d := p.Attributes['d'];
+   v.d0 := p.Attributes['d0'];
+ end;
+ procedure AssignP(p: IXMLNode; var v:sensorTrrT_t);
+ begin
+  AssignK(p.ChildNodes.FindNode('X'),v.X);
+  AssignK(p.ChildNodes.FindNode('Y'),v.Y);
+  AssignK(p.ChildNodes.FindNode('Z'),v.Z);
+ end;
+begin
+  TTrrT.root := root.ChildNodes.FindNode('T');
+  if not Assigned(TTrrT.root) then Exit;
+  for var i := 0 to TTrrT.root.ChildNodes.Count-1 do
+   begin
+    var n := TTrrT.root.ChildNodes[i];
+    TrrTemp[i].t0 := n.Attributes['t0'];
+    TrrTemp[i].t1 := n.Attributes['t1'];
+    var a := n.ChildNodes.FindNode('accel');
+    AssignP(n.ChildNodes.FindNode('accel'), TrrTemp[i].accel);
+    AssignP(n.ChildNodes.FindNode('magnit'), TrrTemp[i].magnit);
+   end;
 end;
 
 end.

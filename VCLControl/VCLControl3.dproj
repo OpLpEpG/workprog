@@ -52,6 +52,7 @@
         <GenDll>true</GenDll>
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -76,7 +77,7 @@
         <DCC_Namespace>System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <DCC_UnitSearchPath>..\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_Locale>1033</VerInfo_Locale>
+        <VerInfo_Locale>1049</VerInfo_Locale>
         <DCC_ExeOutput>..\_exe\$(Config)\</DCC_ExeOutput>
         <UsePackages>true</UsePackages>
         <Debugger_HostApplication>C:\XE\Projects\Device2\_exe\Debug\WorkProg.exe</Debugger_HostApplication>
@@ -116,7 +117,7 @@
             <Form>DialogDelay</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="VCL.Dlg.Ram.pas">
+        <DCCReference Include="VCLDlgRam.pas">
             <Form>FormDlgRam</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -129,20 +130,20 @@
             <Form>FormExportToPSK6_V3</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="VCL.Dlg.Export.Caliper.pas">
-            <Form>FormDlgExportCaliper</Form>
+        <DCCReference Include="VCLDlgExportAcoustics.pas">
+            <Form>FormDlgExportAcoustics</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="VCL.Dlg.Clc.pas">
+        <DCCReference Include="VCLDlgClc.pas">
             <Form>FormDlgClc</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="VCL.Frame.RangeSelect.pas">
+        <DCCReference Include="VCLFrameRangeSelect.pas">
             <Form>FrameRangeSelect</Form>
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="VCL.Dlg.ExportLAS.pas">
+        <DCCReference Include="VCLDlgExportLAS.pas">
             <Form>FormExportLASP3</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -163,6 +164,20 @@
             <Form>FrameDelayInfo</Form>
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="SelectPath.pas">
+            <Form>SelectPathFrm</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="VCLFrmSeltPar.pas">
+            <Form>FrameSelectParam</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="VCLDlgExportCaliper.pas">
+            <Form>FormDlgExportCaliper</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
@@ -215,6 +230,74 @@
                 <Source>
                     <Source Name="MainSource">VCLControl3.dpr</Source>
                 </Source>
+                <Language>
+                    <Language Name="ProjectLang">$00000419</Language>
+                    <Language Name="RootDir">C:\XE\Projects\Device2\VCLControl\</Language>
+                    <Language Name="ActiveLang">ENU</Language>
+                </Language>
+                <Resource_DLL_Projects>
+                    <Resource_DLL_Projects Name="Item0">Английский (США)*$00000409*ENU*ENU</Resource_DLL_Projects>
+                </Resource_DLL_Projects>
+                <RDP_Source_Files>
+                    <RDP_Source_Files Name="Item0">VCLControl\VCL.Dlg.Ram.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item1">VCLControl\VCL.Dlg.Export.Caliper.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item2">VCLControl\VCL.Dlg.Clc.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item3">VCLControl\VCL.Frame.RangeSelect.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item4">VCLControl\VCL.Dlg.ExportLAS.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item5">VCL.Dlg.Ram.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item6">VCL.Dlg.Export.Caliper.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item7">VCL.Dlg.Clc.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item8">VCL.Frame.RangeSelect.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item9">VCL.Dlg.ExportLAS.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item10">C:\XE\Projects\Device2\VCLControl\ControForm3.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item11">C:\XE\Projects\Device2\VCLControl\FormDlgDev.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item12">C:\XE\Projects\Device2\VCLControl\FormDelay2.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item13">C:\XE\Projects\Device2\VCLControl\VCLDlgRam.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item14">C:\XE\Projects\Device2\VCLControl\DlgSetupDate.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item15">C:\XE\Projects\Device2\VCLControl\ExportToPSK6_V3.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item16">C:\XE\Projects\Device2\VCLControl\VCLDlgExportCaliper.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item17">C:\XE\Projects\Device2\VCLControl\VCLDlgClc.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item18">C:\XE\Projects\Device2\VCLControl\VCLFrameRangeSelect.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item19">C:\XE\Projects\Device2\VCLControl\VCLDlgExportLAS.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item20">C:\XE\Projects\Device2\VCLControl\FormDlgSetupProject.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item21">C:\XE\Projects\Device2\VCLControl\FindDevices.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item22">C:\XE\Projects\Device2\VCLControl\FrameFindDevs2.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item23">C:\XE\Projects\Device2\VCLControl\FrameDelayDev.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item24">C:\XE\Projects\Device2\_exe\Debug\VCLControl3.drc</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item25">VCLControl\ControForm3.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item26">VCLControl\FormDlgDev.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item27">VCLControl\FormDelay2.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item28">VCLControl\VCLDlgRam.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item29">VCLControl\DlgSetupDate.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item30">VCLControl\ExportToPSK6_V3.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item31">VCLControl\VCLDlgExportCaliper.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item32">VCLControl\VCLDlgClc.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item33">VCLControl\VCLFrameRangeSelect.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item34">VCLControl\VCLDlgExportLAS.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item35">VCLControl\FormDlgSetupProject.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item36">VCLControl\FindDevices.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item37">VCLControl\FrameFindDevs2.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item38">VCLControl\FrameDelayDev.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item39">_exe\Debug\VCLControl3.drc</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item40">..\VCLDialogs\VCLFrameSelectPath.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item41">ControForm3.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item42">FormDlgDev.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item43">FormDelay2.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item44">VCLDlgRam.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item45">DlgSetupDate.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item46">ExportToPSK6_V3.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item47">VCLDlgExportCaliper.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item48">VCLDlgClc.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item49">VCLFrameRangeSelect.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item50">VCLDlgExportLAS.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item51">FormDlgSetupProject.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item52">FindDevices.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item53">FrameFindDevs2.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item54">FrameDelayDev.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item55">SelectPath.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item56">VCLFrmSeltPar.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item57">..\_exe\Debug\VCLControl3.drc</RDP_Source_Files>
+                </RDP_Source_Files>
             </Delphi.Personality>
             <Deployment Version="3">
                 <DeployFile LocalName="..\_exe\Debug\VCLControl3.dlp" Configuration="Debug" Class="ProjectOutput"/>

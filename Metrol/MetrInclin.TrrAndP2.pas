@@ -13,6 +13,7 @@ type
     FNProblemML: TMenuItem;
     FNsolver: TMenuItem;
     FSaveAccel: TMatrix4;
+    FTempTrr: IXMLNode;
     ErrOld, tG , tH: TMatrix4;
     class procedure _TEST_ApplyHGfromStol(alg: IXMLNode; from, too: Integer; Incl, Amp: Double; TrrA, TrrH: TMatrix4);
   protected
@@ -24,12 +25,12 @@ type
     procedure FindAccel(from, too: Integer; alg, trr: IXMLNode);
     /// количество поворотов вдоль оси для точек from, too включительно
     function ToRollCounts(alg: IXMLNode; from, too: Integer): TArray<Integer>;
-    function ToInpRoll(alg: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4):TZAlignLS.TInput;
+    function ToInpRoll(alg,tr: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4):TZAlignLS.TInput;
     function ToInpML(alg: IXMLNode; from, too: Integer): TArray<TInclPoint>;
-    function ToInp(alg: IXMLNode; from, too: Integer): TAngleFtting.TInput; overload;
-    function ToInp(alg: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4): TZAlignLS.TZConstPoints; overload;
-    function ToInp(alg: IXMLNode; from, too: Integer; TrrA, TrrH: TMatrix4): TCrossConstLS.TInclPoints; overload;
-    function ToInp(alg: IXMLNode; from, too: Integer; TrrA: TMatrix4): TCrossConstLS.TInclPoints; overload;
+    function ToInp(alg,tr: IXMLNode; from, too: Integer): TAngleFtting.TInput; overload;
+    function ToInp(alg,tr: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4): TZAlignLS.TZConstPoints; overload;
+    function ToInp(alg,tr: IXMLNode; from, too: Integer; TrrA, TrrH: TMatrix4): TCrossConstLS.TInclPoints; overload;
+    function ToInp(alg,tr: IXMLNode; from, too: Integer; TrrA: TMatrix4): TCrossConstLS.TInclPoints; overload;
     function AddVizir(v: Double): Variant;
     function UserSetupAlg(alg: IXMLNode): Boolean; override;
     procedure DoSetupAlg; virtual;
@@ -215,10 +216,14 @@ begin
    end;
 end;
 
-function TFormInclinTrrAndP2.ToInp(alg: IXMLNode; from, too: Integer): TAngleFtting.TInput;
+function TFormInclinTrrAndP2.ToInp(alg,tr: IXMLNode; from, too: Integer): TAngleFtting.TInput;
  var
   i: Integer;
   v:Variant;
+
+  n: IXMLNode;
+  g,h: TVector3;
+
 begin
   SetLength(Result, too-from+1);
   for i := 0 to High(Result) do
@@ -226,23 +231,43 @@ begin
     v := XToVar(GetXNode(alg, Format('STEP%d',[I+from])));
     with Result[i] do
      begin
-      gx := v.accel.X.DEV.VALUE;
-      gy := v.accel.Y.DEV.VALUE;
-      gz := v.accel.Z.DEV.VALUE;
-      hx := v.magnit.X.DEV.VALUE;
-      hy := v.magnit.Y.DEV.VALUE;
-      hz := v.magnit.Z.DEV.VALUE;
+        g.x := v.accel.X.DEV.VALUE;
+        g.y := v.accel.Y.DEV.VALUE;
+        g.z := v.accel.Z.DEV.VALUE;
+        h.x := v.magnit.X.DEV.VALUE;
+        h.y := v.magnit.Y.DEV.VALUE;
+        h.z := v.magnit.Z.DEV.VALUE;
+
+        n := GetXNode(alg, Format('STEP%d.T.DEV',[I+from]));
+        if Assigned(FTempTrr) and Assigned(n) then
+         begin
+          g := TTrrT.Find(g,n.Attributes[AT_VALUE],true);
+          h := TTrrT.Find(h,n.Attributes[AT_VALUE],false);
+         end;
+
+      gx := g.X;
+      gy := g.Y;
+      gz := g.Z;
+      hx := h.X;
+      hy := h.Y;
+      hz := h.Z;
       AziStol := v.СТОЛ.азимут + FAziCorr;
       ZenStol := v.СТОЛ.зенит + FZenCorr;
+      try
       MagAmp := v.СТОЛ.амплит_magnit;
+      except
+
+      end;
      end;
    end;
 end;
 
-function TFormInclinTrrAndP2.ToInp(alg: IXMLNode; from, too: Integer; TrrA, TrrH: TMatrix4): TCrossConstLS.TInclPoints;
+
+function TFormInclinTrrAndP2.ToInp(alg,tr: IXMLNode; from, too: Integer; TrrA, TrrH: TMatrix4): TCrossConstLS.TInclPoints;
  var
   i: Integer;
   v: Variant;
+  n: IXMLNode;
   g,h: TVector3;
 begin
   SetLength(Result, too-from+1);
@@ -263,15 +288,24 @@ begin
     h.x := v.magnit.X.DEV.VALUE;
     h.y := v.magnit.Y.DEV.VALUE;
     h.z := v.magnit.Z.DEV.VALUE;
+
+    n := GetXNode(alg, Format('STEP%d.T.DEV',[I+from]));
+    if Assigned(FTempTrr) and Assigned(n) then
+     begin
+      g := TTrrT.Find(g,n.Attributes[AT_VALUE],true);
+      h := TTrrT.Find(h,n.Attributes[AT_VALUE],false);
+     end;
+
     Result[i].A := TrrA * g;
     Result[i].H := TrrH * h;
    end;
 end;
 
-function TFormInclinTrrAndP2.ToInp(alg: IXMLNode; from, too: Integer; TrrA: TMatrix4): TCrossConstLS.TInclPoints;
+function TFormInclinTrrAndP2.ToInp(alg,tr: IXMLNode; from, too: Integer; TrrA: TMatrix4): TCrossConstLS.TInclPoints;
  var
   i: Integer;
   v: Variant;
+  n: IXMLNode;
   g,h: TVector3;
 begin
   SetLength(Result, too-from+1);
@@ -284,6 +318,14 @@ begin
     h.x := v.magnit.X.DEV.VALUE;
     h.y := v.magnit.Y.DEV.VALUE;
     h.z := v.magnit.Z.DEV.VALUE;
+
+    n := GetXNode(alg, Format('STEP%d.T.DEV',[I+from]));
+    if Assigned(FTempTrr) and Assigned(n) then
+     begin
+      g := TTrrT.Find(g,n.Attributes[AT_VALUE],true);
+      h := TTrrT.Find(h,n.Attributes[AT_VALUE],false);
+     end;
+
     Result[i].A := TrrA * g;
     Result[i].H := h;
    end;
@@ -329,12 +371,13 @@ begin
   until i > too;
 end;
 
-function TFormInclinTrrAndP2.ToInp(alg: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4): TZAlignLS.TZConstPoints;
+function TFormInclinTrrAndP2.ToInp(alg,tr: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4): TZAlignLS.TZConstPoints;
  const
   AM: array[Boolean] of string = ('magnit', 'accel');
  var
   i: Integer;
   v: Variant;
+  n: IXMLNode;
   p: TVector3;
 begin
   SetLength(Result, too-from+1);
@@ -344,11 +387,16 @@ begin
     p.X := v.X.DEV.VALUE;
     p.Y := v.Y.DEV.VALUE;
     p.Z := v.Z.DEV.VALUE;
+    n := GetXNode(alg, Format('STEP%d.T.DEV',[I+from]));
+    if Assigned(FTempTrr) and Assigned(n) then
+     begin
+      p := TTrrT.Find(p,n.Attributes[AT_VALUE],TrueAccFalseMag);
+     end;
     Result[i] := Trr * p;
    end;
 end;
 
-function TFormInclinTrrAndP2.ToInpRoll(alg: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4): TZAlignLS.TInput;
+function TFormInclinTrrAndP2.ToInpRoll(alg,tr: IXMLNode; from, too: Integer; TrueAccFalseMag: Boolean; Trr: TMatrix4): TZAlignLS.TInput;
  var
   ArrCnt: TArray<Integer>;
   i, first: Integer;
@@ -358,7 +406,7 @@ begin
   first := from;
   for i := 0 to High(ArrCnt) do
    begin
-    Result[i] := ToInp(alg, first, first + ArrCnt[i]-1, TrueAccFalseMag, Trr);
+    Result[i] := ToInp(alg,tr, first, first + ArrCnt[i]-1, TrueAccFalseMag, Trr);
     Inc(first, ArrCnt[i]);
    end;
 end;
@@ -391,8 +439,10 @@ begin
     m14 :=	-10.4;          m24 :=	20.4;          m34 :=	-30.4;
    end;}
 //  _TEST_ApplyHGfromStol(alg, from, too, 10.9, 1000, tG, tH);
+   FTempTrr := trr.ChildNodes.FindNode('T');
+   if Assigned(FTempTrr) then TTrrT.FindTrrTemp(trr);
 
-  inp := ToInp(alg, from, too);
+  inp := ToInp(alg,trr, from, too);
 
   if FNNoStol.Checked then
    begin
@@ -400,7 +450,7 @@ begin
     TSphereLS.RunZ(inp, Res);
 {    SetLength(alignInp, 12);//6
     for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, True, Res);}
-    alignInp := ToInpRoll(alg, from, too, True, Res);
+    alignInp := ToInpRoll(alg,trr, from, too, True, Res);
     //  SetLength(alignInp, 1);
     //  i := 1;
     //  alignInp[0] := ToInp(alg, 35+i*5, 39+i*5, True, Res);
@@ -423,7 +473,7 @@ begin
     TSphereLS.RunZ(inp, Res);
     {SetLength(alignInp, 12);//6
     for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, True, Res);}
-    alignInp := ToInpRoll(alg, from, too, True, Res);
+    alignInp := ToInpRoll(alg,trr, from, too, True, Res);
 
     TZAlignLS.Run(alignInp, a,b);
     FSaveAccel := TZAlignLS.Apply(Res, a, b);
@@ -467,7 +517,7 @@ procedure TFormInclinTrrAndP2.FindMagnit(from, too: Integer; alg, trr: IXMLNode)
   i: Integer;
   a, b, incl, inclML: Double;
 begin
-  inp := ToInp(alg, from, too);
+  inp := ToInp(alg,trr, from, too);
   if FNNoStol.Checked then
    begin
 //    _sts(alg);
@@ -475,14 +525,14 @@ begin
     TSphereLS.RunA(inp, Res);
     {SetLength(alignInp, 12);//6
     for I := 0 to High(alignInp) do alignInp[i] := ToInp(alg, 5+i*5, 9+i*5, False, Res);}
-    alignInp := ToInpRoll(alg, from, too, False, Res);
+    alignInp := ToInpRoll(alg,trr, from, too, False, Res);
 
    if FNsolver.Checked then
     begin
 //   LEVENBERG
      TZAlignLS.RunLeMa(alignInp, a,b);
      m2 := TZAlignLS.ApplyLeMa(Res, a, b);
-     TCrossConstLS.RunLeMa(ToInp(alg, from, too, FSaveAccel, m2), a, b);
+     TCrossConstLS.RunLeMa(ToInp(alg,trr, from, too, FSaveAccel, m2), a, b);
      m3 := TCrossConstLS.ApplyLeMa(m2, a);
     end
    else
@@ -490,7 +540,7 @@ begin
 //   NMK
      TZAlignLS.Run(alignInp, a,b);
      m2 := TZAlignLS.Apply(Res, a, b);
-     TCrossConstLS.Run(ToInp(alg, from, too, FSaveAccel, m2), a, b);
+     TCrossConstLS.Run(ToInp(alg,trr, from, too, FSaveAccel, m2), a, b);
      m3 := TCrossConstLS.Apply(m2, a);
     end;
 //    incl := RadToDeg(Arccos(b/1000/1000));

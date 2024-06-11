@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLDialogs\VCLFrameSelectParam.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLDialogs\VCLFrameSelectParam.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45034.6681712963</prop>
+        <prop prop-type="OrigDateTime">45030.3892592593</prop>
+        <prop prop-type="XlatDateTime">45030.3892592593</prop>
+        <prop prop-type="Translated">0</prop>
+        <prop prop-type="UnTranslated">99</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FrameSelectParam.Left" resname="O:FrameSelectParam.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">0</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.Top" resname="O:FrameSelectParam.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">1</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.Width" resname="O:FrameSelectParam.Width">
+        <source>451</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">2</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.Height" resname="O:FrameSelectParam.Height">
+        <source>305</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">3</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.Align" resname="O:FrameSelectParam.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">4</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.TabOrder" resname="O:FrameSelectParam.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">5</prop><prop prop-type="Type">TFrameSelectParam</prop><prop prop-type="Localize">0</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Left" resname="O:FrameSelectParam.O:Tree.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">6</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Top" resname="O:FrameSelectParam.O:Tree.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">7</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Width" resname="O:FrameSelectParam.O:Tree.Width">
+        <source>451</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">8</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Height" resname="O:FrameSelectParam.O:Tree.Height">
+        <source>305</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">9</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Align" resname="O:FrameSelectParam.O:Tree.Align">
+        <source>alClient</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">10</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.BorderWidth" resname="O:FrameSelectParam.O:Tree.BorderWidth">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">11</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Color" resname="O:FrameSelectParam.O:Tree.Color">
+        <source>clBtnHighlight</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">12</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.BorderColor" resname="O:FrameSelectParam.O:Tree.Colors.BorderColor">
+        <source>15987699</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">13</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.DisabledColor" resname="O:FrameSelectParam.O:Tree.Colors.DisabledColor">
+        <source>clGray</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">14</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.DropMarkColor" resname="O:FrameSelectParam.O:Tree.Colors.DropMarkColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">15</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.DropTargetColor" resname="O:FrameSelectParam.O:Tree.Colors.DropTargetColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">16</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.DropTargetBorderColor" resname="O:FrameSelectParam.O:Tree.Colors.DropTargetBorderColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">17</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.FocusedSelectionColor" resname="O:FrameSelectParam.O:Tree.Colors.FocusedSelectionColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">18</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.FocusedSelectionBorderColor" resname="O:FrameSelectParam.O:Tree.Colors.FocusedSelectionBorderColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">19</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.GridLineColor" resname="O:FrameSelectParam.O:Tree.Colors.GridLineColor">
+        <source>15987699</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">20</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.HeaderHotColor" resname="O:FrameSelectParam.O:Tree.Colors.HeaderHotColor">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">21</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.HotColor" resname="O:FrameSelectParam.O:Tree.Colors.HotColor">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">22</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.SelectionRectangleBlendColor" resname="O:FrameSelectParam.O:Tree.Colors.SelectionRectangleBlendColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">23</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.SelectionRectangleBorderColor" resname="O:FrameSelectParam.O:Tree.Colors.SelectionRectangleBorderColor">
+        <source>15385233</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">24</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.SelectionTextColor" resname="O:FrameSelectParam.O:Tree.Colors.SelectionTextColor">
+        <source>clBlack</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">25</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.TreeLineColor" resname="O:FrameSelectParam.O:Tree.Colors.TreeLineColor">
+        <source>9471874</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">26</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.UnfocusedColor" resname="O:FrameSelectParam.O:Tree.Colors.UnfocusedColor">
+        <source>clGray</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">27</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.UnfocusedSelectionColor" resname="O:FrameSelectParam.O:Tree.Colors.UnfocusedSelectionColor">
+        <source>13421772</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">28</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Colors.UnfocusedSelectionBorderColor" resname="O:FrameSelectParam.O:Tree.Colors.UnfocusedSelectionBorderColor">
+        <source>13421772</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">29</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.DragMode" resname="O:FrameSelectParam.O:Tree.DragMode">
+        <source>dmAutomatic</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">30</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.DragType" resname="O:FrameSelectParam.O:Tree.DragType">
+        <source>dtVCL</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">31</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Header.AutoSizeIndex" resname="O:FrameSelectParam.O:Tree.Header.AutoSizeIndex">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">32</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Header.MainColumn" resname="O:FrameSelectParam.O:Tree.Header.MainColumn">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">33</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Header.Options" resname="O:FrameSelectParam.O:Tree.Header.Options">
+        <source>[hoAutoResize, hoColumnResize, hoDrag, hoShowImages, hoShowSortGlyphs, hoVisible, hoAutoSpring]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">34</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.PopupMenu" resname="O:FrameSelectParam.O:Tree.PopupMenu">
+        <source>ppM</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">35</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.TabOrder" resname="O:FrameSelectParam.O:Tree.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">36</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.TreeOptions.AutoOptions" resname="O:FrameSelectParam.O:Tree.TreeOptions.AutoOptions">
+        <source>[toAutoDropExpand, toAutoScrollOnExpand, toAutoSpanColumns, toAutoTristateTracking, toAutoHideButtons, toAutoDeleteMovedNodes]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">37</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.TreeOptions.MiscOptions" resname="O:FrameSelectParam.O:Tree.TreeOptions.MiscOptions">
+        <source>[toAcceptOLEDrop, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">38</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.TreeOptions.PaintOptions" resname="O:FrameSelectParam.O:Tree.TreeOptions.PaintOptions">
+        <source>[toHideFocusRect, toHideSelection, toHotTrack, toShowButtons, toShowDropmark, toShowHorzGridLines, toShowRoot, toShowTreeLines, toShowVertGridLines, toThemeAware, toUseBlendedImages, toFullVertGridLines]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">39</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.TreeOptions.SelectionOptions" resname="O:FrameSelectParam.O:Tree.TreeOptions.SelectionOptions">
+        <source>[toDisableDrawSelection, toExtendedFocus, toMultiSelect, toSimpleDrawSelection]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">40</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.OnAfterCellPaint" resname="O:FrameSelectParam.O:Tree.OnAfterCellPaint">
+        <source>TreeAfterCellPaint</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">41</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.OnGetText" resname="O:FrameSelectParam.O:Tree.OnGetText">
+        <source>TreeGetText</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">42</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.OnGetNodeDataSize" resname="O:FrameSelectParam.O:Tree.OnGetNodeDataSize">
+        <source>TreeGetNodeDataSize</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">43</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.OnMouseDown" resname="O:FrameSelectParam.O:Tree.OnMouseDown">
+        <source>TreeMouseDown</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">44</prop><prop prop-type="Type">TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[0].MaxWidth" resname="O:FrameSelectParam.O:Tree.Columns[0].MaxWidth">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">45</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">&lt;item</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[0].MinWidth" resname="O:FrameSelectParam.O:Tree.Columns[0].MinWidth">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">46</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[0].Options" resname="O:FrameSelectParam.O:Tree.Columns[0].Options">
+        <source>[coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">47</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[0].Position" resname="O:FrameSelectParam.O:Tree.Columns[0].Position">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">48</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[0].Text" resname="O:FrameSelectParam.O:Tree.Columns[0].Text">
+        <source>'D'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">49</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[0].Width" resname="O:FrameSelectParam.O:Tree.Columns[0].Width">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">50</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">end</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[1].MaxWidth" resname="O:FrameSelectParam.O:Tree.Columns[1].MaxWidth">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">51</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">item</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[1].MinWidth" resname="O:FrameSelectParam.O:Tree.Columns[1].MinWidth">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">52</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[1].Options" resname="O:FrameSelectParam.O:Tree.Columns[1].Options">
+        <source>[coAllowClick, coDraggable, coEnabled, coParentBidiMode, coParentColor, coResizable, coShowDropMark, coVisible]</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">53</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[1].Position" resname="O:FrameSelectParam.O:Tree.Columns[1].Position">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">54</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[1].Text" resname="O:FrameSelectParam.O:Tree.Columns[1].Text">
+        <source>'C'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">55</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[1].Width" resname="O:FrameSelectParam.O:Tree.Columns[1].Width">
+        <source>24</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">56</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">end</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[2].Position" resname="O:FrameSelectParam.O:Tree.Columns[2].Position">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">57</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Open">item</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[2].Text" resname="O:FrameSelectParam.O:Tree.Columns[2].Text">
+        <source>'Имя'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">58</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:Tree.Columns[2].Width" resname="O:FrameSelectParam.O:Tree.Columns[2].Width">
+        <source>403</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">59</prop><prop prop-type="Type">C:TVirtualStringTree</prop><prop prop-type="Localize">1</prop><prop prop-type="Close">end&gt;</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.OnPopup" resname="O:FrameSelectParam.O:ppM.OnPopup">
+        <source>ppMPopup</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">60</prop><prop prop-type="Type">TPopupActionBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.Left" resname="O:FrameSelectParam.O:ppM.Left">
+        <source>104</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">61</prop><prop prop-type="Type">TPopupActionBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.Top" resname="O:FrameSelectParam.O:ppM.Top">
+        <source>88</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">62</prop><prop prop-type="Type">TPopupActionBar</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSet.Caption" resname="O:FrameSelectParam.O:ppM.O:NSet.Caption">
+        <source>'Выбрать '</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">63</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSet.O:NSetAll.Tag" resname="O:FrameSelectParam.O:ppM.O:NSet.O:NSetAll.Tag">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">64</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSet.O:NSetAll.Caption" resname="O:FrameSelectParam.O:ppM.O:NSet.O:NSetAll.Caption">
+        <source>'Все'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">65</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSet.O:NSetAll.OnClick" resname="O:FrameSelectParam.O:ppM.O:NSet.O:NSetAll.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">66</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSet.O:NSetRow.Caption" resname="O:FrameSelectParam.O:ppM.O:NSet.O:NSetRow.Caption">
+        <source>'[D] "Сырые" данные'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">67</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSet.O:NSetRow.OnClick" resname="O:FrameSelectParam.O:ppM.O:NSet.O:NSetRow.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">68</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSet.O:NSetTrr.Tag" resname="O:FrameSelectParam.O:ppM.O:NSet.O:NSetTrr.Tag">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936343</prop><prop prop-type="Status">0</prop><prop prop-type="Order">69</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSet.O:NSetTrr.Caption" resname="O:FrameSelectParam.O:ppM.O:NSet.O:NSetTrr.Caption">
+        <source>'[C] Расчетные'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">70</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSet.O:NSetTrr.OnClick" resname="O:FrameSelectParam.O:ppM.O:NSet.O:NSetTrr.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">71</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NDel.Caption" resname="O:FrameSelectParam.O:ppM.O:NDel.Caption">
+        <source>'Снять выделение'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">72</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NDel.O:NClrAll.Tag" resname="O:FrameSelectParam.O:ppM.O:NDel.O:NClrAll.Tag">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">73</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NDel.O:NClrAll.Caption" resname="O:FrameSelectParam.O:ppM.O:NDel.O:NClrAll.Caption">
+        <source>'Все'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">74</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NDel.O:NClrAll.OnClick" resname="O:FrameSelectParam.O:ppM.O:NDel.O:NClrAll.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">75</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NDel.O:NClrRow.Caption" resname="O:FrameSelectParam.O:ppM.O:NDel.O:NClrRow.Caption">
+        <source>'[D] "Сырые" данные'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">76</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NDel.O:NClrRow.OnClick" resname="O:FrameSelectParam.O:ppM.O:NDel.O:NClrRow.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">77</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NDel.O:NClrTrr.Tag" resname="O:FrameSelectParam.O:ppM.O:NDel.O:NClrTrr.Tag">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">78</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NDel.O:NClrTrr.Caption" resname="O:FrameSelectParam.O:ppM.O:NDel.O:NClrTrr.Caption">
+        <source>'[C] Расчетные'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">79</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NDel.O:NClrTrr.OnClick" resname="O:FrameSelectParam.O:ppM.O:NDel.O:NClrTrr.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">80</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:N1.Caption" resname="O:FrameSelectParam.O:ppM.O:N1.Caption">
+        <source>'-'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">81</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSetChild.Caption" resname="O:FrameSelectParam.O:ppM.O:NSetChild.Caption">
+        <source>'Выбрать дочерние'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">82</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildALL.Tag" resname="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildALL.Tag">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">83</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildALL.Caption" resname="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildALL.Caption">
+        <source>'Все'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">84</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildALL.OnClick" resname="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildALL.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">85</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildRow.Caption" resname="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildRow.Caption">
+        <source>'[D] "Сырые" данные'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">86</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildRow.OnClick" resname="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildRow.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">87</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildTRR.Tag" resname="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildTRR.Tag">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">88</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildTRR.Caption" resname="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildTRR.Caption">
+        <source>'[C] Расчетные'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">89</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildTRR.OnClick" resname="O:FrameSelectParam.O:ppM.O:NSetChild.O:NSetChildTRR.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">90</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NClrChild.Caption" resname="O:FrameSelectParam.O:ppM.O:NClrChild.Caption">
+        <source>'Снять выделение дочерних'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">91</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildALL.Tag" resname="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildALL.Tag">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">92</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildALL.Caption" resname="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildALL.Caption">
+        <source>'Все'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">93</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildALL.OnClick" resname="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildALL.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">94</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildRow.Caption" resname="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildRow.Caption">
+        <source>'[D] "Сырые" данные'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">95</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildRow.OnClick" resname="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildRow.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">96</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildTrr.Tag" resname="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildTrr.Tag">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">97</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildTrr.Caption" resname="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildTrr.Caption">
+        <source>'[C] Расчетные'</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">98</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildTrr.OnClick" resname="O:FrameSelectParam.O:ppM.O:NClrChild.O:NClrChildTrr.OnClick">
+        <source>ppClick</source>
+        <prop-group name="ITEFieldProp">
+        <prop prop-type="Created">45034.6681936458</prop><prop prop-type="Status">0</prop><prop prop-type="Order">99</prop><prop prop-type="Type">TMenuItem</prop><prop prop-type="Localize">1</prop></prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

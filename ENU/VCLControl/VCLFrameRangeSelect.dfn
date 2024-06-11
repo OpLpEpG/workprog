@@ -1,0 +1,1276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLControl\VCLFrameRangeSelect.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLControl\VCLFrameRangeSelect.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45033.4578703704</prop>
+        <prop prop-type="OrigDateTime">45030.6549074074</prop>
+        <prop prop-type="XlatDateTime">45030.6549074074</prop>
+        <prop prop-type="Translated">6</prop>
+        <prop prop-type="UnTranslated">118</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FrameRangeSelect.Left" resname="O:FrameRangeSelect.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.Top" resname="O:FrameRangeSelect.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.Width" resname="O:FrameRangeSelect.Width">
+        <source>293</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.Height" resname="O:FrameRangeSelect.Height">
+        <source>124</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.AutoSize" resname="O:FrameRangeSelect.AutoSize">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.TabOrder" resname="O:FrameRangeSelect.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">0</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.DesignSize[0]" resname="O:FrameRangeSelect.DesignSize[0]">
+        <source>293</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">(</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.DesignSize[1]" resname="O:FrameRangeSelect.DesignSize[1]">
+        <source>124</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Close">)</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbBegin.Left" resname="O:FrameRangeSelect.O:lbBegin.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbBegin.Top" resname="O:FrameRangeSelect.O:lbBegin.Top">
+        <source>74</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbBegin.Width" resname="O:FrameRangeSelect.O:lbBegin.Width">
+        <source>42</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbBegin.Height" resname="O:FrameRangeSelect.O:lbBegin.Height">
+        <source>15</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbBegin.Caption" resname="O:FrameRangeSelect.O:lbBegin.Caption">
+        <source>'Начало'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Begin'</target>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbEnd.Left" resname="O:FrameRangeSelect.O:lbEnd.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbEnd.Top" resname="O:FrameRangeSelect.O:lbEnd.Top">
+        <source>106</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbEnd.Width" resname="O:FrameRangeSelect.O:lbEnd.Width">
+        <source>34</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbEnd.Height" resname="O:FrameRangeSelect.O:lbEnd.Height">
+        <source>15</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbEnd.Caption" resname="O:FrameRangeSelect.O:lbEnd.Caption">
+        <source>'Конец'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'End'</target>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbCnt.Left" resname="O:FrameRangeSelect.O:lbCnt.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbCnt.Top" resname="O:FrameRangeSelect.O:lbCnt.Top">
+        <source>90</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbCnt.Width" resname="O:FrameRangeSelect.O:lbCnt.Width">
+        <source>39</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">20</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbCnt.Height" resname="O:FrameRangeSelect.O:lbCnt.Height">
+        <source>15</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">21</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbCnt.Caption" resname="O:FrameRangeSelect.O:lbCnt.Caption">
+        <source>'Кол-во'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">22</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Cnt'</target>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaBegin.Left" resname="O:FrameRangeSelect.O:lbKaBegin.Left">
+        <source>233</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071181</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">23</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaBegin.Top" resname="O:FrameRangeSelect.O:lbKaBegin.Top">
+        <source>77</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">24</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaBegin.Width" resname="O:FrameRangeSelect.O:lbKaBegin.Width">
+        <source>6</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">25</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaBegin.Height" resname="O:FrameRangeSelect.O:lbKaBegin.Height">
+        <source>15</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">26</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaBegin.Caption" resname="O:FrameRangeSelect.O:lbKaBegin.Caption">
+        <source>'0'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">27</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaCnt.Left" resname="O:FrameRangeSelect.O:lbKaCnt.Left">
+        <source>233</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">28</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaCnt.Top" resname="O:FrameRangeSelect.O:lbKaCnt.Top">
+        <source>93</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">29</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaCnt.Width" resname="O:FrameRangeSelect.O:lbKaCnt.Width">
+        <source>6</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">30</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaCnt.Height" resname="O:FrameRangeSelect.O:lbKaCnt.Height">
+        <source>15</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">31</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaCnt.Caption" resname="O:FrameRangeSelect.O:lbKaCnt.Caption">
+        <source>'0'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">32</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaEnd.Left" resname="O:FrameRangeSelect.O:lbKaEnd.Left">
+        <source>233</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">33</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaEnd.Top" resname="O:FrameRangeSelect.O:lbKaEnd.Top">
+        <source>109</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">34</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaEnd.Width" resname="O:FrameRangeSelect.O:lbKaEnd.Width">
+        <source>6</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">35</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaEnd.Height" resname="O:FrameRangeSelect.O:lbKaEnd.Height">
+        <source>15</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">36</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:lbKaEnd.Caption" resname="O:FrameRangeSelect.O:lbKaEnd.Caption">
+        <source>'0'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">37</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label1.Left" resname="O:FrameRangeSelect.O:Label1.Left">
+        <source>38</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">38</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label1.Top" resname="O:FrameRangeSelect.O:Label1.Top">
+        <source>63</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">39</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label1.Width" resname="O:FrameRangeSelect.O:Label1.Width">
+        <source>74</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">40</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label1.Height" resname="O:FrameRangeSelect.O:Label1.Height">
+        <source>15</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">41</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label1.Caption" resname="O:FrameRangeSelect.O:Label1.Caption">
+        <source>'время от вкл.'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">42</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Time from on'</target>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label2.Left" resname="O:FrameRangeSelect.O:Label2.Left">
+        <source>124</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">43</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label2.Top" resname="O:FrameRangeSelect.O:Label2.Top">
+        <source>63</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">44</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label2.Width" resname="O:FrameRangeSelect.O:Label2.Width">
+        <source>60</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">45</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label2.Height" resname="O:FrameRangeSelect.O:Label2.Height">
+        <source>15</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">46</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label2.Caption" resname="O:FrameRangeSelect.O:Label2.Caption">
+        <source>'дата время'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">47</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Date time'</target>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label3.Left" resname="O:FrameRangeSelect.O:Label3.Left">
+        <source>232</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">48</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label3.Top" resname="O:FrameRangeSelect.O:Label3.Top">
+        <source>63</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">49</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label3.Width" resname="O:FrameRangeSelect.O:Label3.Width">
+        <source>34</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">50</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label3.Height" resname="O:FrameRangeSelect.O:Label3.Height">
+        <source>15</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">51</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Label3.Caption" resname="O:FrameRangeSelect.O:Label3.Caption">
+        <source>'кадры'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">52</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'frames'</target>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Range.Left" resname="O:FrameRangeSelect.O:Range.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">53</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Range.Top" resname="O:FrameRangeSelect.O:Range.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">54</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Range.Width" resname="O:FrameRangeSelect.O:Range.Width">
+        <source>293</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">55</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Range.Height" resname="O:FrameRangeSelect.O:Range.Height">
+        <source>57</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">56</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Range.Anchors" resname="O:FrameRangeSelect.O:Range.Anchors">
+        <source>[akLeft, akTop, akRight]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">57</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Range.Max" resname="O:FrameRangeSelect.O:Range.Max">
+        <source>100</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">58</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Range.SelStart" resname="O:FrameRangeSelect.O:Range.SelStart">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">59</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Range.SelEnd" resname="O:FrameRangeSelect.O:Range.SelEnd">
+        <source>70</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">60</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Range.ReadyEnd" resname="O:FrameRangeSelect.O:Range.ReadyEnd">
+        <source>80</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">61</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:Range.OnChange" resname="O:FrameRangeSelect.O:Range.OnChange">
+        <source>RangeChange</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">62</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnBegin.Left" resname="O:FrameRangeSelect.O:edOtnBegin.Left">
+        <source>38</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">63</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnBegin.Top" resname="O:FrameRangeSelect.O:edOtnBegin.Top">
+        <source>76</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">64</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnBegin.Width" resname="O:FrameRangeSelect.O:edOtnBegin.Width">
+        <source>80</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">65</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnBegin.Height" resname="O:FrameRangeSelect.O:edOtnBegin.Height">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">66</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnBegin.AutoSize" resname="O:FrameRangeSelect.O:edOtnBegin.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">67</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnBegin.EditMask" resname="O:FrameRangeSelect.O:edOtnBegin.EditMask">
+        <source>'!99 90:00:00;1;_'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">68</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnBegin.MaxLength" resname="O:FrameRangeSelect.O:edOtnBegin.MaxLength">
+        <source>11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">69</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnBegin.TabOrder" resname="O:FrameRangeSelect.O:edOtnBegin.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">70</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnBegin.Text" resname="O:FrameRangeSelect.O:edOtnBegin.Text">
+        <source>'     :  :  '</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">71</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnBegin.OnKeyPress" resname="O:FrameRangeSelect.O:edOtnBegin.OnKeyPress">
+        <source>edOtnBeginKeyPress</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">72</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnEnd.Left" resname="O:FrameRangeSelect.O:edOtnEnd.Left">
+        <source>38</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">73</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnEnd.Top" resname="O:FrameRangeSelect.O:edOtnEnd.Top">
+        <source>106</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">74</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnEnd.Width" resname="O:FrameRangeSelect.O:edOtnEnd.Width">
+        <source>80</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">75</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnEnd.Height" resname="O:FrameRangeSelect.O:edOtnEnd.Height">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">76</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnEnd.AutoSize" resname="O:FrameRangeSelect.O:edOtnEnd.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">77</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnEnd.EditMask" resname="O:FrameRangeSelect.O:edOtnEnd.EditMask">
+        <source>'!99 90:00:00;1;_'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">78</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnEnd.MaxLength" resname="O:FrameRangeSelect.O:edOtnEnd.MaxLength">
+        <source>11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">79</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnEnd.TabOrder" resname="O:FrameRangeSelect.O:edOtnEnd.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">80</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnEnd.Text" resname="O:FrameRangeSelect.O:edOtnEnd.Text">
+        <source>'     :  :  '</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">81</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnEnd.OnKeyPress" resname="O:FrameRangeSelect.O:edOtnEnd.OnKeyPress">
+        <source>edOtnEndKeyPress</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">82</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnCnt.Left" resname="O:FrameRangeSelect.O:edOtnCnt.Left">
+        <source>38</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">83</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnCnt.Top" resname="O:FrameRangeSelect.O:edOtnCnt.Top">
+        <source>91</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">84</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnCnt.Width" resname="O:FrameRangeSelect.O:edOtnCnt.Width">
+        <source>80</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">85</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnCnt.Height" resname="O:FrameRangeSelect.O:edOtnCnt.Height">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">86</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnCnt.AutoSize" resname="O:FrameRangeSelect.O:edOtnCnt.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">87</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnCnt.EditMask" resname="O:FrameRangeSelect.O:edOtnCnt.EditMask">
+        <source>'!99 90:00:00;1;_'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">88</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnCnt.MaxLength" resname="O:FrameRangeSelect.O:edOtnCnt.MaxLength">
+        <source>11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">89</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnCnt.TabOrder" resname="O:FrameRangeSelect.O:edOtnCnt.TabOrder">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">90</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnCnt.Text" resname="O:FrameRangeSelect.O:edOtnCnt.Text">
+        <source>'     :  :  '</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">91</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edOtnCnt.OnKeyPress" resname="O:FrameRangeSelect.O:edOtnCnt.OnKeyPress">
+        <source>edOtnCntKeyPress</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">92</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.Left" resname="O:FrameRangeSelect.O:edGlobBegin.Left">
+        <source>120</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">93</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.Top" resname="O:FrameRangeSelect.O:edGlobBegin.Top">
+        <source>76</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">94</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.Width" resname="O:FrameRangeSelect.O:edGlobBegin.Width">
+        <source>111</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">95</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.Height" resname="O:FrameRangeSelect.O:edGlobBegin.Height">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">96</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.AutoSize" resname="O:FrameRangeSelect.O:edGlobBegin.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">97</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.EditMask" resname="O:FrameRangeSelect.O:edGlobBegin.EditMask">
+        <source>'00/00/0000 !00:00:00;1;_'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">98</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.Font.Charset" resname="O:FrameRangeSelect.O:edGlobBegin.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">99</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.Font.Color" resname="O:FrameRangeSelect.O:edGlobBegin.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">100</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.Font.Height" resname="O:FrameRangeSelect.O:edGlobBegin.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">101</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.Font.Name" resname="O:FrameRangeSelect.O:edGlobBegin.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">102</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.Font.Style" resname="O:FrameRangeSelect.O:edGlobBegin.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">103</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.MaxLength" resname="O:FrameRangeSelect.O:edGlobBegin.MaxLength">
+        <source>19</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">104</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.ParentFont" resname="O:FrameRangeSelect.O:edGlobBegin.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">105</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.TabOrder" resname="O:FrameRangeSelect.O:edGlobBegin.TabOrder">
+        <source>4</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">106</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.Text" resname="O:FrameRangeSelect.O:edGlobBegin.Text">
+        <source>'  .  .       :  :  '</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">107</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobBegin.OnKeyPress" resname="O:FrameRangeSelect.O:edGlobBegin.OnKeyPress">
+        <source>edGlobBeginKeyPress</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">108</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.Left" resname="O:FrameRangeSelect.O:edGlobEnd.Left">
+        <source>120</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">109</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.Top" resname="O:FrameRangeSelect.O:edGlobEnd.Top">
+        <source>106</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">110</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.Width" resname="O:FrameRangeSelect.O:edGlobEnd.Width">
+        <source>111</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">111</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.Height" resname="O:FrameRangeSelect.O:edGlobEnd.Height">
+        <source>16</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">112</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.AutoSize" resname="O:FrameRangeSelect.O:edGlobEnd.AutoSize">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">113</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.EditMask" resname="O:FrameRangeSelect.O:edGlobEnd.EditMask">
+        <source>'00/00/0000 !00:00:00;1;_'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">114</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.Font.Charset" resname="O:FrameRangeSelect.O:edGlobEnd.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">115</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.Font.Color" resname="O:FrameRangeSelect.O:edGlobEnd.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">116</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.Font.Height" resname="O:FrameRangeSelect.O:edGlobEnd.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">117</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.Font.Name" resname="O:FrameRangeSelect.O:edGlobEnd.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071296</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">118</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.Font.Style" resname="O:FrameRangeSelect.O:edGlobEnd.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071412</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">119</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.MaxLength" resname="O:FrameRangeSelect.O:edGlobEnd.MaxLength">
+        <source>19</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071412</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">120</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.ParentFont" resname="O:FrameRangeSelect.O:edGlobEnd.ParentFont">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071412</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">121</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.TabOrder" resname="O:FrameRangeSelect.O:edGlobEnd.TabOrder">
+        <source>5</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071412</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">122</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.Text" resname="O:FrameRangeSelect.O:edGlobEnd.Text">
+        <source>'  .  .       :  :  '</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071412</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">123</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FrameRangeSelect.O:edGlobEnd.OnKeyPress" resname="O:FrameRangeSelect.O:edGlobEnd.OnKeyPress">
+        <source>edGlobEndKeyPress</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634071412</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">124</prop>
+          <prop prop-type="Type">TMaskEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

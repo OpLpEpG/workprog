@@ -11,14 +11,12 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
     295
     235)
-  PixelsPerInch = 96
   TextHeight = 13
   object od: TJvFilenameEdit
     Left = 8
@@ -81,6 +79,54 @@ object FormExportToPSK6_V3: TFormExportToPSK6_V3
     ExplicitLeft = 8
     ExplicitTop = 30
     ExplicitWidth = 273
+    inherited lbBegin: TLabel
+      Width = 37
+      Height = 13
+      ExplicitWidth = 37
+      ExplicitHeight = 13
+    end
+    inherited lbEnd: TLabel
+      Width = 31
+      Height = 13
+      ExplicitWidth = 31
+      ExplicitHeight = 13
+    end
+    inherited lbCnt: TLabel
+      Width = 35
+      Height = 13
+      ExplicitWidth = 35
+      ExplicitHeight = 13
+    end
+    inherited lbKaBegin: TLabel
+      Height = 13
+      ExplicitHeight = 13
+    end
+    inherited lbKaCnt: TLabel
+      Height = 13
+      ExplicitHeight = 13
+    end
+    inherited lbKaEnd: TLabel
+      Height = 13
+      ExplicitHeight = 13
+    end
+    inherited Label1: TLabel
+      Width = 70
+      Height = 13
+      ExplicitWidth = 70
+      ExplicitHeight = 13
+    end
+    inherited Label2: TLabel
+      Width = 58
+      Height = 13
+      ExplicitWidth = 58
+      ExplicitHeight = 13
+    end
+    inherited Label3: TLabel
+      Width = 33
+      Height = 13
+      ExplicitWidth = 33
+      ExplicitHeight = 13
+    end
     inherited Range: TRangeSelector
       Width = 273
       ExplicitWidth = 273

@@ -1,0 +1,1125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xliff PUBLIC "-//XLIFF//DTD XLIFF//EN" "http://www.oasis-open.org/committees/xliff/documents/xliff.dtd">
+<xliff version="1.0">
+  <file original="C:\XE\Projects\Device2\VCLControl\ExportToPSK6_V3.dfm" source-language="ru-RU" target-language="en-US" datatype="delphiform" tool="ETM v10.0" ts="C:\XE\Projects\Device2\VCLControl\ExportToPSK6_V3.dfm">
+    <header>
+      <prop-group name="ITEHeaderProp">
+        <prop prop-type="Version">9.0</prop>
+        <prop prop-type="SelfDateTime">45033.4364814815</prop>
+        <prop prop-type="OrigDateTime">45030.3730324074</prop>
+        <prop prop-type="XlatDateTime">45030.3730324074</prop>
+        <prop prop-type="Translated">5</prop>
+        <prop prop-type="UnTranslated">104</prop>
+      </prop-group>
+    </header>
+    <body>
+      <trans-unit id="O:FormExportToPSK6_V3.Left" resname="O:FormExportToPSK6_V3.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">0</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.Top" resname="O:FormExportToPSK6_V3.Top">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">1</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.BorderStyle" resname="O:FormExportToPSK6_V3.BorderStyle">
+        <source>bsSizeToolWin</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">2</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.Caption" resname="O:FormExportToPSK6_V3.Caption">
+        <source>'экспорт в ПСК6'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">3</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'export to PSK6'</target>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.ClientHeight" resname="O:FormExportToPSK6_V3.ClientHeight">
+        <source>235</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">4</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.ClientWidth" resname="O:FormExportToPSK6_V3.ClientWidth">
+        <source>295</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">5</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.Color" resname="O:FormExportToPSK6_V3.Color">
+        <source>clBtnFace</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">6</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.Font.Charset" resname="O:FormExportToPSK6_V3.Font.Charset">
+        <source>DEFAULT_CHARSET</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">7</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.Font.Color" resname="O:FormExportToPSK6_V3.Font.Color">
+        <source>clWindowText</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">8</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.Font.Height" resname="O:FormExportToPSK6_V3.Font.Height">
+        <source>-11</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">9</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.Font.Name" resname="O:FormExportToPSK6_V3.Font.Name">
+        <source>'Tahoma'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">10</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.Font.Style" resname="O:FormExportToPSK6_V3.Font.Style">
+        <source>[]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">11</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.Position" resname="O:FormExportToPSK6_V3.Position">
+        <source>poMainFormCenter</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">12</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.OnCreate" resname="O:FormExportToPSK6_V3.OnCreate">
+        <source>FormCreate</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">13</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.OnShow" resname="O:FormExportToPSK6_V3.OnShow">
+        <source>FormShow</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">14</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.DesignSize[0]" resname="O:FormExportToPSK6_V3.DesignSize[0]">
+        <source>295</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">15</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">(</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.DesignSize[1]" resname="O:FormExportToPSK6_V3.DesignSize[1]">
+        <source>235</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">16</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Close">)</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.TextHeight" resname="O:FormExportToPSK6_V3.TextHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">17</prop>
+          <prop prop-type="Type">TFormExportToPSK6_V3</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.Left" resname="O:FormExportToPSK6_V3.O:od.Left">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">18</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.Top" resname="O:FormExportToPSK6_V3.O:od.Top">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">19</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.Width" resname="O:FormExportToPSK6_V3.O:od.Width">
+        <source>273</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">20</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.Height" resname="O:FormExportToPSK6_V3.O:od.Height">
+        <source>21</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">21</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.DialogKind" resname="O:FormExportToPSK6_V3.O:od.DialogKind">
+        <source>dkSave</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">22</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.DefaultExt" resname="O:FormExportToPSK6_V3.O:od.DefaultExt">
+        <source>'if'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">23</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.Filter" resname="O:FormExportToPSK6_V3.O:od.Filter">
+        <source>'Бинарный файл (*.if)|*.if'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">24</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Binary file (*.if)|*.if'</target>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.DialogOptions" resname="O:FormExportToPSK6_V3.O:od.DialogOptions">
+        <source>[ofOverwritePrompt, ofHideReadOnly, ofPathMustExist]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">25</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.DirectInput" resname="O:FormExportToPSK6_V3.O:od.DirectInput">
+        <source>False</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">26</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.Anchors" resname="O:FormExportToPSK6_V3.O:od.Anchors">
+        <source>[akLeft, akTop, akRight]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">27</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.TabOrder" resname="O:FormExportToPSK6_V3.O:od.TabOrder">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">28</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:od.Text" resname="O:FormExportToPSK6_V3.O:od.Text">
+        <source>''</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">29</prop>
+          <prop prop-type="Type">TJvFilenameEdit</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btStart.Left" resname="O:FormExportToPSK6_V3.O:btStart.Left">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">30</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btStart.Top" resname="O:FormExportToPSK6_V3.O:btStart.Top">
+        <source>178</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">31</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btStart.Width" resname="O:FormExportToPSK6_V3.O:btStart.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">32</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btStart.Height" resname="O:FormExportToPSK6_V3.O:btStart.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">33</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btStart.Caption" resname="O:FormExportToPSK6_V3.O:btStart.Caption">
+        <source>'Старт'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">34</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Start'</target>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btStart.TabOrder" resname="O:FormExportToPSK6_V3.O:btStart.TabOrder">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">35</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btStart.OnClick" resname="O:FormExportToPSK6_V3.O:btStart.OnClick">
+        <source>btStartClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">36</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btTerminate.Left" resname="O:FormExportToPSK6_V3.O:btTerminate.Left">
+        <source>89</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">37</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btTerminate.Top" resname="O:FormExportToPSK6_V3.O:btTerminate.Top">
+        <source>178</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">38</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btTerminate.Width" resname="O:FormExportToPSK6_V3.O:btTerminate.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">39</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btTerminate.Height" resname="O:FormExportToPSK6_V3.O:btTerminate.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">40</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btTerminate.Caption" resname="O:FormExportToPSK6_V3.O:btTerminate.Caption">
+        <source>'Прервать'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">41</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Abort'</target>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btTerminate.TabOrder" resname="O:FormExportToPSK6_V3.O:btTerminate.TabOrder">
+        <source>2</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">42</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btTerminate.OnClick" resname="O:FormExportToPSK6_V3.O:btTerminate.OnClick">
+        <source>btTerminateClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">43</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btExit.Left" resname="O:FormExportToPSK6_V3.O:btExit.Left">
+        <source>207</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">44</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btExit.Top" resname="O:FormExportToPSK6_V3.O:btExit.Top">
+        <source>178</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">45</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btExit.Width" resname="O:FormExportToPSK6_V3.O:btExit.Width">
+        <source>75</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">46</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btExit.Height" resname="O:FormExportToPSK6_V3.O:btExit.Height">
+        <source>25</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">47</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btExit.Caption" resname="O:FormExportToPSK6_V3.O:btExit.Caption">
+        <source>'Выход'</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">48</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+        <target>'Exit'</target>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btExit.ModalResult" resname="O:FormExportToPSK6_V3.O:btExit.ModalResult">
+        <source>1</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">49</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btExit.TabOrder" resname="O:FormExportToPSK6_V3.O:btExit.TabOrder">
+        <source>3</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">50</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:btExit.OnClick" resname="O:FormExportToPSK6_V3.O:btExit.OnClick">
+        <source>btExitClick</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">51</prop>
+          <prop prop-type="Type">TButton</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:Progress.Left" resname="O:FormExportToPSK6_V3.O:Progress.Left">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">52</prop>
+          <prop prop-type="Type">TProgressBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:Progress.Top" resname="O:FormExportToPSK6_V3.O:Progress.Top">
+        <source>155</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">53</prop>
+          <prop prop-type="Type">TProgressBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:Progress.Width" resname="O:FormExportToPSK6_V3.O:Progress.Width">
+        <source>273</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">54</prop>
+          <prop prop-type="Type">TProgressBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:Progress.Height" resname="O:FormExportToPSK6_V3.O:Progress.Height">
+        <source>17</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">55</prop>
+          <prop prop-type="Type">TProgressBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:Progress.Anchors" resname="O:FormExportToPSK6_V3.O:Progress.Anchors">
+        <source>[akLeft, akTop, akRight]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">56</prop>
+          <prop prop-type="Type">TProgressBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:Progress.TabOrder" resname="O:FormExportToPSK6_V3.O:Progress.TabOrder">
+        <source>4</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">57</prop>
+          <prop prop-type="Type">TProgressBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.Left" resname="O:FormExportToPSK6_V3.L:RangeSelect.Left">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">58</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.Top" resname="O:FormExportToPSK6_V3.L:RangeSelect.Top">
+        <source>30</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">59</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.Width" resname="O:FormExportToPSK6_V3.L:RangeSelect.Width">
+        <source>273</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">60</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.Height" resname="O:FormExportToPSK6_V3.L:RangeSelect.Height">
+        <source>122</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">61</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.Anchors" resname="O:FormExportToPSK6_V3.L:RangeSelect.Anchors">
+        <source>[akLeft, akTop, akRight]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.363404213</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">62</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.AutoSize" resname="O:FormExportToPSK6_V3.L:RangeSelect.AutoSize">
+        <source>True</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">63</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.TabOrder" resname="O:FormExportToPSK6_V3.L:RangeSelect.TabOrder">
+        <source>5</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">64</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.ExplicitLeft" resname="O:FormExportToPSK6_V3.L:RangeSelect.ExplicitLeft">
+        <source>8</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">65</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.ExplicitTop" resname="O:FormExportToPSK6_V3.L:RangeSelect.ExplicitTop">
+        <source>30</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">66</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.ExplicitWidth" resname="O:FormExportToPSK6_V3.L:RangeSelect.ExplicitWidth">
+        <source>273</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">67</prop>
+          <prop prop-type="Type">TFrameRangeSelect</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbBegin.Width" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbBegin.Width">
+        <source>37</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">68</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbBegin.Height" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbBegin.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">69</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbBegin.ExplicitWidth" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbBegin.ExplicitWidth">
+        <source>37</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">70</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbBegin.ExplicitHeight" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbBegin.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">71</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbEnd.Width" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbEnd.Width">
+        <source>31</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">72</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbEnd.Height" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbEnd.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">73</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbEnd.ExplicitWidth" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbEnd.ExplicitWidth">
+        <source>31</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">74</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbEnd.ExplicitHeight" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbEnd.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">75</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbCnt.Width" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbCnt.Width">
+        <source>35</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">76</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbCnt.Height" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbCnt.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">77</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbCnt.ExplicitWidth" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbCnt.ExplicitWidth">
+        <source>35</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">78</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbCnt.ExplicitHeight" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbCnt.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">79</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaBegin.Height" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaBegin.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">80</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaBegin.ExplicitHeight" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaBegin.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">81</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaCnt.Height" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaCnt.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">82</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaCnt.ExplicitHeight" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaCnt.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">83</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaEnd.Height" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaEnd.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">84</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaEnd.ExplicitHeight" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:lbKaEnd.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">85</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label1.Width" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label1.Width">
+        <source>70</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">86</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label1.Height" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label1.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">87</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label1.ExplicitWidth" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label1.ExplicitWidth">
+        <source>70</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">88</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label1.ExplicitHeight" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label1.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">89</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label2.Width" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label2.Width">
+        <source>58</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">90</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label2.Height" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label2.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">91</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label2.ExplicitWidth" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label2.ExplicitWidth">
+        <source>58</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">92</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label2.ExplicitHeight" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label2.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">93</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label3.Width" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label3.Width">
+        <source>33</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">94</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label3.Height" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label3.Height">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">95</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label3.ExplicitWidth" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label3.ExplicitWidth">
+        <source>33</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">96</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Label3.ExplicitHeight" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Label3.ExplicitHeight">
+        <source>13</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">97</prop>
+          <prop prop-type="Type">TLabel</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Range.Width" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Range.Width">
+        <source>273</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">98</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.L:RangeSelect.I:Range.ExplicitWidth" resname="O:FormExportToPSK6_V3.L:RangeSelect.I:Range.ExplicitWidth">
+        <source>273</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">99</prop>
+          <prop prop-type="Type">TRangeSelector</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:sb.Left" resname="O:FormExportToPSK6_V3.O:sb.Left">
+        <source>0</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">100</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:sb.Top" resname="O:FormExportToPSK6_V3.O:sb.Top">
+        <source>216</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">101</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:sb.Width" resname="O:FormExportToPSK6_V3.O:sb.Width">
+        <source>295</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">102</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:sb.Height" resname="O:FormExportToPSK6_V3.O:sb.Height">
+        <source>19</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">103</prop>
+          <prop prop-type="Type">TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:sb.Panels[0].Width" resname="O:FormExportToPSK6_V3.O:sb.Panels[0].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">104</prop>
+          <prop prop-type="Type">C:TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">&lt;item</prop>
+          <prop prop-type="Close">end</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:sb.Panels[1].Width" resname="O:FormExportToPSK6_V3.O:sb.Panels[1].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">105</prop>
+          <prop prop-type="Type">C:TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">item</prop>
+          <prop prop-type="Close">end</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:sb.Panels[2].Width" resname="O:FormExportToPSK6_V3.O:sb.Panels[2].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">106</prop>
+          <prop prop-type="Type">C:TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">item</prop>
+          <prop prop-type="Close">end</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:sb.Panels[3].Width" resname="O:FormExportToPSK6_V3.O:sb.Panels[3].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">107</prop>
+          <prop prop-type="Type">C:TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">item</prop>
+          <prop prop-type="Close">end</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:FormExportToPSK6_V3.O:sb.Panels[4].Width" resname="O:FormExportToPSK6_V3.O:sb.Panels[4].Width">
+        <source>50</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45033.3634042245</prop>
+          <prop prop-type="Status">0</prop>
+          <prop prop-type="Order">108</prop>
+          <prop prop-type="Type">C:TStatusBar</prop>
+          <prop prop-type="Localize">1</prop>
+          <prop prop-type="Open">item</prop>
+          <prop prop-type="Close">end&gt;</prop>
+        </prop-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

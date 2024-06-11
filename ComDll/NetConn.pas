@@ -47,7 +47,7 @@ begin
   FConnectInfo := '192.168.43.5:5000';
   FNet := TIdTCPClient.Create(nil);
   FNet.Port := 5000;
-  FNet.ConnectTimeout := 1000;
+  FNet.ConnectTimeout := 2000;
   FNet.Host := '192.168.43.5';
   FReadThread :=  TReadThread.Create(Self, Name);
 end;
@@ -70,7 +70,7 @@ procedure TNetConnectIO.Send(Data: Pointer; Cnt: Integer; Event: TReceiveDataRef
 begin
   if Assigned(FProtocol) then
    begin
-    if not Assigned(Data) then raise ENetConnectIOException.Create('Данные не инициализированны');
+    if not Assigned(Data) then raise ENetConnectIOException.Create('Data not initialized');
     FEventReceiveData := Event;
     if WaitTime >= 0 then FTimerRxTimeOut.Interval := WaitTime
     else FTimerRxTimeOut.Interval := FComWait;
@@ -98,7 +98,7 @@ procedure TNetConnectIO.CheckOpen;
 begin
   FLock.Acquire;
   try
-   if not FNet.Connected then raise ENetConnectIOException.CreateFmt('Соединение закрыто %s', [FNet.Host]);
+   if not FNet.Connected then raise ENetConnectIOException.CreateFmt('Connection closed %s', [FNet.Host]);
   finally
    FLock.Release;
   end;
