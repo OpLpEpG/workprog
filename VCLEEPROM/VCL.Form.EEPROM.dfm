@@ -32,6 +32,7 @@ object FormDlgEeprom: TFormDlgEeprom
     Height = 25
     Anchors = [akLeft, akBottom]
     Caption = #1055#1080#1089#1072#1090#1100
+    Enabled = False
     TabOrder = 1
     OnClick = btWriteClick
   end
