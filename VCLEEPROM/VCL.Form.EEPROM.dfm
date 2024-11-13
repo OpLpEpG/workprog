@@ -133,6 +133,7 @@ object FormDlgEeprom: TFormDlgEeprom
     Top = 176
     object EEPROM1: TMenuItem
       Caption = #1047#1072#1087#1080#1089#1072#1090#1100' '#1057#1077#1082#1094#1080#1102' EEPROM'
+      Enabled = False
       OnClick = EEPROM1Click
     end
     object File1: TMenuItem
