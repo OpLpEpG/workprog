@@ -54,6 +54,7 @@ type
     FModul, Feep, Fmetr: IXMLNode;
     FAddr: Integer;
     FC_MetrologyChange: string;
+    FC_MetaDataOK: boolean;
     function GetDevice: IEepromDevice;
     procedure ClearTree;
     procedure InitTree;
@@ -61,6 +62,7 @@ type
     procedure NCopyMetrClick(Sender: TObject);
 //    procedure NCmpMetrClick(Sender: TObject);
     procedure SetC_MetrologyChange(const Value: string);
+    procedure SetC_MetaDataOK(const Value: boolean);
   protected
     function GetInfo: PTypeInfo; override;
     function Execute(Eep: IXMLNode; Res: TDialogResult): Boolean;
@@ -69,6 +71,7 @@ type
   public
     { Public declarations }
     property C_MetrologyChange: string read FC_MetrologyChange write SetC_MetrologyChange;
+    property C_MetaDataOK: boolean read FC_MetaDataOK write SetC_MetaDataOK;
   end;
 
 
@@ -507,6 +510,7 @@ procedure TFormDlgEeprom.Loaded;
 begin
   inherited;
   Bind('C_MetrologyChange', GlobalCore as IManager, ['S_MetrologyChange']);
+  Bind('C_MetaDataOK', GlobalCore as IManager, ['S_MetaDataOK']);
   AddToNCMenu('-', nil, 0);
   AddToNCMenu('Копировать Метрологию в буфер EEPROM', NCopyMetrClick, 0);
 //  AddToNCMenu('Сравнить Метрологию и буфер EEPROM', NCopyMetrClick, 0);
@@ -607,6 +611,11 @@ begin
     end, section)
     else MessageDlg('Память EEPROM не считана предыдущие данные будут удалены!!!', mtError, [mbYes, mbCancel], 0)
    end;
+end;
+
+procedure TFormDlgEeprom.SetC_MetaDataOK(const Value: boolean);
+begin
+  FC_MetaDataOK := Value;
 end;
 
 procedure TFormDlgEeprom.SetC_MetrologyChange(const Value: string);
