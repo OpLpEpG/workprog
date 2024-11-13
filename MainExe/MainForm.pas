@@ -868,7 +868,7 @@ begin
   SaveScreeDialog;
   CanClose := not (ChildFormsBusy or DeviceBusy);
   if not CanClose then Exit(False);
-  with TOpenDialog.Create(nil) do
+  with TSaveDialog.Create(nil) do
   try
    if Supports(GContainer, IManagerEx, me) then
     begin

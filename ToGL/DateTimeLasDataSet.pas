@@ -2,12 +2,13 @@ unit DateTimeLasDataSet;
 
 interface
 
-uses dtglDataSet,  LAS, LasImpl,
+uses dtglDataSet,  LAS, LasImpl, Xml.XMLDoc, Xml.XMLIntf, tools,
   System.IOUtils,  System.Generics.Collections, Data.DB, Math,  Datasnap.DBClient, RLDataSet, System.DateUtils,
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, Vcl.ComCtrls;
 
 type
+
  TdtLasDataSet = class(TdtglDataSet)
  protected
     FDTMnem, FTMnem, FDptMnem: string;
@@ -16,6 +17,18 @@ type
  public
    constructor Create(AOwner: TComponent; const fName,DTMnem,TMnem,DptMnem: string; ClearTmp: Boolean); reintroduce;
  end;
+
+ TdtXMLDataSet = class(TdtglDataSet)
+ protected
+   FDTMnem, FPath, FDptMnem: string;
+   procedure InternalOpen;  override;
+ public
+   AddingDays: Integer;
+   constructor Create(AOwner: TComponent; const fName, Path, DTMnem, DptMnem: string; ClearTmp: Boolean); reintroduce;
+end;
+
+
+
  TdatattimeTxtLasDataSet = class(TdtLasDataSet)
  protected
    procedure InternalOpen;  override;
@@ -173,6 +186,61 @@ begin
           Str.Write(rd, SizeOf(rd));
           except
             MessageDlg(Format('Ошибка Index %d DT:[%s] Dept:[%s] ',[i, sdt, sd]), mtError, [mbOk], 0);
+          end;
+      finally
+        Str.Free;
+      end;
+   end;
+  inherited;
+end;
+
+{ TdtXMLDataSet }
+
+constructor TdtXMLDataSet.Create(AOwner: TComponent; const fName, Path,  DTMnem, DptMnem: string; ClearTmp: Boolean);
+begin
+  inherited Create(AOwner, fName, ClearTmp);
+  FPath := Path;
+  FDTMnem := DTMnem;
+  FDptMnem := DptMnem;
+end;
+
+procedure TdtXMLDataSet.InternalOpen;
+ var
+  doc: IXMLDocument;
+  DataRoot: IXMLNode;
+  Str: TStream;
+  datetime: TDateTime;
+begin
+  if not TFile.Exists(BinFile) then
+   begin
+    doc := LoadXMLDocument(FileName);
+
+    if not tools.TryGetX(doc.DocumentElement,FPath, DataRoot)
+     then raise Exception.CreateFmt('путь %s ненайден',[FPath]);
+      // check true data
+      for var i: Integer := 0 to 10 do
+       begin
+        var rd :TfileRecData;
+        var n := DataRoot.ChildNodes[i];
+        rd.datetime := n.Attributes[FDTMnem]/24/3600;
+        rd.depth := n.Attributes[FDptMnem];
+       end;
+      try
+        Str := TFileStream.Create(BinFile, fmCreate);
+        datetime := 0;
+        var
+         n: IXMLNode;
+      for var i: Integer := 0 to DataRoot.ChildNodes.Count-1 do
+         try
+          var rd :TfileRecData;
+          n := DataRoot.ChildNodes[i];
+          rd.datetime := n.Attributes[FDTMnem]/24/3600 + AddingDays;
+          if datetime >= rd.datetime then Continue;
+          datetime := rd.datetime;
+          rd.depth := n.Attributes[FDptMnem];
+          Str.Write(rd, SizeOf(rd));
+          except
+            MessageDlg(Format('Ошибка Index %d DT:[%s] Dept:[%s] ',[i, n.Attributes[FDTMnem], n.Attributes[FDptMnem]]), mtError, [mbOk], 0);
           end;
       finally
         Str.Free;

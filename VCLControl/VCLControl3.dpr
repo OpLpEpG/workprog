@@ -13,6 +13,7 @@ uses
   System.TypInfo,
   System.SysUtils,
   System.Classes,
+  ShellApi,
   RootImpl,
   Actns,
   DeviceIntf,
@@ -51,6 +52,7 @@ uses
    C_Show =  'Show';
    C_New_Proj ='New project...';
    C_Prop_Proj ='-Project properties...';
+   C_Proj_Dir ='-Открыть папку проекта...';
    C_Open_Proj ='Open project...';
    C_exp= 'Export';
 
@@ -63,6 +65,7 @@ uses
    C_Show =  'Показать';
    C_New_Proj ='Новый проект...';
    C_Prop_Proj ='-Свойства проекта...';
+   C_Proj_Dir ='-Открыть папку проекта...';
    C_Open_Proj ='Открыть проект...';
 {$ENDIF}
 
@@ -89,6 +92,8 @@ type
    class procedure DoNewProject(Sender: IAction);
    [StaticAction(C_Prop_Proj, C_Proj, 238, '0:'+C_file+'.'+C_Proj+'|1:4')]
    class procedure DoZPropertyProject(Sender: IAction);
+   [StaticAction(C_Proj_Dir, C_Proj, 239, '0:'+C_file+'.'+C_Proj+'|1:5')]
+   class procedure DoProjectDir(Sender: IAction);
    [StaticAction(C_Open_Proj, C_Proj, 329, '0:'+C_file+'.'+C_Proj+'|1:1')]
    class procedure DoOpenProject(Sender: IAction);
 //   [StaticAction('-Закрыть проект', 'Проект', 226, '0:Файл.Проект|1:2')]
@@ -134,6 +139,16 @@ class procedure TVCLControl.DoOpenProject(Sender: IAction);
   s: string;
 begin
   (GContainer as IProject).Load(s);
+end;
+
+class procedure TVCLControl.DoProjectDir(Sender: IAction);
+ var
+  m: IManager;
+begin
+  if Supports(GContainer, IManager, m) and (m.ProjectName <> '') then
+   begin
+    ShellExecute(0, 'open', Pchar(ExtractFilePath(m.ProjectName)), nil, nil, 1);
+   end;
 end;
 
 class procedure TVCLControl.DoSloseProject(Sender: IAction);

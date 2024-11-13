@@ -167,7 +167,7 @@ begin
     Caption := FileList.FileName;
     il := NewLasDoc();
     il.LoadFromFile(Caption);
-    with il.Version.Items['WRAP']^ do if Data <> 'NO' then raise Exception.CreateFmt(RE_Wrap, [Data]);
+    //with il.Version.Items['WRAP']^ do if Data <> 'NO' then raise Exception.CreateFmt(RE_Wrap, [Data]);
     CreateCurve(il.Curve);
     CeateCat(il.Well);
     CeateCat(il.Params);

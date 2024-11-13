@@ -11,6 +11,7 @@ type
   IEEPData = IXMLNode;
   TInfoEventRes = TDeviceMetaData;
   TInfoEvent = procedure (Res: TInfoEventRes) of object;
+  TCheckInfoEvent = procedure (d, tst: IXMLNode) of object;
   // события считывания данных (режим инвормации (контроль))
   // Work: IXMLInfo - ветвь Info: IXMLInfo c заполненными полями текущих данных в режиме контроля
   TWorkEventRes = record

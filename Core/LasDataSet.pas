@@ -25,6 +25,7 @@ type
     FEncoding: LasEncoding;
     procedure SetLasFile(const Value: string);
     procedure SetEncoding(const Value: LasEncoding);
+    function GetFlasDoc: ILasDoc;
   protected
     function GetTempDir: string; override;
     function GetRecordCount: Integer; override;
@@ -33,6 +34,7 @@ type
 //    function GetFileName: string; override;
   public
     function GetFieldData(Field: TField; var Buffer: TValueBuffer): Boolean; override;
+    procedure UpdateFields();
 /// <summary>
 ///  {week reference container}
 /// </summary>
@@ -40,7 +42,7 @@ type
 //  published
   public
     property LasFile: string read FLasFile write SetLasFile;
-    property LasDoc: ILasDoc read FlasDoc;
+    property LasDoc: ILasDoc read GetFlasDoc;
     property Encoding: LasEncoding read FEncoding write SetEncoding;
   end;
 
@@ -100,6 +102,12 @@ end;
 //  Result := FLasFile;
 //end;
 
+function TLasDataSet.GetFlasDoc: ILasDoc;
+begin
+  if not Assigned(FlasDoc) then  FlasDoc := GetLasDoc(LasFile, Encoding);
+  Result := FlasDoc;
+end;
+
 function TLasDataSet.GetRecordCount: Integer;
 begin
   if not Assigned(FlasDoc) then  FlasDoc := GetLasDoc(LasFile, Encoding);
@@ -130,9 +138,9 @@ begin
 end;
 
 procedure TLasDataSet.SetLasFile(const Value: string);
- var
-  s: string;
-  d: ILasDoc;
+// var
+//  s: string;
+//  d: ILasDoc;
 begin
   if FLasFile <> Value then
    begin
@@ -140,15 +148,28 @@ begin
     FLasFile := Value;
     if not (csLoading in ComponentState) then
      begin
-      d := GetLasDoc(LasFile, Encoding);
+     UpdateFields;
+//      d := GetLasDoc(LasFile, Encoding);
+//      FieldDefs.Clear;
+//      FieldDefs.Add('ID', ftInteger);
+//      for s in d.Curve.Mnems do
+//       begin
+//        FieldDefs.Add(s, ftFloat);
+//       end;
+     end;
+   end;
+end;
+
+procedure TLasDataSet.UpdateFields;
+ var
+  s: string;
+begin
       FieldDefs.Clear;
       FieldDefs.Add('ID', ftInteger);
-      for s in d.Curve.Mnems do
+      for s in GetLasDoc(LasFile, Encoding).Curve.Mnems do
        begin
         FieldDefs.Add(s, ftFloat);
        end;
-     end;
-   end;
 end;
 
 function TLASDataSet.GetTempDir: string;

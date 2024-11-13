@@ -67,6 +67,7 @@ const
   AT_ADDR = 'ADDR';
   AT_CHIP = 'CHIP_INDEX';
   AT_INFO = 'INFO';
+  AT_PSWD = 'PSWD';
   AT_PSK_BYTE_ADDR = 'PSK_BYTE_ADDR';
   AT_SERIAL = 'SERIAL_NO';
   AT_FROM = 'FROM';

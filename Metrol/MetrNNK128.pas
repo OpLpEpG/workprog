@@ -228,7 +228,7 @@ begin
         begin
          if n.HasAttribute('nkw') then s.AddXY(100, Double(n.Attributes['nkw']));
          if n.HasAttribute('nkw1') then s1.AddXY(100, Double(n.Attributes['nkw1']));
-         if n.HasAttribute('nkw1') then s2.AddXY(100, Double(n.Attributes['nkw2']));
+         if n.HasAttribute('nkw2') then s2.AddXY(100, Double(n.Attributes['nkw2']));
          //if n.HasAttribute('nkwg') then sg.AddXY(100, Double(n.Attributes['nkwg']));
         end;
       end

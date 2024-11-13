@@ -113,6 +113,12 @@
         <DCCReference Include="..\Core\LasImpl.pas"/>
         <DCCReference Include="dtglDataSet.pas"/>
         <DCCReference Include="DateTimeLasDataSet.pas"/>
+        <DCCReference Include="AddGl1toLASForm.pas">
+            <Form>FormAddGl1ToLAS</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\Core\debug_except.pas"/>
+        <DCCReference Include="..\Core\LasDataSet.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

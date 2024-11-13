@@ -21,11 +21,12 @@ type ConvAttr = record
  old: string;
 end;
 
-const ConvAttrs: array [0..22] of ConvAttr = (
+const ConvAttrs: array [0..23] of ConvAttr = (
 (new:  'adr';               old: AT_ADDR),
 (new:  'chip';              old: AT_CHIP),
 (new:  'from';              old: AT_FROM),
 (new:  'info';              old: AT_INFO),
+(new:  'password';          old: AT_PSWD),
 (new:  'serial';            old: AT_SERIAL),
 (new:  'SupportUartSpeed';  old: AT_SPEED),
 (new:  'NoPowerDataCount';  old: AT_EXT_NP),

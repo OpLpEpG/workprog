@@ -417,7 +417,11 @@ end;
 procedure TDSection.ClearBufers;
 begin
   inherited;
-  sNul := Double(FOwner.Well.Items['NULL'].Value);
+  try
+   sNul := Double(FOwner.Well.Items['NULL'].Value);
+  except
+   sNul := -999.25;
+  end;
   SetLength(RowData, DataLength);
   Clear;
 end;
@@ -557,7 +561,9 @@ begin
   i := TFSection(Curve).IndexOff(Mnem);
   if i < 0 then Exit(VarNull); // raise Exception.Create('Error Message TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant; i < 0');
   if Index >= DataCount then Exit(VarNull); //raise Exception.CreateFmt('Error Message TLasDoc.GetItem Index %d >= DataCount %d', [Index, DataCount]);
-  Result := Data.Items[Index][i] ;
+  var di := Data.Items[Index];
+  if i< Length(di)then Exit(di[i])
+  else Exit(VarNull);
 end;
 
 procedure TLasDoc.SetEncoding(const Value: LasEncoding);
@@ -572,7 +578,13 @@ begin
   i := TFSection(Curve).IndexOff(Mnem);
   if i < 0 then raise Exception.Create('Error Message TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant; i < 0');
   if Index >= DataCount then raise Exception.Create('Error Message TLasDoc.GetItem(const Mnem: string; Index: Integer): Variant; i < 0');
-  Data.Items[Index][i] := Value;
+  var di := Data.Items[Index];
+  if i >= Length(di) then
+  begin
+   SetLength(di,i+1);
+   Data.Items[Index] := di;
+  end;
+  di[i] := Value;
 end;
 
 function TLasDoc.Well: ILasFormatSection;

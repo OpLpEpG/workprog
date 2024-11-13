@@ -89,7 +89,6 @@
         <DCC_DebugInformation>0</DCC_DebugInformation>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <Debugger_RunParams>c:\XE\Projects\Device2\CreateMetaData\DataStruct1.h  c:\XE\Projects\Device2\CreateMetaData\XMetaData.h C:\AVR\nnk_avr128\_I\Patern.h  newFormat</Debugger_RunParams>
         <DCC_Define>UNUSE_debug_except;$(DCC_Define)</DCC_Define>
         <DCC_Namespace>Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_Locale>1033</VerInfo_Locale>

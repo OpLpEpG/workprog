@@ -34,6 +34,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
     FC_TableUpdate: string;
     FtmpFiles: TStrings;
     FMetrologyName: string;
+    FMetaDataOK: Boolean;
 
 //    FSQLMonitor: TSQLMonitor;
 //    DbgMon: TFDMoniRemoteClientLink;
@@ -80,6 +81,9 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
     procedure TmpFileNeedDelete(const Fname: string);
     function ConstructDataDir(Root: IXMLNode; NeedCreate: Boolean = True; const SubDir: string = ''): string;
     function ConstructDataFileName(Root: IXMLNode; const SubName: string = ''): string;
+
+    function GetMetaDataOK: Boolean;
+    procedure SetMetaDataOK(const Value: Boolean);
 
 //    procedure SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);
     procedure IMetrology.Setup = IMetrologySetup;
@@ -130,6 +134,7 @@ uses debug_except, RootIntf, DeviceIntf, ExtendIntf, tools, Container, System.Da
 
     property C_TableUpdate: string read FC_TableUpdate write SetTableUpdate;
     property S_TableUpdate: string read FC_TableUpdate write SetTableUpdate;
+    property S_MetaDataOK: Boolean read FMetaDataOK write SetMetaDataOK;
   end;
 
   resourcestring
@@ -220,6 +225,11 @@ begin
   GlobalMemoryStatusEx (memStatus);
   Result := memStatus.ullAvailVirtual div 4;
   if Need < Result then Result := Need;  
+end;
+
+function TManager.GetMetaDataOK: Boolean;
+begin
+  Result := FMetaDataOK;
 end;
 
 class function TManager.PluginName: string;
@@ -473,6 +483,15 @@ begin
   Save;
   dv.OwnerDocument.Resync;
   S_TableUpdate := 'Modul';
+end;
+
+procedure TManager.SetMetaDataOK(const Value: Boolean);
+begin
+  if FMetaDataOK <> Value then
+   begin
+    FMetaDataOK := Value;
+    Notify('S_MetaDataOK');
+   end;
 end;
 
 //procedure TManager.SetMetrol(MetrolID: Integer; TrrData: IXMLInfo; const SourceName: string);

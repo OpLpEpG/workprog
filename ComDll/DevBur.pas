@@ -98,6 +98,7 @@ resourcestring
 
     function GetSerialQe: TProtocolBur;
     procedure InfoEvent(Res: TInfoEventRes);
+    procedure CheckEvent(d, tst: IXMLNode);
     procedure ReadEepromAdrRef(root: IXMLNode; adr: Byte; ev: TEepromEventRef);
     procedure ReadEepromAdrSection(adr: Byte; siz, from: Integer; output: PByte; Res: TEepromSectionEventRef);
     procedure ReadEepromSectionsRef(eep: IXMLNode; adr: Byte; ev: TEepromEventRef);
@@ -121,6 +122,7 @@ resourcestring
     constructor Create(); override;
     constructor CreateWithAddr(const AddressArray: TAddressArray; const DeviceName, ModulesNames: string); override;
     destructor Destroy; override;
+    procedure CheckMetaData(ev: TCheckInfoEvent);
     procedure InitMetaData(ev: TInfoEvent);
     procedure ReadWork(ev: TWorkEvent; StdOnly: Boolean = false);
     procedure ReadEeprom(Addr: Integer; ev: TEepromEventRef);
@@ -383,16 +385,23 @@ begin
    end
   else
    begin
-    (Self as ICycle).Cycle := True;
-    Sender.Checked := True;
+    FTmpSender := Sender;
+    CheckMetaData(CheckEvent);
+    FTmpSender.Checked := True;
+
+//    (Self as ICycle).Cycle := True;
+//    Sender.Checked := True;
    end;
 end;
 
 procedure TDeviceBur.InfoEvent(Res: TInfoEventRes);
+  var
+  ix: IProjectDataFile;
 begin
   FTmpSender.Checked := False;
   try
-   if Length(Res.ErrAdr) > 0 then raise EAsyncBurException.CreateFmt(RS_MetadataERR, [AddressArrayToNames(Res.ErrAdr)]);
+   if Length(Res.ErrAdr) > 0 then raise EAsyncBurException.CreateFmt(RS_MetadataERR, [AddressArrayToNames(Res.ErrAdr)])
+   else if Supports(GlobalCore, IProjectDataFile, ix) then ix.MetaDataOK := True;
   finally
    if Length(FAddressArray) > Length(Res.ErrAdr) then
     begin
@@ -401,6 +410,35 @@ begin
     end;
   end;
 end;
+
+procedure TDeviceBur.CheckEvent(d, tst: IXMLNode);
+ var
+  ix: IProjectDataFile;
+begin
+  FTmpSender.Checked := False;
+  try
+   if d.Attributes[AT_INFO] <> tst.Attributes[AT_INFO] then
+    begin
+     if Supports(GlobalCore, IProjectDataFile, ix) then ix.MetaDataOK := False;
+     raise ENeedDialogException.CreateFmt('¬ерси€ подключенного прибора'+#$D#$A+
+     '%s'+#$D#$A
+     +' не совпадает с версией прибора текущего проекта'+#$D#$A+
+     '%s'+#$D#$A+
+     'необходимо создать новый проект, прибор', [tst.Attributes[AT_INFO], d.Attributes[AT_INFO]]);
+    end
+   else
+    begin
+     if Supports(GlobalCore, IProjectDataFile, ix) then ix.MetaDataOK := True;
+    end;
+  finally
+//   if Length(FAddressArray) > Length(Res.ErrAdr) then
+    begin
+     FTmpSender.Checked := True;
+     (Self as ICycle).Cycle := True;
+    end;
+  end;
+end;
+
 
 procedure TDeviceBur.DoDelay(Sender: IAction);
  var
@@ -548,6 +586,33 @@ end;
 function TDeviceBur.GetSerialQe: TProtocolBur;
 begin
   Result := TProtocolBur(ConnectIO.FProtocol);
+end;
+
+procedure TDeviceBur.CheckMetaData(ev: TCheckInfoEvent);
+ var
+  Info: IXMLInfo;
+  a: TArray<IXMLNode>;
+  doc: IXMLDocument;
+  tst: IXMLNode;
+begin
+  a := FindDevs(FMetaDataInfo.Info);
+
+  CheckConnect;
+  ConnectOpen;
+
+  for var d in a do ReadInfoAdr(d.Attributes[AT_ADDR], procedure (Exc: Integer; Adr: Integer; Data: PByte; n: Integer)
+   begin
+    if Exc = 0 then
+     begin
+      doc := NewXDocument();
+      tst := doc.AddChild('root');
+      if Data^ = varRecord then
+       TPars.SetInfo(tst, Data, n) // parse all data for device
+      else
+       TnewPars.SetInfo(tst, Data, n);
+      if Assigned(ev) then ev(d,tst.ChildNodes[0]);
+     end;
+   end);
 end;
 
 procedure TDeviceBur.InitMetaData(ev: TInfoEvent);

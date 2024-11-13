@@ -965,6 +965,10 @@ object FormMain: TFormMain
           Caption = 'Horizont PB'
           OnClick = mOpenHorozontPBClick
         end
+        object LAS1: TMenuItem
+          Caption = 'LAS'
+          OnClick = LAS1Click
+        end
         object N3: TMenuItem
           Caption = '-'
         end
@@ -988,6 +992,14 @@ object FormMain: TFormMain
           Caption = '1.DTM,s-15.VALUE54,m.las'
           OnClick = N1DTMs15VALUE54mlas1Click
         end
+        object t2md1: TMenuItem
+          Caption = '*.t2md'
+          OnClick = t2md1Click
+        end
+      end
+      object CartographerAddGl11: TMenuItem
+        Caption = 'Add Gl1 to LAS...'
+        OnClick = CartographerAddGl11Click
       end
       object N1: TMenuItem
         Caption = '-'
@@ -1037,6 +1049,10 @@ object FormMain: TFormMain
             GroupIndex = 7
             RadioItem = True
           end
+        end
+        object UserDateTimeFormat: TMenuItem
+          Caption = 'UserDateTimeFormat...'
+          OnClick = UserDateTimeFormatClick
         end
       end
       object NLAS: TMenuItem
@@ -1136,6 +1152,12 @@ object FormMain: TFormMain
           AutoHotkeys = maManual
           Caption = '2.097152'
           Checked = True
+          GroupIndex = 1
+          RadioItem = True
+        end
+        object N41943041: TMenuItem
+          AutoCheck = True
+          Caption = '4.194304'
           GroupIndex = 1
           RadioItem = True
         end

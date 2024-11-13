@@ -150,6 +150,11 @@ type
     imeSec1: TMenuItem;
     DEPTTimezbtslasOpeb: TMenuItem;
     N1DTMs15VALUE54mlas1: TMenuItem;
+    CartographerAddGl11: TMenuItem;
+    N41943041: TMenuItem;
+    LAS1: TMenuItem;
+    UserDateTimeFormat: TMenuItem;
+    t2md1: TMenuItem;
     procedure mOpenHorozontPBClick(Sender: TObject);
     procedure mOpenTimeDepthtTxtClick(Sender: TObject);
     procedure ChartClickSeries(Sender: TCustomChart; Series: TChartSeries; ValueIndex: Integer; Button: TMouseButton;
@@ -174,7 +179,10 @@ type
     procedure btResetOutClick(Sender: TObject);
     procedure DEPTTimezbtslasOpebClick(Sender: TObject);
     procedure N1DTMs15VALUE54mlas1Click(Sender: TObject);
-    procedure N1DTMs14VALUE54mlas1Click(Sender: TObject);
+    procedure CartographerAddGl11Click(Sender: TObject);
+    procedure LAS1Click(Sender: TObject);
+    procedure UserDateTimeFormatClick(Sender: TObject);
+    procedure t2md1Click(Sender: TObject);
   private
     Metadata: TMetaData;
     ds: TPBDataSet;
@@ -214,7 +222,7 @@ var
 
 implementation
 
-uses Filters;
+uses Filters, AddGl1toLASForm;
 
 {$R *.dfm}
 
@@ -347,6 +355,16 @@ begin
   end;
 end;
 
+procedure TFormMain.CartographerAddGl11Click(Sender: TObject);
+begin
+  FormAddGl1ToLAS  := TFormAddGl1ToLAS.Create(Self);
+  try
+    FormAddGl1ToLAS.ShowModal;
+  finally
+    FormAddGl1ToLAS.Free;
+  end;
+end;
+
 procedure TFormMain.ChartClickSeries(Sender: TCustomChart; Series: TChartSeries; ValueIndex: Integer;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
@@ -401,11 +419,6 @@ begin
    begin
      Result := TDptTimeZaboiSecTime.Create(Self, FileName, 'TIME','','глуб', mClearTmp.Checked);
    end);
-end;
-
-procedure TFormMain.N1DTMs14VALUE54mlas1Click(Sender: TObject);
-begin
-//
 end;
 
 procedure TFormMain.N1DTMs15VALUE54mlas1Click(Sender: TObject);
@@ -645,12 +658,56 @@ begin
   end;
 end;
 
+procedure TFormMain.LAS1Click(Sender: TObject);
+begin
+  with TOpenDialog.Create(nil) do
+  try
+    InitialDir := ExtractFilePath(ParamStr(0));
+    Options := Options + [ofPathMustExist, ofFileMustExist];
+    DefaultExt := 'las';
+    Filter := 'LAS File (*.las)|*.las';
+//    if Assigned(dsglu) then FreeAndNil(dsglu);
+    if Execute(Handle) then
+     begin
+      sb.Panels[1].Text := FileName;
+      var intv :=  GetFrameTime;
+      lbName.Caption := 'Las File Kadr Interval= ' + (intv*24*3600).ToString;
+      //dsglu := CreateDS(FileName);
+//      dsglu.Open;
+//      with dsglu as TdtglDataSet do
+//       begin
+//        lbFromGlu.Caption := DateTimeToStr(DataStart.datetime);
+//        edFromGlu.Text := lbFromGlu.Caption;
+//        lbToGlu.Caption := DateTimeToStr(DataEnd.datetime);
+//        edEndGlu.Text :=  lbToGlu.Caption;
+//        lbFromGluDep.Caption := DataStart.depth.ToString;
+//        lbEndGluDep.Caption := DataEnd.depth.ToString;
+//        lbDeltaTime.Caption := DeltaTime.ToString;
+////        var mx := GetMaxMinDept(StrToDateTime(edFromGlu.Text), StrToDateTime(edEndGlu.Text));
+////        lbMaxDep.Caption := mx.max.depth.ToString;
+////        lbMinDep.Caption := mx.min.depth.ToString;
+////        lbMinTime.Caption := DateTimeToStr(mx.min.datetime);
+////        lbMaxTime.Caption := DateTimeToStr(mx.max.datetime);
+//       end;
+//      DataSourceGTI.DataSet := dsglu;
+//      dsglu.First;
+//      lbGlu.Caption := Descript;
+//      btResetOutClick(nil);
+      //FillGluSeries;
+     end;
+  finally
+    Free;
+  end;
+end;
+
 procedure TFormMain.mOpenTimeDepthtTxtClick(Sender: TObject);
 begin
   InnerGTIOpenDialog('txt', 'GTI File depth (*.txt)|*.txt', 'Gti time-depth.txt file',
    function (FileName: string): TdtglDataSet
    begin
-     Result := TTimeDepthTxtDataSet.Create(Self, FileName, GetSplitter, mClearTmp.Checked);
+     var s := UserDateTimeFormat.Caption.Replace('&','');
+     if s = 'UserDateTimeFormat...' then s := '';
+     Result := TTimeDepthTxtDataSet.Create(Self, FileName, GetSplitter, s, mClearTmp.Checked);
    end);
 end;
 
@@ -748,6 +805,23 @@ end;
 procedure TFormMain.Setup1Click(Sender: TObject);
 begin
   var t := InputBox('Input time discretesation', 'Time (s)', '8.000');
+  TMenuItem(Sender).Caption := t;
+end;
+
+procedure TFormMain.t2md1Click(Sender: TObject);
+begin
+  InnerGTIOpenDialog('t2md', 'XML File (*.t2md)|*.t2md', 'Gti DateTime-depth.XML file',
+   function (FileName: string): TdtglDataSet
+   begin
+     var r := TdtXMLDataSet.Create(Self, FileName,'Data', 'time', 'md', mClearTmp.Checked);
+     r.AddingDays := 25569;
+     Exit(r);
+   end);
+end;
+
+procedure TFormMain.UserDateTimeFormatClick(Sender: TObject);
+begin
+  var t := InputBox('Input Date Time format', 'Date Time', '(.)(dd.mm.yyyy) (:)(hh:nn:ss)');
   TMenuItem(Sender).Caption := t;
 end;
 

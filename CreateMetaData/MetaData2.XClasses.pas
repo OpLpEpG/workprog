@@ -83,6 +83,7 @@ const
   ATTR_eu =    ATTR + TP_STR + 2;
   ATTR_title = ATTR + TP_STR + 3;
   ATTR_hint =  ATTR + TP_STR + 4;
+  ATTR_pasw =  ATTR + TP_STR + 5;
 
   NAM_1 = 0;
   NAM_2 = 2;
@@ -370,7 +371,7 @@ const
  ATR_ERR: TypedInfo = ();
  ATR_name: TypedInfo = (   Name: 'name'; Tip: ATTR; cls: TattrName );
 
-  ATR_TYPES: array[0..36] of TypedInfo =(
+  ATR_TYPES: array[0..37] of TypedInfo =(
 
    // атрибуты виртуальные  TAttrVirtual
     (   Name: 'name';           Tip: ATTR;    cls: TattrName  ),
@@ -385,6 +386,8 @@ const
     // diagram
     (    Name: 'title';       Tip: ATTR_title;   cls: TStr  ),
     (    Name: 'hint';        Tip: ATTR_hint;    cls: TStr; ra:True ),
+    //безопасность
+    (    Name: 'password';    Tip: ATTR_pasw;      cls: TStr ), //f5
    // len=0
     (    Name: 'WRK';         Tip: ATTR_WRK;          cls: TNone  ),//0x81
     (    Name: 'RAM';         Tip: ATTR_RAM;          cls: TNone  ),//0x82
@@ -413,6 +416,7 @@ const
     // diagram
     (    Name: 'color';               Tip: ATTR+ + LEN_4 + 0;    cls: TUint32; ra:True ), //0xB0
     (    Name: 'SSDSize';             Tip: ATTR+ + LEN_4 + 1;    cls: TUint32  ),        //0xB1
+//    (    Name: 'UnixTime';            Tip: ATTR+ + LEN_4 + 2;    cls: TUint32  ),        //0xB2
    // array (int) avilable len 1,2
     (    Name: 'array';     Tip: ATTR+ LEN_1 + ATTR_IDX_ARRAY;    cls: TUint8;   ct: ArrayCorrectType ),// 0x9F
     (    Name: 'array';     Tip: ATTR+ LEN_2 + ATTR_IDX_ARRAY;    cls: TUint16;  ct: ArrayCorrectType ),// 0xAF

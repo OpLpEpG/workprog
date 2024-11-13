@@ -39,6 +39,12 @@ type
     destructor Destroy; override;
     property AutomatMetrology: TinclAuto read FAutomatMetrology implements IAutomatMetrology;
   end;
+    TFormMetrInclinT2 = class(TFormMetrInclinT)
+    public
+    [StaticAction('Метрология Инкл. по Т V2', 'Метрология', 87, '0:Метрология.Инклинометры:-1')]
+    class procedure DoCreateForm(Sender: IAction); override;
+     class function MetrolAttrName: string; override;
+    end;
 
 implementation
 
@@ -229,9 +235,25 @@ begin
     for i := 1 to NFORT do AddStep(t, i, alg);
 end;  }
 
+{ TFormMetrInclinT2 }
+
+class procedure TFormMetrInclinT2.DoCreateForm(Sender: IAction);
+begin
+  inherited;
+
+end;
+
+class function TFormMetrInclinT2.MetrolAttrName: string;
+begin
+  Result := 'INKLGK2'
+end;
+
 initialization
   RegisterClass(TFormMetrInclinT);
+  RegisterClass(TFormMetrInclinT2);
   TRegister.AddType<TFormMetrInclinT, IForm>.LiveTime(ltSingletonNamed);
+  TRegister.AddType<TFormMetrInclinT2, IForm>.LiveTime(ltSingletonNamed);
 finalization
   GContainer.RemoveModel<TFormMetrInclinT>;
+  GContainer.RemoveModel<TFormMetrInclinT2>;
 end.

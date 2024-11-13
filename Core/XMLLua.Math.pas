@@ -3,7 +3,7 @@ unit XMLLua.Math;
 interface
 
 uses
-  XMLLua, tools, debug_except, MathIntf, System.UITypes, VerySimple.Lua.Lib,
+  XMLLua, tools, debug_except, MathIntf, System.UITypes,System.DateUtils, VerySimple.Lua.Lib,
   Container, ExtendIntf, SysUtils, Xml.XMLIntf, System.Generics.Collections,
   System.Classes, math, System.Variants;
 
@@ -74,6 +74,7 @@ type
 
     class function ArcTan2(L: lua_State): Integer; cdecl; static;
     class function KadrToStr(L: lua_State): Integer; cdecl; static;
+    class function UtmToStr(L: lua_State): Integer; cdecl; static;
     class function Hypot(L: lua_State): Integer; cdecl; static;
     class function Hypot3D(L: lua_State): Integer; overload; cdecl; static;
     class function RadToDeg(L: lua_State): Integer; cdecl; static;
@@ -622,6 +623,7 @@ begin
   Result := 3;
 end;
 
+
 class function TXMLScriptMath.AddXmlMatrix(L: lua_State): Integer;
 var
   r, c: Integer;
@@ -828,6 +830,14 @@ begin
   Result := 1;
 end;
                                                     // K  M
+class function TXMLScriptMath.UtmToStr(L: lua_State): Integer;
+var
+  m: TMarshaller;
+begin
+  lua_pushstring(L, m.AsAnsi(DateTimeToStr(UnixToDateTime(lua_tointeger(L, 1)))).ToPointer);
+  Result := 1;
+end;
+
 
 class procedure TXMLScriptMath.cbNoneLinearLSFit(const c, x: PDoubleArray; out f: Double); cdecl;
 begin

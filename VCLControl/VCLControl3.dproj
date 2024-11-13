@@ -111,73 +111,57 @@
         </DCCReference>
         <DCCReference Include="FormDlgDev.pas">
             <Form>FormCreateDev</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="FormDelay2.pas">
             <Form>DialogDelay</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="VCLDlgRam.pas">
             <Form>FormDlgRam</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ConnectDeviceHelper.pas"/>
         <DCCReference Include="DlgSetupDate.pas">
             <Form>FormCalendar</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ExportToPSK6_V3.pas">
             <Form>FormExportToPSK6_V3</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="VCLDlgExportAcoustics.pas">
             <Form>FormDlgExportAcoustics</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="VCLDlgClc.pas">
             <Form>FormDlgClc</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="VCLFrameRangeSelect.pas">
             <Form>FrameRangeSelect</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="VCLDlgExportLAS.pas">
             <Form>FormExportLASP3</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="FormDlgSetupProject.pas">
             <Form>FormSetupProject</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="FindDevices.pas">
             <Form>FormFindDev</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="FrameFindDevs2.pas">
             <Form>FrameFindDev</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="FrameDelayDev.pas">
             <Form>FrameDelayInfo</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="SelectPath.pas">
             <Form>SelectPathFrm</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="VCLFrmSeltPar.pas">
             <Form>FrameSelectParam</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="VCLDlgExportCaliper.pas">
             <Form>FormDlgExportCaliper</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

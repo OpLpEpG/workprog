@@ -200,6 +200,11 @@ type
     procedure SaveLogData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen: Integer);
     procedure SaveRamData(Dev: IDevice; Adr: Integer; Data: IXMLInfo; Row: Pointer; RowLen, CurAdr, CurKadr: Integer; CurTime: TDateTime);
     procedure SaveEnd(Data: IXMLInfo);
+
+    function GetMetaDataOK: Boolean;
+    procedure SetMetaDataOK(const Value: Boolean);
+
+    property MetaDataOK: Boolean read GetMetaDataOK write SetMetaDataOK;
   end;
 
   IFileData = interface(IManagItem)

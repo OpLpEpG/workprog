@@ -90,6 +90,7 @@ type
     FAddCon: string;
     FAddDev: string;
     FC_TableUpdate: string;
+    FC_MetaDataOK: boolean;
 
     procedure TreeClear;
     procedure TreeUpdate;
@@ -120,6 +121,7 @@ type
     procedure UpdateTextFunc_Metr_File(xd: PNodeExData; Column: Integer);
     procedure UpdateTextFunc_Metr_MetrData(xd: PNodeExData; Column: Integer);
     procedure SetC_TableUpdate(const Value: string);
+    procedure SetC_MetaDataOK(const Value: boolean);
   protected
     type
      TRunViewSectionFunc = procedure(Root: PVirtualNode; node: IXMLNode) of object;
@@ -142,6 +144,7 @@ type
     property C_AddDev: string read FAddDev write SetAddDev;
     property C_AddCon: string read FAddCon write SetAddCon;
     property C_TableUpdate: string read FC_TableUpdate write SetC_TableUpdate;
+    property C_MetaDataOK: boolean read FC_MetaDataOK write SetC_MetaDataOK;
   end;
   resourcestring
    RS_ADR = 'Адрес';
@@ -450,6 +453,7 @@ begin
     ppM.Images := ip.GetImagList;
    end;
   TreeUpdate();
+  Bind('C_MetaDataOK', GlobalCore as IManager, ['S_MetaDataOK']);
   Bind('C_TableUpdate', GlobalCore as IManager, ['S_TableUpdate']);
   Bind('C_Project', GlobalCore as IManager, ['S_ProjectChange']);
   Bind('C_AddDev', GlobalCore as IDeviceEnum, ['S_AfterAdd']);
@@ -796,6 +800,11 @@ begin
   TreeUpdate;
 end;
 
+procedure TFormControl.SetC_MetaDataOK(const Value: boolean);
+begin
+  FC_MetaDataOK := Value;
+end;
+
 procedure TFormControl.SetC_TableUpdate(const Value: string);
 begin
   FC_TableUpdate := Value;
@@ -880,8 +889,8 @@ begin
   NReadRam.Visible := Flag and Chld(T_RAM);
   NInfo.Visible := False;// Flag and Chld(T_WRK);
   NGlu.Visible := Flag and Chld(T_GLU);
-  NeepEdit.Visible := RegisterDialog.Support<Dialog_Eep> and  Flag and Cur(T_EEPROM);
-  NeepCmp.Visible := Flag and Cur(T_EEPROM);
+  NeepEdit.Visible := RegisterDialog.Support<Dialog_Eep> and  Flag and Cur(T_EEPROM) and FC_MetaDataOK;
+  NeepCmp.Visible := Flag and Cur(T_EEPROM) and FC_MetaDataOK;
   NMetrolExport.Visible := Flag and prnt(T_MTR);
   NMetrolImport.Visible := Flag and prnt(T_MTR);
 end;
